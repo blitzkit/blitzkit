@@ -1,14 +1,25 @@
+---
+import { assertSecret } from '@blitzkit/core';
+
+const PUBLIC_GOOGLE_TAG_MANAGER_ID = assertSecret(
+  import.meta.env.PUBLIC_GOOGLE_TAG_MANAGER_ID,
+);
+---
+
 <script
   is:inline
   async
-  src="https://www.googletagmanager.com/gtag/js?id=G-GL2JVHCGPQ"
+  src={`https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GOOGLE_TAG_MANAGER_ID}`}
 ></script>
-<script is:inline>
+
+<script is:inline define:vars={{ PUBLIC_GOOGLE_TAG_MANAGER_ID }}>
   window.dataLayer = window.dataLayer || [];
 
   function gtag() {
     dataLayer.push(arguments);
   }
+
   gtag('js', new Date());
-  gtag('config', 'G-GL2JVHCGPQ');
+
+  gtag('config', PUBLIC_GOOGLE_TAG_MANAGER_ID);
 </script>

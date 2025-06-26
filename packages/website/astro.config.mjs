@@ -1,6 +1,6 @@
 // @ts-check
 
-import partytown from '@astrojs/partytown';
+import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { SUPPORTED_LOCALES } from '@blitzkit/i18n';
 import { defineConfig } from 'astro/config';
