@@ -1,46 +1,19 @@
 ---
 import { assertSecret } from '@blitzkit/core';
-
-const PUBLIC_GOOGLE_TAG_MANAGER_ID = assertSecret(
-  import.meta.env.PUBLIC_GOOGLE_TAG_MANAGER_ID,
-);
 ---
 
 {/* google analytics */}
 <script
   is:inline
   async
-  src={`https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GOOGLE_TAG_MANAGER_ID}`}
+  src="https://www.googletagmanager.com/gtag/js?id=G-GL2JVHCGPQ"
 ></script>
-<script
-  is:inline
-  define:vars={{ PUBLIC_GOOGLE_TAG_MANAGER_ID }}
-  type="text/partytown"
->
+<script is:inline>
   window.dataLayer = window.dataLayer || [];
 
   function gtag() {
     dataLayer.push(arguments);
   }
   gtag('js', new Date());
-  gtag('config', PUBLIC_GOOGLE_TAG_MANAGER_ID);
+  gtag('config', 'G-GL2JVHCGPQ');
 </script>
-
-{/* nitro ads */}
-{
-  /*
-<script is:inline data-cfasync="false">
-  window.nitroAds = window.nitroAds || {
-    createAd: function () {
-      return new Promise((e) => {
-        window.nitroAds.queue.push(['createAd', arguments, e]);
-      });
-    },
-    addUserToken: function () {
-      window.nitroAds.queue.push(['addUserToken', arguments]);
-    },
-    queue: [],
-  };
-</script>
-*/
-}
