@@ -40,8 +40,6 @@ export async function tankModels() {
         parameters.resourcesPath.blitzModelPath.replace(/\.sc2$/, ''),
       );
 
-      await writeFile('../../temp/model.glb', await nodeIO.writeBinary(model));
-
       changes.push({
         path: `3d/tanks/models/${id}.glb`,
         content: Buffer.from(await nodeIO.writeBinary(model)),
