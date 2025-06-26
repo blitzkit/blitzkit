@@ -53,6 +53,7 @@ env:
   PUBLIC_DISCORD_SERVER_ID: ${{ secrets.PUBLIC_DISCORD_SERVER_ID }}
   PUBLIC_ASSET_FAST_USER: blitzkit
   PUBLIC_ASSET_FAST_REPO: assets
+  PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
 
 jobs:
   download_client:
