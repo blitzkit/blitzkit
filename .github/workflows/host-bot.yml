@@ -48,6 +48,9 @@ jobs:
             sleep 5
           done
 
+          mkdir -p dist/bot
+          unzip bot.zip -d dist/bot
+
       - name: Install sharp
         run: bun init -y && bun add sharp
 
