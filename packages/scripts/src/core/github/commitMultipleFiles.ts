@@ -73,12 +73,13 @@ export async function commitMultipleFiles(
       }
 
       if (diff.status === DiffStatus.Unchanged) {
-        console.log(`🔵 (${diff.change.toLocaleString()}B) ${change.path}`);
+        // just don't bother
+        // console.log(`🔵 (${diff.change.toLocaleString()}B) ${change.path}`);
       } else {
         console.log(
           `${
             diff.status === DiffStatus.New ? '🟢' : '🟡'
-          } (+${diff.change.toLocaleString()}B) ${change.path}`,
+          } (${diff.change > 0 ? '+' : ''}${diff.change.toLocaleString()}B) ${change.path}`,
         );
         changes.push(change);
       }
