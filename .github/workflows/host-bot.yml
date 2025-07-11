@@ -34,19 +34,19 @@ jobs:
         run: |
           while true; do
             DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
-              | grep "browser_download_url.*bot.zip" \
-              | cut -d : -f 2,3 \
-              | tr -d \")
-            if curl -fL -o bot.zip "$DOWNLOAD_URL"; then
-              break
+              | jq -r '.assets[] | select(.name | endswith("bot.zip")) | .browser_download_url')
+            
+            if [[ -n "$DOWNLOAD_URL" ]]; then
+              if curl -fL -o bot.zip "$DOWNLOAD_URL"; then
+                break
+              else
+                echo "Download failed, retrying in 5s..."
+              fi
             else
-              echo "Download failed, retrying in 5s..."
-              sleep 5
+              echo "Download URL not found, retrying in 5s..."
             fi
+            sleep 5
           done
-
-          mkdir -p dist/bot
-          unzip -o bot.zip -d dist/bot
 
       - name: Install sharp
         run: bun init -y && bun add sharp
