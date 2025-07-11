@@ -29,18 +29,24 @@ jobs:
 
     steps:
       - uses: oven-sh/setup-bun@v1
-      #        with:
-      #          bun-version: 1.1.33
 
       - name: Download release assets
         run: |
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
+          until DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
             | grep "browser_download_url.*bot.zip" \
             | cut -d : -f 2,3 \
-            | tr -d \")
-          curl -L -o bot.zip $DOWNLOAD_URL
+            | tr -d \"); do
+            echo "Retrying in 5s..."; sleep 5
+          done
+
+          echo "Got URL: $DOWNLOAD_URL"
+
+          until curl -L -o bot.zip "$DOWNLOAD_URL"; do
+            echo "Download failed, retrying in 5s..."; sleep 5
+          done
+
           mkdir -p dist/bot
-          unzip bot.zip -d dist/bot
+          unzip -o bot.zip -d dist/bot
 
       - name: Install sharp
         run: bun init -y && bun add sharp
