@@ -32,17 +32,17 @@ jobs:
 
       - name: Download release assets
         run: |
-          until DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
-            | grep "browser_download_url.*bot.zip" \
-            | cut -d : -f 2,3 \
-            | tr -d \"); do
-            echo "Retrying in 5s..."; sleep 5
-          done
-
-          echo "Got URL: $DOWNLOAD_URL"
-
-          until curl -L -o bot.zip "$DOWNLOAD_URL"; do
-            echo "Download failed, retrying in 5s..."; sleep 5
+          while true; do
+            DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
+              | grep "browser_download_url.*bot.zip" \
+              | cut -d : -f 2,3 \
+              | tr -d \")
+            if curl -fL -o bot.zip "$DOWNLOAD_URL"; then
+              break
+            else
+              echo "Download failed, retrying in 5s..."
+              sleep 5
+            fi
           done
 
           mkdir -p dist/bot
