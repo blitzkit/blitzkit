@@ -80,7 +80,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         >
           <img
             alt={unwrap(tank.name)}
-            src={asset(`icons/tanks/blitzkit/${tank.id}.webp`)}
+            src={asset(`icons/tanks/big/${tank.id}.webp`)}
             className="image"
             draggable={false}
           />
