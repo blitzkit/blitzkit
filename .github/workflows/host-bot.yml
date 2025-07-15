@@ -30,25 +30,14 @@ jobs:
     steps:
       - uses: oven-sh/setup-bun@v1
 
-      - name: Download release assets
-        run: |
-          while true; do
-            DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \
-              | jq -r '.assets[] | select(.name | endswith("bot.zip")) | .browser_download_url')
-            
-            if [[ -n "$DOWNLOAD_URL" ]]; then
-              if curl -fL -o bot.zip "$DOWNLOAD_URL"; then
-                break
-              else
-                echo "Download failed, retrying in 5s..."
-              fi
-            else
-              echo "Download URL not found, retrying in 5s..."
-            fi
-            sleep 5
-          done
-
-          mkdir -p dist/bot
+      - name: Download release assets  
+        run: |  
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/blitzkit/blitzkit/releases/latest \  
+            | grep "browser_download_url.*bot.zip" \  
+            | cut -d : -f 2,3 \  
+            | tr -d \")  
+          curl -L -o bot.zip $DOWNLOAD_URL  
+          mkdir -p dist/bot  
           unzip bot.zip -d dist/bot
 
       - name: Install sharp
