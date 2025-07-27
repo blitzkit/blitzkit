@@ -7,7 +7,7 @@ import type { RadixColor } from '../../../../../stores/embedState';
 import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
 
 interface TitleProps {
-  outline?: boolean;
+  foreground?: boolean;
 }
 
 export const NATION_COLORS: Record<
@@ -65,7 +65,7 @@ export const NATION_COLORS: Record<
   },
 };
 
-export function Title({ outline }: TitleProps) {
+export function Title({ foreground }: TitleProps) {
   const { unwrap } = useLocale();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
@@ -103,11 +103,8 @@ export function Title({ outline }: TitleProps) {
               : `min(65vh, ${125 / name.length}vw)`
             : `min(48vh, ${75 / name.length}vw)`,
           whiteSpace: 'nowrap',
-          color: outline ? Var(`${nationColors.tint}-a2`) : color,
-          opacity: outline && disturbed ? 0 : 1,
-          WebkitTextStroke: outline
-            ? `${revealed ? (disturbed ? '1px' : 'min(2px, 0.2vw)') : 0} ${color}`
-            : undefined,
+          color: foreground ? Var('gray-a10') : color,
+          opacity: foreground && disturbed ? 0 : 1,
           letterSpacing: disturbed || !revealed ? 0 : '-0.03em',
           transition: `
             letter-spacing 1.5s ${disturbed ? '' : 'cubic-bezier(.81,-2,.68,1)'},
