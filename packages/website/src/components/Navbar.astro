@@ -17,7 +17,7 @@ export interface Props {
   integrated?: boolean;
 }
 
-const { integrated } = Astro.props;
+const { integrated = false } = Astro.props;
 const toolsFiltered = TOOLS.filter((tool) => !('href' in tool));
 const { locale } = Astro.params;
 const branchName = resolveBranchName(locale);
@@ -47,7 +47,7 @@ const strings = getStrings(locale);
     height: 100%;
   }
 
-  .navbar[data-expanded='false'] .content {
+  .navbar[data-expanded='false'][data-integrated='false'] .content {
     background-color: var(--black-a8);
     backdrop-filter: blur(4rem);
     box-shadow: var(--shadow-3);
@@ -87,6 +87,7 @@ const strings = getStrings(locale);
   direction="column"
   align="center"
   data-expanded="false"
+  data-integrated={`${integrated}`}
   className="navbar"
   width="100%"
   top="0"
