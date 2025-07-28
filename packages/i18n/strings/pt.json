@@ -698,6 +698,7 @@
           "fire.caliber": "calibre",
           "fire.standardPenetration": "penetração padrão",
           "fire.premiumPenetration": "penetração premium",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "dano",
           "fire.moduleDamage": "dano a módulos",
           "fire.shellVelocity": "velocidade do projétil",

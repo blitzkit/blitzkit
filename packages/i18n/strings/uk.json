@@ -2,7 +2,7 @@
   "test": {
     "default": "тест",
     "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is %s1 because it has the color of %s2. I like it so much that I will say its name 3 times! %s1! %s1! %s1! Once again, it's %s2, not %s3.",
-    "fox": "The quick brown fox jumps over the lazy dog."
+    "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
   },
   "common": {
     "units": {
@@ -12,7 +12,7 @@
       "hp": "%s1хп",
       "x": "х%s1",
       "percentage": "%s1%",
-      "deg_s": "%s1°/s"
+      "deg_s": "%s1°/с"
     },
     "gun_types": {
       "auto_loader": "Магазинна система заряджання",
@@ -413,10 +413,10 @@
         }
       },
       "debug": {
-        "name": "debug",
-        "description": "Debug information about the bot",
+        "name": "налагодження",
+        "description": "Інформація про налагодження бота",
         "body": {
-          "title": "# Debug\n\n",
+          "title": "# Налагодження\n\n",
           "version": "Версія",
           "shard": {
             "label": "Уламок",
@@ -499,7 +499,7 @@
         },
         "embed": {
           "title": "Невірний обліковий запис?",
-          "description": "Use the command again and select a username from the search results."
+          "description": "Використайте команду ще раз і виберіть ім'я користувача з результатів пошуку."
         }
       },
       "search_clans": {
@@ -508,7 +508,7 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "The max number of clan results (default: %s1)"
+            "description": "Максимальна кількість результатів клану (за замовчуванням: %s1)"
           }
         },
         "body": {
@@ -698,6 +698,7 @@
           "fire.caliber": "калібр",
           "fire.standardPenetration": "базове пробиття",
           "fire.premiumPenetration": "преміум пробиття",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "шкода",
           "fire.moduleDamage": "шкода по модулях",
           "fire.shellVelocity": "швидкість польоту снаряда",

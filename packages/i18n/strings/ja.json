@@ -698,6 +698,7 @@
           "fire.caliber": "砲口径",
           "fire.standardPenetration": "通常弾貫通力",
           "fire.premiumPenetration": "課金弾貫通力",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "ダメージ",
           "fire.moduleDamage": "モジュールダメージ",
           "fire.shellVelocity": "弾速",
