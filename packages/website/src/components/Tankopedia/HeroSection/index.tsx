@@ -103,7 +103,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           transitionDuration: '1s',
           background: isFullScreen ? 'black' : undefined,
         }}
-        height={disturbed && !isFullScreen ? 'calc(100svh - 6rem)' : '100vh'}
+        height={!isFullScreen ? 'calc(100svh - 6rem)' : '100vh'}
         maxHeight={isFullScreen ? undefined : '60rem'}
         maxWidth={isFullScreen ? undefined : '120rem'}
         flexGrow="1"
