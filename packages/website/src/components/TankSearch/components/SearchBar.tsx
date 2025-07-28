@@ -21,27 +21,17 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
   const input = useRef<HTMLInputElement>(null);
   const performSearch = useCallback(
     debounce(() => {
-      // tankFiltersStore.setState({ searching: false });
       $tankFilters.setKey('searching', false);
 
       if (!input.current) return;
 
       const sanitized = input.current.value.trim();
 
-      // tankFiltersStore.setState({
-      //   search: sanitized.length === 0 ? undefined : sanitized,
-      // });
-      $tankFilters.setKey(
-        'search',
-        sanitized.length === 0 ? undefined : sanitized,
-      );
+      $tankFilters.setKey('search', sanitized.length === 0 ? null : sanitized);
     }, 500),
     [],
   );
   const handleChange = useCallback(() => {
-    // if (!tankFiltersStore.getState().searching) {
-    //   tankFiltersStore.setState({ searching: true });
-    // }
     if (!tankFilters.searching) {
       $tankFilters.setKey('searching', true);
     }
@@ -69,7 +59,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         <TextField.Root
           variant="classic"
           disabled={skeleton}
-          defaultValue={tankFilters.search}
+          defaultValue={tankFilters.search ?? undefined}
           style={{ flex: 1 }}
           ref={input}
           placeholder={strings.website.common.tank_search.search_bar_hint}

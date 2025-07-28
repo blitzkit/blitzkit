@@ -60,7 +60,7 @@ export const TankSearch = memo<TankSearchProps>(
     const tankFilters = useStore($tankFilters);
     const tankopediaSort = useStore($tankopediaSort);
     const tanksFiltered = useMemo(() => {
-      if (tankFilters.search === undefined) {
+      if (tankFilters.search === null) {
         const filtered = awaitedTanksDefinitionsArray.filter((tank) =>
           filterTank(tankFilters, tank),
         );
