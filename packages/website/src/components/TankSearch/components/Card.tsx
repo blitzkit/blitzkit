@@ -27,6 +27,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
     const gun = turret.guns.at(-1)!;
     const shell0 = gun.gun_type!.value.base.shells[0];
     const shell1 = gun.gun_type!.value.base.shells[1];
+    const shell2 = gun.gun_type!.value.base.shells[2];
     const tracks = tank.tracks.at(-1)!;
     const engine = tank.engines.at(-1)!;
     const tankModelDefinition = modelDefinitions.models[tank.id];
@@ -57,6 +58,8 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return shell0.penetration.near.toFixed(0);
       case 'fire.premiumPenetration':
         return shell1 ? shell1.penetration.near.toFixed(0) : '--';
+      case 'fire.tertiaryPenetration':
+        return shell1 ? shell2.penetration.near.toFixed(0) : '--';
       case 'fire.shellVelocity':
         return shell0.velocity.toFixed(0);
       case 'fire.shellCapacity':

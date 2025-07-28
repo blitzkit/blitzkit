@@ -63,6 +63,7 @@ export function Sort() {
             <Item by="fire.caliber" />
             <Item by="fire.standardPenetration" />
             <Item by="fire.premiumPenetration" />
+            <Item by="fire.tertiaryPenetration" />
             <Item by="fire.damage" />
             <Item by="fire.moduleDamage" />
             <Item by="fire.shellVelocity" />

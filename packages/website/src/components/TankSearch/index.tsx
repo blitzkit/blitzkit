@@ -238,6 +238,16 @@ export const TankSearch = memo<TankSearchProps>(
             );
             break;
 
+          case 'fire.tertiaryPenetration':
+            sorted = filtered.sort(
+              (a, b) =>
+                (a.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[2]
+                  ?.penetration.near ?? 0) -
+                (b.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[2]
+                  ?.penetration.near ?? 0),
+            );
+            break;
+
           case 'fire.damage':
             sorted = filtered.sort(
               (a, b) =>
