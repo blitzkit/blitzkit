@@ -70,6 +70,9 @@ export function InfoWithDelta({
       state.protagonist.shell,
     ),
   );
+  const equipmentMatrix = Duel.use(
+    (state) => state.protagonist.equipmentMatrix,
+  );
   const others = useMemo(() => {
     const defaultSkills = createDefaultSkills(skillDefinitions);
 
@@ -106,7 +109,7 @@ export function InfoWithDelta({
             provisions: member.provisions,
             engine: member.engine,
             gun: member.gun,
-            equipmentMatrix: member.equipmentMatrix,
+            equipmentMatrix: equipmentMatrix,
             shell: member.gun.gun_type!.value.base.shells[shellIndex],
             stockEngine: tank.engines[0],
             stockGun: tank.turrets[0].guns[0],
@@ -133,7 +136,7 @@ export function InfoWithDelta({
 
         return othersValue !== undefined;
       }) as TankCharacteristics[];
-  }, [relativeAgainst, shellIndex]);
+  }, [relativeAgainst, shellIndex, equipmentMatrix]);
   const betterTanks = others.filter((tank) => {
     const othersValue =
       typeof props.value === 'function'
