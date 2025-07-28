@@ -698,6 +698,7 @@
           "fire.caliber": "калибр",
           "fire.standardPenetration": "базовое пробитие",
           "fire.premiumPenetration": "улучшенное пробитие ",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "урон",
           "fire.moduleDamage": "урон по модулям",
           "fire.shellVelocity": "скорость снаряда",
