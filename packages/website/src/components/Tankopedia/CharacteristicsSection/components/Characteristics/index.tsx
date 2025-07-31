@@ -58,6 +58,7 @@ export function Characteristics() {
       applyReactiveArmor: false,
       applyDynamicArmor: false,
       applySpallLiner: false,
+      assaultDistance: 0,
     },
     {
       tankModelDefinition,

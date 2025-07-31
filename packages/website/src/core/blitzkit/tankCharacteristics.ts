@@ -46,6 +46,7 @@ export function tankCharacteristics(
     applyReactiveArmor,
     applyDynamicArmor,
     applySpallLiner,
+    assaultDistance,
   }: {
     tank: TankDefinition;
     turret: TurretDefinition;
@@ -65,6 +66,7 @@ export function tankCharacteristics(
     applyReactiveArmor: boolean;
     applyDynamicArmor: boolean;
     applySpallLiner: boolean;
+    assaultDistance: number;
   },
   {
     tankModelDefinition,
@@ -157,6 +159,13 @@ export function tankCharacteristics(
       [applyDynamicArmor, -0.1],
       [applySpallLiner && shell.type === ShellType.HE, -0.2],
     );
+  const assaultDamageCoefficient =
+    gun.gun_type!.value.base.assault_ranges &&
+    gun.gun_type!.value.base.assault_ranges.types.includes(shell.type)
+      ? (gun.gun_type!.value.base.assault_ranges.ranges.find(
+          ({ distance }) => distance >= assaultDistance,
+        )?.factor ?? 0)
+      : 1;
   const moduleDamageCoefficient = coefficient([hasTungsten, 0.15]);
   const reloadCoefficient =
     (coefficient([hasGunRammer, -0.05]) *
@@ -326,10 +335,11 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.gun_type!.value.base.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
+  const damageCoefficient = armorDamageCoefficient * assaultDamageCoefficient;
   const dpm = resolveDpm(
     gun,
     shell,
-    armorDamageCoefficient,
+    damageCoefficient,
     reloadCoefficient,
     intraClipCoefficient,
   );
@@ -352,7 +362,7 @@ export function tankCharacteristics(
           return current;
         }, null)!.index
       : undefined;
-  const damage = shell.armor_damage * armorDamageCoefficient;
+  const damage = shell.armor_damage * damageCoefficient;
   const dpmEffective =
     gun.gun_type!.$case === 'auto_reloader'
       ? gun.gun_type!.value.extension.shell_reloads[0] >

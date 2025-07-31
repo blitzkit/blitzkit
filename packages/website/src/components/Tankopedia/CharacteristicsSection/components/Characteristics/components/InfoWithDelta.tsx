@@ -118,6 +118,7 @@ export function InfoWithDelta({
             tank,
             track: member.track,
             turret: member.turret,
+            assaultDistance: 0,
           },
           {
             equipmentDefinitions,

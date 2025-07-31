@@ -1250,7 +1250,7 @@ export async function definitions() {
             let assault_ranges: AssaultRanges | undefined;
 
             if (gun.extras?.trayShell) {
-              const kinds = gun.extras.trayShell.kinds
+              const types = gun.extras.trayShell.kinds
                 .split(' ')
                 .map((string) => {
                   const trimmed = string.trim();
@@ -1270,6 +1270,7 @@ export async function definitions() {
               const sector = gun.extras.trayShell.sectors.sector;
 
               assault_ranges = {
+                types,
                 ranges: sector.map((value) => ({
                   factor: value.factor,
                   distance: value.distance,

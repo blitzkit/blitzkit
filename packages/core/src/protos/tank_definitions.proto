@@ -162,6 +162,7 @@ message GunDefinitionBase {
 
 message AssaultRanges {
   repeated AssaultRange ranges = 1;
+  repeated ShellType types = 2;
 }
 
 message AssaultRange {

@@ -96,6 +96,7 @@ export function SceneProps() {
       stockTurret: tank.turrets[0],
       stockTrack: tank.tracks[0],
       track,
+      assaultDistance: 0,
     },
     { equipmentDefinitions, provisionDefinitions, tankModelDefinition },
   );
