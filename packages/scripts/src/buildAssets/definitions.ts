@@ -1,5 +1,6 @@
 import {
   Armor,
+  AssaultRanges,
   BlitzTankClass,
   CamouflageDefinitions,
   Consumable,
@@ -1251,6 +1252,7 @@ export async function definitions() {
             const maskEnabled =
               tankParameters.maskSlice?.[maskName]?.enabled ?? false;
             let mask: number | undefined;
+            let assault_ranges: AssaultRanges | undefined;
 
             if (gun.extras?.trayShell) {
               const kinds = gun.extras.trayShell.kinds
@@ -1272,7 +1274,7 @@ export async function definitions() {
 
               const sector = gun.extras.trayShell.sectors.sector;
 
-              gun.assault_ranges = {
+              assault_ranges = {
                 ranges: sector.map((value) => ({
                   factor: value.factor,
                   distance: value.distance,
@@ -1325,6 +1327,7 @@ export async function definitions() {
               dispersion_traverse: shotDispersionFactors.turretRotation,
               unlocks: resolveUnlocks(gun.unlocks),
               shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
+              assault_ranges,
             } satisfies GunDefinitionBase;
 
             tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
@@ -1408,7 +1411,7 @@ export async function definitions() {
 
               tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
                 gunIndex
-              ].gun_type!.value.base.shells.push({
+              ].gun_type!.value.base!.shells.push({
                 id: shellId,
                 name: shellName,
                 velocity: gunShellEntry.speed,
@@ -1496,8 +1499,8 @@ export async function definitions() {
         turret.research_cost = turretXps.get(turret.id);
 
         Object.values(turret.guns).forEach((gunRaw) => {
-          gunRaw.gun_type!.value.base.research_cost = gunXps.get(
-            gunRaw.gun_type!.value.base.id,
+          gunRaw.gun_type!.value.base!.research_cost = gunXps.get(
+            gunRaw.gun_type!.value.base!.id,
           );
         });
       });

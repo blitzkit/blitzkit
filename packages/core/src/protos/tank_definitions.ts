@@ -270,7 +270,7 @@ export interface TankDefinition {
   crew: Crew[];
   health: number;
   nation: string;
-  name: I18nString;
+  name: I18nString | undefined;
   type: TankType;
   max_consumables: number;
   max_provisions: number;
@@ -281,7 +281,7 @@ export interface TankDefinition {
   turrets: TurretDefinition[];
   engines: EngineDefinition[];
   tracks: TrackDefinition[];
-  price: TankPrice;
+  price: TankPrice | undefined;
   research_cost?: ResearchCost | undefined;
   speed_forwards: number;
   speed_backwards: number;
@@ -317,7 +317,7 @@ export interface TankPrice {
 export interface TrackDefinition {
   id: number;
   tier: number;
-  name: I18nString;
+  name: I18nString | undefined;
   weight: number;
   traverse_speed: number;
   research_cost?: ResearchCost | undefined;
@@ -331,7 +331,7 @@ export interface TrackDefinition {
 
 export interface EngineDefinition {
   id: number;
-  name: I18nString;
+  name: I18nString | undefined;
   research_cost?: ResearchCost | undefined;
   tier: number;
   fire_chance: number;
@@ -346,7 +346,7 @@ export interface TurretDefinition {
   view_range: number;
   traverse_speed: number;
   research_cost?: ResearchCost | undefined;
-  name: I18nString;
+  name: I18nString | undefined;
   tier: number;
   weight: number;
   guns: GunDefinition[];
@@ -362,8 +362,8 @@ export interface GunDefinition {
 }
 
 export interface GunDefinitionRegular {
-  base: GunDefinitionBase;
-  extension: GunDefinitionRegularProperties;
+  base: GunDefinitionBase | undefined;
+  extension: GunDefinitionRegularProperties | undefined;
 }
 
 export interface GunDefinitionRegularProperties {
@@ -371,8 +371,8 @@ export interface GunDefinitionRegularProperties {
 }
 
 export interface GunDefinitionAutoLoader {
-  base: GunDefinitionBase;
-  extension: GunDefinitionAutoLoaderProperties;
+  base: GunDefinitionBase | undefined;
+  extension: GunDefinitionAutoLoaderProperties | undefined;
 }
 
 export interface GunDefinitionAutoLoaderProperties {
@@ -382,8 +382,8 @@ export interface GunDefinitionAutoLoaderProperties {
 }
 
 export interface GunDefinitionAutoReloader {
-  base: GunDefinitionBase;
-  extension: GunDefinitionAutoReloaderProperties;
+  base: GunDefinitionBase | undefined;
+  extension: GunDefinitionAutoReloaderProperties | undefined;
 }
 
 export interface GunDefinitionAutoReloaderProperties {
@@ -397,7 +397,7 @@ export interface GunDefinitionBase {
   rotation_speed: number;
   research_cost?: ResearchCost | undefined;
   weight: number;
-  name: I18nString;
+  name: I18nString | undefined;
   tier: number;
   shells: ShellDefinition[];
   camouflage_loss: number;
@@ -408,17 +408,27 @@ export interface GunDefinitionBase {
   dispersion_damaged: number;
   unlocks: Unlock[];
   shell_capacity: number;
+  assault_ranges?: AssaultRanges | undefined;
+}
+
+export interface AssaultRanges {
+  ranges: AssaultRange[];
+}
+
+export interface AssaultRange {
+  distance: number;
+  factor: number;
 }
 
 export interface ShellDefinition {
   id: number;
-  name: I18nString;
+  name: I18nString | undefined;
   velocity: number;
   armor_damage: number;
   module_damage: number;
   caliber: number;
   icon: string;
-  penetration: ShellPenetration;
+  penetration: ShellPenetration | undefined;
   type: ShellType;
   normalization?: number | undefined;
   ricochet?: number | undefined;
@@ -434,7 +444,7 @@ export interface ShellPenetration {
 export interface Unlock {
   id: number;
   type: ModuleType;
-  cost: UnlockCost;
+  cost: UnlockCost | undefined;
 }
 
 export interface UnlockCost {
@@ -448,7 +458,7 @@ export interface Crew {
   substitute: CrewType[];
 }
 
-export function createBaseTankDefinitions(): TankDefinitions {
+function createBaseTankDefinitions(): TankDefinitions {
   return { tanks: {} };
 }
 
@@ -530,13 +540,13 @@ export const TankDefinitions: MessageFns<TankDefinitions> = {
   },
 };
 
-export function createBaseTankDefinitions_TanksEntry(): TankDefinitions_TanksEntry {
-  return { key: 0, value: createBaseTankDefinition() };
+function createBaseTankDefinitions_TanksEntry(): TankDefinitions_TanksEntry {
+  return { key: 0, value: undefined };
 }
 
 export const TankDefinitions_TanksEntry: MessageFns<TankDefinitions_TanksEntry> = {
   encode(message: TankDefinitions_TanksEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
+    if (message.key !== 0) {
       writer.uint32(8).uint32(message.key);
     }
     if (message.value !== undefined) {
@@ -579,14 +589,14 @@ export const TankDefinitions_TanksEntry: MessageFns<TankDefinitions_TanksEntry> 
 
   fromJSON(object: any): TankDefinitions_TanksEntry {
     return {
-      key: globalThis.Number(assertSet("TankDefinitions_TanksEntry.key", object.key)),
-      value: TankDefinition.fromJSON(assertSet("TankDefinitions_TanksEntry.value", object.value)),
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? TankDefinition.fromJSON(object.value) : undefined,
     };
   },
 
   toJSON(message: TankDefinitions_TanksEntry): unknown {
     const obj: any = {};
-    if (message.key !== undefined) {
+    if (message.key !== 0) {
       obj.key = Math.round(message.key);
     }
     if (message.value !== undefined) {
@@ -603,12 +613,12 @@ export const TankDefinitions_TanksEntry: MessageFns<TankDefinitions_TanksEntry> 
     message.key = object.key ?? 0;
     message.value = (object.value !== undefined && object.value !== null)
       ? TankDefinition.fromPartial(object.value)
-      : createBaseTankDefinition();
+      : undefined;
     return message;
   },
 };
 
-export function createBaseTankDefinition(): TankDefinition {
+function createBaseTankDefinition(): TankDefinition {
   return {
     id: 0,
     slug: "",
@@ -620,7 +630,7 @@ export function createBaseTankDefinition(): TankDefinition {
     crew: [],
     health: 0,
     nation: "",
-    name: createBaseI18nString(),
+    name: undefined,
     type: 0,
     max_consumables: 0,
     max_provisions: 0,
@@ -631,7 +641,7 @@ export function createBaseTankDefinition(): TankDefinition {
     turrets: [],
     engines: [],
     tracks: [],
-    price: createBaseTankPrice(),
+    price: undefined,
     research_cost: undefined,
     speed_forwards: 0,
     speed_backwards: 0,
@@ -1035,15 +1045,15 @@ export const TankDefinition: MessageFns<TankDefinition> = {
 
   fromJSON(object: any): TankDefinition {
     return {
-      id: globalThis.Number(assertSet("TankDefinition.id", object.id)),
-      slug: globalThis.String(assertSet("TankDefinition.slug", object.slug)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       roles: isObject(object.roles)
         ? Object.entries(object.roles).reduce<{ [key: number]: number }>((acc, [key, value]) => {
           acc[globalThis.Number(key)] = Number(value);
           return acc;
         }, {})
         : {},
-      fixed_camouflage: globalThis.Boolean(assertSet("TankDefinition.fixed_camouflage", object.fixed_camouflage)),
+      fixed_camouflage: isSet(object.fixed_camouflage) ? globalThis.Boolean(object.fixed_camouflage) : false,
       camouflages: globalThis.Array.isArray(object?.camouflages)
         ? object.camouflages.map((e: any) => globalThis.Number(e))
         : [],
@@ -1053,19 +1063,17 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       successors: globalThis.Array.isArray(object?.successors)
         ? object.successors.map((e: any) => globalThis.Number(e))
         : [],
-      crew: globalThis.Array.isArray(object?.crew)
-        ? object.crew.map((e: any) => Crew.fromJSON(e))
-        : [],
-      health: globalThis.Number(assertSet("TankDefinition.health", object.health)),
-      nation: globalThis.String(assertSet("TankDefinition.nation", object.nation)),
-      name: I18nString.fromJSON(assertSet("TankDefinition.name", object.name)),
-      type: tankTypeFromJSON(assertSet("TankDefinition.type", object.type)),
-      max_consumables: globalThis.Number(assertSet("TankDefinition.max_consumables", object.max_consumables)),
-      max_provisions: globalThis.Number(assertSet("TankDefinition.max_provisions", object.max_provisions)),
-      tier: globalThis.Number(assertSet("TankDefinition.tier", object.tier)),
-      class: tankClassFromJSON(assertSet("TankDefinition.class", object.class)),
-      testing: globalThis.Boolean(assertSet("TankDefinition.testing", object.testing)),
-      deprecated: globalThis.Boolean(assertSet("TankDefinition.deprecated", object.deprecated)),
+      crew: globalThis.Array.isArray(object?.crew) ? object.crew.map((e: any) => Crew.fromJSON(e)) : [],
+      health: isSet(object.health) ? globalThis.Number(object.health) : 0,
+      nation: isSet(object.nation) ? globalThis.String(object.nation) : "",
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      type: isSet(object.type) ? tankTypeFromJSON(object.type) : 0,
+      max_consumables: isSet(object.max_consumables) ? globalThis.Number(object.max_consumables) : 0,
+      max_provisions: isSet(object.max_provisions) ? globalThis.Number(object.max_provisions) : 0,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      class: isSet(object.class) ? tankClassFromJSON(object.class) : 0,
+      testing: isSet(object.testing) ? globalThis.Boolean(object.testing) : false,
+      deprecated: isSet(object.deprecated) ? globalThis.Boolean(object.deprecated) : false,
       turrets: globalThis.Array.isArray(object?.turrets)
         ? object.turrets.map((e: any) => TurretDefinition.fromJSON(e))
         : [],
@@ -1075,15 +1083,15 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       tracks: globalThis.Array.isArray(object?.tracks)
         ? object.tracks.map((e: any) => TrackDefinition.fromJSON(e))
         : [],
-      price: TankPrice.fromJSON(assertSet("TankDefinition.price", object.price)),
+      price: isSet(object.price) ? TankPrice.fromJSON(object.price) : undefined,
       research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      speed_forwards: globalThis.Number(assertSet("TankDefinition.speed_forwards", object.speed_forwards)),
-      speed_backwards: globalThis.Number(assertSet("TankDefinition.speed_backwards", object.speed_backwards)),
-      camouflage_still: globalThis.Number(assertSet("TankDefinition.camouflage_still", object.camouflage_still)),
-      camouflage_moving: globalThis.Number(assertSet("TankDefinition.camouflage_moving", object.camouflage_moving)),
-      camouflage_onFire: globalThis.Number(assertSet("TankDefinition.camouflage_onFire", object.camouflage_onFire)),
-      equipment_preset: globalThis.String(assertSet("TankDefinition.equipment_preset", object.equipment_preset)),
-      weight: globalThis.Number(assertSet("TankDefinition.weight", object.weight)),
+      speed_forwards: isSet(object.speed_forwards) ? globalThis.Number(object.speed_forwards) : 0,
+      speed_backwards: isSet(object.speed_backwards) ? globalThis.Number(object.speed_backwards) : 0,
+      camouflage_still: isSet(object.camouflage_still) ? globalThis.Number(object.camouflage_still) : 0,
+      camouflage_moving: isSet(object.camouflage_moving) ? globalThis.Number(object.camouflage_moving) : 0,
+      camouflage_onFire: isSet(object.camouflage_onFire) ? globalThis.Number(object.camouflage_onFire) : 0,
+      equipment_preset: isSet(object.equipment_preset) ? globalThis.String(object.equipment_preset) : "",
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
     };
   },
 
@@ -1210,7 +1218,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.nation = object.nation ?? "";
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.type = object.type ?? 0;
     message.max_consumables = object.max_consumables ?? 0;
     message.max_provisions = object.max_provisions ?? 0;
@@ -1223,7 +1231,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.tracks = object.tracks?.map((e) => TrackDefinition.fromPartial(e)) || [];
     message.price = (object.price !== undefined && object.price !== null)
       ? TankPrice.fromPartial(object.price)
-      : createBaseTankPrice();
+      : undefined;
     message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
       ? ResearchCost.fromPartial(object.research_cost)
       : undefined;
@@ -1238,16 +1246,16 @@ export const TankDefinition: MessageFns<TankDefinition> = {
   },
 };
 
-export function createBaseTankDefinition_RolesEntry(): TankDefinition_RolesEntry {
+function createBaseTankDefinition_RolesEntry(): TankDefinition_RolesEntry {
   return { key: 0, value: 0 };
 }
 
 export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> = {
   encode(message: TankDefinition_RolesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
+    if (message.key !== 0) {
       writer.uint32(8).uint32(message.key);
     }
-    if (message.value !== undefined) {
+    if (message.value !== 0) {
       writer.uint32(16).uint32(message.value);
     }
     return writer;
@@ -1287,17 +1295,17 @@ export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> = 
 
   fromJSON(object: any): TankDefinition_RolesEntry {
     return {
-      key: globalThis.Number(assertSet("TankDefinition_RolesEntry.key", object.key)),
-      value: globalThis.Number(assertSet("TankDefinition_RolesEntry.value", object.value)),
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
     };
   },
 
   toJSON(message: TankDefinition_RolesEntry): unknown {
     const obj: any = {};
-    if (message.key !== undefined) {
+    if (message.key !== 0) {
       obj.key = Math.round(message.key);
     }
-    if (message.value !== undefined) {
+    if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
@@ -1314,7 +1322,7 @@ export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> = 
   },
 };
 
-export function createBaseResearchCost(): ResearchCost {
+function createBaseResearchCost(): ResearchCost {
   return { research_cost_type: undefined };
 }
 
@@ -1413,7 +1421,7 @@ export const ResearchCost: MessageFns<ResearchCost> = {
   },
 };
 
-export function createBaseResearchCostSeasonalTokens(): ResearchCostSeasonalTokens {
+function createBaseResearchCostSeasonalTokens(): ResearchCostSeasonalTokens {
   return { season: 0, tokens: 0 };
 }
 
@@ -1462,8 +1470,8 @@ export const ResearchCostSeasonalTokens: MessageFns<ResearchCostSeasonalTokens> 
 
   fromJSON(object: any): ResearchCostSeasonalTokens {
     return {
-      season: globalThis.Number(assertSet("ResearchCostSeasonalTokens.season", object.season)),
-      tokens: globalThis.Number(assertSet("ResearchCostSeasonalTokens.tokens", object.tokens)),
+      season: isSet(object.season) ? globalThis.Number(object.season) : 0,
+      tokens: isSet(object.tokens) ? globalThis.Number(object.tokens) : 0,
     };
   },
 
@@ -1489,7 +1497,7 @@ export const ResearchCostSeasonalTokens: MessageFns<ResearchCostSeasonalTokens> 
   },
 };
 
-export function createBaseTankPrice(): TankPrice {
+function createBaseTankPrice(): TankPrice {
   return { type: 0, value: 0 };
 }
 
@@ -1538,8 +1546,8 @@ export const TankPrice: MessageFns<TankPrice> = {
 
   fromJSON(object: any): TankPrice {
     return {
-      type: tankPriceTypeFromJSON(assertSet("TankPrice.type", object.type)),
-      value: globalThis.Number(assertSet("TankPrice.value", object.value)),
+      type: isSet(object.type) ? tankPriceTypeFromJSON(object.type) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
     };
   },
 
@@ -1565,11 +1573,11 @@ export const TankPrice: MessageFns<TankPrice> = {
   },
 };
 
-export function createBaseTrackDefinition(): TrackDefinition {
+function createBaseTrackDefinition(): TrackDefinition {
   return {
     id: 0,
     tier: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     weight: 0,
     traverse_speed: 0,
     research_cost: undefined,
@@ -1737,19 +1745,17 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
 
   fromJSON(object: any): TrackDefinition {
     return {
-      id: globalThis.Number(assertSet("TrackDefinition.id", object.id)),
-      tier: globalThis.Number(assertSet("TrackDefinition.tier", object.tier)),
-      name: I18nString.fromJSON(assertSet("TrackDefinition.name", object.name)),
-      weight: globalThis.Number(assertSet("TrackDefinition.weight", object.weight)),
-      traverse_speed: globalThis.Number(assertSet("TrackDefinition.traverse_speed", object.traverse_speed)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      traverse_speed: isSet(object.traverse_speed) ? globalThis.Number(object.traverse_speed) : 0,
       research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      dispersion_move: globalThis.Number(assertSet("TrackDefinition.dispersion_move", object.dispersion_move)),
-      dispersion_traverse: globalThis.Number(
-        assertSet("TrackDefinition.dispersion_traverse", object.dispersion_traverse),
-      ),
-      resistance_hard: globalThis.Number(assertSet("TrackDefinition.resistance_hard", object.resistance_hard)),
-      resistance_medium: globalThis.Number(assertSet("TrackDefinition.resistance_medium", object.resistance_medium)),
-      resistance_soft: globalThis.Number(assertSet("TrackDefinition.resistance_soft", object.resistance_soft)),
+      dispersion_move: isSet(object.dispersion_move) ? globalThis.Number(object.dispersion_move) : 0,
+      dispersion_traverse: isSet(object.dispersion_traverse) ? globalThis.Number(object.dispersion_traverse) : 0,
+      resistance_hard: isSet(object.resistance_hard) ? globalThis.Number(object.resistance_hard) : 0,
+      resistance_medium: isSet(object.resistance_medium) ? globalThis.Number(object.resistance_medium) : 0,
+      resistance_soft: isSet(object.resistance_soft) ? globalThis.Number(object.resistance_soft) : 0,
       unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
     };
   },
@@ -1804,7 +1810,7 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
     message.tier = object.tier ?? 0;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.weight = object.weight ?? 0;
     message.traverse_speed = object.traverse_speed ?? 0;
     message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
@@ -1820,10 +1826,10 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
   },
 };
 
-export function createBaseEngineDefinition(): EngineDefinition {
+function createBaseEngineDefinition(): EngineDefinition {
   return {
     id: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     research_cost: undefined,
     tier: 0,
     fire_chance: 0,
@@ -1944,13 +1950,13 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
 
   fromJSON(object: any): EngineDefinition {
     return {
-      id: globalThis.Number(assertSet("EngineDefinition.id", object.id)),
-      name: I18nString.fromJSON(assertSet("EngineDefinition.name", object.name)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
       research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      tier: globalThis.Number(assertSet("EngineDefinition.tier", object.tier)),
-      fire_chance: globalThis.Number(assertSet("EngineDefinition.fire_chance", object.fire_chance)),
-      power: globalThis.Number(assertSet("EngineDefinition.power", object.power)),
-      weight: globalThis.Number(assertSet("EngineDefinition.weight", object.weight)),
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      fire_chance: isSet(object.fire_chance) ? globalThis.Number(object.fire_chance) : 0,
+      power: isSet(object.power) ? globalThis.Number(object.power) : 0,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
       unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
     };
   },
@@ -1992,7 +1998,7 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
     message.id = object.id ?? 0;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
       ? ResearchCost.fromPartial(object.research_cost)
       : undefined;
@@ -2005,14 +2011,14 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
   },
 };
 
-export function createBaseTurretDefinition(): TurretDefinition {
+function createBaseTurretDefinition(): TurretDefinition {
   return {
     id: 0,
     health: 0,
     view_range: 0,
     traverse_speed: 0,
     research_cost: undefined,
-    name: createBaseI18nString(),
+    name: undefined,
     tier: 0,
     weight: 0,
     guns: [],
@@ -2153,14 +2159,14 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
 
   fromJSON(object: any): TurretDefinition {
     return {
-      id: globalThis.Number(assertSet("TurretDefinition.id", object.id)),
-      health: globalThis.Number(assertSet("TurretDefinition.health", object.health)),
-      view_range: globalThis.Number(assertSet("TurretDefinition.view_range", object.view_range)),
-      traverse_speed: globalThis.Number(assertSet("TurretDefinition.traverse_speed", object.traverse_speed)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      health: isSet(object.health) ? globalThis.Number(object.health) : 0,
+      view_range: isSet(object.view_range) ? globalThis.Number(object.view_range) : 0,
+      traverse_speed: isSet(object.traverse_speed) ? globalThis.Number(object.traverse_speed) : 0,
       research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      name: I18nString.fromJSON(assertSet("TurretDefinition.name", object.name)),
-      tier: globalThis.Number(assertSet("TurretDefinition.tier", object.tier)),
-      weight: globalThis.Number(assertSet("TurretDefinition.weight", object.weight)),
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
       guns: globalThis.Array.isArray(object?.guns) ? object.guns.map((e: any) => GunDefinition.fromJSON(e)) : [],
       unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
     };
@@ -2215,7 +2221,7 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
       : undefined;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.tier = object.tier ?? 0;
     message.weight = object.weight ?? 0;
     message.guns = object.guns?.map((e) => GunDefinition.fromPartial(e)) || [];
@@ -2224,7 +2230,7 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
   },
 };
 
-export function createBaseGunDefinition(): GunDefinition {
+function createBaseGunDefinition(): GunDefinition {
   return { gun_type: undefined };
 }
 
@@ -2344,8 +2350,8 @@ export const GunDefinition: MessageFns<GunDefinition> = {
   },
 };
 
-export function createBaseGunDefinitionRegular(): GunDefinitionRegular {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionRegularProperties() };
+function createBaseGunDefinitionRegular(): GunDefinitionRegular {
+  return { base: undefined, extension: undefined };
 }
 
 export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
@@ -2393,8 +2399,8 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
 
   fromJSON(object: any): GunDefinitionRegular {
     return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionRegular.base", object.base)),
-      extension: GunDefinitionRegularProperties.fromJSON(assertSet("GunDefinitionRegular.extension", object.extension)),
+      base: isSet(object.base) ? GunDefinitionBase.fromJSON(object.base) : undefined,
+      extension: isSet(object.extension) ? GunDefinitionRegularProperties.fromJSON(object.extension) : undefined,
     };
   },
 
@@ -2416,15 +2422,15 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
     const message = createBaseGunDefinitionRegular();
     message.base = (object.base !== undefined && object.base !== null)
       ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
+      : undefined;
     message.extension = (object.extension !== undefined && object.extension !== null)
       ? GunDefinitionRegularProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionRegularProperties();
+      : undefined;
     return message;
   },
 };
 
-export function createBaseGunDefinitionRegularProperties(): GunDefinitionRegularProperties {
+function createBaseGunDefinitionRegularProperties(): GunDefinitionRegularProperties {
   return { reload: 0 };
 }
 
@@ -2461,7 +2467,7 @@ export const GunDefinitionRegularProperties: MessageFns<GunDefinitionRegularProp
   },
 
   fromJSON(object: any): GunDefinitionRegularProperties {
-    return { reload: globalThis.Number(assertSet("GunDefinitionRegularProperties.reload", object.reload)) };
+    return { reload: isSet(object.reload) ? globalThis.Number(object.reload) : 0 };
   },
 
   toJSON(message: GunDefinitionRegularProperties): unknown {
@@ -2484,8 +2490,8 @@ export const GunDefinitionRegularProperties: MessageFns<GunDefinitionRegularProp
   },
 };
 
-export function createBaseGunDefinitionAutoLoader(): GunDefinitionAutoLoader {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionAutoLoaderProperties() };
+function createBaseGunDefinitionAutoLoader(): GunDefinitionAutoLoader {
+  return { base: undefined, extension: undefined };
 }
 
 export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
@@ -2533,10 +2539,8 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
 
   fromJSON(object: any): GunDefinitionAutoLoader {
     return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionAutoLoader.base", object.base)),
-      extension: GunDefinitionAutoLoaderProperties.fromJSON(
-        assertSet("GunDefinitionAutoLoader.extension", object.extension),
-      ),
+      base: isSet(object.base) ? GunDefinitionBase.fromJSON(object.base) : undefined,
+      extension: isSet(object.extension) ? GunDefinitionAutoLoaderProperties.fromJSON(object.extension) : undefined,
     };
   },
 
@@ -2558,15 +2562,15 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
     const message = createBaseGunDefinitionAutoLoader();
     message.base = (object.base !== undefined && object.base !== null)
       ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
+      : undefined;
     message.extension = (object.extension !== undefined && object.extension !== null)
       ? GunDefinitionAutoLoaderProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionAutoLoaderProperties();
+      : undefined;
     return message;
   },
 };
 
-export function createBaseGunDefinitionAutoLoaderProperties(): GunDefinitionAutoLoaderProperties {
+function createBaseGunDefinitionAutoLoaderProperties(): GunDefinitionAutoLoaderProperties {
   return { clip_reload: 0, intra_clip: 0, shell_count: 0 };
 }
 
@@ -2626,9 +2630,9 @@ export const GunDefinitionAutoLoaderProperties: MessageFns<GunDefinitionAutoLoad
 
   fromJSON(object: any): GunDefinitionAutoLoaderProperties {
     return {
-      clip_reload: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.clip_reload", object.clip_reload)),
-      intra_clip: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.intra_clip", object.intra_clip)),
-      shell_count: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.shell_count", object.shell_count)),
+      clip_reload: isSet(object.clip_reload) ? globalThis.Number(object.clip_reload) : 0,
+      intra_clip: isSet(object.intra_clip) ? globalThis.Number(object.intra_clip) : 0,
+      shell_count: isSet(object.shell_count) ? globalThis.Number(object.shell_count) : 0,
     };
   },
 
@@ -2662,8 +2666,8 @@ export const GunDefinitionAutoLoaderProperties: MessageFns<GunDefinitionAutoLoad
   },
 };
 
-export function createBaseGunDefinitionAutoReloader(): GunDefinitionAutoReloader {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionAutoReloaderProperties() };
+function createBaseGunDefinitionAutoReloader(): GunDefinitionAutoReloader {
+  return { base: undefined, extension: undefined };
 }
 
 export const GunDefinitionAutoReloader: MessageFns<GunDefinitionAutoReloader> = {
@@ -2711,10 +2715,8 @@ export const GunDefinitionAutoReloader: MessageFns<GunDefinitionAutoReloader> = 
 
   fromJSON(object: any): GunDefinitionAutoReloader {
     return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionAutoReloader.base", object.base)),
-      extension: GunDefinitionAutoReloaderProperties.fromJSON(
-        assertSet("GunDefinitionAutoReloader.extension", object.extension),
-      ),
+      base: isSet(object.base) ? GunDefinitionBase.fromJSON(object.base) : undefined,
+      extension: isSet(object.extension) ? GunDefinitionAutoReloaderProperties.fromJSON(object.extension) : undefined,
     };
   },
 
@@ -2736,15 +2738,15 @@ export const GunDefinitionAutoReloader: MessageFns<GunDefinitionAutoReloader> = 
     const message = createBaseGunDefinitionAutoReloader();
     message.base = (object.base !== undefined && object.base !== null)
       ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
+      : undefined;
     message.extension = (object.extension !== undefined && object.extension !== null)
       ? GunDefinitionAutoReloaderProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionAutoReloaderProperties();
+      : undefined;
     return message;
   },
 };
 
-export function createBaseGunDefinitionAutoReloaderProperties(): GunDefinitionAutoReloaderProperties {
+function createBaseGunDefinitionAutoReloaderProperties(): GunDefinitionAutoReloaderProperties {
   return { shell_reloads: [], intra_clip: 0, shell_count: 0 };
 }
 
@@ -2819,8 +2821,8 @@ export const GunDefinitionAutoReloaderProperties: MessageFns<GunDefinitionAutoRe
       shell_reloads: globalThis.Array.isArray(object?.shell_reloads)
         ? object.shell_reloads.map((e: any) => globalThis.Number(e))
         : [],
-      intra_clip: globalThis.Number(assertSet("GunDefinitionAutoReloaderProperties.intra_clip", object.intra_clip)),
-      shell_count: globalThis.Number(assertSet("GunDefinitionAutoReloaderProperties.shell_count", object.shell_count)),
+      intra_clip: isSet(object.intra_clip) ? globalThis.Number(object.intra_clip) : 0,
+      shell_count: isSet(object.shell_count) ? globalThis.Number(object.shell_count) : 0,
     };
   },
 
@@ -2854,13 +2856,13 @@ export const GunDefinitionAutoReloaderProperties: MessageFns<GunDefinitionAutoRe
   },
 };
 
-export function createBaseGunDefinitionBase(): GunDefinitionBase {
+function createBaseGunDefinitionBase(): GunDefinitionBase {
   return {
     id: 0,
     rotation_speed: 0,
     research_cost: undefined,
     weight: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     tier: 0,
     shells: [],
     camouflage_loss: 0,
@@ -2871,6 +2873,7 @@ export function createBaseGunDefinitionBase(): GunDefinitionBase {
     dispersion_damaged: 0,
     unlocks: [],
     shell_capacity: 0,
+    assault_ranges: undefined,
   };
 }
 
@@ -2920,6 +2923,9 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     }
     if (message.shell_capacity !== 0) {
       writer.uint32(120).uint32(message.shell_capacity);
+    }
+    if (message.assault_ranges !== undefined) {
+      AssaultRanges.encode(message.assault_ranges, writer.uint32(130).fork()).join();
     }
     return writer;
   },
@@ -3051,6 +3057,14 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
           message.shell_capacity = reader.uint32();
           continue;
         }
+        case 16: {
+          if (tag !== 130) {
+            break;
+          }
+
+          message.assault_ranges = AssaultRanges.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3062,27 +3076,24 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
 
   fromJSON(object: any): GunDefinitionBase {
     return {
-      id: globalThis.Number(assertSet("GunDefinitionBase.id", object.id)),
-      rotation_speed: globalThis.Number(assertSet("GunDefinitionBase.rotation_speed", object.rotation_speed)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      rotation_speed: isSet(object.rotation_speed) ? globalThis.Number(object.rotation_speed) : 0,
       research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      weight: globalThis.Number(assertSet("GunDefinitionBase.weight", object.weight)),
-      name: I18nString.fromJSON(assertSet("GunDefinitionBase.name", object.name)),
-      tier: globalThis.Number(assertSet("GunDefinitionBase.tier", object.tier)),
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
       shells: globalThis.Array.isArray(object?.shells)
         ? object.shells.map((e: any) => ShellDefinition.fromJSON(e))
         : [],
-      camouflage_loss: globalThis.Number(assertSet("GunDefinitionBase.camouflage_loss", object.camouflage_loss)),
-      aim_time: globalThis.Number(assertSet("GunDefinitionBase.aim_time", object.aim_time)),
-      dispersion_base: globalThis.Number(assertSet("GunDefinitionBase.dispersion_base", object.dispersion_base)),
-      dispersion_traverse: globalThis.Number(
-        assertSet("GunDefinitionBase.dispersion_traverse", object.dispersion_traverse),
-      ),
-      dispersion_shot: globalThis.Number(assertSet("GunDefinitionBase.dispersion_shot", object.dispersion_shot)),
-      dispersion_damaged: globalThis.Number(
-        assertSet("GunDefinitionBase.dispersion_damaged", object.dispersion_damaged),
-      ),
+      camouflage_loss: isSet(object.camouflage_loss) ? globalThis.Number(object.camouflage_loss) : 0,
+      aim_time: isSet(object.aim_time) ? globalThis.Number(object.aim_time) : 0,
+      dispersion_base: isSet(object.dispersion_base) ? globalThis.Number(object.dispersion_base) : 0,
+      dispersion_traverse: isSet(object.dispersion_traverse) ? globalThis.Number(object.dispersion_traverse) : 0,
+      dispersion_shot: isSet(object.dispersion_shot) ? globalThis.Number(object.dispersion_shot) : 0,
+      dispersion_damaged: isSet(object.dispersion_damaged) ? globalThis.Number(object.dispersion_damaged) : 0,
       unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
-      shell_capacity: globalThis.Number(assertSet("GunDefinitionBase.shell_capacity", object.shell_capacity)),
+      shell_capacity: isSet(object.shell_capacity) ? globalThis.Number(object.shell_capacity) : 0,
+      assault_ranges: isSet(object.assault_ranges) ? AssaultRanges.fromJSON(object.assault_ranges) : undefined,
     };
   },
 
@@ -3133,6 +3144,9 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     if (message.shell_capacity !== 0) {
       obj.shell_capacity = Math.round(message.shell_capacity);
     }
+    if (message.assault_ranges !== undefined) {
+      obj.assault_ranges = AssaultRanges.toJSON(message.assault_ranges);
+    }
     return obj;
   },
 
@@ -3149,7 +3163,7 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     message.weight = object.weight ?? 0;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.tier = object.tier ?? 0;
     message.shells = object.shells?.map((e) => ShellDefinition.fromPartial(e)) || [];
     message.camouflage_loss = object.camouflage_loss ?? 0;
@@ -3160,24 +3174,163 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     message.dispersion_damaged = object.dispersion_damaged ?? 0;
     message.unlocks = object.unlocks?.map((e) => Unlock.fromPartial(e)) || [];
     message.shell_capacity = object.shell_capacity ?? 0;
+    message.assault_ranges = (object.assault_ranges !== undefined && object.assault_ranges !== null)
+      ? AssaultRanges.fromPartial(object.assault_ranges)
+      : undefined;
     return message;
   },
 };
 
-export function createBaseShellDefinition(): ShellDefinition {
+function createBaseAssaultRanges(): AssaultRanges {
+  return { ranges: [] };
+}
+
+export const AssaultRanges: MessageFns<AssaultRanges> = {
+  encode(message: AssaultRanges, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.ranges) {
+      AssaultRange.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AssaultRanges {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAssaultRanges();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ranges.push(AssaultRange.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AssaultRanges {
+    return {
+      ranges: globalThis.Array.isArray(object?.ranges) ? object.ranges.map((e: any) => AssaultRange.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: AssaultRanges): unknown {
+    const obj: any = {};
+    if (message.ranges?.length) {
+      obj.ranges = message.ranges.map((e) => AssaultRange.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AssaultRanges>, I>>(base?: I): AssaultRanges {
+    return AssaultRanges.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AssaultRanges>, I>>(object: I): AssaultRanges {
+    const message = createBaseAssaultRanges();
+    message.ranges = object.ranges?.map((e) => AssaultRange.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAssaultRange(): AssaultRange {
+  return { distance: 0, factor: 0 };
+}
+
+export const AssaultRange: MessageFns<AssaultRange> = {
+  encode(message: AssaultRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.distance !== 0) {
+      writer.uint32(13).float(message.distance);
+    }
+    if (message.factor !== 0) {
+      writer.uint32(21).float(message.factor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AssaultRange {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAssaultRange();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.distance = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.factor = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AssaultRange {
+    return {
+      distance: isSet(object.distance) ? globalThis.Number(object.distance) : 0,
+      factor: isSet(object.factor) ? globalThis.Number(object.factor) : 0,
+    };
+  },
+
+  toJSON(message: AssaultRange): unknown {
+    const obj: any = {};
+    if (message.distance !== 0) {
+      obj.distance = message.distance;
+    }
+    if (message.factor !== 0) {
+      obj.factor = message.factor;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AssaultRange>, I>>(base?: I): AssaultRange {
+    return AssaultRange.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AssaultRange>, I>>(object: I): AssaultRange {
+    const message = createBaseAssaultRange();
+    message.distance = object.distance ?? 0;
+    message.factor = object.factor ?? 0;
+    return message;
+  },
+};
+
+function createBaseShellDefinition(): ShellDefinition {
   return {
     id: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     velocity: 0,
     armor_damage: 0,
     module_damage: 0,
     caliber: 0,
     icon: "",
-    penetration: createBaseShellPenetration(),
+    penetration: undefined,
     type: 0,
-    normalization: undefined,
-    ricochet: undefined,
-    explosion_radius: undefined,
+    normalization: 0,
+    ricochet: 0,
+    explosion_radius: 0,
     range: 0,
   };
 }
@@ -3211,13 +3364,13 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     if (message.type !== 0) {
       writer.uint32(72).int32(message.type);
     }
-    if (message.normalization !== undefined && message.normalization !== undefined) {
+    if (message.normalization !== undefined && message.normalization !== 0) {
       writer.uint32(85).float(message.normalization);
     }
-    if (message.ricochet !== undefined && message.ricochet !== undefined) {
+    if (message.ricochet !== undefined && message.ricochet !== 0) {
       writer.uint32(93).float(message.ricochet);
     }
-    if (message.explosion_radius !== undefined && message.explosion_radius !== undefined) {
+    if (message.explosion_radius !== undefined && message.explosion_radius !== 0) {
       writer.uint32(101).float(message.explosion_radius);
     }
     if (message.range !== 0) {
@@ -3348,19 +3501,19 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
 
   fromJSON(object: any): ShellDefinition {
     return {
-      id: globalThis.Number(assertSet("ShellDefinition.id", object.id)),
-      name: I18nString.fromJSON(assertSet("ShellDefinition.name", object.name)),
-      velocity: globalThis.Number(assertSet("ShellDefinition.velocity", object.velocity)),
-      armor_damage: globalThis.Number(assertSet("ShellDefinition.armor_damage", object.armor_damage)),
-      module_damage: globalThis.Number(assertSet("ShellDefinition.module_damage", object.module_damage)),
-      caliber: globalThis.Number(assertSet("ShellDefinition.caliber", object.caliber)),
-      icon: globalThis.String(assertSet("ShellDefinition.icon", object.icon)),
-      penetration: ShellPenetration.fromJSON(assertSet("ShellDefinition.penetration", object.penetration)),
-      type: shellTypeFromJSON(assertSet("ShellDefinition.type", object.type)),
-      normalization: isSet(object.normalization) ? globalThis.Number(object.normalization) : undefined,
-      ricochet: isSet(object.ricochet) ? globalThis.Number(object.ricochet) : undefined,
-      explosion_radius: isSet(object.explosion_radius) ? globalThis.Number(object.explosion_radius) : undefined,
-      range: globalThis.Number(assertSet("ShellDefinition.range", object.range)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      velocity: isSet(object.velocity) ? globalThis.Number(object.velocity) : 0,
+      armor_damage: isSet(object.armor_damage) ? globalThis.Number(object.armor_damage) : 0,
+      module_damage: isSet(object.module_damage) ? globalThis.Number(object.module_damage) : 0,
+      caliber: isSet(object.caliber) ? globalThis.Number(object.caliber) : 0,
+      icon: isSet(object.icon) ? globalThis.String(object.icon) : "",
+      penetration: isSet(object.penetration) ? ShellPenetration.fromJSON(object.penetration) : undefined,
+      type: isSet(object.type) ? shellTypeFromJSON(object.type) : 0,
+      normalization: isSet(object.normalization) ? globalThis.Number(object.normalization) : 0,
+      ricochet: isSet(object.ricochet) ? globalThis.Number(object.ricochet) : 0,
+      explosion_radius: isSet(object.explosion_radius) ? globalThis.Number(object.explosion_radius) : 0,
+      range: isSet(object.range) ? globalThis.Number(object.range) : 0,
     };
   },
 
@@ -3393,13 +3546,13 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     if (message.type !== 0) {
       obj.type = shellTypeToJSON(message.type);
     }
-    if (message.normalization !== undefined && message.normalization !== undefined) {
+    if (message.normalization !== undefined && message.normalization !== 0) {
       obj.normalization = message.normalization;
     }
-    if (message.ricochet !== undefined && message.ricochet !== undefined) {
+    if (message.ricochet !== undefined && message.ricochet !== 0) {
       obj.ricochet = message.ricochet;
     }
-    if (message.explosion_radius !== undefined && message.explosion_radius !== undefined) {
+    if (message.explosion_radius !== undefined && message.explosion_radius !== 0) {
       obj.explosion_radius = message.explosion_radius;
     }
     if (message.range !== 0) {
@@ -3416,7 +3569,7 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     message.id = object.id ?? 0;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+      : undefined;
     message.velocity = object.velocity ?? 0;
     message.armor_damage = object.armor_damage ?? 0;
     message.module_damage = object.module_damage ?? 0;
@@ -3424,17 +3577,17 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     message.icon = object.icon ?? "";
     message.penetration = (object.penetration !== undefined && object.penetration !== null)
       ? ShellPenetration.fromPartial(object.penetration)
-      : createBaseShellPenetration();
+      : undefined;
     message.type = object.type ?? 0;
-    message.normalization = object.normalization ?? undefined;
-    message.ricochet = object.ricochet ?? undefined;
-    message.explosion_radius = object.explosion_radius ?? undefined;
+    message.normalization = object.normalization ?? 0;
+    message.ricochet = object.ricochet ?? 0;
+    message.explosion_radius = object.explosion_radius ?? 0;
     message.range = object.range ?? 0;
     return message;
   },
 };
 
-export function createBaseShellPenetration(): ShellPenetration {
+function createBaseShellPenetration(): ShellPenetration {
   return { near: 0, far: 0 };
 }
 
@@ -3483,8 +3636,8 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
 
   fromJSON(object: any): ShellPenetration {
     return {
-      near: globalThis.Number(assertSet("ShellPenetration.near", object.near)),
-      far: globalThis.Number(assertSet("ShellPenetration.far", object.far)),
+      near: isSet(object.near) ? globalThis.Number(object.near) : 0,
+      far: isSet(object.far) ? globalThis.Number(object.far) : 0,
     };
   },
 
@@ -3510,8 +3663,8 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
   },
 };
 
-export function createBaseUnlock(): Unlock {
-  return { id: 0, type: 0, cost: createBaseUnlockCost() };
+function createBaseUnlock(): Unlock {
+  return { id: 0, type: 0, cost: undefined };
 }
 
 export const Unlock: MessageFns<Unlock> = {
@@ -3570,9 +3723,9 @@ export const Unlock: MessageFns<Unlock> = {
 
   fromJSON(object: any): Unlock {
     return {
-      id: globalThis.Number(assertSet("Unlock.id", object.id)),
-      type: moduleTypeFromJSON(assertSet("Unlock.type", object.type)),
-      cost: UnlockCost.fromJSON(assertSet("Unlock.cost", object.cost)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      type: isSet(object.type) ? moduleTypeFromJSON(object.type) : 0,
+      cost: isSet(object.cost) ? UnlockCost.fromJSON(object.cost) : undefined,
     };
   },
 
@@ -3599,12 +3752,12 @@ export const Unlock: MessageFns<Unlock> = {
     message.type = object.type ?? 0;
     message.cost = (object.cost !== undefined && object.cost !== null)
       ? UnlockCost.fromPartial(object.cost)
-      : createBaseUnlockCost();
+      : undefined;
     return message;
   },
 };
 
-export function createBaseUnlockCost(): UnlockCost {
+function createBaseUnlockCost(): UnlockCost {
   return { type: "", value: 0 };
 }
 
@@ -3653,8 +3806,8 @@ export const UnlockCost: MessageFns<UnlockCost> = {
 
   fromJSON(object: any): UnlockCost {
     return {
-      type: globalThis.String(assertSet("UnlockCost.type", object.type)),
-      value: globalThis.Number(assertSet("UnlockCost.value", object.value)),
+      type: isSet(object.type) ? globalThis.String(object.type) : "",
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
     };
   },
 
@@ -3680,7 +3833,7 @@ export const UnlockCost: MessageFns<UnlockCost> = {
   },
 };
 
-export function createBaseCrew(): Crew {
+function createBaseCrew(): Crew {
   return { type: 0, count: 0, substitute: [] };
 }
 
@@ -3752,8 +3905,8 @@ export const Crew: MessageFns<Crew> = {
 
   fromJSON(object: any): Crew {
     return {
-      type: crewTypeFromJSON(assertSet("Crew.type", object.type)),
-      count: globalThis.Number(assertSet("Crew.count", object.count)),
+      type: isSet(object.type) ? crewTypeFromJSON(object.type) : 0,
+      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
       substitute: globalThis.Array.isArray(object?.substitute)
         ? object.substitute.map((e: any) => crewTypeFromJSON(e))
         : [],
@@ -3805,14 +3958,6 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
-}
-
-function assertSet<T>(field: string, value: T | undefined): T {
-  if (!isSet(value)) {
-    throw new TypeError(`Required field ${field} is not set`);
-  }
-
-  return value as T;
 }
 
 export interface MessageFns<T> {
