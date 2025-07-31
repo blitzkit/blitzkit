@@ -294,7 +294,7 @@ export interface TankDefinition {
   crew: Crew[];
   health: number;
   nation: string;
-  name: I18nString;
+  name: I18nString | undefined;
   type: TankType;
   max_consumables: number;
   max_provisions: number;
@@ -437,6 +437,7 @@ export interface GunDefinitionBase {
 
 export interface AssaultRanges {
   ranges: AssaultRange[];
+  types: ShellType[];
 }
 
 export interface AssaultRange {
@@ -446,7 +447,7 @@ export interface AssaultRange {
 
 export interface ShellDefinition {
   id: number;
-  name: I18nString | undefined;
+  name: I18nString;
   velocity: number;
   armor_damage: number;
   module_damage: number;
@@ -3615,7 +3616,7 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
 };
 
 function createBaseAssaultRanges(): AssaultRanges {
-  return { ranges: [] };
+  return { ranges: [], types: [] };
 }
 
 export const AssaultRanges: MessageFns<AssaultRanges> = {
@@ -3626,6 +3627,11 @@ export const AssaultRanges: MessageFns<AssaultRanges> = {
     for (const v of message.ranges) {
       AssaultRange.encode(v!, writer.uint32(10).fork()).join();
     }
+    writer.uint32(18).fork();
+    for (const v of message.types) {
+      writer.int32(v);
+    }
+    writer.join();
     return writer;
   },
 
@@ -3645,6 +3651,24 @@ export const AssaultRanges: MessageFns<AssaultRanges> = {
           message.ranges.push(AssaultRange.decode(reader, reader.uint32()));
           continue;
         }
+        case 2: {
+          if (tag === 16) {
+            message.types.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.types.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3659,6 +3683,9 @@ export const AssaultRanges: MessageFns<AssaultRanges> = {
       ranges: globalThis.Array.isArray(object?.ranges)
         ? object.ranges.map((e: any) => AssaultRange.fromJSON(e))
         : [],
+      types: globalThis.Array.isArray(object?.types)
+        ? object.types.map((e: any) => shellTypeFromJSON(e))
+        : [],
     };
   },
 
@@ -3666,6 +3693,9 @@ export const AssaultRanges: MessageFns<AssaultRanges> = {
     const obj: any = {};
     if (message.ranges?.length) {
       obj.ranges = message.ranges.map((e) => AssaultRange.toJSON(e));
+    }
+    if (message.types?.length) {
+      obj.types = message.types.map((e) => shellTypeToJSON(e));
     }
     return obj;
   },
@@ -3681,6 +3711,7 @@ export const AssaultRanges: MessageFns<AssaultRanges> = {
     const message = createBaseAssaultRanges();
     message.ranges =
       object.ranges?.map((e) => AssaultRange.fromPartial(e)) || [];
+    message.types = object.types?.map((e) => e) || [];
     return message;
   },
 };

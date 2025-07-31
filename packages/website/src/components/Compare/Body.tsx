@@ -79,6 +79,12 @@ export function Body({ stats }: BodyProps) {
 
       <Table.Body>
         <CompareRow stats={stats} value="dpm" decimals={0} />
+        <CompareRow stats={stats} value="damage" decimals={0} />
+        {hasNonRegularGun && (
+          <CompareRow stats={stats} indent value="clipDamage" decimals={0} />
+        )}
+        <CompareRow stats={stats} value="moduleDamage" decimals={0} />
+        <CompareRow stats={stats} value="penetration" decimals={0} />
         <CompareRow
           stats={stats}
           name={strings.website.tools.tankopedia.characteristics.values.reload}
@@ -105,12 +111,6 @@ export function Body({ stats }: BodyProps) {
             <CompareRow stats={stats} value="shells" decimals={0} />
           </>
         )}
-        <CompareRow stats={stats} value="penetration" decimals={0} />
-        <CompareRow stats={stats} value="damage" decimals={0} />
-        {hasNonRegularGun && (
-          <CompareRow stats={stats} indent value="clipDamage" decimals={0} />
-        )}
-        <CompareRow stats={stats} value="moduleDamage" decimals={0} />
         <CompareRow stats={stats} value="caliber" decimals={0} />
         <CompareRow stats={stats} value="shellNormalization" decimals={0} />
         <CompareRow
