@@ -157,6 +157,16 @@ message GunDefinitionBase {
   required float dispersion_damaged = 13;
   repeated Unlock unlocks = 14;
   required uint32 shell_capacity = 15;
+  optional AssaultRanges assault_ranges = 16;
+}
+
+message AssaultRanges {
+  repeated AssaultRange ranges = 1;
+}
+
+message AssaultRange {
+  required float distance = 1;
+  required float factor = 2;
 }
 
 message ShellDefinition {
