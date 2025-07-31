@@ -166,7 +166,8 @@ export function tankCharacteristics(
           ({ distance }) => distance >= assaultDistance,
         )?.factor ?? 0)
       : 1;
-  const moduleDamageCoefficient = coefficient([hasTungsten, 0.15]);
+  const moduleDamageCoefficient =
+    coefficient([hasTungsten, 0.15]) * assaultDamageCoefficient;
   const reloadCoefficient =
     (coefficient([hasGunRammer, -0.05]) *
       coefficient([true, degressiveStat(loaderMastery)])) /
