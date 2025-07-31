@@ -578,11 +578,6 @@ export async function definitions() {
 
   await Promise.all(
     SUPPORTED_LOCALES.map(async (locale) => {
-      if (locale !== 'en') {
-        stringsI18n[locale] = {};
-        return;
-      }
-
       const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
       const cache = await fetch(
         `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
@@ -1795,7 +1790,6 @@ export async function definitions() {
     };
   });
 
-  return;
   await commitAssets('definitions', [
     {
       content: GameDefinitions.encode(gameDefinitions).finish(),
