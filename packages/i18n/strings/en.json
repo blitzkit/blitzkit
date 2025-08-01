@@ -1083,7 +1083,6 @@
             "hull_traverse_speed": "Hull traverse speed",
             "camouflage": "Camouflage",
             "reload": "Reload",
-
             "crewCount": "Crew count",
             "shellNormalization": "Normalization",
             "shellRicochet": "Ricochet",
@@ -1097,6 +1096,7 @@
             "caliber": "Caliber",
             "penetration": "Penetration",
             "damage": "Damage",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Module damage",
             "explosionRadius": "Explosion radius",

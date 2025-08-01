@@ -40,5 +40,6 @@ export function tankToDuelMember(
     yaw,
     pitch,
     turret,
+    assaultDistance: 0,
   } satisfies DuelMember;
 }

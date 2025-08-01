@@ -39,6 +39,7 @@ export interface DuelMember {
   provisions: number[];
   camouflage: boolean;
   cooldownBooster: number;
+  assaultDistance: number;
 }
 
 export interface DuelStore {

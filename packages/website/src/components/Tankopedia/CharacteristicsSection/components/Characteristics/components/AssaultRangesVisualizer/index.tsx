@@ -2,6 +2,7 @@ import type { AssaultRanges } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
 import { Box, Card, Flex, Text } from '@radix-ui/themes';
 import { clamp } from 'three/src/math/MathUtils.js';
+import { fakeLog } from '../../../../../../../core/blitzkit/fakeLog';
 import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
@@ -13,18 +14,14 @@ interface Props {
 }
 
 export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
-  const maxDistance = Math.max(
-    ..._ranges.ranges.map((range) => range.distance),
-  );
+  const maxDistance = _ranges.ranges.at(-1)!.distance;
   const ranges = _ranges.ranges.map((range) => ({
     factor: range.factor,
     distance: range.distance,
-    fakeDistance: (2 / Math.PI) * Math.atan((4 * range.distance) / maxDistance),
+    fakeDistance: fakeLog(range.distance / maxDistance, 2),
   }));
-  const sumFakeDistances = ranges.reduce(
-    (total, range) => total + range.fakeDistance,
-    0,
-  );
+  const maxFakeDistance = ranges.at(-1)!.fakeDistance;
+
   const { strings } = useLocale();
 
   return (
@@ -51,8 +48,9 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
         >
           <Flex flexGrow="1">
             <Box position="relative" width={Var('space-8')}>
-              {ranges.map((range) => (
+              {ranges.map((range, index) => (
                 <Text
+                  key={index}
                   style={{
                     position: 'absolute',
                     left: 0,
@@ -75,10 +73,14 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                 const mix = clamp(1.5 * (range.factor - 1) + 1, 0, 1) * 100;
                 const color0 = `color-mix(in hsl, ${Var('tomato-9')}, ${Var('jade-9')} ${mix}%)`;
                 const color1 = `color-mix(in hsl, ${Var('tomato-7')}, ${Var('jade-7')} ${mix}%)`;
+                const last = ranges[index - 1];
+                const lastFakeDistance = last?.fakeDistance ?? 0;
+                const fakeWidth = range.fakeDistance - lastFakeDistance;
+                const fraction = fakeWidth / ranges.at(-1)!.fakeDistance;
 
                 return (
                   <Box
-                    width={`${(range.fakeDistance / sumFakeDistances) * 100}%`}
+                    width={`${fraction * 100}%`}
                     height={`${range.factor * 100}%`}
                     style={{
                       background: `linear-gradient(45deg, ${color1}, ${color0})`,
@@ -103,35 +105,45 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                 />
               ))}
 
-              <AssaultCursor />
+              <AssaultCursor
+                maxDistance={maxDistance}
+                maxFakeDistance={maxFakeDistance}
+              />
             </Flex>
           </Flex>
 
           <Flex ml="8" height={Var('space-7')}>
-            {ranges.map((range, index) => (
-              <Box
-                position="relative"
-                key={index}
-                width={`${(range.fakeDistance / sumFakeDistances) * 100}%`}
-                height="100%"
-              >
-                <Text
-                  size="1"
-                  color="gray"
-                  mt="2"
-                  style={{
-                    position: 'absolute',
-                    right: 0,
-                    transform: 'translateX(50%)',
-                    writingMode: 'vertical-rl',
-                  }}
+            {ranges.map((range, index) => {
+              const last = ranges[index - 1];
+              const lastFakeDistance = last?.fakeDistance ?? 0;
+              const fakeWidth = range.fakeDistance - lastFakeDistance;
+              const fraction = fakeWidth / ranges.at(-1)!.fakeDistance;
+
+              return (
+                <Box
+                  position="relative"
+                  key={index}
+                  width={`${fraction * 100}%`}
+                  height="100%"
                 >
-                  {literals(strings.common.units.m, [
-                    `${Math.round(range.distance)}`,
-                  ])}
-                </Text>
-              </Box>
-            ))}
+                  <Text
+                    size="1"
+                    color="gray"
+                    mt="2"
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      transform: 'translateX(50%)',
+                      writingMode: 'vertical-rl',
+                    }}
+                  >
+                    {literals(strings.common.units.m, [
+                      `${Math.round(range.distance)}`,
+                    ])}
+                  </Text>
+                </Box>
+              );
+            })}
           </Flex>
         </Flex>
       </Flex>

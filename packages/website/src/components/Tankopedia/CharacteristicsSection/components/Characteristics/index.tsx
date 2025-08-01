@@ -24,6 +24,9 @@ export function Characteristics() {
   const provisions = Duel.use((state) => state.protagonist.provisions);
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const camouflage = Duel.use((state) => state.protagonist.camouflage);
+  const assaultDistance = Duel.use(
+    (state) => state.protagonist.assaultDistance,
+  );
   const equipmentMatrix = Duel.use(
     (state) => state.protagonist.equipmentMatrix,
   );
@@ -58,7 +61,7 @@ export function Characteristics() {
       applyReactiveArmor: false,
       applyDynamicArmor: false,
       applySpallLiner: false,
-      assaultDistance: 0,
+      assaultDistance,
     },
     {
       tankModelDefinition,

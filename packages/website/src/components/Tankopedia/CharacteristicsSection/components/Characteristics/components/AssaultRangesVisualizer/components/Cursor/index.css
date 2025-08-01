@@ -1,0 +1,7 @@
+#assault-cursor {
+  cursor: grab;
+}
+
+#assault-cursor:active {
+  cursor: grabbing;
+}

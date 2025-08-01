@@ -159,13 +159,12 @@ export function tankCharacteristics(
       [applyDynamicArmor, -0.1],
       [applySpallLiner && shell.type === ShellType.HE, -0.2],
     );
-  const assaultDamageCoefficient =
-    gun.gun_type!.value.base.assault_ranges &&
-    gun.gun_type!.value.base.assault_ranges.types.includes(shell.type)
-      ? (gun.gun_type!.value.base.assault_ranges.ranges.find(
-          ({ distance }) => distance >= assaultDistance,
-        )?.factor ?? 0)
-      : 1;
+  const assaultDamageCoefficient = gun.gun_type!.value.base.assault_ranges
+    ? // && gun.gun_type!.value.base.assault_ranges.types.includes(shell.type)
+      (gun.gun_type!.value.base.assault_ranges.ranges.find(
+        ({ distance }) => distance >= assaultDistance,
+      )?.factor ?? 0)
+    : 1;
   const moduleDamageCoefficient =
     coefficient([hasTungsten, 0.15]) * assaultDamageCoefficient;
   const reloadCoefficient =
