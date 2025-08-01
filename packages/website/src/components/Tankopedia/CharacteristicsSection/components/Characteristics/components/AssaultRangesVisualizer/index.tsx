@@ -5,6 +5,7 @@ import { clamp } from 'three/src/math/MathUtils.js';
 import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
+import { AssaultCursor } from './components/Cursor';
 
 interface Props {
   ranges: AssaultRanges;
@@ -43,7 +44,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
         <Flex
           direction="column"
           p="3"
-          pt="5"
+          pt="8"
           pr="5"
           style={{ backgroundColor: Var('gray-1') }}
           flexGrow="1"
@@ -101,6 +102,8 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                   }}
                 />
               ))}
+
+              <AssaultCursor />
             </Flex>
           </Flex>
 
