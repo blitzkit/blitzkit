@@ -122,6 +122,7 @@ export function Firepower({ stats }: StatsAcceptorProps) {
 
       {gun.gun_type!.value.base.assault_ranges && (
         <AssaultRangesVisualizer
+          stats={stats}
           ranges={gun.gun_type!.value.base.assault_ranges}
         />
       )}

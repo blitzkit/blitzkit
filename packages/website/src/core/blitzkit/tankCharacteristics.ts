@@ -336,7 +336,9 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.gun_type!.value.base.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
-  const damageCoefficient = armorDamageCoefficient * assaultDamageCoefficient;
+  const damageCoefficientWithoutAssault = armorDamageCoefficient;
+  const damageCoefficient =
+    damageCoefficientWithoutAssault * assaultDamageCoefficient;
   const dpm = resolveDpm(
     gun,
     shell,
@@ -363,6 +365,8 @@ export function tankCharacteristics(
           return current;
         }, null)!.index
       : undefined;
+  const damageWithoutAssault =
+    shell.armor_damage * damageCoefficientWithoutAssault;
   const damage = shell.armor_damage * damageCoefficient;
   const dpmEffective =
     gun.gun_type!.$case === 'auto_reloader'
@@ -544,6 +548,7 @@ export function tankCharacteristics(
     caliber,
     penetration,
     damage,
+    damageWithoutAssault,
     clipDamage,
     moduleDamage,
     explosionRadius,

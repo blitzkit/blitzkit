@@ -887,6 +887,10 @@
         "tank_seo_description": "%s1 armor, statistics, equipment, provisions, and more. %s2 DPM, %s3hp alpha, %s4mm penetration, %s5kph top speed, %s6hp health.",
 
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
+
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
