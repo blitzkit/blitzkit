@@ -294,7 +294,7 @@ export interface TankDefinition {
   crew: Crew[];
   health: number;
   nation: string;
-  name: I18nString | undefined;
+  name: I18nString;
   type: TankType;
   max_consumables: number;
   max_provisions: number;

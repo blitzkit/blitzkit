@@ -2,7 +2,10 @@ import { DragHandleDots2Icon } from '@radix-ui/react-icons';
 import { Box, Flex, Text } from '@radix-ui/themes';
 import { useEffect, useRef, useState } from 'react';
 import { clamp } from 'three/src/math/MathUtils.js';
-import { fakeLogInverse } from '../../../../../../../../../core/blitzkit/fakeLog';
+import {
+  fakeLog,
+  fakeLogInverse,
+} from '../../../../../../../../../core/blitzkit/fakeLog';
 import { Var } from '../../../../../../../../../core/radix/var';
 import { Duel } from '../../../../../../../../../stores/duel';
 import './index.css';
@@ -13,7 +16,10 @@ interface Props {
 }
 
 export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
-  const [x, setX] = useState(0.5);
+  const assaultDistance = Duel.use(
+    (state) => state.protagonist.assaultDistance,
+  );
+  const [x, setX] = useState(fakeLog(assaultDistance / maxDistance, 2));
   const cursor = useRef<HTMLDivElement>(null);
   const mutateDuel = Duel.useMutation();
 

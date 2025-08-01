@@ -120,7 +120,7 @@ export function Firepower({ stats }: StatsAcceptorProps) {
       <InfoWithDelta stats={stats} decimals={0} value="moduleDamage" />
       <InfoWithDelta stats={stats} decimals={0} value="penetration" />
 
-      {gun.gun_type!.value.base.assault_ranges && (
+      {gun.gun_type!.value.base.assault_ranges?.types.includes(shell.type) && (
         <AssaultRangesVisualizer
           stats={stats}
           ranges={gun.gun_type!.value.base.assault_ranges}
