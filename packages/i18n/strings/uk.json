@@ -531,16 +531,16 @@
         }
       },
       "rating_leaderboard": {
-        "name": "rating-leaderboard",
-        "description": "Rating battles statistics",
+        "name": "таблиця рейтингу",
+        "description": "Статистика рейтингових боїв",
         "subcommands": {
           "neighbors": {
             "name": "neighbors",
             "description": "Neighboring players on the leaderboard"
           },
           "league": {
-            "name": "league",
-            "description": "Top players of a league"
+            "name": "ліга",
+            "description": "Найкращий гравець ліги"
           }
         },
         "options": {
@@ -549,8 +549,8 @@
             "description": ""
           },
           "season": {
-            "name": "season",
-            "description": "Season number (default: current)",
+            "name": "сезон",
+            "description": "Базова інформація про гравця",
             "choices": {
               "current": "%s1 (current)"
             }
@@ -578,14 +578,14 @@
         "description": "Коротка статистика за період"
       },
       "owned_tanks": {
-        "name": "owned-tanks",
-        "description": "Shows all own tanks in a tier",
+        "name": "отримані танки",
+        "description": "Показує всі ваші танки даного рівня",
         "body": {
           "title": "# %s1's owned tier %s2 tanks\n\n"
         }
       },
       "permissions": {
-        "name": "permissions",
+        "name": "дозволи",
         "description": "Checks wether the bot has the required permissions to function",
         "body": {
           "title": "# Permissions\n\n%s1",
@@ -615,7 +615,7 @@
       },
       "player_info": {
         "name": "player-info",
-        "description": "Basic information about a player",
+        "description": "Базова інформація про гравця",
         "body": {
           "title": "%s1's information",
           "nickname": "Нік",
@@ -635,7 +635,7 @@
             "description": "Today's rating statistics"
           },
           "season": {
-            "name": "season",
+            "name": "сезон",
             "description": "This season's rating statistics"
           }
         },
