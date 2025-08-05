@@ -34,6 +34,8 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
     }
 
     function handlePointerMove(event: PointerEvent) {
+      event.preventDefault();
+      
       const parent = cursor.current?.parentElement;
 
       if (!parent) return;
