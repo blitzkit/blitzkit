@@ -787,6 +787,9 @@
         "tank_seo_title": "%s1 - %s2 阶 %s3 %s4 | %s5 战车百科 | 战车世界闪击战 (WoTB)",
         "tank_seo_description": "%s1 装甲，统计设备，装备，供给等。 %s2 每分钟伤害， %s3生命值， %s4毫米穿透， %s5kph 最高速度， %s6hp 生命值。",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "车体",
             "turret": "炮塔",
@@ -976,6 +979,7 @@
             "caliber": "口径",
             "penetration": "穿深",
             "damage": "伤害",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "弹匣伤害期望值",
             "moduleDamage": "模组伤害",
             "explosionRadius": "溅射半径",
