@@ -127,8 +127,8 @@ const strings = getStrings(locale);
     </Flex>
   </Flex>
 
-  <Flex gap="5" display={{ initial: 'flex', sm: 'none' }}>
-    <Flex direction="column" justify="between" align="end">
+  <Flex gap="5" display={{ initial: 'flex', sm: 'none' }} width="100%">
+    <Flex direction="column" gap="1" flexGrow="1" flexBasis="0" align="end">
       <Text size="2" color="gray">BlitzKit</Text>
       {
         PUBLIC_ASSET_BRANCH !== 'preview' && (
@@ -140,7 +140,7 @@ const strings = getStrings(locale);
       <Text size="2" color="gray">CDN</Text>
     </Flex>
 
-    <Flex direction="column" justify="between" align="start">
+    <Flex direction="column" gap="1" flexGrow="1" flexBasis="0" align="start">
       <Code size="2" color="gray">
         {packageJson.version}
       </Code>
