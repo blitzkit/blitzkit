@@ -787,6 +787,9 @@
         "tank_seo_title": "%s1 - Nível %s2 %s3 %s4 | %s5 Tanquepedia | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 blindagem, estatísticas, equipamentos, provisões e mais. %s2 DPM, %s3hp alfa, %s4mm de penetração, %s5km/h velocidade máxima, %s6hp vida.",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
@@ -976,6 +979,7 @@
             "caliber": "Calibre",
             "penetration": "Penetração",
             "damage": "Dano",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Potencial de clipe",
             "moduleDamage": "Dano a módulos",
             "explosionRadius": "Raio de Explosão",

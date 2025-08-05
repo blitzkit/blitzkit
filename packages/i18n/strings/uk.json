@@ -787,6 +787,9 @@
         "tank_seo_title": "%s1 - Рівень %s2 %s3 %s4 | %s5 Танкопедія | WoT Blitz",
         "tank_seo_description": "%s1 броня, характеристики, обладнання, амуніція та більше. %s2 шкода на хвилину, %s3 разова шкода, %s4 мм пробиття, %s5 км/год максимальна швидкість, %s6 міцність.",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
@@ -976,6 +979,7 @@
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
             "damage": "Шкода",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Шкода по модулях",
             "explosionRadius": "Радіус розльоту уламків",
