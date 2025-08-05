@@ -1,10 +1,11 @@
 import { TankType } from '@blitzkit/core';
 import { Box, Heading } from '@radix-ui/themes';
-import { Var } from '../../../../../core/radix/var';
-import { useLocale } from '../../../../../hooks/useLocale';
-import { Duel } from '../../../../../stores/duel';
-import type { RadixColor } from '../../../../../stores/embedState';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
+import { Var } from '../../../../../../core/radix/var';
+import { useLocale } from '../../../../../../hooks/useLocale';
+import { Duel } from '../../../../../../stores/duel';
+import type { RadixColor } from '../../../../../../stores/embedState';
+import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+import { Tracker } from './components/Tracker';
 
 interface TitleProps {
   foreground?: boolean;
@@ -81,6 +82,11 @@ export function Title({ foreground }: TitleProps) {
       : `${nationColors.text}-12`,
   );
   const name = unwrap(protagonist.name);
+  const fontSize = revealed
+    ? disturbed
+      ? '2rem'
+      : `min(65vh, ${125 / name.length}vw)`
+    : `min(48vh, ${75 / name.length}vw)`;
 
   return (
     <Box
@@ -97,11 +103,7 @@ export function Title({ foreground }: TitleProps) {
           fontWeight: 900,
           userSelect: 'none',
           pointerEvents: 'none',
-          fontSize: revealed
-            ? disturbed
-              ? '2rem'
-              : `min(65vh, ${125 / name.length}vw)`
-            : `min(48vh, ${75 / name.length}vw)`,
+          fontSize,
           whiteSpace: 'nowrap',
           color: foreground ? Var('gray-a10') : color,
           opacity: foreground && disturbed ? 0 : 1,
@@ -117,6 +119,8 @@ export function Title({ foreground }: TitleProps) {
       >
         {name}
       </Heading>
+
+      {!revealed && <Tracker fontSize={fontSize} />}
     </Box>
   );
 }
