@@ -5,10 +5,10 @@
 // source: packages/core/src/protos/camouflage_definitions.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { createBaseI18nString, I18nString } from "./i18n";
+import { BinaryReader, BinaryWriter } from '@bufbuild/protobuf/wire';
+import { createBaseI18nString, I18nString } from './i18n';
 
-export const protobufPackage = "blitzkit";
+export const protobufPackage = 'blitzkit';
 
 export interface CamouflageDefinitions {
   camouflages: { [key: number]: Camouflage };
@@ -22,8 +22,8 @@ export interface CamouflageDefinitions_CamouflagesEntry {
 export interface Camouflage {
   id: number;
   name: I18nString;
-  tank_name?: I18nString | undefined;
-  tank_name_full?: I18nString | undefined;
+  tank_name?: I18nString;
+  tank_name_full?: I18nString;
 }
 
 export function createBaseCamouflageDefinitions(): CamouflageDefinitions {
@@ -31,15 +31,25 @@ export function createBaseCamouflageDefinitions(): CamouflageDefinitions {
 }
 
 export const CamouflageDefinitions: MessageFns<CamouflageDefinitions> = {
-  encode(message: CamouflageDefinitions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: CamouflageDefinitions,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     Object.entries(message.camouflages).forEach(([key, value]) => {
-      CamouflageDefinitions_CamouflagesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
+      CamouflageDefinitions_CamouflagesEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork(),
+      ).join();
     });
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): CamouflageDefinitions {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): CamouflageDefinitions {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCamouflageDefinitions();
     while (reader.pos < end) {
@@ -50,7 +60,10 @@ export const CamouflageDefinitions: MessageFns<CamouflageDefinitions> = {
             break;
           }
 
-          const entry1 = CamouflageDefinitions_CamouflagesEntry.decode(reader, reader.uint32());
+          const entry1 = CamouflageDefinitions_CamouflagesEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry1.value !== undefined) {
             message.camouflages[entry1.key] = entry1.value;
           }
@@ -68,10 +81,12 @@ export const CamouflageDefinitions: MessageFns<CamouflageDefinitions> = {
   fromJSON(object: any): CamouflageDefinitions {
     return {
       camouflages: isObject(object.camouflages)
-        ? Object.entries(object.camouflages).reduce<{ [key: number]: Camouflage }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Camouflage.fromJSON(value);
-          return acc;
-        }, {})
+        ? Object.entries(object.camouflages).reduce<{
+            [key: number]: Camouflage;
+          }>((acc, [key, value]) => {
+            acc[globalThis.Number(key)] = Camouflage.fromJSON(value);
+            return acc;
+          }, {})
         : {},
     };
   },
@@ -90,20 +105,23 @@ export const CamouflageDefinitions: MessageFns<CamouflageDefinitions> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CamouflageDefinitions>, I>>(base?: I): CamouflageDefinitions {
+  create<I extends Exact<DeepPartial<CamouflageDefinitions>, I>>(
+    base?: I,
+  ): CamouflageDefinitions {
     return CamouflageDefinitions.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CamouflageDefinitions>, I>>(object: I): CamouflageDefinitions {
+  fromPartial<I extends Exact<DeepPartial<CamouflageDefinitions>, I>>(
+    object: I,
+  ): CamouflageDefinitions {
     const message = createBaseCamouflageDefinitions();
-    message.camouflages = Object.entries(object.camouflages ?? {}).reduce<{ [key: number]: Camouflage }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[globalThis.Number(key)] = Camouflage.fromPartial(value);
-        }
-        return acc;
-      },
-      {},
-    );
+    message.camouflages = Object.entries(object.camouflages ?? {}).reduce<{
+      [key: number]: Camouflage;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[globalThis.Number(key)] = Camouflage.fromPartial(value);
+      }
+      return acc;
+    }, {});
     return message;
   },
 };
@@ -112,90 +130,116 @@ export function createBaseCamouflageDefinitions_CamouflagesEntry(): CamouflageDe
   return { key: 0, value: createBaseCamouflage() };
 }
 
-export const CamouflageDefinitions_CamouflagesEntry: MessageFns<CamouflageDefinitions_CamouflagesEntry> = {
-  encode(message: CamouflageDefinitions_CamouflagesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      Camouflage.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): CamouflageDefinitions_CamouflagesEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCamouflageDefinitions_CamouflagesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = Camouflage.decode(reader, reader.uint32());
-          continue;
-        }
+export const CamouflageDefinitions_CamouflagesEntry: MessageFns<CamouflageDefinitions_CamouflagesEntry> =
+  {
+    encode(
+      message: CamouflageDefinitions_CamouflagesEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== undefined) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        Camouflage.encode(message.value, writer.uint32(18).fork()).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): CamouflageDefinitions_CamouflagesEntry {
-    return {
-      key: globalThis.Number(assertSet("CamouflageDefinitions_CamouflagesEntry.key", object.key)),
-      value: Camouflage.fromJSON(assertSet("CamouflageDefinitions_CamouflagesEntry.value", object.value)),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): CamouflageDefinitions_CamouflagesEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseCamouflageDefinitions_CamouflagesEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: CamouflageDefinitions_CamouflagesEntry): unknown {
-    const obj: any = {};
-    if (message.key !== undefined) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = Camouflage.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<CamouflageDefinitions_CamouflagesEntry>, I>>(
-    base?: I,
-  ): CamouflageDefinitions_CamouflagesEntry {
-    return CamouflageDefinitions_CamouflagesEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CamouflageDefinitions_CamouflagesEntry>, I>>(
-    object: I,
-  ): CamouflageDefinitions_CamouflagesEntry {
-    const message = createBaseCamouflageDefinitions_CamouflagesEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? Camouflage.fromPartial(object.value)
-      : createBaseCamouflage();
-    return message;
-  },
-};
+            message.value = Camouflage.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): CamouflageDefinitions_CamouflagesEntry {
+      return {
+        key: globalThis.Number(
+          assertSet('CamouflageDefinitions_CamouflagesEntry.key', object.key),
+        ),
+        value: Camouflage.fromJSON(
+          assertSet(
+            'CamouflageDefinitions_CamouflagesEntry.value',
+            object.value,
+          ),
+        ),
+      };
+    },
+
+    toJSON(message: CamouflageDefinitions_CamouflagesEntry): unknown {
+      const obj: any = {};
+      if (message.key !== undefined) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = Camouflage.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<
+      I extends Exact<DeepPartial<CamouflageDefinitions_CamouflagesEntry>, I>,
+    >(base?: I): CamouflageDefinitions_CamouflagesEntry {
+      return CamouflageDefinitions_CamouflagesEntry.fromPartial(
+        base ?? ({} as any),
+      );
+    },
+    fromPartial<
+      I extends Exact<DeepPartial<CamouflageDefinitions_CamouflagesEntry>, I>,
+    >(object: I): CamouflageDefinitions_CamouflagesEntry {
+      const message = createBaseCamouflageDefinitions_CamouflagesEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? Camouflage.fromPartial(object.value)
+          : createBaseCamouflage();
+      return message;
+    },
+  };
 
 export function createBaseCamouflage(): Camouflage {
-  return { id: 0, name: createBaseI18nString(), tank_name: undefined, tank_name_full: undefined };
+  return {
+    id: 0,
+    name: createBaseI18nString(),
+    tank_name: undefined,
+    tank_name_full: undefined,
+  };
 }
 
 export const Camouflage: MessageFns<Camouflage> = {
-  encode(message: Camouflage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: Camouflage,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -206,13 +250,17 @@ export const Camouflage: MessageFns<Camouflage> = {
       I18nString.encode(message.tank_name, writer.uint32(26).fork()).join();
     }
     if (message.tank_name_full !== undefined) {
-      I18nString.encode(message.tank_name_full, writer.uint32(34).fork()).join();
+      I18nString.encode(
+        message.tank_name_full,
+        writer.uint32(34).fork(),
+      ).join();
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Camouflage {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCamouflage();
     while (reader.pos < end) {
@@ -261,10 +309,14 @@ export const Camouflage: MessageFns<Camouflage> = {
 
   fromJSON(object: any): Camouflage {
     return {
-      id: globalThis.Number(assertSet("Camouflage.id", object.id)),
-      name: I18nString.fromJSON(assertSet("Camouflage.name", object.name)),
-      tank_name: isSet(object.tank_name) ? I18nString.fromJSON(object.tank_name) : undefined,
-      tank_name_full: isSet(object.tank_name_full) ? I18nString.fromJSON(object.tank_name_full) : undefined,
+      id: globalThis.Number(assertSet('Camouflage.id', object.id)),
+      name: I18nString.fromJSON(assertSet('Camouflage.name', object.name)),
+      tank_name: isSet(object.tank_name)
+        ? I18nString.fromJSON(object.tank_name)
+        : undefined,
+      tank_name_full: isSet(object.tank_name_full)
+        ? I18nString.fromJSON(object.tank_name_full)
+        : undefined,
     };
   },
 
@@ -288,37 +340,57 @@ export const Camouflage: MessageFns<Camouflage> = {
   create<I extends Exact<DeepPartial<Camouflage>, I>>(base?: I): Camouflage {
     return Camouflage.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Camouflage>, I>>(object: I): Camouflage {
+  fromPartial<I extends Exact<DeepPartial<Camouflage>, I>>(
+    object: I,
+  ): Camouflage {
     const message = createBaseCamouflage();
     message.id = object.id ?? 0;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
-    message.tank_name = (object.tank_name !== undefined && object.tank_name !== null)
-      ? I18nString.fromPartial(object.tank_name)
-      : undefined;
-    message.tank_name_full = (object.tank_name_full !== undefined && object.tank_name_full !== null)
-      ? I18nString.fromPartial(object.tank_name_full)
-      : undefined;
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : createBaseI18nString();
+    message.tank_name =
+      object.tank_name !== undefined && object.tank_name !== null
+        ? I18nString.fromPartial(object.tank_name)
+        : undefined;
+    message.tank_name_full =
+      object.tank_name_full !== undefined && object.tank_name_full !== null
+        ? I18nString.fromPartial(object.tank_name_full)
+        : undefined;
     return message;
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string; value: unknown } ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends { $case: string; value: unknown }
+        ? { $case: T['$case']; value?: DeepPartial<T['value']> }
+        : T extends {}
+          ? { [K in keyof T]?: DeepPartial<T[K]> }
+          : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isObject(value: any): boolean {
-  return typeof value === "object" && value !== null;
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

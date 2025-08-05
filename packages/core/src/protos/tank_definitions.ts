@@ -305,7 +305,7 @@ export interface TankDefinition {
   turrets: TurretDefinition[];
   engines: EngineDefinition[];
   tracks: TrackDefinition[];
-  price: TankPrice | undefined;
+  price: TankPrice;
   research_cost?: ResearchCost | undefined;
   speed_forwards: number;
   speed_backwards: number;
@@ -341,7 +341,7 @@ export interface TankPrice {
 export interface TrackDefinition {
   id: number;
   tier: number;
-  name: I18nString | undefined;
+  name: I18nString;
   weight: number;
   traverse_speed: number;
   research_cost?: ResearchCost | undefined;
@@ -355,7 +355,7 @@ export interface TrackDefinition {
 
 export interface EngineDefinition {
   id: number;
-  name: I18nString | undefined;
+  name: I18nString;
   research_cost?: ResearchCost | undefined;
   tier: number;
   fire_chance: number;
@@ -370,7 +370,7 @@ export interface TurretDefinition {
   view_range: number;
   traverse_speed: number;
   research_cost?: ResearchCost | undefined;
-  name: I18nString | undefined;
+  name: I18nString;
   tier: number;
   weight: number;
   guns: GunDefinition[];
@@ -421,7 +421,7 @@ export interface GunDefinitionBase {
   rotation_speed: number;
   research_cost?: ResearchCost | undefined;
   weight: number;
-  name: I18nString | undefined;
+  name: I18nString;
   tier: number;
   shells: ShellDefinition[];
   camouflage_loss: number;
@@ -469,7 +469,7 @@ export interface ShellPenetration {
 export interface Unlock {
   id: number;
   type: ModuleType;
-  cost: UnlockCost | undefined;
+  cost: UnlockCost;
 }
 
 export interface UnlockCost {
