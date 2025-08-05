@@ -1,7 +1,9 @@
+const GAMMA = 1.2;
+
 export function fakeLog(x: number, a = 1) {
-  return (2 / Math.PI) * Math.atan((Math.PI * a * x) / 2);
+  return Math.sin((Math.PI / 2) * x) ** (1 / GAMMA);
 }
 
 export function fakeLogInverse(y: number, a = 1) {
-  return (2 / (Math.PI * a)) * Math.tan((Math.PI * y) / 2);
+  return (2 / Math.PI) * Math.asin(y ** GAMMA);
 }
