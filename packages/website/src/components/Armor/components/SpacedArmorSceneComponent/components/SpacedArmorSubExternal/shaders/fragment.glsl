@@ -1,3 +1,5 @@
+precision mediump float;
+
 uniform float thickness;
 uniform float penetration;
 

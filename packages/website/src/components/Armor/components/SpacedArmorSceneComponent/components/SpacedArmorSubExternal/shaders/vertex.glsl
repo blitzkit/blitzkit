@@ -1,3 +1,5 @@
+precision mediump float;
+
 #include <clipping_planes_pars_vertex>
 
 void main() {
