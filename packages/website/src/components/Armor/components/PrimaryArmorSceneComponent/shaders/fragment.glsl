@@ -25,7 +25,6 @@ uniform mat4 inverseProjectionMatrix;
 uniform highp sampler2D spacedArmorBuffer;
 uniform highp sampler2D spacedArmorDepth;
 
-const float HALF = 0.5;
 const float EXPLOSION_DAMAGE_FACTOR = 1.1;
 const float RANDOMIZATION_FACTOR = 0.05;
 const float GREEN_VALUE = 0.392;
@@ -38,7 +37,7 @@ float getDistance(vec2 coord, float depth) {
 
 vec3 getPenetrationColor(bool isThreeCalibersRule, bool couldHaveRicochet) {
   if (advancedHighlighting && couldHaveRicochet) {
-    return vec3(0.0, 1.0, isThreeCalibersRule ? 1.0 : 0.0);
+    return vec3(0.0, 1.0, isThreeCalibersRule ? 0.5 : 0.0);
   }
 
   return vec3(0.0, 1.0, 0.0);
@@ -81,12 +80,12 @@ void main() {
         float distFromArmor = primaryDist - spacedDist;
 
         if (canSplash) {
-          float finalDamage = HALF * damage * (1.0 - distFromArmor / explosionRadius) - EXPLOSION_DAMAGE_FACTOR * (finalThickness + spacedArmorThickness);
+          float finalDamage = 0.5 * damage * (1.0 - distFromArmor / explosionRadius) - EXPLOSION_DAMAGE_FACTOR * (finalThickness + spacedArmorThickness);
           splashChance = step(0.0, finalDamage);
           penetrationChance = 0.0;
 
         } else {
-          remainingPen -= HALF * remainingPen * distFromArmor;
+          remainingPen -= 0.5 * remainingPen * distFromArmor;
         }
       }
     }
@@ -98,17 +97,17 @@ void main() {
       penetrationChance = clamp(1.0 - (delta + randomization) / (2.0 * randomization), 0.0, 1.0);
 
       if (canSplash) {
-        float splashDamage = HALF * damage - EXPLOSION_DAMAGE_FACTOR * finalThickness;
+        float splashDamage = 0.5 * damage - EXPLOSION_DAMAGE_FACTOR * finalThickness;
         splashChance = step(0.0, splashDamage);
       }
     }
   }
 
-  float alpha = opaque ? 1.0 : HALF;
+  float alpha = opaque ? 1.0 : 0.5;
   vec3 baseColor = vec3(1.0, splashChance * GREEN_VALUE, 0.0);
 
   if (advancedHighlighting && didRicochet) {
-    baseColor = vec3(1.0, baseColor.g, 1.0);
+    baseColor = vec3(1.0, baseColor.g, 0.5);
   }
 
   if (greenPenetration || advancedHighlighting) {

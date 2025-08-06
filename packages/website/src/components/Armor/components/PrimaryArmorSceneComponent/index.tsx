@@ -7,8 +7,10 @@ import { invalidate, useFrame } from '@react-three/fiber';
 import { useEffect } from 'react';
 import {
   MeshBasicMaterial,
+  NormalBlending,
   Object3D,
   ShaderMaterial,
+  SubtractiveBlending,
   UniformsLib,
   UniformsUtils,
   Vector2,
@@ -32,6 +34,9 @@ const excludeMaterial = new MeshBasicMaterial({
   colorWrite: false,
 });
 
+const date = new Date();
+const isHalloween = date.getMonth() === 9 && date.getDate() === 31;
+
 export function PrimaryArmorSceneComponent({
   node,
   thickness,
@@ -45,6 +50,8 @@ export function PrimaryArmorSceneComponent({
 
     fog: true,
     transparent: true,
+
+    blending: isHalloween ? SubtractiveBlending : NormalBlending,
 
     uniforms: UniformsUtils.merge([
       UniformsLib.common,
