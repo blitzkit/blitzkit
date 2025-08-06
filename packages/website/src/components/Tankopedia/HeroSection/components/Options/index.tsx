@@ -15,7 +15,6 @@ import {
   GearIcon,
 } from '@radix-ui/react-icons';
 import {
-  Box,
   Button,
   Checkbox,
   Dialog,
@@ -36,10 +35,7 @@ import { useFullscreenAvailability } from '../../../../../hooks/useFullscreenAva
 import { useLocale } from '../../../../../hooks/useLocale';
 import { App } from '../../../../../stores/app';
 import { Duel } from '../../../../../stores/duel';
-import {
-  ShootingRangeZoom,
-  TankopediaEphemeral,
-} from '../../../../../stores/tankopediaEphemeral';
+import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
 import { TankopediaPersistent } from '../../../../../stores/tankopediaPersistent';
 import { TankopediaDisplay } from '../../../../../stores/tankopediaPersistent/constants';
 import type { MaybeSkeletonComponentProps } from '../../../../../types/maybeSkeletonComponentProps';
@@ -96,23 +92,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   return (
     <>
       {disturbed && <QuickInputs />}
-
-      {display === TankopediaDisplay.ShootingRange && (
-        <Box
-          width="1rem"
-          height="1rem"
-          position="absolute"
-          top="50%"
-          left="50%"
-          style={{
-            zIndex: 2,
-            backgroundImage: 'url(/assets/images/icons/aim-caret.png)',
-            backgroundSize: 'contain',
-            transform: 'translateX(-50%)',
-            borderRadius: '50%',
-          }}
-        />
-      )}
 
       <Thicknesses skeleton={skeleton} thicknessRange={thicknessRange} />
 
@@ -408,7 +387,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               mutateTankopediaEphemeral((draft) => {
                 draft.disturbed = true;
                 draft.display = Number(value);
-                draft.shootingRangeZoom = ShootingRangeZoom.Arcade;
               });
             }}
           >
@@ -448,13 +426,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 </Flex>
               </Tooltip>
             </SegmentedControl.Item>
-            {/* <SegmentedControl.Item value={`${TankopediaDisplay.ShootingRange}`}>
-              <Tooltip content="Shooting range">
-                <Flex height="100%" align="center">
-                  <img src="/assets/images/icons/tankopedia-shooting-range.png" style={{ height: '1.25em' }} />
-                </Flex>
-              </Tooltip>
-            </SegmentedControl.Item> */}
           </SegmentedControl.Root>
 
           {disturbed && (

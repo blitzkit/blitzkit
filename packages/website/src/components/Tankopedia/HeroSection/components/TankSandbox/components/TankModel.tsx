@@ -1,6 +1,6 @@
 import { normalizeAngleRad } from '@blitzkit/core';
 import { invalidate, useThree, type ThreeEvent } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from 'three';
 import { applyPitchYawLimits } from '../../../../../../core/blitz/applyPitchYawLimits';
 import { hasEquipment } from '../../../../../../core/blitzkit/hasEquipment';
@@ -10,10 +10,7 @@ import { useModel } from '../../../../../../hooks/useModel';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
 import { useTankTransform } from '../../../../../../hooks/useTankTransform';
 import { Duel } from '../../../../../../stores/duel';
-import {
-  ShootingRangeZoom,
-  TankopediaEphemeral,
-} from '../../../../../../stores/tankopediaEphemeral';
+import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
 import { TankopediaDisplay } from '../../../../../../stores/tankopediaPersistent/constants';
 import { ModelTankWrapper } from '../../../../../Armor/components/ModelTankWrapper';
 
@@ -36,18 +33,6 @@ export function TankModel() {
     turretModelDefinition.guns[protagonist.gun.gun_type!.value.base.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
-
-  useEffect(() => {
-    const unsubscribeShootingRangeZoom = tankopediaEphemeralStore.subscribe(
-      (state) => state.shootingRangeZoom,
-      (zoom) => {
-        if (!hullContainer.current) return;
-        hullContainer.current.visible = zoom === ShootingRangeZoom.Arcade;
-      },
-    );
-
-    return unsubscribeShootingRangeZoom;
-  }, []);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -163,12 +148,7 @@ export function TankModel() {
           function onPointerDown(event: ThreeEvent<PointerEvent>) {
             event.stopPropagation();
 
-            if (
-              !isTurret ||
-              tankopediaEphemeralStore.getState().display ===
-                TankopediaDisplay.ShootingRange
-            )
-              return;
+            if (!isTurret) return;
 
             position.set(event.clientX, event.clientY);
             yaw = protagonist.yaw;
@@ -276,12 +256,6 @@ export function TankModel() {
 
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
-
-              if (
-                tankopediaEphemeralStore.getState().display ===
-                TankopediaDisplay.ShootingRange
-              )
-                return;
 
               mutateTankopediaEphemeral((draft) => {
                 draft.controlsEnabled = false;

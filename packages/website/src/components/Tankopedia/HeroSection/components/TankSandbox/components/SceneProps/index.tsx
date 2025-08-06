@@ -1,5 +1,4 @@
 import { asset, I_HAT, J_HAT } from '@blitzkit/core';
-import { Html } from '@react-three/drei';
 import { useFrame, useLoader } from '@react-three/fiber';
 import { clamp } from 'lodash-es';
 import { useRef } from 'react';
@@ -21,8 +20,6 @@ import { modelTransformEvent } from '../../../../../../../core/blitzkit/modelTra
 import { tankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { Duel } from '../../../../../../../stores/duel';
 import { TankopediaEphemeral } from '../../../../../../../stores/tankopediaEphemeral';
-import { TankopediaDisplay } from '../../../../../../../stores/tankopediaPersistent/constants';
-import { TargetCircle } from './components/TargetCircle';
 import { aimTarget } from './constants';
 
 const [modelDefinitions, equipmentDefinitions, provisionDefinitions] =
@@ -121,7 +118,6 @@ export function SceneProps() {
 
   useFrame(({ raycaster, camera, clock, gl }) => {
     if (
-      display !== TankopediaDisplay.ShootingRange ||
       !playground.current ||
       !targetCircleWrapper.current ||
       DEBUG_disable ||
@@ -241,45 +237,9 @@ export function SceneProps() {
   if (!disturbed) return null;
 
   return (
-    <>
-      {display !== TankopediaDisplay.ShootingRange && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[10, 10]} />
-          <meshStandardMaterial ref={material} map={texture} transparent />
-        </mesh>
-      )}
-
-      {display === TankopediaDisplay.ShootingRange && (
-        <>
-          <group ref={targetCircleWrapper}>
-            <Html center occlude={false} zIndexRange={[0, 0]}>
-              <TargetCircle variant="client" ref={clientTargetCircle} />
-              <TargetCircle variant="server" ref={serverTargetCircle} />
-            </Html>
-          </group>
-
-          <group ref={playground}>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-              <planeGeometry args={[100, 100]} />
-              <meshStandardMaterial color={0x404040} />
-            </mesh>
-
-            <mesh
-              receiveShadow
-              castShadow
-              position={[10, 1.5, -10]}
-              rotation={[0, Math.PI / 4, 0]}
-            >
-              <boxGeometry args={[1, 3, 1]} />
-              <meshStandardMaterial color={0xff8040} />
-            </mesh>
-
-            <group position={[0, 0, -25]} rotation={[-Math.PI / 2, 0, Math.PI]}>
-              <primitive object={mockTank.scene} />
-            </group>
-          </group>
-        </>
-      )}
-    </>
+    <mesh rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[10, 10]} />
+      <meshStandardMaterial ref={material} map={texture} transparent />
+    </mesh>
   );
 }

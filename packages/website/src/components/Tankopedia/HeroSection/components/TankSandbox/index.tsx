@@ -207,13 +207,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
       <Canvas
         ref={canvas}
         scene={{ fog: naked ? undefined : fog.current }}
-        frameloop={
-          onScreen
-            ? display === TankopediaDisplay.ShootingRange
-              ? 'always'
-              : 'demand'
-            : 'never'
-        }
+        frameloop={onScreen ? 'demand' : 'never'}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,

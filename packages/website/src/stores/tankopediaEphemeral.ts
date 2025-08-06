@@ -78,28 +78,10 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
-export enum ShootingRangeZoom {
-  Arcade,
-  Zoom0,
-  Zoom1,
-  Zoom2,
-}
-
-export const SHOOTING_RANGE_ZOOM_COEFFICIENTS: Record<
-  ShootingRangeZoom,
-  number
-> = {
-  [ShootingRangeZoom.Arcade]: 1,
-  [ShootingRangeZoom.Zoom0]: 1 / 8,
-  [ShootingRangeZoom.Zoom1]: 1 / 16,
-  [ShootingRangeZoom.Zoom2]: 1 / 25,
-};
-
 interface TankopediaEphemeral {
   disturbed: boolean;
   revealed: boolean;
   shot?: Shot;
-  shootingRangeZoom: ShootingRangeZoom;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
   controlsEnabled: boolean;
@@ -133,7 +115,6 @@ export const TankopediaEphemeral = createContextualStore(
       subscribeWithSelector<TankopediaEphemeral>(() => ({
         disturbed: false,
         revealed: false,
-        shootingRangeZoom: ShootingRangeZoom.Arcade,
         relativeAgainst: TankopediaRelativeAgainst.Class,
         editStatic: false,
         skills: createDefaultSkills(skillDefinitions),

@@ -1,14 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Group, ShaderMaterial, UniformsLib, UniformsUtils } from 'three';
 import { jsxTree } from '../../../../../../../core/blitzkit/jsxTree';
 import { useModel } from '../../../../../../../hooks/useModel';
 import { useTankModelDefinition } from '../../../../../../../hooks/useTankModelDefinition';
 import { useTankTransform } from '../../../../../../../hooks/useTankTransform';
 import { Duel } from '../../../../../../../stores/duel';
-import {
-  ShootingRangeZoom,
-  TankopediaEphemeral,
-} from '../../../../../../../stores/tankopediaEphemeral';
+import { TankopediaEphemeral } from '../../../../../../../stores/tankopediaEphemeral';
 import { ModelTankWrapper } from '../../../../../../Armor/components/ModelTankWrapper';
 import fragmentShader from './shaders/fragment.glsl?raw';
 import vertexShader from './shaders/vertex.glsl?raw';
@@ -39,18 +36,6 @@ export function TransitionSkeleton() {
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
   const revealed = tankopediaEphemeralStore((state) => state.revealed);
-
-  useEffect(() => {
-    const unsubscribeShootingRangeZoom = tankopediaEphemeralStore.subscribe(
-      (state) => state.shootingRangeZoom,
-      (zoom) => {
-        if (!hullContainer.current) return;
-        hullContainer.current.visible = zoom === ShootingRangeZoom.Arcade;
-      },
-    );
-
-    return unsubscribeShootingRangeZoom;
-  }, []);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 

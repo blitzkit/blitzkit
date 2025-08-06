@@ -1,5 +1,4 @@
 import { Environment } from '@react-three/drei';
-import { times } from 'lodash-es';
 import { Euler } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { useModel } from '../../../../../../hooks/useModel';
@@ -29,24 +28,6 @@ export function Lighting({ display }: LightingProps) {
       )}
       {display === TankopediaDisplay.StaticArmor && (
         <Environment preset="lobby" />
-      )}
-      {display === TankopediaDisplay.ShootingRange && (
-        <>
-          <directionalLight position={[0, -1, 0]} />
-
-          {times(LIGHTS_COUNT, (index) => (
-            <directionalLight
-              key={index}
-              castShadow
-              intensity={3 / LIGHTS_COUNT}
-              position={[
-                Math.sin(2 * Math.PI * (index / LIGHTS_COUNT)),
-                1,
-                Math.cos(2 * Math.PI * (index / LIGHTS_COUNT)),
-              ]}
-            />
-          ))}
-        </>
       )}
     </>
   );
