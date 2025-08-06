@@ -21,6 +21,7 @@
     "start:bot": "bun dist/bot/main.js",
     "dev:docs": "vitepress dev docs",
     "dev:website": "cd packages/website && bun run dev",
+    "dev": "bun run dev:website",
     "dev:api": "bun --filter=@blitzkit/api run dev",
     "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
     "setup:patches": "bun --filter=@blitzkit/scripts run setup:patches",
