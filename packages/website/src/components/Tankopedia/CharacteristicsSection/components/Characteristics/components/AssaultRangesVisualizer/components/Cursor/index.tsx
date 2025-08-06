@@ -25,9 +25,12 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
 
   useEffect(() => {
     let localX = x;
+    let lastX = 0;
 
     function handlePointerDown(event: PointerEvent) {
       event.preventDefault();
+
+      lastX = event.clientX;
 
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
@@ -35,15 +38,17 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
 
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
-      
+
       const parent = cursor.current?.parentElement;
 
       if (!parent) return;
 
       const width = parent.clientWidth;
+      const movementX = event.clientX - lastX;
+      lastX = event.clientX;
 
       setX((state) => {
-        localX = clamp(state + event.movementX / width, 0, 1);
+        localX = clamp(state + movementX / width, 0, 1);
         return localX;
       });
     }
@@ -62,6 +67,8 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
 
     return () => {
       cursor.current?.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
     };
   }, []);
 
@@ -75,6 +82,7 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
       width="2pt"
       id="assault-cursor"
       style={{
+        touchAction: 'none',
         transform: 'translateX(-50%)',
         backgroundColor: Var('accent-11'),
       }}
