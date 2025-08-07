@@ -21,6 +21,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
     fakeDistance: fakeLog(range.distance / maxDistance, 2),
   }));
   const maxFakeDistance = ranges.at(-1)!.fakeDistance;
+  const maxFactor = ranges[0].factor;
 
   const { strings } = useLocale();
 
@@ -81,7 +82,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                 return (
                   <Box
                     width={`${fraction * 100}%`}
-                    height={`${range.factor * 100}%`}
+                    height={`${(range.factor / maxFactor) * 100}%`}
                     style={{
                       background: `linear-gradient(45deg, ${color1}, ${color0})`,
                     }}
