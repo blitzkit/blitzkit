@@ -3,8 +3,8 @@ import { Box, Flex, Text } from '@radix-ui/themes';
 import { useEffect, useRef, useState } from 'react';
 import { clamp } from 'three/src/math/MathUtils.js';
 import {
-  fakeLog,
-  fakeLogInverse,
+  fakeLogSquishyHigh,
+  fakeLogSquishyHighInverse,
 } from '../../../../../../../../../core/blitzkit/fakeLog';
 import { Var } from '../../../../../../../../../core/radix/var';
 import { Duel } from '../../../../../../../../../stores/duel';
@@ -19,7 +19,7 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
   const assaultDistance = Duel.use(
     (state) => state.protagonist.assaultDistance,
   );
-  const [x, setX] = useState(fakeLog(assaultDistance / maxDistance, 2));
+  const [x, setX] = useState(fakeLogSquishyHigh(assaultDistance / maxDistance));
   const cursor = useRef<HTMLDivElement>(null);
   const mutateDuel = Duel.useMutation();
 
@@ -56,7 +56,7 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
     function handlePointerUp() {
       mutateDuel((draft) => {
         draft.protagonist.assaultDistance =
-          fakeLogInverse(localX * maxFakeDistance, 2) * maxDistance;
+          fakeLogSquishyHighInverse(localX * maxFakeDistance) * maxDistance;
       });
 
       window.removeEventListener('pointermove', handlePointerMove);

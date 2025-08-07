@@ -2,7 +2,10 @@ import type { AssaultRanges } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
 import { Box, Card, Flex, Text } from '@radix-ui/themes';
 import { clamp } from 'three/src/math/MathUtils.js';
-import { fakeLog } from '../../../../../../../core/blitzkit/fakeLog';
+import {
+  fakeLogSquishyHigh,
+  fakeLogSquishyLow,
+} from '../../../../../../../core/blitzkit/fakeLog';
 import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
@@ -18,9 +21,10 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
   const ranges = _ranges.ranges.map((range) => ({
     factor: range.factor,
     distance: range.distance,
-    fakeDistance: fakeLog(range.distance / maxDistance, 2),
+    fakeDistance: fakeLogSquishyHigh(range.distance / maxDistance),
   }));
   const maxFakeDistance = ranges.at(-1)!.fakeDistance;
+  const maxFactor = ranges[0].factor;
 
   const { strings } = useLocale();
 
@@ -54,8 +58,8 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                   style={{
                     position: 'absolute',
                     left: 0,
-                    top: `${(1 - range.factor) * 100}%`,
-                    transform: 'translateY(-50%)',
+                    bottom: `${fakeLogSquishyLow(range.factor / maxFactor) * 100}%`,
+                    transform: 'translateY(50%)',
                   }}
                   color="gray"
                   size="1"
@@ -70,7 +74,8 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
 
             <Flex flexGrow="1" align="end" position="relative">
               {ranges.map((range, index) => {
-                const mix = clamp(1.5 * (range.factor - 1) + 1, 0, 1) * 100;
+                const mix =
+                  clamp(2 * (range.factor / maxFactor - 1) + 1, 0, 1) * 100;
                 const color0 = `color-mix(in hsl, ${Var('tomato-9')}, ${Var('jade-9')} ${mix}%)`;
                 const color1 = `color-mix(in hsl, ${Var('tomato-7')}, ${Var('jade-7')} ${mix}%)`;
                 const last = ranges[index - 1];
@@ -81,7 +86,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                 return (
                   <Box
                     width={`${fraction * 100}%`}
-                    height={`${range.factor * 100}%`}
+                    height={`${fakeLogSquishyLow(range.factor / maxFactor) * 100}%`}
                     style={{
                       background: `linear-gradient(45deg, ${color1}, ${color0})`,
                     }}
@@ -95,7 +100,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                   key={index}
                   position="absolute"
                   left="0"
-                  bottom={`${range.factor * 100}%`}
+                  bottom={`${fakeLogSquishyLow(range.factor / maxFactor) * 100}%`}
                   width="100%"
                   height="1pt"
                   style={{
