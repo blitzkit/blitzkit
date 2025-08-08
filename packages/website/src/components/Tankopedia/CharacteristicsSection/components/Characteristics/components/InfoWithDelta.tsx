@@ -162,7 +162,6 @@ export function InfoWithDelta({
       <Info
         deltaType={deltaType}
         indent={indent}
-        {...props}
         name={
           'name' in props
             ? props.name
@@ -171,12 +170,13 @@ export function InfoWithDelta({
               ]
         }
         delta={delta}
+        {...props}
       >
         {uhWhatDoICallThisVariable}
       </Info>
 
       {!noRanking && (
-        <Flex pl={indent ? '2' : '0'} align="center" gap="2" mb="2">
+        <Flex pl={indent ? '2' : '0'} align="center" gap="2">
           <Progress
             variant="soft"
             size="1"
