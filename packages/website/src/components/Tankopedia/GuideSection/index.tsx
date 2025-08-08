@@ -9,7 +9,7 @@ interface Props {
 export function GuideSection({ guide }: Props) {
   return (
     <Flex justify="center">
-      <Flex maxWidth="40rem" direction="column" gap="4">
+      <Flex maxWidth="35rem" direction="column" gap="4">
         <GuidesBlitz guide={guide} />
       </Flex>
     </Flex>
