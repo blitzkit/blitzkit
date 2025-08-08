@@ -22,6 +22,7 @@ import { useLocale } from '../../../../../../hooks/useLocale';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../../stores/duel';
 import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
+import { GunFlexibilityVisualizer } from './GunFlexibilityVisualizer';
 import { Info } from './Info';
 import { InfoWithDelta } from './InfoWithDelta';
 import { ReloadVisualizer } from './ReloadVisualizer';
@@ -404,6 +405,7 @@ export function Firepower({ stats }: StatsAcceptorProps) {
           />
         </>
       )}
+      <GunFlexibilityVisualizer />
     </StatsTableWrapper>
   );
 }
