@@ -1,5 +1,5 @@
 import { type Datum, type Serie } from '@nivo/line';
-import { Box, Card, Code } from '@radix-ui/themes';
+import { Box, Card } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Quicklime, type QuicklimeCallback } from 'quicklime';
 import { useEffect, useRef } from 'react';
@@ -21,7 +21,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const reloadCircle = useRef<HTMLDivElement>(null);
   const reloadCore = useRef<HTMLDivElement>(null);
   const reloadGlow = useRef<HTMLDivElement>(null);
-  const dpmDisplay = useRef<HTMLSpanElement>(null);
 
   /**
    * 3-shell gun example:
@@ -52,7 +51,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
     }
 
     function frame() {
-      if (!dpmDisplay.current) return;
 
       const now = Date.now() / 1000;
       const dt = now - lastT;
@@ -64,7 +62,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
       });
 
       dpm.current = shotPool.current.size * stats.damage;
-      dpmDisplay.current.innerText = `${Math.round(dpm.current)}`;
 
       if (state.current < 1) {
         state.current = Math.min(1, state.current + dt / stats.shellReload!);
@@ -223,10 +220,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         times(stats.shells, (index) => (
           <Shell stats={stats} index={index} key={index} />
         ))}
-
-      <Box position="absolute" right="3" bottom="3">
-        <Code ref={dpmDisplay}>0 dpm</Code>
-      </Box>
     </Card>
   );
 }
