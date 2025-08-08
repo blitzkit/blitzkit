@@ -1,5 +1,6 @@
 import { Card } from '@radix-ui/themes';
 import { awaitableModelDefinitions } from '../../../../../../../core/awaitables/modelDefinitions';
+import { DEFAULT_PITCH_TRANSITION } from '../../../../../../../core/blitz/applyPitchYawLimits';
 import { Duel } from '../../../../../../../stores/duel';
 
 const MAX_MAG = 20;
@@ -28,57 +29,54 @@ export function GunFlexibilityVisualizer() {
   const y = turretModel.yaw;
   const f = p.front;
   const b = p.back;
+  const t = gunModel.pitch.transition ?? DEFAULT_PITCH_TRANSITION;
 
   let d = '';
 
   // right
-  d += `M 0 0`;
   const ms = mag(p.max);
   if (y) {
-    d += `L ${c(90 - y.max, ms)}`;
+    d += `M ${c(90 - y.max, ms)}`;
   } else if (b) {
-    d += `L ${c(-90 + b.range / 2, ms)}`;
+    d += `M ${c(-90 + b.range / 2 + t, ms)}`;
   } else {
-    d += `L ${c(-90 / 2, ms)}`;
+    d += `M ${c(-90 / 2, ms)}`;
   }
   if (f) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(90 - f.range / 2, ms)}`;
+    d += `A ${ms} ${ms} 0 0 0 ${c(90 - f.range / 2 - t, ms)}`;
   } else {
     d += `A ${ms} ${ms} 0 0 0 ${c(90 / 2, ms)}`;
   }
 
-  // left
-  d += `M 0 0`;
+  // front
   if (f) {
-    d += `L ${c(90 + f.range / 2, ms)}`;
+    const m = mag(f.max);
+    d += `L ${c(90 - f.range / 2, m)}`;
+    d += `A ${m} ${m} 0 0 0 ${c(90 + f.range / 2, m)}`;
+  }
+
+  // left
+  if (f) {
+    d += `L ${c(90 + f.range / 2 + t, ms)}`;
   } else {
     d += `L ${c(90 / 2, ms)}`;
   }
   if (y) {
     d += `A ${ms} ${ms} 0 0 0 ${c(90 - y.min, ms)}`;
   } else if (b) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(-90 - b.range / 2, ms)}`;
+    d += `A ${ms} ${ms} 0 0 0 ${c(-90 - b.range / 2 - t, ms)}`;
   } else {
     d += `A ${ms} ${ms} 0 0 0 ${c(-90 / 2, ms)}`;
-  }
-
-  // front
-  if (f) {
-    const m = mag(f.max);
-    d += `M 0 0`;
-    d += `L ${c(90 - f.range / 2, m)}`;
-    d += `A ${m} ${m} 0 0 0 ${c(90 + f.range / 2, m)}`;
-    d += `Z`;
   }
 
   // back
   if (!y && b) {
     const m = mag(b.max);
-    d += `M 0 0`;
     d += `L ${c(-90 - b.range / 2, m)}`;
     d += `A ${m} ${m} 0 0 0 ${c(-90 + b.range / 2, m)}`;
-    d += `Z`;
   }
+
+  d += `Z`;
 
   return (
     <Card style={{ aspectRatio: '1 / 1' }} variant="classic">
@@ -87,16 +85,24 @@ export function GunFlexibilityVisualizer() {
           position: 'absolute',
           top: 0,
           left: 0,
-          width: '100%',
-          height: '100%',
+          width: 'calc(100%)',
+          height: 'calc(100%)',
         }}
         viewBox="-1 -1 2 2"
       >
         <path
-          fill="var(--gray-1)"
+          stroke="var(--gray-11)"
+          strokeWidth="0.01px"
+          fill="var(--gray-9)"
+          d={d}
+        />
+        <path
+          stroke="var(--gray-2)"
+          fill="transparent"
+          strokeWidth="0.01px"
+          strokeDasharray="0.05 0.01"
           d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
         />
-        <path fill="var(--gray-a9)" d={d} />
       </svg>
     </Card>
   );
