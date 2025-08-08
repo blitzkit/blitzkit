@@ -25,36 +25,44 @@ export function GunFlexibilityVisualizer() {
   const gunModel = turretModel.guns[gun.gun_type!.value.base.id];
 
   const p = gunModel.pitch;
+  const y = turretModel.yaw;
   const f = p.front;
   const b = p.back;
 
   let d = '';
 
+  // right
   d += `M 0 0`;
   const ms = mag(p.max);
-  if (b) {
+  if (y) {
+    d += `L ${c(90 - y.max, ms)}`;
+  } else if (b) {
     d += `L ${c(-90 + b.range / 2, ms)}`;
   } else {
     d += `L ${c(-90 / 2, ms)}`;
   }
   if (f) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(90 + f.range / 2, ms)}`;
+    d += `A ${ms} ${ms} 0 0 0 ${c(90 - f.range / 2, ms)}`;
   } else {
     d += `A ${ms} ${ms} 0 0 0 ${c(90 / 2, ms)}`;
   }
 
+  // left
   d += `M 0 0`;
   if (f) {
     d += `L ${c(90 + f.range / 2, ms)}`;
   } else {
     d += `L ${c(90 / 2, ms)}`;
   }
-  if (b) {
+  if (y) {
+    d += `A ${ms} ${ms} 0 0 0 ${c(90 - y.min, ms)}`;
+  } else if (b) {
     d += `A ${ms} ${ms} 0 0 0 ${c(-90 - b.range / 2, ms)}`;
   } else {
     d += `A ${ms} ${ms} 0 0 0 ${c(-90 / 2, ms)}`;
   }
 
+  // front
   if (f) {
     const m = mag(f.max);
     d += `M 0 0`;
@@ -63,7 +71,8 @@ export function GunFlexibilityVisualizer() {
     d += `Z`;
   }
 
-  if (b) {
+  // back
+  if (!y && b) {
     const m = mag(b.max);
     d += `M 0 0`;
     d += `L ${c(-90 - b.range / 2, m)}`;
@@ -87,7 +96,7 @@ export function GunFlexibilityVisualizer() {
           fill="var(--gray-1)"
           d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
         />
-        <path fill="var(--gray-11)" d={d} />
+        <path fill="var(--gray-a9)" d={d} />
       </svg>
     </Card>
   );
