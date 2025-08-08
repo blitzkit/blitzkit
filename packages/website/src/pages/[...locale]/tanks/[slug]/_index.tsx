@@ -3,6 +3,7 @@ import { PageWrapper } from '../../../../components/PageWrapper';
 import { CalloutsSection } from '../../../../components/Tankopedia/CalloutsSection';
 import { CharacteristicsSection } from '../../../../components/Tankopedia/CharacteristicsSection';
 import { GameModeSection } from '../../../../components/Tankopedia/GameModeSection';
+import { GuideSection } from '../../../../components/Tankopedia/GuideSection';
 import { HeroSection } from '../../../../components/Tankopedia/HeroSection';
 import { MetaSection } from '../../../../components/Tankopedia/MetaSection';
 import { TechTreeSection } from '../../../../components/Tankopedia/TechTreeSection';
@@ -19,10 +20,12 @@ import { Duel } from '../../../../stores/duel';
 import { TankopediaEphemeral } from '../../../../stores/tankopediaEphemeral';
 import { TankopediaPersistent } from '../../../../stores/tankopediaPersistent';
 import type { MaybeSkeletonComponentProps } from '../../../../types/maybeSkeletonComponentProps';
+import type { TankGuide } from './index.astro';
 
 type PageProps = MaybeSkeletonComponentProps &
   LocaleAcceptorProps & {
     id: number;
+    guide?: TankGuide;
   };
 
 const [tankDefinitions, provisionDefinitions, modelDefinitions] =
@@ -32,7 +35,7 @@ const [tankDefinitions, provisionDefinitions, modelDefinitions] =
     awaitableModelDefinitions,
   ]);
 
-export function Page({ id, skeleton, locale }: PageProps) {
+export function Page({ id, skeleton, locale, guide }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
@@ -53,6 +56,7 @@ export function Page({ id, skeleton, locale }: PageProps) {
                 )}
                 <CharacteristicsSection />
                 <GameModeSection />
+                {guide && <GuideSection skeleton={skeleton} guide={guide} />}
                 <VideoSection skeleton={skeleton} />
               </PageWrapper>
             </Duel.Provider>

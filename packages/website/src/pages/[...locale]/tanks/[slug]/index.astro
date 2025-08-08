@@ -1,6 +1,7 @@
 ---
 import { AstroSeo } from '@astrolib/seo';
 import {
+  assertSecret,
   asset,
   createDefaultProvisions,
   createDefaultSkills,
@@ -14,6 +15,7 @@ import {
 import { DEFAULT_LOCALE, unwrapper } from '@blitzkit/i18n';
 import { literals } from '@blitzkit/i18n/src/literals';
 import type { GetStaticPaths } from 'astro';
+import { load } from 'cheerio';
 import { tankCharacteristics } from '../../../../core/blitzkit/tankCharacteristics';
 import { getStrings } from '../../../../core/i18n/getStrings';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
@@ -43,6 +45,7 @@ const skillDefinitions = await fetchSkillDefinitions();
 const provisionDefinitions = await fetchProvisionDefinitions();
 const equipmentDefinitions = await fetchEquipmentDefinitions();
 const tankModelDefinitions = await fetchModelDefinitions();
+
 const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
 const unwrap = unwrapper(locale);
@@ -57,6 +60,7 @@ const title = literals(strings.website.tools.tankopedia.tank_seo_title, [
   strings.common.nations[tank.nation as keyof typeof strings.common.nations],
 ]);
 const url = import.meta.env.SITE + Astro.url.pathname;
+
 const icon = asset(`icons/tanks/big/${id}.webp`);
 const turret = tank.turrets.at(-1)!;
 const gun = turret.guns.at(-1)!;
@@ -96,6 +100,28 @@ const description = literals(
     Math.round(characteristics.health).toLocaleString(locale),
   ],
 );
+
+export interface TankGuide {
+  url: string;
+  description?: string;
+  image?: string;
+}
+
+const guideUrl = `${assertSecret(import.meta.env.PUBLIC_GUIDE_WEBSITE)}/${tank.slug}`;
+let guide: TankGuide | undefined = undefined;
+const guideResponse = await fetch(guideUrl);
+
+if (guideResponse.ok) {
+  const $ = await guideResponse.text().then(load);
+  const description = $('.entry-content p').first().text();
+  const image = $('.entry-content img').first().attr('src')?.toString();
+
+  guide = {
+    url: guideUrl,
+    description,
+    image,
+  };
+}
 ---
 
 <AstroSeo
@@ -110,7 +136,7 @@ const description = literals(
 <meta name="twitter:image:src" content={icon} />
 
 <BaseLayout integrated>
-  <Page {locale} id={id} client:only="react">
-    <Page {locale} id={id} skeleton slot="fallback" />
+  <Page {locale} id={id} {guide} client:only="react">
+    <Page {locale} id={id} {guide} skeleton slot="fallback" />
   </Page>
 </BaseLayout>
