@@ -4,7 +4,6 @@ import { invalidate, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import { PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls as OrbitControlsClass } from 'three-stdlib';
-import { degToRad } from 'three/src/math/MathUtils.js';
 import { awaitableModelDefinitions } from '../../../../../../core/awaitables/modelDefinitions';
 import { applyPitchYawLimits } from '../../../../../../core/blitz/applyPitchYawLimits';
 import { hasEquipment } from '../../../../../../core/blitzkit/hasEquipment';
@@ -19,11 +18,6 @@ const poseDistances: Record<Pose, number> = {
 };
 
 const modelDefinitions = await awaitableModelDefinitions;
-
-const ARCADE_MODE_DISTANCE = 19;
-// const ARCADE_MODE_ANGLE = Math.PI / 8;
-const ARCADE_MODE_ANGLE = degToRad(10);
-const ARCADE_MODE_FOV = 54;
 
 interface ControlsProps {
   naked?: boolean;
@@ -41,7 +35,6 @@ export function Controls({
   distanceScale = 1,
 }: ControlsProps) {
   const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
-  const display = TankopediaEphemeral.use((state) => state.display);
   const duelStore = Duel.useStore();
   const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const camera = useThree((state) => state.camera as PerspectiveCamera);
@@ -96,15 +89,6 @@ export function Controls({
     gunHeight + (naked ? 10 : 2),
     -13,
   ).multiplyScalar(distanceScale);
-  const protagonistGunOriginOnlyY = new Vector3(
-    0,
-    protagonistTurretModelDefinition.gun_origin.y,
-    0,
-  );
-  const shellOrigin = protagonistHullOrigin
-    .clone()
-    .add(protagonistTurretOrigin)
-    .add(protagonistGunOriginOnlyY);
 
   useEffect(() => {
     if (!orbitControls.current || !doAutoRotate) return;
