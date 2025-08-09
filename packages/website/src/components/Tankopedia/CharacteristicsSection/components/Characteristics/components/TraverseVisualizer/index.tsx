@@ -1,8 +1,9 @@
 import { literals } from '@blitzkit/i18n';
-import { Card, Checkbox, Code, Flex, Tabs, Text } from '@radix-ui/themes';
+import { Checkbox, Code, Flex, Tabs, Text } from '@radix-ui/themes';
 import { useEffect, useRef, useState } from 'react';
 import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { useLocale } from '../../../../../../../hooks/useLocale';
+import { VisualizerCard } from '../VisualizerCard';
 
 export interface StatsAcceptorProps {
   stats: TankCharacteristics;
@@ -58,7 +59,7 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
   }, [terrain, turretSpeedDeg, hullSpeedDeg]);
 
   return (
-    <Card variant="classic" style={{ aspectRatio: '1 / 1' }}>
+    <VisualizerCard>
       <div
         ref={hull}
         style={{
@@ -188,6 +189,6 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
           </Flex>
         </Flex>
       )}
-    </Card>
+    </VisualizerCard>
   );
 }

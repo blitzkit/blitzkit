@@ -1,12 +1,13 @@
 import { asset, isExplosive } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
-import { Box, Card, Code, Flex, Text } from '@radix-ui/themes';
+import { Box, Code, Flex, Text } from '@radix-ui/themes';
 import { useRef, useState } from 'react';
 import { clamp, degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../../stores/duel';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
+import { VisualizerCard } from '../VisualizerCard';
 import { ShellSwitcher } from './components/ShellSwitcher';
 
 export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
@@ -26,13 +27,8 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
 
   return (
     <Flex direction="column" mb="6" align="center">
-      <Card
-        variant="classic"
-        style={{
-          width: '100%',
-          aspectRatio: '1 / 1',
-          touchAction: 'none',
-        }}
+      <VisualizerCard
+        style={{ width: '100%' }}
         ref={container}
         onPointerMove={(event) => {
           if (!container.current || explodes) return;
@@ -73,23 +69,23 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           position="absolute"
           style={{
             background: `conic-gradient(
-            at 0 50%,
+              at 0 50%,
 
-            ${Var('ruby-a2')},
-            ${Var('ruby-a1')} ${Math.PI / 2 - ricochet}rad,
+              ${Var('ruby-a2')},
+              ${Var('ruby-a1')} ${Math.PI / 2 - ricochet}rad,
 
-            ${Var('jade-a2')} ${Math.PI / 2 - ricochet}rad,
-            ${Var('jade-a4')} ${Math.PI / 2 - normalization}rad,
+              ${Var('jade-a2')} ${Math.PI / 2 - ricochet}rad,
+              ${Var('jade-a4')} ${Math.PI / 2 - normalization}rad,
 
-            ${Var('cyan-a5')} ${Math.PI / 2 - normalization}rad,
-            ${Var('cyan-a3')} ${Math.PI / 2 + normalization}rad,
+              ${Var('cyan-a5')} ${Math.PI / 2 - normalization}rad,
+              ${Var('cyan-a3')} ${Math.PI / 2 + normalization}rad,
 
-            ${Var('jade-a2')} ${Math.PI / 2 + normalization}rad,
-            ${Var('jade-a4')} ${Math.PI / 2 + ricochet}rad,
+              ${Var('jade-a2')} ${Math.PI / 2 + normalization}rad,
+              ${Var('jade-a4')} ${Math.PI / 2 + ricochet}rad,
 
-            ${Var('ruby-a1')} ${Math.PI / 2 + ricochet}rad,
-            ${Var('ruby-a2')} 180deg
-          `,
+              ${Var('ruby-a1')} ${Math.PI / 2 + ricochet}rad,
+              ${Var('ruby-a2')} 180deg
+            `,
           }}
         />
 
@@ -262,7 +258,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             </Text>
           </Flex>
         )}
-      </Card>
+      </VisualizerCard>
 
       <ShellSwitcher />
     </Flex>

@@ -1,6 +1,6 @@
 import type { AssaultRanges } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
-import { Box, Card, Flex, Text } from '@radix-ui/themes';
+import { Box, Flex, Text } from '@radix-ui/themes';
 import { clamp } from 'three/src/math/MathUtils.js';
 import {
   fakeLogSquishyHigh,
@@ -9,6 +9,7 @@ import {
 import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
+import { VisualizerCard } from '../VisualizerCard';
 import { AssaultCursor } from './components/Cursor';
 
 interface Props {
@@ -29,7 +30,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
   const { strings } = useLocale();
 
   return (
-    <Card mb="6" variant="classic" style={{ aspectRatio: '1 / 1' }}>
+    <VisualizerCard>
       <Flex
         position="absolute"
         top="0"
@@ -152,6 +153,6 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
           </Flex>
         </Flex>
       </Flex>
-    </Card>
+    </VisualizerCard>
   );
 }

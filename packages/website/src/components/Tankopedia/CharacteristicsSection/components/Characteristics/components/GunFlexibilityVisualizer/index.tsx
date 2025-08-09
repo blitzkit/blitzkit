@@ -1,14 +1,14 @@
-import { Card } from '@radix-ui/themes';
 import { awaitableModelDefinitions } from '../../../../../../../core/awaitables/modelDefinitions';
 import { DEFAULT_PITCH_TRANSITION } from '../../../../../../../core/blitz/applyPitchYawLimits';
 import { Duel } from '../../../../../../../stores/duel';
+import { VisualizerCard } from '../VisualizerCard';
 
-const MAX_MAG = 20;
+const ANGLE_COEFFICIENT = 1 / 10;
 
 const modelDefinition = await awaitableModelDefinitions;
 
 function mag(x: number) {
-  return (x / MAX_MAG + 1) / 2;
+  return ((2 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1) / 2;
 }
 
 function c(thetaDeg: number, m = 1) {
@@ -34,18 +34,18 @@ export function GunFlexibilityVisualizer() {
   let d = '';
 
   // right
-  const ms = mag(p.max);
+  const mo = mag(p.max);
   if (y) {
-    d += `M ${c(90 - y.max, ms)}`;
+    d += `M ${c(90 - y.max, mo)}`;
   } else if (b) {
-    d += `M ${c(-90 + b.range / 2 + t, ms)}`;
+    d += `M ${c(-90 + b.range / 2 + t, mo)}`;
   } else {
-    d += `M ${c(-90 / 2, ms)}`;
+    d += `M ${c(-90 / 2, mo)}`;
   }
   if (f) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(90 - f.range / 2 - t, ms)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(90 - f.range / 2 - t, mo)}`;
   } else {
-    d += `A ${ms} ${ms} 0 0 0 ${c(90 / 2, ms)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(90 / 2, mo)}`;
   }
 
   // front
@@ -57,16 +57,16 @@ export function GunFlexibilityVisualizer() {
 
   // left
   if (f) {
-    d += `L ${c(90 + f.range / 2 + t, ms)}`;
+    d += `L ${c(90 + f.range / 2 + t, mo)}`;
   } else {
-    d += `L ${c(90 / 2, ms)}`;
+    d += `L ${c(90 / 2, mo)}`;
   }
   if (y) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(90 - y.min, ms)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(90 - y.min, mo)}`;
   } else if (b) {
-    d += `A ${ms} ${ms} 0 0 0 ${c(-90 - b.range / 2 - t, ms)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(-90 - b.range / 2 - t, mo)}`;
   } else {
-    d += `A ${ms} ${ms} 0 0 0 ${c(-90 / 2, ms)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(-90 / 2, mo)}`;
   }
 
   // back
@@ -78,8 +78,53 @@ export function GunFlexibilityVisualizer() {
 
   d += `Z`;
 
+  // right
+  const mi = mag(p.min);
+  if (y) {
+    d += `M ${c(90 - y.max, mi)}`;
+  } else if (b) {
+    d += `M ${c(-90 + b.range / 2 + t, mi)}`;
+  } else {
+    d += `M ${c(-90 / 2, mi)}`;
+  }
+  if (f) {
+    d += `A ${mi} ${mi} 0 0 0 ${c(90 - f.range / 2 - t, mi)}`;
+  } else {
+    d += `A ${mi} ${mi} 0 0 0 ${c(90 / 2, mi)}`;
+  }
+
+  // front
+  if (f) {
+    const m = mag(f.min);
+    d += `L ${c(90 - f.range / 2, m)}`;
+    d += `A ${m} ${m} 0 0 0 ${c(90 + f.range / 2, m)}`;
+  }
+
+  // left
+  if (f) {
+    d += `L ${c(90 + f.range / 2 + t, mi)}`;
+  } else {
+    d += `L ${c(90 / 2, mi)}`;
+  }
+  if (y) {
+    d += `A ${mi} ${mi} 0 0 0 ${c(90 - y.min, mi)}`;
+  } else if (b) {
+    d += `A ${mi} ${mi} 0 0 0 ${c(-90 - b.range / 2 - t, mi)}`;
+  } else {
+    d += `A ${mi} ${mi} 0 0 0 ${c(-90 / 2, mi)}`;
+  }
+
+  // back
+  if (!y && b) {
+    const m = mag(b.min);
+    d += `L ${c(-90 - b.range / 2, m)}`;
+    d += `A ${m} ${m} 0 0 0 ${c(-90 + b.range / 2, m)}`;
+  }
+
+  d += `Z`;
+
   return (
-    <Card style={{ aspectRatio: '1 / 1' }} variant="classic">
+    <VisualizerCard>
       <svg
         style={{
           position: 'absolute',
@@ -91,19 +136,23 @@ export function GunFlexibilityVisualizer() {
         viewBox="-1 -1 2 2"
       >
         <path
-          stroke="var(--gray-11)"
-          strokeWidth="0.01px"
-          fill="var(--gray-9)"
+          fillRule="evenodd"
+          fill="var(--gray-5)"
+          stroke="var(--gray-7)"
+          strokeWidth="1px"
+          vectorEffect="non-scaling-stroke"
           d={d}
         />
+
         <path
-          stroke="var(--gray-2)"
+          stroke="var(--gray-10)"
           fill="transparent"
-          strokeWidth="0.01px"
-          strokeDasharray="0.05 0.01"
+          strokeWidth="1px"
+          strokeDasharray="0.5rem 0.5rem"
+          vectorEffect="non-scaling-stroke"
           d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
         />
       </svg>
-    </Card>
+    </VisualizerCard>
   );
 }

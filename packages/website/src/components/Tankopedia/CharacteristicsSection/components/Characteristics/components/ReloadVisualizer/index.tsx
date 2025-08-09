@@ -1,10 +1,11 @@
 import { type Datum, type Serie } from '@nivo/line';
-import { Box, Card } from '@radix-ui/themes';
+import { Box } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Quicklime, type QuicklimeCallback } from 'quicklime';
 import { useEffect, useRef } from 'react';
 import { Var } from '../../../../../../../core/radix/var';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
+import { VisualizerCard } from '../VisualizerCard';
 import { Shell } from './components/Shell';
 import { Target } from './components/Target';
 
@@ -51,7 +52,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
     }
 
     function frame() {
-
       const now = Date.now() / 1000;
       const dt = now - lastT;
       let reload;
@@ -130,7 +130,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   }, []);
 
   return (
-    <Card variant="classic" mb="6" style={{ aspectRatio: '1 / 1' }}>
+    <VisualizerCard>
       <Box position="absolute" top="0" left="0" width="100%" height="100%">
         <Target />
 
@@ -220,6 +220,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         times(stats.shells, (index) => (
           <Shell stats={stats} index={index} key={index} />
         ))}
-    </Card>
+    </VisualizerCard>
   );
 }
