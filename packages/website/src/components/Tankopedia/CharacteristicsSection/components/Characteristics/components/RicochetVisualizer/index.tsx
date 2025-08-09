@@ -1,6 +1,6 @@
 import { asset, isExplosive } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
-import { Box, Code, Flex, Text } from '@radix-ui/themes';
+import { Box, Flex, Text } from '@radix-ui/themes';
 import { useRef, useState } from 'react';
 import { clamp, degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 import { Var } from '../../../../../../../core/radix/var';
@@ -8,6 +8,7 @@ import { useLocale } from '../../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../../stores/duel';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
 import { VisualizerCard } from '../VisualizerCard';
+import { VisualizerCornerStat } from '../VisualizerCornerStat';
 import { ShellSwitcher } from './components/ShellSwitcher';
 
 export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
@@ -157,85 +158,51 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           />
         </Box>
 
-        <Flex
-          style={{ userSelect: 'none' }}
-          gap="4"
-          position="absolute"
-          top="0"
-          left="0"
-          p="3"
-          width="100%"
-          justify="between"
-        >
-          <Flex gap="2">
-            <Text color="gray" size="1">
-              {strings.website.tools.tankopedia.visualizers.ricochet.angle}
-            </Text>
-            <Code size="1" variant="ghost">
-              {literals(strings.common.units.deg, [
-                radToDeg(Math.abs(angle)).toFixed(0),
-              ])}
-            </Code>
-          </Flex>
-
-          <Flex gap="2">
-            <Text color="gray" size="1">
-              {
-                strings.website.tools.tankopedia.visualizers.ricochet
-                  .normalization
-              }
-            </Text>
-            <Code size="1" variant="ghost">
-              {doesRicochet
-                ? '-'
-                : literals(strings.common.units.deg, [
-                    radToDeg(Math.min(normalization, Math.abs(angle))).toFixed(
-                      0,
-                    ),
-                  ])}
-            </Code>
-          </Flex>
-        </Flex>
-
-        <Flex
-          style={{ userSelect: 'none' }}
-          gap="4"
-          position="absolute"
-          bottom="0"
-          left="0"
-          p="3"
-          width="100%"
-          justify="between"
-        >
-          <Flex gap="2">
-            <Text color="gray" size="1">
-              {
-                strings.website.tools.tankopedia.visualizers.ricochet
-                  .effective_angle
-              }
-            </Text>
-            <Code size="1" variant="ghost">
-              {doesRicochet
-                ? '-'
-                : literals(strings.common.units.deg, [
-                    radToDeg(Math.abs(effectiveAngle)).toFixed(0),
-                  ])}
-            </Code>
-          </Flex>
-
-          <Flex gap="2">
-            <Text color="gray" size="1">
-              {strings.website.tools.tankopedia.visualizers.ricochet.armor}
-            </Text>
-            <Code size="1" variant="ghost">
-              {doesRicochet
-                ? '-'
-                : literals(strings.common.units.percentage, [
-                    armorPercentage.toFixed(0),
-                  ])}
-            </Code>
-          </Flex>
-        </Flex>
+        <VisualizerCornerStat
+          label={strings.website.tools.tankopedia.visualizers.ricochet.angle}
+          value={literals(strings.common.units.deg, [
+            radToDeg(Math.abs(angle)).toFixed(0),
+          ])}
+          side="top-left"
+        />
+        <VisualizerCornerStat
+          label={
+            strings.website.tools.tankopedia.visualizers.ricochet.normalization
+          }
+          value={
+            doesRicochet
+              ? '-'
+              : literals(strings.common.units.deg, [
+                  radToDeg(Math.min(normalization, Math.abs(angle))).toFixed(0),
+                ])
+          }
+          side="top-right"
+        />
+        <VisualizerCornerStat
+          label={
+            strings.website.tools.tankopedia.visualizers.ricochet
+              .effective_angle
+          }
+          value={
+            doesRicochet
+              ? '-'
+              : literals(strings.common.units.deg, [
+                  radToDeg(Math.abs(effectiveAngle)).toFixed(0),
+                ])
+          }
+          side="bottom-left"
+        />
+        <VisualizerCornerStat
+          label={strings.website.tools.tankopedia.visualizers.ricochet.armor}
+          value={
+            doesRicochet
+              ? '-'
+              : literals(strings.common.units.percentage, [
+                  armorPercentage.toFixed(0),
+                ])
+          }
+          side="bottom-right"
+        />
 
         {explodes && (
           <Flex

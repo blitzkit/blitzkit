@@ -1,7 +1,18 @@
+import { literals } from '@blitzkit/i18n';
+import { Box } from '@radix-ui/themes';
+import { useRef, useState } from 'react';
+import { radToDeg } from 'three/src/math/MathUtils.js';
 import { awaitableModelDefinitions } from '../../../../../../../core/awaitables/modelDefinitions';
-import { DEFAULT_PITCH_TRANSITION } from '../../../../../../../core/blitz/applyPitchYawLimits';
+import {
+  applyPitchYawLimits,
+  DEFAULT_PITCH_TRANSITION,
+} from '../../../../../../../core/blitz/applyPitchYawLimits';
+import { hasEquipment } from '../../../../../../../core/blitzkit/hasEquipment';
+import { Var } from '../../../../../../../core/radix/var';
+import { useLocale } from '../../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../../stores/duel';
 import { VisualizerCard } from '../VisualizerCard';
+import { VisualizerCornerStat } from '../VisualizerCornerStat';
 
 const ANGLE_COEFFICIENT = 1 / 10;
 
@@ -17,6 +28,17 @@ function c(thetaDeg: number, m = 1) {
 }
 
 export function GunFlexibilityVisualizer() {
+  const { strings } = useLocale();
+
+  const [yaw, setYaw] = useState(0);
+  const [minPitch, setMinPitch] = useState(0);
+  const [maxPitch, setMaxPitch] = useState(0);
+
+  const container = useRef<HTMLDivElement>(null);
+  const highlighter = useRef<HTMLDivElement>(null);
+  const pointer = useRef<HTMLDivElement>(null);
+
+  const duelStore = Duel.useStore();
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -66,7 +88,6 @@ export function GunFlexibilityVisualizer() {
   } else if (b) {
     d += `A ${mo} ${mo} 0 0 0 ${c(-90 - b.range / 2 - t, mo)}`;
   } else {
-    console.log('this should log 0');
     d += `A ${mo} ${mo} 0 0 0 ${c(-90, mo)}`;
   }
 
@@ -125,7 +146,76 @@ export function GunFlexibilityVisualizer() {
   d += `Z`;
 
   return (
-    <VisualizerCard>
+    <VisualizerCard
+      ref={container}
+      onPointerMove={(event) => {
+        if (!container.current || !highlighter.current || !pointer.current)
+          return;
+
+        const rect = container.current.getBoundingClientRect();
+        const u = event.clientX - rect.left - rect.width / 2;
+        const v = event.clientY - rect.top - rect.height / 2;
+        const yaw = Math.atan2(u, -v);
+
+        const {
+          equipmentMatrix,
+          tank: { equipment_preset },
+        } = duelStore.getState().protagonist;
+        const hasImprovedVerticalStabilizer = hasEquipment(
+          122,
+          equipment_preset,
+          equipmentMatrix,
+        );
+        const hasDownImprovedVerticalStabilizer = hasEquipment(
+          124,
+          equipment_preset,
+          equipmentMatrix,
+        );
+
+        const min = applyPitchYawLimits(
+          -Math.PI,
+          yaw,
+          p,
+          y,
+          hasImprovedVerticalStabilizer,
+          hasDownImprovedVerticalStabilizer,
+        );
+        const max = applyPitchYawLimits(
+          Math.PI,
+          yaw,
+          p,
+          y,
+          hasImprovedVerticalStabilizer,
+          hasDownImprovedVerticalStabilizer,
+        );
+
+        setYaw(min[1]);
+        setMinPitch(min[0]);
+        setMaxPitch(max[0]);
+      }}
+    >
+      <Box
+        ref={highlighter}
+        position="absolute"
+        top="0"
+        left="0"
+        width="100%"
+        height="100%"
+        style={{
+          borderRadius: Var('radius-2'),
+          overflow: 'hidden',
+        }}
+      >
+        <Box
+          width="100%"
+          height="100%"
+          style={{
+            opacity: 2 ** -3,
+            backgroundImage: `url(/assets/images/tankopedia/visualizers/ricochet/armor-hash.png)`,
+          }}
+        />
+      </Box>
+
       <svg
         style={{
           position: 'absolute',
@@ -138,15 +228,15 @@ export function GunFlexibilityVisualizer() {
       >
         <path
           fillRule="evenodd"
-          fill="var(--gray-5)"
-          stroke="var(--gray-7)"
+          fill="var(--gray-6)"
+          stroke="var(--gray-8)"
           strokeWidth="1px"
           vectorEffect="non-scaling-stroke"
           d={d}
         />
 
         <path
-          stroke="var(--gray-10)"
+          stroke="var(--gray-11)"
           fill="transparent"
           strokeWidth="1px"
           strokeDasharray="0.5rem 0.5rem"
@@ -154,6 +244,54 @@ export function GunFlexibilityVisualizer() {
           d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
         />
       </svg>
+
+      <Box
+        ref={pointer}
+        position="absolute"
+        top="50%"
+        left="50%"
+        width="0"
+        height="0"
+        style={{
+          transform: `translate(-50%, -50%) rotate(${yaw + Math.PI}rad)`,
+        }}
+      >
+        <Box
+          width="1pt"
+          height="14rem"
+          style={{
+            borderRadius: Var('radius-1'),
+            background: `linear-gradient(${Var('gray-a6')}, ${Var('gray-a11')})`,
+            transform: 'translateX(-50%)',
+          }}
+        />
+      </Box>
+
+      <VisualizerCornerStat
+        label={
+          strings.website.tools.tankopedia.visualizers.flexibility.elevation
+        }
+        value={literals(strings.common.units.deg, [
+          radToDeg(maxPitch).toFixed(0),
+        ])}
+        side="top-left"
+      />
+
+      <VisualizerCornerStat
+        label={
+          strings.website.tools.tankopedia.visualizers.flexibility.depression
+        }
+        value={literals(strings.common.units.deg, [
+          radToDeg(-minPitch).toFixed(0),
+        ])}
+        side="top-right"
+      />
+
+      <VisualizerCornerStat
+        label={strings.website.tools.tankopedia.visualizers.flexibility.yaw}
+        value={literals(strings.common.units.deg, [radToDeg(yaw).toFixed(0)])}
+        side="bottom-left"
+      />
     </VisualizerCard>
   );
 }

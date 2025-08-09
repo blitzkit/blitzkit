@@ -913,6 +913,12 @@
             "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
+          },
+
+          "flexibility": {
+            "yaw": "Yaw",
+            "depression": "Depression",
+            "elevation": "Elevation"
           }
         },
 

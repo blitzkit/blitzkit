@@ -86,5 +86,5 @@ export function applyPitchYawLimits(
 
   newPitch = clamp(newPitch, lowerPitch, upperPitch);
 
-  return [newPitch, newYaw];
+  return [newPitch, newYaw] as const;
 }

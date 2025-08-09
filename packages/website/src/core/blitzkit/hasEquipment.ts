@@ -1,12 +1,13 @@
 import type { EquipmentMatrix } from '../../stores/duel';
 import { awaitableEquipmentDefinitions } from '../awaitables/equipmentDefinitions';
 
-export async function hasEquipment(
+const equipmentDefinitions = await awaitableEquipmentDefinitions;
+
+export function hasEquipment(
   id: number,
   equipmentPreset: string,
   equipmentMatrix: EquipmentMatrix,
 ) {
-  const equipmentDefinitions = await awaitableEquipmentDefinitions;
   const preset = equipmentDefinitions.presets[equipmentPreset];
   return preset.slots.some((slot, index) => {
     const row = Math.floor(index / 3);
