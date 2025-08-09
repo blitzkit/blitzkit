@@ -1,5 +1,5 @@
 import { TankType } from '@blitzkit/core';
-import { Box, Heading } from '@radix-ui/themes';
+import { Flex, Heading } from '@radix-ui/themes';
 import { Var } from '../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../stores/duel';
@@ -87,13 +87,27 @@ export function Title({ foreground }: TitleProps) {
       ? '2rem'
       : `min(65vh, ${125 / name.length}vw)`
     : `min(48vh, ${75 / name.length}vw)`;
+  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   return (
-    <Box
+    <Flex
+      onPointerDown={(event) => {
+        event.preventDefault();
+
+        mutateTankopediaEphemeral((draft) => {
+          draft.disturbed = true;
+        });
+      }}
+      direction="column"
       position="absolute"
+      align="center"
+      justify="center"
       top={disturbed ? '6rem' : '50%'}
       left="50%"
+      width="100%"
+      height={disturbed ? fontSize : '100%'}
       style={{
+        pointerEvents: disturbed ? 'none' : undefined,
         transitionDuration: '1s',
         transform: 'translate(-50%, -50%)',
       }}
@@ -109,7 +123,7 @@ export function Title({ foreground }: TitleProps) {
           opacity: foreground && disturbed ? 0 : 1,
           letterSpacing: disturbed || !revealed ? 0 : '-0.03em',
           transition: `
-            letter-spacing 1.5s ${disturbed ? '' : 'cubic-bezier(.81,-2,.68,1)'},
+            letter-spacing 1.5s ${disturbed ? '' : 'cubic-bezier(0.81, -2, 0.68, 1)'},
             font-size 1s,
             -webkit-text-stroke 2s,
             opacity 1s
@@ -121,6 +135,6 @@ export function Title({ foreground }: TitleProps) {
       </Heading>
 
       {!revealed && <Tracker fontSize={fontSize} />}
-    </Box>
+    </Flex>
   );
 }

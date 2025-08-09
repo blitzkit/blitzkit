@@ -112,8 +112,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
         top={isFullScreen ? '0' : undefined}
         left={isFullScreen ? '0' : undefined}
       >
-        <Title />
-
         <Box
           className="tank-sandbox-container"
           flexGrow="1"
@@ -122,6 +120,8 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           position="relative"
         >
           <Box position="absolute" width="100%" height="100%" overflow="hidden">
+            <Title />
+
             <Box
               width="100%"
               height="100%"
@@ -147,6 +147,8 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
               </Box>
             </Box>
 
+            <Title foreground />
+
             <Options
               skeleton={skeleton}
               canvas={canvas}
@@ -154,8 +156,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
             />
           </Box>
         </Box>
-
-        <Title foreground />
       </Flex>
     </Flex>
   );
