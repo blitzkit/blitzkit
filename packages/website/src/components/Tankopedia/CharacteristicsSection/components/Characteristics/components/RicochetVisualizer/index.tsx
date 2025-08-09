@@ -28,6 +28,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
   return (
     <Flex direction="column" mb="6" align="center">
       <VisualizerCard
+        mb="0"
         style={{ width: '100%' }}
         ref={container}
         onPointerMove={(event) => {

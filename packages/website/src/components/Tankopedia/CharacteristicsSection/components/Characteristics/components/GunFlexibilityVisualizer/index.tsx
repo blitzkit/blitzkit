@@ -40,12 +40,12 @@ export function GunFlexibilityVisualizer() {
   } else if (b) {
     d += `M ${c(-90 + b.range / 2 + t, mo)}`;
   } else {
-    d += `M ${c(-90 / 2, mo)}`;
+    d += `M ${c(-90, mo)}`;
   }
   if (f) {
     d += `A ${mo} ${mo} 0 0 0 ${c(90 - f.range / 2 - t, mo)}`;
   } else {
-    d += `A ${mo} ${mo} 0 0 0 ${c(90 / 2, mo)}`;
+    d += `A ${mo} ${mo} 0 0 0 ${c(90, mo)}`;
   }
 
   // front
@@ -59,14 +59,15 @@ export function GunFlexibilityVisualizer() {
   if (f) {
     d += `L ${c(90 + f.range / 2 + t, mo)}`;
   } else {
-    d += `L ${c(90 / 2, mo)}`;
+    d += `L ${c(90, mo)}`;
   }
   if (y) {
     d += `A ${mo} ${mo} 0 0 0 ${c(90 - y.min, mo)}`;
   } else if (b) {
     d += `A ${mo} ${mo} 0 0 0 ${c(-90 - b.range / 2 - t, mo)}`;
   } else {
-    d += `A ${mo} ${mo} 0 0 0 ${c(-90 / 2, mo)}`;
+    console.log('this should log 0');
+    d += `A ${mo} ${mo} 0 0 0 ${c(-90, mo)}`;
   }
 
   // back
@@ -85,12 +86,12 @@ export function GunFlexibilityVisualizer() {
   } else if (b) {
     d += `M ${c(-90 + b.range / 2 + t, mi)}`;
   } else {
-    d += `M ${c(-90 / 2, mi)}`;
+    d += `M ${c(-90, mi)}`;
   }
   if (f) {
     d += `A ${mi} ${mi} 0 0 0 ${c(90 - f.range / 2 - t, mi)}`;
   } else {
-    d += `A ${mi} ${mi} 0 0 0 ${c(90 / 2, mi)}`;
+    d += `A ${mi} ${mi} 0 0 0 ${c(90, mi)}`;
   }
 
   // front
@@ -104,14 +105,14 @@ export function GunFlexibilityVisualizer() {
   if (f) {
     d += `L ${c(90 + f.range / 2 + t, mi)}`;
   } else {
-    d += `L ${c(90 / 2, mi)}`;
+    d += `L ${c(90, mi)}`;
   }
   if (y) {
     d += `A ${mi} ${mi} 0 0 0 ${c(90 - y.min, mi)}`;
   } else if (b) {
     d += `A ${mi} ${mi} 0 0 0 ${c(-90 - b.range / 2 - t, mi)}`;
   } else {
-    d += `A ${mi} ${mi} 0 0 0 ${c(-90 / 2, mi)}`;
+    d += `A ${mi} ${mi} 0 0 0 ${c(-90, mi)}`;
   }
 
   // back
