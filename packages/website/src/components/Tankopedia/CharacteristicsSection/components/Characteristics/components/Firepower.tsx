@@ -344,7 +344,7 @@ export function Firepower({ stats }: StatsAcceptorProps) {
       <InfoWithDelta
         stats={stats}
         decimals={1}
-        prefix="x "
+        prefix="x"
         indent
         deltaType="lowerIsBetter"
         value="dispersionGunDamaged"
