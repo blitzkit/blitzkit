@@ -136,7 +136,9 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
                   height: '100%',
                   transitionDuration: '2s',
                   opacity: revealed ? 1 : 0,
-                  filter: disturbed ? undefined : `drop-shadow(0 0 1rem black)`,
+                  filter: disturbed
+                    ? undefined
+                    : `drop-shadow(0 1rem 1rem black)`,
                 }}
               >
                 <Suspense>
