@@ -8,6 +8,7 @@ import { useEquipment } from '../../../../../hooks/useEquipment';
 import { useTankModelDefinition } from '../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../stores/duel';
 import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
+import type { MaybeSkeletonComponentProps } from '../../../../../types/maybeSkeletonComponentProps';
 import { Crew } from './components/Crew';
 import { Firepower } from './components/Firepower';
 import { Maneuverability } from './components/Maneuverability';
@@ -18,7 +19,7 @@ const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
   awaitableProvisionDefinitions,
 ]);
 
-export function Characteristics() {
+export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   const mutateDuel = Duel.useMutation();
   const crewSkills = TankopediaEphemeral.use((state) => state.skills);
   const provisions = Duel.use((state) => state.protagonist.provisions);
@@ -93,7 +94,7 @@ export function Characteristics() {
       align={{ initial: 'center', sm: 'start' }}
       width={{ initial: '100%', sm: 'auto' }}
     >
-      <Firepower stats={stats} />
+      <Firepower skeleton={skeleton} stats={stats} />
 
       <Flex
         gap="8"

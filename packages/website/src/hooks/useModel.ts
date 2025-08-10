@@ -25,5 +25,6 @@ export function useModel(id: number) {
       ),
     };
   }
+
   return cache[id];
 }

@@ -1,7 +1,7 @@
 import { toUniqueId } from '@blitzkit/core';
 import { NodeIO } from '@gltf-transform/core';
 import { ALL_EXTENSIONS } from '@gltf-transform/extensions';
-import { readdir, writeFile } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import { extractModel } from '../core/blitz/extractModel';
 import { readXMLDVPL } from '../core/blitz/readXMLDVPL';
 import { readYAMLDVPL } from '../core/blitz/readYAMLDVPL';
@@ -32,6 +32,7 @@ export async function tankModels() {
       if (tankKey.includes('tutorial_bot')) continue;
 
       const id = toUniqueId(nation, tank.id);
+
       const parameters = await readYAMLDVPL<TankParameters>(
         `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
       );

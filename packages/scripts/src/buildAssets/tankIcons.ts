@@ -62,6 +62,7 @@ export async function tankIcons() {
 
           const nationVehicleId = tank.id;
           const id = (nationVehicleId << 8) + (NATION_IDS[nation] << 4) + 1;
+
           const parameters = await readYAMLDVPL<TankParameters>(
             `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
           );

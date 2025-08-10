@@ -54,9 +54,9 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
                 {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
                   <TechTreeSection skeleton={skeleton} />
                 )}
-                <CharacteristicsSection />
+                <CharacteristicsSection skeleton={skeleton} />
                 <GameModeSection />
-                {guide && <GuideSection skeleton={skeleton} guide={guide} />}
+                {guide && <GuideSection guide={guide} />}
                 <VideoSection skeleton={skeleton} />
               </PageWrapper>
             </Duel.Provider>

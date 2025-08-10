@@ -21,6 +21,7 @@ import { useEquipment } from '../../../../../../hooks/useEquipment';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../../stores/duel';
+import type { MaybeSkeletonComponentProps } from '../../../../../../types/maybeSkeletonComponentProps';
 import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
 import { GunFlexibilityVisualizer } from './GunFlexibilityVisualizer';
 import { Info } from './Info';
@@ -30,7 +31,10 @@ import { RicochetVisualizer } from './RicochetVisualizer';
 import { StatsTableWrapper } from './StatsTableWrapper';
 import type { StatsAcceptorProps } from './TraverseVisualizer';
 
-export function Firepower({ stats }: StatsAcceptorProps) {
+export function Firepower({
+  stats,
+  skeleton,
+}: StatsAcceptorProps & MaybeSkeletonComponentProps) {
   const mutateDuel = Duel.useMutation();
   const { strings, unwrap } = useLocale();
   const [penetrationDistance, setPenetrationDistance] = useState(250);
@@ -405,7 +409,7 @@ export function Firepower({ stats }: StatsAcceptorProps) {
           />
         </>
       )}
-      <GunFlexibilityVisualizer />
+      <GunFlexibilityVisualizer skeleton={skeleton} />
     </StatsTableWrapper>
   );
 }

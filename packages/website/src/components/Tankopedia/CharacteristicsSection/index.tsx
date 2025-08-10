@@ -1,4 +1,5 @@
 import { Flex } from '@radix-ui/themes';
+import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
 import { Characteristics } from './components/Characteristics';
 import { CompareOptions } from './components/Characteristics/components/CompareOptions';
 import { StatSearch } from './components/Characteristics/components/StatSearch';
@@ -9,7 +10,9 @@ import { Modules } from './components/Modules';
 import { Provisions } from './components/Provisions';
 import { Skills } from './components/Skills';
 
-export function CharacteristicsSection() {
+export function CharacteristicsSection({
+  skeleton,
+}: MaybeSkeletonComponentProps) {
   return (
     <Flex direction="column" gap="3">
       <Flex
@@ -64,7 +67,7 @@ export function CharacteristicsSection() {
               <CompareOptions />
             </Flex>
 
-            <Characteristics />
+            <Characteristics skeleton={skeleton} />
           </Flex>
         </Flex>
       </Flex>
