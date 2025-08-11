@@ -198,7 +198,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               hasImprovedVerticalStabilizer,
               hasDownImprovedVerticalStabilizer,
             );
-            modelTransformEvent.emit({ pitch, yaw });
+            modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
             mutateDuel((draft) => {
@@ -298,7 +298,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                 hasImprovedVerticalStabilizer,
                 hasDownImprovedVerticalStabilizer,
               );
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
               mutateTankopediaEphemeral((draft) => {
@@ -386,7 +386,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                 hasImprovedVerticalStabilizer,
                 hasDownImprovedVerticalStabilizer,
               );
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
               mutateTankopediaEphemeral((draft) => {

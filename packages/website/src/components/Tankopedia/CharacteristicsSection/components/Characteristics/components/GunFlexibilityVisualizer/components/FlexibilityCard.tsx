@@ -8,6 +8,7 @@ import {
   applyPitchYawLimits,
 } from '../../../../../../../../core/blitz/applyPitchYawLimits';
 import { hasEquipment } from '../../../../../../../../core/blitzkit/hasEquipment';
+import { modelTransformEvent } from '../../../../../../../../core/blitzkit/modelTransform';
 import { Var } from '../../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../../../stores/duel';
@@ -155,7 +156,7 @@ export function FlexibilityCard() {
         const rect = container.current.getBoundingClientRect();
         const u = event.clientX - rect.left - rect.width / 2;
         const v = event.clientY - rect.top - rect.height / 2;
-        const yaw = Math.atan2(u, -v);
+        let yaw = Math.atan2(u, -v);
 
         const {
           equipmentMatrix,
@@ -189,9 +190,14 @@ export function FlexibilityCard() {
           hasDownImprovedVerticalStabilizer,
         );
 
-        setYaw(min[1]);
+        yaw = min[1];
+        const pitch = min[0];
+
+        setYaw(yaw);
         setMinPitch(min[0]);
         setMaxPitch(max[0]);
+
+        modelTransformEvent.dispatch({ pitch, yaw });
       }}
       mb="0"
     >
@@ -229,7 +235,7 @@ export function FlexibilityCard() {
       >
         <path
           fillRule="evenodd"
-          fill="var(--gray-6)"
+          fill="var(--gray-5)"
           stroke="var(--gray-8)"
           strokeWidth="1px"
           vectorEffect="non-scaling-stroke"
@@ -262,7 +268,7 @@ export function FlexibilityCard() {
           height="14rem"
           style={{
             borderRadius: Var('radius-1'),
-            background: `linear-gradient(${Var('gray-a6')}, ${Var('gray-a11')})`,
+            background: `linear-gradient(${Var('gray-a11')}, ${Var('gray-a6')})`,
             transform: 'translateX(-50%)',
           }}
         />

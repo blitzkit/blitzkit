@@ -189,7 +189,7 @@ export function TankModel() {
               hasImprovedVerticalStabilizer,
               hasDownImprovedVerticalStabilizer,
             );
-            modelTransformEvent.emit({ pitch, yaw });
+            modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
             mutateDuel((draft) => {
@@ -296,7 +296,7 @@ export function TankModel() {
                 hasImprovedVerticalStabilizer,
                 hasDownImprovedVerticalStabilizer,
               );
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
               mutateTankopediaEphemeral((draft) => {

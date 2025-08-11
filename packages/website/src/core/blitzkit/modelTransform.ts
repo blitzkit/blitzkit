@@ -1,8 +1,8 @@
-import { EventManager } from '@blitzkit/core';
+import { Quicklime } from 'quicklime';
 
 export interface ModelTransformEventData {
   yaw?: number;
   pitch: number;
 }
 
-export const modelTransformEvent = new EventManager<ModelTransformEventData>();
+export const modelTransformEvent = new Quicklime<ModelTransformEventData>();

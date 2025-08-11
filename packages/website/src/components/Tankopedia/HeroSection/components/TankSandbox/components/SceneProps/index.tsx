@@ -189,7 +189,7 @@ export function SceneProps() {
       dispersion = Math.max(characteristics.dispersion * penalty, dispersion);
     }
 
-    modelTransformEvent.emit({ pitch, yaw });
+    modelTransformEvent.dispatch({ pitch, yaw });
     lastPitch = pitch;
     lastYaw = yaw;
 

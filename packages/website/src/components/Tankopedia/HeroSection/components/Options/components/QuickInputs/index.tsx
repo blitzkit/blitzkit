@@ -97,7 +97,7 @@ export function QuickInputs() {
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
-          modelTransformEvent.emit({ pitch, yaw });
+          modelTransformEvent.dispatch({ pitch, yaw });
           mutateDuel((state) => {
             state.protagonist.pitch = pitch;
             state.protagonist.yaw = yaw;
@@ -140,7 +140,7 @@ export function QuickInputs() {
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
-          modelTransformEvent.emit({ pitch, yaw });
+          modelTransformEvent.dispatch({ pitch, yaw });
           mutateDuel((state) => {
             state.protagonist.pitch = pitch;
             state.protagonist.yaw = yaw;

@@ -125,7 +125,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
                 hasDownImprovedVerticalStabilizer,
               );
 
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
               draft.protagonist.pitch = pitch;
               draft.protagonist.yaw = yaw;
             });
@@ -143,7 +143,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
                 hasImprovedVerticalStabilizer,
               );
 
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
               draft.protagonist.pitch = pitch;
               draft.protagonist.yaw = yaw;
             });
@@ -161,7 +161,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
                 hasImprovedVerticalStabilizer,
               );
 
-              modelTransformEvent.emit({ pitch, yaw });
+              modelTransformEvent.dispatch({ pitch, yaw });
               draft.protagonist.pitch = pitch;
               draft.protagonist.yaw = yaw;
             });
