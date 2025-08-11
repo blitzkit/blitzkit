@@ -1,5 +1,5 @@
 import { BLITZKIT_TANK_ICON_SIZE } from '@blitzkit/core';
-import { Canvas, invalidate } from '@react-three/fiber';
+import { invalidate } from '@react-three/fiber';
 import {
   forwardRef,
   Suspense,
@@ -13,7 +13,6 @@ import { applyPitchYawLimits } from '../../../../../core/blitz/applyPitchYawLimi
 import { modelTransformEvent } from '../../../../../core/blitzkit/modelTransform';
 import { Pose, poseEvent } from '../../../../../core/blitzkit/pose';
 import { useEquipment } from '../../../../../hooks/useEquipment';
-import { useOnScreen } from '../../../../../hooks/useOnScreen';
 import { useTankModelDefinition } from '../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../stores/duel';
 import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
@@ -26,6 +25,7 @@ import {
   StaticArmor,
   type ThicknessRange,
 } from '../../../../Armor/components/StaticArmor';
+import { SmartCanvas } from '../../../../SmartCanvas';
 import { AutoClear } from './components/AutoClear';
 import { Controls } from './components/Control';
 import { InitialFogReveal } from './components/InitialFogReveal';
@@ -65,7 +65,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const hideTankModelUnderArmor = TankopediaPersistent.use(
       (state) => state.hideTankModelUnderArmor,
     );
-    const onScreen = useOnScreen(canvas);
 
     useEffect(() => {
       if (rawDisplay === display) return;
@@ -204,10 +203,9 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     }, [display]);
 
     return (
-      <Canvas
+      <SmartCanvas
         ref={canvas}
         scene={{ fog: naked ? undefined : fog.current }}
-        frameloop={onScreen ? 'demand' : 'never'}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,
@@ -248,7 +246,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           )}
           <Lighting display={display} />
         </Suspense>
-      </Canvas>
+      </SmartCanvas>
     );
   },
 );

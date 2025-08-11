@@ -1,4 +1,3 @@
-import { invalidate } from '@react-three/fiber';
 import type { QuicklimeEvent } from 'quicklime';
 import { useEffect, useRef } from 'react';
 import type { Group } from 'three';
@@ -19,8 +18,6 @@ export function CanvasContent() {
       if (!gun.current) return;
 
       gun.current.rotation.x = event.data.pitch;
-
-      invalidate();
     }
 
     modelTransformEvent.on(handleModelTransformEvent);

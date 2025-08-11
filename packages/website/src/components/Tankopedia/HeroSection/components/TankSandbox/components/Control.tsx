@@ -1,6 +1,6 @@
 import { I_HAT, J_HAT } from '@blitzkit/core';
 import { OrbitControls } from '@react-three/drei';
-import { invalidate, useThree } from '@react-three/fiber';
+import { invalidate, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import { PerspectiveCamera, Vector3 } from 'three';
 import { OrbitControls as OrbitControlsClass } from 'three-stdlib';
@@ -90,32 +90,16 @@ export function Controls({
     -13,
   ).multiplyScalar(distanceScale);
 
-  useEffect(() => {
-    if (!orbitControls.current || !doAutoRotate) return;
+  const t0 = useRef(Date.now() / 1000);
+  useFrame(() => {
+    const now = Date.now() / 1000;
+    const t = now - t0.current;
 
-    const t0 = Date.now() / 1000;
-    let cancel = false;
-
-    function frame() {
-      if (!cancel) requestAnimationFrame(frame);
-
-      const now = Date.now() / 1000;
-      const t = now - t0;
-
-      camera.position
-        .copy(inspectModeInitialPosition)
-        .applyAxisAngle(I_HAT, (Math.PI / 32) * Math.sin(t / 9))
-        .applyAxisAngle(J_HAT, (-Math.PI / 16) * Math.sin(t / 7));
-
-      invalidate();
-    }
-
-    frame();
-
-    return () => {
-      cancel = true;
-    };
-  }, [doAutoRotate, camera]);
+    camera.position
+      .copy(inspectModeInitialPosition)
+      .applyAxisAngle(I_HAT, (Math.PI / 32) * Math.sin(t / 9))
+      .applyAxisAngle(J_HAT, (-Math.PI / 16) * Math.sin(t / 7));
+  });
 
   useEffect(() => {
     const unsubscribeTankopediaEphemeral = tankopediaEphemeralStore.subscribe(
@@ -229,8 +213,6 @@ export function Controls({
   }, [camera, protagonistTank.id, antagonistTank.id]);
 
   useEffect(() => {
-    let isInitialIteration = true;
-
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
     }
