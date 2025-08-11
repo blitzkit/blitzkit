@@ -917,6 +917,7 @@
 
           "flexibility": {
             "yaw": "Yaw",
+            "pitch": "Pitch",
             "depression": "Depression",
             "elevation": "Elevation"
           }

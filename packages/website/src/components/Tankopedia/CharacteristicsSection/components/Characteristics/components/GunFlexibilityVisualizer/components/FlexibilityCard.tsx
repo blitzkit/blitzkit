@@ -1,7 +1,7 @@
 import { literals } from '@blitzkit/i18n';
 import { Box } from '@radix-ui/themes';
 import { useRef, useState } from 'react';
-import { radToDeg } from 'three/src/math/MathUtils.js';
+import { clamp, degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 import { awaitableModelDefinitions } from '../../../../../../../../core/awaitables/modelDefinitions';
 import {
   DEFAULT_PITCH_TRANSITION,
@@ -20,7 +20,11 @@ const ANGLE_COEFFICIENT = 1 / 10;
 const modelDefinition = await awaitableModelDefinitions;
 
 function mag(x: number) {
-  return ((2 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1) / 2;
+  return (1 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1 / 2;
+}
+
+function magInverse(y: number): number {
+  return (1 / ANGLE_COEFFICIENT) * Math.tan(Math.PI * y - Math.PI / 2);
 }
 
 function c(thetaDeg: number, m = 1) {
@@ -32,6 +36,7 @@ export function FlexibilityCard() {
   const { strings } = useLocale();
 
   const [yaw, setYaw] = useState(0);
+  const [pitch, setPitch] = useState(0);
   const [minPitch, setMinPitch] = useState(0);
   const [maxPitch, setMaxPitch] = useState(0);
 
@@ -146,6 +151,10 @@ export function FlexibilityCard() {
 
   d += `Z`;
 
+  const r = mag(radToDeg(-pitch));
+  const dotX = r * Math.sin(yaw);
+  const dotY = r * Math.cos(yaw);
+
   return (
     <VisualizerCard
       ref={container}
@@ -191,8 +200,12 @@ export function FlexibilityCard() {
         );
 
         yaw = min[1];
-        const pitch = min[0];
+        let t = 2 * Math.sqrt((u / rect.width) ** 2 + (v / rect.height) ** 2);
+        t = clamp(t, 0, 1);
+        let pitch = degToRad(magInverse(-t));
+        pitch = clamp(pitch, min[0], max[0]);
 
+        setPitch(pitch);
         setYaw(yaw);
         setMinPitch(min[0]);
         setMaxPitch(max[0]);
@@ -248,7 +261,12 @@ export function FlexibilityCard() {
           strokeWidth="1px"
           strokeDasharray="0.5rem 0.5rem"
           vectorEffect="non-scaling-stroke"
-          d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
+          d={`
+            M 0.5 0
+            A 0.5 0.5 0 1 1 -0.5 0
+            A 0.5 0.5 0 1 1 0.5 0
+            Z
+          `}
         />
       </svg>
 
@@ -274,6 +292,19 @@ export function FlexibilityCard() {
         />
       </Box>
 
+      <Box
+        position="absolute"
+        left={`${50 * (dotX + 1)}%`}
+        bottom={`${50 * (dotY + 1)}%`}
+        width="0.25rem"
+        height="0.25rem"
+        style={{
+          borderRadius: '50%',
+          backgroundColor: Var('gray-12'),
+          transform: 'translate(-50%, 50%)',
+        }}
+      />
+
       <VisualizerCornerStat
         label={
           strings.website.tools.tankopedia.visualizers.flexibility.elevation
@@ -295,9 +326,15 @@ export function FlexibilityCard() {
       />
 
       <VisualizerCornerStat
+        label={strings.website.tools.tankopedia.visualizers.flexibility.pitch}
+        value={literals(strings.common.units.deg, [radToDeg(pitch).toFixed(0)])}
+        side="bottom-left"
+      />
+
+      <VisualizerCornerStat
         label={strings.website.tools.tankopedia.visualizers.flexibility.yaw}
         value={literals(strings.common.units.deg, [radToDeg(yaw).toFixed(0)])}
-        side="bottom-left"
+        side="bottom-right"
       />
     </VisualizerCard>
   );

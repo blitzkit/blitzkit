@@ -6,11 +6,11 @@ export const zoom = 60;
 export function FlexibilityCanvas() {
   return (
     <Canvas
-      // frameloop="demand"
+      frameloop="demand"
       orthographic
       camera={{
         zoom,
-        position: [10, 0, -2],
+        position: [10, 0, -1.5],
         rotation: [0, Math.PI / 2, 0],
       }}
     >
