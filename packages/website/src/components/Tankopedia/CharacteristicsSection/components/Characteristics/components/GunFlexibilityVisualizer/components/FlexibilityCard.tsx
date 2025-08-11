@@ -64,7 +64,8 @@ export function FlexibilityCard() {
   // right
   const mo = mag(p.max);
   if (y) {
-    d += `M ${c(90 - y.max, mo)}`;
+    d += `M 0 0`;
+    d += `L ${c(90 - y.max, mo)}`;
   } else if (b) {
     d += `M ${c(-90 + b.range / 2 + t, mo)}`;
   } else {
@@ -109,7 +110,8 @@ export function FlexibilityCard() {
   // right
   const mi = mag(p.min);
   if (y) {
-    d += `M ${c(90 - y.max, mi)}`;
+    d += `M 0 0`;
+    d += `L ${c(90 - y.max, mi)}`;
   } else if (b) {
     d += `M ${c(-90 + b.range / 2 + t, mi)}`;
   } else {
