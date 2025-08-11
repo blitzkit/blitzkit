@@ -92,6 +92,8 @@ export function Controls({
 
   const t0 = useRef(Date.now() / 1000);
   useFrame(() => {
+    if (!doAutoRotate) return;
+
     const now = Date.now() / 1000;
     const t = now - t0.current;
 
