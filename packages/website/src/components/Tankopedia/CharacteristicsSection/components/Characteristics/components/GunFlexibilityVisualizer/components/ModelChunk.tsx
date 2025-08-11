@@ -59,7 +59,7 @@ export function ModelChunk({ onlyGun = false }: Props) {
                 <>
                   <mesh key={key} {...props} material={surfaceMaterial} />
                   <lineSegments material={outlineMaterial}>
-                    <edgesGeometry args={[mesh.geometry, 30]} />
+                    <edgesGeometry args={[mesh.geometry, 29]} />
                   </lineSegments>
                 </>
               );
