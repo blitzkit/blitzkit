@@ -101,6 +101,8 @@ export function Controls({
       .copy(inspectModeInitialPosition)
       .applyAxisAngle(I_HAT, (Math.PI / 32) * Math.sin(t / 9))
       .applyAxisAngle(J_HAT, (-Math.PI / 16) * Math.sin(t / 7));
+
+    invalidate();
   });
 
   useEffect(() => {
