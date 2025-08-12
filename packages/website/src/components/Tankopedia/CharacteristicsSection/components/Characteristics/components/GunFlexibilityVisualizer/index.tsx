@@ -364,23 +364,19 @@ export function GunFlexibilityVisualizer({
         />
 
         <VisualizerCornerStat
-          label={
-            strings.website.tools.tankopedia.visualizers.flexibility.elevation
-          }
+          label={strings.website.tools.tankopedia.visualizers.flexibility.max}
           value={literals(strings.common.units.deg, [
             radToDeg(maxPitch).toFixed(0),
           ])}
-          side="top-left"
+          side="bottom-left"
         />
 
         <VisualizerCornerStat
-          label={
-            strings.website.tools.tankopedia.visualizers.flexibility.depression
-          }
+          label={strings.website.tools.tankopedia.visualizers.flexibility.min}
           value={literals(strings.common.units.deg, [
-            radToDeg(-minPitch).toFixed(0),
+            radToDeg(minPitch).toFixed(0),
           ])}
-          side="top-right"
+          side="bottom-right"
         />
 
         <VisualizerCornerStat
@@ -388,13 +384,13 @@ export function GunFlexibilityVisualizer({
           value={literals(strings.common.units.deg, [
             radToDeg(pitch).toFixed(0),
           ])}
-          side="bottom-left"
+          side="top-left"
         />
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.yaw}
           value={literals(strings.common.units.deg, [radToDeg(yaw).toFixed(0)])}
-          side="bottom-right"
+          side="top-right"
         />
       </VisualizerCard>
     </Flex>
