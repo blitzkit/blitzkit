@@ -9,17 +9,17 @@ const modelDefinitions = await awaitableModelDefinitions;
 
 const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
   gun: new MeshBasicMaterial({
-    color: mauveDark.mauve11,
+    color: mauveDark.mauve8,
     toneMapped: false,
   }),
   turret: new MeshBasicMaterial({
     color: mauveDark.mauve6,
     toneMapped: false,
     transparent: true,
-    opacity: 0.25,
+    opacity: 0.5,
   }),
   body: new MeshBasicMaterial({
-    color: mauveDark.mauve9,
+    color: mauveDark.mauve6,
     toneMapped: false,
     transparent: true,
     opacity: 0.5,
@@ -27,17 +27,17 @@ const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
 };
 const outlineMaterial: Record<Props['only'], LineBasicMaterial> = {
   gun: new LineBasicMaterial({
-    color: mauveDark.mauve3,
+    color: mauveDark.mauve11,
     toneMapped: false,
   }),
   turret: new LineBasicMaterial({
     color: mauveDark.mauve8,
     toneMapped: false,
     transparent: true,
-    opacity: 0.25,
+    opacity: 0.5,
   }),
   body: new LineBasicMaterial({
-    color: mauveDark.mauve11,
+    color: mauveDark.mauve8,
     toneMapped: false,
     transparent: true,
     opacity: 0.5,

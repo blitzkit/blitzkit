@@ -208,7 +208,10 @@ export function GunFlexibilityVisualizer({
 
       <VisualizerCard
         ref={container}
+        style={{ touchAction: 'none' }}
         onPointerMove={(event) => {
+          event.preventDefault();
+
           if (!container.current || !highlighter.current || !pointer.current)
             return;
 
