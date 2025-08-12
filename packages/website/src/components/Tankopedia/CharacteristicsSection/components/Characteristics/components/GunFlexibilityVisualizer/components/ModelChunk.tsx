@@ -7,14 +7,42 @@ import { Duel } from '../../../../../../../../stores/duel';
 
 const modelDefinitions = await awaitableModelDefinitions;
 
-const surfaceMaterial = new MeshBasicMaterial({
-  color: mauveDark.mauve6,
-  toneMapped: false,
-});
-const outlineMaterial = new LineBasicMaterial({
-  color: mauveDark.mauve8,
-  toneMapped: false,
-});
+const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
+  gun: new MeshBasicMaterial({
+    color: mauveDark.mauve11,
+    toneMapped: false,
+  }),
+  turret: new MeshBasicMaterial({
+    color: mauveDark.mauve6,
+    toneMapped: false,
+    transparent: true,
+    opacity: 0.25,
+  }),
+  body: new MeshBasicMaterial({
+    color: mauveDark.mauve9,
+    toneMapped: false,
+    transparent: true,
+    opacity: 0.5,
+  }),
+};
+const outlineMaterial: Record<Props['only'], LineBasicMaterial> = {
+  gun: new LineBasicMaterial({
+    color: mauveDark.mauve3,
+    toneMapped: false,
+  }),
+  turret: new LineBasicMaterial({
+    color: mauveDark.mauve8,
+    toneMapped: false,
+    transparent: true,
+    opacity: 0.25,
+  }),
+  body: new LineBasicMaterial({
+    color: mauveDark.mauve11,
+    toneMapped: false,
+    transparent: true,
+    opacity: 0.5,
+  }),
+};
 
 interface Props {
   only: 'gun' | 'turret' | 'body';
@@ -67,8 +95,8 @@ export function ModelChunk({ only }: Props) {
           mesh(mesh, props, key) {
             return (
               <>
-                <mesh key={key} {...props} material={surfaceMaterial} />
-                <lineSegments material={outlineMaterial}>
+                <mesh key={key} {...props} material={surfaceMaterial[only]} />
+                <lineSegments material={outlineMaterial[only]}>
                   <edgesGeometry args={[mesh.geometry, 29]} />
                 </lineSegments>
               </>

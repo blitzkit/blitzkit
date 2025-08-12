@@ -6,6 +6,7 @@ import {
   TurretDefinition,
 } from '@blitzkit/core';
 import { invalidate } from '@react-three/fiber';
+import type { QuicklimeEvent } from 'quicklime';
 import { type RefObject, useEffect } from 'react';
 import { Euler, Group, Vector3 } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
@@ -37,10 +38,16 @@ export function useTankTransform(
     const gunPosition = new Vector3();
     const gunRotation = new Euler();
 
-    function handleModelTransform(modelTransform?: ModelTransformEventData) {
+    function handleModelTransform(
+      event: QuicklimeEvent<ModelTransformEventData>,
+    ) {
+      handleModelTransformInner(event.data);
+    }
+
+    function handleModelTransformInner(data?: ModelTransformEventData) {
       const duel = duelStore.getState();
-      const yaw = modelTransform?.yaw ?? duel.protagonist.yaw;
-      const pitch = modelTransform?.pitch ?? duel.protagonist.pitch;
+      const yaw = data?.yaw ?? duel.protagonist.yaw;
+      const pitch = data?.pitch ?? duel.protagonist.pitch;
 
       gunPosition
         .set(0, 0, 0)
@@ -91,18 +98,18 @@ export function useTankTransform(
       invalidate();
     }
 
-    handleModelTransform();
+    handleModelTransformInner();
 
     modelTransformEvent.on(handleModelTransform);
 
     const unsubscribes = [
       duelStore.subscribe(
         (state) => state.protagonist.pitch,
-        () => handleModelTransform(),
+        () => handleModelTransformInner(),
       ),
       duelStore.subscribe(
         (state) => state.protagonist.yaw,
-        () => handleModelTransform(),
+        () => handleModelTransformInner(),
       ),
       () => modelTransformEvent.off(handleModelTransform),
     ];

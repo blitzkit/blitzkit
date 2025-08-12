@@ -110,23 +110,6 @@ export function TankModel() {
               />
             );
           },
-
-          // group(group) {
-          //   return {
-          //     visible:
-          //       group.name !== 'ST_base' &&
-          //       group.name !== 'MR_Base2' &&
-          //       (!group.name.includes('state_entity') ||
-          //         (isDynamicArmorActive &&
-          //           group.name.includes('state_entity_01')) ||
-          //         (!isDynamicArmorActive &&
-          //           group.name.includes('state_entity_00'))) &&
-          //       (!group.name.includes('shields') ||
-          //         (isDynamicArmorActive &&
-          //           group.name.includes('shields_rev')) ||
-          //         (!isDynamicArmorActive && group.name.endsWith('shields'))),
-          //   };
-          // },
         });
       })}
 
@@ -214,24 +197,6 @@ export function TankModel() {
                 />
               );
             },
-
-            // group(group) {
-            //   return {
-            //     visible:
-            //       group.name !== 'ST_base' &&
-            //       group.name !== 'MR_Base2' &&
-            //       (!group.name.includes('state_entity') ||
-            //         (isDynamicArmorActive &&
-            //           group.name.includes('state_entity_01')) ||
-            //         (!isDynamicArmorActive &&
-            //           group.name.includes('state_entity_00'))) &&
-            //       (!group.name.includes('shields') ||
-            //         (isDynamicArmorActive &&
-            //           group.name.includes('shields_rev')) ||
-            //         (!isDynamicArmorActive &&
-            //           group.name.endsWith('shields'))),
-            //   };
-            // },
           });
         })}
 
@@ -321,24 +286,6 @@ export function TankModel() {
                   />
                 );
               },
-
-              // group(group) {
-              //   return {
-              //     visible:
-              //       group.name !== 'ST_base' &&
-              //       group.name !== 'MR_Base2' &&
-              //       (!group.name.includes('state_entity') ||
-              //         (isDynamicArmorActive &&
-              //           group.name.includes('state_entity_01')) ||
-              //         (!isDynamicArmorActive &&
-              //           group.name.includes('state_entity_00'))) &&
-              //       (!group.name.includes('shields') ||
-              //         (isDynamicArmorActive &&
-              //           group.name.includes('shields_rev')) ||
-              //         (!isDynamicArmorActive &&
-              //           group.name.endsWith('shields'))),
-              //   };
-              // },
             });
           })}
         </group>

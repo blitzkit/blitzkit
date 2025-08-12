@@ -194,8 +194,8 @@ export function GunFlexibilityVisualizer({
                   transparent,
                   ${Var('orange-a2')} ${Math.PI / 2 - maxPitch - CONIC_TRANSITION}rad,
 
-                  ${Var('cyan-a5')} ${Math.PI / 2 - maxPitch}rad,
-                  ${Var('jade-a5')} ${Math.PI / 2 - minPitch}rad,
+                  ${Var('cyan-a6')} ${Math.PI / 2 - maxPitch}rad,
+                  ${Var('jade-a6')} ${Math.PI / 2 - minPitch}rad,
 
                   ${Var('orange-a2')} ${Math.PI / 2 - minPitch + CONIC_TRANSITION}rad,
                   transparent 180deg
