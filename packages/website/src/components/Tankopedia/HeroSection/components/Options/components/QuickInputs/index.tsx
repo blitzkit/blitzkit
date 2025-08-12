@@ -1,5 +1,6 @@
 import { HeightIcon, WidthIcon } from '@radix-ui/react-icons';
 import { Flex, TextField } from '@radix-ui/themes';
+import type { QuicklimeEvent } from 'quicklime';
 import { useEffect, useRef } from 'react';
 import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
 import { applyPitchYawLimits } from '../../../../../../../core/blitz/applyPitchYawLimits';
@@ -28,31 +29,19 @@ export function QuickInputs() {
   const hasDownImprovedVerticalStabilizer = useEquipment(124);
 
   useEffect(() => {
-    if (!yawInput.current) return;
-
-    yawInput.current.value = radToDeg(protagonist.yaw).toFixed(1);
-  }, [protagonist.yaw]);
-
-  useEffect(() => {
-    if (!pitchInput.current) return;
-
-    pitchInput.current.value = (
-      -radToDeg(protagonist.pitch) + initialGunPitch
-    ).toFixed(1);
-  }, [protagonist.pitch]);
-
-  useEffect(() => {
-    function handleTransformEvent({ pitch, yaw }: ModelTransformEventData) {
+    function handleTransformEvent(
+      event: QuicklimeEvent<ModelTransformEventData>,
+    ) {
       if (!pitchInput.current || !yawInput.current) return;
 
       pitchInput.current.value = (
-        -radToDeg(pitch) +
+        -radToDeg(event.data.pitch) +
         (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
       ).toFixed(1);
 
-      if (yaw === undefined) return;
+      if (event.data.yaw === undefined) return;
 
-      yawInput.current.value = radToDeg(yaw).toFixed(1);
+      yawInput.current.value = radToDeg(event.data.yaw).toFixed(1);
     }
 
     modelTransformEvent.on(handleTransformEvent);
@@ -85,24 +74,27 @@ export function QuickInputs() {
         defaultValue="0.0"
         onBlur={() => {
           const value = Number(yawInput.current!.value);
+
           if (isNaN(value)) {
-            yawInput.current!.value = radToDeg(protagonist.yaw).toFixed(1);
+            yawInput.current!.value = radToDeg(
+              modelTransformEvent.last!.yaw,
+            ).toFixed(1);
             return;
           }
+
           const [pitch, yaw] = applyPitchYawLimits(
-            protagonist.pitch,
+            modelTransformEvent.last!.pitch,
             degToRad(value),
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
+
           modelTransformEvent.dispatch({ pitch, yaw });
-          mutateDuel((state) => {
-            state.protagonist.pitch = pitch;
-            state.protagonist.yaw = yaw;
-          });
-          yawInput.current!.value = radToDeg(protagonist.yaw).toFixed(1);
+          yawInput.current!.value = radToDeg(
+            modelTransformEvent.last!.yaw,
+          ).toFixed(1);
         }}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
@@ -128,25 +120,21 @@ export function QuickInputs() {
           const value = Number(pitchInput.current!.value);
           if (isNaN(value)) {
             pitchInput.current!.value = (
-              -radToDeg(protagonist.pitch) + initialGunPitch
+              -radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
             ).toFixed(1);
             return;
           }
           const [pitch, yaw] = applyPitchYawLimits(
             degToRad(-value + initialGunPitch),
-            protagonist.yaw,
+            modelTransformEvent.last!.yaw,
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
           modelTransformEvent.dispatch({ pitch, yaw });
-          mutateDuel((state) => {
-            state.protagonist.pitch = pitch;
-            state.protagonist.yaw = yaw;
-          });
           pitchInput.current!.value = (
-            -radToDeg(protagonist.pitch) + initialGunPitch
+            -radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
           ).toFixed(1);
         }}
         onKeyDown={(event) => {

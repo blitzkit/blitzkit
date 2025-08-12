@@ -33,8 +33,6 @@ export interface DuelMember {
   shell: ShellDefinition;
   track: TrackDefinition;
   equipmentMatrix: EquipmentMatrix;
-  pitch: number;
-  yaw: number;
   consumables: number[];
   provisions: number[];
   camouflage: boolean;

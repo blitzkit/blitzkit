@@ -45,9 +45,8 @@ export function useTankTransform(
     }
 
     function handleModelTransformInner(data?: ModelTransformEventData) {
-      const duel = duelStore.getState();
-      const yaw = data?.yaw ?? duel.protagonist.yaw;
-      const pitch = data?.pitch ?? duel.protagonist.pitch;
+      const yaw = data?.yaw ?? modelTransformEvent.last!.yaw;
+      const pitch = data?.pitch ?? modelTransformEvent.last!.pitch;
 
       gunPosition
         .set(0, 0, 0)
@@ -102,20 +101,8 @@ export function useTankTransform(
 
     modelTransformEvent.on(handleModelTransform);
 
-    const unsubscribes = [
-      duelStore.subscribe(
-        (state) => state.protagonist.pitch,
-        () => handleModelTransformInner(),
-      ),
-      duelStore.subscribe(
-        (state) => state.protagonist.yaw,
-        () => handleModelTransformInner(),
-      ),
-      () => modelTransformEvent.off(handleModelTransform),
-    ];
-
     return () => {
-      unsubscribes.forEach((unsubscribe) => unsubscribe());
+      modelTransformEvent.off(handleModelTransform);
     };
   }, [track, turret]);
 }

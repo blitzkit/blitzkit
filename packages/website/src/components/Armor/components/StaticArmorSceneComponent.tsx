@@ -1,6 +1,7 @@
 import { I_HAT, J_HAT } from '@blitzkit/core';
 import { type MeshProps, useThree } from '@react-three/fiber';
 import { clamp } from 'lodash-es';
+import type { QuicklimeEvent } from 'quicklime';
 import { useEffect, useMemo } from 'react';
 import {
   Box3,
@@ -186,16 +187,18 @@ export function StaticArmorSceneComponent({
       const distanceToBarrel = clip.distanceToPoint(barrelOrigin);
       const point = new Vector3();
 
-      function handleModelTransform(data: ModelTransformEventData) {
+      function handleModelTransform(
+        event: QuicklimeEvent<ModelTransformEventData>,
+      ) {
         clip.normal
           .set(0, 0, -1)
-          .applyAxisAngle(I_HAT, data.pitch)
-          .applyAxisAngle(J_HAT, data.yaw ?? 0);
+          .applyAxisAngle(I_HAT, event.data.pitch)
+          .applyAxisAngle(J_HAT, event.data.yaw);
         clip.constant = 0;
 
         point
           .copy(gunOrigin)
-          .applyAxisAngle(J_HAT, data.yaw ?? 0)
+          .applyAxisAngle(J_HAT, event.data.yaw)
           .add(clip.normal.multiplyScalar(-distanceToBarrel))
           .add(neckOrigin);
         clip.normal.normalize();

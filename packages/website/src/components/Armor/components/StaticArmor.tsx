@@ -1,4 +1,3 @@
-import { normalizeAngleRad } from '@blitzkit/core';
 import { useThree, type ThreeEvent } from '@react-three/fiber';
 import { memo, useRef } from 'react';
 import { Group, Plane, Vector2, Vector3 } from 'three';
@@ -153,15 +152,11 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
 
           const position = new Vector2();
           const delta = new Vector2();
-          let pitch = 0;
-          let yaw = 0;
 
           function onPointerDown(event: ThreeEvent<PointerEvent>) {
             event.stopPropagation();
 
             position.set(event.clientX, event.clientY);
-            yaw = protagonist.yaw;
-            pitch = protagonist.pitch;
 
             mutateTankopediaEphemeral((draft) => {
               draft.controlsEnabled = false;
@@ -190,9 +185,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             delta.set(event.clientX, event.clientY).sub(position);
             position.set(event.clientX, event.clientY);
 
-            [pitch, yaw] = applyPitchYawLimits(
-              pitch,
-              yaw + delta.x * (Math.PI / boundingRect.width),
+            const [pitch, yaw] = applyPitchYawLimits(
+              modelTransformEvent.last!.pitch,
+              modelTransformEvent.last!.yaw +
+                delta.x * (Math.PI / boundingRect.width),
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
@@ -201,10 +197,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            mutateDuel((draft) => {
-              draft.protagonist.pitch = normalizeAngleRad(pitch);
-              draft.protagonist.yaw = normalizeAngleRad(yaw);
-            });
             mutateTankopediaEphemeral((draft) => {
               draft.controlsEnabled = true;
             });
@@ -253,8 +245,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
 
             const position = new Vector2();
             const delta = new Vector2();
-            let pitch = 0;
-            let yaw = 0;
 
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
@@ -268,8 +258,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               });
 
               position.set(event.clientX, event.clientY);
-              pitch = protagonist.pitch;
-              yaw = protagonist.yaw;
 
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
@@ -290,9 +278,11 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               delta.set(event.clientX, event.clientY).sub(position);
               position.set(event.clientX, event.clientY);
 
-              [pitch, yaw] = applyPitchYawLimits(
-                pitch - delta.y * (Math.PI / boundingRect.height),
-                yaw + delta.x * (Math.PI / boundingRect.width),
+              const [pitch, yaw] = applyPitchYawLimits(
+                modelTransformEvent.last!.pitch -
+                  delta.y * (Math.PI / boundingRect.height),
+                modelTransformEvent.last!.yaw +
+                  delta.x * (Math.PI / boundingRect.width),
                 gunModelDefinition.pitch,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
@@ -303,10 +293,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             function handlePointerUp() {
               mutateTankopediaEphemeral((draft) => {
                 draft.controlsEnabled = true;
-              });
-              mutateDuel((draft) => {
-                draft.protagonist.pitch = normalizeAngleRad(pitch);
-                draft.protagonist.yaw = normalizeAngleRad(yaw);
               });
               window.removeEventListener('pointermove', handlePointerMove);
               window.removeEventListener('pointerup', handlePointerUp);
@@ -341,8 +327,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
 
             const position = new Vector2();
             const delta = new Vector2();
-            let pitch = 0;
-            let yaw = 0;
 
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
@@ -356,9 +340,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               });
 
               position.set(event.clientX, event.clientY);
-              pitch = protagonist.pitch;
-              yaw = protagonist.yaw;
-
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
             }
@@ -378,9 +359,11 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               delta.set(event.clientX, event.clientY).sub(position);
               position.set(event.clientX, event.clientY);
 
-              [pitch, yaw] = applyPitchYawLimits(
-                pitch - delta.y * (Math.PI / boundingRect.height),
-                yaw + delta.x * (Math.PI / boundingRect.width),
+              const [pitch, yaw] = applyPitchYawLimits(
+                modelTransformEvent.last!.pitch -
+                  delta.y * (Math.PI / boundingRect.height),
+                modelTransformEvent.last!.yaw +
+                  delta.x * (Math.PI / boundingRect.width),
                 gunModelDefinition.pitch,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
@@ -392,10 +375,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               mutateTankopediaEphemeral((draft) => {
                 draft.controlsEnabled = true;
               });
-              mutateDuel((draft) => {
-                draft.protagonist.pitch = normalizeAngleRad(pitch);
-                draft.protagonist.yaw = normalizeAngleRad(yaw);
-              });
+
               window.removeEventListener('pointermove', handlePointerMove);
               window.removeEventListener('pointerup', handlePointerUp);
             }

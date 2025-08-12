@@ -28,6 +28,7 @@ import {
 import { SmartCanvas } from '../../../../SmartCanvas';
 import { AutoClear } from './components/AutoClear';
 import { Controls } from './components/Control';
+import { InitialAligner } from './components/InitialAligner';
 import { InitialFogReveal } from './components/InitialFogReveal';
 import { Lighting } from './components/Lighting';
 import { SceneProps } from './components/SceneProps';
@@ -114,56 +115,44 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
       function handlePoseEvent(pose: Pose) {
         switch (pose) {
           case Pose.HullDown: {
-            mutateDuel((draft) => {
-              const [pitch, yaw] = applyPitchYawLimits(
-                -Infinity,
-                0,
-                gunModelDefinition.pitch,
-                turretModelDefinition.yaw,
-                hasImprovedVerticalStabilizer,
-                hasDownImprovedVerticalStabilizer,
-              );
+            const [pitch, yaw] = applyPitchYawLimits(
+              -Infinity,
+              0,
+              gunModelDefinition.pitch,
+              turretModelDefinition.yaw,
+              hasImprovedVerticalStabilizer,
+              hasDownImprovedVerticalStabilizer,
+            );
 
-              modelTransformEvent.dispatch({ pitch, yaw });
-              draft.protagonist.pitch = pitch;
-              draft.protagonist.yaw = yaw;
-            });
+            modelTransformEvent.dispatch({ pitch, yaw });
 
             break;
           }
 
           case Pose.FaceHug: {
-            mutateDuel((draft) => {
-              const [pitch, yaw] = applyPitchYawLimits(
-                Infinity,
-                0,
-                gunModelDefinition.pitch,
-                turretModelDefinition.yaw,
-                hasImprovedVerticalStabilizer,
-              );
+            const [pitch, yaw] = applyPitchYawLimits(
+              Infinity,
+              0,
+              gunModelDefinition.pitch,
+              turretModelDefinition.yaw,
+              hasImprovedVerticalStabilizer,
+            );
 
-              modelTransformEvent.dispatch({ pitch, yaw });
-              draft.protagonist.pitch = pitch;
-              draft.protagonist.yaw = yaw;
-            });
+            modelTransformEvent.dispatch({ pitch, yaw });
 
             break;
           }
 
           case Pose.Default:
-            mutateDuel((draft) => {
-              const [pitch, yaw] = applyPitchYawLimits(
-                0,
-                0,
-                gunModelDefinition.pitch,
-                turretModelDefinition.yaw,
-                hasImprovedVerticalStabilizer,
-              );
+            const [pitch, yaw] = applyPitchYawLimits(
+              0,
+              0,
+              gunModelDefinition.pitch,
+              turretModelDefinition.yaw,
+              hasImprovedVerticalStabilizer,
+            );
 
-              modelTransformEvent.dispatch({ pitch, yaw });
-              draft.protagonist.pitch = pitch;
-              draft.protagonist.yaw = yaw;
-            });
+            modelTransformEvent.dispatch({ pitch, yaw });
 
             break;
         }
@@ -177,15 +166,15 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     });
 
     useEffect(() => {
-      mutateDuel((draft) => {
-        [draft.protagonist.pitch, draft.protagonist.yaw] = applyPitchYawLimits(
-          draft.protagonist.pitch,
-          draft.protagonist.yaw,
-          gunModelDefinition.pitch,
-          turretModelDefinition.yaw,
-          hasImprovedVerticalStabilizer,
-        );
-      });
+      const [pitch, yaw] = applyPitchYawLimits(
+        modelTransformEvent.last!.pitch,
+        modelTransformEvent.last!.yaw,
+        gunModelDefinition.pitch,
+        turretModelDefinition.yaw,
+        hasImprovedVerticalStabilizer,
+      );
+
+      modelTransformEvent.dispatch({ pitch, yaw });
     }, [protagonistGun, protagonistTurret]);
 
     useEffect(() => {
@@ -246,6 +235,8 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           )}
           <Lighting display={display} />
         </Suspense>
+
+        <InitialAligner />
       </SmartCanvas>
     );
   },

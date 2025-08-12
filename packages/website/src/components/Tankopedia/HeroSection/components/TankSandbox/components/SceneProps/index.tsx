@@ -39,9 +39,6 @@ export function SceneProps() {
   const material = useRef<MeshStandardMaterial>(null);
   const playground = useRef<Group>(null);
 
-  let lastPitch = Duel.use((state) => state.protagonist.pitch);
-  let lastYaw = Duel.use((state) => state.protagonist.yaw);
-  const display = TankopediaEphemeral.use((state) => state.display);
   const turret = Duel.use((state) => state.protagonist.turret);
   const track = Duel.use((state) => state.protagonist.track);
   const tank = Duel.use((state) => state.protagonist.tank);
@@ -152,8 +149,8 @@ export function SceneProps() {
 
     const desiredPitch = Math.asin(direction.y);
     const desiredYaw = Math.atan2(-direction.x, -direction.z);
-    const deltaPitch = desiredPitch - lastPitch;
-    const deltaYaw = desiredYaw - lastYaw;
+    const deltaPitch = desiredPitch - modelTransformEvent.last!.pitch;
+    const deltaYaw = desiredYaw - modelTransformEvent.last!.yaw;
     const deltaAngle = Math.sqrt(deltaPitch ** 2 + deltaYaw ** 2);
     const maxPossibleRotationInTime = gunRotationSpeed * deltaT;
     const clampedDeltaAngle = Math.min(maxPossibleRotationInTime, deltaAngle);
@@ -163,14 +160,14 @@ export function SceneProps() {
       deltaAngle === 0 ? 0 : deltaYaw * (clampedDeltaAngle / deltaAngle);
 
     const [pitch, yaw] = applyPitchYawLimits(
-      lastPitch + clampedDeltaPitch,
-      lastYaw + clampedDeltaYaw,
+      modelTransformEvent.last!.pitch + clampedDeltaPitch,
+      modelTransformEvent.last!.yaw + clampedDeltaYaw,
       gunModelDefinition.pitch,
       turretModelDefinition.yaw,
     );
 
-    const actualDeltaPitch = pitch - lastPitch;
-    const actualDeltaYaw = yaw - lastYaw;
+    const actualDeltaPitch = pitch - modelTransformEvent.last!.pitch;
+    const actualDeltaYaw = yaw - modelTransformEvent.last!.yaw;
     const deltaRotation = Math.abs(actualDeltaPitch) + Math.abs(actualDeltaYaw);
     const rotationSpeed = deltaRotation / deltaT;
     const turretTraversePenalty =
@@ -190,8 +187,6 @@ export function SceneProps() {
     }
 
     modelTransformEvent.dispatch({ pitch, yaw });
-    lastPitch = pitch;
-    lastYaw = yaw;
 
     const gunDirection = new Vector3(0, 0, -1)
       .applyAxisAngle(I_HAT, pitch)

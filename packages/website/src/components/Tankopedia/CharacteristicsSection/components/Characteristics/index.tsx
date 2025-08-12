@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { awaitableEquipmentDefinitions } from '../../../../../core/awaitables/equipmentDefinitions';
 import { awaitableProvisionDefinitions } from '../../../../../core/awaitables/provisionDefinitions';
 import { applyPitchYawLimits } from '../../../../../core/blitz/applyPitchYawLimits';
+import { modelTransformEvent } from '../../../../../core/blitzkit/modelTransform';
 import { tankCharacteristics } from '../../../../../core/blitzkit/tankCharacteristics';
 import { useEquipment } from '../../../../../hooks/useEquipment';
 import { useTankModelDefinition } from '../../../../../hooks/useTankModelDefinition';
@@ -75,16 +76,16 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   const hasDownImprovedVerticalStabilizer = useEquipment(124);
 
   useEffect(() => {
-    mutateDuel((draft) => {
-      [draft.protagonist.pitch, draft.protagonist.yaw] = applyPitchYawLimits(
-        draft.protagonist.pitch,
-        draft.protagonist.yaw,
-        gunModelDefinition.pitch,
-        turretModelDefinition.yaw,
-        hasImprovedVerticalStabilizer,
-        hasDownImprovedVerticalStabilizer,
-      );
-    });
+    const [pitch, yaw] = applyPitchYawLimits(
+      modelTransformEvent.last!.pitch,
+      modelTransformEvent.last!.yaw,
+      gunModelDefinition.pitch,
+      turretModelDefinition.yaw,
+      hasImprovedVerticalStabilizer,
+      hasDownImprovedVerticalStabilizer,
+    );
+
+    modelTransformEvent.dispatch({ pitch, yaw });
   }, [hasImprovedVerticalStabilizer, hasDownImprovedVerticalStabilizer]);
 
   return (

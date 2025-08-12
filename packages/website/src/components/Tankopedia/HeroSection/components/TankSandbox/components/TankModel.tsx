@@ -1,4 +1,3 @@
-import { normalizeAngleRad } from '@blitzkit/core';
 import { invalidate, useThree, type ThreeEvent } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from 'three';
@@ -125,17 +124,12 @@ export function TankModel() {
 
           if (!isVisible) return null;
 
-          let pitch = 0;
-          let yaw = 0;
-
           function onPointerDown(event: ThreeEvent<PointerEvent>) {
             event.stopPropagation();
 
             if (!isTurret) return;
 
             position.set(event.clientX, event.clientY);
-            yaw = protagonist.yaw;
-            pitch = protagonist.pitch;
 
             mutateTankopediaEphemeral((draft) => {
               draft.controlsEnabled = false;
@@ -164,9 +158,10 @@ export function TankModel() {
             delta.set(event.clientX, event.clientY).sub(position);
             position.set(event.clientX, event.clientY);
 
-            [pitch, yaw] = applyPitchYawLimits(
-              pitch,
-              yaw + delta.x * (Math.PI / boundingRect.width),
+            const [pitch, yaw] = applyPitchYawLimits(
+              modelTransformEvent.last!.pitch,
+              modelTransformEvent.last!.yaw +
+                delta.x * (Math.PI / boundingRect.width),
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
@@ -175,10 +170,6 @@ export function TankModel() {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            mutateDuel((draft) => {
-              draft.protagonist.pitch = normalizeAngleRad(pitch);
-              draft.protagonist.yaw = normalizeAngleRad(yaw);
-            });
             mutateTankopediaEphemeral((draft) => {
               draft.controlsEnabled = true;
             });
@@ -231,8 +222,8 @@ export function TankModel() {
               });
 
               position.set(event.clientX, event.clientY);
-              pitch = protagonist.pitch;
-              yaw = protagonist.yaw;
+              pitch = modelTransformEvent.last!.pitch;
+              yaw = modelTransformEvent.last!.yaw;
 
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
@@ -266,10 +257,6 @@ export function TankModel() {
             function handlePointerUp() {
               mutateTankopediaEphemeral((draft) => {
                 draft.controlsEnabled = true;
-              });
-              mutateDuel((draft) => {
-                draft.protagonist.pitch = normalizeAngleRad(pitch);
-                draft.protagonist.yaw = normalizeAngleRad(yaw);
               });
               window.removeEventListener('pointermove', handlePointerMove);
               window.removeEventListener('pointerup', handlePointerUp);
