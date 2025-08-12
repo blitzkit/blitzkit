@@ -19,7 +19,6 @@ import { VisualizerCornerStat } from '../VisualizerCornerStat';
 import { FlexibilityCanvas } from './components/FlexibilityCanvas';
 
 const ANGLE_COEFFICIENT = 1 / 10;
-const CONIC_TRANSITION = degToRad(0);
 
 const modelDefinition = await awaitableModelDefinitions;
 
@@ -169,10 +168,12 @@ export function GunFlexibilityVisualizer({
 
   return (
     <Flex direction="column-reverse" gap="0">
-      <Box mt="-4" px="2">
+      <Box mt="-3" px="2">
         <Card variant="classic" style={{ height: '10rem' }}>
           <Box
-            style={{ backgroundColor: Var('gray-1') }}
+            style={{
+              background: 'linear-gradient(var(--gray-1), var(--gray-3))',
+            }}
             position="absolute"
             width="100%"
             height="100%"
@@ -192,14 +193,15 @@ export function GunFlexibilityVisualizer({
                   at 0 50%,
                   
                   transparent,
-                  ${Var('orange-a2')} ${Math.PI / 2 - maxPitch - CONIC_TRANSITION}rad,
+                  transparent ${Math.PI / 2 - maxPitch}rad,
 
-                  ${Var('cyan-a6')} ${Math.PI / 2 - maxPitch}rad,
-                  ${Var('jade-a6')} ${Math.PI / 2 - minPitch}rad,
+                  ${Var('cyan-a4')} ${Math.PI / 2 - maxPitch}rad,
+                  ${Var('jade-a4')} ${Math.PI / 2 - minPitch}rad,
 
-                  ${Var('orange-a2')} ${Math.PI / 2 - minPitch + CONIC_TRANSITION}rad,
+                  transparent ${Math.PI / 2 - minPitch}rad,
                   transparent 180deg
                 )`,
+                filter: 'blur(0.25rem)',
               }}
             />
           </Box>
@@ -285,6 +287,7 @@ export function GunFlexibilityVisualizer({
             style={{
               opacity: 2 ** -3,
               backgroundImage: `url(/assets/images/tankopedia/visualizers/ricochet/armor-hash.png)`,
+              boxShadow: 'inset 0 0 4rem 1rem black',
             }}
           />
         </Box>
@@ -309,7 +312,7 @@ export function GunFlexibilityVisualizer({
           />
 
           <path
-            stroke="var(--gray-11)"
+            stroke="var(--gray-10)"
             fill="transparent"
             strokeWidth="1px"
             strokeDasharray="0.5rem 0.5rem"
@@ -340,6 +343,8 @@ export function GunFlexibilityVisualizer({
             style={{
               borderRadius: Var('radius-1'),
               background: `linear-gradient(${Var('gray-a11')}, ${Var('gray-a6')})`,
+              boxShadow:
+                'var(--white-a12) -0.25rem 0 1rem, var(--black-a12) 0.25rem 0 1rem',
               transform: 'translateX(-50%)',
             }}
           />
