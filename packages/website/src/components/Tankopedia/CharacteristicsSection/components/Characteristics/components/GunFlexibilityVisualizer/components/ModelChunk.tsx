@@ -17,10 +17,10 @@ const outlineMaterial = new LineBasicMaterial({
 });
 
 interface Props {
-  onlyGun?: boolean;
+  only: 'gun' | 'turret' | 'body';
 }
 
-export function ModelChunk({ onlyGun = false }: Props) {
+export function ModelChunk({ only }: Props) {
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -43,29 +43,38 @@ export function ModelChunk({ onlyGun = false }: Props) {
           `gun_${gunModel.model_id.toString().padStart(2, '0')}_mask`;
         const isCurrentGun =
           node.name === `gun_${gunModel.model_id.toString().padStart(2, '0')}`;
-        const isVisible = isCurrentGun || isCurrentMantlet;
-        const isHull = node.name === 'hull';
-        const isWheel = node.name.startsWith('chassis_wheel_');
-        const isTrack = node.name.startsWith('chassis_track_');
+        const isGun = isCurrentGun || isCurrentMantlet;
+
         const isCurrentTurret =
           node.name ===
           `turret_${turretModel.model_id.toString().padStart(2, '0')}`;
-        const isAnythingElse = isHull || isWheel || isTrack || isCurrentTurret;
+        const isTurret = isCurrentTurret;
 
-        if ((onlyGun && isVisible) || (!onlyGun && isAnythingElse)) {
-          return jsxTree(node, {
-            mesh(mesh, props, key) {
-              return (
-                <>
-                  <mesh key={key} {...props} material={surfaceMaterial} />
-                  <lineSegments material={outlineMaterial}>
-                    <edgesGeometry args={[mesh.geometry, 29]} />
-                  </lineSegments>
-                </>
-              );
-            },
-          });
+        const isHull = node.name === 'hull';
+        const isWheel = node.name.startsWith('chassis_wheel_');
+        const isTrack = node.name.startsWith('chassis_track_');
+        const isBody = isHull || isWheel || isTrack;
+
+        if (
+          (only === 'gun' && !isGun) ||
+          (only === 'turret' && !isTurret) ||
+          (only === 'body' && !isBody)
+        ) {
+          return null;
         }
+
+        return jsxTree(node, {
+          mesh(mesh, props, key) {
+            return (
+              <>
+                <mesh key={key} {...props} material={surfaceMaterial} />
+                <lineSegments material={outlineMaterial}>
+                  <edgesGeometry args={[mesh.geometry, 29]} />
+                </lineSegments>
+              </>
+            );
+          },
+        });
       })}
     </group>
   );
