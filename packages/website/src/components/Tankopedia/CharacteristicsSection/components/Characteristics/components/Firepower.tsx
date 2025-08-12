@@ -26,7 +26,6 @@ import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
 import { GunFlexibilityVisualizer } from './GunFlexibilityVisualizer';
 import { Info } from './Info';
 import { InfoWithDelta } from './InfoWithDelta';
-import { ReloadVisualizer } from './ReloadVisualizer';
 import { RicochetVisualizer } from './RicochetVisualizer';
 import { StatsTableWrapper } from './StatsTableWrapper';
 import type { StatsAcceptorProps } from './TraverseVisualizer';
@@ -191,7 +190,7 @@ export function Firepower({
           value="intraClip"
         />
       )}
-      <ReloadVisualizer stats={stats} />
+      {/* <ReloadVisualizer stats={stats} /> */}
 
       {typeof shell.penetration !== 'number' && (
         <>
