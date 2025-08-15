@@ -65,6 +65,14 @@ export function InfoWithDelta({
       : (stats[props.value] as number);
   const delta = useDelta(uhWhatDoICallThisVariable);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
+  const shellIndex = Duel.use((state) =>
+    state.protagonist.gun.gun_type!.value.base.shells.indexOf(
+      state.protagonist.shell,
+    ),
+  );
+  const equipmentMatrix = Duel.use(
+    (state) => state.protagonist.equipmentMatrix,
+  );
   const others = useMemo(() => {
     const defaultSkills = createDefaultSkills(skillDefinitions);
 
@@ -86,6 +94,10 @@ export function InfoWithDelta({
           provisionDefinitions,
         );
 
+        if (member.gun.gun_type!.value.base.shells[shellIndex] === undefined) {
+          return undefined;
+        }
+
         return tankCharacteristics(
           {
             applyDynamicArmor: false,
@@ -97,8 +109,8 @@ export function InfoWithDelta({
             provisions: member.provisions,
             engine: member.engine,
             gun: member.gun,
-            equipmentMatrix: member.equipmentMatrix,
-            shell: member.shell,
+            equipmentMatrix: equipmentMatrix,
+            shell: member.gun.gun_type!.value.base.shells[shellIndex],
             stockEngine: tank.engines[0],
             stockGun: tank.turrets[0].guns[0],
             stockTrack: tank.tracks[0],
@@ -106,6 +118,7 @@ export function InfoWithDelta({
             tank,
             track: member.track,
             turret: member.turret,
+            assaultDistance: member.assaultDistance,
           },
           {
             equipmentDefinitions,
@@ -115,14 +128,16 @@ export function InfoWithDelta({
         );
       })
       .filter((tank) => {
+        if (tank === undefined) return false;
+
         const othersValue =
           typeof props.value === 'function'
             ? props.value(tank)!
             : (tank[props.value] as number);
 
         return othersValue !== undefined;
-      });
-  }, [relativeAgainst]);
+      }) as TankCharacteristics[];
+  }, [relativeAgainst, shellIndex, equipmentMatrix]);
   const betterTanks = others.filter((tank) => {
     const othersValue =
       typeof props.value === 'function'

@@ -60,6 +60,7 @@ const url = import.meta.env.SITE + Astro.url.pathname;
 const icon = asset(`icons/tanks/big/${id}.webp`);
 const turret = tank.turrets.at(-1)!;
 const gun = turret.guns.at(-1)!;
+const shell = gun.gun_type!.value.base.shells[0];
 const characteristics = tankCharacteristics(
   {
     tank,
@@ -74,12 +75,13 @@ const characteristics = tankCharacteristics(
     turret,
     gun,
     provisions: createDefaultProvisions(tank, gun, provisionDefinitions),
-    shell: gun.gun_type!.value.base.shells[0],
+    shell,
     stockEngine: tank.engines[0],
     stockGun: tank.turrets[0].guns[0],
     stockTurret: tank.turrets[0],
     stockTrack: tank.tracks[0],
     track: tank.tracks.at(-1)!,
+    assaultDistance: 0,
   },
   { equipmentDefinitions, provisionDefinitions, tankModelDefinition },
 );

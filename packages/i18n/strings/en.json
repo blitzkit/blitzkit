@@ -799,6 +799,7 @@
           "fire.caliber": "caliber",
           "fire.standardPenetration": "standard penetration",
           "fire.premiumPenetration": "premium penetration",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "damage",
           "fire.moduleDamage": "module damage",
           "fire.shellVelocity": "shell velocity",
@@ -902,6 +903,10 @@
         "tank_seo_description": "%s1 armor, statistics, equipment, provisions, and more. %s2 DPM, %s3hp alpha, %s4mm penetration, %s5kph top speed, %s6hp health.",
 
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
+
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
@@ -1094,7 +1099,6 @@
             "hull_traverse_speed": "Hull traverse speed",
             "camouflage": "Camouflage",
             "reload": "Reload",
-
             "crewCount": "Crew count",
             "shellNormalization": "Normalization",
             "shellRicochet": "Ricochet",
@@ -1108,6 +1112,7 @@
             "caliber": "Caliber",
             "penetration": "Penetration",
             "damage": "Damage",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Module damage",
             "explosionRadius": "Explosion radius",

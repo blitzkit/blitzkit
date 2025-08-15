@@ -1,7 +1,7 @@
 {
   "name": "blitzkit",
   "private": true,
-  "version": "1.28.0-beta.1",
+  "version": "1.27.15",
   "description": "🎉 Tools for everything World of Tanks Blitz",
   "type": "module",
   "types": "./types.d.ts",
@@ -21,7 +21,8 @@
     "dev:bot": "bun run build:bot --dev && bun start:bot",
     "start:bot": "bun dist/bot/main.js",
     "dev:docs": "vitepress dev docs",
-    "dev:website": "cd packages/website-ue && bun run dev",
+    "dev:website": "cd packages/website && bun run dev",
+    "dev": "bun run dev:website",
     "dev:api": "bun --filter=@blitzkit/api run dev",
     "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
     "setup:patches": "bun --filter=@blitzkit/scripts run setup:patches",

@@ -85,6 +85,7 @@ function Content() {
                 member.key !== thisMember.key &&
                 member.provisions.includes(101),
             ),
+            assaultDistance: thisMember.assaultDistance,
           },
           {
             equipmentDefinitions: equipmentDefinitions,

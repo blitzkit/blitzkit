@@ -60,7 +60,7 @@ export const TankSearch = memo<TankSearchProps>(
     const tankFilters = useStore($tankFilters);
     const tankopediaSort = useStore($tankopediaSort);
     const tanksFiltered = useMemo(() => {
-      if (tankFilters.search === undefined) {
+      if (tankFilters.search === null) {
         const filtered = awaitedTanksDefinitionsArray.filter((tank) =>
           filterTank(tankFilters, tank),
         );
@@ -234,6 +234,16 @@ export const TankSearch = memo<TankSearchProps>(
                 (a.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[1]
                   ?.penetration.near ?? 0) -
                 (b.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[1]
+                  ?.penetration.near ?? 0),
+            );
+            break;
+
+          case 'fire.tertiaryPenetration':
+            sorted = filtered.sort(
+              (a, b) =>
+                (a.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[2]
+                  ?.penetration.near ?? 0) -
+                (b.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[2]
                   ?.penetration.near ?? 0),
             );
             break;

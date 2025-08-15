@@ -697,7 +697,8 @@
           "fire.reload": "перезарядка",
           "fire.caliber": "калибр",
           "fire.standardPenetration": "базовое пробитие",
-          "fire.premiumPenetration": "улучшенное пробитие ",
+          "fire.premiumPenetration": "премиумное пробитие ",
+          "fire.tertiaryPenetration": "пробитие третьего снаряда",
           "fire.damage": "урон",
           "fire.moduleDamage": "урон по модулям",
           "fire.shellVelocity": "скорость снаряда",
@@ -786,6 +787,9 @@
         "tank_seo_title": "%s1 - %s4 %s3 %s2 уровня | Танкопедия %s5 | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 броня, статистика, оборудование, снабжение и многое другое. %s2 УВМ, %s3hp альфа, %s4mm пробитие, %s5км/ч лучшая скорость, %s6hp здоровье.",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "Корпус",
             "turret": "Башня",
@@ -975,6 +979,7 @@
             "caliber": "Калибр",
             "penetration": "Пробитие",
             "damage": "Урон",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Урон с барабана",
             "moduleDamage": "Урон по модулям",
             "explosionRadius": "Разлет осколков",

@@ -1,13 +1,14 @@
 import { TankType } from '@blitzkit/core';
 import { Box, Heading } from '@radix-ui/themes';
-import { Var } from '../../../../../core/radix/var';
-import { useLocale } from '../../../../../hooks/useLocale';
-import { Duel } from '../../../../../stores/duel';
-import type { RadixColor } from '../../../../../stores/embedState';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
+import { Var } from '../../../../../../core/radix/var';
+import { useLocale } from '../../../../../../hooks/useLocale';
+import { Duel } from '../../../../../../stores/duel';
+import type { RadixColor } from '../../../../../../stores/embedState';
+import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+import { Tracker } from './components/Tracker';
 
 interface TitleProps {
-  outline?: boolean;
+  foreground?: boolean;
 }
 
 export const NATION_COLORS: Record<
@@ -65,7 +66,7 @@ export const NATION_COLORS: Record<
   },
 };
 
-export function Title({ outline }: TitleProps) {
+export function Title({ foreground }: TitleProps) {
   const { unwrap } = useLocale();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
@@ -81,6 +82,11 @@ export function Title({ outline }: TitleProps) {
       : `${nationColors.text}-12`,
   );
   const name = unwrap(protagonist.name);
+  const fontSize = revealed
+    ? disturbed
+      ? '2rem'
+      : `min(65vh, ${125 / name.length}vw)`
+    : `min(48vh, ${75 / name.length}vw)`;
 
   return (
     <Box
@@ -97,17 +103,10 @@ export function Title({ outline }: TitleProps) {
           fontWeight: 900,
           userSelect: 'none',
           pointerEvents: 'none',
-          fontSize: revealed
-            ? disturbed
-              ? '2rem'
-              : `min(65vh, ${125 / name.length}vw)`
-            : `min(48vh, ${75 / name.length}vw)`,
+          fontSize,
           whiteSpace: 'nowrap',
-          color: outline ? Var(`${nationColors.tint}-a2`) : color,
-          opacity: outline && disturbed ? 0 : 1,
-          WebkitTextStroke: outline
-            ? `${revealed ? (disturbed ? '1px' : 'min(2px, 0.2vw)') : 0} ${color}`
-            : undefined,
+          color: foreground ? Var('gray-a10') : color,
+          opacity: foreground && disturbed ? 0 : 1,
           letterSpacing: disturbed || !revealed ? 0 : '-0.03em',
           transition: `
             letter-spacing 1.5s ${disturbed ? '' : 'cubic-bezier(.81,-2,.68,1)'},
@@ -120,6 +119,8 @@ export function Title({ outline }: TitleProps) {
       >
         {name}
       </Heading>
+
+      {!revealed && <Tracker fontSize={fontSize} />}
     </Box>
   );
 }

@@ -73,6 +73,9 @@ export function SceneProps() {
   const crewSkills = TankopediaEphemeral.use((state) => state.skills);
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const provisions = Duel.use((state) => state.protagonist.provisions);
+  const assaultDistance = Duel.use(
+    (state) => state.protagonist.assaultDistance,
+  );
   const equipmentMatrix = Duel.use(
     (state) => state.protagonist.equipmentMatrix,
   );
@@ -96,6 +99,7 @@ export function SceneProps() {
       stockTurret: tank.turrets[0],
       stockTrack: tank.tracks[0],
       track,
+      assaultDistance,
     },
     { equipmentDefinitions, provisionDefinitions, tankModelDefinition },
   );

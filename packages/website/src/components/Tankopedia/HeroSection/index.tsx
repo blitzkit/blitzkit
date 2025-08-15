@@ -103,7 +103,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           transitionDuration: '1s',
           background: isFullScreen ? 'black' : undefined,
         }}
-        height={disturbed && !isFullScreen ? 'calc(100svh - 6rem)' : '100vh'}
+        height={!isFullScreen ? 'calc(100svh - 6rem)' : '100vh'}
         maxHeight={isFullScreen ? undefined : '60rem'}
         maxWidth={isFullScreen ? undefined : '120rem'}
         flexGrow="1"
@@ -136,7 +136,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
                   height: '100%',
                   transitionDuration: '2s',
                   opacity: revealed ? 1 : 0,
-                  filter: disturbed ? undefined : `drop-shadow(0 0 2rem black)`,
+                  filter: disturbed ? undefined : `drop-shadow(0 0 1rem black)`,
                 }}
               >
                 <Suspense>
@@ -153,7 +153,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           </Box>
         </Box>
 
-        <Title outline />
+        <Title foreground />
       </Flex>
     </Flex>
   );

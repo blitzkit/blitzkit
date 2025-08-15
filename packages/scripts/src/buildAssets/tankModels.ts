@@ -32,9 +32,6 @@ export async function tankModels() {
       if (tankKey.includes('tutorial_bot')) continue;
 
       const id = toUniqueId(nation, tank.id);
-
-      if (id !== 21777) continue;
-
       const parameters = await readYAMLDVPL<TankParameters>(
         `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
       );
@@ -42,8 +39,6 @@ export async function tankModels() {
         DATA,
         parameters.resourcesPath.blitzModelPath.replace(/\.sc2$/, ''),
       );
-
-      await writeFile('../../temp/model.glb', await nodeIO.writeBinary(model));
 
       changes.push({
         path: `3d/tanks/models/${id}.glb`,

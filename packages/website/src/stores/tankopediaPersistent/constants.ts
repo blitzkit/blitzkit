@@ -14,6 +14,7 @@ export const SORT_UNITS: Record<TankopediaSortBy, string | undefined> = {
   'fire.gunDepression': '°',
   'fire.gunElevation': '°',
   'fire.premiumPenetration': 'mm',
+  'fire.tertiaryPenetration': 'mm',
   'fire.reload': 's',
   'fire.shellVelocity': 'm/s',
   'fire.shellRange': 'm',

@@ -18,7 +18,7 @@ export interface TankFilters {
   classes: TankClass[];
   types: TankType[];
   testing: 'include' | 'exclude' | 'only';
-  search?: string;
+  search: string | null;
   searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
@@ -30,7 +30,7 @@ export const initialTankFilters: TankFilters = {
   classes: [],
   types: [],
   testing: 'include',
-  search: undefined,
+  search: null,
   searching: false,
   gunType: [],
   shells: [null, null, null],

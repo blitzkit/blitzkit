@@ -1,3 +1,5 @@
+precision mediump float;
+
 #define USE_FOG
 
 #include <fog_pars_fragment>

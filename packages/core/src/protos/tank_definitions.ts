@@ -5,10 +5,10 @@
 // source: packages/core/src/protos/tank_definitions.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { createBaseI18nString, I18nString } from "./i18n";
+import { BinaryReader, BinaryWriter } from '@bufbuild/protobuf/wire';
+import { I18nString } from './i18n';
 
-export const protobufPackage = "blitzkit";
+export const protobufPackage = 'blitzkit';
 
 export enum TankPriceType {
   CREDITS = 0,
@@ -18,24 +18,28 @@ export enum TankPriceType {
 export function tankPriceTypeFromJSON(object: any): TankPriceType {
   switch (object) {
     case 0:
-    case "TANK_PRICE_TYPE_CREDITS":
+    case 'TANK_PRICE_TYPE_CREDITS':
       return TankPriceType.CREDITS;
     case 1:
-    case "TANK_PRICE_TYPE_GOLD":
+    case 'TANK_PRICE_TYPE_GOLD':
       return TankPriceType.GOLD;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankPriceType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankPriceType',
+      );
   }
 }
 
 export function tankPriceTypeToJSON(object: TankPriceType): string {
   switch (object) {
     case TankPriceType.CREDITS:
-      return "TANK_PRICE_TYPE_CREDITS";
+      return 'TANK_PRICE_TYPE_CREDITS';
     case TankPriceType.GOLD:
-      return "TANK_PRICE_TYPE_GOLD";
+      return 'TANK_PRICE_TYPE_GOLD';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankPriceType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankPriceType',
+      );
   }
 }
 
@@ -49,34 +53,38 @@ export enum ShellType {
 export function shellTypeFromJSON(object: any): ShellType {
   switch (object) {
     case 0:
-    case "SHELL_TYPE_AP":
+    case 'SHELL_TYPE_AP':
       return ShellType.AP;
     case 1:
-    case "SHELL_TYPE_APCR":
+    case 'SHELL_TYPE_APCR':
       return ShellType.APCR;
     case 2:
-    case "SHELL_TYPE_HEAT":
+    case 'SHELL_TYPE_HEAT':
       return ShellType.HEAT;
     case 3:
-    case "SHELL_TYPE_HE":
+    case 'SHELL_TYPE_HE':
       return ShellType.HE;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum ShellType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ShellType',
+      );
   }
 }
 
 export function shellTypeToJSON(object: ShellType): string {
   switch (object) {
     case ShellType.AP:
-      return "SHELL_TYPE_AP";
+      return 'SHELL_TYPE_AP';
     case ShellType.APCR:
-      return "SHELL_TYPE_APCR";
+      return 'SHELL_TYPE_APCR';
     case ShellType.HEAT:
-      return "SHELL_TYPE_HEAT";
+      return 'SHELL_TYPE_HEAT';
     case ShellType.HE:
-      return "SHELL_TYPE_HE";
+      return 'SHELL_TYPE_HE';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum ShellType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ShellType',
+      );
   }
 }
 
@@ -91,39 +99,43 @@ export enum ModuleType {
 export function moduleTypeFromJSON(object: any): ModuleType {
   switch (object) {
     case 0:
-    case "MODULE_TYPE_VEHICLE":
+    case 'MODULE_TYPE_VEHICLE':
       return ModuleType.VEHICLE;
     case 1:
-    case "MODULE_TYPE_ENGINE":
+    case 'MODULE_TYPE_ENGINE':
       return ModuleType.ENGINE;
     case 2:
-    case "MODULE_TYPE_TRACKS":
+    case 'MODULE_TYPE_TRACKS':
       return ModuleType.TRACKS;
     case 3:
-    case "MODULE_TYPE_TURRET":
+    case 'MODULE_TYPE_TURRET':
       return ModuleType.TURRET;
     case 4:
-    case "MODULE_TYPE_GUN":
+    case 'MODULE_TYPE_GUN':
       return ModuleType.GUN;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum ModuleType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ModuleType',
+      );
   }
 }
 
 export function moduleTypeToJSON(object: ModuleType): string {
   switch (object) {
     case ModuleType.VEHICLE:
-      return "MODULE_TYPE_VEHICLE";
+      return 'MODULE_TYPE_VEHICLE';
     case ModuleType.ENGINE:
-      return "MODULE_TYPE_ENGINE";
+      return 'MODULE_TYPE_ENGINE';
     case ModuleType.TRACKS:
-      return "MODULE_TYPE_TRACKS";
+      return 'MODULE_TYPE_TRACKS';
     case ModuleType.TURRET:
-      return "MODULE_TYPE_TURRET";
+      return 'MODULE_TYPE_TURRET';
     case ModuleType.GUN:
-      return "MODULE_TYPE_GUN";
+      return 'MODULE_TYPE_GUN';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum ModuleType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ModuleType',
+      );
   }
 }
 
@@ -137,34 +149,38 @@ export enum TankClass {
 export function tankClassFromJSON(object: any): TankClass {
   switch (object) {
     case 0:
-    case "TANK_CLASS_LIGHT":
+    case 'TANK_CLASS_LIGHT':
       return TankClass.LIGHT;
     case 1:
-    case "TANK_CLASS_MEDIUM":
+    case 'TANK_CLASS_MEDIUM':
       return TankClass.MEDIUM;
     case 2:
-    case "TANK_CLASS_HEAVY":
+    case 'TANK_CLASS_HEAVY':
       return TankClass.HEAVY;
     case 3:
-    case "TANK_CLASS_TANK_DESTROYER":
+    case 'TANK_CLASS_TANK_DESTROYER':
       return TankClass.TANK_DESTROYER;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankClass");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankClass',
+      );
   }
 }
 
 export function tankClassToJSON(object: TankClass): string {
   switch (object) {
     case TankClass.LIGHT:
-      return "TANK_CLASS_LIGHT";
+      return 'TANK_CLASS_LIGHT';
     case TankClass.MEDIUM:
-      return "TANK_CLASS_MEDIUM";
+      return 'TANK_CLASS_MEDIUM';
     case TankClass.HEAVY:
-      return "TANK_CLASS_HEAVY";
+      return 'TANK_CLASS_HEAVY';
     case TankClass.TANK_DESTROYER:
-      return "TANK_CLASS_TANK_DESTROYER";
+      return 'TANK_CLASS_TANK_DESTROYER';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankClass");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankClass',
+      );
   }
 }
 
@@ -177,29 +193,33 @@ export enum TankType {
 export function tankTypeFromJSON(object: any): TankType {
   switch (object) {
     case 0:
-    case "TANK_TYPE_RESEARCHABLE":
+    case 'TANK_TYPE_RESEARCHABLE':
       return TankType.RESEARCHABLE;
     case 1:
-    case "TANK_TYPE_PREMIUM":
+    case 'TANK_TYPE_PREMIUM':
       return TankType.PREMIUM;
     case 2:
-    case "TANK_TYPE_COLLECTOR":
+    case 'TANK_TYPE_COLLECTOR':
       return TankType.COLLECTOR;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankType',
+      );
   }
 }
 
 export function tankTypeToJSON(object: TankType): string {
   switch (object) {
     case TankType.RESEARCHABLE:
-      return "TANK_TYPE_RESEARCHABLE";
+      return 'TANK_TYPE_RESEARCHABLE';
     case TankType.PREMIUM:
-      return "TANK_TYPE_PREMIUM";
+      return 'TANK_TYPE_PREMIUM';
     case TankType.COLLECTOR:
-      return "TANK_TYPE_COLLECTOR";
+      return 'TANK_TYPE_COLLECTOR';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum TankType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum TankType',
+      );
   }
 }
 
@@ -214,39 +234,43 @@ export enum CrewType {
 export function crewTypeFromJSON(object: any): CrewType {
   switch (object) {
     case 0:
-    case "CREW_TYPE_COMMANDER":
+    case 'CREW_TYPE_COMMANDER':
       return CrewType.COMMANDER;
     case 1:
-    case "CREW_TYPE_RADIOMAN":
+    case 'CREW_TYPE_RADIOMAN':
       return CrewType.RADIOMAN;
     case 2:
-    case "CREW_TYPE_GUNNER":
+    case 'CREW_TYPE_GUNNER':
       return CrewType.GUNNER;
     case 3:
-    case "CREW_TYPE_DRIVER":
+    case 'CREW_TYPE_DRIVER':
       return CrewType.DRIVER;
     case 4:
-    case "CREW_TYPE_LOADER":
+    case 'CREW_TYPE_LOADER':
       return CrewType.LOADER;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum CrewType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CrewType',
+      );
   }
 }
 
 export function crewTypeToJSON(object: CrewType): string {
   switch (object) {
     case CrewType.COMMANDER:
-      return "CREW_TYPE_COMMANDER";
+      return 'CREW_TYPE_COMMANDER';
     case CrewType.RADIOMAN:
-      return "CREW_TYPE_RADIOMAN";
+      return 'CREW_TYPE_RADIOMAN';
     case CrewType.GUNNER:
-      return "CREW_TYPE_GUNNER";
+      return 'CREW_TYPE_GUNNER';
     case CrewType.DRIVER:
-      return "CREW_TYPE_DRIVER";
+      return 'CREW_TYPE_DRIVER';
     case CrewType.LOADER:
-      return "CREW_TYPE_LOADER";
+      return 'CREW_TYPE_LOADER';
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum CrewType");
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CrewType',
+      );
   }
 }
 
@@ -299,8 +323,8 @@ export interface TankDefinition_RolesEntry {
 
 export interface ResearchCost {
   research_cost_type?:
-    | { $case: "xp"; value: number }
-    | { $case: "seasonal_tokens"; value: ResearchCostSeasonalTokens }
+    | { $case: 'xp'; value: number }
+    | { $case: 'seasonal_tokens'; value: ResearchCostSeasonalTokens }
     | undefined;
 }
 
@@ -355,9 +379,9 @@ export interface TurretDefinition {
 
 export interface GunDefinition {
   gun_type?:
-    | { $case: "regular"; value: GunDefinitionRegular }
-    | { $case: "auto_loader"; value: GunDefinitionAutoLoader }
-    | { $case: "auto_reloader"; value: GunDefinitionAutoReloader }
+    | { $case: 'regular'; value: GunDefinitionRegular }
+    | { $case: 'auto_loader'; value: GunDefinitionAutoLoader }
+    | { $case: 'auto_reloader'; value: GunDefinitionAutoReloader }
     | undefined;
 }
 
@@ -408,6 +432,17 @@ export interface GunDefinitionBase {
   dispersion_damaged: number;
   unlocks: Unlock[];
   shell_capacity: number;
+  assault_ranges?: AssaultRanges | undefined;
+}
+
+export interface AssaultRanges {
+  ranges: AssaultRange[];
+  types: ShellType[];
+}
+
+export interface AssaultRange {
+  distance: number;
+  factor: number;
 }
 
 export interface ShellDefinition {
@@ -448,20 +483,27 @@ export interface Crew {
   substitute: CrewType[];
 }
 
-export function createBaseTankDefinitions(): TankDefinitions {
+function createBaseTankDefinitions(): TankDefinitions {
   return { tanks: {} };
 }
 
 export const TankDefinitions: MessageFns<TankDefinitions> = {
-  encode(message: TankDefinitions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TankDefinitions,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     Object.entries(message.tanks).forEach(([key, value]) => {
-      TankDefinitions_TanksEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
+      TankDefinitions_TanksEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork(),
+      ).join();
     });
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TankDefinitions {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTankDefinitions();
     while (reader.pos < end) {
@@ -472,7 +514,10 @@ export const TankDefinitions: MessageFns<TankDefinitions> = {
             break;
           }
 
-          const entry1 = TankDefinitions_TanksEntry.decode(reader, reader.uint32());
+          const entry1 = TankDefinitions_TanksEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry1.value !== undefined) {
             message.tanks[entry1.key] = entry1.value;
           }
@@ -490,10 +535,12 @@ export const TankDefinitions: MessageFns<TankDefinitions> = {
   fromJSON(object: any): TankDefinitions {
     return {
       tanks: isObject(object.tanks)
-        ? Object.entries(object.tanks).reduce<{ [key: number]: TankDefinition }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = TankDefinition.fromJSON(value);
-          return acc;
-        }, {})
+        ? Object.entries(object.tanks).reduce<{
+            [key: number]: TankDefinition;
+          }>((acc, [key, value]) => {
+            acc[globalThis.Number(key)] = TankDefinition.fromJSON(value);
+            return acc;
+          }, {})
         : {},
     };
   },
@@ -512,106 +559,124 @@ export const TankDefinitions: MessageFns<TankDefinitions> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TankDefinitions>, I>>(base?: I): TankDefinitions {
+  create<I extends Exact<DeepPartial<TankDefinitions>, I>>(
+    base?: I,
+  ): TankDefinitions {
     return TankDefinitions.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TankDefinitions>, I>>(object: I): TankDefinitions {
+  fromPartial<I extends Exact<DeepPartial<TankDefinitions>, I>>(
+    object: I,
+  ): TankDefinitions {
     const message = createBaseTankDefinitions();
-    message.tanks = Object.entries(object.tanks ?? {}).reduce<{ [key: number]: TankDefinition }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[globalThis.Number(key)] = TankDefinition.fromPartial(value);
-        }
-        return acc;
-      },
-      {},
-    );
+    message.tanks = Object.entries(object.tanks ?? {}).reduce<{
+      [key: number]: TankDefinition;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[globalThis.Number(key)] = TankDefinition.fromPartial(value);
+      }
+      return acc;
+    }, {});
     return message;
   },
 };
 
-export function createBaseTankDefinitions_TanksEntry(): TankDefinitions_TanksEntry {
-  return { key: 0, value: createBaseTankDefinition() };
+function createBaseTankDefinitions_TanksEntry(): TankDefinitions_TanksEntry {
+  return { key: 0, value: undefined };
 }
 
-export const TankDefinitions_TanksEntry: MessageFns<TankDefinitions_TanksEntry> = {
-  encode(message: TankDefinitions_TanksEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      TankDefinition.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): TankDefinitions_TanksEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTankDefinitions_TanksEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = TankDefinition.decode(reader, reader.uint32());
-          continue;
-        }
+export const TankDefinitions_TanksEntry: MessageFns<TankDefinitions_TanksEntry> =
+  {
+    encode(
+      message: TankDefinitions_TanksEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        TankDefinition.encode(message.value, writer.uint32(18).fork()).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): TankDefinitions_TanksEntry {
-    return {
-      key: globalThis.Number(assertSet("TankDefinitions_TanksEntry.key", object.key)),
-      value: TankDefinition.fromJSON(assertSet("TankDefinitions_TanksEntry.value", object.value)),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): TankDefinitions_TanksEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTankDefinitions_TanksEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: TankDefinitions_TanksEntry): unknown {
-    const obj: any = {};
-    if (message.key !== undefined) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = TankDefinition.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<TankDefinitions_TanksEntry>, I>>(base?: I): TankDefinitions_TanksEntry {
-    return TankDefinitions_TanksEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TankDefinitions_TanksEntry>, I>>(object: I): TankDefinitions_TanksEntry {
-    const message = createBaseTankDefinitions_TanksEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? TankDefinition.fromPartial(object.value)
-      : createBaseTankDefinition();
-    return message;
-  },
-};
+            message.value = TankDefinition.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
 
-export function createBaseTankDefinition(): TankDefinition {
+    fromJSON(object: any): TankDefinitions_TanksEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value)
+          ? TankDefinition.fromJSON(object.value)
+          : undefined,
+      };
+    },
+
+    toJSON(message: TankDefinitions_TanksEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = TankDefinition.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<TankDefinitions_TanksEntry>, I>>(
+      base?: I,
+    ): TankDefinitions_TanksEntry {
+      return TankDefinitions_TanksEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<TankDefinitions_TanksEntry>, I>>(
+      object: I,
+    ): TankDefinitions_TanksEntry {
+      const message = createBaseTankDefinitions_TanksEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? TankDefinition.fromPartial(object.value)
+          : undefined;
+      return message;
+    },
+  };
+
+function createBaseTankDefinition(): TankDefinition {
   return {
     id: 0,
-    slug: "",
+    slug: '',
     roles: {},
     fixed_camouflage: false,
     camouflages: [],
@@ -619,8 +684,8 @@ export function createBaseTankDefinition(): TankDefinition {
     successors: [],
     crew: [],
     health: 0,
-    nation: "",
-    name: createBaseI18nString(),
+    nation: '',
+    name: undefined,
     type: 0,
     max_consumables: 0,
     max_provisions: 0,
@@ -631,28 +696,34 @@ export function createBaseTankDefinition(): TankDefinition {
     turrets: [],
     engines: [],
     tracks: [],
-    price: createBaseTankPrice(),
+    price: undefined,
     research_cost: undefined,
     speed_forwards: 0,
     speed_backwards: 0,
     camouflage_still: 0,
     camouflage_moving: 0,
     camouflage_onFire: 0,
-    equipment_preset: "",
+    equipment_preset: '',
     weight: 0,
   };
 }
 
 export const TankDefinition: MessageFns<TankDefinition> = {
-  encode(message: TankDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TankDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
-    if (message.slug !== "") {
+    if (message.slug !== '') {
       writer.uint32(18).string(message.slug);
     }
     Object.entries(message.roles).forEach(([key, value]) => {
-      TankDefinition_RolesEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
+      TankDefinition_RolesEntry.encode(
+        { key: key as any, value },
+        writer.uint32(26).fork(),
+      ).join();
     });
     if (message.fixed_camouflage !== false) {
       writer.uint32(40).bool(message.fixed_camouflage);
@@ -678,7 +749,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.health !== 0) {
       writer.uint32(80).uint32(message.health);
     }
-    if (message.nation !== "") {
+    if (message.nation !== '') {
       writer.uint32(90).string(message.nation);
     }
     if (message.name !== undefined) {
@@ -718,7 +789,10 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       TankPrice.encode(message.price, writer.uint32(186).fork()).join();
     }
     if (message.research_cost !== undefined) {
-      ResearchCost.encode(message.research_cost, writer.uint32(194).fork()).join();
+      ResearchCost.encode(
+        message.research_cost,
+        writer.uint32(194).fork(),
+      ).join();
     }
     if (message.speed_forwards !== 0) {
       writer.uint32(205).float(message.speed_forwards);
@@ -735,7 +809,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.camouflage_onFire !== 0) {
       writer.uint32(237).float(message.camouflage_onFire);
     }
-    if (message.equipment_preset !== "") {
+    if (message.equipment_preset !== '') {
       writer.uint32(242).string(message.equipment_preset);
     }
     if (message.weight !== 0) {
@@ -745,7 +819,8 @@ export const TankDefinition: MessageFns<TankDefinition> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TankDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTankDefinition();
     while (reader.pos < end) {
@@ -772,7 +847,10 @@ export const TankDefinition: MessageFns<TankDefinition> = {
             break;
           }
 
-          const entry3 = TankDefinition_RolesEntry.decode(reader, reader.uint32());
+          const entry3 = TankDefinition_RolesEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry3.value !== undefined) {
             message.roles[entry3.key] = entry3.value;
           }
@@ -933,7 +1011,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
             break;
           }
 
-          message.turrets.push(TurretDefinition.decode(reader, reader.uint32()));
+          message.turrets.push(
+            TurretDefinition.decode(reader, reader.uint32()),
+          );
           continue;
         }
         case 21: {
@@ -941,7 +1021,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
             break;
           }
 
-          message.engines.push(EngineDefinition.decode(reader, reader.uint32()));
+          message.engines.push(
+            EngineDefinition.decode(reader, reader.uint32()),
+          );
           continue;
         }
         case 22: {
@@ -1035,15 +1117,20 @@ export const TankDefinition: MessageFns<TankDefinition> = {
 
   fromJSON(object: any): TankDefinition {
     return {
-      id: globalThis.Number(assertSet("TankDefinition.id", object.id)),
-      slug: globalThis.String(assertSet("TankDefinition.slug", object.slug)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : '',
       roles: isObject(object.roles)
-        ? Object.entries(object.roles).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[globalThis.Number(key)] = Number(value);
-          return acc;
-        }, {})
+        ? Object.entries(object.roles).reduce<{ [key: number]: number }>(
+            (acc, [key, value]) => {
+              acc[globalThis.Number(key)] = Number(value);
+              return acc;
+            },
+            {},
+          )
         : {},
-      fixed_camouflage: globalThis.Boolean(assertSet("TankDefinition.fixed_camouflage", object.fixed_camouflage)),
+      fixed_camouflage: isSet(object.fixed_camouflage)
+        ? globalThis.Boolean(object.fixed_camouflage)
+        : false,
       camouflages: globalThis.Array.isArray(object?.camouflages)
         ? object.camouflages.map((e: any) => globalThis.Number(e))
         : [],
@@ -1056,16 +1143,24 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       crew: globalThis.Array.isArray(object?.crew)
         ? object.crew.map((e: any) => Crew.fromJSON(e))
         : [],
-      health: globalThis.Number(assertSet("TankDefinition.health", object.health)),
-      nation: globalThis.String(assertSet("TankDefinition.nation", object.nation)),
-      name: I18nString.fromJSON(assertSet("TankDefinition.name", object.name)),
-      type: tankTypeFromJSON(assertSet("TankDefinition.type", object.type)),
-      max_consumables: globalThis.Number(assertSet("TankDefinition.max_consumables", object.max_consumables)),
-      max_provisions: globalThis.Number(assertSet("TankDefinition.max_provisions", object.max_provisions)),
-      tier: globalThis.Number(assertSet("TankDefinition.tier", object.tier)),
-      class: tankClassFromJSON(assertSet("TankDefinition.class", object.class)),
-      testing: globalThis.Boolean(assertSet("TankDefinition.testing", object.testing)),
-      deprecated: globalThis.Boolean(assertSet("TankDefinition.deprecated", object.deprecated)),
+      health: isSet(object.health) ? globalThis.Number(object.health) : 0,
+      nation: isSet(object.nation) ? globalThis.String(object.nation) : '',
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      type: isSet(object.type) ? tankTypeFromJSON(object.type) : 0,
+      max_consumables: isSet(object.max_consumables)
+        ? globalThis.Number(object.max_consumables)
+        : 0,
+      max_provisions: isSet(object.max_provisions)
+        ? globalThis.Number(object.max_provisions)
+        : 0,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      class: isSet(object.class) ? tankClassFromJSON(object.class) : 0,
+      testing: isSet(object.testing)
+        ? globalThis.Boolean(object.testing)
+        : false,
+      deprecated: isSet(object.deprecated)
+        ? globalThis.Boolean(object.deprecated)
+        : false,
       turrets: globalThis.Array.isArray(object?.turrets)
         ? object.turrets.map((e: any) => TurretDefinition.fromJSON(e))
         : [],
@@ -1075,15 +1170,29 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       tracks: globalThis.Array.isArray(object?.tracks)
         ? object.tracks.map((e: any) => TrackDefinition.fromJSON(e))
         : [],
-      price: TankPrice.fromJSON(assertSet("TankDefinition.price", object.price)),
-      research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      speed_forwards: globalThis.Number(assertSet("TankDefinition.speed_forwards", object.speed_forwards)),
-      speed_backwards: globalThis.Number(assertSet("TankDefinition.speed_backwards", object.speed_backwards)),
-      camouflage_still: globalThis.Number(assertSet("TankDefinition.camouflage_still", object.camouflage_still)),
-      camouflage_moving: globalThis.Number(assertSet("TankDefinition.camouflage_moving", object.camouflage_moving)),
-      camouflage_onFire: globalThis.Number(assertSet("TankDefinition.camouflage_onFire", object.camouflage_onFire)),
-      equipment_preset: globalThis.String(assertSet("TankDefinition.equipment_preset", object.equipment_preset)),
-      weight: globalThis.Number(assertSet("TankDefinition.weight", object.weight)),
+      price: isSet(object.price) ? TankPrice.fromJSON(object.price) : undefined,
+      research_cost: isSet(object.research_cost)
+        ? ResearchCost.fromJSON(object.research_cost)
+        : undefined,
+      speed_forwards: isSet(object.speed_forwards)
+        ? globalThis.Number(object.speed_forwards)
+        : 0,
+      speed_backwards: isSet(object.speed_backwards)
+        ? globalThis.Number(object.speed_backwards)
+        : 0,
+      camouflage_still: isSet(object.camouflage_still)
+        ? globalThis.Number(object.camouflage_still)
+        : 0,
+      camouflage_moving: isSet(object.camouflage_moving)
+        ? globalThis.Number(object.camouflage_moving)
+        : 0,
+      camouflage_onFire: isSet(object.camouflage_onFire)
+        ? globalThis.Number(object.camouflage_onFire)
+        : 0,
+      equipment_preset: isSet(object.equipment_preset)
+        ? globalThis.String(object.equipment_preset)
+        : '',
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
     };
   },
 
@@ -1092,7 +1201,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
     }
-    if (message.slug !== "") {
+    if (message.slug !== '') {
       obj.slug = message.slug;
     }
     if (message.roles) {
@@ -1122,7 +1231,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.health !== 0) {
       obj.health = Math.round(message.health);
     }
-    if (message.nation !== "") {
+    if (message.nation !== '') {
       obj.nation = message.nation;
     }
     if (message.name !== undefined) {
@@ -1179,7 +1288,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.camouflage_onFire !== 0) {
       obj.camouflage_onFire = message.camouflage_onFire;
     }
-    if (message.equipment_preset !== "") {
+    if (message.equipment_preset !== '') {
       obj.equipment_preset = message.equipment_preset;
     }
     if (message.weight !== 0) {
@@ -1188,14 +1297,20 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TankDefinition>, I>>(base?: I): TankDefinition {
+  create<I extends Exact<DeepPartial<TankDefinition>, I>>(
+    base?: I,
+  ): TankDefinition {
     return TankDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TankDefinition>, I>>(object: I): TankDefinition {
+  fromPartial<I extends Exact<DeepPartial<TankDefinition>, I>>(
+    object: I,
+  ): TankDefinition {
     const message = createBaseTankDefinition();
     message.id = object.id ?? 0;
-    message.slug = object.slug ?? "";
-    message.roles = Object.entries(object.roles ?? {}).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+    message.slug = object.slug ?? '';
+    message.roles = Object.entries(object.roles ?? {}).reduce<{
+      [key: number]: number;
+    }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[globalThis.Number(key)] = globalThis.Number(value);
       }
@@ -1207,10 +1322,11 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.successors = object.successors?.map((e) => e) || [];
     message.crew = object.crew?.map((e) => Crew.fromPartial(e)) || [];
     message.health = object.health ?? 0;
-    message.nation = object.nation ?? "";
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+    message.nation = object.nation ?? '';
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
     message.type = object.type ?? 0;
     message.max_consumables = object.max_consumables ?? 0;
     message.max_provisions = object.max_provisions ?? 0;
@@ -1218,121 +1334,145 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.class = object.class ?? 0;
     message.testing = object.testing ?? false;
     message.deprecated = object.deprecated ?? false;
-    message.turrets = object.turrets?.map((e) => TurretDefinition.fromPartial(e)) || [];
-    message.engines = object.engines?.map((e) => EngineDefinition.fromPartial(e)) || [];
-    message.tracks = object.tracks?.map((e) => TrackDefinition.fromPartial(e)) || [];
-    message.price = (object.price !== undefined && object.price !== null)
-      ? TankPrice.fromPartial(object.price)
-      : createBaseTankPrice();
-    message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
-      ? ResearchCost.fromPartial(object.research_cost)
-      : undefined;
+    message.turrets =
+      object.turrets?.map((e) => TurretDefinition.fromPartial(e)) || [];
+    message.engines =
+      object.engines?.map((e) => EngineDefinition.fromPartial(e)) || [];
+    message.tracks =
+      object.tracks?.map((e) => TrackDefinition.fromPartial(e)) || [];
+    message.price =
+      object.price !== undefined && object.price !== null
+        ? TankPrice.fromPartial(object.price)
+        : undefined;
+    message.research_cost =
+      object.research_cost !== undefined && object.research_cost !== null
+        ? ResearchCost.fromPartial(object.research_cost)
+        : undefined;
     message.speed_forwards = object.speed_forwards ?? 0;
     message.speed_backwards = object.speed_backwards ?? 0;
     message.camouflage_still = object.camouflage_still ?? 0;
     message.camouflage_moving = object.camouflage_moving ?? 0;
     message.camouflage_onFire = object.camouflage_onFire ?? 0;
-    message.equipment_preset = object.equipment_preset ?? "";
+    message.equipment_preset = object.equipment_preset ?? '';
     message.weight = object.weight ?? 0;
     return message;
   },
 };
 
-export function createBaseTankDefinition_RolesEntry(): TankDefinition_RolesEntry {
+function createBaseTankDefinition_RolesEntry(): TankDefinition_RolesEntry {
   return { key: 0, value: 0 };
 }
 
-export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> = {
-  encode(message: TankDefinition_RolesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      writer.uint32(16).uint32(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): TankDefinition_RolesEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTankDefinition_RolesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.value = reader.uint32();
-          continue;
-        }
+export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> =
+  {
+    encode(
+      message: TankDefinition_RolesEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== 0) {
+        writer.uint32(16).uint32(message.value);
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): TankDefinition_RolesEntry {
-    return {
-      key: globalThis.Number(assertSet("TankDefinition_RolesEntry.key", object.key)),
-      value: globalThis.Number(assertSet("TankDefinition_RolesEntry.value", object.value)),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): TankDefinition_RolesEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTankDefinition_RolesEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: TankDefinition_RolesEntry): unknown {
-    const obj: any = {};
-    if (message.key !== undefined) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = Math.round(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<TankDefinition_RolesEntry>, I>>(base?: I): TankDefinition_RolesEntry {
-    return TankDefinition_RolesEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TankDefinition_RolesEntry>, I>>(object: I): TankDefinition_RolesEntry {
-    const message = createBaseTankDefinition_RolesEntry();
-    message.key = object.key ?? 0;
-    message.value = object.value ?? 0;
-    return message;
-  },
-};
+            message.value = reader.uint32();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
 
-export function createBaseResearchCost(): ResearchCost {
+    fromJSON(object: any): TankDefinition_RolesEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+      };
+    },
+
+    toJSON(message: TankDefinition_RolesEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== 0) {
+        obj.value = Math.round(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<TankDefinition_RolesEntry>, I>>(
+      base?: I,
+    ): TankDefinition_RolesEntry {
+      return TankDefinition_RolesEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<TankDefinition_RolesEntry>, I>>(
+      object: I,
+    ): TankDefinition_RolesEntry {
+      const message = createBaseTankDefinition_RolesEntry();
+      message.key = object.key ?? 0;
+      message.value = object.value ?? 0;
+      return message;
+    },
+  };
+
+function createBaseResearchCost(): ResearchCost {
   return { research_cost_type: undefined };
 }
 
 export const ResearchCost: MessageFns<ResearchCost> = {
-  encode(message: ResearchCost, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: ResearchCost,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     switch (message.research_cost_type?.$case) {
-      case "xp":
+      case 'xp':
         writer.uint32(8).uint32(message.research_cost_type.value);
         break;
-      case "seasonal_tokens":
-        ResearchCostSeasonalTokens.encode(message.research_cost_type.value, writer.uint32(18).fork()).join();
+      case 'seasonal_tokens':
+        ResearchCostSeasonalTokens.encode(
+          message.research_cost_type.value,
+          writer.uint32(18).fork(),
+        ).join();
         break;
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ResearchCost {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResearchCost();
     while (reader.pos < end) {
@@ -1343,7 +1483,7 @@ export const ResearchCost: MessageFns<ResearchCost> = {
             break;
           }
 
-          message.research_cost_type = { $case: "xp", value: reader.uint32() };
+          message.research_cost_type = { $case: 'xp', value: reader.uint32() };
           continue;
         }
         case 2: {
@@ -1352,7 +1492,7 @@ export const ResearchCost: MessageFns<ResearchCost> = {
           }
 
           message.research_cost_type = {
-            $case: "seasonal_tokens",
+            $case: 'seasonal_tokens',
             value: ResearchCostSeasonalTokens.decode(reader, reader.uint32()),
           };
           continue;
@@ -1369,132 +1509,163 @@ export const ResearchCost: MessageFns<ResearchCost> = {
   fromJSON(object: any): ResearchCost {
     return {
       research_cost_type: isSet(object.xp)
-        ? { $case: "xp", value: globalThis.Number(object.xp) }
+        ? { $case: 'xp', value: globalThis.Number(object.xp) }
         : isSet(object.seasonal_tokens)
-        ? { $case: "seasonal_tokens", value: ResearchCostSeasonalTokens.fromJSON(object.seasonal_tokens) }
-        : undefined,
+          ? {
+              $case: 'seasonal_tokens',
+              value: ResearchCostSeasonalTokens.fromJSON(
+                object.seasonal_tokens,
+              ),
+            }
+          : undefined,
     };
   },
 
   toJSON(message: ResearchCost): unknown {
     const obj: any = {};
-    if (message.research_cost_type?.$case === "xp") {
+    if (message.research_cost_type?.$case === 'xp') {
       obj.xp = Math.round(message.research_cost_type.value);
     }
-    if (message.research_cost_type?.$case === "seasonal_tokens") {
-      obj.seasonal_tokens = ResearchCostSeasonalTokens.toJSON(message.research_cost_type.value);
+    if (message.research_cost_type?.$case === 'seasonal_tokens') {
+      obj.seasonal_tokens = ResearchCostSeasonalTokens.toJSON(
+        message.research_cost_type.value,
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ResearchCost>, I>>(base?: I): ResearchCost {
+  create<I extends Exact<DeepPartial<ResearchCost>, I>>(
+    base?: I,
+  ): ResearchCost {
     return ResearchCost.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ResearchCost>, I>>(object: I): ResearchCost {
+  fromPartial<I extends Exact<DeepPartial<ResearchCost>, I>>(
+    object: I,
+  ): ResearchCost {
     const message = createBaseResearchCost();
     if (
-      object.research_cost_type?.$case === "xp" &&
-      object.research_cost_type?.value !== undefined &&
-      object.research_cost_type?.value !== null
-    ) {
-      message.research_cost_type = { $case: "xp", value: object.research_cost_type.value };
-    }
-    if (
-      object.research_cost_type?.$case === "seasonal_tokens" &&
+      object.research_cost_type?.$case === 'xp' &&
       object.research_cost_type?.value !== undefined &&
       object.research_cost_type?.value !== null
     ) {
       message.research_cost_type = {
-        $case: "seasonal_tokens",
-        value: ResearchCostSeasonalTokens.fromPartial(object.research_cost_type.value),
+        $case: 'xp',
+        value: object.research_cost_type.value,
+      };
+    }
+    if (
+      object.research_cost_type?.$case === 'seasonal_tokens' &&
+      object.research_cost_type?.value !== undefined &&
+      object.research_cost_type?.value !== null
+    ) {
+      message.research_cost_type = {
+        $case: 'seasonal_tokens',
+        value: ResearchCostSeasonalTokens.fromPartial(
+          object.research_cost_type.value,
+        ),
       };
     }
     return message;
   },
 };
 
-export function createBaseResearchCostSeasonalTokens(): ResearchCostSeasonalTokens {
+function createBaseResearchCostSeasonalTokens(): ResearchCostSeasonalTokens {
   return { season: 0, tokens: 0 };
 }
 
-export const ResearchCostSeasonalTokens: MessageFns<ResearchCostSeasonalTokens> = {
-  encode(message: ResearchCostSeasonalTokens, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.season !== 0) {
-      writer.uint32(8).uint32(message.season);
-    }
-    if (message.tokens !== 0) {
-      writer.uint32(16).uint32(message.tokens);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ResearchCostSeasonalTokens {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseResearchCostSeasonalTokens();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.season = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.tokens = reader.uint32();
-          continue;
-        }
+export const ResearchCostSeasonalTokens: MessageFns<ResearchCostSeasonalTokens> =
+  {
+    encode(
+      message: ResearchCostSeasonalTokens,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.season !== 0) {
+        writer.uint32(8).uint32(message.season);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.tokens !== 0) {
+        writer.uint32(16).uint32(message.tokens);
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): ResearchCostSeasonalTokens {
-    return {
-      season: globalThis.Number(assertSet("ResearchCostSeasonalTokens.season", object.season)),
-      tokens: globalThis.Number(assertSet("ResearchCostSeasonalTokens.tokens", object.tokens)),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): ResearchCostSeasonalTokens {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseResearchCostSeasonalTokens();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: ResearchCostSeasonalTokens): unknown {
-    const obj: any = {};
-    if (message.season !== 0) {
-      obj.season = Math.round(message.season);
-    }
-    if (message.tokens !== 0) {
-      obj.tokens = Math.round(message.tokens);
-    }
-    return obj;
-  },
+            message.season = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<ResearchCostSeasonalTokens>, I>>(base?: I): ResearchCostSeasonalTokens {
-    return ResearchCostSeasonalTokens.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ResearchCostSeasonalTokens>, I>>(object: I): ResearchCostSeasonalTokens {
-    const message = createBaseResearchCostSeasonalTokens();
-    message.season = object.season ?? 0;
-    message.tokens = object.tokens ?? 0;
-    return message;
-  },
-};
+            message.tokens = reader.uint32();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
 
-export function createBaseTankPrice(): TankPrice {
+    fromJSON(object: any): ResearchCostSeasonalTokens {
+      return {
+        season: isSet(object.season) ? globalThis.Number(object.season) : 0,
+        tokens: isSet(object.tokens) ? globalThis.Number(object.tokens) : 0,
+      };
+    },
+
+    toJSON(message: ResearchCostSeasonalTokens): unknown {
+      const obj: any = {};
+      if (message.season !== 0) {
+        obj.season = Math.round(message.season);
+      }
+      if (message.tokens !== 0) {
+        obj.tokens = Math.round(message.tokens);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<ResearchCostSeasonalTokens>, I>>(
+      base?: I,
+    ): ResearchCostSeasonalTokens {
+      return ResearchCostSeasonalTokens.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<ResearchCostSeasonalTokens>, I>>(
+      object: I,
+    ): ResearchCostSeasonalTokens {
+      const message = createBaseResearchCostSeasonalTokens();
+      message.season = object.season ?? 0;
+      message.tokens = object.tokens ?? 0;
+      return message;
+    },
+  };
+
+function createBaseTankPrice(): TankPrice {
   return { type: 0, value: 0 };
 }
 
 export const TankPrice: MessageFns<TankPrice> = {
-  encode(message: TankPrice, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TankPrice,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
@@ -1505,7 +1676,8 @@ export const TankPrice: MessageFns<TankPrice> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TankPrice {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTankPrice();
     while (reader.pos < end) {
@@ -1538,8 +1710,8 @@ export const TankPrice: MessageFns<TankPrice> = {
 
   fromJSON(object: any): TankPrice {
     return {
-      type: tankPriceTypeFromJSON(assertSet("TankPrice.type", object.type)),
-      value: globalThis.Number(assertSet("TankPrice.value", object.value)),
+      type: isSet(object.type) ? tankPriceTypeFromJSON(object.type) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
     };
   },
 
@@ -1557,7 +1729,9 @@ export const TankPrice: MessageFns<TankPrice> = {
   create<I extends Exact<DeepPartial<TankPrice>, I>>(base?: I): TankPrice {
     return TankPrice.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TankPrice>, I>>(object: I): TankPrice {
+  fromPartial<I extends Exact<DeepPartial<TankPrice>, I>>(
+    object: I,
+  ): TankPrice {
     const message = createBaseTankPrice();
     message.type = object.type ?? 0;
     message.value = object.value ?? 0;
@@ -1565,11 +1739,11 @@ export const TankPrice: MessageFns<TankPrice> = {
   },
 };
 
-export function createBaseTrackDefinition(): TrackDefinition {
+function createBaseTrackDefinition(): TrackDefinition {
   return {
     id: 0,
     tier: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     weight: 0,
     traverse_speed: 0,
     research_cost: undefined,
@@ -1583,7 +1757,10 @@ export function createBaseTrackDefinition(): TrackDefinition {
 }
 
 export const TrackDefinition: MessageFns<TrackDefinition> = {
-  encode(message: TrackDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TrackDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -1600,7 +1777,10 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
       writer.uint32(45).float(message.traverse_speed);
     }
     if (message.research_cost !== undefined) {
-      ResearchCost.encode(message.research_cost, writer.uint32(50).fork()).join();
+      ResearchCost.encode(
+        message.research_cost,
+        writer.uint32(50).fork(),
+      ).join();
     }
     if (message.dispersion_move !== 0) {
       writer.uint32(61).float(message.dispersion_move);
@@ -1624,7 +1804,8 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TrackDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTrackDefinition();
     while (reader.pos < end) {
@@ -1737,20 +1918,34 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
 
   fromJSON(object: any): TrackDefinition {
     return {
-      id: globalThis.Number(assertSet("TrackDefinition.id", object.id)),
-      tier: globalThis.Number(assertSet("TrackDefinition.tier", object.tier)),
-      name: I18nString.fromJSON(assertSet("TrackDefinition.name", object.name)),
-      weight: globalThis.Number(assertSet("TrackDefinition.weight", object.weight)),
-      traverse_speed: globalThis.Number(assertSet("TrackDefinition.traverse_speed", object.traverse_speed)),
-      research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      dispersion_move: globalThis.Number(assertSet("TrackDefinition.dispersion_move", object.dispersion_move)),
-      dispersion_traverse: globalThis.Number(
-        assertSet("TrackDefinition.dispersion_traverse", object.dispersion_traverse),
-      ),
-      resistance_hard: globalThis.Number(assertSet("TrackDefinition.resistance_hard", object.resistance_hard)),
-      resistance_medium: globalThis.Number(assertSet("TrackDefinition.resistance_medium", object.resistance_medium)),
-      resistance_soft: globalThis.Number(assertSet("TrackDefinition.resistance_soft", object.resistance_soft)),
-      unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      traverse_speed: isSet(object.traverse_speed)
+        ? globalThis.Number(object.traverse_speed)
+        : 0,
+      research_cost: isSet(object.research_cost)
+        ? ResearchCost.fromJSON(object.research_cost)
+        : undefined,
+      dispersion_move: isSet(object.dispersion_move)
+        ? globalThis.Number(object.dispersion_move)
+        : 0,
+      dispersion_traverse: isSet(object.dispersion_traverse)
+        ? globalThis.Number(object.dispersion_traverse)
+        : 0,
+      resistance_hard: isSet(object.resistance_hard)
+        ? globalThis.Number(object.resistance_hard)
+        : 0,
+      resistance_medium: isSet(object.resistance_medium)
+        ? globalThis.Number(object.resistance_medium)
+        : 0,
+      resistance_soft: isSet(object.resistance_soft)
+        ? globalThis.Number(object.resistance_soft)
+        : 0,
+      unlocks: globalThis.Array.isArray(object?.unlocks)
+        ? object.unlocks.map((e: any) => Unlock.fromJSON(e))
+        : [],
     };
   },
 
@@ -1795,21 +1990,27 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TrackDefinition>, I>>(base?: I): TrackDefinition {
+  create<I extends Exact<DeepPartial<TrackDefinition>, I>>(
+    base?: I,
+  ): TrackDefinition {
     return TrackDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TrackDefinition>, I>>(object: I): TrackDefinition {
+  fromPartial<I extends Exact<DeepPartial<TrackDefinition>, I>>(
+    object: I,
+  ): TrackDefinition {
     const message = createBaseTrackDefinition();
     message.id = object.id ?? 0;
     message.tier = object.tier ?? 0;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
     message.weight = object.weight ?? 0;
     message.traverse_speed = object.traverse_speed ?? 0;
-    message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
-      ? ResearchCost.fromPartial(object.research_cost)
-      : undefined;
+    message.research_cost =
+      object.research_cost !== undefined && object.research_cost !== null
+        ? ResearchCost.fromPartial(object.research_cost)
+        : undefined;
     message.dispersion_move = object.dispersion_move ?? 0;
     message.dispersion_traverse = object.dispersion_traverse ?? 0;
     message.resistance_hard = object.resistance_hard ?? 0;
@@ -1820,10 +2021,10 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
   },
 };
 
-export function createBaseEngineDefinition(): EngineDefinition {
+function createBaseEngineDefinition(): EngineDefinition {
   return {
     id: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     research_cost: undefined,
     tier: 0,
     fire_chance: 0,
@@ -1834,7 +2035,10 @@ export function createBaseEngineDefinition(): EngineDefinition {
 }
 
 export const EngineDefinition: MessageFns<EngineDefinition> = {
-  encode(message: EngineDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: EngineDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -1842,7 +2046,10 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
       I18nString.encode(message.name, writer.uint32(18).fork()).join();
     }
     if (message.research_cost !== undefined) {
-      ResearchCost.encode(message.research_cost, writer.uint32(26).fork()).join();
+      ResearchCost.encode(
+        message.research_cost,
+        writer.uint32(26).fork(),
+      ).join();
     }
     if (message.tier !== 0) {
       writer.uint32(32).uint32(message.tier);
@@ -1863,7 +2070,8 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): EngineDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEngineDefinition();
     while (reader.pos < end) {
@@ -1944,14 +2152,20 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
 
   fromJSON(object: any): EngineDefinition {
     return {
-      id: globalThis.Number(assertSet("EngineDefinition.id", object.id)),
-      name: I18nString.fromJSON(assertSet("EngineDefinition.name", object.name)),
-      research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      tier: globalThis.Number(assertSet("EngineDefinition.tier", object.tier)),
-      fire_chance: globalThis.Number(assertSet("EngineDefinition.fire_chance", object.fire_chance)),
-      power: globalThis.Number(assertSet("EngineDefinition.power", object.power)),
-      weight: globalThis.Number(assertSet("EngineDefinition.weight", object.weight)),
-      unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      research_cost: isSet(object.research_cost)
+        ? ResearchCost.fromJSON(object.research_cost)
+        : undefined,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      fire_chance: isSet(object.fire_chance)
+        ? globalThis.Number(object.fire_chance)
+        : 0,
+      power: isSet(object.power) ? globalThis.Number(object.power) : 0,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      unlocks: globalThis.Array.isArray(object?.unlocks)
+        ? object.unlocks.map((e: any) => Unlock.fromJSON(e))
+        : [],
     };
   },
 
@@ -1984,18 +2198,24 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EngineDefinition>, I>>(base?: I): EngineDefinition {
+  create<I extends Exact<DeepPartial<EngineDefinition>, I>>(
+    base?: I,
+  ): EngineDefinition {
     return EngineDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<EngineDefinition>, I>>(object: I): EngineDefinition {
+  fromPartial<I extends Exact<DeepPartial<EngineDefinition>, I>>(
+    object: I,
+  ): EngineDefinition {
     const message = createBaseEngineDefinition();
     message.id = object.id ?? 0;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
-    message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
-      ? ResearchCost.fromPartial(object.research_cost)
-      : undefined;
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
+    message.research_cost =
+      object.research_cost !== undefined && object.research_cost !== null
+        ? ResearchCost.fromPartial(object.research_cost)
+        : undefined;
     message.tier = object.tier ?? 0;
     message.fire_chance = object.fire_chance ?? 0;
     message.power = object.power ?? 0;
@@ -2005,14 +2225,14 @@ export const EngineDefinition: MessageFns<EngineDefinition> = {
   },
 };
 
-export function createBaseTurretDefinition(): TurretDefinition {
+function createBaseTurretDefinition(): TurretDefinition {
   return {
     id: 0,
     health: 0,
     view_range: 0,
     traverse_speed: 0,
     research_cost: undefined,
-    name: createBaseI18nString(),
+    name: undefined,
     tier: 0,
     weight: 0,
     guns: [],
@@ -2021,7 +2241,10 @@ export function createBaseTurretDefinition(): TurretDefinition {
 }
 
 export const TurretDefinition: MessageFns<TurretDefinition> = {
-  encode(message: TurretDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TurretDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -2035,7 +2258,10 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
       writer.uint32(37).float(message.traverse_speed);
     }
     if (message.research_cost !== undefined) {
-      ResearchCost.encode(message.research_cost, writer.uint32(42).fork()).join();
+      ResearchCost.encode(
+        message.research_cost,
+        writer.uint32(42).fork(),
+      ).join();
     }
     if (message.name !== undefined) {
       I18nString.encode(message.name, writer.uint32(50).fork()).join();
@@ -2056,7 +2282,8 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TurretDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTurretDefinition();
     while (reader.pos < end) {
@@ -2153,16 +2380,26 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
 
   fromJSON(object: any): TurretDefinition {
     return {
-      id: globalThis.Number(assertSet("TurretDefinition.id", object.id)),
-      health: globalThis.Number(assertSet("TurretDefinition.health", object.health)),
-      view_range: globalThis.Number(assertSet("TurretDefinition.view_range", object.view_range)),
-      traverse_speed: globalThis.Number(assertSet("TurretDefinition.traverse_speed", object.traverse_speed)),
-      research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      name: I18nString.fromJSON(assertSet("TurretDefinition.name", object.name)),
-      tier: globalThis.Number(assertSet("TurretDefinition.tier", object.tier)),
-      weight: globalThis.Number(assertSet("TurretDefinition.weight", object.weight)),
-      guns: globalThis.Array.isArray(object?.guns) ? object.guns.map((e: any) => GunDefinition.fromJSON(e)) : [],
-      unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      health: isSet(object.health) ? globalThis.Number(object.health) : 0,
+      view_range: isSet(object.view_range)
+        ? globalThis.Number(object.view_range)
+        : 0,
+      traverse_speed: isSet(object.traverse_speed)
+        ? globalThis.Number(object.traverse_speed)
+        : 0,
+      research_cost: isSet(object.research_cost)
+        ? ResearchCost.fromJSON(object.research_cost)
+        : undefined,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      guns: globalThis.Array.isArray(object?.guns)
+        ? object.guns.map((e: any) => GunDefinition.fromJSON(e))
+        : [],
+      unlocks: globalThis.Array.isArray(object?.unlocks)
+        ? object.unlocks.map((e: any) => Unlock.fromJSON(e))
+        : [],
     };
   },
 
@@ -2201,21 +2438,27 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TurretDefinition>, I>>(base?: I): TurretDefinition {
+  create<I extends Exact<DeepPartial<TurretDefinition>, I>>(
+    base?: I,
+  ): TurretDefinition {
     return TurretDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TurretDefinition>, I>>(object: I): TurretDefinition {
+  fromPartial<I extends Exact<DeepPartial<TurretDefinition>, I>>(
+    object: I,
+  ): TurretDefinition {
     const message = createBaseTurretDefinition();
     message.id = object.id ?? 0;
     message.health = object.health ?? 0;
     message.view_range = object.view_range ?? 0;
     message.traverse_speed = object.traverse_speed ?? 0;
-    message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
-      ? ResearchCost.fromPartial(object.research_cost)
-      : undefined;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+    message.research_cost =
+      object.research_cost !== undefined && object.research_cost !== null
+        ? ResearchCost.fromPartial(object.research_cost)
+        : undefined;
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
     message.tier = object.tier ?? 0;
     message.weight = object.weight ?? 0;
     message.guns = object.guns?.map((e) => GunDefinition.fromPartial(e)) || [];
@@ -2224,28 +2467,41 @@ export const TurretDefinition: MessageFns<TurretDefinition> = {
   },
 };
 
-export function createBaseGunDefinition(): GunDefinition {
+function createBaseGunDefinition(): GunDefinition {
   return { gun_type: undefined };
 }
 
 export const GunDefinition: MessageFns<GunDefinition> = {
-  encode(message: GunDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GunDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     switch (message.gun_type?.$case) {
-      case "regular":
-        GunDefinitionRegular.encode(message.gun_type.value, writer.uint32(10).fork()).join();
+      case 'regular':
+        GunDefinitionRegular.encode(
+          message.gun_type.value,
+          writer.uint32(10).fork(),
+        ).join();
         break;
-      case "auto_loader":
-        GunDefinitionAutoLoader.encode(message.gun_type.value, writer.uint32(18).fork()).join();
+      case 'auto_loader':
+        GunDefinitionAutoLoader.encode(
+          message.gun_type.value,
+          writer.uint32(18).fork(),
+        ).join();
         break;
-      case "auto_reloader":
-        GunDefinitionAutoReloader.encode(message.gun_type.value, writer.uint32(26).fork()).join();
+      case 'auto_reloader':
+        GunDefinitionAutoReloader.encode(
+          message.gun_type.value,
+          writer.uint32(26).fork(),
+        ).join();
         break;
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): GunDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGunDefinition();
     while (reader.pos < end) {
@@ -2256,7 +2512,10 @@ export const GunDefinition: MessageFns<GunDefinition> = {
             break;
           }
 
-          message.gun_type = { $case: "regular", value: GunDefinitionRegular.decode(reader, reader.uint32()) };
+          message.gun_type = {
+            $case: 'regular',
+            value: GunDefinitionRegular.decode(reader, reader.uint32()),
+          };
           continue;
         }
         case 2: {
@@ -2264,7 +2523,10 @@ export const GunDefinition: MessageFns<GunDefinition> = {
             break;
           }
 
-          message.gun_type = { $case: "auto_loader", value: GunDefinitionAutoLoader.decode(reader, reader.uint32()) };
+          message.gun_type = {
+            $case: 'auto_loader',
+            value: GunDefinitionAutoLoader.decode(reader, reader.uint32()),
+          };
           continue;
         }
         case 3: {
@@ -2273,7 +2535,7 @@ export const GunDefinition: MessageFns<GunDefinition> = {
           }
 
           message.gun_type = {
-            $case: "auto_reloader",
+            $case: 'auto_reloader',
             value: GunDefinitionAutoReloader.decode(reader, reader.uint32()),
           };
           continue;
@@ -2290,53 +2552,76 @@ export const GunDefinition: MessageFns<GunDefinition> = {
   fromJSON(object: any): GunDefinition {
     return {
       gun_type: isSet(object.regular)
-        ? { $case: "regular", value: GunDefinitionRegular.fromJSON(object.regular) }
+        ? {
+            $case: 'regular',
+            value: GunDefinitionRegular.fromJSON(object.regular),
+          }
         : isSet(object.auto_loader)
-        ? { $case: "auto_loader", value: GunDefinitionAutoLoader.fromJSON(object.auto_loader) }
-        : isSet(object.auto_reloader)
-        ? { $case: "auto_reloader", value: GunDefinitionAutoReloader.fromJSON(object.auto_reloader) }
-        : undefined,
+          ? {
+              $case: 'auto_loader',
+              value: GunDefinitionAutoLoader.fromJSON(object.auto_loader),
+            }
+          : isSet(object.auto_reloader)
+            ? {
+                $case: 'auto_reloader',
+                value: GunDefinitionAutoReloader.fromJSON(object.auto_reloader),
+              }
+            : undefined,
     };
   },
 
   toJSON(message: GunDefinition): unknown {
     const obj: any = {};
-    if (message.gun_type?.$case === "regular") {
+    if (message.gun_type?.$case === 'regular') {
       obj.regular = GunDefinitionRegular.toJSON(message.gun_type.value);
     }
-    if (message.gun_type?.$case === "auto_loader") {
+    if (message.gun_type?.$case === 'auto_loader') {
       obj.auto_loader = GunDefinitionAutoLoader.toJSON(message.gun_type.value);
     }
-    if (message.gun_type?.$case === "auto_reloader") {
-      obj.auto_reloader = GunDefinitionAutoReloader.toJSON(message.gun_type.value);
+    if (message.gun_type?.$case === 'auto_reloader') {
+      obj.auto_reloader = GunDefinitionAutoReloader.toJSON(
+        message.gun_type.value,
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GunDefinition>, I>>(base?: I): GunDefinition {
+  create<I extends Exact<DeepPartial<GunDefinition>, I>>(
+    base?: I,
+  ): GunDefinition {
     return GunDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GunDefinition>, I>>(object: I): GunDefinition {
+  fromPartial<I extends Exact<DeepPartial<GunDefinition>, I>>(
+    object: I,
+  ): GunDefinition {
     const message = createBaseGunDefinition();
     if (
-      object.gun_type?.$case === "regular" && object.gun_type?.value !== undefined && object.gun_type?.value !== null
-    ) {
-      message.gun_type = { $case: "regular", value: GunDefinitionRegular.fromPartial(object.gun_type.value) };
-    }
-    if (
-      object.gun_type?.$case === "auto_loader" &&
-      object.gun_type?.value !== undefined &&
-      object.gun_type?.value !== null
-    ) {
-      message.gun_type = { $case: "auto_loader", value: GunDefinitionAutoLoader.fromPartial(object.gun_type.value) };
-    }
-    if (
-      object.gun_type?.$case === "auto_reloader" &&
+      object.gun_type?.$case === 'regular' &&
       object.gun_type?.value !== undefined &&
       object.gun_type?.value !== null
     ) {
       message.gun_type = {
-        $case: "auto_reloader",
+        $case: 'regular',
+        value: GunDefinitionRegular.fromPartial(object.gun_type.value),
+      };
+    }
+    if (
+      object.gun_type?.$case === 'auto_loader' &&
+      object.gun_type?.value !== undefined &&
+      object.gun_type?.value !== null
+    ) {
+      message.gun_type = {
+        $case: 'auto_loader',
+        value: GunDefinitionAutoLoader.fromPartial(object.gun_type.value),
+      };
+    }
+    if (
+      object.gun_type?.$case === 'auto_reloader' &&
+      object.gun_type?.value !== undefined &&
+      object.gun_type?.value !== null
+    ) {
+      message.gun_type = {
+        $case: 'auto_reloader',
         value: GunDefinitionAutoReloader.fromPartial(object.gun_type.value),
       };
     }
@@ -2344,23 +2629,33 @@ export const GunDefinition: MessageFns<GunDefinition> = {
   },
 };
 
-export function createBaseGunDefinitionRegular(): GunDefinitionRegular {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionRegularProperties() };
+function createBaseGunDefinitionRegular(): GunDefinitionRegular {
+  return { base: undefined, extension: undefined };
 }
 
 export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
-  encode(message: GunDefinitionRegular, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GunDefinitionRegular,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.base !== undefined) {
       GunDefinitionBase.encode(message.base, writer.uint32(10).fork()).join();
     }
     if (message.extension !== undefined) {
-      GunDefinitionRegularProperties.encode(message.extension, writer.uint32(18).fork()).join();
+      GunDefinitionRegularProperties.encode(
+        message.extension,
+        writer.uint32(18).fork(),
+      ).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionRegular {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): GunDefinitionRegular {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGunDefinitionRegular();
     while (reader.pos < end) {
@@ -2379,7 +2674,10 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
             break;
           }
 
-          message.extension = GunDefinitionRegularProperties.decode(reader, reader.uint32());
+          message.extension = GunDefinitionRegularProperties.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         }
       }
@@ -2393,8 +2691,12 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
 
   fromJSON(object: any): GunDefinitionRegular {
     return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionRegular.base", object.base)),
-      extension: GunDefinitionRegularProperties.fromJSON(assertSet("GunDefinitionRegular.extension", object.extension)),
+      base: isSet(object.base)
+        ? GunDefinitionBase.fromJSON(object.base)
+        : undefined,
+      extension: isSet(object.extension)
+        ? GunDefinitionRegularProperties.fromJSON(object.extension)
+        : undefined,
     };
   },
 
@@ -2409,98 +2711,126 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GunDefinitionRegular>, I>>(base?: I): GunDefinitionRegular {
+  create<I extends Exact<DeepPartial<GunDefinitionRegular>, I>>(
+    base?: I,
+  ): GunDefinitionRegular {
     return GunDefinitionRegular.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionRegular>, I>>(object: I): GunDefinitionRegular {
+  fromPartial<I extends Exact<DeepPartial<GunDefinitionRegular>, I>>(
+    object: I,
+  ): GunDefinitionRegular {
     const message = createBaseGunDefinitionRegular();
-    message.base = (object.base !== undefined && object.base !== null)
-      ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
-    message.extension = (object.extension !== undefined && object.extension !== null)
-      ? GunDefinitionRegularProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionRegularProperties();
+    message.base =
+      object.base !== undefined && object.base !== null
+        ? GunDefinitionBase.fromPartial(object.base)
+        : undefined;
+    message.extension =
+      object.extension !== undefined && object.extension !== null
+        ? GunDefinitionRegularProperties.fromPartial(object.extension)
+        : undefined;
     return message;
   },
 };
 
-export function createBaseGunDefinitionRegularProperties(): GunDefinitionRegularProperties {
+function createBaseGunDefinitionRegularProperties(): GunDefinitionRegularProperties {
   return { reload: 0 };
 }
 
-export const GunDefinitionRegularProperties: MessageFns<GunDefinitionRegularProperties> = {
-  encode(message: GunDefinitionRegularProperties, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.reload !== 0) {
-      writer.uint32(13).float(message.reload);
-    }
-    return writer;
-  },
+export const GunDefinitionRegularProperties: MessageFns<GunDefinitionRegularProperties> =
+  {
+    encode(
+      message: GunDefinitionRegularProperties,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.reload !== 0) {
+        writer.uint32(13).float(message.reload);
+      }
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionRegularProperties {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGunDefinitionRegularProperties();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 13) {
-            break;
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): GunDefinitionRegularProperties {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGunDefinitionRegularProperties();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 13) {
+              break;
+            }
+
+            message.reload = reader.float();
+            continue;
           }
-
-          message.reload = reader.float();
-          continue;
         }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      return message;
+    },
+
+    fromJSON(object: any): GunDefinitionRegularProperties {
+      return {
+        reload: isSet(object.reload) ? globalThis.Number(object.reload) : 0,
+      };
+    },
+
+    toJSON(message: GunDefinitionRegularProperties): unknown {
+      const obj: any = {};
+      if (message.reload !== 0) {
+        obj.reload = message.reload;
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return obj;
+    },
 
-  fromJSON(object: any): GunDefinitionRegularProperties {
-    return { reload: globalThis.Number(assertSet("GunDefinitionRegularProperties.reload", object.reload)) };
-  },
+    create<I extends Exact<DeepPartial<GunDefinitionRegularProperties>, I>>(
+      base?: I,
+    ): GunDefinitionRegularProperties {
+      return GunDefinitionRegularProperties.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<
+      I extends Exact<DeepPartial<GunDefinitionRegularProperties>, I>,
+    >(object: I): GunDefinitionRegularProperties {
+      const message = createBaseGunDefinitionRegularProperties();
+      message.reload = object.reload ?? 0;
+      return message;
+    },
+  };
 
-  toJSON(message: GunDefinitionRegularProperties): unknown {
-    const obj: any = {};
-    if (message.reload !== 0) {
-      obj.reload = message.reload;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GunDefinitionRegularProperties>, I>>(base?: I): GunDefinitionRegularProperties {
-    return GunDefinitionRegularProperties.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionRegularProperties>, I>>(
-    object: I,
-  ): GunDefinitionRegularProperties {
-    const message = createBaseGunDefinitionRegularProperties();
-    message.reload = object.reload ?? 0;
-    return message;
-  },
-};
-
-export function createBaseGunDefinitionAutoLoader(): GunDefinitionAutoLoader {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionAutoLoaderProperties() };
+function createBaseGunDefinitionAutoLoader(): GunDefinitionAutoLoader {
+  return { base: undefined, extension: undefined };
 }
 
 export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
-  encode(message: GunDefinitionAutoLoader, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GunDefinitionAutoLoader,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.base !== undefined) {
       GunDefinitionBase.encode(message.base, writer.uint32(10).fork()).join();
     }
     if (message.extension !== undefined) {
-      GunDefinitionAutoLoaderProperties.encode(message.extension, writer.uint32(18).fork()).join();
+      GunDefinitionAutoLoaderProperties.encode(
+        message.extension,
+        writer.uint32(18).fork(),
+      ).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionAutoLoader {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): GunDefinitionAutoLoader {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGunDefinitionAutoLoader();
     while (reader.pos < end) {
@@ -2519,7 +2849,10 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
             break;
           }
 
-          message.extension = GunDefinitionAutoLoaderProperties.decode(reader, reader.uint32());
+          message.extension = GunDefinitionAutoLoaderProperties.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         }
       }
@@ -2533,10 +2866,12 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
 
   fromJSON(object: any): GunDefinitionAutoLoader {
     return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionAutoLoader.base", object.base)),
-      extension: GunDefinitionAutoLoaderProperties.fromJSON(
-        assertSet("GunDefinitionAutoLoader.extension", object.extension),
-      ),
+      base: isSet(object.base)
+        ? GunDefinitionBase.fromJSON(object.base)
+        : undefined,
+      extension: isSet(object.extension)
+        ? GunDefinitionAutoLoaderProperties.fromJSON(object.extension)
+        : undefined,
     };
   },
 
@@ -2546,321 +2881,381 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
       obj.base = GunDefinitionBase.toJSON(message.base);
     }
     if (message.extension !== undefined) {
-      obj.extension = GunDefinitionAutoLoaderProperties.toJSON(message.extension);
+      obj.extension = GunDefinitionAutoLoaderProperties.toJSON(
+        message.extension,
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GunDefinitionAutoLoader>, I>>(base?: I): GunDefinitionAutoLoader {
+  create<I extends Exact<DeepPartial<GunDefinitionAutoLoader>, I>>(
+    base?: I,
+  ): GunDefinitionAutoLoader {
     return GunDefinitionAutoLoader.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoLoader>, I>>(object: I): GunDefinitionAutoLoader {
+  fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoLoader>, I>>(
+    object: I,
+  ): GunDefinitionAutoLoader {
     const message = createBaseGunDefinitionAutoLoader();
-    message.base = (object.base !== undefined && object.base !== null)
-      ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
-    message.extension = (object.extension !== undefined && object.extension !== null)
-      ? GunDefinitionAutoLoaderProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionAutoLoaderProperties();
+    message.base =
+      object.base !== undefined && object.base !== null
+        ? GunDefinitionBase.fromPartial(object.base)
+        : undefined;
+    message.extension =
+      object.extension !== undefined && object.extension !== null
+        ? GunDefinitionAutoLoaderProperties.fromPartial(object.extension)
+        : undefined;
     return message;
   },
 };
 
-export function createBaseGunDefinitionAutoLoaderProperties(): GunDefinitionAutoLoaderProperties {
+function createBaseGunDefinitionAutoLoaderProperties(): GunDefinitionAutoLoaderProperties {
   return { clip_reload: 0, intra_clip: 0, shell_count: 0 };
 }
 
-export const GunDefinitionAutoLoaderProperties: MessageFns<GunDefinitionAutoLoaderProperties> = {
-  encode(message: GunDefinitionAutoLoaderProperties, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.clip_reload !== 0) {
-      writer.uint32(13).float(message.clip_reload);
-    }
-    if (message.intra_clip !== 0) {
-      writer.uint32(21).float(message.intra_clip);
-    }
-    if (message.shell_count !== 0) {
-      writer.uint32(29).float(message.shell_count);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionAutoLoaderProperties {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGunDefinitionAutoLoaderProperties();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 13) {
-            break;
-          }
-
-          message.clip_reload = reader.float();
-          continue;
-        }
-        case 2: {
-          if (tag !== 21) {
-            break;
-          }
-
-          message.intra_clip = reader.float();
-          continue;
-        }
-        case 3: {
-          if (tag !== 29) {
-            break;
-          }
-
-          message.shell_count = reader.float();
-          continue;
-        }
+export const GunDefinitionAutoLoaderProperties: MessageFns<GunDefinitionAutoLoaderProperties> =
+  {
+    encode(
+      message: GunDefinitionAutoLoaderProperties,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.clip_reload !== 0) {
+        writer.uint32(13).float(message.clip_reload);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.intra_clip !== 0) {
+        writer.uint32(21).float(message.intra_clip);
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      if (message.shell_count !== 0) {
+        writer.uint32(29).float(message.shell_count);
+      }
+      return writer;
+    },
 
-  fromJSON(object: any): GunDefinitionAutoLoaderProperties {
-    return {
-      clip_reload: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.clip_reload", object.clip_reload)),
-      intra_clip: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.intra_clip", object.intra_clip)),
-      shell_count: globalThis.Number(assertSet("GunDefinitionAutoLoaderProperties.shell_count", object.shell_count)),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): GunDefinitionAutoLoaderProperties {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGunDefinitionAutoLoaderProperties();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 13) {
+              break;
+            }
 
-  toJSON(message: GunDefinitionAutoLoaderProperties): unknown {
-    const obj: any = {};
-    if (message.clip_reload !== 0) {
-      obj.clip_reload = message.clip_reload;
-    }
-    if (message.intra_clip !== 0) {
-      obj.intra_clip = message.intra_clip;
-    }
-    if (message.shell_count !== 0) {
-      obj.shell_count = message.shell_count;
-    }
-    return obj;
-  },
+            message.clip_reload = reader.float();
+            continue;
+          }
+          case 2: {
+            if (tag !== 21) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<GunDefinitionAutoLoaderProperties>, I>>(
-    base?: I,
-  ): GunDefinitionAutoLoaderProperties {
-    return GunDefinitionAutoLoaderProperties.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoLoaderProperties>, I>>(
-    object: I,
-  ): GunDefinitionAutoLoaderProperties {
-    const message = createBaseGunDefinitionAutoLoaderProperties();
-    message.clip_reload = object.clip_reload ?? 0;
-    message.intra_clip = object.intra_clip ?? 0;
-    message.shell_count = object.shell_count ?? 0;
-    return message;
-  },
-};
+            message.intra_clip = reader.float();
+            continue;
+          }
+          case 3: {
+            if (tag !== 29) {
+              break;
+            }
 
-export function createBaseGunDefinitionAutoReloader(): GunDefinitionAutoReloader {
-  return { base: createBaseGunDefinitionBase(), extension: createBaseGunDefinitionAutoReloaderProperties() };
+            message.shell_count = reader.float();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): GunDefinitionAutoLoaderProperties {
+      return {
+        clip_reload: isSet(object.clip_reload)
+          ? globalThis.Number(object.clip_reload)
+          : 0,
+        intra_clip: isSet(object.intra_clip)
+          ? globalThis.Number(object.intra_clip)
+          : 0,
+        shell_count: isSet(object.shell_count)
+          ? globalThis.Number(object.shell_count)
+          : 0,
+      };
+    },
+
+    toJSON(message: GunDefinitionAutoLoaderProperties): unknown {
+      const obj: any = {};
+      if (message.clip_reload !== 0) {
+        obj.clip_reload = message.clip_reload;
+      }
+      if (message.intra_clip !== 0) {
+        obj.intra_clip = message.intra_clip;
+      }
+      if (message.shell_count !== 0) {
+        obj.shell_count = message.shell_count;
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<GunDefinitionAutoLoaderProperties>, I>>(
+      base?: I,
+    ): GunDefinitionAutoLoaderProperties {
+      return GunDefinitionAutoLoaderProperties.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<
+      I extends Exact<DeepPartial<GunDefinitionAutoLoaderProperties>, I>,
+    >(object: I): GunDefinitionAutoLoaderProperties {
+      const message = createBaseGunDefinitionAutoLoaderProperties();
+      message.clip_reload = object.clip_reload ?? 0;
+      message.intra_clip = object.intra_clip ?? 0;
+      message.shell_count = object.shell_count ?? 0;
+      return message;
+    },
+  };
+
+function createBaseGunDefinitionAutoReloader(): GunDefinitionAutoReloader {
+  return { base: undefined, extension: undefined };
 }
 
-export const GunDefinitionAutoReloader: MessageFns<GunDefinitionAutoReloader> = {
-  encode(message: GunDefinitionAutoReloader, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.base !== undefined) {
-      GunDefinitionBase.encode(message.base, writer.uint32(10).fork()).join();
-    }
-    if (message.extension !== undefined) {
-      GunDefinitionAutoReloaderProperties.encode(message.extension, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionAutoReloader {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGunDefinitionAutoReloader();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.base = GunDefinitionBase.decode(reader, reader.uint32());
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.extension = GunDefinitionAutoReloaderProperties.decode(reader, reader.uint32());
-          continue;
-        }
+export const GunDefinitionAutoReloader: MessageFns<GunDefinitionAutoReloader> =
+  {
+    encode(
+      message: GunDefinitionAutoReloader,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.base !== undefined) {
+        GunDefinitionBase.encode(message.base, writer.uint32(10).fork()).join();
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.extension !== undefined) {
+        GunDefinitionAutoReloaderProperties.encode(
+          message.extension,
+          writer.uint32(18).fork(),
+        ).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): GunDefinitionAutoReloader {
-    return {
-      base: GunDefinitionBase.fromJSON(assertSet("GunDefinitionAutoReloader.base", object.base)),
-      extension: GunDefinitionAutoReloaderProperties.fromJSON(
-        assertSet("GunDefinitionAutoReloader.extension", object.extension),
-      ),
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): GunDefinitionAutoReloader {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGunDefinitionAutoReloader();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
 
-  toJSON(message: GunDefinitionAutoReloader): unknown {
-    const obj: any = {};
-    if (message.base !== undefined) {
-      obj.base = GunDefinitionBase.toJSON(message.base);
-    }
-    if (message.extension !== undefined) {
-      obj.extension = GunDefinitionAutoReloaderProperties.toJSON(message.extension);
-    }
-    return obj;
-  },
+            message.base = GunDefinitionBase.decode(reader, reader.uint32());
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<GunDefinitionAutoReloader>, I>>(base?: I): GunDefinitionAutoReloader {
-    return GunDefinitionAutoReloader.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoReloader>, I>>(object: I): GunDefinitionAutoReloader {
-    const message = createBaseGunDefinitionAutoReloader();
-    message.base = (object.base !== undefined && object.base !== null)
-      ? GunDefinitionBase.fromPartial(object.base)
-      : createBaseGunDefinitionBase();
-    message.extension = (object.extension !== undefined && object.extension !== null)
-      ? GunDefinitionAutoReloaderProperties.fromPartial(object.extension)
-      : createBaseGunDefinitionAutoReloaderProperties();
-    return message;
-  },
-};
+            message.extension = GunDefinitionAutoReloaderProperties.decode(
+              reader,
+              reader.uint32(),
+            );
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
 
-export function createBaseGunDefinitionAutoReloaderProperties(): GunDefinitionAutoReloaderProperties {
+    fromJSON(object: any): GunDefinitionAutoReloader {
+      return {
+        base: isSet(object.base)
+          ? GunDefinitionBase.fromJSON(object.base)
+          : undefined,
+        extension: isSet(object.extension)
+          ? GunDefinitionAutoReloaderProperties.fromJSON(object.extension)
+          : undefined,
+      };
+    },
+
+    toJSON(message: GunDefinitionAutoReloader): unknown {
+      const obj: any = {};
+      if (message.base !== undefined) {
+        obj.base = GunDefinitionBase.toJSON(message.base);
+      }
+      if (message.extension !== undefined) {
+        obj.extension = GunDefinitionAutoReloaderProperties.toJSON(
+          message.extension,
+        );
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<GunDefinitionAutoReloader>, I>>(
+      base?: I,
+    ): GunDefinitionAutoReloader {
+      return GunDefinitionAutoReloader.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoReloader>, I>>(
+      object: I,
+    ): GunDefinitionAutoReloader {
+      const message = createBaseGunDefinitionAutoReloader();
+      message.base =
+        object.base !== undefined && object.base !== null
+          ? GunDefinitionBase.fromPartial(object.base)
+          : undefined;
+      message.extension =
+        object.extension !== undefined && object.extension !== null
+          ? GunDefinitionAutoReloaderProperties.fromPartial(object.extension)
+          : undefined;
+      return message;
+    },
+  };
+
+function createBaseGunDefinitionAutoReloaderProperties(): GunDefinitionAutoReloaderProperties {
   return { shell_reloads: [], intra_clip: 0, shell_count: 0 };
 }
 
-export const GunDefinitionAutoReloaderProperties: MessageFns<GunDefinitionAutoReloaderProperties> = {
-  encode(message: GunDefinitionAutoReloaderProperties, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    writer.uint32(10).fork();
-    for (const v of message.shell_reloads) {
-      writer.float(v);
-    }
-    writer.join();
-    if (message.intra_clip !== 0) {
-      writer.uint32(21).float(message.intra_clip);
-    }
-    if (message.shell_count !== 0) {
-      writer.uint32(29).float(message.shell_count);
-    }
-    return writer;
-  },
+export const GunDefinitionAutoReloaderProperties: MessageFns<GunDefinitionAutoReloaderProperties> =
+  {
+    encode(
+      message: GunDefinitionAutoReloaderProperties,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      writer.uint32(10).fork();
+      for (const v of message.shell_reloads) {
+        writer.float(v);
+      }
+      writer.join();
+      if (message.intra_clip !== 0) {
+        writer.uint32(21).float(message.intra_clip);
+      }
+      if (message.shell_count !== 0) {
+        writer.uint32(29).float(message.shell_count);
+      }
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionAutoReloaderProperties {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGunDefinitionAutoReloaderProperties();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag === 13) {
-            message.shell_reloads.push(reader.float());
-
-            continue;
-          }
-
-          if (tag === 10) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): GunDefinitionAutoReloaderProperties {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGunDefinitionAutoReloaderProperties();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag === 13) {
               message.shell_reloads.push(reader.float());
+
+              continue;
             }
 
+            if (tag === 10) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.shell_reloads.push(reader.float());
+              }
+
+              continue;
+            }
+
+            break;
+          }
+          case 2: {
+            if (tag !== 21) {
+              break;
+            }
+
+            message.intra_clip = reader.float();
             continue;
           }
+          case 3: {
+            if (tag !== 29) {
+              break;
+            }
 
+            message.shell_count = reader.float();
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
           break;
         }
-        case 2: {
-          if (tag !== 21) {
-            break;
-          }
-
-          message.intra_clip = reader.float();
-          continue;
-        }
-        case 3: {
-          if (tag !== 29) {
-            break;
-          }
-
-          message.shell_count = reader.float();
-          continue;
-        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      return message;
+    },
+
+    fromJSON(object: any): GunDefinitionAutoReloaderProperties {
+      return {
+        shell_reloads: globalThis.Array.isArray(object?.shell_reloads)
+          ? object.shell_reloads.map((e: any) => globalThis.Number(e))
+          : [],
+        intra_clip: isSet(object.intra_clip)
+          ? globalThis.Number(object.intra_clip)
+          : 0,
+        shell_count: isSet(object.shell_count)
+          ? globalThis.Number(object.shell_count)
+          : 0,
+      };
+    },
+
+    toJSON(message: GunDefinitionAutoReloaderProperties): unknown {
+      const obj: any = {};
+      if (message.shell_reloads?.length) {
+        obj.shell_reloads = message.shell_reloads;
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      if (message.intra_clip !== 0) {
+        obj.intra_clip = message.intra_clip;
+      }
+      if (message.shell_count !== 0) {
+        obj.shell_count = message.shell_count;
+      }
+      return obj;
+    },
 
-  fromJSON(object: any): GunDefinitionAutoReloaderProperties {
-    return {
-      shell_reloads: globalThis.Array.isArray(object?.shell_reloads)
-        ? object.shell_reloads.map((e: any) => globalThis.Number(e))
-        : [],
-      intra_clip: globalThis.Number(assertSet("GunDefinitionAutoReloaderProperties.intra_clip", object.intra_clip)),
-      shell_count: globalThis.Number(assertSet("GunDefinitionAutoReloaderProperties.shell_count", object.shell_count)),
-    };
-  },
+    create<
+      I extends Exact<DeepPartial<GunDefinitionAutoReloaderProperties>, I>,
+    >(base?: I): GunDefinitionAutoReloaderProperties {
+      return GunDefinitionAutoReloaderProperties.fromPartial(
+        base ?? ({} as any),
+      );
+    },
+    fromPartial<
+      I extends Exact<DeepPartial<GunDefinitionAutoReloaderProperties>, I>,
+    >(object: I): GunDefinitionAutoReloaderProperties {
+      const message = createBaseGunDefinitionAutoReloaderProperties();
+      message.shell_reloads = object.shell_reloads?.map((e) => e) || [];
+      message.intra_clip = object.intra_clip ?? 0;
+      message.shell_count = object.shell_count ?? 0;
+      return message;
+    },
+  };
 
-  toJSON(message: GunDefinitionAutoReloaderProperties): unknown {
-    const obj: any = {};
-    if (message.shell_reloads?.length) {
-      obj.shell_reloads = message.shell_reloads;
-    }
-    if (message.intra_clip !== 0) {
-      obj.intra_clip = message.intra_clip;
-    }
-    if (message.shell_count !== 0) {
-      obj.shell_count = message.shell_count;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GunDefinitionAutoReloaderProperties>, I>>(
-    base?: I,
-  ): GunDefinitionAutoReloaderProperties {
-    return GunDefinitionAutoReloaderProperties.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionAutoReloaderProperties>, I>>(
-    object: I,
-  ): GunDefinitionAutoReloaderProperties {
-    const message = createBaseGunDefinitionAutoReloaderProperties();
-    message.shell_reloads = object.shell_reloads?.map((e) => e) || [];
-    message.intra_clip = object.intra_clip ?? 0;
-    message.shell_count = object.shell_count ?? 0;
-    return message;
-  },
-};
-
-export function createBaseGunDefinitionBase(): GunDefinitionBase {
+function createBaseGunDefinitionBase(): GunDefinitionBase {
   return {
     id: 0,
     rotation_speed: 0,
     research_cost: undefined,
     weight: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     tier: 0,
     shells: [],
     camouflage_loss: 0,
@@ -2871,11 +3266,15 @@ export function createBaseGunDefinitionBase(): GunDefinitionBase {
     dispersion_damaged: 0,
     unlocks: [],
     shell_capacity: 0,
+    assault_ranges: undefined,
   };
 }
 
 export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
-  encode(message: GunDefinitionBase, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GunDefinitionBase,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -2883,7 +3282,10 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
       writer.uint32(21).float(message.rotation_speed);
     }
     if (message.research_cost !== undefined) {
-      ResearchCost.encode(message.research_cost, writer.uint32(26).fork()).join();
+      ResearchCost.encode(
+        message.research_cost,
+        writer.uint32(26).fork(),
+      ).join();
     }
     if (message.weight !== 0) {
       writer.uint32(32).uint32(message.weight);
@@ -2921,11 +3323,18 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     if (message.shell_capacity !== 0) {
       writer.uint32(120).uint32(message.shell_capacity);
     }
+    if (message.assault_ranges !== undefined) {
+      AssaultRanges.encode(
+        message.assault_ranges,
+        writer.uint32(130).fork(),
+      ).join();
+    }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): GunDefinitionBase {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGunDefinitionBase();
     while (reader.pos < end) {
@@ -3051,6 +3460,17 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
           message.shell_capacity = reader.uint32();
           continue;
         }
+        case 16: {
+          if (tag !== 130) {
+            break;
+          }
+
+          message.assault_ranges = AssaultRanges.decode(
+            reader,
+            reader.uint32(),
+          );
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3062,27 +3482,44 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
 
   fromJSON(object: any): GunDefinitionBase {
     return {
-      id: globalThis.Number(assertSet("GunDefinitionBase.id", object.id)),
-      rotation_speed: globalThis.Number(assertSet("GunDefinitionBase.rotation_speed", object.rotation_speed)),
-      research_cost: isSet(object.research_cost) ? ResearchCost.fromJSON(object.research_cost) : undefined,
-      weight: globalThis.Number(assertSet("GunDefinitionBase.weight", object.weight)),
-      name: I18nString.fromJSON(assertSet("GunDefinitionBase.name", object.name)),
-      tier: globalThis.Number(assertSet("GunDefinitionBase.tier", object.tier)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      rotation_speed: isSet(object.rotation_speed)
+        ? globalThis.Number(object.rotation_speed)
+        : 0,
+      research_cost: isSet(object.research_cost)
+        ? ResearchCost.fromJSON(object.research_cost)
+        : undefined,
+      weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      tier: isSet(object.tier) ? globalThis.Number(object.tier) : 0,
       shells: globalThis.Array.isArray(object?.shells)
         ? object.shells.map((e: any) => ShellDefinition.fromJSON(e))
         : [],
-      camouflage_loss: globalThis.Number(assertSet("GunDefinitionBase.camouflage_loss", object.camouflage_loss)),
-      aim_time: globalThis.Number(assertSet("GunDefinitionBase.aim_time", object.aim_time)),
-      dispersion_base: globalThis.Number(assertSet("GunDefinitionBase.dispersion_base", object.dispersion_base)),
-      dispersion_traverse: globalThis.Number(
-        assertSet("GunDefinitionBase.dispersion_traverse", object.dispersion_traverse),
-      ),
-      dispersion_shot: globalThis.Number(assertSet("GunDefinitionBase.dispersion_shot", object.dispersion_shot)),
-      dispersion_damaged: globalThis.Number(
-        assertSet("GunDefinitionBase.dispersion_damaged", object.dispersion_damaged),
-      ),
-      unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
-      shell_capacity: globalThis.Number(assertSet("GunDefinitionBase.shell_capacity", object.shell_capacity)),
+      camouflage_loss: isSet(object.camouflage_loss)
+        ? globalThis.Number(object.camouflage_loss)
+        : 0,
+      aim_time: isSet(object.aim_time) ? globalThis.Number(object.aim_time) : 0,
+      dispersion_base: isSet(object.dispersion_base)
+        ? globalThis.Number(object.dispersion_base)
+        : 0,
+      dispersion_traverse: isSet(object.dispersion_traverse)
+        ? globalThis.Number(object.dispersion_traverse)
+        : 0,
+      dispersion_shot: isSet(object.dispersion_shot)
+        ? globalThis.Number(object.dispersion_shot)
+        : 0,
+      dispersion_damaged: isSet(object.dispersion_damaged)
+        ? globalThis.Number(object.dispersion_damaged)
+        : 0,
+      unlocks: globalThis.Array.isArray(object?.unlocks)
+        ? object.unlocks.map((e: any) => Unlock.fromJSON(e))
+        : [],
+      shell_capacity: isSet(object.shell_capacity)
+        ? globalThis.Number(object.shell_capacity)
+        : 0,
+      assault_ranges: isSet(object.assault_ranges)
+        ? AssaultRanges.fromJSON(object.assault_ranges)
+        : undefined,
     };
   },
 
@@ -3133,25 +3570,35 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     if (message.shell_capacity !== 0) {
       obj.shell_capacity = Math.round(message.shell_capacity);
     }
+    if (message.assault_ranges !== undefined) {
+      obj.assault_ranges = AssaultRanges.toJSON(message.assault_ranges);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GunDefinitionBase>, I>>(base?: I): GunDefinitionBase {
+  create<I extends Exact<DeepPartial<GunDefinitionBase>, I>>(
+    base?: I,
+  ): GunDefinitionBase {
     return GunDefinitionBase.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GunDefinitionBase>, I>>(object: I): GunDefinitionBase {
+  fromPartial<I extends Exact<DeepPartial<GunDefinitionBase>, I>>(
+    object: I,
+  ): GunDefinitionBase {
     const message = createBaseGunDefinitionBase();
     message.id = object.id ?? 0;
     message.rotation_speed = object.rotation_speed ?? 0;
-    message.research_cost = (object.research_cost !== undefined && object.research_cost !== null)
-      ? ResearchCost.fromPartial(object.research_cost)
-      : undefined;
+    message.research_cost =
+      object.research_cost !== undefined && object.research_cost !== null
+        ? ResearchCost.fromPartial(object.research_cost)
+        : undefined;
     message.weight = object.weight ?? 0;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
     message.tier = object.tier ?? 0;
-    message.shells = object.shells?.map((e) => ShellDefinition.fromPartial(e)) || [];
+    message.shells =
+      object.shells?.map((e) => ShellDefinition.fromPartial(e)) || [];
     message.camouflage_loss = object.camouflage_loss ?? 0;
     message.aim_time = object.aim_time ?? 0;
     message.dispersion_base = object.dispersion_base ?? 0;
@@ -3160,30 +3607,222 @@ export const GunDefinitionBase: MessageFns<GunDefinitionBase> = {
     message.dispersion_damaged = object.dispersion_damaged ?? 0;
     message.unlocks = object.unlocks?.map((e) => Unlock.fromPartial(e)) || [];
     message.shell_capacity = object.shell_capacity ?? 0;
+    message.assault_ranges =
+      object.assault_ranges !== undefined && object.assault_ranges !== null
+        ? AssaultRanges.fromPartial(object.assault_ranges)
+        : undefined;
     return message;
   },
 };
 
-export function createBaseShellDefinition(): ShellDefinition {
+function createBaseAssaultRanges(): AssaultRanges {
+  return { ranges: [], types: [] };
+}
+
+export const AssaultRanges: MessageFns<AssaultRanges> = {
+  encode(
+    message: AssaultRanges,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    for (const v of message.ranges) {
+      AssaultRange.encode(v!, writer.uint32(10).fork()).join();
+    }
+    writer.uint32(18).fork();
+    for (const v of message.types) {
+      writer.int32(v);
+    }
+    writer.join();
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AssaultRanges {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAssaultRanges();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ranges.push(AssaultRange.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 2: {
+          if (tag === 16) {
+            message.types.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 18) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.types.push(reader.int32() as any);
+            }
+
+            continue;
+          }
+
+          break;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AssaultRanges {
+    return {
+      ranges: globalThis.Array.isArray(object?.ranges)
+        ? object.ranges.map((e: any) => AssaultRange.fromJSON(e))
+        : [],
+      types: globalThis.Array.isArray(object?.types)
+        ? object.types.map((e: any) => shellTypeFromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: AssaultRanges): unknown {
+    const obj: any = {};
+    if (message.ranges?.length) {
+      obj.ranges = message.ranges.map((e) => AssaultRange.toJSON(e));
+    }
+    if (message.types?.length) {
+      obj.types = message.types.map((e) => shellTypeToJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AssaultRanges>, I>>(
+    base?: I,
+  ): AssaultRanges {
+    return AssaultRanges.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AssaultRanges>, I>>(
+    object: I,
+  ): AssaultRanges {
+    const message = createBaseAssaultRanges();
+    message.ranges =
+      object.ranges?.map((e) => AssaultRange.fromPartial(e)) || [];
+    message.types = object.types?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseAssaultRange(): AssaultRange {
+  return { distance: 0, factor: 0 };
+}
+
+export const AssaultRange: MessageFns<AssaultRange> = {
+  encode(
+    message: AssaultRange,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.distance !== 0) {
+      writer.uint32(13).float(message.distance);
+    }
+    if (message.factor !== 0) {
+      writer.uint32(21).float(message.factor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): AssaultRange {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAssaultRange();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.distance = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.factor = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AssaultRange {
+    return {
+      distance: isSet(object.distance) ? globalThis.Number(object.distance) : 0,
+      factor: isSet(object.factor) ? globalThis.Number(object.factor) : 0,
+    };
+  },
+
+  toJSON(message: AssaultRange): unknown {
+    const obj: any = {};
+    if (message.distance !== 0) {
+      obj.distance = message.distance;
+    }
+    if (message.factor !== 0) {
+      obj.factor = message.factor;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AssaultRange>, I>>(
+    base?: I,
+  ): AssaultRange {
+    return AssaultRange.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AssaultRange>, I>>(
+    object: I,
+  ): AssaultRange {
+    const message = createBaseAssaultRange();
+    message.distance = object.distance ?? 0;
+    message.factor = object.factor ?? 0;
+    return message;
+  },
+};
+
+function createBaseShellDefinition(): ShellDefinition {
   return {
     id: 0,
-    name: createBaseI18nString(),
+    name: undefined,
     velocity: 0,
     armor_damage: 0,
     module_damage: 0,
     caliber: 0,
-    icon: "",
-    penetration: createBaseShellPenetration(),
+    icon: '',
+    penetration: undefined,
     type: 0,
-    normalization: undefined,
-    ricochet: undefined,
-    explosion_radius: undefined,
+    normalization: 0,
+    ricochet: 0,
+    explosion_radius: 0,
     range: 0,
   };
 }
 
 export const ShellDefinition: MessageFns<ShellDefinition> = {
-  encode(message: ShellDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: ShellDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).uint32(message.id);
     }
@@ -3202,22 +3841,28 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     if (message.caliber !== 0) {
       writer.uint32(53).float(message.caliber);
     }
-    if (message.icon !== "") {
+    if (message.icon !== '') {
       writer.uint32(58).string(message.icon);
     }
     if (message.penetration !== undefined) {
-      ShellPenetration.encode(message.penetration, writer.uint32(66).fork()).join();
+      ShellPenetration.encode(
+        message.penetration,
+        writer.uint32(66).fork(),
+      ).join();
     }
     if (message.type !== 0) {
       writer.uint32(72).int32(message.type);
     }
-    if (message.normalization !== undefined && message.normalization !== undefined) {
+    if (message.normalization !== undefined && message.normalization !== 0) {
       writer.uint32(85).float(message.normalization);
     }
-    if (message.ricochet !== undefined && message.ricochet !== undefined) {
+    if (message.ricochet !== undefined && message.ricochet !== 0) {
       writer.uint32(93).float(message.ricochet);
     }
-    if (message.explosion_radius !== undefined && message.explosion_radius !== undefined) {
+    if (
+      message.explosion_radius !== undefined &&
+      message.explosion_radius !== 0
+    ) {
       writer.uint32(101).float(message.explosion_radius);
     }
     if (message.range !== 0) {
@@ -3227,7 +3872,8 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ShellDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseShellDefinition();
     while (reader.pos < end) {
@@ -3294,7 +3940,10 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
             break;
           }
 
-          message.penetration = ShellPenetration.decode(reader, reader.uint32());
+          message.penetration = ShellPenetration.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         }
         case 9: {
@@ -3348,19 +3997,29 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
 
   fromJSON(object: any): ShellDefinition {
     return {
-      id: globalThis.Number(assertSet("ShellDefinition.id", object.id)),
-      name: I18nString.fromJSON(assertSet("ShellDefinition.name", object.name)),
-      velocity: globalThis.Number(assertSet("ShellDefinition.velocity", object.velocity)),
-      armor_damage: globalThis.Number(assertSet("ShellDefinition.armor_damage", object.armor_damage)),
-      module_damage: globalThis.Number(assertSet("ShellDefinition.module_damage", object.module_damage)),
-      caliber: globalThis.Number(assertSet("ShellDefinition.caliber", object.caliber)),
-      icon: globalThis.String(assertSet("ShellDefinition.icon", object.icon)),
-      penetration: ShellPenetration.fromJSON(assertSet("ShellDefinition.penetration", object.penetration)),
-      type: shellTypeFromJSON(assertSet("ShellDefinition.type", object.type)),
-      normalization: isSet(object.normalization) ? globalThis.Number(object.normalization) : undefined,
-      ricochet: isSet(object.ricochet) ? globalThis.Number(object.ricochet) : undefined,
-      explosion_radius: isSet(object.explosion_radius) ? globalThis.Number(object.explosion_radius) : undefined,
-      range: globalThis.Number(assertSet("ShellDefinition.range", object.range)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      velocity: isSet(object.velocity) ? globalThis.Number(object.velocity) : 0,
+      armor_damage: isSet(object.armor_damage)
+        ? globalThis.Number(object.armor_damage)
+        : 0,
+      module_damage: isSet(object.module_damage)
+        ? globalThis.Number(object.module_damage)
+        : 0,
+      caliber: isSet(object.caliber) ? globalThis.Number(object.caliber) : 0,
+      icon: isSet(object.icon) ? globalThis.String(object.icon) : '',
+      penetration: isSet(object.penetration)
+        ? ShellPenetration.fromJSON(object.penetration)
+        : undefined,
+      type: isSet(object.type) ? shellTypeFromJSON(object.type) : 0,
+      normalization: isSet(object.normalization)
+        ? globalThis.Number(object.normalization)
+        : 0,
+      ricochet: isSet(object.ricochet) ? globalThis.Number(object.ricochet) : 0,
+      explosion_radius: isSet(object.explosion_radius)
+        ? globalThis.Number(object.explosion_radius)
+        : 0,
+      range: isSet(object.range) ? globalThis.Number(object.range) : 0,
     };
   },
 
@@ -3384,7 +4043,7 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     if (message.caliber !== 0) {
       obj.caliber = message.caliber;
     }
-    if (message.icon !== "") {
+    if (message.icon !== '') {
       obj.icon = message.icon;
     }
     if (message.penetration !== undefined) {
@@ -3393,13 +4052,16 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     if (message.type !== 0) {
       obj.type = shellTypeToJSON(message.type);
     }
-    if (message.normalization !== undefined && message.normalization !== undefined) {
+    if (message.normalization !== undefined && message.normalization !== 0) {
       obj.normalization = message.normalization;
     }
-    if (message.ricochet !== undefined && message.ricochet !== undefined) {
+    if (message.ricochet !== undefined && message.ricochet !== 0) {
       obj.ricochet = message.ricochet;
     }
-    if (message.explosion_radius !== undefined && message.explosion_radius !== undefined) {
+    if (
+      message.explosion_radius !== undefined &&
+      message.explosion_radius !== 0
+    ) {
       obj.explosion_radius = message.explosion_radius;
     }
     if (message.range !== 0) {
@@ -3408,38 +4070,47 @@ export const ShellDefinition: MessageFns<ShellDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ShellDefinition>, I>>(base?: I): ShellDefinition {
+  create<I extends Exact<DeepPartial<ShellDefinition>, I>>(
+    base?: I,
+  ): ShellDefinition {
     return ShellDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ShellDefinition>, I>>(object: I): ShellDefinition {
+  fromPartial<I extends Exact<DeepPartial<ShellDefinition>, I>>(
+    object: I,
+  ): ShellDefinition {
     const message = createBaseShellDefinition();
     message.id = object.id ?? 0;
-    message.name = (object.name !== undefined && object.name !== null)
-      ? I18nString.fromPartial(object.name)
-      : createBaseI18nString();
+    message.name =
+      object.name !== undefined && object.name !== null
+        ? I18nString.fromPartial(object.name)
+        : undefined;
     message.velocity = object.velocity ?? 0;
     message.armor_damage = object.armor_damage ?? 0;
     message.module_damage = object.module_damage ?? 0;
     message.caliber = object.caliber ?? 0;
-    message.icon = object.icon ?? "";
-    message.penetration = (object.penetration !== undefined && object.penetration !== null)
-      ? ShellPenetration.fromPartial(object.penetration)
-      : createBaseShellPenetration();
+    message.icon = object.icon ?? '';
+    message.penetration =
+      object.penetration !== undefined && object.penetration !== null
+        ? ShellPenetration.fromPartial(object.penetration)
+        : undefined;
     message.type = object.type ?? 0;
-    message.normalization = object.normalization ?? undefined;
-    message.ricochet = object.ricochet ?? undefined;
-    message.explosion_radius = object.explosion_radius ?? undefined;
+    message.normalization = object.normalization ?? 0;
+    message.ricochet = object.ricochet ?? 0;
+    message.explosion_radius = object.explosion_radius ?? 0;
     message.range = object.range ?? 0;
     return message;
   },
 };
 
-export function createBaseShellPenetration(): ShellPenetration {
+function createBaseShellPenetration(): ShellPenetration {
   return { near: 0, far: 0 };
 }
 
 export const ShellPenetration: MessageFns<ShellPenetration> = {
-  encode(message: ShellPenetration, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: ShellPenetration,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.near !== 0) {
       writer.uint32(13).float(message.near);
     }
@@ -3450,7 +4121,8 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ShellPenetration {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseShellPenetration();
     while (reader.pos < end) {
@@ -3483,8 +4155,8 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
 
   fromJSON(object: any): ShellPenetration {
     return {
-      near: globalThis.Number(assertSet("ShellPenetration.near", object.near)),
-      far: globalThis.Number(assertSet("ShellPenetration.far", object.far)),
+      near: isSet(object.near) ? globalThis.Number(object.near) : 0,
+      far: isSet(object.far) ? globalThis.Number(object.far) : 0,
     };
   },
 
@@ -3499,10 +4171,14 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ShellPenetration>, I>>(base?: I): ShellPenetration {
+  create<I extends Exact<DeepPartial<ShellPenetration>, I>>(
+    base?: I,
+  ): ShellPenetration {
     return ShellPenetration.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ShellPenetration>, I>>(object: I): ShellPenetration {
+  fromPartial<I extends Exact<DeepPartial<ShellPenetration>, I>>(
+    object: I,
+  ): ShellPenetration {
     const message = createBaseShellPenetration();
     message.near = object.near ?? 0;
     message.far = object.far ?? 0;
@@ -3510,12 +4186,15 @@ export const ShellPenetration: MessageFns<ShellPenetration> = {
   },
 };
 
-export function createBaseUnlock(): Unlock {
-  return { id: 0, type: 0, cost: createBaseUnlockCost() };
+function createBaseUnlock(): Unlock {
+  return { id: 0, type: 0, cost: undefined };
 }
 
 export const Unlock: MessageFns<Unlock> = {
-  encode(message: Unlock, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: Unlock,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -3529,7 +4208,8 @@ export const Unlock: MessageFns<Unlock> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Unlock {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnlock();
     while (reader.pos < end) {
@@ -3570,9 +4250,9 @@ export const Unlock: MessageFns<Unlock> = {
 
   fromJSON(object: any): Unlock {
     return {
-      id: globalThis.Number(assertSet("Unlock.id", object.id)),
-      type: moduleTypeFromJSON(assertSet("Unlock.type", object.type)),
-      cost: UnlockCost.fromJSON(assertSet("Unlock.cost", object.cost)),
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      type: isSet(object.type) ? moduleTypeFromJSON(object.type) : 0,
+      cost: isSet(object.cost) ? UnlockCost.fromJSON(object.cost) : undefined,
     };
   },
 
@@ -3597,20 +4277,24 @@ export const Unlock: MessageFns<Unlock> = {
     const message = createBaseUnlock();
     message.id = object.id ?? 0;
     message.type = object.type ?? 0;
-    message.cost = (object.cost !== undefined && object.cost !== null)
-      ? UnlockCost.fromPartial(object.cost)
-      : createBaseUnlockCost();
+    message.cost =
+      object.cost !== undefined && object.cost !== null
+        ? UnlockCost.fromPartial(object.cost)
+        : undefined;
     return message;
   },
 };
 
-export function createBaseUnlockCost(): UnlockCost {
-  return { type: "", value: 0 };
+function createBaseUnlockCost(): UnlockCost {
+  return { type: '', value: 0 };
 }
 
 export const UnlockCost: MessageFns<UnlockCost> = {
-  encode(message: UnlockCost, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.type !== "") {
+  encode(
+    message: UnlockCost,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.type !== '') {
       writer.uint32(10).string(message.type);
     }
     if (message.value !== 0) {
@@ -3620,7 +4304,8 @@ export const UnlockCost: MessageFns<UnlockCost> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): UnlockCost {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnlockCost();
     while (reader.pos < end) {
@@ -3653,14 +4338,14 @@ export const UnlockCost: MessageFns<UnlockCost> = {
 
   fromJSON(object: any): UnlockCost {
     return {
-      type: globalThis.String(assertSet("UnlockCost.type", object.type)),
-      value: globalThis.Number(assertSet("UnlockCost.value", object.value)),
+      type: isSet(object.type) ? globalThis.String(object.type) : '',
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
     };
   },
 
   toJSON(message: UnlockCost): unknown {
     const obj: any = {};
-    if (message.type !== "") {
+    if (message.type !== '') {
       obj.type = message.type;
     }
     if (message.value !== 0) {
@@ -3672,20 +4357,25 @@ export const UnlockCost: MessageFns<UnlockCost> = {
   create<I extends Exact<DeepPartial<UnlockCost>, I>>(base?: I): UnlockCost {
     return UnlockCost.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UnlockCost>, I>>(object: I): UnlockCost {
+  fromPartial<I extends Exact<DeepPartial<UnlockCost>, I>>(
+    object: I,
+  ): UnlockCost {
     const message = createBaseUnlockCost();
-    message.type = object.type ?? "";
+    message.type = object.type ?? '';
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-export function createBaseCrew(): Crew {
+function createBaseCrew(): Crew {
   return { type: 0, count: 0, substitute: [] };
 }
 
 export const Crew: MessageFns<Crew> = {
-  encode(message: Crew, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: Crew,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
@@ -3701,7 +4391,8 @@ export const Crew: MessageFns<Crew> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Crew {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCrew();
     while (reader.pos < end) {
@@ -3752,8 +4443,8 @@ export const Crew: MessageFns<Crew> = {
 
   fromJSON(object: any): Crew {
     return {
-      type: crewTypeFromJSON(assertSet("Crew.type", object.type)),
-      count: globalThis.Number(assertSet("Crew.count", object.count)),
+      type: isSet(object.type) ? crewTypeFromJSON(object.type) : 0,
+      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
       substitute: globalThis.Array.isArray(object?.substitute)
         ? object.substitute.map((e: any) => crewTypeFromJSON(e))
         : [],
@@ -3786,33 +4477,40 @@ export const Crew: MessageFns<Crew> = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string; value: unknown } ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends { $case: string; value: unknown }
+        ? { $case: T['$case']; value?: DeepPartial<T['value']> }
+        : T extends {}
+          ? { [K in keyof T]?: DeepPartial<T[K]> }
+          : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isObject(value: any): boolean {
-  return typeof value === "object" && value !== null;
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
-}
-
-function assertSet<T>(field: string, value: T | undefined): T {
-  if (!isSet(value)) {
-    throw new TypeError(`Required field ${field} is not set`);
-  }
-
-  return value as T;
 }
 
 export interface MessageFns<T> {

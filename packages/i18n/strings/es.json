@@ -698,6 +698,7 @@
           "fire.caliber": "calibre",
           "fire.standardPenetration": "penetración estándar",
           "fire.premiumPenetration": "penetración prémium",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "daño",
           "fire.moduleDamage": "daño al módulo",
           "fire.shellVelocity": "velocidad del proyectil",
@@ -786,6 +787,9 @@
         "tank_seo_title": "%s1 - Nivel %s2 %s3 %s4 | %s5 Tankopedia | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 blindaje, estadisticas, equipamiento, proviciones y mas.\n%s2 DPM, %3hp alfa, %s4mm penetracion, %s5kph velocidad maxima, %s6 hp salud",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
@@ -975,6 +979,7 @@
             "caliber": "Calibre",
             "penetration": "Penetración",
             "damage": "Daño",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Daño a módulos",
             "explosionRadius": "Radio de Explosión",

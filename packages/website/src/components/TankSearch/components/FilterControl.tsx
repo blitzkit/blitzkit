@@ -84,6 +84,7 @@ function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
 
               return (
                 <IconButton
+                  key={shellType}
                   value={`${shellType}`}
                   radius="none"
                   variant={selected ? 'solid' : 'soft'}

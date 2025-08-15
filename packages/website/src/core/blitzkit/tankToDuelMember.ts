@@ -40,5 +40,7 @@ export function tankToDuelMember(
     yaw,
     pitch,
     turret,
+    assaultDistance:
+      (gun.gun_type!.value.base.assault_ranges?.ranges[0].distance ?? 0) / 2,
   } satisfies DuelMember;
 }

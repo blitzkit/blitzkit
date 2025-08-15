@@ -21,7 +21,6 @@ import { gameModeBanners } from './gameModeBanners';
 import { glossary } from './glossary';
 import { migration } from './migration';
 import { moduleIcons } from './moduleIcons';
-import { popularTanks } from './popularTanks';
 import { shellIcons } from './shellIcons';
 import { skillIcons } from './skillIcons';
 import { tankArmors } from './tankArmors';
@@ -47,7 +46,7 @@ const methods = [
   boosterIcons,
   tankIcons,
   blitzkitTankIcons,
-  popularTanks,
+  // popularTanks,
   glossary,
 ];
 

@@ -2,7 +2,7 @@
   "test": {
     "default": "тест",
     "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is %s1 because it has the color of %s2. I like it so much that I will say its name 3 times! %s1! %s1! %s1! Once again, it's %s2, not %s3.",
-    "fox": "The quick brown fox jumps over the lazy dog."
+    "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
   },
   "common": {
     "units": {
@@ -12,7 +12,7 @@
       "hp": "%s1хп",
       "x": "х%s1",
       "percentage": "%s1%",
-      "deg_s": "%s1°/s"
+      "deg_s": "%s1°/с"
     },
     "gun_types": {
       "auto_loader": "Магазинна система заряджання",
@@ -413,10 +413,10 @@
         }
       },
       "debug": {
-        "name": "debug",
-        "description": "Debug information about the bot",
+        "name": "налагодження",
+        "description": "Інформація про налагодження бота",
         "body": {
-          "title": "# Debug\n\n",
+          "title": "# Налагодження\n\n",
           "version": "Версія",
           "shard": {
             "label": "Уламок",
@@ -499,7 +499,7 @@
         },
         "embed": {
           "title": "Невірний обліковий запис?",
-          "description": "Use the command again and select a username from the search results."
+          "description": "Використайте команду ще раз і виберіть ім'я користувача з результатів пошуку."
         }
       },
       "search_clans": {
@@ -508,7 +508,7 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "The max number of clan results (default: %s1)"
+            "description": "Максимальна кількість результатів клану (за замовчуванням: %s1)"
           }
         },
         "body": {
@@ -531,16 +531,16 @@
         }
       },
       "rating_leaderboard": {
-        "name": "rating-leaderboard",
-        "description": "Rating battles statistics",
+        "name": "таблиця рейтингу",
+        "description": "Статистика рейтингових боїв",
         "subcommands": {
           "neighbors": {
             "name": "neighbors",
             "description": "Neighboring players on the leaderboard"
           },
           "league": {
-            "name": "league",
-            "description": "Top players of a league"
+            "name": "ліга",
+            "description": "Найкращий гравець ліги"
           }
         },
         "options": {
@@ -549,8 +549,8 @@
             "description": ""
           },
           "season": {
-            "name": "season",
-            "description": "Season number (default: current)",
+            "name": "сезон",
+            "description": "Базова інформація про гравця",
             "choices": {
               "current": "%s1 (current)"
             }
@@ -578,14 +578,14 @@
         "description": "Коротка статистика за період"
       },
       "owned_tanks": {
-        "name": "owned-tanks",
-        "description": "Shows all own tanks in a tier",
+        "name": "отримані танки",
+        "description": "Показує всі ваші танки даного рівня",
         "body": {
           "title": "# %s1's owned tier %s2 tanks\n\n"
         }
       },
       "permissions": {
-        "name": "permissions",
+        "name": "дозволи",
         "description": "Checks wether the bot has the required permissions to function",
         "body": {
           "title": "# Permissions\n\n%s1",
@@ -615,7 +615,7 @@
       },
       "player_info": {
         "name": "player-info",
-        "description": "Basic information about a player",
+        "description": "Базова інформація про гравця",
         "body": {
           "title": "%s1's information",
           "nickname": "Нік",
@@ -635,7 +635,7 @@
             "description": "Today's rating statistics"
           },
           "season": {
-            "name": "season",
+            "name": "сезон",
             "description": "This season's rating statistics"
           }
         },
@@ -698,6 +698,7 @@
           "fire.caliber": "калібр",
           "fire.standardPenetration": "базове пробиття",
           "fire.premiumPenetration": "преміум пробиття",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "шкода",
           "fire.moduleDamage": "шкода по модулях",
           "fire.shellVelocity": "швидкість польоту снаряда",
@@ -786,6 +787,9 @@
         "tank_seo_title": "%s1 - Рівень %s2 %s3 %s4 | %s5 Танкопедія | WoT Blitz",
         "tank_seo_description": "%s1 броня, характеристики, обладнання, амуніція та більше. %s2 шкода на хвилину, %s3 разова шкода, %s4 мм пробиття, %s5 км/год максимальна швидкість, %s6 міцність.",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "Hull",
             "turret": "Turret",
@@ -975,6 +979,7 @@
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
             "damage": "Шкода",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Шкода по модулях",
             "explosionRadius": "Радіус розльоту уламків",

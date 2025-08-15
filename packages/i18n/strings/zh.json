@@ -41,15 +41,15 @@
       "preview": "预览"
     },
     "locales": {
-      "en": "英文",
-      "es": "西班牙文",
-      "pt": "葡萄牙文",
-      "ru": "俄文",
-      "uk": "乌克兰文",
+      "en": "英语",
+      "es": "西班牙语",
+      "pt": "葡萄牙语",
+      "ru": "俄语",
+      "uk": "乌克兰语",
       "zh": "中文",
-      "ja": "日文",
-      "fr": "法文",
-      "pl": "波兰文"
+      "ja": "日语",
+      "fr": "法语",
+      "pl": "波兰语"
     },
     "wn8_percentile": {
       "0": "非常差",
@@ -283,7 +283,7 @@
           "name": "阶级",
           "description": "阶级",
           "choices": {
-            "tier": "%s1- %s2 级"
+            "tier": "%s1阶 - %s2"
           }
         }
       },
@@ -494,7 +494,7 @@
           "accounts_linked": "帐号已绑定",
           "no_role_permissions": {
             "title": "%s1 验证失败",
-            "description": "我没有管理角色的权限。"
+            "description": "我没有管理身份的权限。"
           }
         },
         "embed": {
@@ -517,7 +517,7 @@
         }
       },
       "search_players": {
-        "name": "搜索玩家",
+        "name": "搜索-玩家",
         "description": "搜索玩家",
         "options": {
           "limit": {
@@ -578,7 +578,7 @@
         "description": "一段时间内的快速统计"
       },
       "owned_tanks": {
-        "name": "已擁有的戰車",
+        "name": "已拥有的战车",
         "description": "显示该阶级中所有您已拥有的战车",
         "body": {
           "title": "# %s1 所拥有的 %s2 阶战车\n\n"
@@ -589,8 +589,8 @@
         "description": "检查机器人是否拥有运行所需的权限",
         "body": {
           "title": "# 权限\n\n%s1",
-          "view_channels": "查看頻道：需要找到重新整理按鈕使用的訊息",
-          "read_message_history": "讀取歷史訊息: 需要找到訊息以重新整理",
+          "view_channels": "查看频道：需要找到重新整理按钮使用的讯息",
+          "read_message_history": "读取消息历史: 需要找到消息以刷新",
           "attach_files": "附加文件：需要将图像添加到基于图像的命令",
           "external_emojis": "外部表情符号：需要添加国家旗帜和战车类别"
         }
@@ -698,6 +698,7 @@
           "fire.caliber": "口径",
           "fire.standardPenetration": "标准炮弹穿透力",
           "fire.premiumPenetration": "加值炮弹穿透力",
+          "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "炮弹伤害值",
           "fire.moduleDamage": "模组伤害值",
           "fire.shellVelocity": "炮弹飞行速度",
@@ -786,6 +787,9 @@
         "tank_seo_title": "%s1 - %s2 阶 %s3 %s4 | %s5 战车百科 | 战车世界闪击战 (WoTB)",
         "tank_seo_description": "%s1 装甲，统计设备，装备，供给等。 %s2 每分钟伤害， %s3生命值， %s4毫米穿透， %s5kph 最高速度， %s6hp 生命值。",
         "visualizers": {
+          "assault": {
+            "title": "Assault shells"
+          },
           "rotator": {
             "hull": "车体",
             "turret": "炮塔",
@@ -796,9 +800,9 @@
           },
           "ricochet": {
             "angle": "角度",
-            "normalization": "轉正",
+            "normalization": "转正",
             "effective_angle": "有效角度",
-            "armor": "裝甲",
+            "armor": "装甲",
             "no_ricochet": "高爆弹不会跳弹"
           },
           "view_range": {
@@ -854,7 +858,7 @@
                 "track": "履带"
               },
               "status": {
-                "penetration": "%s1生命值 擊穿",
+                "penetration": "%s1生命值 击穿",
                 "blocked": "抵挡伤害",
                 "ricochet": "跳弹",
                 "splash": "%s1生命值 溅射"
@@ -975,6 +979,7 @@
             "caliber": "口径",
             "penetration": "穿深",
             "damage": "伤害",
+            "damageWithoutAssault": "Damage without assault shells",
             "clipDamage": "弹匣伤害期望值",
             "moduleDamage": "模组伤害",
             "explosionRadius": "溅射半径",

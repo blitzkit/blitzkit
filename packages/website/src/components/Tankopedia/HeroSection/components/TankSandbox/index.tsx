@@ -39,11 +39,11 @@ interface TankSandboxProps {
   naked?: boolean;
 }
 
-export const forNear0 = 20;
-export const fogFar0 = 25;
+export const forNear0 = 30;
+export const fogFar0 = 50;
 export const forNear1 = 0;
 export const fogFar1 = 0;
-export const fogAnimationTime = 1.5;
+export const fogAnimationTime = 2.5;
 
 export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
   ({ thicknessRange, naked }, ref) => {
@@ -74,7 +74,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
       const interval = setInterval(() => {
         const t = (Date.now() - t0) / 1000;
         const x = t / fogAnimationTime;
-        const y = Math.cbrt(-2 * Math.abs(x - 0.5)) + 1;
+        const y = Math.sin(Math.PI * x);
 
         const near = forNear0 + (forNear1 - forNear0) * y;
         const far = fogFar0 + (fogFar1 - fogFar0) * y;

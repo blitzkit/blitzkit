@@ -7,7 +7,6 @@ import { FileChange } from '../core/github/commitMultipleFiles';
 export async function blitzkitTankIcons() {
   console.log('Building blitzkit tank icons...');
 
-  console.log('Starting website dev server...');
   const browser = await launch();
   const page = await browser.newPage();
   const tanks = Object.values((await fetchTankDefinitions()).tanks);
@@ -19,12 +18,14 @@ export async function blitzkitTankIcons() {
       width: BLITZKIT_TANK_ICON_SIZE.width - 1,
       height: BLITZKIT_TANK_ICON_SIZE.height,
     });
-    await page.goto(`http://localhost:4321/api/tankopedia/tank-icon/${id}/`, {
-      waitUntil: 'networkidle0',
-    });
 
-    if (index === 0) {
-      console.log('Dev server started!');
+    try {
+      await page.goto(`http://localhost:4321/api/tankopedia/tank-icon/${id}/`, {
+        waitUntil: 'networkidle0',
+      });
+    } catch (error) {
+      console.error(`${id} ${name} time out`, error);
+      continue;
     }
 
     const screenshot = await page.screenshot({

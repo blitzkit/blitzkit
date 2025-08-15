@@ -21,6 +21,7 @@ import { useEquipment } from '../../../../../../hooks/useEquipment';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../../stores/duel';
+import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
 import { Info } from './Info';
 import { InfoWithDelta } from './InfoWithDelta';
 import { RicochetVisualizer } from './RicochetVisualizer';
@@ -112,6 +113,20 @@ export function Firepower({ stats }: StatsAcceptorProps) {
         {strings.common.gun_types[gun.gun_type!.$case]}
       </Info>
       <InfoWithDelta stats={stats} decimals={0} value="dpm" />
+      <InfoWithDelta stats={stats} decimals={0} value="damage" />
+      {gun.gun_type!.$case !== 'regular' && (
+        <InfoWithDelta stats={stats} indent decimals={0} value="clipDamage" />
+      )}
+      <InfoWithDelta stats={stats} decimals={0} value="moduleDamage" />
+      <InfoWithDelta stats={stats} decimals={0} value="penetration" />
+
+      {gun.gun_type!.value.base.assault_ranges?.types.includes(shell.type) && (
+        <AssaultRangesVisualizer
+          stats={stats}
+          ranges={gun.gun_type!.value.base.assault_ranges}
+        />
+      )}
+
       {gun.gun_type!.$case === 'auto_reloader' && (
         <InfoWithDelta stats={stats} decimals={0} indent value="dpmEffective" />
       )}
@@ -172,7 +187,6 @@ export function Firepower({ stats }: StatsAcceptorProps) {
       )}
       {/* <ReloadVisualizer stats={stats} /> */}
 
-      <InfoWithDelta stats={stats} decimals={0} value="penetration" />
       {typeof shell.penetration !== 'number' && (
         <>
           <InfoWithDelta
@@ -240,11 +254,6 @@ export function Firepower({ stats }: StatsAcceptorProps) {
           </Flex>
         </>
       )}
-      <InfoWithDelta stats={stats} decimals={0} value="damage" />
-      {gun.gun_type!.$case !== 'regular' && (
-        <InfoWithDelta stats={stats} indent decimals={0} value="clipDamage" />
-      )}
-      <InfoWithDelta stats={stats} decimals={0} value="moduleDamage" />
       {isExplosive(shell.type) && (
         <InfoWithDelta
           stats={stats}
