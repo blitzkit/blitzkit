@@ -1304,11 +1304,6 @@ export async function definitions() {
                 }
               });
 
-            if (gun.burst) {
-              console.log(tankId);
-              console.log(gun.burst);
-            }
-
             tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
               id: gunId,
               weight: gunListEntry.weight,
