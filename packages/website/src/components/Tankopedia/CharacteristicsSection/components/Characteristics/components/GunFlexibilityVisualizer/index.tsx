@@ -201,7 +201,6 @@ export function GunFlexibilityVisualizer({
                   transparent ${Math.PI / 2 - minPitch}rad,
                   transparent 180deg
                 )`,
-                filter: 'blur(0.25rem)',
               }}
             />
           </Box>

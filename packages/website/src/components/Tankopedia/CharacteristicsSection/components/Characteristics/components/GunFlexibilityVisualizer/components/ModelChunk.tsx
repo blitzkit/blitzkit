@@ -15,8 +15,6 @@ const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
   turret: new MeshBasicMaterial({
     color: mauveDark.mauve6,
     toneMapped: false,
-    transparent: true,
-    opacity: 0.5,
   }),
   body: new MeshBasicMaterial({
     color: mauveDark.mauve6,
@@ -33,8 +31,6 @@ const outlineMaterial: Record<Props['only'], LineBasicMaterial> = {
   turret: new LineBasicMaterial({
     color: mauveDark.mauve8,
     toneMapped: false,
-    transparent: true,
-    opacity: 0.5,
   }),
   body: new LineBasicMaterial({
     color: mauveDark.mauve8,
