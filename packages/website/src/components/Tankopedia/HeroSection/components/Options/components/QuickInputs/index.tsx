@@ -21,8 +21,7 @@ export function QuickInputs() {
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition =
     tankModelDefinition.turrets[protagonist.turret.id];
-  const gunModelDefinition =
-    turretModelDefinition.guns[protagonist.gun.gun_type!.value.base.id];
+  const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const initialGunPitch =
     tankModelDefinition.initial_turret_rotation?.pitch ?? 0;
   const hasImprovedVerticalStabilizer = useEquipment(122);

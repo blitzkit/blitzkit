@@ -41,8 +41,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   const stockGun = stockTurret.guns[0];
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-  const gunModelDefinition =
-    turretModelDefinition.guns[gun.gun_type!.value.base.id];
+  const gunModelDefinition = turretModelDefinition.guns[gun.id];
   const stats = tankCharacteristics(
     {
       tank,

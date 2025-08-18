@@ -59,8 +59,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const tankModelDefinition = useTankModelDefinition();
     const turretModelDefinition =
       tankModelDefinition.turrets[protagonistTurret.id];
-    const gunModelDefinition =
-      turretModelDefinition.guns[protagonistGun.gun_type!.value.base.id];
+    const gunModelDefinition = turretModelDefinition.guns[protagonistGun.id];
     const rawDisplay = TankopediaEphemeral.use((state) => state.display);
     const [display, setDisplay] = useState(rawDisplay);
     const hideTankModelUnderArmor = TankopediaPersistent.use(

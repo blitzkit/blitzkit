@@ -141,7 +141,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   mr="2"
                   mb="1"
                 >
-                  {TIER_ROMAN_NUMERALS[antagonistGun.gun_type!.value.base.tier]}
+                  {TIER_ROMAN_NUMERALS[antagonistGun.tier]}
                 </Text>
 
                 <img
@@ -161,26 +161,20 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 {[...antagonistUniqueGuns].reverse().map(({ gun, turret }) => (
                   <ModuleButton
                     module="gun"
-                    key={gun.gun_type!.value.base.id}
+                    key={gun.id}
                     onClick={() =>
                       mutateDuel((draft) => {
                         draft.antagonist.turret = turret;
                         draft.antagonist.gun = gun;
-                        draft.antagonist.shell =
-                          gun.gun_type!.value.base.shells[0];
+                        draft.antagonist.shell = gun.shells[0];
                       })
                     }
-                    selected={
-                      gun.gun_type!.value.base.id ===
-                      antagonistGun.gun_type!.value.base.id
-                    }
-                    discriminator={
-                      TIER_ROMAN_NUMERALS[gun.gun_type!.value.base.tier]
-                    }
+                    selected={gun.id === antagonistGun.id}
+                    discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
                     secondaryDiscriminator={
                       <Text style={{ fontSize: '0.75em' }}>
                         {literals(strings.common.units.mm, [
-                          gun.gun_type!.value.base.shells[0].caliber.toFixed(0),
+                          gun.shells[0].caliber.toFixed(0),
                         ])}
                       </Text>
                     }
@@ -198,7 +192,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           }}
           overflow="hidden"
         >
-          {antagonistGun.gun_type!.value.base.shells.map((thisShell) => (
+          {antagonistGun.shells.map((thisShell) => (
             <IconButton
               color={
                 thisShell.id === antagonistShell.id && !hasCustomShell
@@ -367,8 +361,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                         draft.antagonist.turret = tank.turrets.at(-1)!;
                         draft.antagonist.gun =
                           draft.antagonist.turret.guns.at(-1)!;
-                        draft.antagonist.shell =
-                          draft.antagonist.gun.gun_type!.value.base.shells[0];
+                        draft.antagonist.shell = draft.antagonist.gun.shells[0];
                       });
                       setAntagonistSelectorOpen(false);
                     }}

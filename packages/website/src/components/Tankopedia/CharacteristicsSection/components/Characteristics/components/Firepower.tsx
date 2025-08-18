@@ -26,6 +26,7 @@ import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
 import { GunFlexibilityVisualizer } from './GunFlexibilityVisualizer';
 import { Info } from './Info';
 import { InfoWithDelta } from './InfoWithDelta';
+import { ReloadVisualizer } from './ReloadVisualizer';
 import { RicochetVisualizer } from './RicochetVisualizer';
 import { StatsTableWrapper } from './StatsTableWrapper';
 import type { StatsAcceptorProps } from './TraverseVisualizer';
@@ -54,8 +55,7 @@ export function Firepower({
   ]);
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-  const gunModelDefinition =
-    turretModelDefinition.guns[gun.gun_type!.value.base.id];
+  const gunModelDefinition = turretModelDefinition.guns[gun.id];
 
   useEffect(() => {
     if (penetrationDistanceInput.current) {
@@ -71,7 +71,7 @@ export function Firepower({
         </Heading>
 
         <Flex>
-          {gun.gun_type!.value.base.shells.map((thisShell, shellIndex) => {
+          {gun.shells.map((thisShell, shellIndex) => {
             const selected = thisShell.id === shell.id;
 
             return (
@@ -84,13 +84,9 @@ export function Firepower({
                     borderTopLeftRadius: shellIndex === 0 ? undefined : 0,
                     borderBottomLeftRadius: shellIndex === 0 ? undefined : 0,
                     borderTopRightRadius:
-                      shellIndex === gun.gun_type!.value.base.shells.length - 1
-                        ? undefined
-                        : 0,
+                      shellIndex === gun.shells.length - 1 ? undefined : 0,
                     borderBottomRightRadius:
-                      shellIndex === gun.gun_type!.value.base.shells.length - 1
-                        ? undefined
-                        : 0,
+                      shellIndex === gun.shells.length - 1 ? undefined : 0,
                     marginLeft: shellIndex === 0 ? 0 : -1,
                   }}
                   onClick={() => {
@@ -125,11 +121,8 @@ export function Firepower({
       <InfoWithDelta stats={stats} decimals={0} value="moduleDamage" />
       <InfoWithDelta stats={stats} decimals={0} value="penetration" />
 
-      {gun.gun_type!.value.base.assault_ranges?.types.includes(shell.type) && (
-        <AssaultRangesVisualizer
-          stats={stats}
-          ranges={gun.gun_type!.value.base.assault_ranges}
-        />
+      {gun.assault_ranges?.types.includes(shell.type) && (
+        <AssaultRangesVisualizer stats={stats} ranges={gun.assault_ranges} />
       )}
 
       {gun.gun_type!.$case === 'auto_reloader' && (
@@ -190,7 +183,7 @@ export function Firepower({
           value="intraClip"
         />
       )}
-      {/* <ReloadVisualizer stats={stats} /> */}
+      <ReloadVisualizer stats={stats} />
 
       {typeof shell.penetration !== 'number' && (
         <>

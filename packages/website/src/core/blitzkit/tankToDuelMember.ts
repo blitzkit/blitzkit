@@ -23,11 +23,10 @@ export function tankToDuelMember(
     provisions: createDefaultProvisions(tank, gun, provisionDefinitions),
     engine: tank.engines.at(-1)!,
     gun,
-    shell: tank.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[0],
+    shell: tank.turrets.at(-1)!.guns.at(-1)!.shells[0],
     tank,
     track: tank.tracks.at(-1)!,
     turret,
-    assaultDistance:
-      (gun.gun_type!.value.base.assault_ranges?.ranges[0].distance ?? 0) / 2,
+    assaultDistance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
   } satisfies DuelMember;
 }

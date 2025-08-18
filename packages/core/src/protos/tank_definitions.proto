@@ -108,56 +108,46 @@ message GunDefinition {
     GunDefinitionAutoLoader auto_loader = 2;
     GunDefinitionAutoReloader auto_reloader = 3;
   }
+
+  required uint32 id = 4;
+  required float rotation_speed = 5;
+  optional ResearchCost research_cost = 6;
+  required uint32 weight = 7;
+  required I18nString name = 8;
+  required uint32 tier = 9;
+  repeated ShellDefinition shells = 10;
+  required float camouflage_loss = 11;
+  required float aim_time = 12;
+  required float dispersion_base = 13;
+  required float dispersion_traverse = 14;
+  required float dispersion_shot = 15;
+  required float dispersion_damaged = 16;
+  repeated Unlock unlocks = 17;
+  required uint32 shell_capacity = 18;
+  optional AssaultRanges assault_ranges = 19;
+  optional Burst burst = 20;
 }
 
 message GunDefinitionRegular {
-  required GunDefinitionBase base = 1;
-  required GunDefinitionRegularProperties extension = 2;
-}
-
-message GunDefinitionRegularProperties {
   required float reload = 1;
 }
 
 message GunDefinitionAutoLoader {
-  required GunDefinitionBase base = 1;
-  required GunDefinitionAutoLoaderProperties extension = 2;
-}
-
-message GunDefinitionAutoLoaderProperties {
   required float clip_reload = 1;
   required float intra_clip = 2;
   required float shell_count = 3;
+  optional Burst burst = 4;
+}
+
+message Burst {
+  required uint32 count = 1;
+  required float interval = 2;
 }
 
 message GunDefinitionAutoReloader {
-  required GunDefinitionBase base = 1;
-  required GunDefinitionAutoReloaderProperties extension = 2;
-}
-
-message GunDefinitionAutoReloaderProperties {
   repeated float shell_reloads = 1;
   required float intra_clip = 2;
   required float shell_count = 3;
-}
-
-message GunDefinitionBase {
-  required uint32 id = 1;
-  required float rotation_speed = 2;
-  optional ResearchCost research_cost = 3;
-  required uint32 weight = 4;
-  required I18nString name = 5;
-  required uint32 tier = 6;
-  repeated ShellDefinition shells = 7;
-  required float camouflage_loss = 8;
-  required float aim_time = 9;
-  required float dispersion_base = 10;
-  required float dispersion_traverse = 11;
-  required float dispersion_shot = 12;
-  required float dispersion_damaged = 13;
-  repeated Unlock unlocks = 14;
-  required uint32 shell_capacity = 15;
-  optional AssaultRanges assault_ranges = 16;
 }
 
 message AssaultRanges {

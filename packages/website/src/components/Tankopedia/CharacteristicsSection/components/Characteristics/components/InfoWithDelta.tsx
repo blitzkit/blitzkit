@@ -61,9 +61,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
     const delta = useDelta(uhWhatDoICallThisVariable);
     const protagonistTank = Duel.use((state) => state.protagonist.tank);
     const shellIndex = Duel.use((state) =>
-      state.protagonist.gun.gun_type!.value.base.shells.indexOf(
-        state.protagonist.shell,
-      ),
+      state.protagonist.gun.shells.indexOf(state.protagonist.shell),
     );
     const equipmentMatrix = Duel.use(
       (state) => state.protagonist.equipmentMatrix,
@@ -89,9 +87,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
             provisionDefinitions,
           );
 
-          if (
-            member.gun.gun_type!.value.base.shells[shellIndex] === undefined
-          ) {
+          if (member.gun.shells[shellIndex] === undefined) {
             return undefined;
           }
 
@@ -107,7 +103,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               engine: member.engine,
               gun: member.gun,
               equipmentMatrix: equipmentMatrix,
-              shell: member.gun.gun_type!.value.base.shells[shellIndex],
+              shell: member.gun.shells[shellIndex],
               stockEngine: tank.engines[0],
               stockGun: tank.turrets[0].guns[0],
               stockTrack: tank.tracks[0],

@@ -90,7 +90,7 @@ export function CustomShellButton() {
                         modified.normalization = undefined;
                         modified.ricochet = undefined;
                         modified.explosion_radius =
-                          gun.gun_type!.value.base.shells.find(
+                          gun.shells.find(
                             (shell) => shell.type === ShellType.HE,
                           )?.explosion_radius ?? 1;
                         break;
