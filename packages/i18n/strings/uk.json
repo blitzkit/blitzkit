@@ -810,6 +810,12 @@
             "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
+          },
+          "flexibility": {
+            "yaw": "Yaw",
+            "pitch": "Pitch",
+            "min": "Min",
+            "max": "Max"
           }
         },
         "sandbox": {
@@ -912,7 +918,6 @@
         },
         "review": {
           "title": "Review videos",
-          "disclaimer": "BlitzKit does not endorse any review videos.",
           "join": "Apply to %s1 YouTuber program"
         },
         "configuration": {
