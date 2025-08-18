@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro';
 
-const ALLOW_ROBOTS = import.meta.env.ALLOW_ROBOTS === 'true';
+const ALLOW_ROBOTS = import.meta.env.ALLOW_ROBOTS;
 
 export async function GET({ request }: APIContext) {
   const flags: Record<string, string | null> = {
