@@ -38,14 +38,15 @@ export function applyPitchYawLimits(
     const range = degToRad(pitchLimits.back.range);
     const yawRotatedAbs = Math.abs(normalizeAngleRad(newYaw - Math.PI));
 
-    if (yawRotatedAbs <= range + transition) {
-      if (yawRotatedAbs <= range) {
+    if (yawRotatedAbs <= range / 2 + transition) {
+      if (yawRotatedAbs <= range / 2) {
         // inside range
         lowerPitch = -degToRad(pitchLimits.back.max);
         upperPitch = -degToRad(pitchLimits.back.min);
       } else {
         // inside transition
-        const transitionProgress = (yawRotatedAbs - range) / transition;
+        const transitionProgress = (yawRotatedAbs - range / 2) / transition;
+        // console.log(transitionProgress);
         const maxInterpolatedPitch =
           (1 - transitionProgress) * pitchLimits.back.max +
           transitionProgress * pitchLimits.max;
@@ -63,14 +64,14 @@ export function applyPitchYawLimits(
     const range = degToRad(pitchLimits.front.range);
     const yawAbs = Math.abs(normalizeAngleRad(newYaw));
 
-    if (yawAbs <= range + transition) {
-      if (yawAbs <= range) {
+    if (yawAbs <= range / 2 + transition) {
+      if (yawAbs <= range / 2) {
         // inside range
         lowerPitch = -degToRad(pitchLimits.front.max);
         upperPitch = -degToRad(pitchLimits.front.min);
       } else {
         // inside transition
-        const transitionProgress = (yawAbs - range) / transition;
+        const transitionProgress = (yawAbs - range / 2) / transition;
         const maxInterpolatedPitch =
           (1 - transitionProgress) * pitchLimits.front.max +
           transitionProgress * pitchLimits.max;
