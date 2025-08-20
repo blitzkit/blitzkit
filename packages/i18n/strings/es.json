@@ -810,6 +810,12 @@
             "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
+          },
+          "flexibility": {
+            "yaw": "Yaw",
+            "pitch": "Pitch",
+            "min": "Min",
+            "max": "Max"
           }
         },
         "sandbox": {
@@ -912,7 +918,6 @@
         },
         "review": {
           "title": "Vídeos de reseña",
-          "disclaimer": "BlitzKit no respalda ningún vídeo de reseñas.",
           "join": "Aplica para el programa de YouTube de %s1"
         },
         "configuration": {
