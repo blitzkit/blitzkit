@@ -810,6 +810,12 @@
             "percentage": "%s1%",
             "ghost_factory": "幽灵工厂",
             "dead_rail": "死亡铁道"
+          },
+          "flexibility": {
+            "yaw": "Yaw",
+            "pitch": "Pitch",
+            "min": "Min",
+            "max": "Max"
           }
         },
         "sandbox": {
@@ -912,7 +918,6 @@
         },
         "review": {
           "title": "回顾影片",
-          "disclaimer": "BlitzKit 不支援任何影片回顾。",
           "join": "应用到 %s1 YouTuber程序"
         },
         "configuration": {

@@ -788,7 +788,7 @@
         "tank_seo_description": "%s1 броня, статистика, оборудование, снабжение и многое другое. %s2 УВМ, %s3hp альфа, %s4mm пробитие, %s5км/ч лучшая скорость, %s6hp здоровье.",
         "visualizers": {
           "assault": {
-            "title": "Assault shells"
+            "title": "Штурмовые снаряды"
           },
           "rotator": {
             "hull": "Корпус",
@@ -810,6 +810,12 @@
             "percentage": "%s1%",
             "ghost_factory": "Промзона",
             "dead_rail": "Эшелон"
+          },
+          "flexibility": {
+            "yaw": "Отклонение",
+            "pitch": "Наклон",
+            "min": "Вниз",
+            "max": "Вверх"
           }
         },
         "sandbox": {
@@ -912,7 +918,6 @@
         },
         "review": {
           "title": "Видеообзоры",
-          "disclaimer": "BlitzKit не несёт ответственности за видеообзоры.",
           "join": "Предложить ютубера для программы %s1"
         },
         "configuration": {
@@ -979,7 +984,7 @@
             "caliber": "Калибр",
             "penetration": "Пробитие",
             "damage": "Урон",
-            "damageWithoutAssault": "Damage without assault shells",
+            "damageWithoutAssault": "Урон без штурмовых снарядов",
             "clipDamage": "Урон с барабана",
             "moduleDamage": "Урон по модулям",
             "explosionRadius": "Разлет осколков",
