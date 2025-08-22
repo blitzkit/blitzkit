@@ -1155,7 +1155,9 @@
             "shellRange": "Shell range",
             "shellCapacity": "Shell capacity",
             "gunType": "Gun type",
-            "penetrationAt250m": "Penetration at 250m"
+            "penetrationAt250m": "Penetration at 250m",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
 

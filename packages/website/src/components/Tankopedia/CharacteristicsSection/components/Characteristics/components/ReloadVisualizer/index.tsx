@@ -1,5 +1,4 @@
-import { type Datum, type Serie } from '@nivo/line';
-import { Box } from '@radix-ui/themes';
+import { Box, Code } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Quicklime, type QuicklimeCallback } from 'quicklime';
 import { useEffect, useRef } from 'react';
@@ -9,6 +8,8 @@ import { VisualizerCard } from '../VisualizerCard';
 import { Shell } from './components/Shell';
 import { Target } from './components/Target';
 
+const PRECISION = 2;
+
 export interface ReloadUpdateData {
   reload: number;
   shells: number[];
@@ -16,12 +17,12 @@ export interface ReloadUpdateData {
 
 export const reloadUpdate = new Quicklime<ReloadUpdateData>();
 
-const T = 60;
-
 export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const reloadCircle = useRef<HTMLDivElement>(null);
   const reloadCore = useRef<HTMLDivElement>(null);
   const reloadGlow = useRef<HTMLDivElement>(null);
+  const totalTime = useRef<HTMLSpanElement>(null);
+  const progressTime = useRef<HTMLSpanElement>(null);
 
   /**
    * 3-shell gun example:
@@ -38,7 +39,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const state = useRef(0);
   const dpm = useRef(0);
   const shotPool = useRef(new Set<number>());
-  const data = useRef<Serie[]>([{ id: 'value', data: [] }]);
 
   useEffect(() => {
     let cancel = false;
@@ -52,6 +52,8 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
     }
 
     function frame() {
+      if (!totalTime.current || !progressTime.current) return;
+
       const now = Date.now() / 1000;
       const dt = now - lastT;
       let reload;
@@ -68,14 +70,29 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         reload = state.current;
         shells = shellArray.fill(reload);
 
+        totalTime.current.innerHTML = stats.shellReload!.toFixed(PRECISION);
+        progressTime.current.innerHTML = (
+          (1 - reload) *
+          stats.shellReload!
+        ).toFixed(PRECISION);
+
         if (state.current >= 1) shoot();
       } else if (state.current < stats.shells) {
-        state.current = Math.min(
-          stats.shells,
-          state.current + dt / stats.intraClip!,
-        );
+        const interval =
+          stats.burstShells === 1
+            ? stats.intraClip!
+            : Math.floor(state.current) % stats.burstShells === 0
+              ? stats.intraClip!
+              : stats.burstInterShell!;
+
+        state.current = Math.min(stats.shells, state.current + dt / interval);
         shells = times(stats.shells, (index) => index > state.current - 1);
         reload = state.current % 1;
+
+        totalTime.current.innerHTML = interval.toFixed(PRECISION);
+        progressTime.current.innerHTML = ((1 - reload) * interval).toFixed(
+          PRECISION,
+        );
 
         if (lastState % 1 > state.current % 1) shoot();
       } else {
@@ -90,15 +107,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
 
       lastT = now;
       lastState = state.current;
-
-      (data.current[0].data as Datum[]).push({
-        x: now,
-        y: dpm.current / (stats.dpm + stats.damage),
-      });
-      (data.current[0].data as Datum[]).splice(
-        0,
-        data.current[0].data.findIndex((d) => now - (d.x as number) < T),
-      );
     }
 
     frame();
@@ -215,6 +223,38 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           height: '10%',
         }}
       />
+
+      <Code
+        ref={progressTime}
+        size="1"
+        variant="ghost"
+        weight="bold"
+        color="gray"
+        highContrast
+        style={{
+          position: 'absolute',
+          top: '50%',
+          right: 'calc(50% + var(--space-8))',
+          transform: 'translateX(50%)',
+        }}
+      >
+        6.9s
+      </Code>
+      <Code
+        ref={totalTime}
+        size="1"
+        variant="ghost"
+        weight="bold"
+        color="gray"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 'calc(50% + var(--space-8))',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        10.0s
+      </Code>
 
       {stats.shells > 1 &&
         times(stats.shells, (index) => (

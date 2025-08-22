@@ -87,6 +87,8 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
     modelTransformEvent.dispatch({ pitch, yaw });
   }, [hasImprovedVerticalStabilizer, hasDownImprovedVerticalStabilizer]);
 
+  console.log(tank.slug, gun.burst, stats.burstShells);
+
   return (
     <Flex
       gap="8"

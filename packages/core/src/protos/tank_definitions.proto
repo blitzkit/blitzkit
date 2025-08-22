@@ -136,7 +136,6 @@ message GunDefinitionAutoLoader {
   required float clip_reload = 1;
   required float intra_clip = 2;
   required float shell_count = 3;
-  optional Burst burst = 4;
 }
 
 message Burst {

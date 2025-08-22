@@ -151,6 +151,8 @@ export function tankCharacteristics(
     commanderMastery *
     (tank.crew.some(({ type }) => type === CrewType.DRIVER) ? 1.1 : 1.05);
   const intraClipCoefficient = coefficient([hasShellReloadBoost, -0.3]);
+  const burstShells = gun.burst?.count ?? 1;
+  const burstInterShell = gun.burst?.interval;
   const armorDamageCoefficient =
     coefficient([hasTungsten, 0.15]) *
     coefficient(
@@ -581,6 +583,8 @@ export function tankCharacteristics(
     shellCapacity,
     gunType,
     penetrationAt250m,
+    burstShells,
+    burstInterShell,
   };
 }
 

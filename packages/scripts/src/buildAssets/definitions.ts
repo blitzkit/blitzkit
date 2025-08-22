@@ -1324,7 +1324,13 @@ export async function definitions() {
               unlocks: resolveUnlocks(gun.unlocks),
               shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
               assault_ranges,
-
+              burst:
+                gun.burst && gun.burst.count > 1
+                  ? {
+                      count: gun.burst.count,
+                      interval: 60 / gun.burst.rate,
+                    }
+                  : undefined,
               gun_type:
                 gunType === 'regular'
                   ? {
@@ -1350,13 +1356,6 @@ export async function definitions() {
                           intra_clip: 60 / gun.clip!.rate,
                           clip_reload: gun.reloadTime,
                           shell_count: gunClipCount,
-                          burst:
-                            gun.burst && gun.burst.count > 1
-                              ? {
-                                  count: gun.burst.count,
-                                  interval: 60 / gun.burst.rate,
-                                }
-                              : undefined,
                         },
                       },
             } satisfies GunDefinition);

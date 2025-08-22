@@ -408,7 +408,6 @@ export interface GunDefinitionAutoLoader {
   clip_reload: number;
   intra_clip: number;
   shell_count: number;
-  burst?: Burst;
 }
 
 export interface Burst {
@@ -3023,7 +3022,7 @@ export const GunDefinitionRegular: MessageFns<GunDefinitionRegular> = {
 };
 
 function createBaseGunDefinitionAutoLoader(): GunDefinitionAutoLoader {
-  return { clip_reload: 0, intra_clip: 0, shell_count: 0, burst: undefined };
+  return { clip_reload: 0, intra_clip: 0, shell_count: 0 };
 }
 
 export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
@@ -3039,9 +3038,6 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
     }
     if (message.shell_count !== 0) {
       writer.uint32(29).float(message.shell_count);
-    }
-    if (message.burst !== undefined) {
-      Burst.encode(message.burst, writer.uint32(34).fork()).join();
     }
     return writer;
   },
@@ -3081,14 +3077,6 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
           message.shell_count = reader.float();
           continue;
         }
-        case 4: {
-          if (tag !== 34) {
-            break;
-          }
-
-          message.burst = Burst.decode(reader, reader.uint32());
-          continue;
-        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3109,7 +3097,6 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
       shell_count: isSet(object.shell_count)
         ? globalThis.Number(object.shell_count)
         : 0,
-      burst: isSet(object.burst) ? Burst.fromJSON(object.burst) : undefined,
     };
   },
 
@@ -3123,9 +3110,6 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
     }
     if (message.shell_count !== 0) {
       obj.shell_count = message.shell_count;
-    }
-    if (message.burst !== undefined) {
-      obj.burst = Burst.toJSON(message.burst);
     }
     return obj;
   },
@@ -3142,10 +3126,6 @@ export const GunDefinitionAutoLoader: MessageFns<GunDefinitionAutoLoader> = {
     message.clip_reload = object.clip_reload ?? 0;
     message.intra_clip = object.intra_clip ?? 0;
     message.shell_count = object.shell_count ?? 0;
-    message.burst =
-      object.burst !== undefined && object.burst !== null
-        ? Burst.fromPartial(object.burst)
-        : undefined;
     return message;
   },
 };

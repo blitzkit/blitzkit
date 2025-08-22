@@ -41,7 +41,9 @@ export function Firepower({
   const setPenetrationDistanceDebounced = debounce((value: number) => {
     setPenetrationDistance(value);
   }, 500);
-  const { gun, shell, turret } = Duel.use((state) => state.protagonist);
+  const turret = Duel.use((state) => state.protagonist.turret);
+  const gun = Duel.use((state) => state.protagonist.gun);
+  const shell = Duel.use((state) => state.protagonist.shell);
   const penetrationDistanceInput = useRef<HTMLInputElement>(null);
   const hasSupercharger = useEquipment(107);
   const hasCalibratedShells = useEquipment(103);
