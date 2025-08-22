@@ -1,0 +1,9 @@
+#reload-visualizer-flash {
+  background: transparent;
+  transition-duration: 200ms;
+}
+
+#reload-visualizer-flash.go {
+  background: var(--white-a3);
+  transition: none;
+}

@@ -1,12 +1,13 @@
 import { Box, Code } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Quicklime, type QuicklimeCallback } from 'quicklime';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Var } from '../../../../../../../core/radix/var';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
 import { VisualizerCard } from '../VisualizerCard';
 import { Shell } from './components/Shell';
 import { Target } from './components/Target';
+import './index.css';
 
 const PRECISION = 2;
 
@@ -25,6 +26,16 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const progressTime = useRef<HTMLSpanElement>(null);
 
   const state = useRef(0);
+
+  const shoot = useCallback(() => {
+    const element = document.getElementById('reload-visualizer-flash');
+
+    console.log('shoot');
+
+    element?.classList.add('go');
+    void element?.offsetWidth;
+    element?.classList.remove('go');
+  }, []);
 
   useEffect(() => {
     let cancel = false;
@@ -66,6 +77,8 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         progressTime.current.innerHTML = ((1 - reload) * shellReload).toFixed(
           PRECISION,
         );
+
+        if (state.current >= reloadThreshold) shoot();
       } else if (state.current < stats.shells + reloadThreshold - 1) {
         let interval;
 
@@ -99,6 +112,8 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         progressTime.current.innerHTML = ((1 - reload) * interval).toFixed(
           PRECISION,
         );
+
+        if (lastState % 1 > state.current % 1) shoot();
       } else {
         state.current = 0;
         reload = 0;
@@ -264,6 +279,15 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         times(stats.shells, (index) => (
           <Shell stats={stats} index={index} key={index} />
         ))}
+
+      <Box
+        id="reload-visualizer-flash"
+        position="absolute"
+        top="0"
+        left="0"
+        width="100%"
+        height="100%"
+      />
     </VisualizerCard>
   );
 }
