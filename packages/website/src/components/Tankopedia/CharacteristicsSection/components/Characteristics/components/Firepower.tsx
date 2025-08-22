@@ -5,18 +5,9 @@ import {
   resolvePenetrationCoefficient,
 } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
-import {
-  Flex,
-  Heading,
-  IconButton,
-  Slider,
-  Text,
-  TextField,
-  Tooltip,
-} from '@radix-ui/themes';
+import { Flex, Heading, IconButton, Tooltip } from '@radix-ui/themes';
 import { debounce } from 'lodash-es';
 import { useEffect, useRef, useState } from 'react';
-import { lerp } from 'three/src/math/MathUtils.js';
 import { useEquipment } from '../../../../../../hooks/useEquipment';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
@@ -187,73 +178,6 @@ export function Firepower({
       )}
       <ReloadVisualizer stats={stats} />
 
-      {typeof shell.penetration !== 'number' && (
-        <>
-          <InfoWithDelta
-            stats={stats}
-            indent
-            decimals={0}
-            name={literals(
-              strings.website.tools.tankopedia.characteristics.values
-                .at_distance,
-              [`${penetrationDistance}`],
-            )}
-            noRanking
-            value={() =>
-              lerp(
-                shell.penetration.near,
-                shell.penetration.far,
-                (penetrationDistance * penetrationLossOverDistanceCoefficient) /
-                  500,
-              ) * penetrationCoefficient
-            }
-          />
-          <Flex align="center" gap="2" style={{ paddingLeft: 24 }}>
-            <Text color="gray">
-              {
-                strings.website.tools.tankopedia.characteristics.values
-                  .at_distance_slider_label
-              }
-            </Text>
-            <Slider
-              variant="classic"
-              key={penetrationDistance}
-              min={0}
-              max={500}
-              style={{ flex: 1 }}
-              defaultValue={[penetrationDistance]}
-              onValueChange={([value]) => {
-                setPenetrationDistanceDebounced(value);
-
-                if (!penetrationDistanceInput.current) return;
-
-                penetrationDistanceInput.current.value = value.toString();
-              }}
-            />
-            <TextField.Root
-              variant="classic"
-              style={{ width: 64 }}
-              ref={penetrationDistanceInput}
-              defaultValue={penetrationDistance}
-              onBlur={() => {
-                setPenetrationDistance(
-                  Math.min(
-                    parseInt(penetrationDistanceInput.current!.value),
-                    500,
-                  ),
-                );
-              }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.currentTarget.blur();
-                }
-              }}
-            >
-              <TextField.Slot side="right">m</TextField.Slot>
-            </TextField.Root>
-          </Flex>
-        </>
-      )}
       {isExplosive(shell.type) && (
         <InfoWithDelta
           stats={stats}

@@ -24,21 +24,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const totalTime = useRef<HTMLSpanElement>(null);
   const progressTime = useRef<HTMLSpanElement>(null);
 
-  /**
-   * 3-shell gun example:
-   *
-   * 0-1: clip reload
-   * ~~~: shell shot
-   * 1-2: intra-clip
-   * ~~~: shell shot
-   * 2-3: intra-clip
-   * ~~~: shell shot & reset to 0
-   *
-   * intra-clip time = intraClip * (n - 1)
-   */
   const state = useRef(0);
-  const dpm = useRef(0);
-  const shotPool = useRef(new Set<number>());
 
   useEffect(() => {
     let cancel = false;
@@ -46,55 +32,73 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
     let lastState = state.current;
     const shellArray = new Array(stats.shells);
 
-    function shoot() {
-      shotPool.current.add(Date.now() / 1000);
-      dpm.current += stats.damage;
-    }
-
     function frame() {
       if (!totalTime.current || !progressTime.current) return;
 
+      const reloadThreshold = stats.shellReloads
+        ? stats.shellReloads.length
+        : 1;
       const now = Date.now() / 1000;
       const dt = now - lastT;
       let reload;
       let shells;
 
-      shotPool.current.forEach((t) => {
-        if (now - t > 60) shotPool.current.delete(t);
-      });
+      if (state.current < reloadThreshold) {
+        const shellReload =
+          reloadThreshold === 1
+            ? stats.shellReload!
+            : stats.shellReloads![Math.floor(state.current)];
 
-      dpm.current = shotPool.current.size * stats.damage;
-
-      if (state.current < 1) {
-        state.current = Math.min(1, state.current + dt / stats.shellReload!);
-        reload = state.current;
+        state.current = Math.min(
+          reloadThreshold,
+          state.current + dt / shellReload,
+        );
+        reload = state.current % 1;
         shells = shellArray.fill(reload);
 
-        totalTime.current.innerHTML = stats.shellReload!.toFixed(PRECISION);
-        progressTime.current.innerHTML = (
-          (1 - reload) *
-          stats.shellReload!
-        ).toFixed(PRECISION);
+        if (reloadThreshold > 1) {
+          shells = shells.map((_, index) =>
+            Math.max(0, state.current - shellArray.length + index + 1),
+          );
+        }
 
-        if (state.current >= 1) shoot();
-      } else if (state.current < stats.shells) {
-        const interval =
-          stats.burstShells === 1
-            ? stats.intraClip!
-            : Math.floor(state.current) % stats.burstShells === 0
-              ? stats.intraClip!
-              : stats.burstInterShell!;
+        totalTime.current.innerHTML = shellReload.toFixed(PRECISION);
+        progressTime.current.innerHTML = ((1 - reload) * shellReload).toFixed(
+          PRECISION,
+        );
+      } else if (state.current < stats.shells + reloadThreshold - 1) {
+        let interval;
 
-        state.current = Math.min(stats.shells, state.current + dt / interval);
-        shells = times(stats.shells, (index) => index > state.current - 1);
+        if (
+          stats.burstShells === 1 ||
+          Math.floor(state.current) % stats.burstShells === 0
+        ) {
+          interval = stats.intraClip!;
+        } else {
+          interval = stats.burstInterShell!;
+        }
+
+        state.current = Math.min(
+          stats.shells + reloadThreshold,
+          state.current + dt / interval,
+        );
         reload = state.current % 1;
+
+        if (reloadThreshold > 1) {
+          shells = shellArray.map((_, index) =>
+            Math.max(
+              0,
+              Math.floor(index + 1 + reloadThreshold - state.current),
+            ),
+          );
+        } else {
+          shells = times(stats.shells, (index) => index > state.current - 1);
+        }
 
         totalTime.current.innerHTML = interval.toFixed(PRECISION);
         progressTime.current.innerHTML = ((1 - reload) * interval).toFixed(
           PRECISION,
         );
-
-        if (lastState % 1 > state.current % 1) shoot();
       } else {
         state.current = 0;
         reload = 0;
