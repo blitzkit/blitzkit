@@ -24,17 +24,22 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
   const reloadGlow = useRef<HTMLDivElement>(null);
   const totalTime = useRef<HTMLSpanElement>(null);
   const progressTime = useRef<HTMLSpanElement>(null);
+  const flash = useRef<HTMLDivElement>(null);
 
   const state = useRef(0);
 
   const shoot = useCallback(() => {
-    const element = document.getElementById('reload-visualizer-flash');
+    flash.current?.classList.add('go');
+    reloadCircle.current?.classList.add('go');
+    reloadGlow.current?.classList.add('go');
 
-    console.log('shoot');
+    void flash.current?.offsetWidth;
+    void reloadCircle.current?.offsetWidth;
+    void reloadGlow.current?.offsetWidth;
 
-    element?.classList.add('go');
-    void element?.offsetWidth;
-    element?.classList.remove('go');
+    flash.current?.classList.remove('go');
+    reloadCircle.current?.classList.remove('go');
+    reloadGlow.current?.classList.remove('go');
   }, []);
 
   useEffect(() => {
@@ -178,8 +183,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         position="absolute"
         top="50%"
         left="50%"
-        width="65%"
-        height="65%"
         className="reload"
         ref={reloadGlow}
         style={{
@@ -194,8 +197,6 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         position="absolute"
         top="50%"
         left="50%"
-        width="65%"
-        height="65%"
         className="reload"
         ref={reloadCircle}
         style={{
@@ -282,6 +283,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
 
       <Box
         id="reload-visualizer-flash"
+        ref={flash}
         position="absolute"
         top="0"
         left="0"
