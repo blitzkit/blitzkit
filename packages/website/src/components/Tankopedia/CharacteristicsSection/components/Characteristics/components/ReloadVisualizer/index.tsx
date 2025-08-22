@@ -163,8 +163,8 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         position="absolute"
         top="50%"
         left="50%"
-        width="12rem"
-        height="12rem"
+        width="65%"
+        height="65%"
         className="reload"
         ref={reloadGlow}
         style={{
@@ -179,8 +179,8 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         position="absolute"
         top="50%"
         left="50%"
-        width="12rem"
-        height="12rem"
+        width="65%"
+        height="65%"
         className="reload"
         ref={reloadCircle}
         style={{
@@ -242,7 +242,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           transform: 'translateX(50%)',
         }}
       >
-        6.9s
+        0.00
       </Code>
       <Code
         ref={totalTime}
@@ -257,7 +257,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           transform: 'translateX(-50%)',
         }}
       >
-        10.0s
+        0.00
       </Code>
 
       {stats.shells > 1 &&
