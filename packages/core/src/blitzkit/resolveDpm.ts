@@ -17,12 +17,27 @@ export function resolveDpm(
   if (gun.gun_type!.$case === 'regular') {
     dps = alpha / (reloadCoefficient * gun.gun_type!.value.reload);
   } else if (gun.gun_type!.$case === 'auto_loader') {
-    dps =
-      (alpha * gun.gun_type!.value.shell_count) /
-      (gun.gun_type!.value.clip_reload * reloadCoefficient +
+    const damage = alpha * gun.gun_type!.value.shell_count;
+    let time = gun.gun_type!.value.clip_reload * reloadCoefficient;
+
+    if (gun.burst) {
+      time +=
+        (gun.gun_type!.value.shell_count / gun.burst.count - 1) *
+        gun.gun_type!.value.intra_clip *
+        intraClipCoefficient;
+
+      time +=
+        (gun.gun_type!.value.shell_count / gun.burst.count) *
+        (gun.burst.count - 1) *
+        gun.burst.interval;
+    } else {
+      time +=
         (gun.gun_type!.value.shell_count - 1) *
-          gun.gun_type!.value.intra_clip *
-          intraClipCoefficient);
+        gun.gun_type!.value.intra_clip *
+        intraClipCoefficient;
+    }
+
+    dps = damage / time;
   } else {
     const mostOptimalShell = gun.gun_type!.value.shell_reloads.reduce<null | {
       index: number;
