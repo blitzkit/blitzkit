@@ -30,6 +30,7 @@ env:
   PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
   PUBLIC_BRANCH: ${{ secrets.PUBLIC_BRANCH }}
   PUBLIC_GUIDE_WEBSITE: ${{ secrets.PUBLIC_GUIDE_WEBSITE }}
+  SERVICING: ${{ secrets.SERVICING }}
 
 jobs:
   build:

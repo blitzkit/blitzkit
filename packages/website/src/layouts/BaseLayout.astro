@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar.astro';
 import Party3 from '../components/Party3.astro';
 import './base.css';
 import { DEFAULT_LOCALE } from '@blitzkit/i18n';
+import Servicing from '../components/Servicing.astro';
 
 export interface Props {
   noFooter?: boolean;
@@ -15,6 +16,7 @@ export interface Props {
   integrated?: boolean;
 }
 
+const servicing = import.meta.env.SERVICING;
 const { noFooter, noNavbar, integrated } = Astro.props;
 const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 ---
@@ -65,7 +67,7 @@ const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 
         <Checks {locale} client:only="react" />
 
-        <slot />
+        {servicing ? <Servicing /> : <slot />}
 
         {!noFooter && <Footer />}
       </Flex>
