@@ -29,8 +29,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
       (filtered.reduce((accumulator, thisTank) => {
         return (
           accumulator +
-          thisTank.turrets.at(-1)!.guns.at(-1)!.gun_type!.value.base.shells[0]
-            .penetration.near
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration.near
         );
       }, 0) /
         filtered.length) *
@@ -51,8 +50,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      const { shells } =
-        duelStore.getState().antagonist.gun.gun_type!.value.base;
+      const { shells } = duelStore.getState().antagonist.gun;
 
       times(3, (index) => {
         if (event.key === `${index + 1}` && shells.length > index) {

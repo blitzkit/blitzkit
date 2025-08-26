@@ -49,7 +49,7 @@ export function SceneProps() {
   const trackModelDefinition =
     modelDefinitions.models[tank.id].tracks[track.id];
   const gunModelDefinition =
-    tankModelDefinition.turrets[turret.id].guns[gun.gun_type!.value.base.id];
+    tankModelDefinition.turrets[turret.id].guns[gun.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const hullOrigin = new Vector3(
     trackModelDefinition.origin.x,

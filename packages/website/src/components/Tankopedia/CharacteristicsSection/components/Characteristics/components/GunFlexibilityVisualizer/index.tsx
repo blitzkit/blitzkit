@@ -47,7 +47,7 @@ export function GunFlexibilityVisualizer({
 
   const tankModel = modelDefinition.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];
-  const gunModel = turretModel.guns[gun.gun_type!.value.base.id];
+  const gunModel = turretModel.guns[gun.id];
 
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);

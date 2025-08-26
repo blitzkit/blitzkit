@@ -197,15 +197,10 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
             turret.guns.forEach((gun) => {
               if (
-                gun.gun_type!.value.base.research_cost !== undefined &&
-                typeof gun.gun_type!.value.base.research_cost
-                  .research_cost_type!.value === 'number'
+                gun.research_cost !== undefined &&
+                typeof gun.research_cost.research_cost_type!.value === 'number'
               ) {
-                gunXps.set(
-                  gun.gun_type!.value.base.id,
-                  gun.gun_type!.value.base.research_cost.research_cost_type!
-                    .value,
-                );
+                gunXps.set(gun.id, gun.research_cost.research_cost_type!.value);
               }
             });
           });

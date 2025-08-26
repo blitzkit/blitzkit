@@ -36,8 +36,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const tankModelDefinition = useTankModelDefinition();
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-  const gunModelDefinition =
-    turretModelDefinition.guns[gun.gun_type!.value.base.id];
+  const gunModelDefinition = turretModelDefinition.guns[gun.id];
   const hullOrigin = correctZYTuple(trackModelDefinition.origin);
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);

@@ -31,9 +31,8 @@ export function filterTank(filters: TankFilters, tank: TankDefinition) {
         SHELLS.every(
           (index) =>
             filters.shells[index] === null ||
-            gun.gun_type!.value.base.shells[index] === undefined ||
-            gun.gun_type!.value.base.shells[index].type ===
-              filters.shells[index],
+            gun.shells[index] === undefined ||
+            gun.shells[index].type === filters.shells[index],
         ),
       ),
     )

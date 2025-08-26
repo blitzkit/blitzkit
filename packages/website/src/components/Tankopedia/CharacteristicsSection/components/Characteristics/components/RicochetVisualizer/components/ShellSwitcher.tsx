@@ -11,7 +11,7 @@ export function ShellSwitcher() {
 
   return (
     <Flex>
-      {gun.gun_type!.value.base.shells.map((thisShell, shellIndex) => {
+      {gun.shells.map((thisShell, shellIndex) => {
         const selected = thisShell.id === shell.id;
 
         return (
@@ -26,9 +26,7 @@ export function ShellSwitcher() {
                 borderBottomLeftRadius: shellIndex === 0 ? '50%' : 0,
                 borderTopRightRadius: 0,
                 borderBottomRightRadius:
-                  shellIndex === gun.gun_type!.value.base.shells.length - 1
-                    ? '50%'
-                    : 0,
+                  shellIndex === gun.shells.length - 1 ? '50%' : 0,
                 marginLeft: shellIndex === 0 ? 0 : -1,
               }}
               onClick={() => {

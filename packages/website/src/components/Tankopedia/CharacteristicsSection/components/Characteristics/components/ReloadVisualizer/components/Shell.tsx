@@ -40,7 +40,7 @@ export function Shell({ index, stats }: ShellProps & StatsAcceptorProps) {
       <Box
         left="50%"
         position="absolute"
-        ml="calc(25% + 2.5rem)"
+        ml="40%"
         width="1.25rem"
         height="1.25rem"
         style={{
@@ -70,11 +70,9 @@ export function Shell({ index, stats }: ShellProps & StatsAcceptorProps) {
             overflow: 'hidden',
             maskImage:
               'url(/assets/images/tankopedia/visualizers/reload/shell.png)',
-            // maskComposite: 'exclude',
             maskSize: 'contain',
             maskRepeat: 'no-repeat',
             maskPosition: 'center',
-            // background: 'red',
           }}
         >
           <Box

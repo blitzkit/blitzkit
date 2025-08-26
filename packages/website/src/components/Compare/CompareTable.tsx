@@ -250,8 +250,7 @@ export function CompareTable({ stats }: CompareTableProps) {
 
                                 member.turret = member.tank.turrets[0];
                                 member.gun = member.turret.guns[0];
-                                member.shell =
-                                  member.gun.gun_type!.value.base.shells[0];
+                                member.shell = member.gun.shells[0];
                                 member.engine = member.tank.engines[0];
                                 member.track = member.tank.tracks[0];
                               });
@@ -267,8 +266,7 @@ export function CompareTable({ stats }: CompareTableProps) {
 
                                 member.turret = member.tank.turrets.at(-1)!;
                                 member.gun = member.turret.guns.at(-1)!;
-                                member.shell =
-                                  member.gun.gun_type!.value.base.shells[0];
+                                member.shell = member.gun.shells[0];
                                 member.engine = member.tank.engines.at(-1)!;
                                 member.track = member.tank.tracks.at(-1)!;
                               });

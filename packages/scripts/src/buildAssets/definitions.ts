@@ -12,7 +12,6 @@ import {
   EquipmentSlot,
   GameDefinitions,
   GunDefinition,
-  GunDefinitionBase,
   I18nString,
   MapDefinitions,
   ModelDefinitions,
@@ -274,6 +273,7 @@ interface VehicleDefinitions {
           pumpGunMode?: boolean;
           pumpGunReloadTimes?: string;
           clip?: { count: number; rate: number };
+          burst?: { count: number; rate: number };
           models: { undamaged: string };
           extras?: {
             trayShell?: {
@@ -1304,7 +1304,7 @@ export async function definitions() {
                 }
               });
 
-            const base = {
+            tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
               id: gunId,
               weight: gunListEntry.weight,
               rotation_speed: gunListEntry.rotationSpeed,
@@ -1324,41 +1324,38 @@ export async function definitions() {
               unlocks: resolveUnlocks(gun.unlocks),
               shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
               assault_ranges,
-            } satisfies GunDefinitionBase;
-
-            tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
+              burst:
+                gun.burst && gun.burst.count > 1
+                  ? {
+                      count: gun.burst.count,
+                      interval: 60 / gun.burst.rate,
+                    }
+                  : undefined,
               gun_type:
                 gunType === 'regular'
                   ? {
                       $case: 'regular',
                       value: {
-                        base,
-                        extension: { reload: gun.reloadTime },
+                        reload: gun.reloadTime,
                       },
                     }
                   : gunType === 'autoReloader'
                     ? {
                         $case: 'auto_reloader',
                         value: {
-                          base,
-                          extension: {
-                            intra_clip: 60 / gun.clip!.rate,
-                            shell_count: gunClipCount,
-                            shell_reloads: gun
-                              .pumpGunReloadTimes!.split(' ')
-                              .map(Number),
-                          },
+                          intra_clip: 60 / gun.clip!.rate,
+                          shell_count: gunClipCount,
+                          shell_reloads: gun
+                            .pumpGunReloadTimes!.split(' ')
+                            .map(Number),
                         },
                       }
                     : {
                         $case: 'auto_loader',
                         value: {
-                          base,
-                          extension: {
-                            intra_clip: 60 / gun.clip!.rate,
-                            clip_reload: gun.reloadTime,
-                            shell_count: gunClipCount,
-                          },
+                          intra_clip: 60 / gun.clip!.rate,
+                          clip_reload: gun.reloadTime,
+                          shell_count: gunClipCount,
                         },
                       },
             } satisfies GunDefinition);
@@ -1407,7 +1404,7 @@ export async function definitions() {
 
               tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
                 gunIndex
-              ].gun_type!.value.base!.shells.push({
+              ].shells.push({
                 id: shellId,
                 name: shellName,
                 velocity: gunShellEntry.speed,
@@ -1495,9 +1492,7 @@ export async function definitions() {
         turret.research_cost = turretXps.get(turret.id);
 
         Object.values(turret.guns).forEach((gunRaw) => {
-          gunRaw.gun_type!.value.base!.research_cost = gunXps.get(
-            gunRaw.gun_type!.value.base!.id,
-          );
+          gunRaw.research_cost = gunXps.get(gunRaw.id);
         });
       });
 

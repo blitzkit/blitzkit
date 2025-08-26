@@ -51,7 +51,7 @@ export function ModelChunk({ only }: Props) {
 
   const tankModel = modelDefinitions.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];
-  const gunModel = turretModel.guns[gun.gun_type!.value.base.id];
+  const gunModel = turretModel.guns[gun.id];
 
   const originZ = tankModel.turret_origin.z + turretModel.gun_origin.z;
   const originY = tankModel.turret_origin.y + turretModel.gun_origin.y;

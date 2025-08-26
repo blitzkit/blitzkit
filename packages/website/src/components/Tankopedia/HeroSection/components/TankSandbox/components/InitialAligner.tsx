@@ -14,7 +14,7 @@ export function InitialAligner() {
 
   const tankModel = modelDefinitions.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];
-  const gunModel = turretModel.guns[gun.gun_type!.value.base.id];
+  const gunModel = turretModel.guns[gun.id];
 
   useEffect(() => {
     const [pitch, yaw] = applyPitchYawLimits(

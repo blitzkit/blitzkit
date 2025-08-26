@@ -28,8 +28,7 @@ export function TankModel() {
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition =
     tankModelDefinition.turrets[protagonist.turret.id];
-  const gunModelDefinition =
-    turretModelDefinition.guns[protagonist.gun.gun_type!.value.base.id];
+  const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
 

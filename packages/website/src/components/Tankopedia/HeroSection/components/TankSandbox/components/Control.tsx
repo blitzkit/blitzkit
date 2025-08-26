@@ -56,9 +56,7 @@ export function Controls({
   const antagonistTurretModelDefinition =
     antagonistModelDefinition.turrets[antagonistTurret.id];
   const protagonistGunModelDefinition =
-    protagonistTurretModelDefinition.guns[
-      protagonistGun.gun_type!.value.base.id
-    ];
+    protagonistTurretModelDefinition.guns[protagonistGun.id];
   const protagonistHullOrigin = new Vector3(
     protagonistTrackModelDefinition.origin.x,
     protagonistTrackModelDefinition.origin.y,
