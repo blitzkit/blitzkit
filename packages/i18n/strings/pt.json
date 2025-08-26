@@ -978,8 +978,8 @@
             "dpmEffective": "Efetivo aos 60s",
             "shells": "Projéteis",
             "mostOptimalShellIndex": "Projétil mais ideal",
-            "shellReloads": "Recarga de projétil",
-            "shellReload": "Recarregamento de projétil",
+            "shellReloads": "Reloads",
+            "shellReload": "Recarga",
             "intraClip": "Intra-clipe",
             "caliber": "Calibre",
             "penetration": "Penetração",
@@ -1037,7 +1037,9 @@
             "shellRange": "Alcance de projétil",
             "shellCapacity": "Capacidade de projéteis",
             "gunType": "Tipo de arma",
-            "penetrationAt250m": "Penetração à 250m"
+            "penetrationAt250m": "Penetração à 250m",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
         "firepower": {
