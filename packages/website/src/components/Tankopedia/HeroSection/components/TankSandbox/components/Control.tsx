@@ -24,7 +24,6 @@ interface ControlsProps {
   autoRotate?: boolean;
   zoomable?: boolean;
   enableRotate?: boolean;
-  distanceScale?: number;
 }
 
 export function Controls({
@@ -32,7 +31,6 @@ export function Controls({
   autoRotate = true,
   zoomable = true,
   enableRotate = true,
-  distanceScale = 1,
 }: ControlsProps) {
   const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const duelStore = Duel.useStore();
@@ -86,7 +84,7 @@ export function Controls({
     -8,
     gunHeight + (naked ? 10 : 2),
     -13,
-  ).multiplyScalar(distanceScale);
+  );
 
   const t0 = useRef(Date.now() / 1000);
   useFrame(() => {

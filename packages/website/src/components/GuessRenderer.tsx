@@ -5,7 +5,7 @@ import { Controls } from './Tankopedia/HeroSection/components/TankSandbox/compon
 import { Lighting } from './Tankopedia/HeroSection/components/TankSandbox/components/Lighting';
 import { TankModel } from './Tankopedia/HeroSection/components/TankSandbox/components/TankModel';
 
-const BRIGHTNESS = 2 ** -5;
+const BRIGHTNESS = 2 ** -5.5;
 const CONTRAST = 2 ** 2;
 
 export function GuessRenderer() {
@@ -16,13 +16,12 @@ export function GuessRenderer() {
     <SmartCanvas
       style={{
         filter: `grayscale(${isRevealed ? 0 : 1}) contrast(${isRevealed ? 1 : CONTRAST}) brightness(${isRevealed ? 1 : BRIGHTNESS})`,
-        // filter: `drop-shadow(0 0 1rem ${Var('black-a11')})`,
         transitionDuration: isRevealed ? '2s' : undefined,
         transitionProperty: 'filter',
       }}
       camera={{ position: [-5, 5, -5] }}
     >
-      <Controls distanceScale={2} zoomable={false} />
+      <Controls zoomable={false} />
       <Lighting display={TankopediaDisplay.Model} />
       <TankModel />
     </SmartCanvas>

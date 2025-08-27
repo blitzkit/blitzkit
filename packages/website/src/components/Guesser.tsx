@@ -88,7 +88,7 @@ export function Guesser() {
       position="absolute"
       bottom="0"
       left="50%"
-      style={{ transform: 'translateX(-50%)' }}
+      style={{ transform: 'translateX(-50%)', pointerEvents: 'none' }}
       width="100%"
       p="4"
       maxWidth="25rem"

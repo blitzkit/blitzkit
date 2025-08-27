@@ -7,7 +7,6 @@ import { GuessRendererLoader } from '../../../components/GuessRendererLoader';
 import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
 import { awaitableProvisionDefinitions } from '../../../core/awaitables/provisionDefinitions';
 import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { Var } from '../../../core/radix/var';
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
@@ -33,13 +32,13 @@ export function Page({ locale }: LocaleAcceptorProps) {
   return (
     <GuessEphemeral.Provider data={initialTank}>
       <LocaleProvider locale={locale}>
-        <Page2 />
+        <Container />
       </LocaleProvider>
     </GuessEphemeral.Provider>
   );
 }
 
-function Page2() {
+function Container() {
   const tank = GuessEphemeral.use((state) => state.tank);
   const model = modelDefinitions.models[tank.id];
 
@@ -57,65 +56,62 @@ function Content() {
   const tank = GuessEphemeral.use((state) => state.tank);
   const guessState = GuessEphemeral.use((state) => state.guessState);
   const isRevealed = guessState !== null;
+  const name = unwrap(tank.name);
+  const fontSize = `min(48vh, ${55 / name.length}vw)`;
+  const transitionDuration = isRevealed ? '2s' : undefined;
 
   return (
     <Flex flexGrow="1" position="relative" overflow="hidden">
       <GuessBackground />
 
-      <Flex
-        position="absolute"
-        left="50%"
-        top="50%"
-        ml="9"
+      <Heading
         style={{
+          transitionDuration,
           opacity: isRevealed ? 1 : 0,
-          transitionDuration: isRevealed ? '2s' : undefined,
-          transform: 'translateY(-50%)',
+          fontWeight: 900,
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize,
+          userSelect: 'none',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
         }}
       >
-        <Heading weight="medium" size="9">
-          {unwrap(tank.name)}
-        </Heading>
-      </Flex>
+        {name}
+      </Heading>
 
       <Box
         position="absolute"
+        top="0"
+        left="0"
         width="100%"
         height="100%"
-        top="0"
-        right={isRevealed ? '16rem' : '0'}
-        style={{
-          transitionDuration: isRevealed ? '2s' : undefined,
-        }}
+        style={{ transitionDuration }}
       >
         <Suspense fallback={<GuessRendererLoader />}>
           <GuessRenderer />
         </Suspense>
       </Box>
 
-      <Flex
-        position="absolute"
-        left="50%"
-        top="50%"
-        ml="9"
+      <Heading
         style={{
-          opacity: isRevealed ? 1 : 0,
-          transitionDuration: isRevealed ? '2s' : undefined,
-          transform: 'translateY(-50%)',
-          color: 'transparent',
-          WebkitTextStroke: `1px ${Var('gray-12')}`,
+          transitionDuration,
+          opacity: isRevealed ? 0.5 : 0,
+          fontWeight: 900,
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize,
+          userSelect: 'none',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
         }}
       >
-        <Heading
-          style={{
-            WebkitTextStroke: `1px inherit`,
-          }}
-          weight="medium"
-          size="9"
-        >
-          {unwrap(tank.name)}
-        </Heading>
-      </Flex>
+        {name}
+      </Heading>
 
       <Guesser />
     </Flex>

@@ -131,7 +131,7 @@ export const TOOLS: Tool[] = [
   tankopediaTool,
   compareTool,
   performanceTool,
-  // guessTool,
+  guessTool,
   // chartsTool,
   galleryTool,
   sessionTool,
