@@ -978,8 +978,8 @@
             "dpmEffective": "60秒内生效",
             "shells": "炮弹 ",
             "mostOptimalShellIndex": "最优炮弹",
-            "shellReloads": "弹匣装填",
-            "shellReload": "炮弹装填",
+            "shellReloads": "Reloads",
+            "shellReload": "装填时间",
             "intraClip": "炮弹装填",
             "caliber": "口径",
             "penetration": "穿深",
@@ -1037,7 +1037,9 @@
             "shellRange": "射程",
             "shellCapacity": "携弹量",
             "gunType": "炮管类型",
-            "penetrationAt250m": "两百五十米处的穿透力"
+            "penetrationAt250m": "两百五十米处的穿透力",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
         "firepower": {

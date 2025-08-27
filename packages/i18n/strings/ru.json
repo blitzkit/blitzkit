@@ -813,7 +813,7 @@
           },
           "flexibility": {
             "yaw": "Отклонение",
-            "pitch": "Угол",
+            "pitch": "Наклон",
             "min": "Вниз",
             "max": "Вверх"
           }
@@ -978,7 +978,7 @@
             "dpmEffective": "Эффективность за 60с",
             "shells": "Снарядов в барабане",
             "mostOptimalShellIndex": "Самый эффективный снаряд",
-            "shellReloads": "Перезарядка снарядов",
+            "shellReloads": "Reloads",
             "shellReload": "Перезарядка",
             "intraClip": "Между снарядами",
             "caliber": "Калибр",
@@ -1037,7 +1037,9 @@
             "shellRange": "Дальность снаряда",
             "shellCapacity": "Боезапас",
             "gunType": "Тип орудия",
-            "penetrationAt250m": "Пробитие на 250м"
+            "penetrationAt250m": "Пробитие на 250м",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
         "firepower": {
