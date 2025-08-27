@@ -978,8 +978,8 @@
             "dpmEffective": "Effective at 60s",
             "shells": "Снаряди",
             "mostOptimalShellIndex": "Most optimal shell",
-            "shellReloads": "Shell reloads",
-            "shellReload": "Shell reload",
+            "shellReloads": "Reloads",
+            "shellReload": "Час перезаряджання",
             "intraClip": "Intra-clip",
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
@@ -1037,7 +1037,9 @@
             "shellRange": "Shell range",
             "shellCapacity": "Shell capacity",
             "gunType": "Тип гармати",
-            "penetrationAt250m": "Penetration at 250m"
+            "penetrationAt250m": "Penetration at 250m",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
         "firepower": {

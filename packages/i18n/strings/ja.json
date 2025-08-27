@@ -978,7 +978,7 @@
             "dpmEffective": "60秒での有効値",
             "shells": "砲弾",
             "mostOptimalShellIndex": "最適な弾数",
-            "shellReloads": "自動装填時間",
+            "shellReloads": "Reloads",
             "shellReload": "装填時間",
             "intraClip": "砲弾再装填時間",
             "caliber": "口径",
@@ -1037,7 +1037,9 @@
             "shellRange": "射程",
             "shellCapacity": "総弾数",
             "gunType": "主砲タイプ",
-            "penetrationAt250m": "250m での貫通力"
+            "penetrationAt250m": "250m での貫通力",
+            "burstShells": "Burst shell count",
+            "burstInterShell": "Burst inter-shell"
           }
         },
         "firepower": {
