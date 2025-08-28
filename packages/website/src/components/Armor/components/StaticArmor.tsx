@@ -30,7 +30,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null);
   const gunContainer = useRef<Group>(null);
-  const protagonist = Duel.use((draft) => draft.protagonist);
   const tank = Duel.use((state) => state.protagonist.tank);
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
@@ -46,7 +45,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const hullOrigin = correctZYTuple(trackModelDefinition.origin);
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
-  const mutateDuel = Duel.useMutation();
   const canvas = useThree((state) => state.gl.domElement);
   const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const duelStore = Duel.useStore();

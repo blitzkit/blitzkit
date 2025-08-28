@@ -1,92 +1,20 @@
-import { TankType } from '@blitzkit/core';
 import { Flex, Heading } from '@radix-ui/themes';
-import { Var } from '../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { Duel } from '../../../../../../stores/duel';
-import type { RadixColor } from '../../../../../../stores/embedState';
 import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
 import { Tracker } from './components/Tracker';
 
-interface TitleProps {
-  foreground?: boolean;
-}
-
-export const NATION_COLORS: Record<
-  string,
-  {
-    text: RadixColor;
-    background: RadixColor[];
-    tint: RadixColor;
-  }
-> = {
-  france: {
-    text: 'mint',
-    tint: 'purple',
-    background: ['mint', 'cyan', 'jade'],
-  },
-  germany: {
-    text: 'sage',
-    tint: 'blue',
-    background: ['slate', 'sage', 'mauve'],
-  },
-  usa: {
-    text: 'gold',
-    tint: 'red',
-    background: ['brown', 'gold', 'gray'],
-  },
-  european: {
-    text: 'sky',
-    tint: 'violet',
-    background: ['cyan', 'blue', 'indigo'],
-  },
-  ussr: {
-    text: 'bronze',
-    tint: 'red',
-    background: ['bronze', 'tomato', 'bronze'],
-  },
-  uk: {
-    text: 'gold',
-    tint: 'red',
-    background: ['bronze', 'gold', 'brown'],
-  },
-  japan: {
-    text: 'mint',
-    tint: 'violet',
-    background: ['green', 'teal', 'jade'],
-  },
-  china: {
-    text: 'mint',
-    tint: 'pink',
-    background: ['green', 'teal', 'jade'],
-  },
-  other: {
-    text: 'amber',
-    tint: 'sky',
-    background: ['amber', 'yellow', 'gray'],
-  },
-};
-
-export function Title({ foreground }: TitleProps) {
+export function Title() {
   const { unwrap } = useLocale();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
   const revealed = TankopediaEphemeral.use((state) => state.revealed);
-  const nationColors = NATION_COLORS[protagonist.nation];
-  const color = Var(
-    disturbed
-      ? protagonist.type === TankType.COLLECTOR
-        ? 'blue-11'
-        : protagonist.type === TankType.PREMIUM
-          ? 'amber-11'
-          : 'gray-12'
-      : `${nationColors.text}-12`,
-  );
   const name = unwrap(protagonist.name);
   const fontSize = revealed
     ? disturbed
       ? '2rem'
-      : `min(65vh, ${125 / name.length}vw)`
-    : `min(48vh, ${75 / name.length}vw)`;
+      : `min(16vh, ${125 / name.length}vw)`
+    : `min(12vh, ${75 / name.length}vw)`;
   const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   return (
@@ -119,8 +47,7 @@ export function Title({ foreground }: TitleProps) {
           pointerEvents: 'none',
           fontSize,
           whiteSpace: 'nowrap',
-          color: foreground ? Var('gray-a10') : color,
-          opacity: foreground && disturbed ? 0 : 1,
+          opacity: disturbed ? 1 : 0.5,
           letterSpacing: disturbed || !revealed ? 0 : '-0.03em',
           transition: `
             letter-spacing 1.5s ${disturbed ? '' : 'cubic-bezier(0.81, -2, 0.68, 1)'},

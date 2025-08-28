@@ -10,7 +10,7 @@ import {
   FrontSide,
   LineBasicMaterial,
   Mesh,
-  MeshStandardMaterial,
+  MeshBasicMaterial,
   Object3D,
   Plane,
   Quaternion,
@@ -108,7 +108,7 @@ export function StaticArmorSceneComponent({
 
   const surfaceMaterial = useMemo(
     () =>
-      new MeshStandardMaterial({
+      new MeshBasicMaterial({
         color,
         opacity,
         transparent: opacity < 1,

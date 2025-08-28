@@ -2,7 +2,6 @@ import { Box, Flex } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { Var } from '../../../core/radix/var';
 import { useFullScreen } from '../../../hooks/useFullScreen';
 import { Duel } from '../../../stores/duel';
 import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
@@ -10,7 +9,7 @@ import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonCo
 import type { ThicknessRange } from '../../Armor/components/StaticArmor';
 import { Options } from './components/Options';
 import { TankSandbox } from './components/TankSandbox';
-import { NATION_COLORS, Title } from './components/TankSandbox/Title';
+import { Title } from './components/TankSandbox/Title';
 
 const tankDefinitions = await awaitableTankDefinitions;
 
@@ -40,7 +39,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const duelStore = Duel.useStore();
   const mutateDuel = Duel.useMutation();
   const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
-  const nationColors = NATION_COLORS[protagonist.nation];
 
   useEffect(() => {
     if (disturbed) {
@@ -85,9 +83,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
         left="0"
         style={{
           opacity: disturbed ? 0 : 1,
-          background: `linear-gradient(${nationColors.background
-            .map((color) => Var(`${color}-2`))
-            .join(',')})`,
+          background: 'black',
           transitionDuration: '1s',
         }}
       />
@@ -118,8 +114,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           position="relative"
         >
           <Box position="absolute" width="100%" height="100%" overflow="hidden">
-            <Title />
-
             <Box
               width="100%"
               height="100%"
@@ -145,7 +139,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
               </Box>
             </Box>
 
-            <Title foreground />
+            <Title />
 
             <Options
               skeleton={skeleton}

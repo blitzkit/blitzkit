@@ -138,7 +138,7 @@ export const TOOLS: Tool[] = [
   compareTool,
   performanceTool,
   guessTool,
-  mixerTool,
+  // mixerTool,
   // chartsTool,
   galleryTool,
   sessionTool,
