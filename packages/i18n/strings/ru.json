@@ -676,7 +676,7 @@
         "recent": "Недавние",
         "select_all": "Выбрать всё",
         "count_singular": "1 танк",
-        "count_plural": "%s1 танк",
+        "count_plural": "Танков: %s1",
         "sorting_by": "Сортировать по %s1",
         "no_tanks_found": {
           "body": "Танков не найдено.",
@@ -978,7 +978,7 @@
             "dpmEffective": "Эффективность за 60с",
             "shells": "Снарядов в барабане",
             "mostOptimalShellIndex": "Самый эффективный снаряд",
-            "shellReloads": "Reloads",
+            "shellReloads": "Перезарядка",
             "shellReload": "Перезарядка",
             "intraClip": "Между снарядами",
             "caliber": "Калибр",
@@ -1038,8 +1038,8 @@
             "shellCapacity": "Боезапас",
             "gunType": "Тип орудия",
             "penetrationAt250m": "Пробитие на 250м",
-            "burstShells": "Burst shell count",
-            "burstInterShell": "Burst inter-shell"
+            "burstShells": "Кол-во разрывных снарядов",
+            "burstInterShell": "Взрыв между снарядами"
           }
         },
         "firepower": {
@@ -1148,7 +1148,7 @@
         "last_updated": "Последнее обновление %s1",
         "search": {
           "hint": "Поиск аватаров...",
-          "results": "%s1 аватар"
+          "results": "Аватаров: %s1"
         }
       },
       "session": {
