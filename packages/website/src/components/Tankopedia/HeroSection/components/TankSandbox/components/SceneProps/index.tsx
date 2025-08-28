@@ -19,8 +19,9 @@ export function SceneProps() {
       <meshStandardMaterial
         transparent
         ref={material}
-        color={[0, 0, 0]}
+        color="black"
         roughness={1}
+        metalness={1}
       />
     </mesh>
   );

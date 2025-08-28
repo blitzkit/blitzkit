@@ -1,10 +1,10 @@
-import type { PointLightProps } from '@react-three/fiber';
+import type { SpotLightProps } from '@react-three/fiber';
 
-interface Props extends PointLightProps {
+interface Props extends SpotLightProps {
   debug?: boolean;
 }
 
-export function HelpingPointLight({ debug, ...props }: Props) {
+export function HelpingSpotLight({ debug, ...props }: Props) {
   return (
     <>
       {debug && (
