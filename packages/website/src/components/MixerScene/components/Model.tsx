@@ -1,4 +1,3 @@
-import { Vector3 } from 'three';
 import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
 import { jsxTree } from '../../../core/blitzkit/jsxTree';
 import { useModel } from '../../../hooks/useModel';
@@ -32,17 +31,6 @@ export function Model() {
   const gunTurretModel = gunTankModel.turrets[gun.turret.id];
   const gunModel = gunTurretModel.guns[gun.gun.id];
 
-  const turretDelta = new Vector3(
-    tankModel.turret_origin.x - turretTankModel.turret_origin.x,
-    tankModel.turret_origin.y - turretTankModel.turret_origin.y,
-    tankModel.turret_origin.z - turretTankModel.turret_origin.z,
-  );
-  const gunDelta = new Vector3(
-    turretModel.gun_origin.x - gunTurretModel.gun_origin.x,
-    turretModel.gun_origin.z - gunTurretModel.gun_origin.z,
-    turretModel.gun_origin.y - gunTurretModel.gun_origin.y,
-  );
-
   return (
     <group rotation={[-Math.PI / 2, 0, 0]}>
       {hullNodes.map((node) => {
@@ -55,7 +43,7 @@ export function Model() {
 
         return jsxTree(node, {
           mesh(_, props, key) {
-            return <mesh {...props} key={key} />;
+            return <mesh {...props} key={key} castShadow receiveShadow />;
           },
         });
       })}
@@ -86,7 +74,7 @@ export function Model() {
 
           return jsxTree(node, {
             mesh(_, props, key) {
-              return <mesh {...props} key={key} />;
+              return <mesh {...props} key={key} castShadow receiveShadow />;
             },
           });
         })}
@@ -126,7 +114,7 @@ export function Model() {
 
             return jsxTree(node, {
               mesh(_, props, key) {
-                return <mesh {...props} key={key} />;
+                return <mesh {...props} key={key} castShadow receiveShadow />;
               },
             });
           })}

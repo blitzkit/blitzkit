@@ -55,7 +55,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const hasDownImprovedVerticalStabilizer = useEquipment(124);
     const protagonistGun = Duel.use((state) => state.protagonist.gun);
     const protagonistTurret = Duel.use((state) => state.protagonist.turret);
-    const mutateDuel = Duel.useMutation();
     const tankModelDefinition = useTankModelDefinition();
     const turretModelDefinition =
       tankModelDefinition.turrets[protagonistTurret.id];
@@ -199,7 +198,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           localClippingEnabled: true,
           preserveDrawingBuffer: true,
         }}
-        shadows
+        shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {
           mutateTankopediaEphemeral((draft) => {

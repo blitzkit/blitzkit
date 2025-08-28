@@ -105,6 +105,7 @@ export function TankModel() {
                 key={key}
                 onPointerDown={onPointerDown}
                 castShadow
+                receiveShadow
               />
             );
           },
@@ -184,6 +185,7 @@ export function TankModel() {
                   key={key}
                   onPointerDown={onPointerDown}
                   castShadow
+                  receiveShadow
                 />
               );
             },
@@ -269,6 +271,7 @@ export function TankModel() {
                     key={key}
                     onPointerDown={onPointerDown}
                     castShadow
+                    receiveShadow
                   />
                 );
               },

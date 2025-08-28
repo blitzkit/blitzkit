@@ -1,4 +1,4 @@
-import { Environment, OrbitControls } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
 import { Model } from './components/Model';
@@ -6,16 +6,16 @@ import { Model } from './components/Model';
 export function MixerScene() {
   return (
     <Canvas
+      shadows
       camera={{
-        fov: 65,
+        fov: 45,
         position: [5, 5, -5],
       }}
     >
       <OrbitControls />
 
-      <Environment preset="lobby" />
-      {/* <ambientLight intensity={6} />
-      <pointLight position={[10, 10, 10]} /> */}
+      <directionalLight position={[10, 10, 10]} intensity={5} castShadow />
+      <directionalLight position={[-10, -10, -10]} intensity={3} castShadow />
 
       <Suspense fallback={null}>
         <Model />
