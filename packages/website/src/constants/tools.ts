@@ -127,11 +127,18 @@ export const guessTool: Tool = {
   branches: ['main', 'dev', 'opentest', 'preview'],
 };
 
+export const mixerTool: Tool = {
+  id: 'mixer',
+  button: { color: 'red' },
+  branches: ['main', 'dev', 'opentest', 'preview'],
+};
+
 export const TOOLS: Tool[] = [
   tankopediaTool,
   compareTool,
   performanceTool,
   guessTool,
+  mixerTool,
   // chartsTool,
   galleryTool,
   sessionTool,

@@ -861,6 +861,12 @@
     },
 
     "tools": {
+      "mixer": {
+        "name": "Mixer",
+        "button": "Mix and match",
+        "description": "Mix tank modules"
+      },
+
       "guess": {
         "name": "Guess the tank",
         "button": "Guess away",
