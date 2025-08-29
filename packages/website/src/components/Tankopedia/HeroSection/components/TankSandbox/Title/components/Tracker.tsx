@@ -13,10 +13,10 @@ export function Tracker({ fontSize }: Props) {
     <Box
       position="absolute"
       left="50%"
-      bottom="0"
+      top="50%"
       width="min(100%, 16rem)"
       style={{
-        transform: `translate(-50%, calc(${fontSize} / 2))`,
+        transform: `translate(-50%, calc(${fontSize} / 2 + var(--space-4)))`,
       }}
     >
       <Progress color="gray" value={progress} />
