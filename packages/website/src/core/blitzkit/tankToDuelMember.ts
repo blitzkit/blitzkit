@@ -1,6 +1,5 @@
 import {
   createDefaultProvisions,
-  ModelDefinition,
   type ProvisionDefinitions,
   type TankDefinition,
 } from '@blitzkit/core';
@@ -9,7 +8,6 @@ import { genericDefaultEquipmentMatrix } from '../../stores/duel/constants';
 
 export function tankToDuelMember(
   tank: TankDefinition,
-  model: ModelDefinition,
   provisionDefinitions: ProvisionDefinitions,
 ) {
   const turret = tank.turrets.at(-1)!;

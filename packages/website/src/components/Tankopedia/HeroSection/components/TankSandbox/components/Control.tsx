@@ -109,14 +109,14 @@ export function Controls({
       },
     );
 
-    async function handlePoseEvent(event: Pose) {
+    function handlePoseEvent(event: Pose) {
       const duel = duelStore.getState();
-      const hasImprovedVerticalStabilizer = await hasEquipment(
+      const hasImprovedVerticalStabilizer = hasEquipment(
         122,
         duel.protagonist.tank.equipment_preset,
         duel.protagonist.equipmentMatrix,
       );
-      const hasDownImprovedVerticalStabilizer = await hasEquipment(
+      const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
         duel.protagonist.tank.equipment_preset,
         duel.protagonist.equipmentMatrix,

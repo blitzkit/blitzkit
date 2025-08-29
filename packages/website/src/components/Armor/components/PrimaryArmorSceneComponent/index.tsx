@@ -80,7 +80,7 @@ export function PrimaryArmorSceneComponent({
   });
 
   useEffect(() => {
-    async function handleShellChange() {
+    function handleShellChange() {
       const duel = duelStore.getState();
       const tankopediaEphemeral = tankopediaEphemeralStore.getState();
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
@@ -97,14 +97,8 @@ export function PrimaryArmorSceneComponent({
       material.uniforms.damage.value = shell.armor_damage;
       material.uniforms.explosionRadius.value = shell.explosion_radius;
 
-      await handleProtagonistEquipmentChange(
-        duel.protagonist.equipmentMatrix,
-        true,
-      );
-      await handleAntagonistEquipmentChange(
-        duel.antagonist.equipmentMatrix,
-        true,
-      );
+      handleProtagonistEquipmentChange(duel.protagonist.equipmentMatrix, true);
+      handleAntagonistEquipmentChange(duel.antagonist.equipmentMatrix, true);
 
       invalidate();
     }
@@ -121,12 +115,12 @@ export function PrimaryArmorSceneComponent({
     function handleWireframeChange(wireframe: boolean) {
       material.wireframe = wireframe;
     }
-    async function handleProtagonistEquipmentChange(
+    function handleProtagonistEquipmentChange(
       equipment: EquipmentMatrix,
       noInvalidate = false,
     ) {
       const duel = duelStore.getState();
-      const hasEnhancedArmor = await hasEquipment(
+      const hasEnhancedArmor = hasEquipment(
         110,
         duel.protagonist.tank.equipment_preset,
         equipment,
@@ -137,7 +131,7 @@ export function PrimaryArmorSceneComponent({
 
       if (!noInvalidate) invalidate();
     }
-    async function handleAntagonistEquipmentChange(
+    function handleAntagonistEquipmentChange(
       equipment: EquipmentMatrix,
       noInvalidate = false,
     ) {
@@ -145,7 +139,7 @@ export function PrimaryArmorSceneComponent({
       const tankopediaEphemeral = tankopediaEphemeralStore.getState();
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
-      const hasCalibratedShells = await hasEquipment(
+      const hasCalibratedShells = hasEquipment(
         103,
         duel.antagonist.tank.equipment_preset,
         equipment,

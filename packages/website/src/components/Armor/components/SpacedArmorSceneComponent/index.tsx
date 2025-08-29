@@ -81,7 +81,7 @@ export function SpacedArmorSceneComponent({
   const camera = useThree((state) => state.camera);
 
   const shoot = useCallback(
-    async (
+    (
       point: Vector3,
       intersections: Intersection[],
       allowRicochet: boolean,
@@ -103,12 +103,12 @@ export function SpacedArmorSceneComponent({
         },
       };
 
-      const hasCalibratedShells = await hasEquipment(
+      const hasCalibratedShells = hasEquipment(
         103,
         antagonist.tank.equipment_preset,
         antagonist.equipmentMatrix,
       );
-      const hasEnhancedArmor = await hasEquipment(
+      const hasEnhancedArmor = hasEquipment(
         110,
         protagonist.tank.equipment_preset,
         protagonist.equipmentMatrix,
@@ -340,7 +340,7 @@ export function SpacedArmorSceneComponent({
               props.scene.children,
               true,
             );
-            const outShot = await shoot(
+            const outShot = shoot(
               lastLayer.point,
               ricochetIntersections,
               false,
@@ -386,13 +386,11 @@ export function SpacedArmorSceneComponent({
                     thickness,
                   } satisfies ArmorUserData
                 }
-                onClick={async (event) => {
+                onClick={(event) => {
                   event.stopPropagation();
-                  const shot = (await shoot(
-                    event.point,
-                    event.intersections,
-                    true,
-                  ))!;
+
+                  const shot = shoot(event.point, event.intersections, true)!;
+
                   tankopediaEphemeralStore.setState({ shot });
                 }}
               />

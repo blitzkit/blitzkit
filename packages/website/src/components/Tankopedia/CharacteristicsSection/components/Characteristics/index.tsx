@@ -21,7 +21,6 @@ const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
 ]);
 
 export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
-  const mutateDuel = Duel.useMutation();
   const crewSkills = TankopediaEphemeral.use((state) => state.skills);
   const provisions = Duel.use((state) => state.protagonist.provisions);
   const consumables = Duel.use((state) => state.protagonist.consumables);

@@ -80,12 +80,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
             relativeAgainst === TankopediaRelativeAgainst.All,
         )
         .map((tank) => {
-          const thisTankModel = modelDefinitions.models[tank.id];
-          const member = tankToDuelMember(
-            tank,
-            thisTankModel,
-            provisionDefinitions,
-          );
+          const member = tankToDuelMember(tank, provisionDefinitions);
 
           if (member.gun.shells[shellIndex] === undefined) {
             return undefined;

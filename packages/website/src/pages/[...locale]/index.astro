@@ -25,7 +25,6 @@ import { getStrings } from '../../core/i18n/getStrings';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
-const MODE = assertSecret(import.meta.env.MODE);
 const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = getStrings(Astro.params.locale);
 

@@ -14,7 +14,6 @@ import { Duel } from '../../../../../../../stores/duel';
 import './index.css';
 
 export function QuickInputs() {
-  const mutateDuel = Duel.useMutation();
   const protagonist = Duel.use((state) => state.protagonist);
   const yawInput = useRef<HTMLInputElement>(null);
   const pitchInput = useRef<HTMLInputElement>(null);

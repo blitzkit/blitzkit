@@ -165,14 +165,14 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             window.addEventListener('pointermove', handlePointerMove);
             window.addEventListener('pointerup', handlePointerUp);
           }
-          async function handlePointerMove(event: PointerEvent) {
+          function handlePointerMove(event: PointerEvent) {
             const duel = duelStore.getState();
-            const hasImprovedVerticalStabilizer = await hasEquipment(
+            const hasImprovedVerticalStabilizer = hasEquipment(
               122,
               duel.protagonist.tank.equipment_preset,
               duel.protagonist.equipmentMatrix,
             );
-            const hasDownImprovedVerticalStabilizer = await hasEquipment(
+            const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
               duel.protagonist.tank.equipment_preset,
               duel.protagonist.equipmentMatrix,
@@ -259,14 +259,14 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
             }
-            async function handlePointerMove(event: PointerEvent) {
+            function handlePointerMove(event: PointerEvent) {
               const duel = duelStore.getState();
-              const hasImprovedVerticalStabilizer = await hasEquipment(
+              const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,
               );
-              const hasDownImprovedVerticalStabilizer = await hasEquipment(
+              const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,
@@ -340,14 +340,14 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
             }
-            async function handlePointerMove(event: PointerEvent) {
+            function handlePointerMove(event: PointerEvent) {
               const duel = duelStore.getState();
-              const hasImprovedVerticalStabilizer = await hasEquipment(
+              const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,
               );
-              const hasDownImprovedVerticalStabilizer = await hasEquipment(
+              const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,

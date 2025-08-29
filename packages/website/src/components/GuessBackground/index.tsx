@@ -22,8 +22,7 @@ export function GuessBackground() {
 
   useEffect(() => {
     mutateDuel((state) => {
-      const model = modelDefinitions.models[tank.id];
-      state.protagonist = tankToDuelMember(tank, model, provisionDefinitions);
+      state.protagonist = tankToDuelMember(tank, provisionDefinitions);
     });
     mutateTankopediaEphemeral((state) => {
       state.model = modelDefinitions.models[tank.id];

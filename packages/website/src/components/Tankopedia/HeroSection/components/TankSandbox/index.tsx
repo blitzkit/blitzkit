@@ -231,7 +231,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           {display === TankopediaDisplay.StaticArmor && (
             <StaticArmor thicknessRange={thicknessRange} />
           )}
-          <Lighting display={display} />
+          <Lighting />
         </Suspense>
 
         <InitialAligner />

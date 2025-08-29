@@ -55,7 +55,7 @@ export const Duel = createContextualStore(
     model: ModelDefinition;
     provisionDefinitions: ProvisionDefinitions;
   }) => {
-    const protagonist = tankToDuelMember(tank, model, provisionDefinitions);
+    const protagonist = tankToDuelMember(tank, provisionDefinitions);
 
     return create<DuelStore>()(
       subscribeWithSelector<DuelStore>(() => ({

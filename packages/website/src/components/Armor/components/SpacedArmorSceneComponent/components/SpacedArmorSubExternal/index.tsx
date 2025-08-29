@@ -54,11 +54,9 @@ export function SpacedArmorSubExternal({
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       material.uniforms.penetration.value = shell.penetration.near;
     }
-    async function handleProtagonistEquipmentChange(
-      equipment: EquipmentMatrix,
-    ) {
+    function handleProtagonistEquipmentChange(equipment: EquipmentMatrix) {
       const duel = duelStore.getState();
-      const hasEnhancedArmor = await hasEquipment(
+      const hasEnhancedArmor = hasEquipment(
         110,
         duel.protagonist.tank.equipment_preset,
         equipment,
@@ -67,12 +65,12 @@ export function SpacedArmorSubExternal({
         ? thickness * 1.03
         : thickness;
     }
-    async function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
+    function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
       const duel = duelStore.getState();
       const tankopediaEphemeral = tankopediaEphemeralStore.getState();
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
-      const hasCalibratedShells = await hasEquipment(
+      const hasCalibratedShells = hasEquipment(
         103,
         duel.antagonist.tank.equipment_preset,
         equipment,

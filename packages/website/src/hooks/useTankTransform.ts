@@ -15,7 +15,6 @@ import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from '../core/blitzkit/modelTransform';
-import { Duel } from '../stores/duel';
 import { useTankModelDefinition } from './useTankModelDefinition';
 
 export function useTankTransform(
@@ -25,7 +24,6 @@ export function useTankTransform(
   gunContainer: RefObject<Group>,
 ) {
   const tankModelDefinition = useTankModelDefinition();
-  const duelStore = Duel.useStore();
 
   useEffect(() => {
     const trackModelDefinition = tankModelDefinition.tracks[track.id];

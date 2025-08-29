@@ -864,7 +864,8 @@
       "mixer": {
         "name": "Mixer",
         "button": "Mix and match",
-        "description": "Mix tank modules"
+        "description": "Mix tank modules",
+        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz"
       },
 
       "guess": {

@@ -1,14 +1,6 @@
-import {
-  asset,
-  coefficient,
-  isExplosive,
-  resolvePenetrationCoefficient,
-} from '@blitzkit/core';
+import { asset, isExplosive } from '@blitzkit/core';
 import { literals } from '@blitzkit/i18n';
 import { Flex, Heading, IconButton, Tooltip } from '@radix-ui/themes';
-import { debounce } from 'lodash-es';
-import { useEffect, useRef, useState } from 'react';
-import { useEquipment } from '../../../../../../hooks/useEquipment';
 import { useLocale } from '../../../../../../hooks/useLocale';
 import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
 import { Duel } from '../../../../../../stores/duel';
@@ -28,33 +20,12 @@ export function Firepower({
 }: StatsAcceptorProps & MaybeSkeletonComponentProps) {
   const mutateDuel = Duel.useMutation();
   const { strings, unwrap } = useLocale();
-  const [penetrationDistance, setPenetrationDistance] = useState(250);
-  const setPenetrationDistanceDebounced = debounce((value: number) => {
-    setPenetrationDistance(value);
-  }, 500);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
   const shell = Duel.use((state) => state.protagonist.shell);
-  const penetrationDistanceInput = useRef<HTMLInputElement>(null);
-  const hasSupercharger = useEquipment(107);
-  const hasCalibratedShells = useEquipment(103);
-  const penetrationCoefficient = coefficient([
-    hasCalibratedShells,
-    resolvePenetrationCoefficient(true, shell.type) - 1,
-  ]);
-  const penetrationLossOverDistanceCoefficient = coefficient([
-    hasSupercharger,
-    -0.6,
-  ]);
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-
-  useEffect(() => {
-    if (penetrationDistanceInput.current) {
-      penetrationDistanceInput.current.value = `${penetrationDistance}`;
-    }
-  }, [penetrationDistance]);
 
   return (
     <StatsTableWrapper>

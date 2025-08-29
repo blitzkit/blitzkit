@@ -14,7 +14,6 @@ import { TankopediaDisplay } from '../../../../../../stores/tankopediaPersistent
 import { ModelTankWrapper } from '../../../../../Armor/components/ModelTankWrapper';
 
 export function TankModel() {
-  const mutateDuel = Duel.useMutation();
   const duelStore = Duel.useStore();
   const protagonist = Duel.use((draft) => draft.protagonist);
   const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
@@ -141,14 +140,14 @@ export function TankModel() {
             window.addEventListener('pointermove', handlePointerMove);
             window.addEventListener('pointerup', handlePointerUp);
           }
-          async function handlePointerMove(event: PointerEvent) {
+          function handlePointerMove(event: PointerEvent) {
             const duel = duelStore.getState();
-            const hasImprovedVerticalStabilizer = await hasEquipment(
+            const hasImprovedVerticalStabilizer = hasEquipment(
               122,
               duel.protagonist.tank.equipment_preset,
               duel.protagonist.equipmentMatrix,
             );
-            const hasDownImprovedVerticalStabilizer = await hasEquipment(
+            const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
               duel.protagonist.tank.equipment_preset,
               duel.protagonist.equipmentMatrix,
@@ -229,14 +228,14 @@ export function TankModel() {
               window.addEventListener('pointermove', handlePointerMove);
               window.addEventListener('pointerup', handlePointerUp);
             }
-            async function handlePointerMove(event: PointerEvent) {
+            function handlePointerMove(event: PointerEvent) {
               const duel = duelStore.getState();
-              const hasImprovedVerticalStabilizer = await hasEquipment(
+              const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,
               );
-              const hasDownImprovedVerticalStabilizer = await hasEquipment(
+              const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 duel.protagonist.tank.equipment_preset,
                 duel.protagonist.equipmentMatrix,

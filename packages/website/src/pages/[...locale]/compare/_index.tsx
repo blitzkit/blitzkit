@@ -114,11 +114,7 @@ function Content() {
 
         if (tank === undefined) return;
 
-        const model = modelDefinitions.models[tank.id];
-
-        draft.members.push(
-          tankToCompareMember(tank, model, provisionDefinitions),
-        );
+        draft.members.push(tankToCompareMember(tank, provisionDefinitions));
       });
     });
   }, []);
