@@ -1,5 +1,4 @@
 import { GuessEphemeral } from '../stores/guessEphemeral';
-import { TankopediaDisplay } from '../stores/tankopediaPersistent/constants';
 import { SmartCanvas } from './SmartCanvas';
 import { Controls } from './Tankopedia/HeroSection/components/TankSandbox/components/Control';
 import { Lighting } from './Tankopedia/HeroSection/components/TankSandbox/components/Lighting';
@@ -22,7 +21,7 @@ export function GuessRenderer() {
       camera={{ position: [-5, 5, -5] }}
     >
       <Controls zoomable={false} />
-      <Lighting display={TankopediaDisplay.Model} />
+      <Lighting />
       <TankModel />
     </SmartCanvas>
   );

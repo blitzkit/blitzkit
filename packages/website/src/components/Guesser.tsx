@@ -88,7 +88,7 @@ export function Guesser() {
       position="absolute"
       bottom="0"
       left="50%"
-      style={{ transform: 'translateX(-50%)', pointerEvents: 'none' }}
+      style={{ transform: 'translateX(-50%)' }}
       width="100%"
       p="4"
       maxWidth="25rem"
@@ -138,7 +138,7 @@ export function Guesser() {
         </Card>
       )}
 
-      <Flex justify="center">
+      <Flex justify="center" style={{ userSelect: 'none' }}>
         <Text>
           {literals(strings.website.tools.guess.stats, [
             `${correctGuesses}`,
