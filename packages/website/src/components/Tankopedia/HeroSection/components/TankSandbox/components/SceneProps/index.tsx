@@ -3,7 +3,7 @@ import { clamp } from 'lodash-es';
 import { useRef } from 'react';
 import { MeshStandardMaterial } from 'three';
 
-const SIZE = 2 ** 6;
+const SIZE = 2 ** 5;
 
 export function SceneProps() {
   const material = useRef<MeshStandardMaterial>(null);

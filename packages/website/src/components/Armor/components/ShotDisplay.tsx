@@ -16,6 +16,7 @@ import {
   Path,
   Quaternion,
 } from 'three';
+import { isHalloween } from '../../../core/blitzkit/isHalloween';
 import { LocaleProvider, useLocale } from '../../../hooks/useLocale';
 import {
   TankopediaEphemeral,
@@ -72,11 +73,8 @@ export function ShotDisplay() {
   });
 
   useEffect(() => {
-    const data = new Date();
-    const isHalloween = data.getMonth() === 9 && data.getDate() === 31;
-
     if (
-      isHalloween &&
+      isHalloween() &&
       shot?.splashRadius !== undefined &&
       shot.in.status === 'penetration'
     ) {
