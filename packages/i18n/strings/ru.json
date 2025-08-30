@@ -793,6 +793,9 @@
         "tank_seo_title": "%s1 - %s4 %s3 %s2 уровня | Танкопедия %s5 | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 броня, статистика, оборудование, снабжение и многое другое. %s2 УВМ, %s3hp альфа, %s4mm пробитие, %s5км/ч лучшая скорость, %s6hp здоровье.",
         "visualizers": {
+          "reload": {
+            "skip": "Пропустить"
+          },
           "assault": {
             "title": "Штурмовые снаряды"
           },
@@ -835,9 +838,7 @@
             "green_penetration": "Зелёное пробитие",
             "hide_model_under_armor": "Скрыть модель под броней",
             "opaque": "Прозрачность",
-            "dev_wireframe": "DEV: wireframe",
-            "environment": "Окружение",
-            "show_grid": "Показать сетку"
+            "dev_wireframe": "DEV: wireframe"
           },
           "screenshot": {
             "download": "Загрузить",
