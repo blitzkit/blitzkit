@@ -82,7 +82,7 @@ export function Controls({
     protagonistGunOrigin.y;
   const inspectModeInitialPosition = new Vector3(
     -8,
-    gunHeight + (naked ? 10 : 2),
+    naked ? gunHeight + 10 : 1,
     -13,
   );
 
@@ -238,7 +238,11 @@ export function Controls({
       orbitControls.current.rotateSpeed = 0.25;
 
       camera.position.copy(inspectModeInitialPosition);
-      orbitControls.current.target.set(0, gunHeight / (naked ? 4 : 2), 0);
+      orbitControls.current.target.set(
+        0,
+        gunHeight * (naked ? 1 / 4 : 7 / 8),
+        0,
+      );
       orbitControls.current.enablePan = true;
       orbitControls.current.enableZoom = true;
       camera.fov = naked ? 20 : 25;
