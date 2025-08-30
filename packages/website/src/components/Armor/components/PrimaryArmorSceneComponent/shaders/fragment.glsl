@@ -37,7 +37,7 @@ float getDistance(vec2 coord, float depth) {
 
 vec3 getPenetrationColor(bool isThreeCalibersRule, bool couldHaveRicochet) {
   if (advancedHighlighting && couldHaveRicochet) {
-    return vec3(0.0, 1.0, isThreeCalibersRule ? 0.5 : 0.0);
+    return vec3(0.0, 1.0, isThreeCalibersRule ? 1.0 : 0.0);
   }
 
   return vec3(0.0, 1.0, 0.0);
@@ -107,7 +107,7 @@ void main() {
   vec3 baseColor = vec3(1.0, splashChance * GREEN_VALUE, 0.0);
 
   if (advancedHighlighting && didRicochet) {
-    baseColor = vec3(1.0, baseColor.g, 0.5);
+    baseColor = vec3(1.0, baseColor.g, 1.0);
   }
 
   if (greenPenetration || advancedHighlighting) {
