@@ -1,8 +1,9 @@
 import { useHelper } from '@react-three/drei';
 import { times } from 'lodash-es';
 import { useRef } from 'react';
-import { SpotLight, SpotLightHelper } from 'three';
+import { Color, SpotLight, SpotLightHelper } from 'three';
 import { degToRad } from 'three/src/math/MathUtils.js';
+import { isHalloween } from '../../../../../../../core/blitzkit/isHalloween';
 import { HelpingSpotLight } from '../../../../../../HelpingSpotLight';
 
 const LIGHTS_COUNT = 5;
@@ -28,6 +29,9 @@ export function Lighting() {
           LIGHT_HEIGHT_0 * (1 - x) + LIGHT_HEIGHT_1 * x,
           LIGHT_DISTANCE * Math.cos(theta),
         ] as const;
+        const color = new Color();
+
+        if (isHalloween()) color.set(1, 0.25, 0.25);
 
         return (
           <HelpingSpotLight
@@ -36,6 +40,7 @@ export function Lighting() {
             penumbra={1}
             castShadow
             decay={1}
+            color={color}
           />
         );
       })}
