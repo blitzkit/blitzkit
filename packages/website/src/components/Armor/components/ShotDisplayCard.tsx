@@ -118,8 +118,6 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
 
   if (!shot) return null;
 
-  console.log(shot);
-
   const outTitleColor = shot.out
     ? shotStatusColors[shot.out.status]
     : undefined;

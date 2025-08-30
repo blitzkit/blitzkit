@@ -207,7 +207,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                 <StaticArmorSceneComponent
                   name={node.name}
                   thicknessRange={thicknessRange}
-                  key={node.uuid}
                   type={spaced ? ArmorType.Spaced : ArmorType.Primary}
                   thickness={thickness}
                   node={node}

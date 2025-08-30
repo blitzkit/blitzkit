@@ -14,7 +14,6 @@ export const PrimaryArmorScene = memo(() => {
   const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null);
   const gunContainer = useRef<Group>(null);
-  // const protagonist = Duel.use((draft) => draft.protagonist);
   const tank = Duel.use((state) => state.protagonist.tank);
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);

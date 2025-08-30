@@ -123,6 +123,7 @@ export function SpacedArmorSubExternal({
           return (
             <mesh
               {...props}
+              onClick={() => {}}
               key={`${key}-spaced-sub-external-exclude`}
               renderOrder={3}
               material={
