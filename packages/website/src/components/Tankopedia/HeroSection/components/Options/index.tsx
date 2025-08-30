@@ -32,7 +32,6 @@ import { useEquipment } from '../../../../../hooks/useEquipment';
 import { useFullScreen } from '../../../../../hooks/useFullScreen';
 import { useFullscreenAvailability } from '../../../../../hooks/useFullscreenAvailability';
 import { useLocale } from '../../../../../hooks/useLocale';
-import { App } from '../../../../../stores/app';
 import { Duel } from '../../../../../stores/duel';
 import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
 import { TankopediaPersistent } from '../../../../../stores/tankopediaPersistent';
@@ -42,6 +41,7 @@ import type { ThicknessRange } from '../../../../Armor/components/StaticArmor';
 import { ModuleButton } from '../../../../ModuleButtons/ModuleButton';
 import { SmallTankIcon } from '../../../../SmallTankIcon';
 import { TankSearch } from '../../../../TankSearch';
+import { screenshotReadyEvent } from '../TankSandbox/components/SceneProps';
 import { CustomShellButton } from './components/CustomShellButton';
 import { DynamicArmorSwitcher } from './components/DynamicArmorSwitcher';
 import { QuickInputs } from './components/QuickInputs';
@@ -58,19 +58,10 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   );
   const display = TankopediaEphemeral.use((state) => state.display);
   const isFullScreen = useFullScreen();
-  const greenPenetration = TankopediaPersistent.use(
-    (state) => state.greenPenetration,
-  );
-  const hideTankModelUnderArmor = TankopediaPersistent.use(
-    (state) => state.hideTankModelUnderArmor,
-  );
   const advancedHighlighting = TankopediaPersistent.use(
     (state) => state.advancedHighlighting,
   );
-  const wireframe = TankopediaPersistent.use((state) => state.wireframe);
-  const opaque = TankopediaPersistent.use((state) => state.opaque);
   const fullScreenAvailable = useFullscreenAvailability(true);
-  const developerMode = App.use((state) => state.developerMode);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
   const antagonistGun = Duel.use((state) => state.antagonist.gun);
   const antagonistShell = Duel.use((state) => state.antagonist.shell);
@@ -461,19 +452,25 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                     <Popover.Close>
                       <Button
                         onClick={() => {
-                          if (!canvas.current) return;
+                          screenshotReadyEvent.dispatch(true);
 
-                          const anchor = document.createElement('a');
+                          requestAnimationFrame(() => {
+                            if (!canvas.current) return;
 
-                          anchor.setAttribute(
-                            'download',
-                            `${protagonistTank.name}.png`,
-                          );
-                          anchor.setAttribute(
-                            'href',
-                            canvas.current.toDataURL('image/png'),
-                          );
-                          anchor.click();
+                            const anchor = document.createElement('a');
+
+                            anchor.setAttribute(
+                              'download',
+                              `${protagonistTank.name}.png`,
+                            );
+                            anchor.setAttribute(
+                              'href',
+                              canvas.current.toDataURL('image/png'),
+                            );
+                            anchor.click();
+
+                            screenshotReadyEvent.dispatch(false);
+                          });
                         }}
                       >
                         <DownloadIcon />
@@ -487,14 +484,20 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                       <Button
                         variant="outline"
                         onClick={() => {
-                          if (!canvas.current) return;
+                          screenshotReadyEvent.dispatch(true);
 
-                          canvas.current.toBlob((blob) => {
-                            if (!blob) return;
+                          requestAnimationFrame(() => {
+                            if (!canvas.current) return;
 
-                            navigator.clipboard.write([
-                              new ClipboardItem({ 'image/png': blob }),
-                            ]);
+                            canvas.current.toBlob((blob) => {
+                              if (!blob) return;
+
+                              navigator.clipboard.write([
+                                new ClipboardItem({ 'image/png': blob }),
+                              ]);
+                            });
+
+                            screenshotReadyEvent.dispatch(false);
                           });
                         }}
                       >
