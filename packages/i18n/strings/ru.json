@@ -676,7 +676,7 @@
         "recent": "Недавние",
         "select_all": "Выбрать всё",
         "count_singular": "1 танк",
-        "count_plural": "%s1 танк",
+        "count_plural": "Танков: %s1",
         "sorting_by": "Сортировать по %s1",
         "no_tanks_found": {
           "body": "Танков не найдено.",
@@ -764,6 +764,12 @@
       }
     },
     "tools": {
+      "mixer": {
+        "name": "Mixer",
+        "button": "Mix and match",
+        "description": "Mix tank modules",
+        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz"
+      },
       "guess": {
         "name": "Угадайте танк",
         "button": "Угадать",
@@ -787,6 +793,9 @@
         "tank_seo_title": "%s1 - %s4 %s3 %s2 уровня | Танкопедия %s5 | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 броня, статистика, оборудование, снабжение и многое другое. %s2 УВМ, %s3hp альфа, %s4mm пробитие, %s5км/ч лучшая скорость, %s6hp здоровье.",
         "visualizers": {
+          "reload": {
+            "skip": "Пропустить"
+          },
           "assault": {
             "title": "Штурмовые снаряды"
           },
@@ -829,9 +838,7 @@
             "green_penetration": "Зелёное пробитие",
             "hide_model_under_armor": "Скрыть модель под броней",
             "opaque": "Прозрачность",
-            "dev_wireframe": "DEV: wireframe",
-            "environment": "Окружение",
-            "show_grid": "Показать сетку"
+            "dev_wireframe": "DEV: wireframe"
           },
           "screenshot": {
             "download": "Загрузить",
@@ -978,7 +985,7 @@
             "dpmEffective": "Эффективность за 60с",
             "shells": "Снарядов в барабане",
             "mostOptimalShellIndex": "Самый эффективный снаряд",
-            "shellReloads": "Reloads",
+            "shellReloads": "Перезарядка",
             "shellReload": "Перезарядка",
             "intraClip": "Между снарядами",
             "caliber": "Калибр",
@@ -1038,8 +1045,8 @@
             "shellCapacity": "Боезапас",
             "gunType": "Тип орудия",
             "penetrationAt250m": "Пробитие на 250м",
-            "burstShells": "Burst shell count",
-            "burstInterShell": "Burst inter-shell"
+            "burstShells": "Кол-во разрывных снарядов",
+            "burstInterShell": "Взрыв между снарядами"
           }
         },
         "firepower": {
@@ -1148,7 +1155,7 @@
         "last_updated": "Последнее обновление %s1",
         "search": {
           "hint": "Поиск аватаров...",
-          "results": "%s1 аватар"
+          "results": "Аватаров: %s1"
         }
       },
       "session": {

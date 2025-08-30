@@ -764,6 +764,12 @@
       }
     },
     "tools": {
+      "mixer": {
+        "name": "Mixer",
+        "button": "Mix and match",
+        "description": "Mix tank modules",
+        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz"
+      },
       "guess": {
         "name": "Guess the tank",
         "button": "Guess away",
@@ -787,6 +793,9 @@
         "tank_seo_title": "%s1 - Рівень %s2 %s3 %s4 | %s5 Танкопедія | WoT Blitz",
         "tank_seo_description": "%s1 броня, характеристики, обладнання, амуніція та більше. %s2 шкода на хвилину, %s3 разова шкода, %s4 мм пробиття, %s5 км/год максимальна швидкість, %s6 міцність.",
         "visualizers": {
+          "reload": {
+            "skip": "Skip"
+          },
           "assault": {
             "title": "Assault shells"
           },
@@ -829,9 +838,7 @@
             "green_penetration": "Зелене пробиття",
             "hide_model_under_armor": "Hide model under armor",
             "opaque": "Opaque",
-            "dev_wireframe": "DEV: wireframe",
-            "environment": "Environment",
-            "show_grid": "Show grid"
+            "dev_wireframe": "DEV: wireframe"
           },
           "screenshot": {
             "download": "Завантажити",
