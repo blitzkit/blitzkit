@@ -793,6 +793,9 @@
         "tank_seo_title": "%s1 - Nivel %s2 %s3 %s4 | %s5 Tankopedia | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "%s1 blindaje, estadisticas, equipamiento, proviciones y mas.\n%s2 DPM, %3hp alfa, %s4mm penetracion, %s5kph velocidad maxima, %s6 hp salud",
         "visualizers": {
+          "reload": {
+            "skip": "Skip"
+          },
           "assault": {
             "title": "Assault shells"
           },
@@ -835,9 +838,7 @@
             "green_penetration": "Penetración verde",
             "hide_model_under_armor": "Ocultar modelo bajo la armadura",
             "opaque": "Opaco",
-            "dev_wireframe": "DEV: wireframe",
-            "environment": "Entorno",
-            "show_grid": "Mostrar cuadrícula"
+            "dev_wireframe": "DEV: wireframe"
           },
           "screenshot": {
             "download": "Descargar",
