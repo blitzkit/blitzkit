@@ -1,8 +1,10 @@
-import { Box, Code } from '@radix-ui/themes';
+import { DoubleArrowRightIcon } from '@radix-ui/react-icons';
+import { Box, Button, Code } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { Quicklime, type QuicklimeCallback } from 'quicklime';
 import { useCallback, useEffect, useRef } from 'react';
 import { Var } from '../../../../../../../core/radix/var';
+import { useLocale } from '../../../../../../../hooks/useLocale';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
 import { VisualizerCard } from '../VisualizerCard';
 import { Shell } from './components/Shell';
@@ -19,6 +21,8 @@ export interface ReloadUpdateData {
 export const reloadUpdate = new Quicklime<ReloadUpdateData>();
 
 export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
+  const { strings } = useLocale();
+
   const reloadCircle = useRef<HTMLDivElement>(null);
   const reloadCore = useRef<HTMLDivElement>(null);
   const reloadGlow = useRef<HTMLDivElement>(null);
@@ -246,7 +250,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
 
       <Code
         ref={progressTime}
-        size="1"
+        size="2"
         variant="ghost"
         weight="bold"
         color="gray"
@@ -255,14 +259,14 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           position: 'absolute',
           top: '50%',
           right: 'calc(50% + var(--space-8))',
-          transform: 'translateX(50%)',
+          transform: 'translate(50%, -50%)',
         }}
       >
         0.00
       </Code>
       <Code
         ref={totalTime}
-        size="1"
+        size="2"
         variant="ghost"
         weight="bold"
         color="gray"
@@ -270,7 +274,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           position: 'absolute',
           top: '50%',
           left: 'calc(50% + var(--space-8))',
-          transform: 'translateX(-50%)',
+          transform: 'translate(-50%, -50%)',
         }}
       >
         0.00
@@ -290,6 +294,25 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         width="100%"
         height="100%"
       />
+
+      <Button
+        size="1"
+        variant="outline"
+        color="gray"
+        highContrast
+        style={{
+          position: 'absolute',
+          top: '68%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+        onClick={() => {
+          state.current = Math.floor(state.current + 1);
+        }}
+      >
+        {strings.website.tools.tankopedia.visualizers.reload.skip}
+        <DoubleArrowRightIcon />
+      </Button>
     </VisualizerCard>
   );
 }
