@@ -52,21 +52,11 @@ function LayerEntry({
 
       <td>
         {layer.type === null && (
-          <>
-            <Text size="2" color={shotStatusColor}>
-              {literals(strings.common.units.mm, [
-                Math.round(layer.distance * 1000).toLocaleString(locale),
-              ])}
-            </Text>
-
-            <Text size="2" color="gray">
-              {literals(
-                strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
-                  .ricochet_loss,
-                [Math.max(-100, -50 * layer.distance).toFixed(0)],
-              )}
-            </Text>
-          </>
+          <Text size="2" color={shotStatusColor}>
+            {literals(strings.common.units.mm, [
+              Math.round(layer.distance * 1000).toLocaleString(locale),
+            ])}
+          </Text>
         )}
 
         {layer.type === ArmorType.External && (
@@ -93,9 +83,19 @@ function LayerEntry({
         )}
       </td>
 
-      {(layer.type === ArmorType.Primary ||
-        layer.type === ArmorType.Spaced) && (
-        <td>
+      <td>
+        {layer.type === null && (
+          <Text size="2" color="gray">
+            {literals(
+              strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
+                .ricochet_loss,
+              [Math.max(-100, -50 * layer.distance).toFixed(0)],
+            )}
+          </Text>
+        )}
+
+        {(layer.type === ArmorType.Primary ||
+          layer.type === ArmorType.Spaced) && (
           <Text size="2" color="gray">
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
@@ -103,8 +103,8 @@ function LayerEntry({
               [Math.round(layer.thickness).toLocaleString(locale)],
             )}
           </Text>
-        </td>
-      )}
+        )}
+      </td>
     </tr>
   );
 }
@@ -117,6 +117,8 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
   const { locale, strings } = useLocale();
 
   if (!shot) return null;
+
+  console.log(shot);
 
   const outTitleColor = shot.out
     ? shotStatusColors[shot.out.status]
