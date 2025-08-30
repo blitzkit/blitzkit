@@ -12,7 +12,6 @@ export interface TankopediaPersistentStore {
   wireframe: boolean;
   opaque: boolean;
   advancedHighlighting: boolean;
-  showGrid: boolean;
   greenPenetration: boolean;
   showSpacedArmor: boolean;
   showExternalModules: boolean;
@@ -34,7 +33,6 @@ export const TankopediaPersistent = createContextualStore(() =>
         wireframe: false,
         opaque: false,
         advancedHighlighting: false,
-        showGrid: true,
         greenPenetration: false,
         showSpacedArmor: true,
         showExternalModules: true,

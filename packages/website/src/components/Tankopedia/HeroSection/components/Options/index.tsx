@@ -12,7 +12,6 @@ import {
   EnterFullScreenIcon,
   ExitFullScreenIcon,
   EyeOpenIcon,
-  GearIcon,
 } from '@radix-ui/react-icons';
 import {
   Button,
@@ -59,7 +58,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   );
   const display = TankopediaEphemeral.use((state) => state.display);
   const isFullScreen = useFullScreen();
-  const showGrid = TankopediaPersistent.use((state) => state.showGrid);
   const greenPenetration = TankopediaPersistent.use(
     (state) => state.greenPenetration,
   );
@@ -448,106 +446,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   >
                     {strings.website.tools.tankopedia.sandbox.poses.default}
                   </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" color="gray">
-                    <GearIcon />
-                  </IconButton>
-                </DropdownMenu.Trigger>
-
-                <DropdownMenu.Content>
-                  {display === TankopediaDisplay.DynamicArmor && (
-                    <>
-                      <DropdownMenu.Label>
-                        {
-                          strings.website.tools.tankopedia.sandbox.settings
-                            .armor
-                        }
-                      </DropdownMenu.Label>
-
-                      <DropdownMenu.CheckboxItem
-                        checked={greenPenetration}
-                        onCheckedChange={(checked) => {
-                          mutateTankopediaPersistent((draft) => {
-                            draft.greenPenetration = checked;
-                          });
-                        }}
-                      >
-                        {
-                          strings.website.tools.tankopedia.sandbox.settings
-                            .green_penetration
-                        }
-                      </DropdownMenu.CheckboxItem>
-
-                      <DropdownMenu.CheckboxItem
-                        checked={hideTankModelUnderArmor}
-                        onCheckedChange={(checked) => {
-                          mutateTankopediaPersistent((draft) => {
-                            draft.hideTankModelUnderArmor = checked;
-                          });
-                        }}
-                      >
-                        {
-                          strings.website.tools.tankopedia.sandbox.settings
-                            .hide_model_under_armor
-                        }
-                      </DropdownMenu.CheckboxItem>
-
-                      <DropdownMenu.CheckboxItem
-                        checked={opaque}
-                        onCheckedChange={(checked) => {
-                          mutateTankopediaPersistent((draft) => {
-                            draft.opaque = checked;
-                          });
-                        }}
-                      >
-                        {
-                          strings.website.tools.tankopedia.sandbox.settings
-                            .opaque
-                        }
-                      </DropdownMenu.CheckboxItem>
-
-                      {developerMode && (
-                        <DropdownMenu.CheckboxItem
-                          checked={wireframe}
-                          onCheckedChange={(checked) => {
-                            mutateTankopediaPersistent((draft) => {
-                              draft.wireframe = checked;
-                            });
-                          }}
-                        >
-                          {
-                            strings.website.tools.tankopedia.sandbox.settings
-                              .dev_wireframe
-                          }
-                        </DropdownMenu.CheckboxItem>
-                      )}
-                    </>
-                  )}
-
-                  <DropdownMenu.Label>
-                    {
-                      strings.website.tools.tankopedia.sandbox.settings
-                        .environment
-                    }
-                  </DropdownMenu.Label>
-
-                  <DropdownMenu.CheckboxItem
-                    checked={showGrid}
-                    onCheckedChange={(checked) => {
-                      mutateTankopediaPersistent((draft) => {
-                        draft.showGrid = checked;
-                      });
-                    }}
-                  >
-                    {
-                      strings.website.tools.tankopedia.sandbox.settings
-                        .show_grid
-                    }
-                  </DropdownMenu.CheckboxItem>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
 

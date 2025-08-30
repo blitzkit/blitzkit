@@ -942,9 +942,7 @@
             "green_penetration": "Green penetration",
             "hide_model_under_armor": "Hide model under armor",
             "opaque": "Opaque",
-            "dev_wireframe": "DEV: wireframe",
-            "environment": "Environment",
-            "show_grid": "Show grid"
+            "dev_wireframe": "DEV: wireframe"
           },
 
           "screenshot": {
