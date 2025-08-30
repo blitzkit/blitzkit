@@ -37,44 +37,48 @@ function LayerEntry({
   const { locale, strings } = useLocale();
 
   return (
-    <Flex align="center" gap="2">
-      <Text size="1" color="gray" style={{ width: 12 }}>
-        {layerIndex}
-      </Text>
-      <Text size="2" color={shotStatusColor} style={{ width: 48 }}>
-        {layerName}
-      </Text>
+    <tr>
+      <td>
+        <Text size="1" color="gray">
+          {layerIndex}
+        </Text>
+      </td>
 
-      {layer.type === null && (
-        <>
-          <Text size="2" color={shotStatusColor} style={{ width: 64 }}>
+      <td>
+        <Text size="2" color={shotStatusColor}>
+          {layerName}
+        </Text>
+      </td>
+
+      <td>
+        {layer.type === null && (
+          <>
+            <Text size="2" color={shotStatusColor}>
+              {literals(strings.common.units.mm, [
+                Math.round(layer.distance * 1000).toLocaleString(locale),
+              ])}
+            </Text>
+
+            <Text size="2" color="gray">
+              {literals(
+                strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
+                  .ricochet_loss,
+                [Math.max(-100, -50 * layer.distance).toFixed(0)],
+              )}
+            </Text>
+          </>
+        )}
+
+        {layer.type === ArmorType.External && (
+          <Text size="2" color={shotStatusColor}>
             {literals(strings.common.units.mm, [
-              Math.round(layer.distance * 1000).toLocaleString(locale),
+              Math.round(layer.thickness).toLocaleString(locale),
             ])}
           </Text>
-
-          <Text size="2" color="gray">
-            {literals(
-              strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
-                .ricochet_loss,
-              [Math.max(-100, -50 * layer.distance).toFixed(0)],
-            )}
-          </Text>
-        </>
-      )}
-
-      {layer.type === ArmorType.External && (
-        <Text size="2" color={shotStatusColor} style={{ width: 64 }}>
-          {literals(strings.common.units.mm, [
-            Math.round(layer.thickness).toLocaleString(locale),
-          ])}
-        </Text>
-      )}
-
-      {(layer.type === ArmorType.Primary ||
-        layer.type === ArmorType.Spaced) && (
-        <>
-          <Text size="2" color={shotStatusColor} style={{ width: 80 }}>
+        )}
+        {(layer.type === ArmorType.Primary ||
+          layer.type === ArmorType.Spaced) && (
+          <Text size="2" color={shotStatusColor}>
             {literals(
               angle === undefined
                 ? strings.common.units.mm
@@ -86,7 +90,12 @@ function LayerEntry({
               ],
             )}
           </Text>
+        )}
+      </td>
 
+      {(layer.type === ArmorType.Primary ||
+        layer.type === ArmorType.Spaced) && (
+        <td>
           <Text size="2" color="gray">
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
@@ -94,9 +103,9 @@ function LayerEntry({
               [Math.round(layer.thickness).toLocaleString(locale)],
             )}
           </Text>
-        </>
+        </td>
       )}
-    </Flex>
+    </tr>
   );
 }
 
@@ -115,7 +124,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
   const inTitleColor = shotStatusColors[shot.in.status];
 
   return (
-    <Card variant="classic" style={{ width: 300 }} {...props}>
+    <Card variant="classic" {...props}>
       <Flex direction="column" gap="2">
         <Flex direction="column" gap="1">
           <Text color={inTitleColor} weight="bold">
@@ -127,7 +136,12 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
             )}
           </Text>
 
-          <Flex direction="column">
+          <table
+            style={{
+              whiteSpace: 'nowrap',
+              borderSpacing: 'var(--space-1) 0',
+            }}
+          >
             {shot.in.layers.map((layer, index) => {
               const layerName =
                 strings.website.tools.tankopedia.sandbox.dynamic.shot_card
@@ -161,7 +175,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
                 />
               );
             })}
-          </Flex>
+          </table>
         </Flex>
 
         {shot.out && shot.out.layers.length > 0 && (
