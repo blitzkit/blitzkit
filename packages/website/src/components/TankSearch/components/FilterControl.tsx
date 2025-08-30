@@ -307,7 +307,7 @@ export function FilterControl({ compact }: FilterControlProps) {
         </Flex>
 
         <Flex
-          direction={{ initial: 'row', md: 'column' }}
+          direction={compact ? 'row' : { initial: 'row', md: 'column' }}
           align="start"
           gap={{ initial: '2', md: '1' }}
         >

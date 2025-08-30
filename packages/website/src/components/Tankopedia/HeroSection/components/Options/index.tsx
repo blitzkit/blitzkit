@@ -319,6 +319,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             <Text color="gray" size="2">
               {strings.website.tools.tankopedia.sandbox.dynamic.shooter}
             </Text>
+
             <Dialog.Root
               open={antagonistSelectorOpen}
               onOpenChange={setAntagonistSelectorOpen}
