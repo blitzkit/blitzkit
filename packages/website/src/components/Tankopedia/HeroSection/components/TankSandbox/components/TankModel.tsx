@@ -16,14 +16,12 @@ import { ModelTankWrapper } from '../../../../../Armor/components/ModelTankWrapp
 export function TankModel() {
   const duelStore = Duel.useStore();
   const protagonist = Duel.use((draft) => draft.protagonist);
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
   const canvas = useThree((state) => state.gl.domElement);
   const hullContainer = useRef<Group>(null);
   const turretContainer = useRef<Group>(null);
   const gunContainer = useRef<Group>(null);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition =
     tankModelDefinition.turrets[protagonist.turret.id];
@@ -63,13 +61,12 @@ export function TankModel() {
         function onPointerDown(event: ThreeEvent<PointerEvent>) {
           if (
             isTrack &&
-            tankopediaEphemeralStore.getState().display ===
-              TankopediaDisplay.Model
+            TankopediaEphemeral.state.display === TankopediaDisplay.Model
           ) {
             position.set(event.clientX, event.clientY);
             event.stopPropagation();
 
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.controlsEnabled = false;
             });
 
@@ -88,7 +85,7 @@ export function TankModel() {
           translateTexture(deltaX + deltaY);
         }
         function handlePointerUp() {
-          mutateTankopediaEphemeral((draft) => {
+          TankopediaEphemeral.mutate((draft) => {
             draft.controlsEnabled = true;
           });
 
@@ -130,10 +127,10 @@ export function TankModel() {
 
             position.set(event.clientX, event.clientY);
 
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.controlsEnabled = false;
             });
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.shot = undefined;
               draft.highlightArmor = undefined;
             });
@@ -169,7 +166,7 @@ export function TankModel() {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.controlsEnabled = true;
             });
             window.removeEventListener('pointermove', handlePointerMove);
@@ -213,10 +210,10 @@ export function TankModel() {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = false;
               });
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
               });
@@ -255,7 +252,7 @@ export function TankModel() {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = true;
               });
               window.removeEventListener('pointermove', handlePointerMove);

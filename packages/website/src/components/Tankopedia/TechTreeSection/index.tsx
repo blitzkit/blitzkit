@@ -21,7 +21,6 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
   const { locale, strings } = useLocale();
   const master = Duel.use((state) => state.protagonist.tank);
   const xpMultiplier = TankopediaEphemeral.use((state) => state.xpMultiplier);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const container = useRef<HTMLDivElement>(null);
   const lines = useMemo(() => {
     function extend(line: Line): Line[] {
@@ -148,7 +147,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
                   cursor: 'pointer',
                 }}
                 onClick={() => {
-                  mutateTankopediaEphemeral((draft) => {
+                  TankopediaEphemeral.mutate((draft) => {
                     draft.xpMultiplier = multiplier;
                   });
                 }}

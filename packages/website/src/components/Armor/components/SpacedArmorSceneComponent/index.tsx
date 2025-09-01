@@ -76,7 +76,6 @@ export function SpacedArmorSceneComponent({
   clip,
   ...props
 }: SpacedArmorSceneComponentProps) {
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const duelStore = Duel.useStore();
   const camera = useThree((state) => state.camera);
 
@@ -88,7 +87,7 @@ export function SpacedArmorSceneComponent({
       remainingPenetrationInput?: number,
     ) => {
       const { antagonist, protagonist } = duelStore.getState();
-      const { customShell } = tankopediaEphemeralStore.getState();
+      const { customShell } = TankopediaEphemeral.state;
       const shell = customShell ?? antagonist.shell;
       const cameraNormal = camera.position.clone().sub(point).normalize();
       const shot: Shot = {
@@ -391,7 +390,9 @@ export function SpacedArmorSceneComponent({
 
                   const shot = shoot(event.point, event.intersections, true)!;
 
-                  tankopediaEphemeralStore.setState({ shot });
+                  TankopediaEphemeral.mutate((draft) => {
+                    draft.shot = shot;
+                  });
                 }}
               />
             );

@@ -28,9 +28,8 @@ export function Page({ id }: PageProps) {
       <App.Provider>
         <TankopediaPersistent.Provider>
           <Duel.Provider data={{ provisionDefinitions, model, tank }}>
-            <TankopediaEphemeral.Provider data={model}>
-              <Content />
-            </TankopediaEphemeral.Provider>
+            <TankopediaEphemeral.Provider args={model} />
+            <Content />
           </Duel.Provider>
         </TankopediaPersistent.Provider>
       </App.Provider>

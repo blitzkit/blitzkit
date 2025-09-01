@@ -10,7 +10,6 @@ export function StatSearch(props: FlexProps) {
   const { strings } = useLocale();
   const [searching, setSearching] = useState(false);
   const input = useRef<HTMLInputElement>(null);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const count = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const search = useCallback(() => {
@@ -34,14 +33,14 @@ export function StatSearch(props: FlexProps) {
         count.current.textContent = '';
 
         setSearching(false);
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.statSearch = undefined;
         });
         return;
       }
 
       setSearching(false);
-      mutateTankopediaEphemeral((draft) => {
+      TankopediaEphemeral.mutate((draft) => {
         draft.statSearch = input.current!.value;
       });
     }, 500),

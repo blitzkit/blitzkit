@@ -73,7 +73,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasEnhancedArmor = useEquipment(110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
   const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const { strings, unwrap } = useLocale();
   const revealed = TankopediaEphemeral.use((state) => state.revealed);
   const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
@@ -196,7 +195,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 mutateDuel((draft) => {
                   draft.antagonist.shell = thisShell;
                 });
-                mutateTankopediaEphemeral((draft) => {
+                TankopediaEphemeral.mutate((draft) => {
                   draft.shot = undefined;
                   draft.customShell = undefined;
                 });
@@ -235,7 +234,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   ? 0
                   : 1;
               });
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.shot = undefined;
               });
             }}
@@ -260,7 +259,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   ? 0
                   : -1;
               });
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.shot = undefined;
               });
             }}
@@ -367,7 +366,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             variant="classic"
             value={`${disturbed ? display : -1}`}
             onValueChange={(value) => {
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.disturbed = true;
                 draft.display = Number(value);
               });

@@ -29,7 +29,6 @@ export function SpacedArmorSubExternal({
   variant,
   clip,
 }: SpacedArmorSubExternalProps) {
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const duelStore = Duel.useStore();
   const material = new ShaderMaterial({
     fragmentShader,
@@ -50,7 +49,7 @@ export function SpacedArmorSubExternal({
   useEffect(() => {
     function handleShellChange() {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = tankopediaEphemeralStore.getState();
+      const tankopediaEphemeral = TankopediaEphemeral.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       material.uniforms.penetration.value = shell.penetration.near;
     }
@@ -67,7 +66,7 @@ export function SpacedArmorSubExternal({
     }
     function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = tankopediaEphemeralStore.getState();
+      const tankopediaEphemeral = TankopediaEphemeral.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
       const hasCalibratedShells = hasEquipment(
@@ -91,10 +90,7 @@ export function SpacedArmorSubExternal({
 
     const unsubscribes = [
       duelStore.subscribe((state) => state.antagonist.shell, handleShellChange),
-      tankopediaEphemeralStore.subscribe(
-        (state) => state.customShell,
-        handleShellChange,
-      ),
+      TankopediaEphemeral.on((state) => state.customShell, handleShellChange),
       duelStore.subscribe(
         (state) => state.protagonist.equipmentMatrix,
         handleProtagonistEquipmentChange,

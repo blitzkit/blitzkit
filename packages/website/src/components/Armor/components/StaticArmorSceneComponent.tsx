@@ -69,8 +69,6 @@ export function StaticArmorSceneComponent({
   onPointerDown,
   ...props
 }: StaticArmorSceneComponentProps) {
-  const mutateTankopediaEphemeralStore = TankopediaEphemeral.useMutation();
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const camera = useThree((state) => state.camera);
   const x = thickness / thicknessRange.value;
   const xClamped = clamp(x, 0, 1);
@@ -166,7 +164,7 @@ export function StaticArmorSceneComponent({
     }
 
     const unsubscribes = [
-      tankopediaEphemeralStore.subscribe(
+      TankopediaEphemeral.on(
         (state) => state.highlightArmor?.name,
         handleHighlightArmor,
       ),
@@ -238,7 +236,7 @@ export function StaticArmorSceneComponent({
 
                 event.stopPropagation();
 
-                const { editStatic } = tankopediaEphemeralStore.getState();
+                const { editStatic } = TankopediaEphemeral.state;
 
                 const bounds = new Box3().setFromObject(event.object);
                 const point = bounds.min
@@ -259,7 +257,7 @@ export function StaticArmorSceneComponent({
                 const thicknessAngled =
                   thickness / Math.sin(Math.PI / 2 - angle);
 
-                mutateTankopediaEphemeralStore((draft) => {
+                TankopediaEphemeral.mutate((draft) => {
                   draft.highlightArmor = {
                     type: props.type,
                     name,

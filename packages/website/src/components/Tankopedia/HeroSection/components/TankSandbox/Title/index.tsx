@@ -14,14 +14,13 @@ export function Title() {
       ? '2rem'
       : `min(16vh, ${125 / name.length}vw)`
     : `min(12vh, ${75 / name.length}vw)`;
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   return (
     <Flex
       onPointerDown={(event) => {
         event.preventDefault();
 
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.revealed = true;
         });
       }}

@@ -7,7 +7,6 @@ import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemera
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
   const mutateDuel = Duel.useMutation();
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const isDynamicArmorActive = Duel.use((state) =>
     state.protagonist.consumables.includes(73),
   );
@@ -33,7 +32,7 @@ export function DynamicArmorSwitcher() {
             }
           }
         });
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.shot = undefined;
         });
       }}

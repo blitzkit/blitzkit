@@ -41,28 +41,27 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
 
   return (
     <LocaleProvider locale={locale}>
-      <TankopediaEphemeral.Provider data={model}>
-        <App.Provider>
-          <TankopediaPersistent.Provider>
-            <Duel.Provider
-              data={{ tank, model, provisionDefinitions: provisionDefinitions }}
-            >
-              <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
-                <HeroSection skeleton={skeleton} />
-                <MetaSection />
-                <CalloutsSection />
-                {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
-                  <TechTreeSection skeleton={skeleton} />
-                )}
-                <CharacteristicsSection skeleton={skeleton} />
-                <GameModeSection />
-                {guide && <GuideSection guide={guide} />}
-                <VideoSection skeleton={skeleton} />
-              </PageWrapper>
-            </Duel.Provider>
-          </TankopediaPersistent.Provider>
-        </App.Provider>
-      </TankopediaEphemeral.Provider>
+      <TankopediaEphemeral.Provider args={model} />
+      <App.Provider>
+        <TankopediaPersistent.Provider>
+          <Duel.Provider
+            data={{ tank, model, provisionDefinitions: provisionDefinitions }}
+          >
+            <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
+              <HeroSection skeleton={skeleton} />
+              <MetaSection />
+              <CalloutsSection />
+              {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
+                <TechTreeSection skeleton={skeleton} />
+              )}
+              <CharacteristicsSection skeleton={skeleton} />
+              <GameModeSection />
+              {guide && <GuideSection guide={guide} />}
+              <VideoSection skeleton={skeleton} />
+            </PageWrapper>
+          </Duel.Provider>
+        </TankopediaPersistent.Provider>
+      </App.Provider>
     </LocaleProvider>
   );
 }

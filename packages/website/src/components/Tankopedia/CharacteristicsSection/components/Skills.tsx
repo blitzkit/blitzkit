@@ -14,7 +14,6 @@ import { ConfigurationChildWrapper } from './ConfigurationChildWrapper';
 
 export function Skills() {
   const skillLevels = TankopediaEphemeral.use((state) => state.skills);
-  const mutateTankopediaTemporary = TankopediaEphemeral.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -46,7 +45,7 @@ export function Skills() {
           variant="ghost"
           color="red"
           onClick={() => {
-            mutateTankopediaTemporary((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               Object.keys(draft.skills).forEach((skill) => {
                 draft.skills[skill] = 0;
               });
@@ -58,7 +57,7 @@ export function Skills() {
         <Button
           variant="ghost"
           onClick={() => {
-            mutateTankopediaTemporary((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               Object.keys(draft.skills).forEach((skill) => {
                 draft.skills[skill] = 7;
               });
@@ -72,7 +71,7 @@ export function Skills() {
       <CrewSkillManager
         skillLevels={skillLevels}
         onChange={(skills) => {
-          mutateTankopediaTemporary((draft) => {
+          TankopediaEphemeral.mutate((draft) => {
             draft.skills = skills;
           });
         }}

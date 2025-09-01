@@ -26,9 +26,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
     (state) => state.showPrimaryArmor,
   );
   const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const editStatic = TankopediaEphemeral.use((state) => state.editStatic);
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const { strings } = useLocale();
 
   return (
@@ -55,7 +53,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
             mutateTankopediaPersistent((draft) => {
               draft.showPrimaryArmor = !draft.showPrimaryArmor;
             });
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.highlightArmor = undefined;
             });
           }}
@@ -96,7 +94,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
             mutateTankopediaPersistent((draft) => {
               draft.showSpacedArmor = !draft.showSpacedArmor;
             });
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.highlightArmor = undefined;
             });
           }}
@@ -135,7 +133,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
             mutateTankopediaPersistent((draft) => {
               draft.showExternalModules = !draft.showExternalModules;
             });
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.highlightArmor = undefined;
             });
           }}
@@ -168,7 +166,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
             gap="2"
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.editStatic = !draft.editStatic;
                 draft.highlightArmor = undefined;
               });
@@ -186,9 +184,9 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
           size="1"
           variant="ghost"
           onClick={() => {
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.editStatic = false;
-              draft.model = tankopediaEphemeralStore.getInitialState().model;
+              draft.model = TankopediaEphemeral.initial.model;
             });
           }}
         >

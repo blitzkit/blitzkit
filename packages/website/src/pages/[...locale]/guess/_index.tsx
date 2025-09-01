@@ -43,11 +43,12 @@ function Container() {
   const model = modelDefinitions.models[tank.id];
 
   return (
-    <TankopediaEphemeral.Provider data={model}>
+    <>
+      <TankopediaEphemeral.Provider args={model} />
       <Duel.Provider data={{ tank, model, provisionDefinitions }}>
         <Content />
       </Duel.Provider>
-    </TankopediaEphemeral.Provider>
+    </>
   );
 }
 

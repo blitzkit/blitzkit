@@ -32,9 +32,7 @@ export function Controls({
   zoomable = true,
   enableRotate = true,
 }: ControlsProps) {
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const duelStore = Duel.useStore();
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const camera = useThree((state) => state.camera as PerspectiveCamera);
   const canvas = useThree((state) => state.gl.domElement);
   const orbitControls = useRef<OrbitControlsClass>(null);
@@ -102,7 +100,7 @@ export function Controls({
   });
 
   useEffect(() => {
-    const unsubscribeTankopediaEphemeral = tankopediaEphemeralStore.subscribe(
+    const unsubscribeTankopediaEphemeral = TankopediaEphemeral.on(
       (state) => state.controlsEnabled,
       (enabled) => {
         if (orbitControls.current) orbitControls.current.enabled = enabled;
@@ -222,7 +220,7 @@ export function Controls({
     }
 
     function disturb() {
-      mutateTankopediaEphemeral((draft) => {
+      TankopediaEphemeral.mutate((draft) => {
         draft.disturbed = true;
       });
     }
@@ -268,7 +266,7 @@ export function Controls({
       enableZoom={zoomable}
       zoomSpeed={zoomable ? undefined : 0}
       ref={orbitControls}
-      enabled={tankopediaEphemeralStore.getState().controlsEnabled}
+      enabled={TankopediaEphemeral.state.controlsEnabled}
       enableDamping={false}
       autoRotateSpeed={1 / 4}
     />

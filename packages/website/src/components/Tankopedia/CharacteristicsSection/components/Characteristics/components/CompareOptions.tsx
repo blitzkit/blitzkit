@@ -13,7 +13,6 @@ export function CompareOptions(props: FlexProps) {
     (state) => state.relativeAgainst,
   );
   const tank = Duel.use((state) => state.protagonist.tank);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -33,7 +32,7 @@ export function CompareOptions(props: FlexProps) {
         size="1"
         value={`${relativeAgainst}`}
         onValueChange={(value) => {
-          mutateTankopediaEphemeral((draft) => {
+          TankopediaEphemeral.mutate((draft) => {
             draft.relativeAgainst = Number(value) as TankopediaRelativeAgainst;
           });
         }}

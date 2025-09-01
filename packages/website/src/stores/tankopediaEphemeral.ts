@@ -4,13 +4,11 @@ import {
   type ModelDefinition,
 } from '@blitzkit/core';
 import type { Vector3 } from 'three';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { Varuna } from 'varuna';
 import type { ArmorType } from '../components/Armor/components/SpacedArmorScene';
 import type { ExternalModuleVariant } from '../components/Armor/components/SpacedArmorSceneComponent';
 import type { XP_MULTIPLIERS } from '../components/Tankopedia/TechTreeSection';
 import { awaitableSkillDefinitions } from '../core/awaitables/skillDefinitions';
-import { createContextualStore } from '../core/zustand/createContextualStore';
 import { TankopediaDisplay } from './tankopediaPersistent/constants';
 
 export interface ShotLayerBase {
@@ -109,20 +107,17 @@ interface TankopediaEphemeral {
 
 const skillDefinitions = await awaitableSkillDefinitions;
 
-export const TankopediaEphemeral = createContextualStore(
-  (model: ModelDefinition) => {
-    return create<TankopediaEphemeral>()(
-      subscribeWithSelector<TankopediaEphemeral>(() => ({
-        disturbed: false,
-        revealed: false,
-        relativeAgainst: TankopediaRelativeAgainst.Class,
-        editStatic: false,
-        skills: createDefaultSkills(skillDefinitions),
-        model,
-        controlsEnabled: true,
-        xpMultiplier: 1,
-        display: TankopediaDisplay.Model,
-      })),
-    );
-  },
-);
+export const TankopediaEphemeral = new Varuna<
+  TankopediaEphemeral,
+  ModelDefinition
+>((model) => ({
+  disturbed: false,
+  revealed: false,
+  relativeAgainst: TankopediaRelativeAgainst.Class,
+  editStatic: false,
+  skills: createDefaultSkills(skillDefinitions),
+  model,
+  controlsEnabled: true,
+  xpMultiplier: 1,
+  display: TankopediaDisplay.Model,
+}));

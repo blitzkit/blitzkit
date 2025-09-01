@@ -46,7 +46,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
   const canvas = useThree((state) => state.gl.domElement);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const duelStore = Duel.useStore();
   const maskOrigin =
     gunModelDefinition.mask === undefined
@@ -155,10 +154,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
 
             position.set(event.clientX, event.clientY);
 
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.controlsEnabled = false;
             });
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.shot = undefined;
               draft.highlightArmor = undefined;
             });
@@ -194,7 +193,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            mutateTankopediaEphemeral((draft) => {
+            TankopediaEphemeral.mutate((draft) => {
               draft.controlsEnabled = true;
             });
             window.removeEventListener('pointermove', handlePointerMove);
@@ -245,10 +244,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = false;
               });
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
               });
@@ -287,7 +286,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = true;
               });
               window.removeEventListener('pointermove', handlePointerMove);
@@ -327,10 +326,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = false;
               });
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
               });
@@ -368,7 +367,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              mutateTankopediaEphemeral((draft) => {
+              TankopediaEphemeral.mutate((draft) => {
                 draft.controlsEnabled = true;
               });
 

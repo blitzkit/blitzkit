@@ -43,7 +43,6 @@ export function PrimaryArmorSceneComponent({
 }: PrimaryArmorSceneComponentProps) {
   const tankopediaPersistentStore = TankopediaPersistent.useStore();
   const duelStore = Duel.useStore();
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const material = new ShaderMaterial({
     fragmentShader,
     vertexShader,
@@ -82,7 +81,7 @@ export function PrimaryArmorSceneComponent({
   useEffect(() => {
     function handleShellChange() {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = tankopediaEphemeralStore.getState();
+      const tankopediaEphemeral = TankopediaEphemeral.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
 
       material.uniforms.caliber.value = shell.caliber;
@@ -136,7 +135,7 @@ export function PrimaryArmorSceneComponent({
       noInvalidate = false,
     ) {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = tankopediaEphemeralStore.getState();
+      const tankopediaEphemeral = TankopediaEphemeral.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
       const hasCalibratedShells = hasEquipment(
@@ -168,10 +167,7 @@ export function PrimaryArmorSceneComponent({
 
     const unsubscribes = [
       duelStore.subscribe((state) => state.antagonist.shell, handleShellChange),
-      tankopediaEphemeralStore.subscribe(
-        (state) => state.customShell,
-        handleShellChange,
-      ),
+      TankopediaEphemeral.on((state) => state.customShell, handleShellChange),
       tankopediaPersistentStore.subscribe(
         (state) => state.greenPenetration,
         handleGreenPenetrationChange,

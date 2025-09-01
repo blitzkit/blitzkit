@@ -49,7 +49,6 @@ export const fogAnimationTime = 2.5;
 export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
   ({ thicknessRange, naked }, ref) => {
     const fog = useRef(new Fog('black', forNear1, fogFar1));
-    const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
     const canvas = useRef<HTMLCanvasElement>(null);
     const hasImprovedVerticalStabilizer = useEquipment(122);
     const hasDownImprovedVerticalStabilizer = useEquipment(124);
@@ -177,13 +176,13 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
 
     useEffect(() => {
       if (display !== TankopediaDisplay.DynamicArmor) {
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.shot = undefined;
         });
       }
 
       if (display !== TankopediaDisplay.StaticArmor) {
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.highlightArmor = undefined;
         });
       }
@@ -201,7 +200,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {
-          mutateTankopediaEphemeral((draft) => {
+          TankopediaEphemeral.mutate((draft) => {
             draft.shot = undefined;
             draft.highlightArmor = undefined;
           });

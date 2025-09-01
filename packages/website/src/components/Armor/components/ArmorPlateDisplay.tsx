@@ -21,11 +21,9 @@ export function ArmorPlateDisplay() {
   const highlightArmor = TankopediaEphemeral.use(
     (state) => state.highlightArmor,
   );
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const duelStore = Duel.useStore();
   const input = useRef<HTMLInputElement>(null);
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
 
   if (highlightArmor === undefined) return null;
 
@@ -95,7 +93,7 @@ export function ArmorPlateDisplay() {
                     if (event.key === 'Enter') {
                       input.current?.blur();
 
-                      mutateTankopediaEphemeral((draft) => {
+                      TankopediaEphemeral.mutate((draft) => {
                         draft.highlightArmor = undefined;
                         const { protagonist } = duelStore.getState();
                         const tank = draft.model;
@@ -119,7 +117,7 @@ export function ArmorPlateDisplay() {
                       });
                     } else if (event.key === 'Escape') {
                       input.current?.blur();
-                      mutateTankopediaEphemeral((draft) => {
+                      TankopediaEphemeral.mutate((draft) => {
                         draft.highlightArmor = undefined;
                       });
                     }
@@ -137,7 +135,7 @@ export function ArmorPlateDisplay() {
                   mt="2"
                   color="red"
                   onClick={() => {
-                    mutateTankopediaEphemeral((draft) => {
+                    TankopediaEphemeral.mutate((draft) => {
                       if (!highlightArmor.editingPlate) return;
 
                       const index = resolveArmorIndex(highlightArmor.name);
@@ -145,8 +143,7 @@ export function ArmorPlateDisplay() {
                       if (index === undefined) return;
 
                       draft.highlightArmor = undefined;
-                      const initialState =
-                        tankopediaEphemeralStore.getInitialState();
+                      const initialState = TankopediaEphemeral.initial;
                       const { protagonist } = duelStore.getState();
                       const tank = draft.model;
                       const initialTank = initialState.model;

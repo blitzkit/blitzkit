@@ -6,10 +6,9 @@ import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemera
 
 export function InitialFogReveal() {
   const fog = useThree((state) => state.scene.fog as Fog | null);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   useEffect(() => {
-    mutateTankopediaEphemeral((draft) => {
+    TankopediaEphemeral.mutate((draft) => {
       draft.revealed = true;
     });
 

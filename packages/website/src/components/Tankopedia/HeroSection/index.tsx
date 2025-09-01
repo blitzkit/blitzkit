@@ -38,7 +38,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   }, [protagonist]);
   const duelStore = Duel.useStore();
   const mutateDuel = Duel.useMutation();
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   useEffect(() => {
     if (disturbed) {
@@ -55,7 +54,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           mutateDuel((draft) => {
             draft.antagonist.shell = shells[index];
           });
-          mutateTankopediaEphemeral((draft) => {
+          TankopediaEphemeral.mutate((draft) => {
             draft.customShell = undefined;
           });
         }

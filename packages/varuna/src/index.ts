@@ -2,24 +2,49 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 import { useEffect, useState } from 'react';
 
-export class Varuna<Type> {
+interface ProviderProps<Arguments> {
+  args: Arguments;
+}
+
+export class Varuna<Type, Arguments = void> {
   private listeners = new Set<(state: Type) => void>();
-  public initial: Type;
+
+  private initialized = false;
+  private _initial?: Type;
+  private _state?: Type;
 
   constructor(
-    public state: Type,
-    persistence?: string,
+    private creator: Type | ((...args: Arguments[]) => Type),
+    private persistence?: string,
   ) {
-    if (persistence) {
-      const dehydrated = localStorage.getItem(persistence);
+    if (typeof creator !== 'function') this.initialize(creator);
+  }
+
+  Provider({ args }: ProviderProps<Arguments>) {
+    if (typeof this.creator !== 'function') {
+      throw new Error('Provider must be used with a function creator');
+    }
+
+    this.initialize((this.creator as (...args: Arguments[]) => Type)(args));
+
+    return null;
+  }
+
+  private initialize(initial: Type) {
+    let data = initial;
+
+    if (this.persistence) {
+      const dehydrated = localStorage.getItem(this.persistence);
 
       if (dehydrated) {
         const rehydrated = JSON.parse(dehydrated) as unknown;
-        this.state = merge(this.state, rehydrated);
+        data = merge(data, rehydrated);
       }
     }
 
-    this.initial = this.state;
+    this.initialized = true;
+    this._initial = data;
+    this._state = data;
   }
 
   private dispatch() {
@@ -46,9 +71,24 @@ export class Varuna<Type> {
     this.set(produce(this.state, mutator));
   }
 
+  private assertInitialized() {
+    if (!this.initialized) throw new Error('State used before initialization');
+  }
+
+  get state() {
+    this.assertInitialized();
+    return this._state as Type;
+  }
+
   set(state: Type) {
-    this.state = state;
+    this.assertInitialized();
+    this._state = state;
     this.dispatch();
+  }
+
+  get initial() {
+    this.assertInitialized();
+    return this._initial as Type;
   }
 
   use<Slice = Type>(

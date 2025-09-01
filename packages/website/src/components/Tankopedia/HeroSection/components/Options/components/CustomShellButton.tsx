@@ -20,7 +20,6 @@ export function CustomShellButton() {
   const customShell = TankopediaEphemeral.use((state) => state.customShell);
   const gun = Duel.use((state) => state.protagonist.gun);
   const antagonistShell = Duel.use((state) => state.antagonist.shell);
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -28,7 +27,7 @@ export function CustomShellButton() {
       onOpenChange={(open) => {
         if (!open || customShell) return;
 
-        mutateTankopediaEphemeral((draft) => {
+        TankopediaEphemeral.mutate((draft) => {
           draft.customShell = antagonistShell;
         });
       }}
@@ -97,7 +96,7 @@ export function CustomShellButton() {
                       }
                     }
 
-                    mutateTankopediaEphemeral((draft) => {
+                    TankopediaEphemeral.mutate((draft) => {
                       draft.customShell = modified;
                     });
                   }}
@@ -134,7 +133,7 @@ export function CustomShellButton() {
                   defaultValue={customShell.caliber}
                   type="number"
                   onChange={(event) => {
-                    mutateTankopediaEphemeral((draft) => {
+                    TankopediaEphemeral.mutate((draft) => {
                       draft.customShell!.caliber = event.target.valueAsNumber;
                     });
                   }}
@@ -170,7 +169,7 @@ export function CustomShellButton() {
                   defaultValue={customShell.penetration.near}
                   type="number"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    mutateTankopediaEphemeral((draft) => {
+                    TankopediaEphemeral.mutate((draft) => {
                       draft.customShell!.penetration.near =
                         event.target.valueAsNumber;
                     });
@@ -226,7 +225,7 @@ export function CustomShellButton() {
                         onValueChange={([value]) => {
                           console.log('asd');
 
-                          mutateTankopediaEphemeral((draft) => {
+                          TankopediaEphemeral.mutate((draft) => {
                             draft.customShell!.normalization = value;
                           });
                         }}
@@ -255,7 +254,7 @@ export function CustomShellButton() {
                         step={Number.EPSILON}
                         defaultValue={[customShell.ricochet ?? 90]}
                         onValueChange={throttle(([value]) => {
-                          mutateTankopediaEphemeral((draft) => {
+                          TankopediaEphemeral.mutate((draft) => {
                             draft.customShell!.ricochet = value;
                           });
                         }, 1000)}
@@ -274,7 +273,7 @@ export function CustomShellButton() {
                     defaultValue={customShell.explosion_radius ?? 0}
                     type="number"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                      mutateTankopediaEphemeral((draft) => {
+                      TankopediaEphemeral.mutate((draft) => {
                         draft.customShell!.explosion_radius =
                           event.target.valueAsNumber;
                       });
@@ -310,7 +309,7 @@ export function CustomShellButton() {
               <Button
                 color="red"
                 onClick={() => {
-                  mutateTankopediaEphemeral((draft) => {
+                  TankopediaEphemeral.mutate((draft) => {
                     draft.customShell = antagonistShell;
                   });
                 }}

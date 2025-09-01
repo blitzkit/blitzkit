@@ -18,13 +18,12 @@ export function GuessBackground() {
   const guessState = GuessEphemeral.use((state) => state.guessState);
   const tank = GuessEphemeral.use((state) => state.tank);
   const mutateDuel = Duel.useMutation();
-  const mutateTankopediaEphemeral = TankopediaEphemeral.useMutation();
 
   useEffect(() => {
     mutateDuel((state) => {
       state.protagonist = tankToDuelMember(tank, provisionDefinitions);
     });
-    mutateTankopediaEphemeral((state) => {
+    TankopediaEphemeral.mutate((state) => {
       state.model = modelDefinitions.models[tank.id];
     });
   }, [tank]);

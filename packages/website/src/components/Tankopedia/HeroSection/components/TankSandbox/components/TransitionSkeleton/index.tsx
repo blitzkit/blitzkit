@@ -22,7 +22,6 @@ const skeletonMaterial = new ShaderMaterial({
 
 export function TransitionSkeleton() {
   const protagonist = Duel.use((draft) => draft.protagonist);
-  const tankopediaEphemeralStore = TankopediaEphemeral.useStore();
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
   const hullContainer = useRef<Group>(null);
@@ -34,7 +33,7 @@ export function TransitionSkeleton() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
-  const revealed = tankopediaEphemeralStore((state) => state.revealed);
+  const revealed = TankopediaEphemeral.use((state) => state.revealed);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
