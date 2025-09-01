@@ -1,15 +1,9 @@
 import { Flex, Select, Text } from '@radix-ui/themes';
 import { useLocale } from '../../hooks/useLocale';
-import {
-  TankPerformanceEphemeral,
-  type PlayerCountPeriod,
-} from '../../stores/tankPerformanceEphemeral';
+import { Performance, type PlayerCountPeriod } from '../../stores/performance';
 
 export function PlayerCountControl() {
-  const playerCountPeriod = TankPerformanceEphemeral.use(
-    (state) => state.playerCountPeriod,
-  );
-  const mutateTankPerformanceSort = TankPerformanceEphemeral.useMutation();
+  const playerCountPeriod = Performance.use((state) => state.playerCountPeriod);
   const { strings } = useLocale();
 
   return (
@@ -18,7 +12,7 @@ export function PlayerCountControl() {
       <Select.Root
         value={playerCountPeriod}
         onValueChange={(period) => {
-          mutateTankPerformanceSort((draft) => {
+          Performance.mutate((draft) => {
             draft.playerCountPeriod = period as PlayerCountPeriod;
           });
         }}

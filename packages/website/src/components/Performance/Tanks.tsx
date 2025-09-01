@@ -5,8 +5,8 @@ import { Fragment, Suspense, useEffect, useMemo, useState } from 'react';
 import { awaitableAverageDefinitions } from '../../core/awaitables/averageDefinitions';
 import { awaitableTankDefinitions } from '../../core/awaitables/tankDefinitions';
 import { filterTank } from '../../core/blitzkit/filterTank';
+import { Performance } from '../../stores/performance';
 import { $tankFilters } from '../../stores/tankFilters';
-import { TankPerformanceEphemeral } from '../../stores/tankPerformanceEphemeral';
 import { TankPerformanceSort } from '../../stores/tankPerformanceSort';
 import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
 import { RowLoader } from './RowLoader';
@@ -40,10 +40,9 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
   }
 
   const sort = TankPerformanceSort.use();
-  const tankPerformancePersistentStore = TankPerformanceEphemeral.useStore();
   const filters = useStore($tankFilters);
   const tanksSorted = useMemo(() => {
-    const { playerCountPeriod } = tankPerformancePersistentStore.getState();
+    const { playerCountPeriod } = Performance.state;
 
     switch (sort.type) {
       case 'accuracy':

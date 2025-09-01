@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { awaitableAverageDefinitions } from '../../core/awaitables/averageDefinitions';
 import { useAveragesExclusionRatio } from '../../hooks/useAveragesExclusionRatio';
 import { useLocale } from '../../hooks/useLocale';
-import { TankPerformanceEphemeral } from '../../stores/tankPerformanceEphemeral';
+import { Performance } from '../../stores/performance';
 import { TankRowHeaderCell } from '../TankRowHeaderCell';
 
 interface TankRowProps {
@@ -17,7 +17,7 @@ export const TankRow = memo<TankRowProps>(
   ({ tank }) => {
     const averages = averageDefinitions.averages[tank.id];
     const ratio = useAveragesExclusionRatio();
-    const playerCountPeriod = TankPerformanceEphemeral.use(
+    const playerCountPeriod = Performance.use(
       (state) => state.playerCountPeriod,
     );
     const { locale } = useLocale();

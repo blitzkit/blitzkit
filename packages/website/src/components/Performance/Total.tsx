@@ -8,7 +8,7 @@ import { memo, useCallback } from 'react';
 import { awaitableAverageDefinitions } from '../../core/awaitables/averageDefinitions';
 import { useAveragesExclusionRatio } from '../../hooks/useAveragesExclusionRatio';
 import { useLocale } from '../../hooks/useLocale';
-import { TankPerformanceEphemeral } from '../../stores/tankPerformanceEphemeral';
+import { Performance } from '../../stores/performance';
 import { StickyRowHeaderCell } from '../StickyRowHeaderCell';
 
 interface AverageDefinitionsEntryWithId extends AverageDefinitionsEntry {
@@ -23,7 +23,7 @@ const averageDefinitions = await awaitableAverageDefinitions;
 
 export const Total = memo<TotalProps>(
   ({ tanks }) => {
-    const playerCountPeriod = TankPerformanceEphemeral.use(
+    const playerCountPeriod = Performance.use(
       (state) => state.playerCountPeriod,
     );
     const { strings, locale } = useLocale();
