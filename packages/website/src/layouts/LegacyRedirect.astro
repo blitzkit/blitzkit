@@ -1,9 +1,5 @@
 ---
-import { DiscordLogoIcon, PaperPlaneIcon } from '@radix-ui/react-icons';
-import { Button, Flex, Heading, Link, Text } from '@radix-ui/themes';
-import { PageWrapper } from '../components/PageWrapper';
 import { getStrings } from '../core/i18n/getStrings';
-import BaseLayout from '../layouts/BaseLayout.astro';
 
 export interface Props {
   path: string;
@@ -16,30 +12,29 @@ const strings = getStrings(locale);
 const resolvedPath = `/${locale === undefined ? '' : `${locale}/`}${path}`;
 ---
 
-<BaseLayout>
-  <link
-    slot="head"
-    rel="canonical"
-    href={`${Astro.url.origin}${resolvedPath}`}
-  />
-  <meta slot="head" http-equiv="refresh" content={`0; url=${resolvedPath}`} />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="canonical" href={`${Astro.url.origin}${resolvedPath}`} />
+    <meta http-equiv="refresh" content={`0; url=${resolvedPath}`} />
+  </head>
 
-  <PageWrapper align="center" justify="center" gap="0">
-    <Heading>{strings.website.redirect.title}</Heading>
-    <Text color="gray">{strings.website.redirect.body}</Text>
-
-    <Flex mt="4" gap="2">
-      <Link href={resolvedPath}>
-        <Button>
-          <PaperPlaneIcon /> Redirect
-        </Button>
-      </Link>
-
-      <Link href="https://discord.gg/nDt7AjGJQH">
-        <Button variant="outline">
-          <DiscordLogoIcon /> Discord
-        </Button>
-      </Link>
-    </Flex>
-  </PageWrapper>
-</BaseLayout>
+  <body>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'black',
+        color: 'white',
+        fontFamily: 'sans-serif',
+      }}
+    >
+      <h2>{strings.website.redirect.title}</h2>
+      <span>{strings.website.redirect.body}</span>
+    </div>
+  </body>
+</html>
