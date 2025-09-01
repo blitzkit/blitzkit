@@ -1,8 +1,6 @@
 import { enableMapSet } from 'immer';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { Varuna } from 'varuna';
 import { tierListRows } from '../components/TierList/Table/constants';
-import { createContextualStore } from '../core/zustand/createContextualStore';
 
 export interface TierList {
   dragging: boolean;
@@ -10,19 +8,10 @@ export interface TierList {
   placedTanks: Set<number>;
 }
 
-enableMapSet();
-
-export const tierListInitialState: TierList = {
+export const TierList = new Varuna<TierList>({
   dragging: false,
-  rows: tierListRows.map((row) => ({
-    name: row.name,
-    tanks: [],
-  })),
+  rows: tierListRows.map((row) => ({ name: row.name, tanks: [] })),
   placedTanks: new Set(),
-};
+});
 
-export const TierList = createContextualStore(() =>
-  create<TierList>()(
-    subscribeWithSelector<TierList>(() => tierListInitialState),
-  ),
-);
+enableMapSet();

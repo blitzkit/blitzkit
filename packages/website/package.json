@@ -13,6 +13,7 @@
     "@astrolib/seo": "^1.0.0-beta.8",
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
+    "varuna": "workspace:*",
     "@fontsource/inter": "^5.2.5",
     "@nanostores/persistent": "^0.10.2",
     "@nanostores/react": "^0.7.3",

@@ -7,7 +7,6 @@ const tankDefinitions = await awaitableTankDefinitions;
 
 export function URLManager() {
   const rows = TierList.use((state) => state.rows);
-  const mutateTierList = TierList.useMutation();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -20,7 +19,7 @@ export function URLManager() {
           .map(Number)
           .filter((id) => id in tankDefinitions.tanks);
 
-        mutateTierList((draft) => {
+        TierList.mutate((draft) => {
           draft.rows[index].tanks = values;
         });
       }

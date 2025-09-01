@@ -26,7 +26,6 @@ export function Header({ index }: HeaderProps) {
   const rowStyle = tierListRows[index];
   const name = TierList.use((state) => state.rows[index].name);
   const input = useRef<HTMLInputElement>(null);
-  const mutateTierList = TierList.useMutation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -67,9 +66,8 @@ export function Header({ index }: HeaderProps) {
               onBlur={() => {
                 if (!input.current) return;
 
-                mutateTierList((draft) => {
+                TierList.mutate((draft) => {
                   if (!input.current) return;
-
                   draft.rows[index].name = input.current.value;
                 });
 

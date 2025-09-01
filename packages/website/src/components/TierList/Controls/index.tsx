@@ -1,11 +1,10 @@
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Button, Flex } from '@radix-ui/themes';
 import { useLocale } from '../../../hooks/useLocale';
-import { TierList, tierListInitialState } from '../../../stores/tierList';
+import { TierList } from '../../../stores/tierList';
 import { Share } from './components/Share';
 
 export function TierListControls() {
-  const mutateTierList = TierList.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -13,8 +12,8 @@ export function TierListControls() {
       <Button
         color="red"
         onClick={() => {
-          mutateTierList((draft) => {
-            Object.assign(draft, tierListInitialState);
+          TierList.mutate((draft) => {
+            Object.assign(draft, TierList.initial);
           });
         }}
       >

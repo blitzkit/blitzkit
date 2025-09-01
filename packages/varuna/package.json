@@ -1,0 +1,8 @@
+{
+  "name": "varuna",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "react": "^18.3.1"
+  }
+}

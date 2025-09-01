@@ -25,7 +25,6 @@ type TierListTileProps = {
 
 export function TierListTile(props: TierListTileProps) {
   const card = useRef<HTMLDivElement>(null);
-  const mutateTierList = TierList.useMutation();
   const lastPosition = useRef({ x: 0, y: 0 });
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLSpanElement>) => {
@@ -48,7 +47,7 @@ export function TierListTile(props: TierListTileProps) {
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
 
-      mutateTierList((draft) => {
+      TierList.mutate((draft) => {
         draft.dragging = true;
       });
     },
@@ -104,7 +103,7 @@ export function TierListTile(props: TierListTileProps) {
 
         const tileIndex = Number(tile.dataset.tileIndex);
 
-        mutateTierList((draft) => {
+        TierList.mutate((draft) => {
           draft.dragging = false;
           draft.rows.forEach((row) => {
             row.tanks = row.tanks.filter((tankId) => tankId !== props.tank.id);
@@ -118,7 +117,7 @@ export function TierListTile(props: TierListTileProps) {
         break rowLoop;
       }
 
-      mutateTierList((draft) => {
+      TierList.mutate((draft) => {
         draft.dragging = false;
         draft.rows.forEach((row) => {
           row.tanks = row.tanks.filter((tankId) => tankId !== props.tank.id);
@@ -133,7 +132,7 @@ export function TierListTile(props: TierListTileProps) {
     }
 
     if (!wasPlaced) {
-      mutateTierList((draft) => {
+      TierList.mutate((draft) => {
         draft.dragging = false;
         draft.rows.forEach((row) => {
           row.tanks = row.tanks.filter((tankId) => tankId !== props.tank.id);

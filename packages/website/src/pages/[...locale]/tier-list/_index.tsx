@@ -9,16 +9,13 @@ import {
   type LocaleAcceptorProps,
 } from '../../../hooks/useLocale';
 import { TankopediaPersistent } from '../../../stores/tankopediaPersistent';
-import { TierList } from '../../../stores/tierList';
 
 export function Page({ locale }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
-      <TierList.Provider>
-        <TankopediaPersistent.Provider>
-          <Content />
-        </TankopediaPersistent.Provider>
-      </TierList.Provider>
+      <TankopediaPersistent.Provider>
+        <Content />
+      </TankopediaPersistent.Provider>
     </LocaleProvider>
   );
 }
