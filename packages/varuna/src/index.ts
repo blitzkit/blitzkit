@@ -43,11 +43,17 @@ export class Varuna<Type> {
   }
 
   mutate(mutator: (state: Type) => void) {
-    this.state = produce(this.state, mutator);
+    this.set(produce(this.state, mutator));
+  }
+
+  set(state: Type) {
+    this.state = state;
     this.dispatch();
   }
 
-  use<Slice>(slicer: (state: Type) => Slice) {
+  use<Slice = Type>(
+    slicer: (state: Type) => Slice = (state) => state as unknown as Slice,
+  ) {
     const [slice, setSlice] = useState(slicer(this.state));
     useEffect(() => this.on(slicer, setSlice), []);
     return slice;

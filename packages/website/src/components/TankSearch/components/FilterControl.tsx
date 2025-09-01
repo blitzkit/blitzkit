@@ -24,10 +24,7 @@ import {
   initialTankFilters,
   type TankFilters,
 } from '../../../stores/tankFilters';
-import {
-  $tankopediaSort,
-  initialTankopediaSort,
-} from '../../../stores/tankopediaSort';
+import { TankSort } from '../../../stores/tankopediaSort';
 import { classIcons } from '../../ClassIcon';
 import { ExperimentIcon } from '../../ExperimentIcon';
 import { GunAutoloaderIcon } from '../../GunAutoloaderIcon';
@@ -620,7 +617,7 @@ export function FilterControl({ compact }: FilterControlProps) {
           onClick={(event) => {
             event.preventDefault();
             $tankFilters.set(initialTankFilters);
-            $tankopediaSort.set(initialTankopediaSort);
+            TankSort.set(TankSort.initial);
           }}
         >
           {strings.website.common.tank_search.clear_filters}

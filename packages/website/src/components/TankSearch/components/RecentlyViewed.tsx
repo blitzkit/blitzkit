@@ -6,7 +6,7 @@ import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitio
 import { useLocale } from '../../../hooks/useLocale';
 import { $tankFilters, initialTankFilters } from '../../../stores/tankFilters';
 import { TankopediaPersistent } from '../../../stores/tankopediaPersistent';
-import { $tankopediaSort } from '../../../stores/tankopediaSort';
+import { TankSort } from '../../../stores/tankopediaSort';
 import { TankCard } from '../../TankCard';
 import { TankCardWrapper } from './TankCardWrapper';
 
@@ -19,7 +19,6 @@ export function RecentlyViewed() {
   const recentlyViewed = tankopediaPersistentStore
     .getState()
     .recentlyViewed.filter((id) => id in tankDefinitions.tanks);
-  const sort = useStore($tankopediaSort);
   const hasFilters = useMemo(
     () =>
       Object.entries(filters).some(([key, value]) => {
@@ -31,8 +30,9 @@ export function RecentlyViewed() {
     [filters],
   );
   const { strings } = useLocale();
+  const by = TankSort.use((state) => state.by);
 
-  if (recentlyViewed.length === 0 || sort.by !== 'meta.none' || hasFilters) {
+  if (recentlyViewed.length === 0 || by !== 'meta.none' || hasFilters) {
     return null;
   }
 

@@ -4,11 +4,10 @@ import {
   unionBoundingBox,
   type TankDefinition,
 } from '@blitzkit/core';
-import { useStore } from '@nanostores/react';
 import { useMemo } from 'react';
 import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
 import { resolveReload } from '../../../core/blitzkit/resolveReload';
-import { $tankopediaSort } from '../../../stores/tankopediaSort';
+import { TankSort } from '../../../stores/tankopediaSort';
 import { TankCard } from '../../TankCard';
 
 interface TankSearchCardProps {
@@ -19,9 +18,9 @@ interface TankSearchCardProps {
 const modelDefinitions = await awaitableModelDefinitions;
 
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
-  const tankopediaSort = useStore($tankopediaSort);
+  const by = TankSort.use((state) => state.by);
   const discriminator = useMemo(() => {
-    if (tankopediaSort.by.startsWith('meta')) return undefined;
+    if (by.startsWith('meta')) return undefined;
 
     const turret = tank.turrets.at(-1)!;
     const gun = turret.guns.at(-1)!;
@@ -34,7 +33,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
     const turretModelDefinition = tankModelDefinition.turrets[turret.id];
     const gunModelDefinition = turretModelDefinition.guns[gun.id];
 
-    switch (tankopediaSort.by) {
+    switch (by) {
       case 'fire.aimTime':
         return gun.aim_time.toFixed(2);
       case 'fire.caliber':
@@ -133,7 +132,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return Math.max(bounds.x, bounds.y, bounds.z).toFixed(0);
       }
     }
-  }, [tankopediaSort.by]);
+  }, [by]);
 
   return (
     <TankCard

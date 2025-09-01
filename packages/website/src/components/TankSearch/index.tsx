@@ -22,7 +22,7 @@ import { useLocale } from '../../hooks/useLocale';
 import { $tankFilters } from '../../stores/tankFilters';
 import { TankopediaPersistent } from '../../stores/tankopediaPersistent';
 import { SORT_UNITS } from '../../stores/tankopediaPersistent/constants';
-import { $tankopediaSort } from '../../stores/tankopediaSort';
+import { TankSort } from '../../stores/tankopediaSort';
 import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
 import { ExperimentIcon } from '../ExperimentIcon';
 import { TankSearchCard } from './components/Card';
@@ -58,7 +58,7 @@ export const TankSearch = memo<TankSearchProps>(
     const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankFilters = useStore($tankFilters);
-    const tankopediaSort = useStore($tankopediaSort);
+    const tankopediaSort = TankSort.use();
     const tanksFiltered = useMemo(() => {
       if (tankFilters.search === null) {
         const filtered = awaitedTanksDefinitionsArray.filter((tank) =>

@@ -4,13 +4,13 @@ import { Flex, IconButton, Text } from '@radix-ui/themes';
 import { times } from 'lodash-es';
 import { memo } from 'react';
 import { $tankFilters } from '../../../stores/tankFilters';
-import { $tankopediaSort } from '../../../stores/tankopediaSort';
+import { TankSort } from '../../../stores/tankopediaSort';
 
 export const TierFilter = memo(() => {
   const tankFilters = useStore($tankFilters);
-  const tankopediaSort = useStore($tankopediaSort);
+  const by = TankSort.use((state) => state.by);
 
-  if (tankopediaSort.by !== 'meta.none' || tankFilters.search) return null;
+  if (by !== 'meta.none' || tankFilters.search) return null;
 
   return (
     <Flex justify="center">

@@ -1,4 +1,3 @@
-import { useStore } from '@nanostores/react';
 import { CaretDownIcon } from '@radix-ui/react-icons';
 import { Button, DropdownMenu } from '@radix-ui/themes';
 import { useLocale } from '../../../hooks/useLocale';
@@ -6,7 +5,7 @@ import type {
   TankopediaSortBy,
   TankopediaSortDirection,
 } from '../../../stores/tankopediaPersistent';
-import { $tankopediaSort } from '../../../stores/tankopediaSort';
+import { TankSort } from '../../../stores/tankopediaSort';
 
 interface ItemProps {
   by: TankopediaSortBy;
@@ -18,13 +17,15 @@ interface ItemProps {
 
 function Item({ by }: ItemProps) {
   const { strings } = useLocale();
-  const tankopediaSort = useStore($tankopediaSort);
+  const _by = TankSort.use((state) => state.by);
 
   return (
     <DropdownMenu.CheckboxItem
-      checked={tankopediaSort.by === by}
+      checked={_by === by}
       onClick={() => {
-        $tankopediaSort.setKey('by', by);
+        TankSort.mutate((draft) => {
+          draft.by = by;
+        });
       }}
     >
       {strings.website.common.tank_search.sort[by]}
@@ -33,7 +34,7 @@ function Item({ by }: ItemProps) {
 }
 
 export function Sort() {
-  const tankopediaSort = useStore($tankopediaSort);
+  const direction = TankSort.use((state) => state.direction);
   const { strings } = useLocale();
 
   return (
@@ -119,12 +120,11 @@ export function Sort() {
           }
         </DropdownMenu.Label>
         <DropdownMenu.RadioGroup
-          value={tankopediaSort.direction}
+          value={direction}
           onValueChange={(value) => {
-            $tankopediaSort.setKey(
-              'direction',
-              value as TankopediaSortDirection,
-            );
+            TankSort.mutate((draft) => {
+              draft.direction = value as TankopediaSortDirection;
+            });
           }}
         >
           <DropdownMenu.RadioItem value="ascending">

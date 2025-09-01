@@ -1,17 +1,15 @@
-import { map } from 'nanostores';
+import { Varuna } from 'varuna';
 import {
   type TankopediaSortBy,
   type TankopediaSortDirection,
 } from './tankopediaPersistent';
 
-export interface TankopediaSort {
+export interface TankSort {
   by: TankopediaSortBy;
   direction: TankopediaSortDirection;
 }
 
-export const initialTankopediaSort: TankopediaSort = {
+export const TankSort = new Varuna<TankSort>({
   by: 'meta.none',
   direction: 'descending',
-};
-
-export const $tankopediaSort = map<TankopediaSort>(initialTankopediaSort);
+});

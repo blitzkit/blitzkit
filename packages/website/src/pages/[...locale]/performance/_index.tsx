@@ -7,7 +7,6 @@ import {
   LocaleProvider,
   type LocaleAcceptorProps,
 } from '../../../hooks/useLocale';
-import { TankPerformanceEphemeral } from '../../../stores/tankPerformanceEphemeral';
 import { TankPerformanceSort } from '../../../stores/tankPerformanceSort';
 import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
 
@@ -17,9 +16,7 @@ export function Page({ skeleton, locale }: PageProps) {
   return (
     <LocaleProvider locale={locale}>
       <TankPerformanceSort.Provider>
-        <TankPerformanceEphemeral.Provider>
-          <Content skeleton={skeleton} />
-        </TankPerformanceEphemeral.Provider>
+        <Content skeleton={skeleton} />
       </TankPerformanceSort.Provider>
     </LocaleProvider>
   );
