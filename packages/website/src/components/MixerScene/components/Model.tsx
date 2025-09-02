@@ -1,14 +1,14 @@
-import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
-import { jsxTree } from '../../../core/blitzkit/jsxTree';
-import { useModel } from '../../../hooks/useModel';
-import { MixerEphemeral } from '../../../stores/mixerEphemeral';
+import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
+import { jsxTree } from "../../../core/blitzkit/jsxTree";
+import { useModel } from "../../../hooks/useModel";
+import { Mixer } from "../../../stores/mixer";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
 export function Model() {
-  const hull = MixerEphemeral.use((state) => state.hull);
-  const turret = MixerEphemeral.use((state) => state.turret);
-  const gun = MixerEphemeral.use((state) => state.gun);
+  const hull = Mixer.use((state) => state.hull);
+  const turret = Mixer.use((state) => state.turret);
+  const gun = Mixer.use((state) => state.gun);
 
   const hullGltf = useModel(hull.id);
   const turretGltf = useModel(turret.tank.id);
@@ -34,9 +34,9 @@ export function Model() {
   return (
     <group rotation={[-Math.PI / 2, 0, 0]}>
       {hullNodes.map((node) => {
-        const isHull = node.name === 'hull';
-        const isWheel = node.name.startsWith('chassis_wheel_');
-        const isTrack = node.name.startsWith('chassis_track_');
+        const isHull = node.name === "hull";
+        const isWheel = node.name.startsWith("chassis_wheel_");
+        const isTrack = node.name.startsWith("chassis_track_");
         const isVisible = isHull || isWheel || isTrack;
 
         if (!isVisible) return null;
@@ -67,7 +67,7 @@ export function Model() {
         {turretNodes.map((node) => {
           const isCurrentTurret =
             node.name ===
-            `turret_${turretModel.model_id.toString().padStart(2, '0')}`;
+            `turret_${turretModel.model_id.toString().padStart(2, "0")}`;
           const isVisible = isCurrentTurret;
 
           if (!isVisible) return null;
@@ -104,10 +104,10 @@ export function Model() {
           {gunNodes.map((node) => {
             const isCurrentMantlet =
               node.name ===
-              `gun_${gunModel.model_id.toString().padStart(2, '0')}_mask`;
+              `gun_${gunModel.model_id.toString().padStart(2, "0")}_mask`;
             const isCurrentGun =
               node.name ===
-              `gun_${gunModel.model_id.toString().padStart(2, '0')}`;
+              `gun_${gunModel.model_id.toString().padStart(2, "0")}`;
             const isVisible = isCurrentGun || isCurrentMantlet;
 
             if (!isVisible) return null;

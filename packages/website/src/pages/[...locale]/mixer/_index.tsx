@@ -1,13 +1,13 @@
-import { Box } from '@radix-ui/themes';
-import { useRef } from 'react';
-import { MixerScene } from '../../../components/MixerScene';
-import { PageWrapper } from '../../../components/PageWrapper';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
+import { Box } from "@radix-ui/themes";
+import { useRef } from "react";
+import { MixerScene } from "../../../components/MixerScene";
+import { PageWrapper } from "../../../components/PageWrapper";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from '../../../hooks/useLocale';
-import { MixerEphemeral } from '../../../stores/mixerEphemeral';
+} from "../../../hooks/useLocale";
+import { Mixer } from "../../../stores/mixer";
 
 const tankDefinitions = await awaitableTankDefinitions;
 const tanks = Object.values(tankDefinitions.tanks);
@@ -18,35 +18,33 @@ export function Page({ locale }: LocaleAcceptorProps) {
   const turret = useRef(
     turretTank.current.turrets[
       Math.floor(Math.random() * turretTank.current.turrets.length)
-    ],
+    ]
   );
   const gunTank = useRef(tanks[Math.floor(Math.random() * tanks.length)]);
   const gunTurret = useRef(
     gunTank.current.turrets[
       Math.floor(Math.random() * gunTank.current.turrets.length)
-    ],
+    ]
   );
   const gun = useRef(
     gunTurret.current.guns[
       Math.floor(Math.random() * gunTurret.current.guns.length)
-    ],
+    ]
   );
+
+  Mixer.useInitialization({
+    hull: hull.current,
+    turret: { tank: turretTank.current, turret: turret.current },
+    gun: {
+      tank: gunTank.current,
+      turret: gunTurret.current,
+      gun: gun.current,
+    },
+  });
 
   return (
     <LocaleProvider locale={locale}>
-      <MixerEphemeral.Provider
-        data={{
-          hull: hull.current,
-          turret: { tank: turretTank.current, turret: turret.current },
-          gun: {
-            tank: gunTank.current,
-            turret: gunTurret.current,
-            gun: gun.current,
-          },
-        }}
-      >
-        <Content />
-      </MixerEphemeral.Provider>
+      <Content />
     </LocaleProvider>
   );
 }
