@@ -1,27 +1,27 @@
-import { createDefaultSkills } from '@blitzkit/core';
-import { Flex, Progress, Text } from '@radix-ui/themes';
-import { clamp } from 'lodash-es';
-import { memo, useMemo, type ComponentProps, type ReactNode } from 'react';
-import { awaitableEquipmentDefinitions } from '../../../../../../core/awaitables/equipmentDefinitions';
-import { awaitableModelDefinitions } from '../../../../../../core/awaitables/modelDefinitions';
-import { awaitableProvisionDefinitions } from '../../../../../../core/awaitables/provisionDefinitions';
-import { awaitableSkillDefinitions } from '../../../../../../core/awaitables/skillDefinitions';
-import { awaitableTankDefinitions } from '../../../../../../core/awaitables/tankDefinitions';
+import { createDefaultSkills } from "@blitzkit/core";
+import { Flex, Progress, Text } from "@radix-ui/themes";
+import { clamp } from "lodash-es";
+import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
+import { awaitableEquipmentDefinitions } from "../../../../../../core/awaitables/equipmentDefinitions";
+import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
+import { awaitableProvisionDefinitions } from "../../../../../../core/awaitables/provisionDefinitions";
+import { awaitableSkillDefinitions } from "../../../../../../core/awaitables/skillDefinitions";
+import { awaitableTankDefinitions } from "../../../../../../core/awaitables/tankDefinitions";
 import {
   tankCharacteristics,
   type TankCharacteristics,
-} from '../../../../../../core/blitzkit/tankCharacteristics';
-import { tankToDuelMember } from '../../../../../../core/blitzkit/tankToDuelMember';
-import { useDelta } from '../../../../../../hooks/useDelta';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../stores/duel';
+} from "../../../../../../core/blitzkit/tankCharacteristics";
+import { tankToDuelMember } from "../../../../../../core/blitzkit/tankToDuelMember";
+import { useDelta } from "../../../../../../hooks/useDelta";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../stores/duel";
 import {
-  TankopediaEphemeral,
+  Tankopedia,
   TankopediaRelativeAgainst,
-} from '../../../../../../stores/tankopediaEphemeral';
-import { Info, type InfoProps } from './Info';
+} from "../../../../../../stores/tankopedia";
+import { Info, type InfoProps } from "./Info";
 
-type InfoWithDeltaProps = Omit<InfoProps, 'name'> & {
+type InfoWithDeltaProps = Omit<InfoProps, "name"> & {
   stats: TankCharacteristics;
   noRanking?: boolean;
 } & (
@@ -51,20 +51,18 @@ const [
 export const InfoWithDelta = memo<InfoWithDeltaProps>(
   ({ stats, indent, noRanking, deltaType, ...props }) => {
     const { strings } = useLocale();
-    const relativeAgainst = TankopediaEphemeral.use(
-      (state) => state.relativeAgainst,
-    );
+    const relativeAgainst = Tankopedia.use((state) => state.relativeAgainst);
     const uhWhatDoICallThisVariable =
-      typeof props.value === 'function'
+      typeof props.value === "function"
         ? props.value(stats)!
         : (stats[props.value] as number);
     const delta = useDelta(uhWhatDoICallThisVariable);
     const protagonistTank = Duel.use((state) => state.protagonist.tank);
     const shellIndex = Duel.use((state) =>
-      state.protagonist.gun.shells.indexOf(state.protagonist.shell),
+      state.protagonist.gun.shells.indexOf(state.protagonist.shell)
     );
     const equipmentMatrix = Duel.use(
-      (state) => state.protagonist.equipmentMatrix,
+      (state) => state.protagonist.equipmentMatrix
     );
     const others = useMemo(() => {
       const defaultSkills = createDefaultSkills(skillDefinitions);
@@ -77,7 +75,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               tank.class === protagonistTank.class) ||
             (relativeAgainst === TankopediaRelativeAgainst.Tier &&
               tank.tier === protagonistTank.tier) ||
-            relativeAgainst === TankopediaRelativeAgainst.All,
+            relativeAgainst === TankopediaRelativeAgainst.All
         )
         .map((tank) => {
           const member = tankToDuelMember(tank, provisionDefinitions);
@@ -112,14 +110,14 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               equipmentDefinitions,
               provisionDefinitions,
               tankModelDefinition: modelDefinitions.models[tank.id],
-            },
+            }
           );
         })
         .filter((tank) => {
           if (tank === undefined) return false;
 
           const othersValue =
-            typeof props.value === 'function'
+            typeof props.value === "function"
               ? props.value(tank)!
               : (tank[props.value] as number);
 
@@ -128,22 +126,22 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
     }, [relativeAgainst, shellIndex, equipmentMatrix]);
     const betterTanks = others.filter((tank) => {
       const othersValue =
-        typeof props.value === 'function'
+        typeof props.value === "function"
           ? props.value(tank)!
           : (tank[props.value] as number);
 
       if (othersValue === undefined) return false;
-      return deltaType === 'lowerIsBetter'
+      return deltaType === "lowerIsBetter"
         ? othersValue < uhWhatDoICallThisVariable
         : othersValue > uhWhatDoICallThisVariable;
     });
     const goodness = (others.length - betterTanks.length) / others.length;
-    let color: ComponentProps<typeof Progress>['color'];
+    let color: ComponentProps<typeof Progress>["color"];
 
-    if (goodness <= 0.25) color = 'red';
-    else if (goodness <= 0.5) color = 'orange';
-    else if (goodness <= 0.75) color = 'yellow';
-    else color = 'green';
+    if (goodness <= 0.25) color = "red";
+    else if (goodness <= 0.5) color = "orange";
+    else if (goodness <= 0.75) color = "yellow";
+    else color = "green";
 
     return (
       <Flex direction="column">
@@ -151,7 +149,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
           deltaType={deltaType}
           indent={indent}
           name={
-            'name' in props
+            "name" in props
               ? props.name
               : strings.website.tools.tankopedia.characteristics.values[
                   props.value
@@ -164,17 +162,17 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
         </Info>
 
         {!noRanking && (
-          <Flex pl={indent ? '2' : '0'} align="center" gap="2">
+          <Flex pl={indent ? "2" : "0"} align="center" gap="2">
             <Progress
               variant="soft"
               size="1"
               value={goodness * 100}
               color={color}
-              style={{ height: '0.125rem', opacity: 0.5 }}
+              style={{ height: "0.125rem", opacity: 0.5 }}
             />
 
             <Text color="gray" size="1">
-              {clamp(betterTanks.length + 1, 1, others.length)} /{' '}
+              {clamp(betterTanks.length + 1, 1, others.length)} /{" "}
               {others.length}
             </Text>
           </Flex>
@@ -184,6 +182,6 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
   },
 
   (a, b) =>
-    (typeof a.value === 'function' ? a.value(a.stats) : a.stats[a.value]) ===
-    (typeof b.value === 'function' ? b.value(b.stats) : b.stats[b.value]),
+    (typeof a.value === "function" ? a.value(a.stats) : a.stats[a.value]) ===
+    (typeof b.value === "function" ? b.value(b.stats) : b.stats[b.value])
 );

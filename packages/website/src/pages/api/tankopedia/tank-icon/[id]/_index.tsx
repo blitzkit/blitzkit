@@ -5,7 +5,7 @@ import { awaitableTankDefinitions } from "../../../../../core/awaitables/tankDef
 import { LocaleProvider } from "../../../../../hooks/useLocale";
 import { App } from "../../../../../stores/app";
 import { Duel } from "../../../../../stores/duel";
-import { TankopediaEphemeral } from "../../../../../stores/tankopediaEphemeral";
+import { Tankopedia } from "../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
 
 const [provisionDefinitions, tankDefinitions, modelDefinitions] =
@@ -23,7 +23,7 @@ export function Page({ id }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
-  TankopediaEphemeral.useInitialization(model);
+  Tankopedia.useInitialization(model);
 
   return (
     <LocaleProvider locale="en">

@@ -1,20 +1,20 @@
-import { isExplosive, resolvePenetrationCoefficient } from '@blitzkit/core';
-import { useEffect } from 'react';
+import { isExplosive, resolvePenetrationCoefficient } from "@blitzkit/core";
+import { useEffect } from "react";
 import {
   AdditiveBlending,
   MeshBasicMaterial,
   ShaderMaterial,
   type Object3D,
-} from 'three';
-import { degToRad } from 'three/src/math/MathUtils.js';
-import type { ArmorUserData } from '../..';
-import { hasEquipment } from '../../../../../../core/blitzkit/hasEquipment';
-import { jsxTree } from '../../../../../../core/blitzkit/jsxTree';
-import { Duel, type EquipmentMatrix } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
-import { ArmorType } from '../../../SpacedArmorScene';
-import fragmentShader from './shaders/fragment.glsl?raw';
-import vertexShader from './shaders/vertex.glsl?raw';
+} from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
+import type { ArmorUserData } from "../..";
+import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
+import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
+import { Duel, type EquipmentMatrix } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { ArmorType } from "../../../SpacedArmorScene";
+import fragmentShader from "./shaders/fragment.glsl?raw";
+import vertexShader from "./shaders/vertex.glsl?raw";
 
 interface SpacedArmorSubSpacedProps {
   node: Object3D;
@@ -51,16 +51,16 @@ export function SpacedArmorSubSpaced({
   useEffect(() => {
     function handleShellChange() {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = TankopediaEphemeral.state;
+      const tankopediaEphemeral = Tankopedia.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
 
       material.uniforms.penetration.value = shell.penetration.near;
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!,
+        isExplosive(shell.type) ? 90 : shell.ricochet!
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0,
+        shell.normalization ?? 0
       );
     }
     function handleProtagonistEquipmentChange(equipment: EquipmentMatrix) {
@@ -68,7 +68,7 @@ export function SpacedArmorSubSpaced({
       const hasEnhancedArmor = hasEquipment(
         110,
         duel.protagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
       material.uniforms.thickness.value = hasEnhancedArmor
         ? thickness * 1.03
@@ -76,13 +76,13 @@ export function SpacedArmorSubSpaced({
     }
     function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = TankopediaEphemeral.state;
+      const tankopediaEphemeral = Tankopedia.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
       const hasCalibratedShells = hasEquipment(
         103,
         duel.antagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
 
       material.uniforms.penetration.value =
@@ -92,22 +92,22 @@ export function SpacedArmorSubSpaced({
 
     handleShellChange();
     handleProtagonistEquipmentChange(
-      duelStore.getState().protagonist.equipmentMatrix,
+      duelStore.getState().protagonist.equipmentMatrix
     );
     handleAntagonistEquipmentChange(
-      duelStore.getState().antagonist.equipmentMatrix,
+      duelStore.getState().antagonist.equipmentMatrix
     );
 
     const unsubscribes = [
       duelStore.subscribe((state) => state.antagonist.shell, handleShellChange),
-      TankopediaEphemeral.on((state) => state.customShell, handleShellChange),
+      Tankopedia.on((state) => state.customShell, handleShellChange),
       duelStore.subscribe(
         (state) => state.protagonist.equipmentMatrix,
-        handleProtagonistEquipmentChange,
+        handleProtagonistEquipmentChange
       ),
       duelStore.subscribe(
         (state) => state.antagonist.equipmentMatrix,
-        handleAntagonistEquipmentChange,
+        handleAntagonistEquipmentChange
       ),
     ];
 

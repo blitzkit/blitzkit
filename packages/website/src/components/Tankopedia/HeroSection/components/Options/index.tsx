@@ -3,8 +3,8 @@ import {
   resolvePenetrationCoefficient,
   TIER_ROMAN_NUMERALS,
   uniqueGuns,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n/src/literals';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n/src/literals";
 import {
   CameraIcon,
   CopyIcon,
@@ -12,7 +12,7 @@ import {
   EnterFullScreenIcon,
   ExitFullScreenIcon,
   EyeOpenIcon,
-} from '@radix-ui/react-icons';
+} from "@radix-ui/react-icons";
 import {
   Button,
   Checkbox,
@@ -25,27 +25,27 @@ import {
   Tabs,
   Text,
   Tooltip,
-} from '@radix-ui/themes';
-import { Suspense, useState, type RefObject } from 'react';
-import { Pose, poseEvent } from '../../../../../core/blitzkit/pose';
-import { useEquipment } from '../../../../../hooks/useEquipment';
-import { useFullScreen } from '../../../../../hooks/useFullScreen';
-import { useFullscreenAvailability } from '../../../../../hooks/useFullscreenAvailability';
-import { useLocale } from '../../../../../hooks/useLocale';
-import { Duel } from '../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
-import { TankopediaPersistent } from '../../../../../stores/tankopediaPersistent';
-import { TankopediaDisplay } from '../../../../../stores/tankopediaPersistent/constants';
-import type { MaybeSkeletonComponentProps } from '../../../../../types/maybeSkeletonComponentProps';
-import type { ThicknessRange } from '../../../../Armor/components/StaticArmor';
-import { ModuleButton } from '../../../../ModuleButtons/ModuleButton';
-import { SmallTankIcon } from '../../../../SmallTankIcon';
-import { TankSearch } from '../../../../TankSearch';
-import { screenshotReadyEvent } from '../TankSandbox/components/SceneProps';
-import { CustomShellButton } from './components/CustomShellButton';
-import { DynamicArmorSwitcher } from './components/DynamicArmorSwitcher';
-import { QuickInputs } from './components/QuickInputs';
-import { Thicknesses } from './components/Thicknesses';
+} from "@radix-ui/themes";
+import { Suspense, useState, type RefObject } from "react";
+import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
+import { useEquipment } from "../../../../../hooks/useEquipment";
+import { useFullScreen } from "../../../../../hooks/useFullScreen";
+import { useFullscreenAvailability } from "../../../../../hooks/useFullscreenAvailability";
+import { useLocale } from "../../../../../hooks/useLocale";
+import { Duel } from "../../../../../stores/duel";
+import { Tankopedia } from "../../../../../stores/tankopedia";
+import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
+import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
+import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
+import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
+import { SmallTankIcon } from "../../../../SmallTankIcon";
+import { TankSearch } from "../../../../TankSearch";
+import { screenshotReadyEvent } from "../TankSandbox/components/SceneProps";
+import { CustomShellButton } from "./components/CustomShellButton";
+import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
+import { QuickInputs } from "./components/QuickInputs";
+import { Thicknesses } from "./components/Thicknesses";
 
 type OptionsProps = MaybeSkeletonComponentProps & {
   thicknessRange: ThicknessRange;
@@ -53,13 +53,13 @@ type OptionsProps = MaybeSkeletonComponentProps & {
 };
 
 export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
-  const hasCustomShell = TankopediaEphemeral.use(
-    (state) => state.customShell !== undefined,
+  const hasCustomShell = Tankopedia.use(
+    (state) => state.customShell !== undefined
   );
-  const display = TankopediaEphemeral.use((state) => state.display);
+  const display = Tankopedia.use((state) => state.display);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
-    (state) => state.advancedHighlighting,
+    (state) => state.advancedHighlighting
   );
   const fullScreenAvailable = useFullscreenAvailability(true);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
@@ -68,14 +68,14 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const [antagonistSelectorOpen, setAntagonistSelectorOpen] = useState(false);
   const antagonistTank = Duel.use((state) => state.antagonist.tank);
   const hasCalibratedShells = useEquipment(103, true);
-  const [tab, setTab] = useState('search');
+  const [tab, setTab] = useState("search");
   const mutateDuel = Duel.useMutation();
   const hasEnhancedArmor = useEquipment(110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
   const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
   const { strings, unwrap } = useLocale();
-  const revealed = TankopediaEphemeral.use((state) => state.revealed);
-  const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
+  const revealed = Tankopedia.use((state) => state.revealed);
+  const disturbed = Tankopedia.use((state) => state.disturbed);
 
   return (
     <>
@@ -87,21 +87,21 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         gap="2"
         direction="column"
         top="50%"
-        right={display === TankopediaDisplay.DynamicArmor ? '3' : '-4rem'}
+        right={display === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"}
         style={{
-          position: 'absolute',
-          transform: 'translateY(-50%)',
-          transitionDuration: '200ms',
+          position: "absolute",
+          transform: "translateY(-50%)",
+          transitionDuration: "200ms",
         }}
         align="end"
       >
         {!hasCustomShell && (
-          <Text color="gray" size={{ initial: '1', sm: '2' }}>
+          <Text color="gray" size={{ initial: "1", sm: "2" }}>
             {literals(strings.common.units.mm, [
               (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
-                  antagonistShell.type,
+                  antagonistShell.type
                 ) * antagonistShell.penetration.near
               ).toFixed(0),
             ])}
@@ -115,14 +115,14 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 radius="full"
                 variant="soft"
                 color="gray"
-                size={{ initial: '2', sm: '3' }}
-                style={{ position: 'relative' }}
+                size={{ initial: "2", sm: "3" }}
+                style={{ position: "relative" }}
               >
                 <Text
                   size="1"
                   color="gray"
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     right: 0,
                     bottom: 0,
                   }}
@@ -134,11 +134,11 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
 
                 <img
                   alt="Antagonist Gun"
-                  src={asset('icons/modules/gun.webp')}
+                  src={asset("icons/modules/gun.webp")}
                   style={{
-                    width: '65%',
-                    height: '65%',
-                    objectFit: 'contain',
+                    width: "65%",
+                    height: "65%",
+                    objectFit: "contain",
                   }}
                 />
               </IconButton>
@@ -160,7 +160,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                     selected={gun.id === antagonistGun.id}
                     discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
                     secondaryDiscriminator={
-                      <Text style={{ fontSize: '0.75em' }}>
+                      <Text style={{ fontSize: "0.75em" }}>
                         {literals(strings.common.units.mm, [
                           gun.shells[0].caliber.toFixed(0),
                         ])}
@@ -176,7 +176,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         <Flex
           direction="column"
           style={{
-            borderRadius: 'var(--radius-full)',
+            borderRadius: "var(--radius-full)",
           }}
           overflow="hidden"
         >
@@ -185,17 +185,17 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               color={
                 thisShell.id === antagonistShell.id && !hasCustomShell
                   ? undefined
-                  : 'gray'
+                  : "gray"
               }
               variant="soft"
               key={thisShell.id}
-              size={{ initial: '2', sm: '3' }}
+              size={{ initial: "2", sm: "3" }}
               radius="none"
               onClick={() => {
                 mutateDuel((draft) => {
                   draft.antagonist.shell = thisShell;
                 });
-                TankopediaEphemeral.mutate((draft) => {
+                Tankopedia.mutate((draft) => {
                   draft.shot = undefined;
                   draft.customShell = undefined;
                 });
@@ -205,8 +205,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 alt={unwrap(thisShell.name)}
                 src={asset(`icons/shells/${thisShell.icon}.webp`)}
                 style={{
-                  width: '50%',
-                  height: '50%',
+                  width: "50%",
+                  height: "50%",
                 }}
               />
             </IconButton>
@@ -218,15 +218,15 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         <Flex
           direction="column"
           style={{
-            pointerEvents: 'auto',
-            borderRadius: 'var(--radius-full)',
+            pointerEvents: "auto",
+            borderRadius: "var(--radius-full)",
           }}
           overflow="hidden"
         >
           <IconButton
-            color={hasCalibratedShells ? undefined : 'gray'}
+            color={hasCalibratedShells ? undefined : "gray"}
             variant="soft"
-            size={{ initial: '2', sm: '3' }}
+            size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
               mutateDuel((draft) => {
@@ -234,24 +234,24 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   ? 0
                   : 1;
               });
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
               });
             }}
           >
             <img
               alt="Calibrated Shells"
-              src={asset('icons/equipment/103.webp')}
+              src={asset("icons/equipment/103.webp")}
               style={{
-                width: '50%',
-                height: '50%',
+                width: "50%",
+                height: "50%",
               }}
             />
           </IconButton>
           <IconButton
-            color={hasEnhancedArmor ? undefined : 'gray'}
+            color={hasEnhancedArmor ? undefined : "gray"}
             variant="soft"
-            size={{ initial: '2', sm: '3' }}
+            size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
               mutateDuel((draft) => {
@@ -259,17 +259,17 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   ? 0
                   : -1;
               });
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
               });
             }}
           >
             <img
               alt="Enhanced Armor"
-              src={asset('icons/equipment/110.webp')}
+              src={asset("icons/equipment/110.webp")}
               style={{
-                width: '50%',
-                height: '50%',
+                width: "50%",
+                height: "50%",
               }}
             />
           </IconButton>
@@ -286,22 +286,22 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         direction="column"
         align="center"
         position="absolute"
-        bottom={revealed ? '4' : '-100%'}
+        bottom={revealed ? "4" : "-100%"}
         left="50%"
-        style={{ transform: 'translateX(-50%)', transitionDuration: '200ms' }}
+        style={{ transform: "translateX(-50%)", transitionDuration: "200ms" }}
       >
         <Flex
           direction="column"
           align="center"
-          style={{ transitionDuration: '200ms' }}
+          style={{ transitionDuration: "200ms" }}
           position="relative"
-          bottom={display === TankopediaDisplay.DynamicArmor ? '0' : '-7rem'}
+          bottom={display === TankopediaDisplay.DynamicArmor ? "0" : "-7rem"}
         >
           <Flex
             align="center"
             gap="2"
             mb="1"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => {
               mutateTankopediaPersistent((draft) => {
                 draft.advancedHighlighting = !draft.advancedHighlighting;
@@ -338,7 +338,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 <Tabs.Root
                   value={tab}
                   onValueChange={setTab}
-                  style={{ position: 'relative' }}
+                  style={{ position: "relative" }}
                 >
                   <TankSearch
                     compact
@@ -366,7 +366,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             variant="classic"
             value={`${disturbed ? display : -1}`}
             onValueChange={(value) => {
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.disturbed = true;
                 draft.display = Number(value);
               });
@@ -379,7 +379,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-model.png"
-                    style={{ height: '1.25em' }}
+                    style={{ height: "1.25em" }}
                   />
                 </Flex>
               </Tooltip>
@@ -391,7 +391,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-dynamic-armor.png"
-                    style={{ height: '1.25em' }}
+                    style={{ height: "1.25em" }}
                   />
                 </Flex>
               </Tooltip>
@@ -403,7 +403,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-static-armor.png"
-                    style={{ height: '1.25em' }}
+                    style={{ height: "1.25em" }}
                   />
                 </Flex>
               </Tooltip>
@@ -457,15 +457,15 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                           requestAnimationFrame(() => {
                             if (!canvas.current) return;
 
-                            const anchor = document.createElement('a');
+                            const anchor = document.createElement("a");
 
                             anchor.setAttribute(
-                              'download',
-                              `${protagonistTank.name}.png`,
+                              "download",
+                              `${protagonistTank.name}.png`
                             );
                             anchor.setAttribute(
-                              'href',
-                              canvas.current.toDataURL('image/png'),
+                              "href",
+                              canvas.current.toDataURL("image/png")
                             );
                             anchor.click();
 
@@ -493,7 +493,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                               if (!blob) return;
 
                               navigator.clipboard.write([
-                                new ClipboardItem({ 'image/png': blob }),
+                                new ClipboardItem({ "image/png": blob }),
                               ]);
                             });
 

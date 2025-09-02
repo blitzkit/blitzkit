@@ -1,10 +1,10 @@
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Flex, Spinner, TextField, type FlexProps } from '@radix-ui/themes';
-import { debounce } from 'lodash-es';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
-import { highlightedRows, highlightedRowsUpdate } from './Info';
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Flex, Spinner, TextField, type FlexProps } from "@radix-ui/themes";
+import { debounce } from "lodash-es";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { highlightedRows, highlightedRowsUpdate } from "./Info";
 
 export function StatSearch(props: FlexProps) {
   const { strings } = useLocale();
@@ -19,7 +19,7 @@ export function StatSearch(props: FlexProps) {
       setSearching(true);
     } else {
       setSearching(false);
-      count.current.textContent = '';
+      count.current.textContent = "";
     }
 
     requestUpdate();
@@ -30,21 +30,21 @@ export function StatSearch(props: FlexProps) {
       if (!input.current || !count.current) return;
 
       if (input.current.value.length === 0) {
-        count.current.textContent = '';
+        count.current.textContent = "";
 
         setSearching(false);
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.statSearch = undefined;
         });
         return;
       }
 
       setSearching(false);
-      TankopediaEphemeral.mutate((draft) => {
+      Tankopedia.mutate((draft) => {
         draft.statSearch = input.current!.value;
       });
     }, 500),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export function StatSearch(props: FlexProps) {
       if (!count.current || !input.current) return;
 
       count.current.textContent =
-        input.current.value.length === 0 ? '' : `0 / ${highlightedRows.size}`;
+        input.current.value.length === 0 ? "" : `0 / ${highlightedRows.size}`;
     };
 
     highlightedRowsUpdate.on(handleHighlightedRowsUpdate);
@@ -68,23 +68,23 @@ export function StatSearch(props: FlexProps) {
         ref={input}
         placeholder={strings.website.tools.tankopedia.search}
         variant="classic"
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
         onChange={search}
         onKeyDown={(event) => {
           if (!count.current) return;
 
-          if (event.key === 'Enter') {
+          if (event.key === "Enter") {
             const newIndex = (index + 1) % highlightedRows.size;
             count.current.textContent = `${newIndex + 1} / ${highlightedRows.size}`;
             const array = [...highlightedRows];
 
-            array.forEach((element) => element.classList.remove('focused'));
+            array.forEach((element) => element.classList.remove("focused"));
 
             if (array[newIndex]) {
-              array[newIndex].classList.add('focused');
+              array[newIndex].classList.add("focused");
               array[newIndex].scrollIntoView({
-                block: 'center',
-                inline: 'center',
+                block: "center",
+                inline: "center",
               });
             }
 

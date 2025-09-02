@@ -2,9 +2,9 @@ import {
   canSplash,
   isExplosive,
   resolvePenetrationCoefficient,
-} from '@blitzkit/core';
-import { invalidate, useFrame } from '@react-three/fiber';
-import { useEffect } from 'react';
+} from "@blitzkit/core";
+import { invalidate, useFrame } from "@react-three/fiber";
+import { useEffect } from "react";
 import {
   MeshBasicMaterial,
   NormalBlending,
@@ -14,16 +14,16 @@ import {
   UniformsLib,
   UniformsUtils,
   Vector2,
-} from 'three';
-import { degToRad } from 'three/src/math/MathUtils.js';
-import { hasEquipment } from '../../../../core/blitzkit/hasEquipment';
-import { jsxTree } from '../../../../core/blitzkit/jsxTree';
-import { Duel, type EquipmentMatrix } from '../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../stores/tankopediaEphemeral';
-import { TankopediaPersistent } from '../../../../stores/tankopediaPersistent';
-import fragmentShader from './shaders/fragment.glsl?raw';
-import vertexShader from './shaders/vertex.glsl?raw';
-import { spacedArmorRenderTarget } from './target';
+} from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
+import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
+import { jsxTree } from "../../../../core/blitzkit/jsxTree";
+import { Duel, type EquipmentMatrix } from "../../../../stores/duel";
+import { Tankopedia } from "../../../../stores/tankopedia";
+import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
+import fragmentShader from "./shaders/fragment.glsl?raw";
+import vertexShader from "./shaders/vertex.glsl?raw";
+import { spacedArmorRenderTarget } from "./target";
 
 interface PrimaryArmorSceneComponentProps {
   thickness: number;
@@ -81,15 +81,15 @@ export function PrimaryArmorSceneComponent({
   useEffect(() => {
     function handleShellChange() {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = TankopediaEphemeral.state;
+      const tankopediaEphemeral = Tankopedia.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!,
+        isExplosive(shell.type) ? 90 : shell.ricochet!
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0,
+        shell.normalization ?? 0
       );
       material.uniforms.isExplosive.value = isExplosive(shell.type);
       material.uniforms.canSplash.value = canSplash(shell.type);
@@ -116,13 +116,13 @@ export function PrimaryArmorSceneComponent({
     }
     function handleProtagonistEquipmentChange(
       equipment: EquipmentMatrix,
-      noInvalidate = false,
+      noInvalidate = false
     ) {
       const duel = duelStore.getState();
       const hasEnhancedArmor = hasEquipment(
         110,
         duel.protagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
       material.uniforms.thickness.value = hasEnhancedArmor
         ? thickness * 1.03
@@ -132,16 +132,16 @@ export function PrimaryArmorSceneComponent({
     }
     function handleAntagonistEquipmentChange(
       equipment: EquipmentMatrix,
-      noInvalidate = false,
+      noInvalidate = false
     ) {
       const duel = duelStore.getState();
-      const tankopediaEphemeral = TankopediaEphemeral.state;
+      const tankopediaEphemeral = Tankopedia.state;
       const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
       const penetration = shell.penetration.near;
       const hasCalibratedShells = hasEquipment(
         103,
         duel.antagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
 
       material.uniforms.penetration.value =
@@ -159,34 +159,34 @@ export function PrimaryArmorSceneComponent({
     handleOpaqueChange(initialState.opaque);
     handleWireframeChange(initialState.wireframe);
     handleProtagonistEquipmentChange(
-      duelStore.getState().protagonist.equipmentMatrix,
+      duelStore.getState().protagonist.equipmentMatrix
     );
     handleAntagonistEquipmentChange(
-      duelStore.getState().antagonist.equipmentMatrix,
+      duelStore.getState().antagonist.equipmentMatrix
     );
 
     const unsubscribes = [
       duelStore.subscribe((state) => state.antagonist.shell, handleShellChange),
-      TankopediaEphemeral.on((state) => state.customShell, handleShellChange),
+      Tankopedia.on((state) => state.customShell, handleShellChange),
       tankopediaPersistentStore.subscribe(
         (state) => state.greenPenetration,
-        handleGreenPenetrationChange,
+        handleGreenPenetrationChange
       ),
       tankopediaPersistentStore.subscribe(
         (state) => state.advancedHighlighting,
-        handleAdvancedHighlightingChange,
+        handleAdvancedHighlightingChange
       ),
       tankopediaPersistentStore.subscribe(
         (state) => state.opaque,
-        handleOpaqueChange,
+        handleOpaqueChange
       ),
       duelStore.subscribe(
         (state) => state.protagonist.equipmentMatrix,
-        (equipment) => handleProtagonistEquipmentChange(equipment),
+        (equipment) => handleProtagonistEquipmentChange(equipment)
       ),
       duelStore.subscribe(
         (state) => state.antagonist.equipmentMatrix,
-        (equipment) => handleAntagonistEquipmentChange(equipment),
+        (equipment) => handleAntagonistEquipmentChange(equipment)
       ),
     ];
 
@@ -197,7 +197,7 @@ export function PrimaryArmorSceneComponent({
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(
-      gl.getPixelRatio(),
+      gl.getPixelRatio()
     );
     material.uniforms.spacedArmorBuffer.value = spacedArmorRenderTarget.texture;
     material.uniforms.spacedArmorDepth.value =

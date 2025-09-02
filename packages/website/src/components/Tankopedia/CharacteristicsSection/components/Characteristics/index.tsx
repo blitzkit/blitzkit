@@ -1,19 +1,19 @@
-import { Flex } from '@radix-ui/themes';
-import { useEffect } from 'react';
-import { awaitableEquipmentDefinitions } from '../../../../../core/awaitables/equipmentDefinitions';
-import { awaitableProvisionDefinitions } from '../../../../../core/awaitables/provisionDefinitions';
-import { applyPitchYawLimits } from '../../../../../core/blitz/applyPitchYawLimits';
-import { modelTransformEvent } from '../../../../../core/blitzkit/modelTransform';
-import { tankCharacteristics } from '../../../../../core/blitzkit/tankCharacteristics';
-import { useEquipment } from '../../../../../hooks/useEquipment';
-import { useTankModelDefinition } from '../../../../../hooks/useTankModelDefinition';
-import { Duel } from '../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
-import type { MaybeSkeletonComponentProps } from '../../../../../types/maybeSkeletonComponentProps';
-import { Crew } from './components/Crew';
-import { Firepower } from './components/Firepower';
-import { Maneuverability } from './components/Maneuverability';
-import { Survivability } from './components/Survivability';
+import { Flex } from "@radix-ui/themes";
+import { useEffect } from "react";
+import { awaitableEquipmentDefinitions } from "../../../../../core/awaitables/equipmentDefinitions";
+import { awaitableProvisionDefinitions } from "../../../../../core/awaitables/provisionDefinitions";
+import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
+import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
+import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
+import { useEquipment } from "../../../../../hooks/useEquipment";
+import { useTankModelDefinition } from "../../../../../hooks/useTankModelDefinition";
+import { Duel } from "../../../../../stores/duel";
+import { Tankopedia } from "../../../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
+import { Crew } from "./components/Crew";
+import { Firepower } from "./components/Firepower";
+import { Maneuverability } from "./components/Maneuverability";
+import { Survivability } from "./components/Survivability";
 
 const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
   awaitableEquipmentDefinitions,
@@ -21,18 +21,18 @@ const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
 ]);
 
 export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
-  const crewSkills = TankopediaEphemeral.use((state) => state.skills);
+  const crewSkills = Tankopedia.use((state) => state.skills);
   const provisions = Duel.use((state) => state.protagonist.provisions);
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const camouflage = Duel.use((state) => state.protagonist.camouflage);
   const assaultDistance = Duel.use(
-    (state) => state.protagonist.assaultDistance,
+    (state) => state.protagonist.assaultDistance
   );
   const equipmentMatrix = Duel.use(
-    (state) => state.protagonist.equipmentMatrix,
+    (state) => state.protagonist.equipmentMatrix
   );
   const { tank, turret, gun, engine, track, shell } = Duel.use(
-    (state) => state.protagonist,
+    (state) => state.protagonist
   );
   const stockEngine = tank.engines[0];
   const stockTrack = tank.tracks[0];
@@ -67,7 +67,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
       tankModelDefinition,
       equipmentDefinitions: equipmentDefinitions,
       provisionDefinitions: provisionDefinitions,
-    },
+    }
   );
 
   const hasImprovedVerticalStabilizer = useEquipment(122);
@@ -80,7 +80,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
       gunModelDefinition.pitch,
       turretModelDefinition.yaw,
       hasImprovedVerticalStabilizer,
-      hasDownImprovedVerticalStabilizer,
+      hasDownImprovedVerticalStabilizer
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });
@@ -89,25 +89,25 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   return (
     <Flex
       gap="8"
-      direction={{ initial: 'column', md: 'row' }}
-      align={{ initial: 'center', sm: 'start' }}
-      width={{ initial: '100%', sm: 'auto' }}
+      direction={{ initial: "column", md: "row" }}
+      align={{ initial: "center", sm: "start" }}
+      width={{ initial: "100%", sm: "auto" }}
     >
       <Firepower skeleton={skeleton} stats={stats} />
 
       <Flex
         gap="8"
-        direction={{ initial: 'column', lg: 'row' }}
-        align={{ initial: 'center', sm: 'start' }}
-        width={{ initial: '100%', sm: 'auto' }}
+        direction={{ initial: "column", lg: "row" }}
+        align={{ initial: "center", sm: "start" }}
+        width={{ initial: "100%", sm: "auto" }}
       >
         <Maneuverability stats={stats} />
 
         <Flex
           gap="8"
           direction="column"
-          align={{ initial: 'center', sm: 'start' }}
-          width={{ initial: '100%', sm: 'auto' }}
+          align={{ initial: "center", sm: "start" }}
+          width={{ initial: "100%", sm: "auto" }}
         >
           <Survivability stats={stats} />
           <Crew stats={stats} />

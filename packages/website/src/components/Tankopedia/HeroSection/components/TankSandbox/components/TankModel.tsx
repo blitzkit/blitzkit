@@ -1,17 +1,17 @@
-import { invalidate, useThree, type ThreeEvent } from '@react-three/fiber';
-import { useRef } from 'react';
-import { Group, Mesh, MeshStandardMaterial, Vector2 } from 'three';
-import { applyPitchYawLimits } from '../../../../../../core/blitz/applyPitchYawLimits';
-import { hasEquipment } from '../../../../../../core/blitzkit/hasEquipment';
-import { jsxTree } from '../../../../../../core/blitzkit/jsxTree';
-import { modelTransformEvent } from '../../../../../../core/blitzkit/modelTransform';
-import { useModel } from '../../../../../../hooks/useModel';
-import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
-import { useTankTransform } from '../../../../../../hooks/useTankTransform';
-import { Duel } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
-import { TankopediaDisplay } from '../../../../../../stores/tankopediaPersistent/constants';
-import { ModelTankWrapper } from '../../../../../Armor/components/ModelTankWrapper';
+import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
+import { useRef } from "react";
+import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
+import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
+import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
+import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
+import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
+import { useModel } from "../../../../../../hooks/useModel";
+import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
+import { useTankTransform } from "../../../../../../hooks/useTankTransform";
+import { Duel } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
+import { ModelTankWrapper } from "../../../../../Armor/components/ModelTankWrapper";
 
 export function TankModel() {
   const duelStore = Duel.useStore();
@@ -34,9 +34,9 @@ export function TankModel() {
   return (
     <ModelTankWrapper ref={hullContainer}>
       {nodes.map((node) => {
-        const isHull = node.name === 'hull';
-        const isWheel = node.name.startsWith('chassis_wheel_');
-        const isTrack = node.name.startsWith('chassis_track_');
+        const isHull = node.name === "hull";
+        const isWheel = node.name.startsWith("chassis_wheel_");
+        const isTrack = node.name.startsWith("chassis_track_");
         const isVisible = isHull || isWheel || isTrack;
         const position = new Vector2();
         const delta = new Vector2();
@@ -59,19 +59,16 @@ export function TankModel() {
         }
 
         function onPointerDown(event: ThreeEvent<PointerEvent>) {
-          if (
-            isTrack &&
-            TankopediaEphemeral.state.display === TankopediaDisplay.Model
-          ) {
+          if (isTrack && Tankopedia.state.display === TankopediaDisplay.Model) {
             position.set(event.clientX, event.clientY);
             event.stopPropagation();
 
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               draft.controlsEnabled = false;
             });
 
-            window.addEventListener('pointermove', handlePointerMove);
-            window.addEventListener('pointerup', handlePointerUp);
+            window.addEventListener("pointermove", handlePointerMove);
+            window.addEventListener("pointerup", handlePointerUp);
           } else {
             event.stopPropagation();
           }
@@ -85,12 +82,12 @@ export function TankModel() {
           translateTexture(deltaX + deltaY);
         }
         function handlePointerUp() {
-          TankopediaEphemeral.mutate((draft) => {
+          Tankopedia.mutate((draft) => {
             draft.controlsEnabled = true;
           });
 
-          window.removeEventListener('pointermove', handlePointerMove);
-          window.removeEventListener('pointerup', handlePointerUp);
+          window.removeEventListener("pointermove", handlePointerMove);
+          window.removeEventListener("pointerup", handlePointerUp);
         }
 
         return jsxTree(node, {
@@ -110,10 +107,10 @@ export function TankModel() {
 
       <group ref={turretContainer}>
         {nodes.map((node) => {
-          const isTurret = node.name.startsWith('turret_');
+          const isTurret = node.name.startsWith("turret_");
           const isCurrentTurret =
             node.name ===
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, '0')}`;
+            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`;
           const isVisible = isCurrentTurret;
           const position = new Vector2();
           const delta = new Vector2();
@@ -127,27 +124,27 @@ export function TankModel() {
 
             position.set(event.clientX, event.clientY);
 
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               draft.controlsEnabled = false;
             });
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               draft.shot = undefined;
               draft.highlightArmor = undefined;
             });
-            window.addEventListener('pointermove', handlePointerMove);
-            window.addEventListener('pointerup', handlePointerUp);
+            window.addEventListener("pointermove", handlePointerMove);
+            window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
             const duel = duelStore.getState();
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
               duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix,
+              duel.protagonist.equipmentMatrix
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
               duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix,
+              duel.protagonist.equipmentMatrix
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -161,16 +158,16 @@ export function TankModel() {
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
-              hasDownImprovedVerticalStabilizer,
+              hasDownImprovedVerticalStabilizer
             );
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               draft.controlsEnabled = true;
             });
-            window.removeEventListener('pointermove', handlePointerMove);
-            window.removeEventListener('pointerup', handlePointerUp);
+            window.removeEventListener("pointermove", handlePointerMove);
+            window.removeEventListener("pointerup", handlePointerUp);
           }
 
           return jsxTree(node, {
@@ -194,10 +191,10 @@ export function TankModel() {
               node.name ===
               `gun_${gunModelDefinition.model_id
                 .toString()
-                .padStart(2, '0')}_mask`;
+                .padStart(2, "0")}_mask`;
             const isCurrentGun =
               node.name ===
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, '0')}`;
+              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`;
             const isVisible = isCurrentGun || isCurrentMantlet;
             const position = new Vector2();
             const delta = new Vector2();
@@ -210,10 +207,10 @@ export function TankModel() {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.controlsEnabled = false;
               });
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
               });
@@ -222,20 +219,20 @@ export function TankModel() {
               pitch = modelTransformEvent.last!.pitch;
               yaw = modelTransformEvent.last!.yaw;
 
-              window.addEventListener('pointermove', handlePointerMove);
-              window.addEventListener('pointerup', handlePointerUp);
+              window.addEventListener("pointermove", handlePointerMove);
+              window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
               const duel = duelStore.getState();
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix,
+                duel.protagonist.equipmentMatrix
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix,
+                duel.protagonist.equipmentMatrix
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -247,16 +244,16 @@ export function TankModel() {
                 gunModelDefinition.pitch,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
-                hasDownImprovedVerticalStabilizer,
+                hasDownImprovedVerticalStabilizer
               );
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              TankopediaEphemeral.mutate((draft) => {
+              Tankopedia.mutate((draft) => {
                 draft.controlsEnabled = true;
               });
-              window.removeEventListener('pointermove', handlePointerMove);
-              window.removeEventListener('pointerup', handlePointerUp);
+              window.removeEventListener("pointermove", handlePointerMove);
+              window.removeEventListener("pointerup", handlePointerUp);
             }
 
             return jsxTree(node, {

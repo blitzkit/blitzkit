@@ -1,4 +1,4 @@
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { ReloadIcon } from "@radix-ui/react-icons";
 import {
   Card,
   Code,
@@ -6,21 +6,19 @@ import {
   IconButton,
   Text,
   TextField,
-} from '@radix-ui/themes';
-import { Html } from '@react-three/drei';
-import { useRef } from 'react';
-import { radToDeg } from 'three/src/math/MathUtils.js';
-import { resolveArmorIndex } from '../../../core/blitzkit/resolveArmorIndex';
-import { App } from '../../../stores/app';
-import { Duel } from '../../../stores/duel';
-import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
-import { layerTypeNames } from './ShotDisplayCard';
-import { ArmorType } from './SpacedArmorScene';
+} from "@radix-ui/themes";
+import { Html } from "@react-three/drei";
+import { useRef } from "react";
+import { radToDeg } from "three/src/math/MathUtils.js";
+import { resolveArmorIndex } from "../../../core/blitzkit/resolveArmorIndex";
+import { App } from "../../../stores/app";
+import { Duel } from "../../../stores/duel";
+import { Tankopedia } from "../../../stores/tankopedia";
+import { layerTypeNames } from "./ShotDisplayCard";
+import { ArmorType } from "./SpacedArmorScene";
 
 export function ArmorPlateDisplay() {
-  const highlightArmor = TankopediaEphemeral.use(
-    (state) => state.highlightArmor,
-  );
+  const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const duelStore = Duel.useStore();
   const input = useRef<HTMLInputElement>(null);
@@ -31,20 +29,20 @@ export function ArmorPlateDisplay() {
     <group position={highlightArmor.point}>
       <Html
         center
-        style={{ pointerEvents: highlightArmor.editingPlate ? 'auto' : 'none' }}
+        style={{ pointerEvents: highlightArmor.editingPlate ? "auto" : "none" }}
       >
         <Card
           variant="classic"
           mb="4"
           style={{
-            whiteSpace: 'nowrap',
+            whiteSpace: "nowrap",
             color: highlightArmor.color,
-            transform: 'translateY(-50%)',
+            transform: "translateY(-50%)",
           }}
         >
           <Flex direction="column">
             <Text weight="bold">
-              {layerTypeNames[highlightArmor.type]}{' '}
+              {layerTypeNames[highlightArmor.type]}{" "}
               {highlightArmor.thickness.toFixed(0)}
               <Text size="1" weight="regular">
                 mm
@@ -90,10 +88,10 @@ export function ArmorPlateDisplay() {
 
                     if (isNaN(thickness) || thickness < 0) return;
 
-                    if (event.key === 'Enter') {
+                    if (event.key === "Enter") {
                       input.current?.blur();
 
-                      TankopediaEphemeral.mutate((draft) => {
+                      Tankopedia.mutate((draft) => {
                         draft.highlightArmor = undefined;
                         const { protagonist } = duelStore.getState();
                         const tank = draft.model;
@@ -101,23 +99,23 @@ export function ArmorPlateDisplay() {
                         const gun = turret.guns[protagonist.gun.id];
                         const track = tank.tracks[protagonist.track.id];
 
-                        if (highlightArmor.name.startsWith('hull_')) {
+                        if (highlightArmor.name.startsWith("hull_")) {
                           tank.armor.thickness[index] = thickness;
-                        } else if (highlightArmor.name.startsWith('turret_')) {
+                        } else if (highlightArmor.name.startsWith("turret_")) {
                           turret.armor.thickness[index] = thickness;
-                        } else if (highlightArmor.name.startsWith('gun_')) {
-                          if (highlightArmor.name.includes('_armor_')) {
+                        } else if (highlightArmor.name.startsWith("gun_")) {
+                          if (highlightArmor.name.includes("_armor_")) {
                             gun.armor.thickness[index] = thickness;
                           } else {
                             gun.thickness = thickness;
                           }
-                        } else if (highlightArmor.name.startsWith('chassis_')) {
+                        } else if (highlightArmor.name.startsWith("chassis_")) {
                           track.thickness = thickness;
                         }
                       });
-                    } else if (event.key === 'Escape') {
+                    } else if (event.key === "Escape") {
                       input.current?.blur();
-                      TankopediaEphemeral.mutate((draft) => {
+                      Tankopedia.mutate((draft) => {
                         draft.highlightArmor = undefined;
                       });
                     }
@@ -135,7 +133,7 @@ export function ArmorPlateDisplay() {
                   mt="2"
                   color="red"
                   onClick={() => {
-                    TankopediaEphemeral.mutate((draft) => {
+                    Tankopedia.mutate((draft) => {
                       if (!highlightArmor.editingPlate) return;
 
                       const index = resolveArmorIndex(highlightArmor.name);
@@ -143,7 +141,7 @@ export function ArmorPlateDisplay() {
                       if (index === undefined) return;
 
                       draft.highlightArmor = undefined;
-                      const initialState = TankopediaEphemeral.initial;
+                      const initialState = Tankopedia.initial;
                       const { protagonist } = duelStore.getState();
                       const tank = draft.model;
                       const initialTank = initialState.model;
@@ -156,20 +154,20 @@ export function ArmorPlateDisplay() {
                       const initialTrack =
                         initialTank.tracks[protagonist.track.id];
 
-                      if (highlightArmor.name.startsWith('hull_')) {
+                      if (highlightArmor.name.startsWith("hull_")) {
                         tank.armor.thickness[index] =
                           initialTank.armor.thickness[index];
-                      } else if (highlightArmor.name.startsWith('turret_')) {
+                      } else if (highlightArmor.name.startsWith("turret_")) {
                         turret.armor.thickness[index] =
                           initialTurret.armor.thickness[index];
-                      } else if (highlightArmor.name.startsWith('gun_')) {
-                        if (highlightArmor.name.includes('_armor_')) {
+                      } else if (highlightArmor.name.startsWith("gun_")) {
+                        if (highlightArmor.name.includes("_armor_")) {
                           gun.armor.thickness[index] =
                             initialGun.armor.thickness[index];
                         } else {
                           gun.thickness = initialGun.thickness;
                         }
-                      } else if (highlightArmor.name.startsWith('chassis_')) {
+                      } else if (highlightArmor.name.startsWith("chassis_")) {
                         track.thickness = initialTrack.thickness;
                       }
                     });

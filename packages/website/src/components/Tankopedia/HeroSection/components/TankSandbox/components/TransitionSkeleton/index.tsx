@@ -1,14 +1,14 @@
-import { useRef } from 'react';
-import { Group, ShaderMaterial, UniformsLib, UniformsUtils } from 'three';
-import { jsxTree } from '../../../../../../../core/blitzkit/jsxTree';
-import { useModel } from '../../../../../../../hooks/useModel';
-import { useTankModelDefinition } from '../../../../../../../hooks/useTankModelDefinition';
-import { useTankTransform } from '../../../../../../../hooks/useTankTransform';
-import { Duel } from '../../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../../stores/tankopediaEphemeral';
-import { ModelTankWrapper } from '../../../../../../Armor/components/ModelTankWrapper';
-import fragmentShader from './shaders/fragment.glsl?raw';
-import vertexShader from './shaders/vertex.glsl?raw';
+import { useRef } from "react";
+import { Group, ShaderMaterial, UniformsLib, UniformsUtils } from "three";
+import { jsxTree } from "../../../../../../../core/blitzkit/jsxTree";
+import { useModel } from "../../../../../../../hooks/useModel";
+import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
+import { useTankTransform } from "../../../../../../../hooks/useTankTransform";
+import { Duel } from "../../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../../stores/tankopedia";
+import { ModelTankWrapper } from "../../../../../../Armor/components/ModelTankWrapper";
+import fragmentShader from "./shaders/fragment.glsl?raw";
+import vertexShader from "./shaders/vertex.glsl?raw";
 
 const skeletonMaterial = new ShaderMaterial({
   vertexShader,
@@ -33,16 +33,16 @@ export function TransitionSkeleton() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
-  const revealed = TankopediaEphemeral.use((state) => state.revealed);
+  const revealed = Tankopedia.use((state) => state.revealed);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
   return (
     <ModelTankWrapper ref={hullContainer} visible={revealed}>
       {nodes.map((node) => {
-        const isHull = node.name === 'hull';
-        const isWheel = node.name.startsWith('chassis_wheel_');
-        const isTrack = node.name.startsWith('chassis_track_');
+        const isHull = node.name === "hull";
+        const isWheel = node.name.startsWith("chassis_wheel_");
+        const isTrack = node.name.startsWith("chassis_track_");
         const isVisible = isHull || isWheel || isTrack;
 
         if (!isVisible) return null;
@@ -58,7 +58,7 @@ export function TransitionSkeleton() {
         {nodes.map((node) => {
           const isCurrentTurret =
             node.name ===
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, '0')}`;
+            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`;
           const isVisible = isCurrentTurret;
 
           if (!isVisible) return null;
@@ -76,10 +76,10 @@ export function TransitionSkeleton() {
               node.name ===
               `gun_${gunModelDefinition.model_id
                 .toString()
-                .padStart(2, '0')}_mask`;
+                .padStart(2, "0")}_mask`;
             const isCurrentGun =
               node.name ===
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, '0')}`;
+              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`;
             const isVisible = isCurrentGun || isCurrentMantlet;
 
             if (!isVisible) return null;

@@ -2,9 +2,9 @@ import {
   ShellType,
   isExplosive,
   resolvePenetrationCoefficient,
-} from '@blitzkit/core';
-import { useThree } from '@react-three/fiber';
-import { useCallback } from 'react';
+} from "@blitzkit/core";
+import { useThree } from "@react-three/fiber";
+import { useCallback } from "react";
 import {
   type Intersection,
   MeshBasicMaterial,
@@ -14,21 +14,21 @@ import {
   Raycaster,
   Scene,
   Vector3,
-} from 'three';
-import { degToRad } from 'three/src/math/MathUtils.js';
-import { hasEquipment } from '../../../../core/blitzkit/hasEquipment';
-import { jsxTree } from '../../../../core/blitzkit/jsxTree';
-import { discardClippingPlane } from '../../../../core/three/discardClippingPlane';
-import { Duel } from '../../../../stores/duel';
+} from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
+import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
+import { jsxTree } from "../../../../core/blitzkit/jsxTree";
+import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
+import { Duel } from "../../../../stores/duel";
 import {
   type Shot,
   type ShotLayerBase,
   type ShotLayerNonExternal,
-  TankopediaEphemeral,
-} from '../../../../stores/tankopediaEphemeral';
-import { ArmorType } from '../SpacedArmorScene';
-import { SpacedArmorSubExternal } from './components/SpacedArmorSubExternal';
-import { SpacedArmorSubSpaced } from './components/SpacedArmorSubSpaced';
+  Tankopedia,
+} from "../../../../stores/tankopedia";
+import { ArmorType } from "../SpacedArmorScene";
+import { SpacedArmorSubExternal } from "./components/SpacedArmorSubExternal";
+import { SpacedArmorSubSpaced } from "./components/SpacedArmorSubSpaced";
 
 type SpacedArmorSceneComponentProps = {
   node: Object3D;
@@ -45,7 +45,7 @@ type SpacedArmorSceneComponentProps = {
     }
 );
 
-export type ExternalModuleVariant = 'gun' | 'track';
+export type ExternalModuleVariant = "gun" | "track";
 export type ArmorUserData = {
   thickness: number;
 } & (
@@ -84,10 +84,10 @@ export function SpacedArmorSceneComponent({
       point: Vector3,
       intersections: Intersection[],
       allowRicochet: boolean,
-      remainingPenetrationInput?: number,
+      remainingPenetrationInput?: number
     ) => {
       const { antagonist, protagonist } = duelStore.getState();
-      const { customShell } = TankopediaEphemeral.state;
+      const { customShell } = Tankopedia.state;
       const shell = customShell ?? antagonist.shell;
       const cameraNormal = camera.position.clone().sub(point).normalize();
       const shot: Shot = {
@@ -98,19 +98,19 @@ export function SpacedArmorSceneComponent({
         in: {
           surfaceNormal: cameraNormal,
           layers: [],
-          status: 'blocked',
+          status: "blocked",
         },
       };
 
       const hasCalibratedShells = hasEquipment(
         103,
         antagonist.tank.equipment_preset,
-        antagonist.equipmentMatrix,
+        antagonist.equipmentMatrix
       );
       const hasEnhancedArmor = hasEquipment(
         110,
         protagonist.tank.equipment_preset,
-        protagonist.equipmentMatrix,
+        protagonist.equipmentMatrix
       );
       const penetration =
         shell.penetration.near *
@@ -118,8 +118,8 @@ export function SpacedArmorSceneComponent({
       const thicknessCoefficient = hasEnhancedArmor ? 1.03 : 1;
       const filteredIntersections = intersections.filter(
         (intersection) =>
-          'type' in intersection.object.userData &&
-          !discardClippingPlane(intersection.object, intersection.point),
+          "type" in intersection.object.userData &&
+          !discardClippingPlane(intersection.object, intersection.point)
       ) as unknown as Intersection<Object3D & { userData: ArmorUserData }>[];
       const encounteredExternalModuleVariants: ExternalModuleVariant[] = [];
       const noDuplicateIntersections: typeof filteredIntersections = [];
@@ -128,12 +128,12 @@ export function SpacedArmorSceneComponent({
         if (intersection.object.userData.type === ArmorType.External) {
           if (
             !encounteredExternalModuleVariants.includes(
-              intersection.object.userData.variant,
+              intersection.object.userData.variant
             )
           ) {
             noDuplicateIntersections.push(intersection);
             encounteredExternalModuleVariants.push(
-              intersection.object.userData.variant,
+              intersection.object.userData.variant
             );
           }
         } else {
@@ -161,7 +161,7 @@ export function SpacedArmorSceneComponent({
         const surfaceNormal = intersection
           .normal!.clone()
           .applyQuaternion(
-            intersection.object.getWorldQuaternion(new Quaternion()),
+            intersection.object.getWorldQuaternion(new Quaternion())
           );
 
         if (shell.type === ShellType.HEAT && index > 0) {
@@ -173,7 +173,7 @@ export function SpacedArmorSceneComponent({
           shot.in.layers.push({
             type: null,
             distance,
-            status: blocked ? 'blocked' : 'penetration',
+            status: blocked ? "blocked" : "penetration",
           });
 
           if (blocked) break;
@@ -193,16 +193,16 @@ export function SpacedArmorSceneComponent({
             surfaceNormal,
             status:
               shell.type === ShellType.HE
-                ? 'blocked'
+                ? "blocked"
                 : blocked
-                  ? 'blocked'
-                  : 'penetration',
+                  ? "blocked"
+                  : "penetration",
             variant: layer.variant,
           });
         } else {
           const thickness = layer.thickness * thicknessCoefficient;
           const ricochet = degToRad(
-            isExplosive(shell.type) ? 90 : shell.ricochet!,
+            isExplosive(shell.type) ? 90 : shell.ricochet!
           );
           const angle = surfaceNormal.angleTo(cameraNormal);
 
@@ -226,7 +226,7 @@ export function SpacedArmorSceneComponent({
               thicknessAngled: finalThickness,
               point: intersection.point,
               surfaceNormal,
-              status: 'ricochet',
+              status: "ricochet",
               angle,
             });
 
@@ -244,10 +244,10 @@ export function SpacedArmorSceneComponent({
               surfaceNormal: intersection.face!.normal,
               status:
                 shell.type === ShellType.HE && layer.type !== ArmorType.Primary
-                  ? 'blocked'
+                  ? "blocked"
                   : blocked
-                    ? 'blocked'
-                    : 'penetration',
+                    ? "blocked"
+                    : "penetration",
               angle,
             });
           }
@@ -281,10 +281,10 @@ export function SpacedArmorSceneComponent({
 
               return acc + layer.thicknessAngled;
             },
-            0,
+            0
           );
           const distanceFromSpacedArmor = firstLayer.point.distanceTo(
-            lastLayer.point,
+            lastLayer.point
           );
           const finalDamage = Math.max(
             0,
@@ -293,7 +293,7 @@ export function SpacedArmorSceneComponent({
               (1 - distanceFromSpacedArmor / shell.explosion_radius!) -
               1.1 *
                 (lastLayer.thicknessAngled +
-                  Math.min(penetration, totalSpacedArmorThickness)),
+                  Math.min(penetration, totalSpacedArmorThickness))
           );
 
           /**
@@ -307,19 +307,19 @@ export function SpacedArmorSceneComponent({
            * for parity's sake, I am capping the value here.
            */
 
-          if (shot.in.layers.length > 1 || lastLayer.status === 'blocked') {
-            shot.in.status = finalDamage > 0 ? 'splash' : 'blocked';
+          if (shot.in.layers.length > 1 || lastLayer.status === "blocked") {
+            shot.in.status = finalDamage > 0 ? "splash" : "blocked";
             shot.damage = finalDamage;
           } else {
-            shot.in.status = 'penetration';
+            shot.in.status = "penetration";
             shot.damage = shell.armor_damage;
           }
         } else {
-          if (lastLayer.status === 'blocked') {
-            shot.in.status = 'blocked';
+          if (lastLayer.status === "blocked") {
+            shot.in.status = "blocked";
             shot.damage = 0;
-          } else if (lastLayer.status === 'penetration') {
-            shot.in.status = 'penetration';
+          } else if (lastLayer.status === "penetration") {
+            shot.in.status = "penetration";
             shot.damage = shell.armor_damage;
           } else {
             const caster = new Raycaster();
@@ -330,29 +330,29 @@ export function SpacedArmorSceneComponent({
               .sub(
                 lastLayer.surfaceNormal
                   .clone()
-                  .multiplyScalar(2 * shellNormal.dot(lastLayer.surfaceNormal)),
+                  .multiplyScalar(2 * shellNormal.dot(lastLayer.surfaceNormal))
               );
 
             caster.set(lastLayer.point, ricochetNormal);
 
             const ricochetIntersections = caster.intersectObjects(
               props.scene.children,
-              true,
+              true
             );
             const outShot = shoot(
               lastLayer.point,
               ricochetIntersections,
               false,
-              remainingPenetration,
+              remainingPenetration
             );
 
-            shot.in.status = 'ricochet';
+            shot.in.status = "ricochet";
             if (outShot === null) {
               shot.damage = 0;
               shot.out = {
                 surfaceNormal: ricochetNormal,
                 layers: [],
-                status: 'ricochet',
+                status: "ricochet",
               };
             } else {
               shot.damage = outShot.damage;
@@ -365,7 +365,7 @@ export function SpacedArmorSceneComponent({
 
       return shot;
     },
-    [camera],
+    [camera]
   );
 
   return (
@@ -390,7 +390,7 @@ export function SpacedArmorSceneComponent({
 
                   const shot = shoot(event.point, event.intersections, true)!;
 
-                  TankopediaEphemeral.mutate((draft) => {
+                  Tankopedia.mutate((draft) => {
                     draft.shot = shot;
                   });
                 }}

@@ -1,15 +1,15 @@
-import { I_HAT, J_HAT } from '@blitzkit/core';
-import { OrbitControls } from '@react-three/drei';
-import { invalidate, useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
-import { PerspectiveCamera, Vector3 } from 'three';
-import { OrbitControls as OrbitControlsClass } from 'three-stdlib';
-import { awaitableModelDefinitions } from '../../../../../../core/awaitables/modelDefinitions';
-import { applyPitchYawLimits } from '../../../../../../core/blitz/applyPitchYawLimits';
-import { hasEquipment } from '../../../../../../core/blitzkit/hasEquipment';
-import { Pose, poseEvent } from '../../../../../../core/blitzkit/pose';
-import { Duel } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+import { I_HAT, J_HAT } from "@blitzkit/core";
+import { OrbitControls } from "@react-three/drei";
+import { invalidate, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import { PerspectiveCamera, Vector3 } from "three";
+import { OrbitControls as OrbitControlsClass } from "three-stdlib";
+import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
+import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
+import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
+import { Pose, poseEvent } from "../../../../../../core/blitzkit/pose";
+import { Duel } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
 
 const poseDistances: Record<Pose, number> = {
   [Pose.HullDown]: 15,
@@ -56,23 +56,23 @@ export function Controls({
   const protagonistHullOrigin = new Vector3(
     protagonistTrackModelDefinition.origin.x,
     protagonistTrackModelDefinition.origin.y,
-    -protagonistTrackModelDefinition.origin.z,
+    -protagonistTrackModelDefinition.origin.z
   );
   const protagonistTurretOrigin = new Vector3(
     protagonistModelDefinition.turret_origin.x,
     protagonistModelDefinition.turret_origin.y,
-    -protagonistModelDefinition.turret_origin.z,
+    -protagonistModelDefinition.turret_origin.z
   );
   const protagonistGunOrigin = new Vector3(
     protagonistTurretModelDefinition.gun_origin.x,
     protagonistTurretModelDefinition.gun_origin.y,
-    -protagonistTurretModelDefinition.gun_origin.z,
+    -protagonistTurretModelDefinition.gun_origin.z
   );
   const antagonistGunHeight =
     protagonistTrackModelDefinition.origin.y +
     antagonistModelDefinition.turret_origin.y +
     antagonistTurretModelDefinition.gun_origin.y;
-  const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
+  const disturbed = Tankopedia.use((state) => state.disturbed);
   const doAutoRotate = autoRotate && !disturbed;
   const gunHeight =
     protagonistHullOrigin.y +
@@ -81,7 +81,7 @@ export function Controls({
   const inspectModeInitialPosition = new Vector3(
     -8,
     naked ? gunHeight + 10 : 2,
-    -13,
+    -13
   );
 
   const t0 = useRef(Date.now() / 1000);
@@ -100,11 +100,11 @@ export function Controls({
   });
 
   useEffect(() => {
-    const unsubscribeTankopediaEphemeral = TankopediaEphemeral.on(
+    const unsubscribeTankopediaEphemeral = Tankopedia.on(
       (state) => state.controlsEnabled,
       (enabled) => {
         if (orbitControls.current) orbitControls.current.enabled = enabled;
-      },
+      }
     );
 
     function handlePoseEvent(event: Pose) {
@@ -112,12 +112,12 @@ export function Controls({
       const hasImprovedVerticalStabilizer = hasEquipment(
         122,
         duel.protagonist.tank.equipment_preset,
-        duel.protagonist.equipmentMatrix,
+        duel.protagonist.equipmentMatrix
       );
       const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
         duel.protagonist.tank.equipment_preset,
-        duel.protagonist.equipmentMatrix,
+        duel.protagonist.equipmentMatrix
       );
 
       switch (event) {
@@ -128,7 +128,7 @@ export function Controls({
             protagonistGunModelDefinition.pitch,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           camera.position
@@ -140,14 +140,14 @@ export function Controls({
               new Vector3(
                 0,
                 poseDistances[event] * Math.sin(pitch),
-                poseDistances[event] * -Math.cos(pitch),
-              ),
+                poseDistances[event] * -Math.cos(pitch)
+              )
             );
           camera.lookAt(
             protagonistHullOrigin
               .clone()
               .add(protagonistTurretOrigin)
-              .add(protagonistGunOrigin),
+              .add(protagonistGunOrigin)
           );
           orbitControls.current?.target.set(0, antagonistGunHeight, 0);
 
@@ -161,7 +161,7 @@ export function Controls({
             protagonistGunModelDefinition.pitch,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           camera.position
@@ -173,8 +173,8 @@ export function Controls({
               new Vector3(
                 0,
                 poseDistances[event] * Math.sin(pitch),
-                poseDistances[event] * -Math.cos(pitch),
-              ),
+                poseDistances[event] * -Math.cos(pitch)
+              )
             );
           orbitControls.current?.target
             .set(0, 0, 0)
@@ -185,8 +185,8 @@ export function Controls({
               new Vector3(
                 0,
                 0.5 * poseDistances[event] * Math.sin(pitch),
-                0.5 * poseDistances[event] * -Math.cos(pitch),
-              ),
+                0.5 * poseDistances[event] * -Math.cos(pitch)
+              )
             );
 
           break;
@@ -220,15 +220,15 @@ export function Controls({
     }
 
     function disturb() {
-      TankopediaEphemeral.mutate((draft) => {
+      Tankopedia.mutate((draft) => {
         draft.disturbed = true;
       });
     }
 
     poseEvent.on(disturb);
-    canvas.addEventListener('pointerdown', disturb);
-    canvas.addEventListener('wheel', handleWheel);
-    document.body.addEventListener('scroll', handleScroll);
+    canvas.addEventListener("pointerdown", disturb);
+    canvas.addEventListener("wheel", handleWheel);
+    document.body.addEventListener("scroll", handleScroll);
 
     function updateCamera() {
       if (!orbitControls.current) return;
@@ -239,7 +239,7 @@ export function Controls({
       orbitControls.current.target.set(
         0,
         gunHeight * (naked ? 1 / 4 : 3 / 4),
-        0,
+        0
       );
       orbitControls.current.enablePan = true;
       orbitControls.current.enableZoom = true;
@@ -251,10 +251,10 @@ export function Controls({
     updateCamera();
 
     return () => {
-      canvas.removeEventListener('pointerdown', disturb);
+      canvas.removeEventListener("pointerdown", disturb);
       poseEvent.off(disturb);
-      canvas.removeEventListener('wheel', handleWheel);
-      document.body.removeEventListener('scroll', handleScroll);
+      canvas.removeEventListener("wheel", handleWheel);
+      document.body.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -266,7 +266,7 @@ export function Controls({
       enableZoom={zoomable}
       zoomSpeed={zoomable ? undefined : 0}
       ref={orbitControls}
-      enabled={TankopediaEphemeral.state.controlsEnabled}
+      enabled={Tankopedia.state.controlsEnabled}
       enableDamping={false}
       autoRotateSpeed={1 / 4}
     />

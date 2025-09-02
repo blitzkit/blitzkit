@@ -1,14 +1,14 @@
-import { invalidate, useThree } from '@react-three/fiber';
-import { useEffect } from 'react';
-import type { Fog } from 'three';
-import { fogAnimationTime, fogFar0, fogFar1, forNear0, forNear1 } from '..';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+import { invalidate, useThree } from "@react-three/fiber";
+import { useEffect } from "react";
+import type { Fog } from "three";
+import { fogAnimationTime, fogFar0, fogFar1, forNear0, forNear1 } from "..";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
 
 export function InitialFogReveal() {
   const fog = useThree((state) => state.scene.fog as Fog | null);
 
   useEffect(() => {
-    TankopediaEphemeral.mutate((draft) => {
+    Tankopedia.mutate((draft) => {
       draft.revealed = true;
     });
 

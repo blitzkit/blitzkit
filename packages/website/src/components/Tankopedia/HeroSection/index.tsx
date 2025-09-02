@@ -1,28 +1,28 @@
-import { Box, Flex } from '@radix-ui/themes';
-import { times } from 'lodash-es';
-import { Suspense, useEffect, useMemo, useRef } from 'react';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { useFullScreen } from '../../../hooks/useFullScreen';
-import { Duel } from '../../../stores/duel';
-import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
-import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
-import type { ThicknessRange } from '../../Armor/components/StaticArmor';
-import { Options } from './components/Options';
-import { TankSandbox } from './components/TankSandbox';
-import { Title } from './components/TankSandbox/Title';
+import { Box, Flex } from "@radix-ui/themes";
+import { times } from "lodash-es";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { useFullScreen } from "../../../hooks/useFullScreen";
+import { Duel } from "../../../stores/duel";
+import { Tankopedia } from "../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import type { ThicknessRange } from "../../Armor/components/StaticArmor";
+import { Options } from "./components/Options";
+import { TankSandbox } from "./components/TankSandbox";
+import { Title } from "./components/TankSandbox/Title";
 
 const tankDefinitions = await awaitableTankDefinitions;
 
 export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
-  const revealed = TankopediaEphemeral.use((state) => state.revealed);
-  const disturbed = TankopediaEphemeral.use((state) => state.disturbed);
+  const revealed = Tankopedia.use((state) => state.revealed);
+  const disturbed = Tankopedia.use((state) => state.disturbed);
   const canvas = useRef<HTMLCanvasElement>(null);
   const isFullScreen = useFullScreen();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const thicknessRange = useMemo(() => {
     const entries = Object.values(tankDefinitions.tanks);
     const filtered = entries.filter(
-      (thisTank) => thisTank.tier === protagonist.tier,
+      (thisTank) => thisTank.tier === protagonist.tier
     );
     const value =
       (filtered.reduce((accumulator, thisTank) => {
@@ -41,7 +41,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
   useEffect(() => {
     if (disturbed) {
-      document.body.classList.remove('no-navbar');
+      document.body.classList.remove("no-navbar");
     }
   }, [disturbed]);
 
@@ -54,15 +54,15 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           mutateDuel((draft) => {
             draft.antagonist.shell = shells[index];
           });
-          TankopediaEphemeral.mutate((draft) => {
+          Tankopedia.mutate((draft) => {
             draft.customShell = undefined;
           });
         }
       });
     }
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
@@ -70,7 +70,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
       overflow="hidden"
       justify="center"
       style={{
-        backgroundColor: 'black',
+        backgroundColor: "black",
       }}
       position="relative"
     >
@@ -82,36 +82,36 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
         left="0"
         style={{
           opacity: disturbed ? 0 : 1,
-          background: 'black',
-          transitionDuration: '1s',
+          background: "black",
+          transitionDuration: "1s",
         }}
       />
 
       {/* <ScrollHint /> */}
 
       <Flex
-        direction={{ initial: 'column-reverse', md: 'row' }}
+        direction={{ initial: "column-reverse", md: "row" }}
         style={{
           zIndex: isFullScreen ? 2 : undefined,
-          transitionDuration: '1s',
-          background: isFullScreen ? 'black' : undefined,
+          transitionDuration: "1s",
+          background: isFullScreen ? "black" : undefined,
         }}
         height={
           isFullScreen
-            ? '100vh'
+            ? "100vh"
             : disturbed
-              ? 'calc(100svh - 6rem)'
+              ? "calc(100svh - 6rem)"
               : {
-                  initial: '28rem',
-                  md: 'calc(100svh - 12rem)',
+                  initial: "28rem",
+                  md: "calc(100svh - 12rem)",
                 }
         }
-        maxWidth={isFullScreen ? undefined : '120rem'}
+        maxWidth={isFullScreen ? undefined : "120rem"}
         flexGrow="1"
-        width={isFullScreen ? '100vw' : undefined}
-        position={isFullScreen ? 'fixed' : 'relative'}
-        top={isFullScreen ? '0' : undefined}
-        left={isFullScreen ? '0' : undefined}
+        width={isFullScreen ? "100vw" : undefined}
+        position={isFullScreen ? "fixed" : "relative"}
+        top={isFullScreen ? "0" : undefined}
+        left={isFullScreen ? "0" : undefined}
       >
         <Box
           className="tank-sandbox-container"
@@ -126,14 +126,14 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
               height="100%"
               position="relative"
               style={{
-                transitionDuration: '1s',
+                transitionDuration: "1s",
               }}
             >
               <Box
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  transitionDuration: '2s',
+                  width: "100%",
+                  height: "100%",
+                  transitionDuration: "2s",
                   opacity: revealed ? 1 : 0,
                   filter: disturbed
                     ? undefined

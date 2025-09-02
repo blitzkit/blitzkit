@@ -1,9 +1,9 @@
-import { J_HAT, K_HAT } from '@blitzkit/core';
-import { Box, Flex, Text } from '@radix-ui/themes';
-import { Html } from '@react-three/drei';
-import { invalidate, useFrame } from '@react-three/fiber';
-import { clamp } from 'lodash-es';
-import { useEffect, useRef, type ComponentProps } from 'react';
+import { J_HAT, K_HAT } from "@blitzkit/core";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { Html } from "@react-three/drei";
+import { invalidate, useFrame } from "@react-three/fiber";
+import { clamp } from "lodash-es";
+import { useEffect, useRef, type ComponentProps } from "react";
 import {
   BufferGeometry,
   DoubleSide,
@@ -15,24 +15,24 @@ import {
   MeshBasicMaterial,
   Path,
   Quaternion,
-} from 'three';
-import { isHalloween } from '../../../core/blitzkit/isHalloween';
-import { LocaleProvider, useLocale } from '../../../hooks/useLocale';
+} from "three";
+import { isHalloween } from "../../../core/blitzkit/isHalloween";
+import { LocaleProvider, useLocale } from "../../../hooks/useLocale";
 import {
-  TankopediaEphemeral,
+  Tankopedia,
   type ShotLayerNonExternal,
   type ShotStatus,
-} from '../../../stores/tankopediaEphemeral';
-import { ShotDisplayCard } from './ShotDisplayCard';
+} from "../../../stores/tankopedia";
+import { ShotDisplayCard } from "./ShotDisplayCard";
 
 export const shotStatusColors: Record<
   ShotStatus,
-  ComponentProps<typeof Text>['color']
+  ComponentProps<typeof Text>["color"]
 > = {
-  blocked: 'red',
-  penetration: 'green',
-  ricochet: 'yellow',
-  splash: 'orange',
+  blocked: "red",
+  penetration: "green",
+  ricochet: "yellow",
+  splash: "orange",
 };
 
 const SURFACE_POINT_SIZE = 12;
@@ -41,7 +41,7 @@ const TRACER_THICK = 1 / 32;
 const TRACER_THIN = TRACER_THICK / 2;
 
 export function ShotDisplay() {
-  const shot = TankopediaEphemeral.use((state) => state.shot);
+  const shot = Tankopedia.use((state) => state.shot);
   const inTracer = useRef<Mesh>(null);
   const outTracer = useRef<Mesh>(null);
   const splashRadiusWrapper = useRef<Group>(null);
@@ -52,16 +52,16 @@ export function ShotDisplay() {
   useEffect(() => {
     if (shot?.splashRadius !== undefined) {
       const outlineGeometry = new BufferGeometry().setFromPoints(
-        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50),
+        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50)
       );
       const outlineMaterial = new LineDashedMaterial({
-        color: 'orange',
+        color: "orange",
         dashSize: 0.05,
         gapSize: 0.025,
       });
       const outline = new Line(
         outlineGeometry,
-        outlineMaterial,
+        outlineMaterial
       ).computeLineDistances();
 
       splashRadiusWrapper.current?.add(outline);
@@ -76,9 +76,9 @@ export function ShotDisplay() {
     if (
       isHalloween() &&
       shot?.splashRadius !== undefined &&
-      shot.in.status === 'penetration'
+      shot.in.status === "penetration"
     ) {
-      const audio = new Audio('/assets/audio/lotta-damage.mp3');
+      const audio = new Audio("/assets/audio/lotta-damage.mp3");
 
       audio.currentTime = 0.7;
       audio.volume = 0.25;
@@ -134,11 +134,11 @@ export function ShotDisplay() {
   const outLength =
     shot.out && shot.out.layers.length > 0
       ? (shot.in.layers.at(-1) as ShotLayerNonExternal).point.distanceTo(
-          (shot.out.layers.at(-1) as ShotLayerNonExternal).point,
+          (shot.out.layers.at(-1) as ShotLayerNonExternal).point
         )
       : SHOT_DISPLAY_LENGTH_INFINITY;
   const inLast = shot.in.layers.findLast(
-    (layer) => layer.type !== null,
+    (layer) => layer.type !== null
   ) as ShotLayerNonExternal;
   const outTitleColor = shot.out
     ? shotStatusColors[shot.out.status]
@@ -154,7 +154,7 @@ export function ShotDisplay() {
           position={inLast.point}
           ref={splashRadiusWrapper}
           rotation={new Euler().setFromQuaternion(
-            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal),
+            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal)
           )}
         >
           <mesh>
@@ -172,13 +172,13 @@ export function ShotDisplay() {
       <Html position={inLast.point} center>
         <Box
           style={{
-            pointerEvents: 'none',
+            pointerEvents: "none",
             transform: `translateY(${tracerGoingUp ? 50 : -50}%)`,
           }}
-          mb={tracerGoingUp ? '0' : '9'}
-          pb={tracerGoingUp ? '0' : '4'}
-          mt={tracerGoingUp ? '9' : '0'}
-          pt={tracerGoingUp ? '4' : '0'}
+          mb={tracerGoingUp ? "0" : "9"}
+          pb={tracerGoingUp ? "0" : "4"}
+          mt={tracerGoingUp ? "9" : "0"}
+          pt={tracerGoingUp ? "4" : "0"}
         >
           <LocaleProvider locale={locale}>
             <ShotDisplayCard shot={shot} />
@@ -190,7 +190,7 @@ export function ShotDisplay() {
         if (layer.type === null) return null;
 
         const shotStatusColor =
-          shot.in.status === 'splash'
+          shot.in.status === "splash"
             ? shotStatusColors.splash
             : shotStatusColors[layer.status];
 
@@ -199,8 +199,8 @@ export function ShotDisplay() {
             position={layer.point}
             key={index}
             style={{
-              pointerEvents: 'none',
-              transform: 'translateY(-50%)',
+              pointerEvents: "none",
+              transform: "translateY(-50%)",
             }}
           >
             <Flex
@@ -225,7 +225,7 @@ export function ShotDisplay() {
       <group
         position={inLast.point}
         rotation={new Euler().setFromQuaternion(
-          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal),
+          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal)
         )}
       >
         <mesh position={[0, inLength / 2, 0]} renderOrder={2}>
@@ -253,8 +253,8 @@ export function ShotDisplay() {
           rotation={new Euler().setFromQuaternion(
             new Quaternion().setFromUnitVectors(
               J_HAT,
-              shot.out.surfaceNormal.clone(),
-            ),
+              shot.out.surfaceNormal.clone()
+            )
           )}
         >
           <mesh position={[0, outLength / 2, 0]} renderOrder={2}>

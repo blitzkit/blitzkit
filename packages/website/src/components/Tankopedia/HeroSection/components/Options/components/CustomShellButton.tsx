@@ -1,5 +1,5 @@
-import { ShellType } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n/src/literals';
+import { ShellType } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n/src/literals";
 import {
   Button,
   Flex,
@@ -9,15 +9,15 @@ import {
   Slider,
   Text,
   TextField,
-} from '@radix-ui/themes';
-import { throttle } from 'lodash-es';
-import { type ChangeEvent } from 'react';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+} from "@radix-ui/themes";
+import { throttle } from "lodash-es";
+import { type ChangeEvent } from "react";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
 
 export function CustomShellButton() {
-  const customShell = TankopediaEphemeral.use((state) => state.customShell);
+  const customShell = Tankopedia.use((state) => state.customShell);
   const gun = Duel.use((state) => state.protagonist.gun);
   const antagonistShell = Duel.use((state) => state.antagonist.shell);
   const { strings } = useLocale();
@@ -27,24 +27,24 @@ export function CustomShellButton() {
       onOpenChange={(open) => {
         if (!open || customShell) return;
 
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.customShell = antagonistShell;
         });
       }}
     >
       <Popover.Trigger>
         <IconButton
-          color={customShell ? undefined : 'gray'}
+          color={customShell ? undefined : "gray"}
           variant="soft"
-          size={{ initial: '2', sm: '3' }}
+          size={{ initial: "2", sm: "3" }}
           radius="none"
         >
           <img
             alt="custom shell"
             src="/assets/images/icons/custom-shell.png"
             style={{
-              width: '50%',
-              height: '50%',
+              width: "50%",
+              height: "50%",
             }}
           />
         </IconButton>
@@ -90,13 +90,13 @@ export function CustomShellButton() {
                         modified.ricochet = undefined;
                         modified.explosion_radius =
                           gun.shells.find(
-                            (shell) => shell.type === ShellType.HE,
+                            (shell) => shell.type === ShellType.HE
                           )?.explosion_radius ?? 1;
                         break;
                       }
                     }
 
-                    TankopediaEphemeral.mutate((draft) => {
+                    Tankopedia.mutate((draft) => {
                       draft.customShell = modified;
                     });
                   }}
@@ -129,11 +129,11 @@ export function CustomShellButton() {
                 </Text>
                 <TextField.Root
                   variant="classic"
-                  style={{ maxWidth: '6rem' }}
+                  style={{ maxWidth: "6rem" }}
                   defaultValue={customShell.caliber}
                   type="number"
                   onChange={(event) => {
-                    TankopediaEphemeral.mutate((draft) => {
+                    Tankopedia.mutate((draft) => {
                       draft.customShell!.caliber = event.target.valueAsNumber;
                     });
                   }}
@@ -141,9 +141,9 @@ export function CustomShellButton() {
                   onKeyDown={(event) => {
                     event.stopPropagation();
 
-                    if (event.key === 'Enter') {
+                    if (event.key === "Enter") {
                       (event.target as HTMLInputElement).blur();
-                    } else if (event.key === 'Escape') {
+                    } else if (event.key === "Escape") {
                       (event.target as HTMLInputElement).valueAsNumber =
                         customShell.caliber;
                       (event.target as HTMLInputElement).blur();
@@ -151,7 +151,7 @@ export function CustomShellButton() {
                   }}
                 >
                   <TextField.Slot side="right">
-                    {literals(strings.common.units.mm, [''])}
+                    {literals(strings.common.units.mm, [""])}
                   </TextField.Slot>
                 </TextField.Root>
               </Flex>
@@ -165,11 +165,11 @@ export function CustomShellButton() {
                 </Text>
                 <TextField.Root
                   variant="classic"
-                  style={{ maxWidth: '6rem' }}
+                  style={{ maxWidth: "6rem" }}
                   defaultValue={customShell.penetration.near}
                   type="number"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    TankopediaEphemeral.mutate((draft) => {
+                    Tankopedia.mutate((draft) => {
                       draft.customShell!.penetration.near =
                         event.target.valueAsNumber;
                     });
@@ -178,9 +178,9 @@ export function CustomShellButton() {
                   onKeyDown={(event) => {
                     event.stopPropagation();
 
-                    if (event.key === 'Enter') {
+                    if (event.key === "Enter") {
                       (event.target as HTMLInputElement).blur();
-                    } else if (event.key === 'Escape') {
+                    } else if (event.key === "Escape") {
                       (event.target as HTMLInputElement).valueAsNumber =
                         customShell.penetration.near;
                       (event.target as HTMLInputElement).blur();
@@ -188,7 +188,7 @@ export function CustomShellButton() {
                   }}
                 >
                   <TextField.Slot side="right">
-                    {literals(strings.common.units.mm, [''])}
+                    {literals(strings.common.units.mm, [""])}
                   </TextField.Slot>
                 </TextField.Root>
               </Flex>
@@ -223,9 +223,9 @@ export function CustomShellButton() {
                         step={Number.EPSILON}
                         defaultValue={[customShell.normalization ?? 0]}
                         onValueChange={([value]) => {
-                          console.log('asd');
+                          console.log("asd");
 
-                          TankopediaEphemeral.mutate((draft) => {
+                          Tankopedia.mutate((draft) => {
                             draft.customShell!.normalization = value;
                           });
                         }}
@@ -254,7 +254,7 @@ export function CustomShellButton() {
                         step={Number.EPSILON}
                         defaultValue={[customShell.ricochet ?? 90]}
                         onValueChange={throttle(([value]) => {
-                          TankopediaEphemeral.mutate((draft) => {
+                          Tankopedia.mutate((draft) => {
                             draft.customShell!.ricochet = value;
                           });
                         }, 1000)}
@@ -269,11 +269,11 @@ export function CustomShellButton() {
                   <Text>Explosion radius</Text>
                   <TextField.Root
                     variant="classic"
-                    style={{ maxWidth: '6rem' }}
+                    style={{ maxWidth: "6rem" }}
                     defaultValue={customShell.explosion_radius ?? 0}
                     type="number"
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                      TankopediaEphemeral.mutate((draft) => {
+                      Tankopedia.mutate((draft) => {
                         draft.customShell!.explosion_radius =
                           event.target.valueAsNumber;
                       });
@@ -282,9 +282,9 @@ export function CustomShellButton() {
                     onKeyDown={(event) => {
                       event.stopPropagation();
 
-                      if (event.key === 'Enter') {
+                      if (event.key === "Enter") {
                         (event.target as HTMLInputElement).blur();
-                      } else if (event.key === 'Escape') {
+                      } else if (event.key === "Escape") {
                         (event.target as HTMLInputElement).valueAsNumber =
                           customShell.explosion_radius ?? 1;
                         (event.target as HTMLInputElement).blur();
@@ -309,7 +309,7 @@ export function CustomShellButton() {
               <Button
                 color="red"
                 onClick={() => {
-                  TankopediaEphemeral.mutate((draft) => {
+                  Tankopedia.mutate((draft) => {
                     draft.customShell = antagonistShell;
                   });
                 }}

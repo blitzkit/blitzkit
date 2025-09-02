@@ -1,17 +1,17 @@
-import { Flex, Heading } from '@radix-ui/themes';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
-import { Tracker } from './components/Tracker';
+import { Flex, Heading } from "@radix-ui/themes";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { Tracker } from "./components/Tracker";
 
 export function Title() {
   const { unwrap } = useLocale();
   const protagonist = Duel.use((state) => state.protagonist.tank);
-  const revealed = TankopediaEphemeral.use((state) => state.revealed);
+  const revealed = Tankopedia.use((state) => state.revealed);
   const name = unwrap(protagonist.name);
   const fontSize = revealed
     ? revealed
-      ? '2rem'
+      ? "2rem"
       : `min(16vh, ${125 / name.length}vw)`
     : `min(12vh, ${75 / name.length}vw)`;
 
@@ -20,7 +20,7 @@ export function Title() {
       onPointerDown={(event) => {
         event.preventDefault();
 
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.revealed = true;
         });
       }}
@@ -28,27 +28,27 @@ export function Title() {
       position="absolute"
       align="center"
       justify="center"
-      top={revealed ? '6rem' : '50%'}
+      top={revealed ? "6rem" : "50%"}
       left="50%"
       width="100%"
-      height={revealed ? fontSize : '100%'}
+      height={revealed ? fontSize : "100%"}
       style={{
-        pointerEvents: revealed ? 'none' : undefined,
-        transitionDuration: '1s',
-        transform: 'translate(-50%, -50%)',
+        pointerEvents: revealed ? "none" : undefined,
+        transitionDuration: "1s",
+        transform: "translate(-50%, -50%)",
       }}
     >
       <Heading
         style={{
           fontWeight: 900,
-          userSelect: 'none',
-          pointerEvents: 'none',
+          userSelect: "none",
+          pointerEvents: "none",
           fontSize,
-          whiteSpace: 'nowrap',
+          whiteSpace: "nowrap",
           opacity: revealed ? 1 : 0.5,
-          letterSpacing: revealed || !revealed ? 0 : '-0.03em',
+          letterSpacing: revealed || !revealed ? 0 : "-0.03em",
           transition: `
-            letter-spacing 1.5s ${revealed ? '' : 'cubic-bezier(0.81, -2, 0.68, 1)'},
+            letter-spacing 1.5s ${revealed ? "" : "cubic-bezier(0.81, -2, 0.68, 1)"},
             font-size 1s,
             -webkit-text-stroke 2s,
             opacity 1s

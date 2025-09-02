@@ -1,4 +1,4 @@
-import { literals } from '@blitzkit/i18n/src/literals';
+import { literals } from "@blitzkit/i18n/src/literals";
 import {
   Card,
   Flex,
@@ -6,19 +6,19 @@ import {
   Separator,
   Text,
   type CardProps,
-} from '@radix-ui/themes';
-import type { ComponentProps } from 'react';
-import { radToDeg } from 'three/src/math/MathUtils.js';
-import { useLocale } from '../../../hooks/useLocale';
-import type { Shot, ShotLayer } from '../../../stores/tankopediaEphemeral';
-import { shotStatusColors } from './ShotDisplay';
-import { ArmorType } from './SpacedArmorScene';
+} from "@radix-ui/themes";
+import type { ComponentProps } from "react";
+import { radToDeg } from "three/src/math/MathUtils.js";
+import { useLocale } from "../../../hooks/useLocale";
+import type { Shot, ShotLayer } from "../../../stores/tankopedia";
+import { shotStatusColors } from "./ShotDisplay";
+import { ArmorType } from "./SpacedArmorScene";
 
 export const layerTypeNames = {
-  [ArmorType.Primary]: 'primary',
-  [ArmorType.Spaced]: 'spaced',
-  [ArmorType.External]: 'external',
-  null: 'gap',
+  [ArmorType.Primary]: "primary",
+  [ArmorType.Spaced]: "spaced",
+  [ArmorType.External]: "external",
+  null: "gap",
 } as const;
 
 function LayerEntry({
@@ -29,7 +29,7 @@ function LayerEntry({
   angle,
 }: {
   layerIndex?: string;
-  shotStatusColor: ComponentProps<typeof Text>['color'];
+  shotStatusColor: ComponentProps<typeof Text>["color"];
   layerName: string;
   layer: ShotLayer;
   angle?: number;
@@ -77,7 +77,7 @@ function LayerEntry({
               [
                 Math.round(layer.thicknessAngled).toLocaleString(locale),
                 radToDeg(angle ?? 0).toFixed(0),
-              ],
+              ]
             )}
           </Text>
         )}
@@ -89,7 +89,7 @@ function LayerEntry({
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
                 .ricochet_loss,
-              [Math.max(-100, -50 * layer.distance).toFixed(0)],
+              [Math.max(-100, -50 * layer.distance).toFixed(0)]
             )}
           </Text>
         )}
@@ -100,7 +100,7 @@ function LayerEntry({
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
                 .nominal,
-              [Math.round(layer.thickness).toLocaleString(locale)],
+              [Math.round(layer.thickness).toLocaleString(locale)]
             )}
           </Text>
         )}
@@ -132,14 +132,14 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.status[
                 shot.in.status
               ],
-              [Math.round(shot.damage).toLocaleString(locale)],
+              [Math.round(shot.damage).toLocaleString(locale)]
             )}
           </Text>
 
           <table
             style={{
-              whiteSpace: 'nowrap',
-              borderSpacing: 'var(--space-1) 0',
+              whiteSpace: "nowrap",
+              borderSpacing: "var(--space-1) 0",
             }}
           >
             {shot.in.layers.map((layer, index) => {
@@ -155,7 +155,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
                   ? undefined
                   : `${(shot.containsGaps ? index / 2 : index) + 1}.`;
               const shotStatusColor =
-                shot.in.status === 'splash'
+                shot.in.status === "splash"
                   ? shotStatusColors.splash
                   : shotStatusColors[layer.status];
 
@@ -202,7 +202,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
               {literals(
                 strings.website.tools.tankopedia.sandbox.dynamic.shot_card
                   .status[shot.out.status],
-                [Math.round(shot.damage).toLocaleString(locale)],
+                [Math.round(shot.damage).toLocaleString(locale)]
               )}
             </Text>
 
@@ -224,7 +224,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
                         1
                       }.`;
                 const shotStatusColor =
-                  shot.out!.status === 'splash'
+                  shot.out!.status === "splash"
                     ? shotStatusColors.splash
                     : shotStatusColors[layer.status];
 

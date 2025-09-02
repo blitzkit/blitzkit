@@ -1,8 +1,8 @@
-import { I_HAT, J_HAT } from '@blitzkit/core';
-import { type MeshProps, useThree } from '@react-three/fiber';
-import { clamp } from 'lodash-es';
-import type { QuicklimeEvent } from 'quicklime';
-import { useEffect, useMemo } from 'react';
+import { I_HAT, J_HAT } from "@blitzkit/core";
+import { type MeshProps, useThree } from "@react-three/fiber";
+import { clamp } from "lodash-es";
+import type { QuicklimeEvent } from "quicklime";
+import { useEffect, useMemo } from "react";
 import {
   Box3,
   Color,
@@ -15,28 +15,28 @@ import {
   Plane,
   Quaternion,
   Vector3,
-} from 'three';
-import { unrotateDavaVector } from '../../../core/blitz/unrotateDavaVector';
-import { jsxTree } from '../../../core/blitzkit/jsxTree';
+} from "three";
+import { unrotateDavaVector } from "../../../core/blitz/unrotateDavaVector";
+import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import {
   type ModelTransformEventData,
   modelTransformEvent,
-} from '../../../core/blitzkit/modelTransform';
-import { discardClippingPlane } from '../../../core/three/discardClippingPlane';
-import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
-import { ArmorType } from './SpacedArmorScene';
+} from "../../../core/blitzkit/modelTransform";
+import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
+import { Tankopedia } from "../../../stores/tankopedia";
+import { ArmorType } from "./SpacedArmorScene";
 import type {
   ArmorUserData,
   ExternalModuleVariant,
-} from './SpacedArmorSceneComponent';
-import type { ThicknessRange } from './StaticArmor';
+} from "./SpacedArmorSceneComponent";
+import type { ThicknessRange } from "./StaticArmor";
 
 type StaticArmorSceneComponentProps = {
   name: string;
   thickness: number;
   thicknessRange: ThicknessRange;
   node: Object3D;
-  onPointerDown?: MeshProps['onPointerDown'];
+  onPointerDown?: MeshProps["onPointerDown"];
 } & (
   | {
       type: Exclude<ArmorType, ArmorType.External>;
@@ -90,7 +90,7 @@ export function StaticArmorSceneComponent({
       color = new Color(
         clamp(1 - (7 / 8) * xClamped, 0, 1),
         0,
-        clamp(1 - (1 / 8) * xClamped, 0, 1),
+        clamp(1 - (1 / 8) * xClamped, 0, 1)
       );
       opacity = clamp(x + 1 / 2, 0, 1);
       break;
@@ -113,7 +113,7 @@ export function StaticArmorSceneComponent({
         depthWrite,
         ...(props.clip ? { clippingPlanes: [props.clip] } : {}),
       }),
-    [thickness],
+    [thickness]
   );
   const outlineMaterial = useMemo(
     () =>
@@ -122,7 +122,7 @@ export function StaticArmorSceneComponent({
           .clone()
           .multiplyScalar(props.type === ArmorType.Spaced ? 2 ** 2 : 2 ** -1),
       }),
-    [thickness],
+    [thickness]
   );
 
   useEffect(() => {
@@ -137,11 +137,11 @@ export function StaticArmorSceneComponent({
         outlineMaterial.visible = true;
       } else if (
         selectedName === name ||
-        (name.startsWith('chassis_') && selectedName.startsWith('chassis_')) ||
-        (name.startsWith('gun_') &&
-          selectedName.startsWith('gun_') &&
-          !name.includes('_armor_') &&
-          !selectedName.includes('_armor_'))
+        (name.startsWith("chassis_") && selectedName.startsWith("chassis_")) ||
+        (name.startsWith("gun_") &&
+          selectedName.startsWith("gun_") &&
+          !name.includes("_armor_") &&
+          !selectedName.includes("_armor_"))
       ) {
         // this selected, stand out!
         surfaceMaterial.opacity = 1;
@@ -164,9 +164,9 @@ export function StaticArmorSceneComponent({
     }
 
     const unsubscribes = [
-      TankopediaEphemeral.on(
+      Tankopedia.on(
         (state) => state.highlightArmor?.name,
-        handleHighlightArmor,
+        handleHighlightArmor
       ),
     ];
 
@@ -179,14 +179,14 @@ export function StaticArmorSceneComponent({
       const { clip } = props;
       const gunOrigin = unrotateDavaVector(props.gunOrigin.clone());
       const neckOrigin = unrotateDavaVector(props.hullOrigin.clone()).add(
-        unrotateDavaVector(props.turretOrigin.clone()),
+        unrotateDavaVector(props.turretOrigin.clone())
       );
       const barrelOrigin = neckOrigin.clone().add(gunOrigin);
       const distanceToBarrel = clip.distanceToPoint(barrelOrigin);
       const point = new Vector3();
 
       function handleModelTransform(
-        event: QuicklimeEvent<ModelTransformEventData>,
+        event: QuicklimeEvent<ModelTransformEventData>
       ) {
         clip.normal
           .set(0, 0, -1)
@@ -227,7 +227,7 @@ export function StaticArmorSceneComponent({
                 {
                   type: props.type,
                   variant:
-                    props.type === ArmorType.External ? props.variant : 'gun',
+                    props.type === ArmorType.External ? props.variant : "gun",
                   thickness,
                 } satisfies ArmorUserData
               }
@@ -236,7 +236,7 @@ export function StaticArmorSceneComponent({
 
                 event.stopPropagation();
 
-                const { editStatic } = TankopediaEphemeral.state;
+                const { editStatic } = Tankopedia.state;
 
                 const bounds = new Box3().setFromObject(event.object);
                 const point = bounds.min
@@ -251,13 +251,13 @@ export function StaticArmorSceneComponent({
                 const surfaceNormal = event
                   .normal!.clone()
                   .applyQuaternion(
-                    event.object.getWorldQuaternion(new Quaternion()),
+                    event.object.getWorldQuaternion(new Quaternion())
                   );
                 const angle = surfaceNormal.angleTo(cameraNormal);
                 const thicknessAngled =
                   thickness / Math.sin(Math.PI / 2 - angle);
 
-                TankopediaEphemeral.mutate((draft) => {
+                Tankopedia.mutate((draft) => {
                   draft.highlightArmor = {
                     type: props.type,
                     name,

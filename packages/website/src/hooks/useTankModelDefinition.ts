@@ -1,5 +1,5 @@
-import { TankopediaEphemeral } from '../stores/tankopediaEphemeral';
+import { Tankopedia } from "../stores/tankopedia";
 
 export function useTankModelDefinition() {
-  return TankopediaEphemeral.use((state) => state.model);
+  return Tankopedia.use((state) => state.model);
 }

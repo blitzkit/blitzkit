@@ -1,5 +1,5 @@
-import { BLITZKIT_TANK_ICON_SIZE } from '@blitzkit/core';
-import { invalidate } from '@react-three/fiber';
+import { BLITZKIT_TANK_ICON_SIZE } from "@blitzkit/core";
+import { invalidate } from "@react-three/fiber";
 import {
   forwardRef,
   Suspense,
@@ -7,33 +7,33 @@ import {
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import { Fog } from 'three';
-import { applyPitchYawLimits } from '../../../../../core/blitz/applyPitchYawLimits';
-import { modelTransformEvent } from '../../../../../core/blitzkit/modelTransform';
-import { Pose, poseEvent } from '../../../../../core/blitzkit/pose';
-import { useEquipment } from '../../../../../hooks/useEquipment';
-import { useTankModelDefinition } from '../../../../../hooks/useTankModelDefinition';
-import { Duel } from '../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
-import { TankopediaPersistent } from '../../../../../stores/tankopediaPersistent';
-import { TankopediaDisplay } from '../../../../../stores/tankopediaPersistent/constants';
-import { Armor } from '../../../../Armor';
-import { ArmorPlateDisplay } from '../../../../Armor/components/ArmorPlateDisplay';
-import { ShotDisplay } from '../../../../Armor/components/ShotDisplay';
+} from "react";
+import { Fog } from "three";
+import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
+import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
+import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
+import { useEquipment } from "../../../../../hooks/useEquipment";
+import { useTankModelDefinition } from "../../../../../hooks/useTankModelDefinition";
+import { Duel } from "../../../../../stores/duel";
+import { Tankopedia } from "../../../../../stores/tankopedia";
+import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
+import { Armor } from "../../../../Armor";
+import { ArmorPlateDisplay } from "../../../../Armor/components/ArmorPlateDisplay";
+import { ShotDisplay } from "../../../../Armor/components/ShotDisplay";
 import {
   StaticArmor,
   type ThicknessRange,
-} from '../../../../Armor/components/StaticArmor';
-import { SmartCanvas } from '../../../../SmartCanvas';
-import { AutoClear } from './components/AutoClear';
-import { Controls } from './components/Control';
-import { InitialAligner } from './components/InitialAligner';
-import { InitialFogReveal } from './components/InitialFogReveal';
-import { Lighting } from './components/Lighting';
-import { SceneProps } from './components/SceneProps';
-import { TankModel } from './components/TankModel';
-import { TransitionSkeleton } from './components/TransitionSkeleton';
+} from "../../../../Armor/components/StaticArmor";
+import { SmartCanvas } from "../../../../SmartCanvas";
+import { AutoClear } from "./components/AutoClear";
+import { Controls } from "./components/Control";
+import { InitialAligner } from "./components/InitialAligner";
+import { InitialFogReveal } from "./components/InitialFogReveal";
+import { Lighting } from "./components/Lighting";
+import { SceneProps } from "./components/SceneProps";
+import { TankModel } from "./components/TankModel";
+import { TransitionSkeleton } from "./components/TransitionSkeleton";
 
 interface TankSandboxProps {
   thicknessRange: ThicknessRange;
@@ -48,7 +48,7 @@ export const fogAnimationTime = 2.5;
 
 export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
   ({ thicknessRange, naked }, ref) => {
-    const fog = useRef(new Fog('black', forNear1, fogFar1));
+    const fog = useRef(new Fog("black", forNear1, fogFar1));
     const canvas = useRef<HTMLCanvasElement>(null);
     const hasImprovedVerticalStabilizer = useEquipment(122);
     const hasDownImprovedVerticalStabilizer = useEquipment(124);
@@ -58,10 +58,10 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const turretModelDefinition =
       tankModelDefinition.turrets[protagonistTurret.id];
     const gunModelDefinition = turretModelDefinition.guns[protagonistGun.id];
-    const rawDisplay = TankopediaEphemeral.use((state) => state.display);
+    const rawDisplay = Tankopedia.use((state) => state.display);
     const [display, setDisplay] = useState(rawDisplay);
     const hideTankModelUnderArmor = TankopediaPersistent.use(
-      (state) => state.hideTankModelUnderArmor,
+      (state) => state.hideTankModelUnderArmor
     );
 
     useEffect(() => {
@@ -95,8 +95,8 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     useImperativeHandle(ref, () => canvas.current!, []);
 
     function handlePointerDown() {
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
     }
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
@@ -104,8 +104,8 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     function handlePointerUp(event: PointerEvent) {
       event.preventDefault();
 
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
     }
 
     useEffect(() => {
@@ -118,7 +118,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
-              hasDownImprovedVerticalStabilizer,
+              hasDownImprovedVerticalStabilizer
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -132,7 +132,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               0,
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
-              hasImprovedVerticalStabilizer,
+              hasImprovedVerticalStabilizer
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -146,7 +146,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               0,
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
-              hasImprovedVerticalStabilizer,
+              hasImprovedVerticalStabilizer
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -168,7 +168,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         modelTransformEvent.last!.yaw,
         gunModelDefinition.pitch,
         turretModelDefinition.yaw,
-        hasImprovedVerticalStabilizer,
+        hasImprovedVerticalStabilizer
       );
 
       modelTransformEvent.dispatch({ pitch, yaw });
@@ -176,13 +176,13 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
 
     useEffect(() => {
       if (display !== TankopediaDisplay.DynamicArmor) {
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.shot = undefined;
         });
       }
 
       if (display !== TankopediaDisplay.StaticArmor) {
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.highlightArmor = undefined;
         });
       }
@@ -200,16 +200,16 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {
-          TankopediaEphemeral.mutate((draft) => {
+          Tankopedia.mutate((draft) => {
             draft.shot = undefined;
             draft.highlightArmor = undefined;
           });
         }}
         style={{
-          userSelect: 'none',
-          width: naked ? BLITZKIT_TANK_ICON_SIZE.width : '100%',
-          height: naked ? BLITZKIT_TANK_ICON_SIZE.height : '100%',
-          outline: naked ? '1rem red solid' : undefined,
+          userSelect: "none",
+          width: naked ? BLITZKIT_TANK_ICON_SIZE.width : "100%",
+          height: naked ? BLITZKIT_TANK_ICON_SIZE.height : "100%",
+          outline: naked ? "1rem red solid" : undefined,
         }}
       >
         {!naked && <SceneProps />}
@@ -236,5 +236,5 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         <InitialAligner />
       </SmartCanvas>
     );
-  },
+  }
 );

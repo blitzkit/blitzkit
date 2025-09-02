@@ -5,8 +5,8 @@ import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDe
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 import { Var } from "../../core/radix/var";
 import { Duel } from "../../stores/duel";
-import { Guess, GuessState } from "../../stores/guessEphemeral";
-import { TankopediaEphemeral } from "../../stores/tankopediaEphemeral";
+import { Guess, GuessState } from "../../stores/guess";
+import { Tankopedia } from "../../stores/tankopedia";
 import "./index.css";
 
 const [modelDefinitions, provisionDefinitions] = await Promise.all([
@@ -23,7 +23,7 @@ export function GuessBackground() {
     mutateDuel((state) => {
       state.protagonist = tankToDuelMember(tank, provisionDefinitions);
     });
-    TankopediaEphemeral.mutate((state) => {
+    Tankopedia.mutate((state) => {
       state.model = modelDefinitions.models[tank.id];
     });
   }, [tank]);

@@ -24,7 +24,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
 import { useLocale } from "../hooks/useLocale";
-import { Guess, GuessState } from "../stores/guessEphemeral";
+import { Guess, GuessState } from "../stores/guess";
 import { classIcons } from "./ClassIcon";
 import { SearchResults } from "./SearchResults";
 

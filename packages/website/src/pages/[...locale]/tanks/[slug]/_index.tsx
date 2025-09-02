@@ -17,7 +17,7 @@ import {
 } from "../../../../hooks/useLocale";
 import { App } from "../../../../stores/app";
 import { Duel } from "../../../../stores/duel";
-import { TankopediaEphemeral } from "../../../../stores/tankopediaEphemeral";
+import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 import type { TankGuide } from "./index.astro";
@@ -39,7 +39,7 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
-  TankopediaEphemeral.useInitialization(model);
+  Tankopedia.useInitialization(model);
 
   return (
     <LocaleProvider locale={locale}>

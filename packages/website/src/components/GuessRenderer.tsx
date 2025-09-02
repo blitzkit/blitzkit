@@ -1,4 +1,4 @@
-import { Guess, GuessState } from "../stores/guessEphemeral";
+import { Guess, GuessState } from "../stores/guess";
 import { SmartCanvas } from "./SmartCanvas";
 import { Controls } from "./Tankopedia/HeroSection/components/TankSandbox/components/Control";
 import { Lighting } from "./Tankopedia/HeroSection/components/TankSandbox/components/Lighting";

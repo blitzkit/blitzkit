@@ -1,4 +1,4 @@
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   Button,
   Flex,
@@ -6,14 +6,14 @@ import {
   IconButton,
   Popover,
   Text,
-} from '@radix-ui/themes';
-import { useLocale } from '../../../../hooks/useLocale';
-import { TankopediaEphemeral } from '../../../../stores/tankopediaEphemeral';
-import { CrewSkillManager } from '../../../CrewSkillManager';
-import { ConfigurationChildWrapper } from './ConfigurationChildWrapper';
+} from "@radix-ui/themes";
+import { useLocale } from "../../../../hooks/useLocale";
+import { Tankopedia } from "../../../../stores/tankopedia";
+import { CrewSkillManager } from "../../../CrewSkillManager";
+import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 export function Skills() {
-  const skillLevels = TankopediaEphemeral.use((state) => state.skills);
+  const skillLevels = Tankopedia.use((state) => state.skills);
   const { strings } = useLocale();
 
   return (
@@ -45,7 +45,7 @@ export function Skills() {
           variant="ghost"
           color="red"
           onClick={() => {
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               Object.keys(draft.skills).forEach((skill) => {
                 draft.skills[skill] = 0;
               });
@@ -57,7 +57,7 @@ export function Skills() {
         <Button
           variant="ghost"
           onClick={() => {
-            TankopediaEphemeral.mutate((draft) => {
+            Tankopedia.mutate((draft) => {
               Object.keys(draft.skills).forEach((skill) => {
                 draft.skills[skill] = 7;
               });
@@ -71,7 +71,7 @@ export function Skills() {
       <CrewSkillManager
         skillLevels={skillLevels}
         onChange={(skills) => {
-          TankopediaEphemeral.mutate((draft) => {
+          Tankopedia.mutate((draft) => {
             draft.skills = skills;
           });
         }}

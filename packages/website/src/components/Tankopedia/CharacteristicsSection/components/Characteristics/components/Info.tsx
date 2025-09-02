@@ -1,10 +1,10 @@
-import { CaretDownIcon, CaretUpIcon } from '@radix-ui/react-icons';
-import { Box, Flex, Text } from '@radix-ui/themes';
-import fuzzysort from 'fuzzysort';
-import { Quicklime } from 'quicklime';
-import { useEffect, useRef, type ReactNode } from 'react';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
-import { Mark } from '../../../../../Mark';
+import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import fuzzysort from "fuzzysort";
+import { Quicklime } from "quicklime";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { Mark } from "../../../../../Mark";
 
 export const highlightedRows = new Set<HTMLDivElement>();
 export const highlightedRowsUpdate = new Quicklime();
@@ -16,7 +16,7 @@ export interface InfoProps {
   delta?: number;
   decimals?: number;
   prefix?: string;
-  deltaType?: 'higherIsBetter' | 'lowerIsBetter';
+  deltaType?: "higherIsBetter" | "lowerIsBetter";
 }
 
 export function Info({
@@ -26,15 +26,15 @@ export function Info({
   delta,
   decimals,
   prefix,
-  deltaType = 'higherIsBetter',
+  deltaType = "higherIsBetter",
 }: InfoProps) {
-  const statSearch = TankopediaEphemeral.use((state) => state.statSearch);
+  const statSearch = Tankopedia.use((state) => state.statSearch);
   const container = useRef<HTMLDivElement>(null);
 
   let label = name;
   let highlighted = false;
 
-  if (statSearch !== undefined && typeof name === 'string') {
+  if (statSearch !== undefined && typeof name === "string") {
     const result = fuzzysort.single(statSearch, name);
 
     if (result) {
@@ -62,7 +62,7 @@ export function Info({
   return (
     <Flex
       align="center"
-      pl={indent ? '2' : '0'}
+      pl={indent ? "2" : "0"}
       width="100%"
       gap="4"
       ref={container}
@@ -77,9 +77,9 @@ export function Info({
             <>
               <Text
                 color={
-                  delta * (deltaType === 'lowerIsBetter' ? -1 : 1) > 0
-                    ? 'green'
-                    : 'tomato'
+                  delta * (deltaType === "lowerIsBetter" ? -1 : 1) > 0
+                    ? "green"
+                    : "tomato"
                 }
               >
                 {decimals !== undefined
@@ -88,9 +88,9 @@ export function Info({
               </Text>
               <Text
                 color={
-                  delta * (deltaType === 'lowerIsBetter' ? -1 : 1) > 0
-                    ? 'green'
-                    : 'tomato'
+                  delta * (deltaType === "lowerIsBetter" ? -1 : 1) > 0
+                    ? "green"
+                    : "tomato"
                 }
               >
                 {delta > 0 ? <CaretUpIcon /> : <CaretDownIcon />}
@@ -105,7 +105,7 @@ export function Info({
               </Text>
             )}
 
-            {decimals !== undefined && typeof children === 'number'
+            {decimals !== undefined && typeof children === "number"
               ? children.toFixed(decimals)
               : children}
           </Text>

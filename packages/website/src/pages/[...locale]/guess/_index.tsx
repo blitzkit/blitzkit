@@ -13,8 +13,8 @@ import {
   useLocale,
 } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
-import { Guess, GuessState } from "../../../stores/guessEphemeral";
-import { TankopediaEphemeral } from "../../../stores/tankopediaEphemeral";
+import { Guess, GuessState } from "../../../stores/guess";
+import { Tankopedia } from "../../../stores/tankopedia";
 
 const [tankDefinitions, modelDefinitions, provisionDefinitions] =
   await Promise.all([
@@ -42,7 +42,7 @@ function Container() {
   const tank = Guess.use((state) => state.tank);
   const model = modelDefinitions.models[tank.id];
 
-  TankopediaEphemeral.useInitialization(model);
+  Tankopedia.useInitialization(model);
 
   return (
     <Duel.Provider data={{ tank, model, provisionDefinitions }}>

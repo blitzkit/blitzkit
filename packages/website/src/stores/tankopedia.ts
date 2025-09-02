@@ -2,21 +2,21 @@ import {
   createDefaultSkills,
   ShellDefinition,
   type ModelDefinition,
-} from '@blitzkit/core';
-import type { Vector3 } from 'three';
-import { Varuna } from 'varuna';
-import type { ArmorType } from '../components/Armor/components/SpacedArmorScene';
-import type { ExternalModuleVariant } from '../components/Armor/components/SpacedArmorSceneComponent';
-import type { XP_MULTIPLIERS } from '../components/Tankopedia/TechTreeSection';
-import { awaitableSkillDefinitions } from '../core/awaitables/skillDefinitions';
-import { TankopediaDisplay } from './tankopediaPersistent/constants';
+} from "@blitzkit/core";
+import type { Vector3 } from "three";
+import { Varuna } from "varuna";
+import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
+import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
+import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
+import { awaitableSkillDefinitions } from "../core/awaitables/skillDefinitions";
+import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
   index: number;
   thickness: number;
   point: Vector3;
   surfaceNormal: Vector3;
-  status: 'blocked' | 'penetration' | 'ricochet';
+  status: "blocked" | "penetration" | "ricochet";
 }
 
 interface ShotLayerExternal extends ShotLayerBase {
@@ -32,7 +32,7 @@ export interface ShotLayerNonExternal extends ShotLayerBase {
 
 export interface ShotLayerGap {
   type: null;
-  status: 'penetration' | 'blocked';
+  status: "penetration" | "blocked";
   distance: number;
 }
 
@@ -55,7 +55,7 @@ export type Shot = {
   };
 };
 
-export type ShotStatus = 'penetration' | 'blocked' | 'ricochet' | 'splash';
+export type ShotStatus = "penetration" | "blocked" | "ricochet" | "splash";
 
 export type ArmorPiercingLayer =
   | {
@@ -63,10 +63,10 @@ export type ArmorPiercingLayer =
       nominal: number;
       angled: number;
       ricochet: boolean;
-      type: 'core' | 'spaced' | 'external';
+      type: "core" | "spaced" | "external";
     }
   | {
-      type: 'gap';
+      type: "gap";
       gap: number;
     };
 
@@ -76,7 +76,7 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
-interface TankopediaEphemeral {
+interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
   shot?: Shot;
@@ -107,10 +107,7 @@ interface TankopediaEphemeral {
 
 const skillDefinitions = await awaitableSkillDefinitions;
 
-export const TankopediaEphemeral = new Varuna<
-  TankopediaEphemeral,
-  ModelDefinition
->((model) => ({
+export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,
   revealed: false,
   relativeAgainst: TankopediaRelativeAgainst.Class,

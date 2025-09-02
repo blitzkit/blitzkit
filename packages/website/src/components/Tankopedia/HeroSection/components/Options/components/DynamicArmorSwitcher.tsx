@@ -1,14 +1,14 @@
-import { asset } from '@blitzkit/core';
-import { IconButton } from '@radix-ui/themes';
-import { useArmor } from '../../../../../../hooks/useArmor';
-import { Duel } from '../../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../../stores/tankopediaEphemeral';
+import { asset } from "@blitzkit/core";
+import { IconButton } from "@radix-ui/themes";
+import { useArmor } from "../../../../../../hooks/useArmor";
+import { Duel } from "../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
 
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
   const mutateDuel = Duel.useMutation();
   const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73),
+    state.protagonist.consumables.includes(73)
   );
   const { hasDynamicArmor } = useArmor(tank.id);
 
@@ -16,9 +16,9 @@ export function DynamicArmorSwitcher() {
 
   return (
     <IconButton
-      color={isDynamicArmorActive ? undefined : 'gray'}
+      color={isDynamicArmorActive ? undefined : "gray"}
       variant="soft"
-      size={{ initial: '2', sm: '3' }}
+      size={{ initial: "2", sm: "3" }}
       onClick={() => {
         mutateDuel((draft) => {
           if (draft.protagonist.consumables.includes(73)) {
@@ -32,17 +32,17 @@ export function DynamicArmorSwitcher() {
             }
           }
         });
-        TankopediaEphemeral.mutate((draft) => {
+        Tankopedia.mutate((draft) => {
           draft.shot = undefined;
         });
       }}
     >
       <img
         alt="Dynamic Armor"
-        src={asset('icons/consumables/73.webp')}
+        src={asset("icons/consumables/73.webp")}
         style={{
-          width: '50%',
-          height: '50%',
+          width: "50%",
+          height: "50%",
         }}
       />
     </IconButton>

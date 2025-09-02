@@ -1,15 +1,15 @@
-import { asset, TankType } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n/src/literals';
-import { CaretLeftIcon, CaretRightIcon, PlusIcon } from '@radix-ui/react-icons';
-import { Flex, Heading, IconButton, ScrollArea, Text } from '@radix-ui/themes';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { useLocale } from '../../../hooks/useLocale';
-import { Duel } from '../../../stores/duel';
-import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
-import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
-import { Arrow } from './components/Arrow';
-import { Node } from './components/Node';
+import { asset, TankType } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n/src/literals";
+import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
+import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { useLocale } from "../../../hooks/useLocale";
+import { Duel } from "../../../stores/duel";
+import { Tankopedia } from "../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import { Arrow } from "./components/Arrow";
+import { Node } from "./components/Node";
 
 type Line = number[];
 
@@ -20,7 +20,7 @@ export const XP_MULTIPLIERS = [1, 2, 3, 4, 5, 10];
 export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
   const { locale, strings } = useLocale();
   const master = Duel.use((state) => state.protagonist.tank);
-  const xpMultiplier = TankopediaEphemeral.use((state) => state.xpMultiplier);
+  const xpMultiplier = Tankopedia.use((state) => state.xpMultiplier);
   const container = useRef<HTMLDivElement>(null);
   const lines = useMemo(() => {
     function extend(line: Line): Line[] {
@@ -32,8 +32,8 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
         if (root.ancestors.length === 1 || root.tier === 2) {
           line.push(
             root.ancestors.find(
-              (ancestor) => !tankDefinitions.tanks[ancestor].deprecated,
-            ) ?? root.ancestors[0],
+              (ancestor) => !tankDefinitions.tanks[ancestor].deprecated
+            ) ?? root.ancestors[0]
           );
           return extend(line);
         } else {
@@ -52,7 +52,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
   const [lineIndex, setLineIndex] = useState(0);
   const line = useMemo(
     () => (lines.length === 0 ? [master.id] : [...lines[lineIndex]].reverse()),
-    [master, lineIndex],
+    [master, lineIndex]
   );
   const totalXp = line.reduce(
     (xp, id) =>
@@ -62,11 +62,11 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
         ? 0
         : (tankDefinitions.tanks[id].research_cost.research_cost_type!
             .value as number)),
-    0,
+    0
   );
   const totalCredits = line.reduce(
     (credits, id) => credits + tankDefinitions.tanks[id].price.value,
-    0,
+    0
   );
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
       direction="column"
       align="center"
       gap="0"
-      style={{ backgroundColor: 'var(--color-surface)' }}
+      style={{ backgroundColor: "var(--color-surface)" }}
       py="6"
     >
       <Flex direction="column" align="center">
@@ -101,12 +101,12 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="XP"
-                  src={asset('icons/currencies/xp.webp')}
+                  src={asset("icons/currencies/xp.webp")}
                   style={{
-                    width: '1em',
-                    height: '1em',
-                    objectFit: 'contain',
-                    objectPosition: 'center',
+                    width: "1em",
+                    height: "1em",
+                    objectFit: "contain",
+                    objectPosition: "center",
                   }}
                 />
                 {Math.round(totalXp / xpMultiplier).toLocaleString(locale)}
@@ -117,12 +117,12 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="Silver"
-                  src={asset('icons/currencies/silver.webp')}
+                  src={asset("icons/currencies/silver.webp")}
                   style={{
-                    width: '1em',
-                    height: '1em',
-                    objectFit: 'contain',
-                    objectPosition: 'center',
+                    width: "1em",
+                    height: "1em",
+                    objectFit: "contain",
+                    objectPosition: "center",
                   }}
                 />
                 {totalCredits.toLocaleString(locale)}
@@ -139,15 +139,15 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex
                 key={multiplier}
                 style={{
-                  background: 'url(/assets/images/icons/xp-multiplier.png)',
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
+                  background: "url(/assets/images/icons/xp-multiplier.png)",
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
                   opacity: selected ? 1 : 0.5,
-                  cursor: 'pointer',
+                  cursor: "pointer",
                 }}
                 onClick={() => {
-                  TankopediaEphemeral.mutate((draft) => {
+                  Tankopedia.mutate((draft) => {
                     draft.xpMultiplier = multiplier;
                   });
                 }}
