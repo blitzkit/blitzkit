@@ -1,28 +1,28 @@
-import { asset, availableProvisions, permanentSkills } from '@blitzkit/core';
-import { checkConsumableProvisionInclusivity } from '@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity';
-import { ComponentPlaceholderIcon } from '@radix-ui/react-icons';
-import { Button, Flex, IconButton, Popover, Table } from '@radix-ui/themes';
-import { times } from 'lodash-es';
-import { awaitableConsumableDefinitions } from '../../core/awaitables/consumableDefinitions';
-import { awaitableEquipmentDefinitions } from '../../core/awaitables/equipmentDefinitions';
-import { awaitableProvisionDefinitions } from '../../core/awaitables/provisionDefinitions';
-import { awaitableSkillDefinitions } from '../../core/awaitables/skillDefinitions';
-import type { TankCharacteristics } from '../../core/blitzkit/tankCharacteristics';
-import { Var } from '../../core/radix/var';
-import { useLocale } from '../../hooks/useLocale';
-import { CompareEphemeral } from '../../stores/compareEphemeral';
-import type { EquipmentMatrix } from '../../stores/duel';
-import { BlitzkitButtonGrayIcon } from '../BlitzkitButtonGrayIcon';
-import { ConsumablesManager } from '../ConsumablesManager';
-import { CrewSkillManager } from '../CrewSkillManager';
-import { EquipmentManager } from '../EquipmentManager';
-import { ModuleManager } from '../ModuleManager';
-import { ProvisionsManager } from '../ProvisionsManager';
-import { StickyColumnHeaderCell } from '../StickyColumnHeaderCell';
-import { StickyTableRoot } from '../StickyTableRoot';
-import { Body } from './Body';
-import { InsertionMarker } from './IntersectionMarker';
-import { TankCard } from './TankCard';
+import { asset, availableProvisions, permanentSkills } from "@blitzkit/core";
+import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
+import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
+import { Button, Flex, IconButton, Popover, Table } from "@radix-ui/themes";
+import { times } from "lodash-es";
+import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
+import { awaitableEquipmentDefinitions } from "../../core/awaitables/equipmentDefinitions";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { awaitableSkillDefinitions } from "../../core/awaitables/skillDefinitions";
+import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
+import { Var } from "../../core/radix/var";
+import { useLocale } from "../../hooks/useLocale";
+import { CompareEphemeral } from "../../stores/compareEphemeral";
+import type { EquipmentMatrix } from "../../stores/duel";
+import { BlitzkitButtonGrayIcon } from "../BlitzkitButtonGrayIcon";
+import { ConsumablesManager } from "../ConsumablesManager";
+import { CrewSkillManager } from "../CrewSkillManager";
+import { EquipmentManager } from "../EquipmentManager";
+import { ModuleManager } from "../ModuleManager";
+import { ProvisionsManager } from "../ProvisionsManager";
+import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
+import { StickyTableRoot } from "../StickyTableRoot";
+import { Body } from "./Body";
+import { InsertionMarker } from "./IntersectionMarker";
+import { TankCard } from "./TankCard";
 
 interface CompareTableProps {
   stats: TankCharacteristics[];
@@ -43,7 +43,6 @@ const [
 export function CompareTable({ stats }: CompareTableProps) {
   const crewSkills = CompareEphemeral.use((state) => state.crewSkills);
   const members = CompareEphemeral.use((state) => state.members);
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
   const { unwrap, strings } = useLocale();
 
   return (
@@ -51,20 +50,20 @@ export function CompareTable({ stats }: CompareTableProps) {
       size="1"
       variant="surface"
       style={{
-        position: 'absolute',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        height: '100%',
+        position: "absolute",
+        maxWidth: "100%",
+        maxHeight: "100%",
+        height: "100%",
         // height: 'calc(100vh - 128px)'
       }}
     >
       <Table.Header>
         <Table.Row>
-          <StickyColumnHeaderCell width="0" style={{ height: '100%' }}>
+          <StickyColumnHeaderCell width="0" style={{ height: "100%" }}>
             <Flex
               style={{
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
               }}
               align="center"
               justify="center"
@@ -82,11 +81,11 @@ export function CompareTable({ stats }: CompareTableProps) {
 
       <Table.Body>
         <Table.Row>
-          <Table.Cell style={{ height: '100%' }}>
+          <Table.Cell style={{ height: "100%" }}>
             <Flex
               style={{
-                width: '100%',
-                height: '100%',
+                width: "100%",
+                height: "100%",
               }}
               align="center"
               justify="center"
@@ -107,15 +106,15 @@ export function CompareTable({ stats }: CompareTableProps) {
                                   borderRadius: 2,
                                   backgroundColor:
                                     crewSkills[skill] === 0
-                                      ? Var('gray-11')
+                                      ? Var("gray-11")
                                       : permanentSkills.includes(skill)
-                                        ? Var('crimson-11')
-                                        : Var('amber-11'),
+                                        ? Var("crimson-11")
+                                        : Var("amber-11"),
                                 }}
                               />
                             ))}
                           </Flex>
-                        ),
+                        )
                       )}
                     </Flex>
                   </Button>
@@ -125,7 +124,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                   <CrewSkillManager
                     skillLevels={crewSkills}
                     onChange={(skills) => {
-                      mutateCompareEphemeral((draft) => {
+                      CompareEphemeral.mutate((draft) => {
                         draft.crewSkills = skills;
                       });
                     }}
@@ -135,7 +134,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        mutateCompareEphemeral((draft) => {
+                        CompareEphemeral.mutate((draft) => {
                           Object.keys(draft.crewSkills).forEach((skill) => {
                             draft.crewSkills[skill] = 0;
                           });
@@ -147,7 +146,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                     <Button
                       variant="ghost"
                       onClick={() => {
-                        mutateCompareEphemeral((draft) => {
+                        CompareEphemeral.mutate((draft) => {
                           Object.keys(draft.crewSkills).forEach((skill) => {
                             draft.crewSkills[skill] = 7;
                           });
@@ -177,19 +176,19 @@ export function CompareTable({ stats }: CompareTableProps) {
                 consumables,
                 camouflage,
               },
-              index,
+              index
             ) => {
               const equipmentPreset =
                 equipmentDefinitions.presets[tank.equipment_preset];
               const provisionsList = availableProvisions(
                 tank,
                 gun,
-                provisionDefinitions,
+                provisionDefinitions
               );
               const consumablesList = Object.values(
-                consumableDefinitions.consumables,
+                consumableDefinitions.consumables
               ).filter((consumable) =>
-                checkConsumableProvisionInclusivity(consumable, tank, gun),
+                checkConsumableProvisionInclusivity(consumable, tank, gun)
               );
 
               return (
@@ -205,7 +204,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                         <Button variant="ghost">
                           <Flex align="center">
                             {(
-                              ['turret', 'gun', 'engine', 'chassis'] as const
+                              ["turret", "gun", "engine", "chassis"] as const
                             ).map((module, index) => (
                               <img
                                 key={module}
@@ -215,7 +214,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 src={asset(`icons/modules/${module}.webp`)}
                                 style={{
                                   marginLeft: index > 0 ? -8 : 0,
-                                  objectFit: 'contain',
+                                  objectFit: "contain",
                                 }}
                               />
                             ))}
@@ -232,7 +231,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                           engine={engine}
                           track={track}
                           onChange={(modules) => {
-                            mutateCompareEphemeral((draft) => {
+                            CompareEphemeral.mutate((draft) => {
                               draft.members[index] = {
                                 ...draft.members[index],
                                 ...modules,
@@ -245,7 +244,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                           <Button
                             variant="ghost"
                             onClick={() => {
-                              mutateCompareEphemeral((draft) => {
+                              CompareEphemeral.mutate((draft) => {
                                 const member = draft.members[index];
 
                                 member.turret = member.tank.turrets[0];
@@ -261,7 +260,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                           <Button
                             variant="ghost"
                             onClick={() => {
-                              mutateCompareEphemeral((draft) => {
+                              CompareEphemeral.mutate((draft) => {
                                 const member = draft.members[index];
 
                                 member.turret = member.tank.turrets.at(-1)!;
@@ -288,9 +287,9 @@ export function CompareTable({ stats }: CompareTableProps) {
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: '100%',
+                              height: "100%",
                               width: 12,
-                              position: 'relative',
+                              position: "relative",
                             }}
                           >
                             <Flex direction="column" justify="center">
@@ -298,14 +297,14 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 <img
                                   alt={unwrap(
                                     provisionDefinitions.provisions[provision]
-                                      .name,
+                                      .name
                                   )}
                                   key={provision}
                                   src={asset(
-                                    `/icons/provisions/${provision}.webp`,
+                                    `/icons/provisions/${provision}.webp`
                                   )}
                                   style={{
-                                    left: '50%',
+                                    left: "50%",
                                     /**
                                      * max = 100% - 16px - 4px
                                      * min = 4px
@@ -320,11 +319,11 @@ export function CompareTable({ stats }: CompareTableProps) {
                                         ? 0.5
                                         : index / (provisions.length - 1)
                                     } * (100% - 24px))`,
-                                    transform: 'translateX(-50%)',
-                                    position: 'absolute',
+                                    transform: "translateX(-50%)",
+                                    position: "absolute",
                                     width: 16,
                                     height: 16,
-                                    objectFit: 'contain',
+                                    objectFit: "contain",
                                   }}
                                 />
                               ))}
@@ -339,12 +338,12 @@ export function CompareTable({ stats }: CompareTableProps) {
                         <Popover.Content>
                           <ProvisionsManager
                             provisions={provisionsList.map(
-                              (provision) => provision.id,
+                              (provision) => provision.id
                             )}
                             selected={provisions}
                             disabled={tank.max_provisions === provisions.length}
                             onChange={(provisions) => {
-                              mutateCompareEphemeral((draft) => {
+                              CompareEphemeral.mutate((draft) => {
                                 draft.members[index].provisions = provisions;
                               });
                             }}
@@ -353,7 +352,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             <Button
                               variant="ghost"
                               onClick={() => {
-                                mutateCompareEphemeral((draft) => {
+                                CompareEphemeral.mutate((draft) => {
                                   draft.members[index].provisions = [];
                                 });
                               }}
@@ -394,8 +393,8 @@ export function CompareTable({ stats }: CompareTableProps) {
                                             height: 8,
                                             backgroundColor:
                                               equipment === -1
-                                                ? Var('crimson-11')
-                                                : Var('gray-11'),
+                                                ? Var("crimson-11")
+                                                : Var("gray-11"),
                                             borderRadius: 2,
                                           }}
                                         />
@@ -405,8 +404,8 @@ export function CompareTable({ stats }: CompareTableProps) {
                                             height: 8,
                                             backgroundColor:
                                               equipment === 1
-                                                ? Var('crimson-11')
-                                                : Var('gray-11'),
+                                                ? Var("crimson-11")
+                                                : Var("gray-11"),
                                             borderRadius: 2,
                                           }}
                                         />
@@ -424,7 +423,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             matrix={equipmentMatrix}
                             preset={equipmentPreset}
                             onChange={(matrix) => {
-                              mutateCompareEphemeral((draft) => {
+                              CompareEphemeral.mutate((draft) => {
                                 draft.members[index].equipmentMatrix = matrix;
                                 draft.sorting = undefined;
                               });
@@ -436,10 +435,10 @@ export function CompareTable({ stats }: CompareTableProps) {
                               variant="ghost"
                               color="red"
                               onClick={() => {
-                                mutateCompareEphemeral((draft) => {
+                                CompareEphemeral.mutate((draft) => {
                                   draft.members[index].equipmentMatrix = times(
                                     3,
-                                    () => times(3, () => 0),
+                                    () => times(3, () => 0)
                                   ) as EquipmentMatrix;
                                   draft.sorting = undefined;
                                 });
@@ -453,7 +452,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             <Button
                               variant="ghost"
                               onClick={() => {
-                                mutateCompareEphemeral((draft) => {
+                                CompareEphemeral.mutate((draft) => {
                                   draft.members.forEach((member) => {
                                     member.equipmentMatrix =
                                       draft.members[index].equipmentMatrix;
@@ -477,9 +476,9 @@ export function CompareTable({ stats }: CompareTableProps) {
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: '100%',
+                              height: "100%",
                               width: 12,
-                              position: 'relative',
+                              position: "relative",
                             }}
                           >
                             <Flex direction="column" justify="center">
@@ -488,14 +487,14 @@ export function CompareTable({ stats }: CompareTableProps) {
                                   alt={unwrap(
                                     consumableDefinitions.consumables[
                                       consumable
-                                    ].name,
+                                    ].name
                                   )}
                                   key={consumable}
                                   src={asset(
-                                    `/icons/consumables/${consumable}.webp`,
+                                    `/icons/consumables/${consumable}.webp`
                                   )}
                                   style={{
-                                    left: '50%',
+                                    left: "50%",
                                     /**
                                      * max = 100% - 16px - 4px
                                      * min = 4px
@@ -510,11 +509,11 @@ export function CompareTable({ stats }: CompareTableProps) {
                                         ? 0.5
                                         : index / (consumables.length - 1)
                                     } * (100% - 24px))`,
-                                    transform: 'translateX(-50%)',
-                                    position: 'absolute',
+                                    transform: "translateX(-50%)",
+                                    position: "absolute",
                                     width: 16,
                                     height: 16,
-                                    objectFit: 'contain',
+                                    objectFit: "contain",
                                   }}
                                 />
                               ))}
@@ -531,7 +530,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             consumables={consumablesList}
                             selected={consumables}
                             onConsumablesChange={(consumables) => {
-                              mutateCompareEphemeral((draft) => {
+                              CompareEphemeral.mutate((draft) => {
                                 draft.members[index].consumables = consumables;
                               });
                             }}
@@ -544,7 +543,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             <Button
                               variant="ghost"
                               onClick={() => {
-                                mutateCompareEphemeral((draft) => {
+                                CompareEphemeral.mutate((draft) => {
                                   draft.members[index].consumables = [];
                                 });
                               }}
@@ -562,18 +561,18 @@ export function CompareTable({ stats }: CompareTableProps) {
                     {!tank.fixed_camouflage && (
                       <IconButton
                         onClick={() => {
-                          mutateCompareEphemeral((draft) => {
+                          CompareEphemeral.mutate((draft) => {
                             draft.members[index].camouflage = !camouflage;
                           });
                         }}
-                        variant={camouflage ? 'solid' : 'outline'}
+                        variant={camouflage ? "solid" : "outline"}
                       >
                         <img
-                          src={asset('icons/camo.webp')}
+                          src={asset("icons/camo.webp")}
                           style={{
-                            width: '1em',
-                            height: '1em',
-                            transform: 'scale(2) translate(15%, 15%)',
+                            width: "1em",
+                            height: "1em",
+                            transform: "scale(2) translate(15%, 15%)",
                           }}
                         />
                       </IconButton>
@@ -581,7 +580,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                   </Flex>
                 </Table.Cell>
               );
-            },
+            }
           )}
         </Table.Row>
       </Table.Body>

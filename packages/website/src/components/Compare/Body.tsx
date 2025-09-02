@@ -1,11 +1,11 @@
-import { asset } from '@blitzkit/core';
-import { Flex, Heading, IconButton, Table } from '@radix-ui/themes';
-import type { TankCharacteristics } from '../../core/blitzkit/tankCharacteristics';
-import { useLocale } from '../../hooks/useLocale';
-import { CompareEphemeral } from '../../stores/compareEphemeral';
-import { StickyColumnHeaderCell } from '../StickyColumnHeaderCell';
-import { CompareRow } from './CompareRow';
-import { CompareSectionTitle } from './CompareSectionTitle';
+import { asset } from "@blitzkit/core";
+import { Flex, Heading, IconButton, Table } from "@radix-ui/themes";
+import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
+import { useLocale } from "../../hooks/useLocale";
+import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
+import { CompareRow } from "./CompareRow";
+import { CompareSectionTitle } from "./CompareSectionTitle";
 
 interface BodyProps {
   stats: TankCharacteristics[];
@@ -14,10 +14,9 @@ interface BodyProps {
 export function Body({ stats }: BodyProps) {
   const members = CompareEphemeral.use((state) => state.members);
   const hasNonRegularGun = members.some(
-    ({ gun }) => gun.gun_type!.$case !== 'regular',
+    ({ gun }) => gun.gun_type!.$case !== "regular"
   );
   const { unwrap, strings } = useLocale();
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
 
   return (
     <>
@@ -35,7 +34,7 @@ export function Body({ stats }: BodyProps) {
                 <Flex>
                   {gun.shells.map((thisShell, shellIndex) => (
                     <IconButton
-                      color={thisShell.id === shell.id ? undefined : 'gray'}
+                      color={thisShell.id === shell.id ? undefined : "gray"}
                       variant="soft"
                       key={thisShell.id}
                       style={{
@@ -49,7 +48,7 @@ export function Body({ stats }: BodyProps) {
                         marginLeft: shellIndex === 0 ? 0 : -1,
                       }}
                       onClick={() => {
-                        mutateCompareEphemeral((draft) => {
+                        CompareEphemeral.mutate((draft) => {
                           draft.members[index].shell = thisShell;
                         });
                       }}
@@ -88,7 +87,7 @@ export function Body({ stats }: BodyProps) {
           }
           display={(stats) =>
             stats.shellReload?.toFixed(2) ??
-            stats.shellReloads!.map((reload) => reload.toFixed(2)).join(', ')
+            stats.shellReloads!.map((reload) => reload.toFixed(2)).join(", ")
           }
           deltaNominalDisplay={(delta) => delta.toFixed(2)}
         />

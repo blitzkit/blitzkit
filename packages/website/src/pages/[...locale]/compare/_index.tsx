@@ -36,15 +36,13 @@ const [
 ]);
 
 export function Page({ locale }: LocaleAcceptorProps) {
+  CompareEphemeral.useInitialization(createDefaultSkills(skillDefinitions));
+
   return (
     <LocaleProvider locale={locale}>
       <App.Provider>
         <TankopediaPersistent.Provider>
-          <CompareEphemeral.Provider
-            data={createDefaultSkills(skillDefinitions)}
-          >
-            <Content />
-          </CompareEphemeral.Provider>
+          <Content />
         </TankopediaPersistent.Provider>
       </App.Provider>
     </LocaleProvider>
@@ -90,7 +88,6 @@ function Content() {
       ),
     [members, crewSkills]
   );
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
 
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
@@ -100,7 +97,7 @@ function Content() {
 
     const tanks = tanksQuery.split(",").map(Number);
 
-    mutateCompareEphemeral((draft) => {
+    CompareEphemeral.mutate((draft) => {
       draft.members = [];
 
       tanks.forEach((id) => {

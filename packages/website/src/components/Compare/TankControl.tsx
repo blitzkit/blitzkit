@@ -1,12 +1,12 @@
-import { ExternalLinkIcon, LoopIcon, TrashIcon } from '@radix-ui/react-icons';
-import { Dialog, Flex, IconButton } from '@radix-ui/themes';
-import { useState } from 'react';
-import { awaitableProvisionDefinitions } from '../../core/awaitables/provisionDefinitions';
-import { tankToCompareMember } from '../../core/blitzkit/tankToCompareMember';
-import { useLocale } from '../../hooks/useLocale';
-import { CompareEphemeral } from '../../stores/compareEphemeral';
-import { LinkI18n } from '../LinkI18n';
-import { TankSearch } from '../TankSearch';
+import { ExternalLinkIcon, LoopIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Dialog, Flex, IconButton } from "@radix-ui/themes";
+import { useState } from "react";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
+import { useLocale } from "../../hooks/useLocale";
+import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { LinkI18n } from "../LinkI18n";
+import { TankSearch } from "../TankSearch";
 
 interface TankControlProps {
   index: number;
@@ -18,14 +18,13 @@ const provisionDefinitions = await awaitableProvisionDefinitions;
 export function TankControl({ index, slug }: TankControlProps) {
   const { locale } = useLocale();
   const [switchTankDialogOpen, setSwitchTankDialogOpen] = useState(false);
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
 
   return (
-    <Flex gap="3" justify="center" style={{ width: '100%' }}>
+    <Flex gap="3" justify="center" style={{ width: "100%" }}>
       <IconButton
         variant="ghost"
         onClick={() => {
-          mutateCompareEphemeral((draft) => {
+          CompareEphemeral.mutate((draft) => {
             draft.members.splice(index, 1);
             draft.sorting = undefined;
           });
@@ -57,10 +56,10 @@ export function TankControl({ index, slug }: TankControlProps) {
               <TankSearch
                 compact
                 onSelect={(tank) => {
-                  mutateCompareEphemeral((draft) => {
+                  CompareEphemeral.mutate((draft) => {
                     draft.members[index] = tankToCompareMember(
                       tank,
-                      provisionDefinitions,
+                      provisionDefinitions
                     );
                     draft.sorting = undefined;
                   });

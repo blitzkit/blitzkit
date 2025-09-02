@@ -1,13 +1,13 @@
-import { type TankDefinition, tankIcon } from '@blitzkit/core';
-import { Flex, Text } from '@radix-ui/themes';
-import { useEffect, useRef } from 'react';
-import { Vector2 } from 'three';
-import { useLocale } from '../../hooks/useLocale';
-import { CompareEphemeral } from '../../stores/compareEphemeral';
-import { StickyColumnHeaderCell } from '../StickyColumnHeaderCell';
-import { InsertionMarker } from './IntersectionMarker';
-import { insertionMarkers } from './IntersectionMarker/constants';
-import { TankControl } from './TankControl';
+import { type TankDefinition, tankIcon } from "@blitzkit/core";
+import { Flex, Text } from "@radix-ui/themes";
+import { useEffect, useRef } from "react";
+import { Vector2 } from "three";
+import { useLocale } from "../../hooks/useLocale";
+import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
+import { InsertionMarker } from "./IntersectionMarker";
+import { insertionMarkers } from "./IntersectionMarker/constants";
+import { TankControl } from "./TankControl";
 
 interface TankCardProps {
   index: number;
@@ -16,7 +16,6 @@ interface TankCardProps {
 
 export function TankCard({ index, tank }: TankCardProps) {
   const draggable = useRef<HTMLDivElement>(null);
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
   const { unwrap } = useLocale();
 
   useEffect(() => {
@@ -34,8 +33,8 @@ export function TankCard({ index, tank }: TankCardProps) {
 
       delta.set(0, 0);
       current.copy(initial.set(event.clientX, event.clientY));
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
     }
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
@@ -43,7 +42,7 @@ export function TankCard({ index, tank }: TankCardProps) {
       current.set(event.clientX, event.clientY);
       delta.copy(current).sub(initial);
       insertionMarkers.forEach(({ element }) => {
-        element.style.opacity = '0';
+        element.style.opacity = "0";
       });
 
       const distances = insertionMarkers.map((insertionMarker) => {
@@ -56,34 +55,34 @@ export function TankCard({ index, tank }: TankCardProps) {
         };
       });
       const closest = distances.reduce((a, b) =>
-        a.distance < b.distance ? a : b,
+        a.distance < b.distance ? a : b
       );
 
       dropIndex = closest.index;
-      closest.element.style.opacity = '1';
-      draggable.current!.style.position = 'fixed';
-      draggable.current!.style.cursor = 'grabbing';
-      draggable.current!.style.zIndex = '1';
+      closest.element.style.opacity = "1";
+      draggable.current!.style.position = "fixed";
+      draggable.current!.style.cursor = "grabbing";
+      draggable.current!.style.zIndex = "1";
       draggable.current!.style.left = `${initialRect.left + delta.x}px`;
       draggable.current!.style.top = `${initialRect.top + delta.y}px`;
     }
     function handlePointerUp(event: PointerEvent) {
       event.preventDefault();
 
-      draggable.current!.style.position = 'static';
-      draggable.current!.style.zIndex = 'unset';
-      draggable.current!.style.cursor = 'grab';
+      draggable.current!.style.position = "static";
+      draggable.current!.style.zIndex = "unset";
+      draggable.current!.style.cursor = "grab";
 
       insertionMarkers.forEach(({ element }) => {
-        element.style.opacity = '0';
+        element.style.opacity = "0";
       });
 
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
 
       if (dropIndex === -1) return;
 
-      mutateCompareEphemeral((draft) => {
+      CompareEphemeral.mutate((draft) => {
         const fromIndex = index;
         const toIndex = dropIndex > index ? dropIndex - 1 : dropIndex;
 
@@ -95,10 +94,10 @@ export function TankCard({ index, tank }: TankCardProps) {
       dropIndex = -1;
     }
 
-    draggable.current?.addEventListener('pointerdown', handlePointerDown);
+    draggable.current?.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
-      draggable.current?.removeEventListener('pointerdown', handlePointerDown);
+      draggable.current?.removeEventListener("pointerdown", handlePointerDown);
     };
   }, []);
 
@@ -114,9 +113,9 @@ export function TankCard({ index, tank }: TankCardProps) {
           justify="between"
           gap="2"
           style={{
-            userSelect: 'none',
-            touchAction: 'none',
-            cursor: 'grab',
+            userSelect: "none",
+            touchAction: "none",
+            cursor: "grab",
           }}
         >
           <img
@@ -126,16 +125,16 @@ export function TankCard({ index, tank }: TankCardProps) {
             height={64}
             draggable={false}
             style={{
-              objectFit: 'contain',
+              objectFit: "contain",
             }}
           />
 
           <Text
             style={{
-              whiteSpace: 'nowrap',
+              whiteSpace: "nowrap",
               maxWidth: 128,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
             {unwrap(tank.name)}

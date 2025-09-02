@@ -22,7 +22,6 @@ export function Controls({
   onAddTankDialogOpenChange,
 }: ControlsProps) {
   const deltaMode = ComparePersistent.use((state) => state.deltaMode);
-  const mutateCompareEphemeral = CompareEphemeral.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -55,7 +54,7 @@ export function Controls({
               <TankSearch
                 compact
                 onSelect={(tank) => {
-                  mutateCompareEphemeral((draft) => {
+                  CompareEphemeral.mutate((draft) => {
                     draft.members.push(
                       tankToCompareMember(tank, provisionDefinitions)
                     );
@@ -64,7 +63,7 @@ export function Controls({
                   onAddTankDialogOpenChange(false);
                 }}
                 onSelectAll={(tanks) => {
-                  mutateCompareEphemeral((draft) => {
+                  CompareEphemeral.mutate((draft) => {
                     draft.members.push(
                       ...tanks.map((tank) => {
                         return tankToCompareMember(tank, provisionDefinitions);
@@ -84,7 +83,7 @@ export function Controls({
         variant="soft"
         color="red"
         onClick={() => {
-          mutateCompareEphemeral((draft) => {
+          CompareEphemeral.mutate((draft) => {
             draft.members = [];
             draft.sorting = undefined;
           });
