@@ -1,13 +1,12 @@
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { TextField } from '@radix-ui/themes';
-import { useRef } from 'react';
-import { useLocale } from '../../hooks/useLocale';
-import { GalleryEphemeral } from '../../stores/galleryEphemeral';
-import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { TextField } from "@radix-ui/themes";
+import { useRef } from "react";
+import { useLocale } from "../../hooks/useLocale";
+import { Gallery } from "../../stores/gallery";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 
 export function GallerySearch({ skeleton }: MaybeSkeletonComponentProps) {
   const input = useRef<HTMLInputElement>(null);
-  const mutateGalleryEphemeral = GalleryEphemeral.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -17,7 +16,7 @@ export function GallerySearch({ skeleton }: MaybeSkeletonComponentProps) {
       placeholder={strings.website.tools.gallery.search.hint}
       ref={input}
       onChange={(event) => {
-        mutateGalleryEphemeral((draft) => {
+        Gallery.mutate((draft) => {
           const trimmed = event.target.value.trim();
           draft.search = trimmed.length === 0 ? undefined : trimmed;
         });
