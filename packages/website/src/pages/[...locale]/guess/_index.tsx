@@ -13,7 +13,7 @@ import {
   useLocale,
 } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
-import { Guess } from "../../../stores/guessEphemeral";
+import { Guess, GuessState } from "../../../stores/guessEphemeral";
 import { TankopediaEphemeral } from "../../../stores/tankopediaEphemeral";
 
 const [tankDefinitions, modelDefinitions, provisionDefinitions] =
@@ -55,7 +55,7 @@ function Content() {
   const { unwrap } = useLocale();
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
-  const isRevealed = guessState !== null;
+  const isRevealed = guessState !== GuessState.NotGuessed;
   const name = unwrap(tank.name);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
   const transitionDuration = isRevealed ? "2s" : undefined;

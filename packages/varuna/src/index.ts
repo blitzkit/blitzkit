@@ -2,10 +2,6 @@ import { produce } from "immer";
 import { merge } from "lodash-es";
 import { useEffect, useState } from "react";
 
-interface ProviderProps<Arguments> {
-  args: Arguments;
-}
-
 export class Varuna<Type, Arguments = void> {
   private listeners = new Set<(state: Type) => void>();
 
@@ -53,11 +49,15 @@ export class Varuna<Type, Arguments = void> {
   }
 
   on<Slice>(slicer: (state: Type) => Slice, callback: (state: Slice) => void) {
-    const last = slicer(this.state);
+    let last = slicer(this.state);
 
     function listener(state: Type) {
       const next = slicer(state);
-      if (next !== last) callback(next);
+
+      if (next !== last) {
+        callback(next);
+        last = next;
+      }
     }
 
     this.listeners.add(listener);
@@ -94,8 +94,11 @@ export class Varuna<Type, Arguments = void> {
   use<Slice = Type>(
     slicer: (state: Type) => Slice = (state) => state as unknown as Slice
   ) {
+    const instance = this;
     const [slice, setSlice] = useState(slicer(this.state));
-    useEffect(() => this.on(slicer, setSlice), []);
+
+    useEffect(() => instance.on(slicer, setSlice), []);
+
     return slice;
   }
 }

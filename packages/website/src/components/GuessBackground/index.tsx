@@ -5,7 +5,7 @@ import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDe
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 import { Var } from "../../core/radix/var";
 import { Duel } from "../../stores/duel";
-import { Guess } from "../../stores/guessEphemeral";
+import { Guess, GuessState } from "../../stores/guessEphemeral";
 import { TankopediaEphemeral } from "../../stores/tankopediaEphemeral";
 import "./index.css";
 
@@ -39,9 +39,9 @@ export function GuessBackground() {
         style={{
           transitionDuration: "2s",
           backgroundColor: Var(
-            guessState === null
+            guessState === GuessState.NotGuessed
               ? "accent-2"
-              : guessState
+              : guessState === GuessState.Correct
                 ? "jade-3"
                 : "tomato-3"
           ),

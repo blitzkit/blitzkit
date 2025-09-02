@@ -24,7 +24,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
 import { useLocale } from "../hooks/useLocale";
-import { Guess } from "../stores/guessEphemeral";
+import { Guess, GuessState } from "../stores/guessEphemeral";
 import { classIcons } from "./ClassIcon";
 import { SearchResults } from "./SearchResults";
 
@@ -78,7 +78,7 @@ export function Guesser() {
   );
 
   useEffect(() => {
-    if (guessState !== null) setSelected(null);
+    if (guessState !== GuessState.NotGuessed) setSelected(null);
   }, [guessState]);
 
   return (
@@ -148,7 +148,7 @@ export function Guesser() {
 
       <Flex gap="3">
         <TextField.Root
-          disabled={guessState !== null}
+          disabled={guessState !== GuessState.NotGuessed}
           ref={input}
           onChange={requestSearch}
           style={{ flex: 1 }}
@@ -163,13 +163,19 @@ export function Guesser() {
 
         <Button
           size="3"
-          color={guessState === null && selected === null ? "red" : undefined}
+          color={
+            guessState === GuessState.NotGuessed && selected === null
+              ? "red"
+              : undefined
+          }
           onClick={() => {
-            if (guessState === null) {
+            if (guessState === GuessState.NotGuessed) {
               const correct = selected !== null && selected.id === tank.id;
 
               Guess.mutate((draft) => {
-                draft.guessState = correct;
+                draft.guessState = correct
+                  ? GuessState.Correct
+                  : GuessState.Incorrect;
                 draft.totalGuesses++;
                 draft.correctGuesses += correct ? 1 : 0;
               });
@@ -181,13 +187,14 @@ export function Guesser() {
                 if (!input.current) return;
 
                 draft.tank = tank;
-                draft.guessState = null;
+                draft.guessState = GuessState.NotGuessed;
+
                 input.current.value = "";
               });
             }
           }}
         >
-          {guessState === null ? (
+          {guessState === GuessState.NotGuessed ? (
             <>
               {
                 strings.website.tools.guess.search[

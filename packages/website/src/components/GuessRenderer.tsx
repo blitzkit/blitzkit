@@ -1,4 +1,4 @@
-import { Guess } from "../stores/guessEphemeral";
+import { Guess, GuessState } from "../stores/guessEphemeral";
 import { SmartCanvas } from "./SmartCanvas";
 import { Controls } from "./Tankopedia/HeroSection/components/TankSandbox/components/Control";
 import { Lighting } from "./Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
@@ -9,7 +9,7 @@ const CONTRAST = 2 ** 2;
 
 export function GuessRenderer() {
   const guessState = Guess.use((state) => state.guessState);
-  const isRevealed = guessState !== null;
+  const isRevealed = guessState !== GuessState.NotGuessed;
 
   return (
     <SmartCanvas
