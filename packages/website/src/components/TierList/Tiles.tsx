@@ -1,15 +1,14 @@
-import { metaSortTank } from '@blitzkit/core';
-import { useStore } from '@nanostores/react';
-import { times } from 'lodash-es';
-import { useMemo, useState } from 'react';
-import { awaitableGameDefinitions } from '../../core/awaitables/gameDefinitions';
-import { awaitableTankDefinitions } from '../../core/awaitables/tankDefinitions';
-import { filterTank } from '../../core/blitzkit/filterTank';
-import { $tankFilters } from '../../stores/tankFilters';
-import { TierList } from '../../stores/tierList';
-import { SkeletonTankCard } from '../TankSearch/components/SkeletonTankCard';
-import { TankCardWrapper } from '../TankSearch/components/TankCardWrapper';
-import { TierListTile } from './Tile';
+import { metaSortTank } from "@blitzkit/core";
+import { times } from "lodash-es";
+import { useMemo, useState } from "react";
+import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
+import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
+import { filterTank } from "../../core/blitzkit/filterTank";
+import { TankFilters } from "../../stores/tankFilters";
+import { TierList } from "../../stores/tierList";
+import { SkeletonTankCard } from "../TankSearch/components/SkeletonTankCard";
+import { TankCardWrapper } from "../TankSearch/components/TankCardWrapper";
+import { TierListTile } from "./Tile";
 
 const [tankDefinitions, gameDefinitions] = await Promise.all([
   awaitableTankDefinitions,
@@ -22,17 +21,17 @@ const PREVIEW_COUNT = 32;
 const DEFAULT_LOADED_CARDS = 75;
 
 export function TierListTiles() {
-  const filters = useStore($tankFilters);
+  const filters = TankFilters.use();
   const placedTanks = TierList.use((state) => state.placedTanks);
   const sorted = useMemo(
     () =>
       metaSortTank(
         tanks.filter(
-          (tank) => filterTank(filters, tank) && !placedTanks.has(tank.id),
+          (tank) => filterTank(filters, tank) && !placedTanks.has(tank.id)
         ),
-        gameDefinitions,
+        gameDefinitions
       ).reverse(),
-    [filters, placedTanks],
+    [filters, placedTanks]
   );
   const [loadedTiles, setLoadedTiles] = useState(DEFAULT_LOADED_CARDS);
 

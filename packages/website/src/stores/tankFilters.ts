@@ -3,8 +3,8 @@ import type {
   ShellType,
   TankClass,
   TankType,
-} from '@blitzkit/core';
-import { map } from 'nanostores';
+} from "@blitzkit/core";
+import { Varuna } from "varuna";
 
 export type CaseType<T> = T extends {
   gun_type?: { $case: infer U; value: any };
@@ -17,23 +17,21 @@ export interface TankFilters {
   nations: string[];
   classes: TankClass[];
   types: TankType[];
-  testing: 'include' | 'exclude' | 'only';
+  testing: "include" | "exclude" | "only";
   search: string | null;
   searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
 }
 
-export const initialTankFilters: TankFilters = {
+export const TankFilters = new Varuna<TankFilters>({
   tiers: [],
   nations: [],
   classes: [],
   types: [],
-  testing: 'include',
+  testing: "include",
   search: null,
   searching: false,
   gunType: [],
   shells: [null, null, null],
-};
-
-export const $tankFilters = map<TankFilters>(initialTankFilters);
+});

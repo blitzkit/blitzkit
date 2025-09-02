@@ -1,14 +1,13 @@
-import type { TankDefinition } from '@blitzkit/core';
-import { useStore } from '@nanostores/react';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Flex, Spinner, TextField } from '@radix-ui/themes';
-import { debounce } from 'lodash-es';
-import { type KeyboardEventHandler, useCallback, useRef } from 'react';
-import { useLocale } from '../../../hooks/useLocale';
-import { $tankFilters } from '../../../stores/tankFilters';
-import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
-import { QuickLink } from './QuickLink';
-import { Sort } from './Sort';
+import type { TankDefinition } from "@blitzkit/core";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { Flex, Spinner, TextField } from "@radix-ui/themes";
+import { debounce } from "lodash-es";
+import { type KeyboardEventHandler, useCallback, useRef } from "react";
+import { useLocale } from "../../../hooks/useLocale";
+import { TankFilters } from "../../../stores/tankFilters";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import { QuickLink } from "./QuickLink";
+import { Sort } from "./Sort";
 
 type SearchBarProps = MaybeSkeletonComponentProps & {
   topResult?: TankDefinition;
@@ -17,30 +16,37 @@ type SearchBarProps = MaybeSkeletonComponentProps & {
 
 export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
   const { strings } = useLocale();
-  const tankFilters = useStore($tankFilters);
+  const search = TankFilters.use((state) => state.search);
+  const searching = TankFilters.use((state) => state.searching);
   const input = useRef<HTMLInputElement>(null);
   const performSearch = useCallback(
     debounce(() => {
-      $tankFilters.setKey('searching', false);
+      TankFilters.mutate((draft) => {
+        draft.searching = false;
+      });
 
       if (!input.current) return;
 
       const sanitized = input.current.value.trim();
 
-      $tankFilters.setKey('search', sanitized.length === 0 ? null : sanitized);
+      TankFilters.mutate((draft) => {
+        draft.search = sanitized.length === 0 ? null : sanitized;
+      });
     }, 500),
-    [],
+    []
   );
   const handleChange = useCallback(() => {
-    if (!tankFilters.searching) {
-      $tankFilters.setKey('searching', true);
+    if (!searching) {
+      TankFilters.mutate((draft) => {
+        draft.searching = true;
+      });
     }
 
     performSearch();
-  }, [tankFilters]);
+  }, [searching]);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
-      if (event.key !== 'Enter' || !topResult || tankFilters.searching) return;
+      if (event.key !== "Enter" || !topResult || searching) return;
 
       event.preventDefault();
 
@@ -50,7 +56,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         window.location.href = `/tanks/${topResult.slug}`;
       }
     },
-    [topResult],
+    [topResult]
   );
 
   return (
@@ -59,7 +65,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         <TextField.Root
           variant="classic"
           disabled={skeleton}
-          defaultValue={tankFilters.search ?? undefined}
+          defaultValue={search ?? undefined}
           style={{ flex: 1 }}
           ref={input}
           placeholder={strings.website.common.tank_search.search_bar_hint}
@@ -67,7 +73,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
           onKeyDown={handleKeyDown}
         >
           <TextField.Slot>
-            {tankFilters.searching ? <Spinner /> : <MagnifyingGlassIcon />}
+            {searching ? <Spinner /> : <MagnifyingGlassIcon />}
           </TextField.Slot>
 
           <QuickLink topResult={topResult} />

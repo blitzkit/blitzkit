@@ -1,20 +1,20 @@
-import { type TankDefinition } from '@blitzkit/core';
-import { useStore } from '@nanostores/react';
-import { CaretRightIcon } from '@radix-ui/react-icons';
-import { Button, TextField } from '@radix-ui/themes';
-import { useLocale } from '../../../hooks/useLocale';
-import { $tankFilters } from '../../../stores/tankFilters';
-import { LinkI18n } from '../../LinkI18n';
+import { type TankDefinition } from "@blitzkit/core";
+import { CaretRightIcon } from "@radix-ui/react-icons";
+import { Button, TextField } from "@radix-ui/themes";
+import { useLocale } from "../../../hooks/useLocale";
+import { TankFilters } from "../../../stores/tankFilters";
+import { LinkI18n } from "../../LinkI18n";
 
 interface QuickLinkProps {
   topResult?: TankDefinition;
 }
 
 export function QuickLink({ topResult }: QuickLinkProps) {
-  const tankFilters = useStore($tankFilters);
   const { locale, unwrap } = useLocale();
+  const search = TankFilters.use((state) => state.search);
+  const searching = TankFilters.use((state) => state.searching);
 
-  if (!tankFilters.search || !topResult || tankFilters.searching) return null;
+  if (!search || !topResult || searching) return null;
 
   return (
     <TextField.Slot>

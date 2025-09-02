@@ -1,44 +1,43 @@
-import { TIER_ROMAN_NUMERALS } from '@blitzkit/core';
-import { useStore } from '@nanostores/react';
-import { Flex, IconButton, Text } from '@radix-ui/themes';
-import { times } from 'lodash-es';
-import { memo } from 'react';
-import { $tankFilters } from '../../../stores/tankFilters';
-import { TankSort } from '../../../stores/tankopediaSort';
+import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { Flex, IconButton, Text } from "@radix-ui/themes";
+import { times } from "lodash-es";
+import { memo } from "react";
+import { TankFilters } from "../../../stores/tankFilters";
+import { TankSort } from "../../../stores/tankopediaSort";
 
 export const TierFilter = memo(() => {
-  const tankFilters = useStore($tankFilters);
   const by = TankSort.use((state) => state.by);
+  const search = TankFilters.use((state) => state.search);
+  const tiers = TankFilters.use((state) => state.tiers);
 
-  if (by !== 'meta.none' || tankFilters.search) return null;
+  if (by !== "meta.none" || search) return null;
 
   return (
     <Flex justify="center">
       <Flex
         direction="row"
         overflow="hidden"
-        style={{ borderRadius: 'var(--radius-full)' }}
+        style={{ borderRadius: "var(--radius-full)" }}
       >
         {times(10, (index) => {
           const tier = 10 - index;
-          const selected = tankFilters.tiers.includes(tier);
+          const selected = tiers.includes(tier);
 
           return (
             <IconButton
               key={tier}
-              variant={selected ? 'solid' : 'soft'}
+              variant={selected ? "solid" : "soft"}
               radius="none"
-              color={selected ? undefined : 'gray'}
+              color={selected ? undefined : "gray"}
               highContrast
               onClick={() => {
-                if (tankFilters.tiers.includes(tier)) {
-                  $tankFilters.setKey(
-                    'tiers',
-                    tankFilters.tiers.filter((t) => t !== tier),
-                  );
-                } else {
-                  $tankFilters.setKey('tiers', [...tankFilters.tiers, tier]);
-                }
+                TankFilters.mutate((draft) => {
+                  if (tiers.includes(tier)) {
+                    draft.tiers = tiers.filter((t) => t !== tier);
+                  } else {
+                    draft.tiers = [...tiers, tier];
+                  }
+                });
               }}
             >
               <Text size="2">{TIER_ROMAN_NUMERALS[tier]}</Text>
