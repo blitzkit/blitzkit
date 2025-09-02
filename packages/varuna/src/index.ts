@@ -20,12 +20,17 @@ export class Varuna<Type, Arguments = void> {
     let data = initial;
 
     if (this.persistence && typeof localStorage !== "undefined") {
+      const instance = this;
       const dehydrated = localStorage.getItem(this.persistence);
 
       if (dehydrated) {
         const rehydrated = JSON.parse(dehydrated) as unknown;
         data = merge(data, rehydrated);
       }
+
+      window.addEventListener("beforeunload", () => {
+        localStorage.setItem(this.persistence!, JSON.stringify(instance.state));
+      });
     }
 
     this.initialized = true;

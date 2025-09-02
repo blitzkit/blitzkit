@@ -222,12 +222,7 @@
     "yolo",
     "youtuber",
     "youtubers",
-    "zoomable",
-    "zustand"
+    "zoomable"
   ],
-  "deno.enable": false,
-  "deno.unstable": false,
-  "cSpell.enableFiletypes": ["glsl", "proto3"],
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "liveServer.settings.multiRootWorkspaceName": "blitzkit"
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
