@@ -2,13 +2,13 @@ import {
   SEARCH_KEYS,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
 import {
   ArrowRightIcon,
   MagnifyingGlassIcon,
   PaperPlaneIcon,
-} from '@radix-ui/react-icons';
+} from "@radix-ui/react-icons";
 import {
   Box,
   Button,
@@ -17,16 +17,16 @@ import {
   Spinner,
   Text,
   TextField,
-} from '@radix-ui/themes';
-import fuzzysort from 'fuzzysort';
-import { debounce } from 'lodash-es';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { awaitableTankDefinitions } from '../core/awaitables/tankDefinitions';
-import { awaitableTankNames } from '../core/awaitables/tankNames';
-import { useLocale } from '../hooks/useLocale';
-import { GuessEphemeral } from '../stores/guessEphemeral';
-import { classIcons } from './ClassIcon';
-import { SearchResults } from './SearchResults';
+} from "@radix-ui/themes";
+import fuzzysort from "fuzzysort";
+import { debounce } from "lodash-es";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
+import { awaitableTankNames } from "../core/awaitables/tankNames";
+import { useLocale } from "../hooks/useLocale";
+import { Guess } from "../stores/guessEphemeral";
+import { classIcons } from "./ClassIcon";
+import { SearchResults } from "./SearchResults";
 
 const { go } = fuzzysort;
 
@@ -38,16 +38,15 @@ const [tankNames, tankDefinitions] = await Promise.all([
 const ids = Object.keys(tankDefinitions.tanks);
 
 export function Guesser() {
-  const tank = GuessEphemeral.use((state) => state.tank);
-  const guessState = GuessEphemeral.use((state) => state.guessState);
-  const correctGuesses = GuessEphemeral.use((state) => state.correctGuesses);
-  const totalGuesses = GuessEphemeral.use((state) => state.totalGuesses);
+  const tank = Guess.use((state) => state.tank);
+  const guessState = Guess.use((state) => state.guessState);
+  const correctGuesses = Guess.use((state) => state.correctGuesses);
+  const totalGuesses = Guess.use((state) => state.totalGuesses);
   const { strings, unwrap } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<TankDefinition[] | null>(null);
   const [selected, setSelected] = useState<TankDefinition | null>(null);
-  const mutateGuessEphemeral = GuessEphemeral.useMutation();
 
   const requestSearch = useCallback(() => {
     setSelected(null);
@@ -72,10 +71,10 @@ export function Guesser() {
       });
 
       setResults(
-        searchResults.map((result) => tankDefinitions.tanks[result.obj.id]),
+        searchResults.map((result) => tankDefinitions.tanks[result.obj.id])
       );
     }, 500),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -88,7 +87,7 @@ export function Guesser() {
       position="absolute"
       bottom="0"
       left="50%"
-      style={{ transform: 'translateX(-50%)' }}
+      style={{ transform: "translateX(-50%)" }}
       width="100%"
       p="4"
       maxWidth="25rem"
@@ -138,7 +137,7 @@ export function Guesser() {
         </Card>
       )}
 
-      <Flex justify="center" style={{ userSelect: 'none' }}>
+      <Flex justify="center" style={{ userSelect: "none" }}>
         <Text>
           {literals(strings.website.tools.guess.stats, [
             `${correctGuesses}`,
@@ -164,12 +163,12 @@ export function Guesser() {
 
         <Button
           size="3"
-          color={guessState === null && selected === null ? 'red' : undefined}
+          color={guessState === null && selected === null ? "red" : undefined}
           onClick={() => {
             if (guessState === null) {
               const correct = selected !== null && selected.id === tank.id;
 
-              mutateGuessEphemeral((draft) => {
+              Guess.mutate((draft) => {
                 draft.guessState = correct;
                 draft.totalGuesses++;
                 draft.correctGuesses += correct ? 1 : 0;
@@ -178,12 +177,12 @@ export function Guesser() {
               const id = Number(ids[Math.floor(Math.random() * ids.length)]);
               const tank = tankDefinitions.tanks[id];
 
-              mutateGuessEphemeral((draft) => {
+              Guess.mutate((draft) => {
                 if (!input.current) return;
 
                 draft.tank = tank;
                 draft.guessState = null;
-                input.current.value = '';
+                input.current.value = "";
               });
             }
           }}
@@ -192,7 +191,7 @@ export function Guesser() {
             <>
               {
                 strings.website.tools.guess.search[
-                  selected === null ? 'skip' : 'guess'
+                  selected === null ? "skip" : "guess"
                 ]
               }
               {selected === null ? <ArrowRightIcon /> : <PaperPlaneIcon />}

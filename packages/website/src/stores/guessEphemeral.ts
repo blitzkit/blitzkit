@@ -1,20 +1,19 @@
-import type { TankDefinition } from '@blitzkit/core';
-import { create } from 'zustand';
-import { createContextualStore } from '../core/zustand/createContextualStore';
+import type { TankDefinition } from "@blitzkit/core";
+import { Varuna } from "varuna";
 
-export interface GuessEphemeral {
+export interface Guess {
   tank: TankDefinition;
-  // true = correct, false = incorrect, null = not guessed
+  /**
+   * true = correct, false = incorrect, null = not guessed
+   */
   guessState: boolean | null;
   totalGuesses: number;
   correctGuesses: number;
 }
 
-export const GuessEphemeral = createContextualStore((tank: TankDefinition) =>
-  create<GuessEphemeral>()(() => ({
-    tank,
-    guessState: null,
-    totalGuesses: 0,
-    correctGuesses: 0,
-  })),
-);
+export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
+  tank,
+  guessState: null,
+  totalGuesses: 0,
+  correctGuesses: 0,
+}));

@@ -13,7 +13,7 @@ import {
   useLocale,
 } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
-import { GuessEphemeral } from "../../../stores/guessEphemeral";
+import { Guess } from "../../../stores/guessEphemeral";
 import { TankopediaEphemeral } from "../../../stores/tankopediaEphemeral";
 
 const [tankDefinitions, modelDefinitions, provisionDefinitions] =
@@ -26,20 +26,20 @@ const [tankDefinitions, modelDefinitions, provisionDefinitions] =
 const ids = Object.keys(tankDefinitions.tanks);
 
 export function Page({ locale }: LocaleAcceptorProps) {
-  const initialId = Number(ids[Math.floor(Math.random() * ids.length)]);
-  const initialTank = tankDefinitions.tanks[initialId];
+  const id = Number(ids[Math.floor(Math.random() * ids.length)]);
+  const tank = tankDefinitions.tanks[id];
+
+  Guess.useInitialization(tank);
 
   return (
-    <GuessEphemeral.Provider data={initialTank}>
-      <LocaleProvider locale={locale}>
-        <Container />
-      </LocaleProvider>
-    </GuessEphemeral.Provider>
+    <LocaleProvider locale={locale}>
+      <Container />
+    </LocaleProvider>
   );
 }
 
 function Container() {
-  const tank = GuessEphemeral.use((state) => state.tank);
+  const tank = Guess.use((state) => state.tank);
   const model = modelDefinitions.models[tank.id];
 
   TankopediaEphemeral.useInitialization(model);
@@ -53,8 +53,8 @@ function Container() {
 
 function Content() {
   const { unwrap } = useLocale();
-  const tank = GuessEphemeral.use((state) => state.tank);
-  const guessState = GuessEphemeral.use((state) => state.guessState);
+  const tank = Guess.use((state) => state.tank);
+  const guessState = Guess.use((state) => state.guessState);
   const isRevealed = guessState !== null;
   const name = unwrap(tank.name);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
