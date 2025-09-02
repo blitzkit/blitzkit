@@ -2,11 +2,8 @@ import type {
   CompositeStatsKey,
   IndividualTankStats,
   Region,
-} from '@blitzkit/core';
-import { merge } from 'lodash-es';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { createContextualStore } from '../core/zustand/createContextualStore';
+} from "@blitzkit/core";
+import { Varuna } from "varuna";
 
 interface SessionBase {
   columns: CompositeStatsKey[];
@@ -28,19 +25,15 @@ interface SessionNotTracking extends SessionBase {
 
 type Session = SessionTracking | SessionNotTracking;
 
-export const Session = createContextualStore(() =>
-  create<Session>()(
-    persist(
-      (_) => ({
-        columns: [
-          'cumulative_battles',
-          'normalized_wins',
-          'cumulative_wn8',
-          'normalized_damage_dealt',
-        ],
-        tracking: false,
-      }),
-      { name: 'session-3', merge: (a, b) => merge(b, a) },
-    ),
-  ),
+export const Session = new Varuna<Session>(
+  {
+    columns: [
+      "cumulative_battles",
+      "normalized_wins",
+      "cumulative_wn8",
+      "normalized_damage_dealt",
+    ],
+    tracking: false,
+  },
+  "session-4"
 );

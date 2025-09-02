@@ -12,13 +12,13 @@ import {
   idToRegion,
   searchPlayersAcrossRegions,
   sumCompositeStats,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
 import {
   ArrowDownIcon,
   MagnifyingGlassIcon,
   PlusIcon,
-} from '@radix-ui/react-icons';
+} from "@radix-ui/react-icons";
 import {
   AlertDialog,
   Button,
@@ -30,21 +30,21 @@ import {
   Table,
   Text,
   TextField,
-} from '@radix-ui/themes';
-import { debounce } from 'lodash-es';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { PageWrapper } from '../../../components/PageWrapper';
-import { StickyRowHeaderCell } from '../../../components/StickyRowHeaderCell';
-import { StickyTableRoot } from '../../../components/StickyTableRoot';
-import { TankRowHeaderCell } from '../../../components/TankRowHeaderCell';
-import { awaitableAverageDefinitions } from '../../../core/awaitables/averageDefinitions';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
+} from "@radix-ui/themes";
+import { debounce } from "lodash-es";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PageWrapper } from "../../../components/PageWrapper";
+import { StickyRowHeaderCell } from "../../../components/StickyRowHeaderCell";
+import { StickyTableRoot } from "../../../components/StickyTableRoot";
+import { TankRowHeaderCell } from "../../../components/TankRowHeaderCell";
+import { awaitableAverageDefinitions } from "../../../core/awaitables/averageDefinitions";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from '../../../hooks/useLocale';
-import { Session, type SessionTracking } from '../../../stores/session';
+} from "../../../hooks/useLocale";
+import { Session, type SessionTracking } from "../../../stores/session";
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
   awaitableTankDefinitions,
@@ -54,9 +54,7 @@ const [tankDefinitions, averageDefinitions] = await Promise.all([
 export function Page({ locale }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
-      <Session.Provider>
-        <Content />
-      </Session.Provider>
+      <Content />
     </LocaleProvider>
   );
 }
@@ -70,9 +68,8 @@ function Content() {
     useState(false);
   const input = useRef<HTMLInputElement>(null);
   const session = Session.use();
-  const mutateSession = Session.useMutation();
   const [tankStatsB, setTankStatsB] = useState<IndividualTankStats[] | null>(
-    null,
+    null
   );
   const [accountInfo, setAccountInfo] = useState<
     IndividualAccountInfo | null | undefined
@@ -84,7 +81,7 @@ function Content() {
       if (!id) return setAccountInfo(null);
 
       setAccountInfo(
-        session.tracking ? await getAccountInfo(idToRegion(id), id) : null,
+        session.tracking ? await getAccountInfo(idToRegion(id), id) : null
       );
     })();
   }, [session.tracking && session.player.id]);
@@ -98,20 +95,20 @@ function Content() {
               const average = averageDefinitions.averages[tank.id];
               const composite = compositeStats(
                 { ...entry.all, battle_life_time: entry.battle_life_time },
-                average?.mu,
+                average?.mu
               );
 
               return { tank, composite };
             })
         : undefined,
-    [session.tracking && session.player, tankStatsB],
+    [session.tracking && session.player, tankStatsB]
   );
   const total = useMemo(
     () =>
       delta
         ? sumCompositeStats(delta.map(({ composite }) => composite))
         : undefined,
-    [delta],
+    [delta]
   );
   const search = debounce(async () => {
     if (!input.current) return;
@@ -131,7 +128,8 @@ function Content() {
     }
 
     setShowSearch(false);
-    mutateSession((draft) => {
+
+    Session.mutate((draft) => {
       if (!input.current) return;
 
       draft.tracking = true;
@@ -152,7 +150,7 @@ function Content() {
 
       const tankStats = await getTankStats(
         idToRegion(session.player.id),
-        session.player.id,
+        session.player.id
       );
       setTankStatsB(tankStats);
     }
@@ -206,8 +204,8 @@ function Content() {
             variant="classic"
             size="3"
             style={{
-              position: 'relative',
-              width: '75vw',
+              position: "relative",
+              width: "75vw",
               maxWidth: 480,
             }}
             ref={input}
@@ -272,7 +270,7 @@ function Content() {
         <Flex
           mt="2"
           mb="2"
-          direction={{ initial: 'column', sm: 'row' }}
+          direction={{ initial: "column", sm: "row" }}
           align="center"
           justify="between"
           gap="2"
@@ -296,7 +294,7 @@ function Content() {
               onClick={async () => {
                 const stats = await getTankStats(
                   session.player.region,
-                  session.player.id,
+                  session.player.id
                 );
 
                 if (stats === null) {
@@ -304,7 +302,7 @@ function Content() {
                   return;
                 }
 
-                mutateSession((draft) => {
+                Session.mutate((draft) => {
                   (draft as SessionTracking).player.stats = stats;
                 });
               }}
@@ -313,7 +311,7 @@ function Content() {
             </Button>
             <Button
               onClick={() => {
-                mutateSession((draft) => {
+                Session.mutate((draft) => {
                   draft.tracking = false;
                 });
               }}
@@ -338,7 +336,7 @@ function Content() {
                     align="center"
                     width="0"
                     key={column}
-                    style={{ position: 'relative' }}
+                    style={{ position: "relative" }}
                   >
                     {index === 0 && session.columns.length < 4 && (
                       <DropdownMenu.Root>
@@ -347,10 +345,10 @@ function Content() {
                             size="1"
                             variant="surface"
                             style={{
-                              position: 'absolute',
+                              position: "absolute",
                               left: 0,
-                              top: '50%',
-                              transform: 'translate(-100%, -50%)',
+                              top: "50%",
+                              transform: "translate(-100%, -50%)",
                               zIndex: 1,
                             }}
                           >
@@ -365,9 +363,9 @@ function Content() {
                               <DropdownMenu.Item
                                 key={key}
                                 onClick={() => {
-                                  mutateSession((draft) => {
+                                  Session.mutate((draft) => {
                                     (draft as SessionTracking).columns.unshift(
-                                      key,
+                                      key
                                     );
                                   });
                                 }}
@@ -382,8 +380,8 @@ function Content() {
                     <Select.Root
                       value={column}
                       onValueChange={(value) => {
-                        mutateSession((draft) => {
-                          if (value === 'remove') {
+                        Session.mutate((draft) => {
+                          if (value === "remove") {
                             (draft as SessionTracking).columns.splice(index, 1);
                           } else {
                             (draft as SessionTracking).columns[index] =
@@ -404,8 +402,7 @@ function Content() {
                         {compositeStatsKeys
                           .filter(
                             (item) =>
-                              !session.columns.includes(item) ||
-                              item === column,
+                              !session.columns.includes(item) || item === column
                           )
                           .map((key) => (
                             <Select.Item key={key} value={key}>
@@ -422,14 +419,14 @@ function Content() {
             <Table.Body>
               <Table.Row
                 style={{
-                  overflow: 'hidden',
+                  overflow: "hidden",
                 }}
               >
                 <StickyRowHeaderCell
                   style={{
                     paddingLeft: 32,
-                    position: 'relative',
-                    overflowY: 'hidden',
+                    position: "relative",
+                    overflowY: "hidden",
                   }}
                 >
                   {strings.website.tools.session.table.total}
@@ -446,7 +443,7 @@ function Content() {
                   <Table.Row
                     key={tank.id}
                     style={{
-                      overflow: 'hidden',
+                      overflow: "hidden",
                     }}
                   >
                     <TankRowHeaderCell tank={tank} />
@@ -455,7 +452,7 @@ function Content() {
                         {formatCompositeStat(
                           composite[column],
                           column,
-                          composite,
+                          composite
                         )}
                       </Table.Cell>
                     ))}

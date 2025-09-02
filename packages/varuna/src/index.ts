@@ -23,7 +23,7 @@ export class Varuna<Type, Arguments = void> {
   private initialize(initial: Type) {
     let data = initial;
 
-    if (this.persistence) {
+    if (this.persistence && typeof localStorage !== "undefined") {
       const dehydrated = localStorage.getItem(this.persistence);
 
       if (dehydrated) {
