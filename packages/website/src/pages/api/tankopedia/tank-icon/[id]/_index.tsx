@@ -1,12 +1,12 @@
-import { TankSandbox } from '../../../../../components/Tankopedia/HeroSection/components/TankSandbox';
-import { awaitableModelDefinitions } from '../../../../../core/awaitables/modelDefinitions';
-import { awaitableProvisionDefinitions } from '../../../../../core/awaitables/provisionDefinitions';
-import { awaitableTankDefinitions } from '../../../../../core/awaitables/tankDefinitions';
-import { LocaleProvider } from '../../../../../hooks/useLocale';
-import { App } from '../../../../../stores/app';
-import { Duel } from '../../../../../stores/duel';
-import { TankopediaEphemeral } from '../../../../../stores/tankopediaEphemeral';
-import { TankopediaPersistent } from '../../../../../stores/tankopediaPersistent';
+import { TankSandbox } from "../../../../../components/Tankopedia/HeroSection/components/TankSandbox";
+import { awaitableModelDefinitions } from "../../../../../core/awaitables/modelDefinitions";
+import { awaitableProvisionDefinitions } from "../../../../../core/awaitables/provisionDefinitions";
+import { awaitableTankDefinitions } from "../../../../../core/awaitables/tankDefinitions";
+import { LocaleProvider } from "../../../../../hooks/useLocale";
+import { App } from "../../../../../stores/app";
+import { Duel } from "../../../../../stores/duel";
+import { TankopediaEphemeral } from "../../../../../stores/tankopediaEphemeral";
+import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
 
 const [provisionDefinitions, tankDefinitions, modelDefinitions] =
   await Promise.all([
@@ -23,12 +23,13 @@ export function Page({ id }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
+  TankopediaEphemeral.useInitialization(model);
+
   return (
     <LocaleProvider locale="en">
       <App.Provider>
         <TankopediaPersistent.Provider>
           <Duel.Provider data={{ provisionDefinitions, model, tank }}>
-            <TankopediaEphemeral.Provider args={model} />
             <Content />
           </Duel.Provider>
         </TankopediaPersistent.Provider>

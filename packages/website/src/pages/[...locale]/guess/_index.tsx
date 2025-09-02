@@ -1,20 +1,20 @@
-import { Box, Flex, Heading } from '@radix-ui/themes';
-import { Suspense } from 'react';
-import { GuessBackground } from '../../../components/GuessBackground';
-import { Guesser } from '../../../components/Guesser';
-import { GuessRenderer } from '../../../components/GuessRenderer';
-import { GuessRendererLoader } from '../../../components/GuessRendererLoader';
-import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
-import { awaitableProvisionDefinitions } from '../../../core/awaitables/provisionDefinitions';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
+import { Box, Flex, Heading } from "@radix-ui/themes";
+import { Suspense } from "react";
+import { GuessBackground } from "../../../components/GuessBackground";
+import { Guesser } from "../../../components/Guesser";
+import { GuessRenderer } from "../../../components/GuessRenderer";
+import { GuessRendererLoader } from "../../../components/GuessRendererLoader";
+import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
+import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from '../../../hooks/useLocale';
-import { Duel } from '../../../stores/duel';
-import { GuessEphemeral } from '../../../stores/guessEphemeral';
-import { TankopediaEphemeral } from '../../../stores/tankopediaEphemeral';
+} from "../../../hooks/useLocale";
+import { Duel } from "../../../stores/duel";
+import { GuessEphemeral } from "../../../stores/guessEphemeral";
+import { TankopediaEphemeral } from "../../../stores/tankopediaEphemeral";
 
 const [tankDefinitions, modelDefinitions, provisionDefinitions] =
   await Promise.all([
@@ -42,13 +42,12 @@ function Container() {
   const tank = GuessEphemeral.use((state) => state.tank);
   const model = modelDefinitions.models[tank.id];
 
+  TankopediaEphemeral.useInitialization(model);
+
   return (
-    <>
-      <TankopediaEphemeral.Provider args={model} />
-      <Duel.Provider data={{ tank, model, provisionDefinitions }}>
-        <Content />
-      </Duel.Provider>
-    </>
+    <Duel.Provider data={{ tank, model, provisionDefinitions }}>
+      <Content />
+    </Duel.Provider>
   );
 }
 
@@ -59,7 +58,7 @@ function Content() {
   const isRevealed = guessState !== null;
   const name = unwrap(tank.name);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
-  const transitionDuration = isRevealed ? '2s' : undefined;
+  const transitionDuration = isRevealed ? "2s" : undefined;
 
   return (
     <Flex flexGrow="1" position="relative" overflow="hidden">
@@ -70,14 +69,14 @@ function Content() {
           transitionDuration,
           opacity: isRevealed ? 1 : 0,
           fontWeight: 900,
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
           fontSize,
-          userSelect: 'none',
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
+          userSelect: "none",
+          whiteSpace: "nowrap",
+          pointerEvents: "none",
         }}
       >
         {name}
@@ -101,14 +100,14 @@ function Content() {
           transitionDuration,
           opacity: isRevealed ? 0.5 : 0,
           fontWeight: 900,
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
           fontSize,
-          userSelect: 'none',
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
+          userSelect: "none",
+          whiteSpace: "nowrap",
+          pointerEvents: "none",
         }}
       >
         {name}

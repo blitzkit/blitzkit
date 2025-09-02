@@ -1,6 +1,6 @@
-import { produce } from 'immer';
-import { merge } from 'lodash-es';
-import { useEffect, useState } from 'react';
+import { produce } from "immer";
+import { merge } from "lodash-es";
+import { useEffect, useState } from "react";
 
 interface ProviderProps<Arguments> {
   args: Arguments;
@@ -15,19 +15,9 @@ export class Varuna<Type, Arguments = void> {
 
   constructor(
     private creator: Type | ((...args: Arguments[]) => Type),
-    private persistence?: string,
+    private persistence?: string
   ) {
-    if (typeof creator !== 'function') this.initialize(creator);
-  }
-
-  Provider({ args }: ProviderProps<Arguments>) {
-    if (typeof this.creator !== 'function') {
-      throw new Error('Provider must be used with a function creator');
-    }
-
-    this.initialize((this.creator as (...args: Arguments[]) => Type)(args));
-
-    return null;
+    if (typeof creator !== "function") this.initialize(creator);
   }
 
   private initialize(initial: Type) {
@@ -45,6 +35,16 @@ export class Varuna<Type, Arguments = void> {
     this.initialized = true;
     this._initial = data;
     this._state = data;
+  }
+
+  useInitialization(...args: Arguments[]) {
+    if (this.initialized) return;
+
+    if (typeof this.creator !== "function") {
+      throw new Error("Provider must be used with a function creator");
+    }
+
+    this.initialize((this.creator as (...args: Arguments[]) => Type)(...args));
   }
 
   private dispatch() {
@@ -72,7 +72,7 @@ export class Varuna<Type, Arguments = void> {
   }
 
   private assertInitialized() {
-    if (!this.initialized) throw new Error('State used before initialization');
+    if (!this.initialized) throw new Error("State used before initialization");
   }
 
   get state() {
@@ -92,7 +92,7 @@ export class Varuna<Type, Arguments = void> {
   }
 
   use<Slice = Type>(
-    slicer: (state: Type) => Slice = (state) => state as unknown as Slice,
+    slicer: (state: Type) => Slice = (state) => state as unknown as Slice
   ) {
     const [slice, setSlice] = useState(slicer(this.state));
     useEffect(() => this.on(slicer, setSlice), []);
