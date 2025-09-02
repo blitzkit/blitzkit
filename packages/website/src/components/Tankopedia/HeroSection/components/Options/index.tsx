@@ -69,10 +69,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const antagonistTank = Duel.use((state) => state.antagonist.tank);
   const hasCalibratedShells = useEquipment(103, true);
   const [tab, setTab] = useState("search");
-  const mutateDuel = Duel.useMutation();
   const hasEnhancedArmor = useEquipment(110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
-  const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
   const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
@@ -151,7 +149,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                     module="gun"
                     key={gun.id}
                     onClick={() =>
-                      mutateDuel((draft) => {
+                      Duel.mutate((draft) => {
                         draft.antagonist.turret = turret;
                         draft.antagonist.gun = gun;
                         draft.antagonist.shell = gun.shells[0];
@@ -192,7 +190,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               size={{ initial: "2", sm: "3" }}
               radius="none"
               onClick={() => {
-                mutateDuel((draft) => {
+                Duel.mutate((draft) => {
                   draft.antagonist.shell = thisShell;
                 });
                 Tankopedia.mutate((draft) => {
@@ -229,7 +227,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
-              mutateDuel((draft) => {
+              Duel.mutate((draft) => {
                 draft.antagonist.equipmentMatrix[0][0] = hasCalibratedShells
                   ? 0
                   : 1;
@@ -254,7 +252,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
-              mutateDuel((draft) => {
+              Duel.mutate((draft) => {
                 draft.protagonist.equipmentMatrix[1][1] = hasEnhancedArmor
                   ? 0
                   : -1;
@@ -303,7 +301,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             mb="1"
             style={{ cursor: "pointer" }}
             onClick={() => {
-              mutateTankopediaPersistent((draft) => {
+              TankopediaPersistent.mutate((draft) => {
                 draft.advancedHighlighting = !draft.advancedHighlighting;
               });
             }}
@@ -343,7 +341,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   <TankSearch
                     compact
                     onSelect={(tank) => {
-                      mutateDuel((draft) => {
+                      Duel.mutate((draft) => {
                         draft.antagonist.tank = tank;
                         draft.antagonist.engine = tank.engines.at(-1)!;
                         draft.antagonist.track = tank.tracks.at(-1)!;

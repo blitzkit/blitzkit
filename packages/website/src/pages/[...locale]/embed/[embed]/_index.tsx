@@ -5,36 +5,35 @@ import {
   ResetIcon,
   TimerIcon,
   WidthIcon,
-} from '@radix-ui/react-icons';
-import { Box, Button, Flex, Heading, ScrollArea, Text } from '@radix-ui/themes';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { CopyButton } from '../../../../components/CopyButton';
-import { Boolean } from '../../../../components/Embeds/Boolean';
-import { Color } from '../../../../components/Embeds/Color';
-import { Enum } from '../../../../components/Embeds/Enum';
-import { GenerateURL } from '../../../../components/Embeds/GenerateURL';
-import { Import } from '../../../../components/Embeds/Import';
-import { PreviewWrapper } from '../../../../components/Embeds/PreviewWrapper';
-import { Radius } from '../../../../components/Embeds/Radius';
-import { RichText } from '../../../../components/Embeds/RichText';
-import { Size } from '../../../../components/Embeds/Size';
-import { SizeWithout0 } from '../../../../components/Embeds/SizeWithout0';
-import { Slider } from '../../../../components/Embeds/Slider';
-import { TextController } from '../../../../components/Embeds/TextController';
-import { PageWrapper } from '../../../../components/PageWrapper';
+} from "@radix-ui/react-icons";
+import { Box, Button, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { CopyButton } from "../../../../components/CopyButton";
+import { Boolean } from "../../../../components/Embeds/Boolean";
+import { Color } from "../../../../components/Embeds/Color";
+import { Enum } from "../../../../components/Embeds/Enum";
+import { GenerateURL } from "../../../../components/Embeds/GenerateURL";
+import { Import } from "../../../../components/Embeds/Import";
+import { PreviewWrapper } from "../../../../components/Embeds/PreviewWrapper";
+import { Radius } from "../../../../components/Embeds/Radius";
+import { RichText } from "../../../../components/Embeds/RichText";
+import { Size } from "../../../../components/Embeds/Size";
+import { SizeWithout0 } from "../../../../components/Embeds/SizeWithout0";
+import { Slider } from "../../../../components/Embeds/Slider";
+import { TextController } from "../../../../components/Embeds/TextController";
+import { PageWrapper } from "../../../../components/PageWrapper";
 import {
   embedConfigurations,
   extractEmbedConfigDefaults,
-} from '../../../../constants/embeds';
-import { NAVBAR_HEIGHT } from '../../../../constants/navbar';
+} from "../../../../constants/embeds";
+import { NAVBAR_HEIGHT } from "../../../../constants/navbar";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from '../../../../hooks/useLocale';
-import { App } from '../../../../stores/app';
-import { EmbedState, type EmbedConfig } from '../../../../stores/embedState';
-import { EmbedItemType } from '../../../../stores/embedState/constants';
+} from "../../../../hooks/useLocale";
+import { EmbedState, type EmbedConfig } from "../../../../stores/embedState";
+import { EmbedItemType } from "../../../../stores/embedState/constants";
 
 export interface EmbedPreviewControllerProps {
   configKey: string;
@@ -47,31 +46,28 @@ interface PageProps {
 export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
   const config = embedConfigurations[embed];
 
+  EmbedState.useInitialization(extractEmbedConfigDefaults(config));
+
   return (
     <LocaleProvider locale={locale}>
-      <App.Provider>
-        <EmbedState.Provider data={extractEmbedConfigDefaults(config)}>
-          <Content embed={embed} />
-        </EmbedState.Provider>
-      </App.Provider>
+      <Content embed={embed} />
     </LocaleProvider>
   );
 }
 
 function Content({ embed }: PageProps) {
-  const embedStateStore = EmbedState.useStore();
   const config = embedConfigurations[embed] as EmbedConfig;
   const [backgroundImage, setBackgroundImage] = useState(
-    '/assets/images/backgrounds/embed-default.webp',
+    "/assets/images/backgrounds/embed-default.webp"
   );
   const fileInput = useRef<HTMLInputElement>();
   const { strings } = useLocale();
 
   useEffect(() => {
-    fileInput.current = document.createElement('input');
-    fileInput.current.type = 'file';
-    fileInput.current.style.display = 'none';
-    fileInput.current.accept = 'image/*';
+    fileInput.current = document.createElement("input");
+    fileInput.current.type = "file";
+    fileInput.current.style.display = "none";
+    fileInput.current.accept = "image/*";
     fileInput.current.onchange = (event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
@@ -84,7 +80,7 @@ function Content({ embed }: PageProps) {
       <Flex>
         <ScrollArea
           scrollbars="vertical"
-          style={{ height: '100%', maxWidth: 320 }}
+          style={{ height: "100%", maxWidth: 320 }}
         >
           <Flex direction="column" gap="2" p="4">
             <Import />
@@ -102,7 +98,7 @@ function Content({ embed }: PageProps) {
               <CopyButton
                 variant="outline"
                 copy={() =>
-                  'body { margin: 0; background-color: transparent; overflow: hidden; }'
+                  "body { margin: 0; background-color: transparent; overflow: hidden; }"
                 }
               >
                 <CodeIcon />
@@ -110,19 +106,19 @@ function Content({ embed }: PageProps) {
               </CopyButton>
               <CopyButton
                 variant="outline"
-                copy={() => `${embedStateStore.getState().width}`}
+                copy={() => `${EmbedState.state.width}`}
               >
                 <WidthIcon />
                 {strings.website.tools.embed.configuration.export.width}
               </CopyButton>
               <CopyButton
                 variant="outline"
-                copy={() => `${embedStateStore.getState().height}`}
+                copy={() => `${EmbedState.state.height}`}
               >
                 <HeightIcon />
                 {strings.website.tools.embed.configuration.export.height}
               </CopyButton>
-              <CopyButton variant="outline" copy={() => '1'}>
+              <CopyButton variant="outline" copy={() => "1"}>
                 <TimerIcon />
                 {strings.website.tools.embed.configuration.export.framerate}
               </CopyButton>
@@ -136,13 +132,10 @@ function Content({ embed }: PageProps) {
                 color="red"
                 variant="ghost"
                 onClick={() => {
-                  embedStateStore.setState(
-                    embedStateStore.getInitialState(),
-                    true,
-                  );
+                  EmbedState.set(EmbedState.initial);
                 }}
               >
-                <ResetIcon />{' '}
+                <ResetIcon />{" "}
                 {strings.website.tools.embed.configuration.customize.reset}
               </Button>
             </Flex>
@@ -211,11 +204,11 @@ function Content({ embed }: PageProps) {
               return (
                 <Flex
                   key={configKey}
-                  direction={oneLiner ? undefined : 'column'}
-                  gap={oneLiner ? '2' : '1'}
-                  justify={oneLiner ? 'between' : undefined}
-                  mb={oneLiner ? '2' : '4'}
-                  pb={item.pad ? '6' : undefined}
+                  direction={oneLiner ? undefined : "column"}
+                  gap={oneLiner ? "2" : "1"}
+                  justify={oneLiner ? "between" : undefined}
+                  mb={oneLiner ? "2" : "4"}
+                  pb={item.pad ? "6" : undefined}
                 >
                   <Text>
                     {
@@ -229,7 +222,7 @@ function Content({ embed }: PageProps) {
                     gap="2"
                     align="center"
                     flexGrow="1"
-                    justify={oneLiner ? 'end' : undefined}
+                    justify={oneLiner ? "end" : undefined}
                   >
                     {control}
                   </Flex>
@@ -250,9 +243,9 @@ function Content({ embed }: PageProps) {
             direction="column"
             height="100%"
             style={{
-              borderRadius: 'var(--radius-3)',
-              overflow: 'hidden',
-              boxShadow: 'var(--shadow-3)',
+              borderRadius: "var(--radius-3)",
+              overflow: "hidden",
+              boxShadow: "var(--shadow-3)",
             }}
           >
             <Flex
@@ -261,7 +254,7 @@ function Content({ embed }: PageProps) {
               p="2"
               pl="3"
               style={{
-                backgroundColor: 'var(--color-panel-solid)',
+                backgroundColor: "var(--color-panel-solid)",
               }}
             >
               <Text color="gray">

@@ -1,7 +1,4 @@
-import { merge } from 'lodash-es';
-import { create } from 'zustand';
-import { persist, subscribeWithSelector } from 'zustand/middleware';
-import { createContextualStore } from '../../core/zustand/createContextualStore';
+import { Varuna } from "varuna";
 
 export interface WargamingLogin {
   token: string;
@@ -9,7 +6,7 @@ export interface WargamingLogin {
   expires: number;
 }
 
-interface AppStore {
+interface App {
   developerMode: boolean;
   policiesAgreementIndex: number;
   logins: {
@@ -17,15 +14,11 @@ interface AppStore {
   };
 }
 
-export const App = createContextualStore(() =>
-  create<AppStore>()(
-    persist(
-      subscribeWithSelector<AppStore>(() => ({
-        developerMode: false,
-        policiesAgreementIndex: -1,
-        logins: {},
-      })),
-      { name: 'app', merge: (a, b) => merge(b, a) },
-    ),
-  ),
+export const App = new Varuna<App>(
+  {
+    developerMode: false,
+    policiesAgreementIndex: -1,
+    logins: {},
+  },
+  "app-2"
 );

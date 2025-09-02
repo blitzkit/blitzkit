@@ -32,7 +32,6 @@ export function Controls({
   zoomable = true,
   enableRotate = true,
 }: ControlsProps) {
-  const duelStore = Duel.useStore();
   const camera = useThree((state) => state.camera as PerspectiveCamera);
   const canvas = useThree((state) => state.gl.domElement);
   const orbitControls = useRef<OrbitControlsClass>(null);
@@ -108,16 +107,15 @@ export function Controls({
     );
 
     function handlePoseEvent(event: Pose) {
-      const duel = duelStore.getState();
       const hasImprovedVerticalStabilizer = hasEquipment(
         122,
-        duel.protagonist.tank.equipment_preset,
-        duel.protagonist.equipmentMatrix
+        Duel.state.protagonist.tank.equipment_preset,
+        Duel.state.protagonist.equipmentMatrix
       );
       const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
-        duel.protagonist.tank.equipment_preset,
-        duel.protagonist.equipmentMatrix
+        Duel.state.protagonist.tank.equipment_preset,
+        Duel.state.protagonist.equipmentMatrix
       );
 
       switch (event) {

@@ -17,9 +17,7 @@ import {
   LocaleProvider,
   useLocale,
 } from "../../../hooks/useLocale";
-import { App } from "../../../stores/app";
 import { CompareEphemeral } from "../../../stores/compareEphemeral";
-import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
 
 const [
   modelDefinitions,
@@ -40,11 +38,7 @@ export function Page({ locale }: LocaleAcceptorProps) {
 
   return (
     <LocaleProvider locale={locale}>
-      <App.Provider>
-        <TankopediaPersistent.Provider>
-          <Content />
-        </TankopediaPersistent.Provider>
-      </App.Provider>
+      <Content />
     </LocaleProvider>
   );
 }

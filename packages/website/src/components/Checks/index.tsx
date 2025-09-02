@@ -1,19 +1,19 @@
-import { assertSecret, idToRegion } from '@blitzkit/core';
-import { Button, Flex, Heading, Text } from '@radix-ui/themes';
-import { useEffect, useState } from 'react';
+import { assertSecret, idToRegion } from "@blitzkit/core";
+import { Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from '../../hooks/useLocale';
-import { App } from '../../stores/app';
-import { CURRENT_POLICIES_AGREEMENT_INDEX } from '../../stores/app/constants';
-import { LinkI18n } from '../LinkI18n';
-import './index.css';
+} from "../../hooks/useLocale";
+import { App } from "../../stores/app";
+import { CURRENT_POLICIES_AGREEMENT_INDEX } from "../../stores/app/constants";
+import { LinkI18n } from "../LinkI18n";
+import "./index.css";
 
 type Extension =
   | {
-      status: 'ok';
+      status: "ok";
       data: {
         access_token: string;
         account_id: number;
@@ -21,15 +21,13 @@ type Extension =
       };
     }
   | {
-      status: 'error';
+      status: "error";
     };
 
 export function Checks({ locale }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
-      <App.Provider>
-        <Content />
-      </App.Provider>
+      <Content />
     </LocaleProvider>
   );
 }
@@ -40,19 +38,17 @@ export function Checks({ locale }: LocaleAcceptorProps) {
 function Content() {
   const { locale } = useLocale();
   const logins = App.use((state) => state.logins);
-  const mutateApp = App.useMutation();
-  const appStore = App.useStore();
   const policiesAgreementIndex = App.use(
-    (state) => state.policiesAgreementIndex,
+    (state) => state.policiesAgreementIndex
   );
-  const isLegal = window.location.pathname.startsWith('/legal');
+  const isLegal = window.location.pathname.startsWith("/legal");
   const [showPoliciesAgreement, setShowPoliciesAgreement] = useState(false);
 
   useEffect(() => {
     function unsubscribe() {
-      window.removeEventListener('scroll', show);
-      window.removeEventListener('pointermove', show);
-      window.removeEventListener('pointerdown', show);
+      window.removeEventListener("scroll", show);
+      window.removeEventListener("pointermove", show);
+      window.removeEventListener("pointerdown", show);
     }
 
     function show() {
@@ -64,9 +60,9 @@ function Content() {
       policiesAgreementIndex !== CURRENT_POLICIES_AGREEMENT_INDEX &&
       !isLegal
     ) {
-      window.addEventListener('scroll', show);
-      window.addEventListener('pointermove', show);
-      window.addEventListener('pointerdown', show);
+      window.addEventListener("scroll", show);
+      window.addEventListener("pointermove", show);
+      window.addEventListener("pointerdown", show);
     }
 
     return unsubscribe;
@@ -78,25 +74,25 @@ function Content() {
       const expiresInDays = expiresIn / 1000 / 60 / 60 / 24;
 
       if (expiresInDays < 0) {
-        mutateApp((draft) => {
+        App.mutate((draft) => {
           draft.logins.wargaming = undefined;
         });
       } else if (expiresInDays < 7) {
-        const { wargaming } = appStore.getState().logins;
+        const { wargaming } = App.state.logins;
 
         if (!wargaming) return;
 
         fetch(
           `https://api.worldoftanks.${idToRegion(
-            wargaming.id,
+            wargaming.id
           )}/wot/auth/prolongate/?application_id=${assertSecret(
-            import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID,
-          )}&access_token=${wargaming.token}`,
+            import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID
+          )}&access_token=${wargaming.token}`
         )
           .then((response) => response.json() as Promise<Extension>)
           .then((json) => {
-            mutateApp((draft) => {
-              if (json.status === 'error') {
+            App.mutate((draft) => {
+              if (json.status === "error") {
                 draft.logins.wargaming = undefined;
               } else {
                 draft.logins.wargaming = {
@@ -126,11 +122,11 @@ function Content() {
 
             <Text>
               This website utilizes cookies to perform analytics and personalize
-              your experience. You can learn more through{' '}
+              your experience. You can learn more through{" "}
               <LinkI18n locale={locale} href="/docs/legal/privacy-policy">
                 our privacy policy
               </LinkI18n>
-              . By using BlitzKit, you also agree to our{' '}
+              . By using BlitzKit, you also agree to our{" "}
               <LinkI18n locale={locale} href="/docs/legal/terms-of-service">
                 terms of service
               </LinkI18n>
@@ -141,8 +137,8 @@ function Content() {
           <Button
             mt="2"
             onClick={() => {
-              appStore.setState({
-                policiesAgreementIndex: CURRENT_POLICIES_AGREEMENT_INDEX,
+              App.mutate((draft) => {
+                draft.policiesAgreementIndex = CURRENT_POLICIES_AGREEMENT_INDEX;
               });
               setShowPoliciesAgreement(false);
             }}

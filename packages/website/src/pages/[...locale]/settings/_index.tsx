@@ -1,27 +1,24 @@
-import { DEFAULT_LOCALE } from '@blitzkit/i18n';
-import { Flex, Switch, Text } from '@radix-ui/themes';
-import { LocaleSwitcher } from '../../../components/LocaleSwitcher';
-import { PageWrapper } from '../../../components/PageWrapper';
+import { DEFAULT_LOCALE } from "@blitzkit/i18n";
+import { Flex, Switch, Text } from "@radix-ui/themes";
+import { LocaleSwitcher } from "../../../components/LocaleSwitcher";
+import { PageWrapper } from "../../../components/PageWrapper";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from '../../../hooks/useLocale';
-import { App } from '../../../stores/app';
+} from "../../../hooks/useLocale";
+import { App } from "../../../stores/app";
 
 export function Page({ locale = DEFAULT_LOCALE }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
-      <App.Provider>
-        <Content locale={locale} />
-      </App.Provider>
+      <Content locale={locale} />
     </LocaleProvider>
   );
 }
 
 function Content({ locale }: LocaleAcceptorProps) {
   const developerMode = App.useDeferred((state) => state.developerMode, false);
-  const appStore = App.useStore();
   const { strings } = useLocale();
 
   return (
@@ -33,7 +30,9 @@ function Content({ locale }: LocaleAcceptorProps) {
             variant="classic"
             checked={developerMode}
             onCheckedChange={(checked) =>
-              appStore.setState({ developerMode: checked })
+              App.mutate((draft) => {
+                draft.developerMode = checked;
+              })
             }
           />
         </Flex>

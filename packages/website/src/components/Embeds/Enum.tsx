@@ -1,11 +1,11 @@
-import { Select } from '@radix-ui/themes';
-import { useLocale } from '../../hooks/useLocale';
-import type { EmbedPreviewControllerProps } from '../../pages/[...locale]/embed/[embed]/_index';
-import { EmbedState } from '../../stores/embedState';
+import { Select } from "@radix-ui/themes";
+import { useLocale } from "../../hooks/useLocale";
+import type { EmbedPreviewControllerProps } from "../../pages/[...locale]/embed/[embed]/_index";
+import { EmbedState } from "../../stores/embedState";
 import type {
   EmbedConfigItemType,
   EmbedItemType,
-} from '../../stores/embedState/constants';
+} from "../../stores/embedState/constants";
 
 export function Enum({
   configKey,
@@ -13,14 +13,13 @@ export function Enum({
 }: EmbedPreviewControllerProps & {
   config: EmbedConfigItemType<EmbedItemType.Enum>;
 }) {
-  const mutateEmbedState = EmbedState.useMutation();
   const { locale } = useLocale();
 
   return (
     <Select.Root
       value={EmbedState.use((state) => state[configKey] as string)}
       onValueChange={(value) => {
-        mutateEmbedState((draft) => {
+        EmbedState.mutate((draft) => {
           draft[configKey] = value;
         });
       }}

@@ -1,5 +1,5 @@
-import type { BlitzkitResponse, StarsInt } from '@blitzkit/core';
-import { PaperPlaneIcon } from '@radix-ui/react-icons';
+import type { BlitzkitResponse, StarsInt } from "@blitzkit/core";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import {
   AlertDialog,
   Button,
@@ -7,15 +7,14 @@ import {
   Flex,
   Spinner,
   Text,
-} from '@radix-ui/themes';
-import { useState } from 'react';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { App } from '../../../../../../stores/app';
-import { Duel } from '../../../../../../stores/duel';
-import { Stars } from '../../Stars';
+} from "@radix-ui/themes";
+import { useState } from "react";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { App } from "../../../../../../stores/app";
+import { Duel } from "../../../../../../stores/duel";
+import { Stars } from "../../Stars";
 
 export function VoteCaster() {
-  const appStore = App.useStore();
   const tank = Duel.use((state) => state.protagonist.tank);
   const [easiness, setEasiness] = useState<StarsInt | null>(null);
   const [firepower, setFirepower] = useState<StarsInt | null>(null);
@@ -42,28 +41,28 @@ export function VoteCaster() {
           <Flex direction="column" mt="4">
             <Flex align="center" justify="between">
               <Text>
-                Easiness{' '}
+                Easiness{" "}
                 <Text color="gray" size="2">
-                  {easiness === null ? '(empty)' : `(${easiness})`}
+                  {easiness === null ? "(empty)" : `(${easiness})`}
                 </Text>
               </Text>
               <Stars stars={easiness} size="5" onCast={setEasiness} />
             </Flex>
             <Flex align="center" justify="between">
               <Text>
-                Firepower{' '}
+                Firepower{" "}
                 <Text color="gray" size="2">
-                  {firepower === null ? '(empty)' : `(${firepower})`}
+                  {firepower === null ? "(empty)" : `(${firepower})`}
                 </Text>
               </Text>
               <Stars stars={firepower} size="5" onCast={setFirepower} />
             </Flex>
             <Flex align="center" justify="between">
               <Text>
-                Maneuverability{' '}
+                Maneuverability{" "}
                 <Text color="gray" size="2">
                   {maneuverability === null
-                    ? '(empty)'
+                    ? "(empty)"
                     : `(${maneuverability})`}
                 </Text>
               </Text>
@@ -75,9 +74,9 @@ export function VoteCaster() {
             </Flex>
             <Flex align="center" justify="between">
               <Text>
-                Survivability{' '}
+                Survivability{" "}
                 <Text color="gray" size="2">
-                  {survivability === null ? '(empty)' : `(${survivability})`}
+                  {survivability === null ? "(empty)" : `(${survivability})`}
                 </Text>
               </Text>
               <Stars stars={survivability} size="5" onCast={setSurvivability} />
@@ -100,7 +99,7 @@ export function VoteCaster() {
                   survivability === null)
               }
               onClick={() => {
-                const { wargaming } = appStore.getState().logins;
+                const { wargaming } = App.state.logins;
 
                 if (!wargaming) {
                   return setShowDialogue(false);
@@ -110,26 +109,26 @@ export function VoteCaster() {
 
                 fetch(
                   `/api/tank-voting/${tank.id}/cast?${
-                    easiness === null ? '' : `easiness=${easiness}&`
-                  }${firepower === null ? '' : `firepower=${firepower}&`}${
+                    easiness === null ? "" : `easiness=${easiness}&`
+                  }${firepower === null ? "" : `firepower=${firepower}&`}${
                     maneuverability === null
-                      ? ''
+                      ? ""
                       : `maneuverability=${maneuverability}&`
                   }${
                     survivability === null
-                      ? ''
+                      ? ""
                       : `survivability=${survivability}&`
-                  }player=${wargaming.id}&token=${wargaming.token}`,
+                  }player=${wargaming.id}&token=${wargaming.token}`
                 )
                   .then(
-                    (response) => response.json() as Promise<BlitzkitResponse>,
+                    (response) => response.json() as Promise<BlitzkitResponse>
                   )
                   .then((json) => {
                     setShowDialogue(false);
-                    setPostVote(json.status === 'ok');
+                    setPostVote(json.status === "ok");
 
-                    if (json.status === 'error') {
-                      console.error('vote failed', json);
+                    if (json.status === "error") {
+                      console.error("vote failed", json);
                     }
                   });
               }}

@@ -1,22 +1,22 @@
-import { literals } from '@blitzkit/i18n';
-import { Box, Card, Flex } from '@radix-ui/themes';
-import { clamp } from 'lodash-es';
-import { useRef, useState } from 'react';
-import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
-import { awaitableModelDefinitions } from '../../../../../../../core/awaitables/modelDefinitions';
+import { literals } from "@blitzkit/i18n";
+import { Box, Card, Flex } from "@radix-ui/themes";
+import { clamp } from "lodash-es";
+import { useRef, useState } from "react";
+import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { awaitableModelDefinitions } from "../../../../../../../core/awaitables/modelDefinitions";
 import {
   DEFAULT_PITCH_TRANSITION,
   applyPitchYawLimits,
-} from '../../../../../../../core/blitz/applyPitchYawLimits';
-import { hasEquipment } from '../../../../../../../core/blitzkit/hasEquipment';
-import { modelTransformEvent } from '../../../../../../../core/blitzkit/modelTransform';
-import { Var } from '../../../../../../../core/radix/var';
-import { useLocale } from '../../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../../stores/duel';
-import type { MaybeSkeletonComponentProps } from '../../../../../../../types/maybeSkeletonComponentProps';
-import { VisualizerCard } from '../VisualizerCard';
-import { VisualizerCornerStat } from '../VisualizerCornerStat';
-import { FlexibilityCanvas } from './components/FlexibilityCanvas';
+} from "../../../../../../../core/blitz/applyPitchYawLimits";
+import { hasEquipment } from "../../../../../../../core/blitzkit/hasEquipment";
+import { modelTransformEvent } from "../../../../../../../core/blitzkit/modelTransform";
+import { Var } from "../../../../../../../core/radix/var";
+import { useLocale } from "../../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../../stores/duel";
+import type { MaybeSkeletonComponentProps } from "../../../../../../../types/maybeSkeletonComponentProps";
+import { VisualizerCard } from "../VisualizerCard";
+import { VisualizerCornerStat } from "../VisualizerCornerStat";
+import { FlexibilityCanvas } from "./components/FlexibilityCanvas";
 
 const ANGLE_COEFFICIENT = 1 / 10;
 
@@ -40,7 +40,6 @@ export function GunFlexibilityVisualizer({
 }: MaybeSkeletonComponentProps) {
   const { strings } = useLocale();
 
-  const duelStore = Duel.useStore();
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -52,10 +51,10 @@ export function GunFlexibilityVisualizer({
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [minPitch, setMinPitch] = useState(
-    -degToRad(gunModel.pitch.front?.max ?? gunModel.pitch.max),
+    -degToRad(gunModel.pitch.front?.max ?? gunModel.pitch.max)
   );
   const [maxPitch, setMaxPitch] = useState(
-    -degToRad(gunModel.pitch.front?.min ?? gunModel.pitch.min),
+    -degToRad(gunModel.pitch.front?.min ?? gunModel.pitch.min)
   );
 
   const container = useRef<HTMLDivElement>(null);
@@ -68,7 +67,7 @@ export function GunFlexibilityVisualizer({
   const b = p.back;
   const t = gunModel.pitch.transition ?? DEFAULT_PITCH_TRANSITION;
 
-  let d = '';
+  let d = "";
 
   // right
   const mo = mag(p.max);
@@ -169,10 +168,10 @@ export function GunFlexibilityVisualizer({
   return (
     <Flex direction="column-reverse" gap="0">
       <Box mt="-3" px="2">
-        <Card variant="classic" style={{ height: '10rem' }}>
+        <Card variant="classic" style={{ height: "10rem" }}>
           <Box
             style={{
-              background: 'linear-gradient(var(--gray-1), var(--gray-3))',
+              background: "linear-gradient(var(--gray-1), var(--gray-3))",
             }}
             position="absolute"
             width="100%"
@@ -195,8 +194,8 @@ export function GunFlexibilityVisualizer({
                   transparent,
                   transparent ${Math.PI / 2 - maxPitch}rad,
 
-                  ${Var('cyan-a4')} ${Math.PI / 2 - maxPitch}rad,
-                  ${Var('jade-a4')} ${Math.PI / 2 - minPitch}rad,
+                  ${Var("cyan-a4")} ${Math.PI / 2 - maxPitch}rad,
+                  ${Var("jade-a4")} ${Math.PI / 2 - minPitch}rad,
 
                   transparent ${Math.PI / 2 - minPitch}rad,
                   transparent 180deg
@@ -209,7 +208,7 @@ export function GunFlexibilityVisualizer({
 
       <VisualizerCard
         ref={container}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: "none" }}
         onPointerMove={(event) => {
           event.preventDefault();
 
@@ -221,19 +220,15 @@ export function GunFlexibilityVisualizer({
           const v = event.clientY - rect.top - rect.height / 2;
           let yaw = Math.atan2(u, -v);
 
-          const {
-            equipmentMatrix,
-            tank: { equipment_preset },
-          } = duelStore.getState().protagonist;
           const hasImprovedVerticalStabilizer = hasEquipment(
             122,
-            equipment_preset,
-            equipmentMatrix,
+            Duel.state.protagonist.tank.equipment_preset,
+            Duel.state.protagonist.equipmentMatrix
           );
           const hasDownImprovedVerticalStabilizer = hasEquipment(
             124,
-            equipment_preset,
-            equipmentMatrix,
+            Duel.state.protagonist.tank.equipment_preset,
+            Duel.state.protagonist.equipmentMatrix
           );
 
           const min = applyPitchYawLimits(
@@ -242,7 +237,7 @@ export function GunFlexibilityVisualizer({
             p,
             y,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
           const max = applyPitchYawLimits(
             Math.PI,
@@ -250,7 +245,7 @@ export function GunFlexibilityVisualizer({
             p,
             y,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           yaw = min[1];
@@ -276,8 +271,8 @@ export function GunFlexibilityVisualizer({
           width="100%"
           height="100%"
           style={{
-            borderRadius: Var('radius-2'),
-            overflow: 'hidden',
+            borderRadius: Var("radius-2"),
+            overflow: "hidden",
           }}
         >
           <Box
@@ -286,18 +281,18 @@ export function GunFlexibilityVisualizer({
             style={{
               opacity: 2 ** -3,
               backgroundImage: `url(/assets/images/tankopedia/visualizers/ricochet/armor-hash.png)`,
-              boxShadow: 'inset 0 0 4rem 1rem black',
+              boxShadow: "inset 0 0 4rem 1rem black",
             }}
           />
         </Box>
 
         <svg
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
-            width: 'calc(100%)',
-            height: 'calc(100%)',
+            width: "calc(100%)",
+            height: "calc(100%)",
           }}
           viewBox="-1 -1 2 2"
         >
@@ -340,11 +335,11 @@ export function GunFlexibilityVisualizer({
             width="1pt"
             height="14rem"
             style={{
-              borderRadius: Var('radius-1'),
-              background: `linear-gradient(${Var('gray-a11')}, ${Var('gray-a6')})`,
+              borderRadius: Var("radius-1"),
+              background: `linear-gradient(${Var("gray-a11")}, ${Var("gray-a6")})`,
               boxShadow:
-                'var(--white-a12) -0.25rem 0 1rem, var(--black-a12) 0.25rem 0 1rem',
-              transform: 'translateX(-50%)',
+                "var(--white-a12) -0.25rem 0 1rem, var(--black-a12) 0.25rem 0 1rem",
+              transform: "translateX(-50%)",
             }}
           />
         </Box>
@@ -356,9 +351,9 @@ export function GunFlexibilityVisualizer({
           width="0.25rem"
           height="0.25rem"
           style={{
-            borderRadius: '50%',
-            backgroundColor: Var('gray-12'),
-            transform: 'translate(-50%, 50%)',
+            borderRadius: "50%",
+            backgroundColor: Var("gray-12"),
+            transform: "translate(-50%, 50%)",
           }}
         />
 

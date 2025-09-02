@@ -14,7 +14,6 @@ import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent
 import { ModelTankWrapper } from "../../../../../Armor/components/ModelTankWrapper";
 
 export function TankModel() {
-  const duelStore = Duel.useStore();
   const protagonist = Duel.use((draft) => draft.protagonist);
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
@@ -135,16 +134,15 @@ export function TankModel() {
             window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
-            const duel = duelStore.getState();
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
-              duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix
+              Duel.state.protagonist.tank.equipment_preset,
+              Duel.state.protagonist.equipmentMatrix
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
-              duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix
+              Duel.state.protagonist.tank.equipment_preset,
+              Duel.state.protagonist.equipmentMatrix
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -223,16 +221,15 @@ export function TankModel() {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
-              const duel = duelStore.getState();
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);

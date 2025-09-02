@@ -10,7 +10,7 @@ import {
   TurretDefinition,
   type TankDefinition,
   type Unlock,
-} from '@blitzkit/core';
+} from "@blitzkit/core";
 import {
   Button,
   ChevronDownIcon,
@@ -18,12 +18,12 @@ import {
   Heading,
   IconButton,
   Text,
-} from '@radix-ui/themes';
-import { awaitableTankDefinitions } from '../../../../core/awaitables/tankDefinitions';
-import { useLocale } from '../../../../hooks/useLocale';
-import { Duel } from '../../../../stores/duel';
-import { LinkI18n } from '../../../LinkI18n';
-import { ConfigurationChildWrapper } from './ConfigurationChildWrapper';
+} from "@radix-ui/themes";
+import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
+import { useLocale } from "../../../../hooks/useLocale";
+import { Duel } from "../../../../stores/duel";
+import { LinkI18n } from "../../../LinkI18n";
+import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 type ModuleDefinition =
   | TurretDefinition
@@ -32,7 +32,7 @@ type ModuleDefinition =
   | EngineDefinition;
 
 function extractModule(raw: ModuleDefinition | TankDefinition) {
-  if ('gun_type' in raw) {
+  if ("gun_type" in raw) {
     return raw;
   } else
     return raw as Exclude<ModuleDefinition | TankDefinition, GunDefinition>;
@@ -43,11 +43,11 @@ interface ModuleWithUnlocks {
 }
 
 const moduleTypeTypeIconName: Record<ModuleType, string> = {
-  [ModuleType.VEHICLE]: '',
-  [ModuleType.ENGINE]: 'engine',
-  [ModuleType.TRACKS]: 'chassis',
-  [ModuleType.TURRET]: 'turret',
-  [ModuleType.GUN]: 'gun',
+  [ModuleType.VEHICLE]: "",
+  [ModuleType.ENGINE]: "engine",
+  [ModuleType.TRACKS]: "chassis",
+  [ModuleType.TURRET]: "turret",
+  [ModuleType.GUN]: "gun",
 };
 
 function ModuleButton({
@@ -70,11 +70,11 @@ function ModuleButton({
     <IconButton
       size="4"
       radius="small"
-      variant={selected ? 'surface' : 'soft'}
-      color={top ? 'amber' : selected ? undefined : 'gray'}
+      variant={selected ? "surface" : "soft"}
+      color={top ? "amber" : selected ? undefined : "gray"}
       onClick={onClick}
       style={{
-        position: 'relative',
+        position: "relative",
         width: isTank ? 72 : undefined,
         height: isTank ? 72 : undefined,
       }}
@@ -83,7 +83,7 @@ function ModuleButton({
         size="1"
         color="gray"
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: isTank ? 8 : 4,
           top: isTank ? 8 : 4,
         }}
@@ -94,13 +94,13 @@ function ModuleButton({
       {unlock.cost.value > 0 && (
         <Flex
           style={{
-            position: 'absolute',
-            left: '50%',
+            position: "absolute",
+            left: "50%",
             bottom: 4,
-            transform: 'translateX(-50%)',
+            transform: "translateX(-50%)",
           }}
           align="center"
-          gap={isTank ? '1' : undefined}
+          gap={isTank ? "1" : undefined}
         >
           <Text size="1" color="gray">
             {formatCompact(locale, unlock.cost.value)}
@@ -112,7 +112,7 @@ function ModuleButton({
             style={{
               width: 12,
               height: 12,
-              objectFit: 'contain',
+              objectFit: "contain",
             }}
           />
         </Flex>
@@ -128,7 +128,7 @@ function ModuleButton({
         style={{
           width: isTank ? 64 : 32,
           height: isTank ? 64 : 32,
-          objectFit: 'contain',
+          objectFit: "contain",
         }}
       />
     </IconButton>
@@ -149,7 +149,6 @@ function ModuleButton({
 const tankDefinitions = await awaitableTankDefinitions;
 
 export function Modules() {
-  const mutateDuel = Duel.useMutation();
   const tank = Duel.use((state) => state.protagonist.tank);
   const hasUpgrades =
     tank.turrets.length > 1 ||
@@ -171,15 +170,15 @@ export function Modules() {
   const { strings } = useLocale();
 
   function setByUnlock(unlock: Unlock) {
-    mutateDuel((draft) => {
+    Duel.mutate((draft) => {
       if (unlock.type === ModuleType.TURRET) {
         draft.protagonist.turret = draft.protagonist.tank.turrets.find(
-          (turret) => turret.id === unlock.id,
+          (turret) => turret.id === unlock.id
         )!;
 
         if (
           !draft.protagonist.turret.guns.some(
-            (gun) => gun.id === draft.protagonist.gun.id,
+            (gun) => gun.id === draft.protagonist.gun.id
           )
         ) {
           draft.protagonist.gun = draft.protagonist.turret.guns.at(-1)!;
@@ -187,7 +186,7 @@ export function Modules() {
         }
       } else if (unlock.type === ModuleType.GUN) {
         const gunInTurret = draft.protagonist.turret.guns.find(
-          (gun) => gun.id === unlock.id,
+          (gun) => gun.id === unlock.id
         );
         if (gunInTurret) {
           draft.protagonist.gun = gunInTurret;
@@ -195,10 +194,10 @@ export function Modules() {
         } else {
           // TODO: warn somehow?
           const suitableTurret = draft.protagonist.tank.turrets.find((turret) =>
-            turret.guns.some((gun) => gun.id === unlock.id),
+            turret.guns.some((gun) => gun.id === unlock.id)
           )!;
           const gunInSuitableTurret = suitableTurret.guns.find(
-            (gun) => gun.id === unlock.id,
+            (gun) => gun.id === unlock.id
           )!;
 
           draft.protagonist.turret = suitableTurret;
@@ -207,11 +206,11 @@ export function Modules() {
         }
       } else if (unlock.type === ModuleType.ENGINE) {
         draft.protagonist.engine = draft.protagonist.tank.engines.find(
-          (engine) => engine.id === unlock.id,
+          (engine) => engine.id === unlock.id
         )!;
       } else if (unlock.type === ModuleType.TRACKS) {
         draft.protagonist.track = draft.protagonist.tank.tracks.find(
-          (track) => track.id === unlock.id,
+          (track) => track.id === unlock.id
         )!;
       }
     });
@@ -235,7 +234,7 @@ export function Modules() {
           } else if (unlock.type === ModuleType.GUN) {
             module = tank.turrets
               .find((turret) =>
-                turret.guns.some((gun) => gun.id === unlock.id),
+                turret.guns.some((gun) => gun.id === unlock.id)
               )!
               .guns.find((gun) => gun.id === unlock.id)!;
           } else if (unlock.type === ModuleType.VEHICLE) {
@@ -257,12 +256,12 @@ export function Modules() {
                   {unlocks.length > 1 && (
                     <div
                       style={{
-                        backgroundColor: 'currentcolor',
+                        backgroundColor: "currentcolor",
                         width: `calc(${central ? 100 : 50}% + ${
                           central ? 8 : 4
                         }px)`,
                         height: 1,
-                        position: 'absolute',
+                        position: "absolute",
                         right: first ? 0 : undefined,
                         left: last ? 0 : undefined,
                         transform: `translateX(${first ? 4 : last ? -4 : 0}px)`,
@@ -279,14 +278,14 @@ export function Modules() {
                   >
                     <div
                       style={{
-                        backgroundColor: 'currentcolor',
+                        backgroundColor: "currentcolor",
                         width: 1,
                         height: 8,
                       }}
                     />
                     <ChevronDownIcon
                       style={{
-                        transform: 'translateY(-7px)',
+                        transform: "translateY(-7px)",
                       }}
                     />
                   </Flex>
@@ -326,7 +325,7 @@ export function Modules() {
                   1 && (
                   <div
                     style={{
-                      backgroundColor: 'currentcolor',
+                      backgroundColor: "currentcolor",
                       width: 1,
                       height: 8,
                       marginBottom: -8,
@@ -337,7 +336,7 @@ export function Modules() {
               {(extractModule(module) as ModuleWithUnlocks).unlocks &&
                 tree(
                   type,
-                  (extractModule(module) as ModuleWithUnlocks).unlocks!,
+                  (extractModule(module) as ModuleWithUnlocks).unlocks!
                 )}
             </Flex>
           );
@@ -359,7 +358,7 @@ export function Modules() {
               variant="ghost"
               color="red"
               onClick={() => {
-                mutateDuel((draft) => {
+                Duel.mutate((draft) => {
                   draft.protagonist.turret = draft.protagonist.tank.turrets[0];
                   draft.protagonist.gun = draft.protagonist.turret.guns[0];
                   draft.protagonist.shell = draft.protagonist.gun.shells[0];
@@ -373,7 +372,7 @@ export function Modules() {
             <Button
               variant="ghost"
               onClick={() => {
-                mutateDuel((draft) => {
+                Duel.mutate((draft) => {
                   draft.protagonist.turret =
                     draft.protagonist.tank.turrets.at(-1)!;
                   draft.protagonist.gun = draft.protagonist.turret.guns.at(-1)!;
@@ -394,28 +393,28 @@ export function Modules() {
       <Flex gap="2" wrap="wrap" gapY="6">
         {tree(ModuleType.ENGINE, [
           {
-            cost: { type: 'xp', value: 0 },
+            cost: { type: "xp", value: 0 },
             id: engine0.id,
             type: ModuleType.ENGINE,
           },
         ])}
         {tree(ModuleType.TRACKS, [
           {
-            cost: { type: 'xp', value: 0 },
+            cost: { type: "xp", value: 0 },
             id: track0.id,
             type: ModuleType.TRACKS,
           },
         ])}
         {tree(ModuleType.TURRET, [
           {
-            cost: { type: 'xp', value: 0 },
+            cost: { type: "xp", value: 0 },
             id: turret0.id,
             type: ModuleType.TURRET,
           },
         ])}
         {tree(ModuleType.GUN, [
           {
-            cost: { type: 'xp', value: 0 },
+            cost: { type: "xp", value: 0 },
             id: gun0.id,
             type: ModuleType.GUN,
           },

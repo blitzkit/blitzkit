@@ -1,16 +1,15 @@
-import * as radixColors from '@radix-ui/colors';
-import { create } from 'zustand';
-import { createContextualStore } from '../../core/zustand/createContextualStore';
+import * as radixColors from "@radix-ui/colors";
+import { Varuna } from "varuna";
 import {
   type EmbedConfigItemType,
   EmbedItemType,
   radixGrays,
   radixTextWeights,
-} from './constants';
+} from "./constants";
 
 export type RadixSize = `${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
-export type RadixSizeWithout0 = Exclude<RadixSize, '0'>;
-export type RadixRadius = `${1 | 2 | 3 | 4}` | 'full';
+export type RadixSizeWithout0 = Exclude<RadixSize, "0">;
+export type RadixRadius = `${1 | 2 | 3 | 4}` | "full";
 export type RadixTextWeight = (typeof radixTextWeights)[number];
 export type RadixColorCompound = {
   base: RadixColor;
@@ -18,7 +17,7 @@ export type RadixColorCompound = {
 };
 export type RadixTextColor =
   | Exclude<RadixColor, RadixColorGrays>
-  | 'gray'
+  | "gray"
   | undefined;
 export type RadixColorVariantRaw = `${
   | 1
@@ -33,17 +32,17 @@ export type RadixColorVariantRaw = `${
   | 10
   | 11
   | 12}`;
-export type RadixColorVariant = `${'' | 'a'}${RadixColorVariantRaw}`;
+export type RadixColorVariant = `${"" | "a"}${RadixColorVariantRaw}`;
 export type RadixColor = Exclude<
   keyof typeof radixColors,
-  `${string}${'A' | 'P3' | 'Dark'}`
+  `${string}${"A" | "P3" | "Dark"}`
 >;
 export type RadixColorGrays = (typeof radixGrays)[number];
 
 export type ExtractEmbedConfigTypes<Config extends EmbedConfig> = {
   [Key in keyof Config]: ({
-    type: Config[Key]['type'];
-  } & EmbedConfigItem)['default'];
+    type: Config[Key]["type"];
+  } & EmbedConfigItem)["default"];
 };
 
 export type EmbedConfig = {
@@ -102,8 +101,8 @@ export type EmbedConfigItem = (
   pad?: boolean;
 };
 
-export type EmbedStateStore = Record<string, EmbedConfigItem['default']>;
+export type EmbedStateStore = Record<string, EmbedConfigItem["default"]>;
 
-export const EmbedState = createContextualStore((init: EmbedStateStore) =>
-  create<EmbedStateStore>()(() => init),
+export const EmbedState = new Varuna<EmbedStateStore, EmbedStateStore>(
+  (data) => data
 );

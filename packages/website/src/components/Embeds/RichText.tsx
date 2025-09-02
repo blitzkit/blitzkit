@@ -1,21 +1,18 @@
-import { FontBoldIcon, FontSizeIcon } from '@radix-ui/react-icons';
-import { Flex, Slider, Text } from '@radix-ui/themes';
-import type { EmbedPreviewControllerProps } from '../../pages/[...locale]/embed/[embed]/_index';
-import { EmbedState, type RadixSizeWithout0 } from '../../stores/embedState';
+import { FontBoldIcon, FontSizeIcon } from "@radix-ui/react-icons";
+import { Flex, Slider, Text } from "@radix-ui/themes";
+import type { EmbedPreviewControllerProps } from "../../pages/[...locale]/embed/[embed]/_index";
+import { EmbedState, type RadixSizeWithout0 } from "../../stores/embedState";
 import {
   radixTextWeights,
   type EmbedConfigItemType,
   type EmbedItemType,
-} from '../../stores/embedState/constants';
-import { ColorControllerRaw } from './ColorControllerRaw';
+} from "../../stores/embedState/constants";
+import { ColorControllerRaw } from "./ColorControllerRaw";
 
 export function RichText({ configKey }: EmbedPreviewControllerProps) {
-  const mutateEmbedState = EmbedState.useMutation();
   const state = EmbedState.use(
     (state) =>
-      state[
-        configKey
-      ] as EmbedConfigItemType<EmbedItemType.RichText>['default'],
+      state[configKey] as EmbedConfigItemType<EmbedItemType.RichText>["default"]
   );
 
   return (
@@ -24,11 +21,11 @@ export function RichText({ configKey }: EmbedPreviewControllerProps) {
         <ColorControllerRaw
           value={state.color}
           onValueChange={(value) => {
-            mutateEmbedState((draft) => {
+            EmbedState.mutate((draft) => {
               (
                 draft[
                   configKey
-                ] as EmbedConfigItemType<EmbedItemType.RichText>['default']
+                ] as EmbedConfigItemType<EmbedItemType.RichText>["default"]
               ).color = value;
             });
           }}
@@ -45,11 +42,11 @@ export function RichText({ configKey }: EmbedPreviewControllerProps) {
           max={9}
           value={[Number(state.size)]}
           onValueChange={([value]) => {
-            mutateEmbedState((draft) => {
+            EmbedState.mutate((draft) => {
               (
                 draft[
                   configKey
-                ] as EmbedConfigItemType<EmbedItemType.RichText>['default']
+                ] as EmbedConfigItemType<EmbedItemType.RichText>["default"]
               ).size = `${value}` as RadixSizeWithout0;
             });
           }}
@@ -66,11 +63,11 @@ export function RichText({ configKey }: EmbedPreviewControllerProps) {
           max={radixTextWeights.length - 1}
           value={[radixTextWeights.indexOf(state.weight)]}
           onValueChange={([value]) => {
-            mutateEmbedState((draft) => {
+            EmbedState.mutate((draft) => {
               (
                 draft[
                   configKey
-                ] as EmbedConfigItemType<EmbedItemType.RichText>['default']
+                ] as EmbedConfigItemType<EmbedItemType.RichText>["default"]
               ).weight = radixTextWeights[value];
             });
           }}

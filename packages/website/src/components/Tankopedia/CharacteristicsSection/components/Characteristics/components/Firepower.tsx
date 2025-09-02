@@ -1,24 +1,23 @@
-import { asset, isExplosive } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { Flex, Heading, IconButton, Tooltip } from '@radix-ui/themes';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { useTankModelDefinition } from '../../../../../../hooks/useTankModelDefinition';
-import { Duel } from '../../../../../../stores/duel';
-import type { MaybeSkeletonComponentProps } from '../../../../../../types/maybeSkeletonComponentProps';
-import { AssaultRangesVisualizer } from './AssaultRangesVisualizer';
-import { GunFlexibilityVisualizer } from './GunFlexibilityVisualizer';
-import { Info } from './Info';
-import { InfoWithDelta } from './InfoWithDelta';
-import { ReloadVisualizer } from './ReloadVisualizer';
-import { RicochetVisualizer } from './RicochetVisualizer';
-import { StatsTableWrapper } from './StatsTableWrapper';
-import type { StatsAcceptorProps } from './TraverseVisualizer';
+import { asset, isExplosive } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { Flex, Heading, IconButton, Tooltip } from "@radix-ui/themes";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
+import { Duel } from "../../../../../../stores/duel";
+import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
+import { AssaultRangesVisualizer } from "./AssaultRangesVisualizer";
+import { GunFlexibilityVisualizer } from "./GunFlexibilityVisualizer";
+import { Info } from "./Info";
+import { InfoWithDelta } from "./InfoWithDelta";
+import { ReloadVisualizer } from "./ReloadVisualizer";
+import { RicochetVisualizer } from "./RicochetVisualizer";
+import { StatsTableWrapper } from "./StatsTableWrapper";
+import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
 export function Firepower({
   stats,
   skeleton,
 }: StatsAcceptorProps & MaybeSkeletonComponentProps) {
-  const mutateDuel = Duel.useMutation();
   const { strings, unwrap } = useLocale();
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -41,8 +40,8 @@ export function Firepower({
             return (
               <Tooltip content={unwrap(thisShell.name)} key={thisShell.id}>
                 <IconButton
-                  color={selected ? undefined : 'gray'}
-                  variant={selected ? 'solid' : 'soft'}
+                  color={selected ? undefined : "gray"}
+                  variant={selected ? "solid" : "soft"}
                   highContrast={selected}
                   style={{
                     borderTopLeftRadius: shellIndex === 0 ? undefined : 0,
@@ -54,7 +53,7 @@ export function Firepower({
                     marginLeft: shellIndex === 0 ? 0 : -1,
                   }}
                   onClick={() => {
-                    mutateDuel((draft) => {
+                    Duel.mutate((draft) => {
                       draft.protagonist.shell = thisShell;
                     });
                   }}
@@ -79,7 +78,7 @@ export function Firepower({
       </Info>
       <InfoWithDelta stats={stats} decimals={0} value="dpm" />
       <InfoWithDelta stats={stats} decimals={0} value="damage" />
-      {gun.gun_type!.$case !== 'regular' && (
+      {gun.gun_type!.$case !== "regular" && (
         <InfoWithDelta stats={stats} indent decimals={0} value="clipDamage" />
       )}
       <InfoWithDelta stats={stats} decimals={0} value="moduleDamage" />
@@ -89,13 +88,13 @@ export function Firepower({
         <AssaultRangesVisualizer stats={stats} ranges={gun.assault_ranges} />
       )}
 
-      {gun.gun_type!.$case === 'auto_reloader' && (
+      {gun.gun_type!.$case === "auto_reloader" && (
         <InfoWithDelta stats={stats} decimals={0} indent value="dpmEffective" />
       )}
-      {gun.gun_type!.$case !== 'regular' && (
+      {gun.gun_type!.$case !== "regular" && (
         <InfoWithDelta stats={stats} value="shells" />
       )}
-      {gun.gun_type!.$case === 'auto_reloader' ? (
+      {gun.gun_type!.$case === "auto_reloader" ? (
         <>
           <Info
             indent
@@ -120,7 +119,7 @@ export function Firepower({
               name={literals(
                 strings.website.tools.tankopedia.characteristics.values
                   .shell_index,
-                [`${index + 1}`],
+                [`${index + 1}`]
               )}
               decimals={2}
               deltaType="lowerIsBetter"
@@ -137,8 +136,8 @@ export function Firepower({
           value="shellReload"
         />
       )}
-      {(gun.gun_type!.$case === 'auto_loader' ||
-        gun.gun_type!.$case === 'auto_reloader') && (
+      {(gun.gun_type!.$case === "auto_loader" ||
+        gun.gun_type!.$case === "auto_reloader") && (
         <InfoWithDelta
           stats={stats}
           indent
@@ -192,7 +191,7 @@ export function Firepower({
         name={literals(
           strings.website.tools.tankopedia.characteristics.values
             .dispersion_at_distance,
-          ['100'],
+          ["100"]
         )}
       />
       <InfoWithDelta

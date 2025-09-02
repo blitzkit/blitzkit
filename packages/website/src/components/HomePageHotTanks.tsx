@@ -1,15 +1,14 @@
-import { literals } from '@blitzkit/i18n/src/literals';
-import { EyeOpenIcon } from '@radix-ui/react-icons';
-import { Box, Flex, Heading, Text } from '@radix-ui/themes';
-import { awaitablePopularTanks } from '../core/awaitables/popularTanks';
-import { awaitableTankDefinitions } from '../core/awaitables/tankDefinitions';
+import { literals } from "@blitzkit/i18n/src/literals";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { awaitablePopularTanks } from "../core/awaitables/popularTanks";
+import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from '../hooks/useLocale';
-import { TankopediaPersistent } from '../stores/tankopediaPersistent';
-import { TankCard } from './TankCard';
+} from "../hooks/useLocale";
+import { TankCard } from "./TankCard";
 
 const [tankDefinitions, popularTanks] = await Promise.all([
   awaitableTankDefinitions,
@@ -19,9 +18,7 @@ const [tankDefinitions, popularTanks] = await Promise.all([
 export function HomePageHotTanks({ locale }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
-      <TankopediaPersistent.Provider>
-        <Content />
-      </TankopediaPersistent.Provider>
+      <Content />
     </LocaleProvider>
   );
 }
@@ -35,7 +32,7 @@ function Content() {
         {strings.website.home.hot_tanks.title}
       </Heading>
       <Text color="gray" align="center" mb="5" size="2">
-        {literals(strings.website.home.hot_tanks.subtitle, ['7'])}
+        {literals(strings.website.home.hot_tanks.subtitle, ["7"])}
       </Text>
 
       <Flex justify="center" gap="4" wrap="wrap">

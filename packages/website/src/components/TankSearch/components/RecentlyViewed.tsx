@@ -12,12 +12,11 @@ import { TankCardWrapper } from "./TankCardWrapper";
 const tankDefinitions = await awaitableTankDefinitions;
 
 export function RecentlyViewed() {
-  const tankopediaPersistentStore = TankopediaPersistent.useStore();
   const filters = TankFilters.use();
   // non-reactive because it is a little weird that it updates instantly even before the page loads
-  const recentlyViewed = tankopediaPersistentStore
-    .getState()
-    .recentlyViewed.filter((id) => id in tankDefinitions.tanks);
+  const recentlyViewed = TankopediaPersistent.state.recentlyViewed.filter(
+    (id) => id in tankDefinitions.tanks
+  );
   const hasFilters = useMemo(
     () =>
       Object.entries(filters).some(([key, value]) => {

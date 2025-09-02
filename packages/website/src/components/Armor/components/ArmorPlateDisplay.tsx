@@ -20,7 +20,6 @@ import { ArmorType } from "./SpacedArmorScene";
 export function ArmorPlateDisplay() {
   const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
-  const duelStore = Duel.useStore();
   const input = useRef<HTMLInputElement>(null);
 
   if (highlightArmor === undefined) return null;
@@ -93,7 +92,7 @@ export function ArmorPlateDisplay() {
 
                       Tankopedia.mutate((draft) => {
                         draft.highlightArmor = undefined;
-                        const { protagonist } = duelStore.getState();
+                        const { protagonist } = Duel.state;
                         const tank = draft.model;
                         const turret = tank.turrets[protagonist.turret.id];
                         const gun = turret.guns[protagonist.gun.id];
@@ -142,7 +141,7 @@ export function ArmorPlateDisplay() {
 
                       draft.highlightArmor = undefined;
                       const initialState = Tankopedia.initial;
-                      const { protagonist } = duelStore.getState();
+                      const { protagonist } = Duel.state;
                       const tank = draft.model;
                       const initialTank = initialState.model;
                       const turret = tank.turrets[protagonist.turret.id];

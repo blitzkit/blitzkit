@@ -6,7 +6,6 @@ import { Tankopedia } from "../../../../../../stores/tankopedia";
 
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
-  const mutateDuel = Duel.useMutation();
   const isDynamicArmorActive = Duel.use((state) =>
     state.protagonist.consumables.includes(73)
   );
@@ -20,7 +19,7 @@ export function DynamicArmorSwitcher() {
       variant="soft"
       size={{ initial: "2", sm: "3" }}
       onClick={() => {
-        mutateDuel((draft) => {
+        Duel.mutate((draft) => {
           if (draft.protagonist.consumables.includes(73)) {
             draft.protagonist.consumables =
               draft.protagonist.consumables.filter((id) => id !== 73);

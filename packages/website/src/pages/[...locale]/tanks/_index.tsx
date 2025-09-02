@@ -1,12 +1,10 @@
-import { PageWrapper } from '../../../components/PageWrapper';
-import { TankSearch } from '../../../components/TankSearch';
+import { PageWrapper } from "../../../components/PageWrapper";
+import { TankSearch } from "../../../components/TankSearch";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from '../../../hooks/useLocale';
-import { App } from '../../../stores/app';
-import { TankopediaPersistent } from '../../../stores/tankopediaPersistent';
-import type { MaybeSkeletonComponentProps } from '../../../types/maybeSkeletonComponentProps';
+} from "../../../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
 
 export function Page({
   locale,
@@ -15,11 +13,7 @@ export function Page({
   return (
     <LocaleProvider locale={locale}>
       <PageWrapper color="purple" maxWidth="80rem">
-        <TankopediaPersistent.Provider>
-          <App.Provider>
-            <TankSearch skeleton={skeleton} />
-          </App.Provider>
-        </TankopediaPersistent.Provider>
+        <TankSearch skeleton={skeleton} />
       </PageWrapper>
     </LocaleProvider>
   );

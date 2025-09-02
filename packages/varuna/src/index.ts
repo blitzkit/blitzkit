@@ -94,8 +94,12 @@ export class Varuna<Type, Arguments = void> {
   use<Slice = Type>(
     slicer: (state: Type) => Slice = (state) => state as unknown as Slice
   ) {
+    return this.useDeferred(slicer, slicer(this.state));
+  }
+
+  useDeferred<Slice = Type>(slicer: (state: Type) => Slice, initial: Slice) {
     const instance = this;
-    const [slice, setSlice] = useState(slicer(this.state));
+    const [slice, setSlice] = useState(initial);
 
     useEffect(() => instance.on(slicer, setSlice), []);
 

@@ -1,14 +1,14 @@
-import { DragHandleDots2Icon } from '@radix-ui/react-icons';
-import { Box, Flex, Text } from '@radix-ui/themes';
-import { useEffect, useRef, useState } from 'react';
-import { clamp } from 'three/src/math/MathUtils.js';
+import { DragHandleDots2Icon } from "@radix-ui/react-icons";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { useEffect, useRef, useState } from "react";
+import { clamp } from "three/src/math/MathUtils.js";
 import {
   fakeLogSquishyHigh,
   fakeLogSquishyHighInverse,
-} from '../../../../../../../../../core/blitzkit/fakeLog';
-import { Var } from '../../../../../../../../../core/radix/var';
-import { Duel } from '../../../../../../../../../stores/duel';
-import './index.css';
+} from "../../../../../../../../../core/blitzkit/fakeLog";
+import { Var } from "../../../../../../../../../core/radix/var";
+import { Duel } from "../../../../../../../../../stores/duel";
+import "./index.css";
 
 interface Props {
   maxDistance: number;
@@ -17,11 +17,10 @@ interface Props {
 
 export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
   const assaultDistance = Duel.use(
-    (state) => state.protagonist.assaultDistance,
+    (state) => state.protagonist.assaultDistance
   );
   const [x, setX] = useState(fakeLogSquishyHigh(assaultDistance / maxDistance));
   const cursor = useRef<HTMLDivElement>(null);
-  const mutateDuel = Duel.useMutation();
 
   useEffect(() => {
     let localX = x;
@@ -32,8 +31,8 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
 
       lastX = event.clientX;
 
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
     }
 
     function handlePointerMove(event: PointerEvent) {
@@ -54,21 +53,21 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
     }
 
     function handlePointerUp() {
-      mutateDuel((draft) => {
+      Duel.mutate((draft) => {
         draft.protagonist.assaultDistance =
           fakeLogSquishyHighInverse(localX * maxFakeDistance) * maxDistance;
       });
 
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
     }
 
-    cursor.current?.addEventListener('pointerdown', handlePointerDown);
+    cursor.current?.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
-      cursor.current?.removeEventListener('pointerdown', handlePointerDown);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      cursor.current?.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
     };
   }, []);
 
@@ -82,9 +81,9 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
       width="2pt"
       id="assault-cursor"
       style={{
-        touchAction: 'none',
-        transform: 'translateX(-50%)',
-        backgroundColor: Var('accent-11'),
+        touchAction: "none",
+        transform: "translateX(-50%)",
+        backgroundColor: Var("accent-11"),
       }}
     >
       <Flex
@@ -93,19 +92,19 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
         position="absolute"
         left="50%"
         bottom="100%"
-        style={{ transform: 'translateX(-50%)' }}
+        style={{ transform: "translateX(-50%)" }}
       >
         <Flex
           align="center"
           justify="center"
           style={{
-            width: '1.5rem',
-            height: '1.5rem',
-            backgroundColor: Var('accent-9'),
-            borderRadius: `50% 50% ${Var('radius-1')} ${Var('radius-1')}`,
+            width: "1.5rem",
+            height: "1.5rem",
+            backgroundColor: Var("accent-9"),
+            borderRadius: `50% 50% ${Var("radius-1")} ${Var("radius-1")}`,
           }}
         >
-          <Text style={{ display: 'flex' }} highContrast color="purple">
+          <Text style={{ display: "flex" }} highContrast color="purple">
             <DragHandleDots2Icon />
           </Text>
         </Flex>
@@ -114,7 +113,7 @@ export function AssaultCursor({ maxDistance, maxFakeDistance }: Props) {
           height="0.5rem"
           width="2pt"
           style={{
-            backgroundColor: Var('accent-11'),
+            backgroundColor: Var("accent-11"),
           }}
         />
       </Flex>

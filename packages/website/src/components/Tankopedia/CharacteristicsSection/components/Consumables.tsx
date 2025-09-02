@@ -1,5 +1,5 @@
-import { checkConsumableProvisionInclusivity } from '@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   Button,
   Flex,
@@ -7,31 +7,30 @@ import {
   IconButton,
   Popover,
   Text,
-} from '@radix-ui/themes';
-import { awaitableConsumableDefinitions } from '../../../../core/awaitables/consumableDefinitions';
-import { useEquipment } from '../../../../hooks/useEquipment';
-import { useLocale } from '../../../../hooks/useLocale';
-import { Duel } from '../../../../stores/duel';
-import { ConsumablesManager } from '../../../ConsumablesManager';
-import { ConfigurationChildWrapper } from './ConfigurationChildWrapper';
+} from "@radix-ui/themes";
+import { awaitableConsumableDefinitions } from "../../../../core/awaitables/consumableDefinitions";
+import { useEquipment } from "../../../../hooks/useEquipment";
+import { useLocale } from "../../../../hooks/useLocale";
+import { Duel } from "../../../../stores/duel";
+import { ConsumablesManager } from "../../../ConsumablesManager";
+import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 const consumableDefinitions = await awaitableConsumableDefinitions;
 
 export function Consumables() {
-  const mutateDuel = Duel.useMutation();
   const protagonist = Duel.use((state) => state.protagonist);
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const consumablesList = Object.values(
-    consumableDefinitions.consumables,
+    consumableDefinitions.consumables
   ).filter((consumable) =>
     checkConsumableProvisionInclusivity(
       consumable,
       protagonist.tank,
-      protagonist.gun,
-    ),
+      protagonist.gun
+    )
   );
   const cooldownBooster = Duel.use(
-    (state) => state.protagonist.cooldownBooster,
+    (state) => state.protagonist.cooldownBooster
   );
   const hasConsumableDeliverySystem = useEquipment(118);
   const hasHighEndConsumables = useEquipment(101);
@@ -67,7 +66,7 @@ export function Consumables() {
           variant="ghost"
           color="red"
           onClick={() => {
-            mutateDuel((draft) => {
+            Duel.mutate((draft) => {
               draft.protagonist.consumables = [];
             });
           }}
@@ -85,11 +84,11 @@ export function Consumables() {
         hasHighEndConsumables={hasHighEndConsumables}
         timers
         onConsumablesChange={(consumables) => {
-          mutateDuel((draft) => {
+          Duel.mutate((draft) => {
             draft.protagonist.consumables = consumables;
           });
         }}
-        justify={{ initial: 'center', sm: 'start' }}
+        justify={{ initial: "center", sm: "start" }}
       />
     </ConfigurationChildWrapper>
   );

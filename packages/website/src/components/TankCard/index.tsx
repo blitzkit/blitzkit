@@ -3,16 +3,16 @@ import {
   fetchTankDefinitions,
   TankType,
   type TankDefinition,
-} from '@blitzkit/core';
-import { Flex, Text, type TextProps } from '@radix-ui/themes';
-import { uniq } from 'lodash-es';
-import { forwardRef, type ReactNode } from 'react';
-import { useLocale } from '../../hooks/useLocale';
-import { TankopediaPersistent } from '../../stores/tankopediaPersistent';
-import { classIcons } from '../ClassIcon';
-import { LinkI18n } from '../LinkI18n';
-import { MAX_RECENTLY_VIEWED } from '../TankSearch/constants';
-import './index.css';
+} from "@blitzkit/core";
+import { Flex, Text, type TextProps } from "@radix-ui/themes";
+import { uniq } from "lodash-es";
+import { forwardRef, type ReactNode } from "react";
+import { useLocale } from "../../hooks/useLocale";
+import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
+import { classIcons } from "../ClassIcon";
+import { LinkI18n } from "../LinkI18n";
+import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
+import "./index.css";
 
 type TankCardProps = TextProps & {
   tank: TankDefinition;
@@ -33,11 +33,11 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
       style,
       ...props
     }: TankCardProps,
-    ref,
+    ref
   ) => {
     const { unwrap, locale } = useLocale();
     const provideLink = !noLink && onSelect === undefined;
-    const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
+
     const Icon = classIcons[tank.class];
 
     return (
@@ -47,15 +47,15 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         size="2"
         color={
           tank.type === TankType.COLLECTOR
-            ? 'blue'
+            ? "blue"
             : tank.type === TankType.PREMIUM
-              ? 'amber'
-              : 'gray'
+              ? "amber"
+              : "gray"
         }
         highContrast={tank.type === TankType.RESEARCHABLE}
         onClick={() => {
           onSelect?.(tank);
-          mutateTankopediaPersistent((draft) => {
+          TankopediaPersistent.mutate((draft) => {
             draft.recentlyViewed = uniq([tank.id, ...draft.recentlyViewed])
               .filter((id) => id in tankDefinitions.tanks)
               .slice(0, MAX_RECENTLY_VIEWED);
@@ -73,7 +73,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
           locale={locale}
           className="link"
           underline="hover"
-          href={provideLink ? `/tanks/${tank.slug}` : '#'}
+          href={provideLink ? `/tanks/${tank.slug}` : "#"}
           onClick={(event) => {
             if (!provideLink) event.preventDefault();
           }}
@@ -104,9 +104,9 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
               color="gray"
               align="center"
               style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
               {discriminator}
@@ -115,5 +115,5 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         </LinkI18n>
       </Text>
     );
-  },
+  }
 );

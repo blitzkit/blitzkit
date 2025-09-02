@@ -17,10 +17,9 @@ const [modelDefinitions, provisionDefinitions] = await Promise.all([
 export function GuessBackground() {
   const guessState = Guess.use((state) => state.guessState);
   const tank = Guess.use((state) => state.tank);
-  const mutateDuel = Duel.useMutation();
 
   useEffect(() => {
-    mutateDuel((state) => {
+    Duel.mutate((state) => {
       state.protagonist = tankToDuelMember(tank, provisionDefinitions);
     });
     Tankopedia.mutate((state) => {

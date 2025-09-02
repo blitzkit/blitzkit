@@ -9,16 +9,13 @@ import { MetaSection } from "../../../../components/Tankopedia/MetaSection";
 import { TechTreeSection } from "../../../../components/Tankopedia/TechTreeSection";
 import { VideoSection } from "../../../../components/Tankopedia/VideoSection";
 import { awaitableModelDefinitions } from "../../../../core/awaitables/modelDefinitions";
-import { awaitableProvisionDefinitions } from "../../../../core/awaitables/provisionDefinitions";
 import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
 } from "../../../../hooks/useLocale";
-import { App } from "../../../../stores/app";
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
-import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 import type { TankGuide } from "./index.astro";
 
@@ -28,41 +25,32 @@ type PageProps = MaybeSkeletonComponentProps &
     guide?: TankGuide;
   };
 
-const [tankDefinitions, provisionDefinitions, modelDefinitions] =
-  await Promise.all([
-    awaitableTankDefinitions,
-    awaitableProvisionDefinitions,
-    awaitableModelDefinitions,
-  ]);
+const [tankDefinitions, modelDefinitions] = await Promise.all([
+  awaitableTankDefinitions,
+  awaitableModelDefinitions,
+]);
 
 export function Page({ id, skeleton, locale, guide }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
   Tankopedia.useInitialization(model);
+  Duel.useInitialization({ tank, model });
 
   return (
     <LocaleProvider locale={locale}>
-      <App.Provider>
-        <TankopediaPersistent.Provider>
-          <Duel.Provider
-            data={{ tank, model, provisionDefinitions: provisionDefinitions }}
-          >
-            <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
-              <HeroSection skeleton={skeleton} />
-              <MetaSection />
-              <CalloutsSection />
-              {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
-                <TechTreeSection skeleton={skeleton} />
-              )}
-              <CharacteristicsSection skeleton={skeleton} />
-              <GameModeSection />
-              {guide && <GuideSection guide={guide} />}
-              <VideoSection skeleton={skeleton} />
-            </PageWrapper>
-          </Duel.Provider>
-        </TankopediaPersistent.Provider>
-      </App.Provider>
+      <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
+        <HeroSection skeleton={skeleton} />
+        <MetaSection />
+        <CalloutsSection />
+        {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
+          <TechTreeSection skeleton={skeleton} />
+        )}
+        <CharacteristicsSection skeleton={skeleton} />
+        <GameModeSection />
+        {guide && <GuideSection guide={guide} />}
+        <VideoSection skeleton={skeleton} />
+      </PageWrapper>
     </LocaleProvider>
   );
 }

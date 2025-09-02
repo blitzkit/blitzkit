@@ -36,8 +36,6 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
     return { value } satisfies ThicknessRange;
   }, [protagonist]);
-  const duelStore = Duel.useStore();
-  const mutateDuel = Duel.useMutation();
 
   useEffect(() => {
     if (disturbed) {
@@ -47,12 +45,13 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      const { shells } = duelStore.getState().antagonist.gun;
-
       times(3, (index) => {
-        if (event.key === `${index + 1}` && shells.length > index) {
-          mutateDuel((draft) => {
-            draft.antagonist.shell = shells[index];
+        if (
+          event.key === `${index + 1}` &&
+          Duel.state.antagonist.gun.shells.length > index
+        ) {
+          Duel.mutate((draft) => {
+            draft.antagonist.shell = Duel.state.antagonist.gun.shells[index];
           });
           Tankopedia.mutate((draft) => {
             draft.customShell = undefined;

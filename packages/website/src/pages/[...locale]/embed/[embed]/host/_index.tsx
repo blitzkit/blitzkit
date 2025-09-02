@@ -1,22 +1,22 @@
-import { Box } from '@radix-ui/themes';
-import { useMemo } from 'react';
-import { parse } from 'urlon';
-import { BlitzKitTheme } from '../../../../../components/BlitzKitTheme';
+import { Box } from "@radix-ui/themes";
+import { useMemo } from "react";
+import { parse } from "urlon";
+import { BlitzKitTheme } from "../../../../../components/BlitzKitTheme";
 import {
   embedConfigurations,
   embedRenderers,
   extractEmbedConfigDefaults,
-} from '../../../../../constants/embeds';
+} from "../../../../../constants/embeds";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from '../../../../../hooks/useLocale';
+} from "../../../../../hooks/useLocale";
 import {
   EmbedState,
   type EmbedConfig,
   type ExtractEmbedConfigTypes,
-} from '../../../../../stores/embedState';
-import { useEmbedStateCurry } from '../../../../../stores/embedState/utilities';
+} from "../../../../../stores/embedState";
+import { useEmbedStateCurry } from "../../../../../stores/embedState/utilities";
 
 interface PageProps {
   embed: keyof typeof embedConfigurations;
@@ -25,7 +25,7 @@ interface PageProps {
 export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
   const state = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
-    const stateRaw = params.get('state');
+    const stateRaw = params.get("state");
     const partialState = stateRaw === null ? {} : parse(stateRaw);
     const state = {
       ...extractEmbedConfigDefaults(embedConfigurations[embed]),
@@ -35,11 +35,11 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
     return state;
   }, [embed]);
 
+  EmbedState.useInitialization(state);
+
   return (
     <LocaleProvider locale={locale}>
-      <EmbedState.Provider data={state}>
-        <Content embed={embed} />
-      </EmbedState.Provider>
+      <Content embed={embed} />
     </LocaleProvider>
   );
 }
@@ -47,11 +47,11 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
 function Content({ embed }: PageProps) {
   const Renderer = embedRenderers[embed];
   const { useEmbedState } = useEmbedStateCurry();
-  const width = useEmbedState('width');
-  const height = useEmbedState('height');
+  const width = useEmbedState("width");
+  const height = useEmbedState("height");
 
   return (
-    <BlitzKitTheme style={{ background: 'transparent' }}>
+    <BlitzKitTheme style={{ background: "transparent" }}>
       <Box width={`${width}px`} height={`${height}px`} overflow="hidden">
         <Renderer />
       </Box>

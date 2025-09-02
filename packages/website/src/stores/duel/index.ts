@@ -2,16 +2,14 @@ import {
   ModelDefinition,
   type EngineDefinition,
   type GunDefinition,
-  type ProvisionDefinitions,
   type ShellDefinition,
   type TankDefinition,
   type TrackDefinition,
   type TurretDefinition,
-} from '@blitzkit/core';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
-import { tankToDuelMember } from '../../core/blitzkit/tankToDuelMember';
-import { createContextualStore } from '../../core/zustand/createContextualStore';
+} from "@blitzkit/core";
+import { Varuna } from "varuna";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 
 type EquipmentMatrixItem = -1 | 0 | 1;
 type EquipmentMatrixRow = [
@@ -45,24 +43,13 @@ export interface DuelStore {
   antagonist: DuelMember;
 }
 
-export const Duel = createContextualStore(
-  ({
-    tank,
-    model,
-    provisionDefinitions,
-  }: {
-    tank: TankDefinition;
-    model: ModelDefinition;
-    provisionDefinitions: ProvisionDefinitions;
-  }) => {
-    const protagonist = tankToDuelMember(tank, provisionDefinitions);
+const provisionDefinitions = await awaitableProvisionDefinitions;
 
-    return create<DuelStore>()(
-      subscribeWithSelector<DuelStore>(() => ({
-        protagonist,
-        model,
-        antagonist: protagonist,
-      })),
-    );
-  },
-);
+export const Duel = new Varuna<
+  DuelStore,
+  { tank: TankDefinition; model: ModelDefinition }
+>(({ tank, model }) => {
+  const protagonist = tankToDuelMember(tank, provisionDefinitions);
+
+  return { protagonist, antagonist: protagonist, model };
+});

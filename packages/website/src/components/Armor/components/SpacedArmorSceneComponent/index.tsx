@@ -76,7 +76,6 @@ export function SpacedArmorSceneComponent({
   clip,
   ...props
 }: SpacedArmorSceneComponentProps) {
-  const duelStore = Duel.useStore();
   const camera = useThree((state) => state.camera);
 
   const shoot = useCallback(
@@ -86,9 +85,8 @@ export function SpacedArmorSceneComponent({
       allowRicochet: boolean,
       remainingPenetrationInput?: number
     ) => {
-      const { antagonist, protagonist } = duelStore.getState();
       const { customShell } = Tankopedia.state;
-      const shell = customShell ?? antagonist.shell;
+      const shell = customShell ?? Duel.state.antagonist.shell;
       const cameraNormal = camera.position.clone().sub(point).normalize();
       const shot: Shot = {
         splashRadius:
@@ -104,13 +102,13 @@ export function SpacedArmorSceneComponent({
 
       const hasCalibratedShells = hasEquipment(
         103,
-        antagonist.tank.equipment_preset,
-        antagonist.equipmentMatrix
+        Duel.state.antagonist.tank.equipment_preset,
+        Duel.state.antagonist.equipmentMatrix
       );
       const hasEnhancedArmor = hasEquipment(
         110,
-        protagonist.tank.equipment_preset,
-        protagonist.equipmentMatrix
+        Duel.state.protagonist.tank.equipment_preset,
+        Duel.state.protagonist.equipmentMatrix
       );
       const penetration =
         shell.penetration.near *

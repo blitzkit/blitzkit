@@ -6,17 +6,16 @@ import {
   Text,
   TextField,
   Tooltip,
-} from '@radix-ui/themes';
-import { useRef, useState } from 'react';
-import { parse } from 'urlon';
-import { useLocale } from '../../hooks/useLocale';
-import { EmbedState } from '../../stores/embedState';
+} from "@radix-ui/themes";
+import { useRef, useState } from "react";
+import { parse } from "urlon";
+import { useLocale } from "../../hooks/useLocale";
+import { EmbedState } from "../../stores/embedState";
 
 export function Import() {
   const importInput = useRef<HTMLInputElement>(null);
   const [showInvalidURLPrompt, setShowInvalidURLPrompt] = useState(false);
   const [showConfirmation, setConfirmation] = useState(false);
-  const mutateEmbedState = EmbedState.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -64,15 +63,15 @@ export function Import() {
 
               try {
                 const url = new URL(importInput.current.value);
-                const state = url.searchParams.get('state');
+                const state = url.searchParams.get("state");
                 if (state === null) throw undefined;
                 const json = parse(state);
 
-                mutateEmbedState((draft) => {
+                EmbedState.mutate((draft) => {
                   Object.assign(draft, json);
                 });
 
-                importInput.current.value = '';
+                importInput.current.value = "";
                 setConfirmation(true);
                 setTimeout(() => setConfirmation(false), 2000);
               } catch {

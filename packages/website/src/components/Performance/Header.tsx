@@ -2,16 +2,15 @@ import {
   CaretDownIcon,
   CaretSortIcon,
   CaretUpIcon,
-} from '@radix-ui/react-icons';
-import { Button, Flex, Table } from '@radix-ui/themes';
-import { useLocale } from '../../hooks/useLocale';
-import { TankPerformanceSort } from '../../stores/tankPerformanceSort';
-import { TankPerformanceSortTypeNamesArray } from '../../stores/tankPerformanceSort/constants';
-import { StickyColumnHeaderCell } from '../StickyColumnHeaderCell';
+} from "@radix-ui/react-icons";
+import { Button, Flex, Table } from "@radix-ui/themes";
+import { useLocale } from "../../hooks/useLocale";
+import { TankPerformanceSort } from "../../stores/tankPerformanceSort";
+import { TankPerformanceSortTypeNamesArray } from "../../stores/tankPerformanceSort/constants";
+import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 
 export function Header() {
   const sort = TankPerformanceSort.use();
-  const store = TankPerformanceSort.useStore();
   const { strings } = useLocale();
 
   return (
@@ -34,13 +33,18 @@ export function Header() {
               <Flex align="center" gap="1">
                 <Button
                   variant="ghost"
-                  color={isSelected ? undefined : 'gray'}
+                  color={isSelected ? undefined : "gray"}
                   highContrast={!isSelected}
                   onClick={() => {
                     if (isSelected) {
-                      store.setState({ direction: -sort.direction as 1 | -1 });
+                      TankPerformanceSort.mutate((draft) => {
+                        draft.direction *= -1;
+                      });
                     } else {
-                      store.setState({ type, direction: -1 });
+                      TankPerformanceSort.mutate((draft) => {
+                        draft.type = type;
+                        draft.direction = -1;
+                      });
                     }
                   }}
                 >

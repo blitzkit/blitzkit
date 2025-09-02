@@ -41,8 +41,6 @@ export function PrimaryArmorSceneComponent({
   node,
   thickness,
 }: PrimaryArmorSceneComponentProps) {
-  const tankopediaPersistentStore = TankopediaPersistent.useStore();
-  const duelStore = Duel.useStore();
   const material = new ShaderMaterial({
     fragmentShader,
     vertexShader,
@@ -80,9 +78,9 @@ export function PrimaryArmorSceneComponent({
 
   useEffect(() => {
     function handleShellChange() {
-      const duel = duelStore.getState();
       const tankopediaEphemeral = Tankopedia.state;
-      const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
+      const shell =
+        tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
@@ -96,8 +94,14 @@ export function PrimaryArmorSceneComponent({
       material.uniforms.damage.value = shell.armor_damage;
       material.uniforms.explosionRadius.value = shell.explosion_radius;
 
-      handleProtagonistEquipmentChange(duel.protagonist.equipmentMatrix, true);
-      handleAntagonistEquipmentChange(duel.antagonist.equipmentMatrix, true);
+      handleProtagonistEquipmentChange(
+        Duel.state.protagonist.equipmentMatrix,
+        true
+      );
+      handleAntagonistEquipmentChange(
+        Duel.state.antagonist.equipmentMatrix,
+        true
+      );
 
       invalidate();
     }
@@ -118,10 +122,9 @@ export function PrimaryArmorSceneComponent({
       equipment: EquipmentMatrix,
       noInvalidate = false
     ) {
-      const duel = duelStore.getState();
       const hasEnhancedArmor = hasEquipment(
         110,
-        duel.protagonist.tank.equipment_preset,
+        Duel.state.protagonist.tank.equipment_preset,
         equipment
       );
       material.uniforms.thickness.value = hasEnhancedArmor
@@ -134,13 +137,13 @@ export function PrimaryArmorSceneComponent({
       equipment: EquipmentMatrix,
       noInvalidate = false
     ) {
-      const duel = duelStore.getState();
       const tankopediaEphemeral = Tankopedia.state;
-      const shell = tankopediaEphemeral.customShell ?? duel.antagonist.shell;
+      const shell =
+        tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
       const penetration = shell.penetration.near;
       const hasCalibratedShells = hasEquipment(
         103,
-        duel.antagonist.tank.equipment_preset,
+        Duel.state.antagonist.tank.equipment_preset,
         equipment
       );
 
@@ -151,40 +154,33 @@ export function PrimaryArmorSceneComponent({
       if (!noInvalidate) invalidate();
     }
 
-    const initialState = tankopediaPersistentStore.getState();
-
     handleShellChange();
-    handleGreenPenetrationChange(initialState.greenPenetration);
-    handleAdvancedHighlightingChange(initialState.advancedHighlighting);
-    handleOpaqueChange(initialState.opaque);
-    handleWireframeChange(initialState.wireframe);
-    handleProtagonistEquipmentChange(
-      duelStore.getState().protagonist.equipmentMatrix
+    handleGreenPenetrationChange(TankopediaPersistent.state.greenPenetration);
+    handleAdvancedHighlightingChange(
+      TankopediaPersistent.state.advancedHighlighting
     );
-    handleAntagonistEquipmentChange(
-      duelStore.getState().antagonist.equipmentMatrix
-    );
+    handleOpaqueChange(TankopediaPersistent.state.opaque);
+    handleWireframeChange(TankopediaPersistent.state.wireframe);
+    handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
+    handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
 
     const unsubscribes = [
-      duelStore.subscribe((state) => state.antagonist.shell, handleShellChange),
+      Duel.on((state) => state.antagonist.shell, handleShellChange),
       Tankopedia.on((state) => state.customShell, handleShellChange),
-      tankopediaPersistentStore.subscribe(
+      TankopediaPersistent.on(
         (state) => state.greenPenetration,
         handleGreenPenetrationChange
       ),
-      tankopediaPersistentStore.subscribe(
+      TankopediaPersistent.on(
         (state) => state.advancedHighlighting,
         handleAdvancedHighlightingChange
       ),
-      tankopediaPersistentStore.subscribe(
-        (state) => state.opaque,
-        handleOpaqueChange
-      ),
-      duelStore.subscribe(
+      TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
+      Duel.on(
         (state) => state.protagonist.equipmentMatrix,
         (equipment) => handleProtagonistEquipmentChange(equipment)
       ),
-      duelStore.subscribe(
+      Duel.on(
         (state) => state.antagonist.equipmentMatrix,
         (equipment) => handleAntagonistEquipmentChange(equipment)
       ),

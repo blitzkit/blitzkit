@@ -46,7 +46,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
   const canvas = useThree((state) => state.gl.domElement);
-  const duelStore = Duel.useStore();
+
   const maskOrigin =
     gunModelDefinition.mask === undefined
       ? undefined
@@ -165,16 +165,15 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
-            const duel = duelStore.getState();
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
-              duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix
+              Duel.state.protagonist.tank.equipment_preset,
+              Duel.state.protagonist.equipmentMatrix
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
-              duel.protagonist.tank.equipment_preset,
-              duel.protagonist.equipmentMatrix
+              Duel.state.protagonist.tank.equipment_preset,
+              Duel.state.protagonist.equipmentMatrix
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -258,16 +257,15 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
-              const duel = duelStore.getState();
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -339,16 +337,15 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
-              const duel = duelStore.getState();
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
-                duel.protagonist.tank.equipment_preset,
-                duel.protagonist.equipmentMatrix
+                Duel.state.protagonist.tank.equipment_preset,
+                Duel.state.protagonist.equipmentMatrix
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);

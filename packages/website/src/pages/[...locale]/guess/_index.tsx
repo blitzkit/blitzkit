@@ -5,7 +5,6 @@ import { Guesser } from "../../../components/Guesser";
 import { GuessRenderer } from "../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../components/GuessRendererLoader";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
-import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import {
   type LocaleAcceptorProps,
@@ -16,12 +15,10 @@ import { Duel } from "../../../stores/duel";
 import { Guess, GuessState } from "../../../stores/guess";
 import { Tankopedia } from "../../../stores/tankopedia";
 
-const [tankDefinitions, modelDefinitions, provisionDefinitions] =
-  await Promise.all([
-    awaitableTankDefinitions,
-    awaitableModelDefinitions,
-    awaitableProvisionDefinitions,
-  ]);
+const [tankDefinitions, modelDefinitions] = await Promise.all([
+  awaitableTankDefinitions,
+  awaitableModelDefinitions,
+]);
 
 const ids = Object.keys(tankDefinitions.tanks);
 
@@ -43,12 +40,9 @@ function Container() {
   const model = modelDefinitions.models[tank.id];
 
   Tankopedia.useInitialization(model);
+  Duel.useInitialization({ tank, model });
 
-  return (
-    <Duel.Provider data={{ tank, model, provisionDefinitions }}>
-      <Content />
-    </Duel.Provider>
-  );
+  return <Content />;
 }
 
 function Content() {

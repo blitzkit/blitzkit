@@ -54,7 +54,7 @@ const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
 export const TankSearch = memo<TankSearchProps>(
   ({ compact, onSelect, onSelectAll, skeleton, ...props }) => {
     const { strings, locale } = useLocale();
-    const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
+
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankopediaSort = TankSort.use();
     const tankFilters = TankFilters.use();
@@ -443,7 +443,7 @@ export const TankSearch = memo<TankSearchProps>(
                 onClick={(event) => {
                   event.preventDefault();
                   onSelectAll(tanksFiltered);
-                  mutateTankopediaPersistent((draft) => {
+                  TankopediaPersistent.mutate((draft) => {
                     draft.recentlyViewed = uniq([
                       ...tanksFiltered.map(({ id }) => id),
                       ...draft.recentlyViewed,

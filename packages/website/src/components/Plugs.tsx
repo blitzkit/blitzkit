@@ -1,20 +1,11 @@
-import { assertSecret } from '@blitzkit/core';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
-import { Button, Code, Flex, Link, Text } from '@radix-ui/themes';
-import { App } from '../stores/app';
+import { assertSecret } from "@blitzkit/core";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { Button, Code, Flex, Link, Text } from "@radix-ui/themes";
 
 export function Plugs() {
-  return (
-    <App.Provider>
-      <Content />
-    </App.Provider>
-  );
-}
-
-function Content() {
   const promoteOpentest =
-    assertSecret(import.meta.env.PUBLIC_PROMOTE_OPENTEST) === 'true' &&
-    assertSecret(import.meta.env.PUBLIC_BRANCH) !== 'opentest';
+    assertSecret(import.meta.env.PUBLIC_PROMOTE_OPENTEST) === "true" &&
+    assertSecret(import.meta.env.PUBLIC_BRANCH) !== "opentest";
   const promotions = [promoteOpentest];
 
   if (promotions.every((promotion) => !promotion)) return null;
@@ -31,11 +22,11 @@ function Content() {
       {promoteOpentest && (
         <Flex direction="column" gap="3" align="center">
           <Text size="5">
-            BlitzKit{' '}
+            BlitzKit{" "}
             <Code variant="outline" size="4" color="gray">
               opentest
-            </Code>{' '}
-            is available now{' '}
+            </Code>{" "}
+            is available now{" "}
           </Text>
 
           <Link href="https://opentest.blitzkit.app/" target="_blank">

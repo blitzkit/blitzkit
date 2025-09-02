@@ -25,7 +25,6 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
   const showPrimaryArmor = TankopediaPersistent.use(
     (state) => state.showPrimaryArmor
   );
-  const mutateTankopediaPersistent = TankopediaPersistent.useMutation();
   const editStatic = Tankopedia.use((state) => state.editStatic);
   const { strings } = useLocale();
 
@@ -50,7 +49,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
           gap="2"
           style={{ opacity: showPrimaryArmor ? 1 : 0.5, cursor: "pointer" }}
           onClick={() => {
-            mutateTankopediaPersistent((draft) => {
+            TankopediaPersistent.mutate((draft) => {
               draft.showPrimaryArmor = !draft.showPrimaryArmor;
             });
             Tankopedia.mutate((draft) => {
@@ -91,7 +90,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
           gap="2"
           style={{ opacity: showSpacedArmor ? 1 : 0.5, cursor: "pointer" }}
           onClick={() => {
-            mutateTankopediaPersistent((draft) => {
+            TankopediaPersistent.mutate((draft) => {
               draft.showSpacedArmor = !draft.showSpacedArmor;
             });
             Tankopedia.mutate((draft) => {
@@ -130,7 +129,7 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
           gap="2"
           style={{ opacity: showExternalModules ? 1 : 0.5, cursor: "pointer" }}
           onClick={() => {
-            mutateTankopediaPersistent((draft) => {
+            TankopediaPersistent.mutate((draft) => {
               draft.showExternalModules = !draft.showExternalModules;
             });
             Tankopedia.mutate((draft) => {

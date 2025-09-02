@@ -1,10 +1,8 @@
-import { Slider } from '@radix-ui/themes';
-import type { EmbedPreviewControllerProps } from '../../pages/[...locale]/embed/[embed]/_index';
-import { EmbedState, type RadixSizeWithout0 } from '../../stores/embedState';
+import { Slider } from "@radix-ui/themes";
+import type { EmbedPreviewControllerProps } from "../../pages/[...locale]/embed/[embed]/_index";
+import { EmbedState, type RadixSizeWithout0 } from "../../stores/embedState";
 
 export function SizeWithout0({ configKey }: EmbedPreviewControllerProps) {
-  const mutateEmbedState = EmbedState.useMutation();
-
   return (
     <Slider
       variant="classic"
@@ -12,11 +10,11 @@ export function SizeWithout0({ configKey }: EmbedPreviewControllerProps) {
       max={9}
       value={[
         EmbedState.use((state) =>
-          parseInt(state[configKey] as RadixSizeWithout0),
+          parseInt(state[configKey] as RadixSizeWithout0)
         ),
       ]}
       onValueChange={([value]) => {
-        mutateEmbedState((draft) => {
+        EmbedState.mutate((draft) => {
           draft[configKey] = `${value}`;
         });
       }}

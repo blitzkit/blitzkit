@@ -1,14 +1,11 @@
-import type en from '@blitzkit/i18n/strings/en.json';
-import * as lodash from 'lodash-es';
-import { create } from 'zustand';
-import { persist, subscribeWithSelector } from 'zustand/middleware';
-import { createContextualStore } from '../../core/zustand/createContextualStore';
+import type en from "@blitzkit/i18n/strings/en.json";
+import { Varuna } from "varuna";
 
 export type TankopediaSortBy = keyof typeof en.website.common.tank_search.sort;
-export type TankopediaSortDirection = 'ascending' | 'descending';
-export type TankopediaTestTankDisplay = 'include' | 'exclude' | 'only';
+export type TankopediaSortDirection = "ascending" | "descending";
+export type TankopediaTestTankDisplay = "include" | "exclude" | "only";
 
-export interface TankopediaPersistentStore {
+export interface TankopediaPersistent {
   wireframe: boolean;
   opaque: boolean;
   advancedHighlighting: boolean;
@@ -25,25 +22,21 @@ export interface TankopediaPersistentStore {
   };
 }
 
-export const TankopediaPersistent = createContextualStore(() =>
-  create<TankopediaPersistentStore>()(
-    persist(
-      subscribeWithSelector<TankopediaPersistentStore>(() => ({
-        hideTankModelUnderArmor: false,
-        wireframe: false,
-        opaque: false,
-        advancedHighlighting: false,
-        greenPenetration: false,
-        showSpacedArmor: true,
-        showExternalModules: true,
-        showPrimaryArmor: true,
-        recentlyViewed: [],
-        sort: {
-          by: 'meta.none',
-          direction: 'ascending',
-        },
-      })),
-      { name: 'tankopedia', merge: (a, b) => lodash.merge(b, a) },
-    ),
-  ),
+export const TankopediaPersistent = new Varuna<TankopediaPersistent>(
+  {
+    hideTankModelUnderArmor: false,
+    wireframe: false,
+    opaque: false,
+    advancedHighlighting: false,
+    greenPenetration: false,
+    showSpacedArmor: true,
+    showExternalModules: true,
+    showPrimaryArmor: true,
+    recentlyViewed: [],
+    sort: {
+      by: "meta.none",
+      direction: "ascending",
+    },
+  },
+  "tankopedia-2"
 );

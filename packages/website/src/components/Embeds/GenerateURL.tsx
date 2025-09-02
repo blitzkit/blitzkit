@@ -2,9 +2,9 @@ import {
   searchPlayersAcrossRegions,
   type AccountListItem,
   type AccountListWithServer,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n/src/literals';
-import { CaretLeftIcon, Link2Icon, PersonIcon } from '@radix-ui/react-icons';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n/src/literals";
+import { CaretLeftIcon, Link2Icon, PersonIcon } from "@radix-ui/react-icons";
 import {
   Button,
   Dialog,
@@ -13,15 +13,15 @@ import {
   Spinner,
   Text,
   TextField,
-} from '@radix-ui/themes';
-import { debounce } from 'lodash-es';
-import { useCallback, useRef, useState } from 'react';
-import { stringify } from 'urlon';
-import type { embedConfigurations } from '../../constants/embeds';
-import { useLocale } from '../../hooks/useLocale';
-import { EmbedState, type EmbedStateStore } from '../../stores/embedState';
-import { CopyButton } from '../CopyButton';
-import { SearchResults } from '../SearchResults';
+} from "@radix-ui/themes";
+import { debounce } from "lodash-es";
+import { useCallback, useRef, useState } from "react";
+import { stringify } from "urlon";
+import type { embedConfigurations } from "../../constants/embeds";
+import { useLocale } from "../../hooks/useLocale";
+import { EmbedState, type EmbedStateStore } from "../../stores/embedState";
+import { CopyButton } from "../CopyButton";
+import { SearchResults } from "../SearchResults";
 
 interface GenerateURLProps {
   embed: keyof typeof embedConfigurations;
@@ -31,7 +31,6 @@ export function GenerateURL({ embed }: GenerateURLProps) {
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [copyDialogOpen, setCopyDialogOpen] = useState(false);
   const [copyUser, setCopyUser] = useState<AccountListItem | null>(null);
-  const embedStateStore = EmbedState.useStore();
   const input = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<AccountListWithServer>([]);
@@ -52,7 +51,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
       setSearching(false);
       setResults(results);
     }, 500),
-    [],
+    []
   );
   const handleChange = useCallback(() => {
     if (!input.current) return;
@@ -94,7 +93,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
           <TextField.Root
             variant="classic"
             mt="4"
-            style={{ width: '20rem' }}
+            style={{ width: "20rem" }}
             placeholder={strings.website.common.player_search.hint}
             ref={input}
             onChange={handleChange}
@@ -136,7 +135,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
           </Flex>
 
           <Dialog.Close>
-            <Button color="red" variant="outline" style={{ width: '100%' }}>
+            <Button color="red" variant="outline" style={{ width: "100%" }}>
               {strings.website.tools.embed.configuration.export.generate.cancel}
             </Button>
           </Dialog.Close>
@@ -144,7 +143,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
       </Dialog.Root>
 
       <Dialog.Root open={copyDialogOpen} onOpenChange={setCopyDialogOpen}>
-        <Dialog.Content style={{ width: 'fit-content' }}>
+        <Dialog.Content style={{ width: "fit-content" }}>
           <Flex direction="column" gap="1">
             <Heading size="5">
               {
@@ -156,7 +155,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
               {literals(
                 strings.website.tools.embed.configuration.export.generate
                   .success.info,
-                [`${copyUser?.nickname}`],
+                [`${copyUser?.nickname}`]
               )}
             </Text>
           </Flex>
@@ -170,7 +169,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
                 setSearchDialogOpen(true);
               }}
             >
-              <CaretLeftIcon />{' '}
+              <CaretLeftIcon />{" "}
               {
                 strings.website.tools.embed.configuration.export.generate
                   .success.back
@@ -181,12 +180,10 @@ export function GenerateURL({ embed }: GenerateURLProps) {
               copy={() => {
                 if (!copyUser) return;
 
-                const state = embedStateStore.getState();
-                const initial = embedStateStore.getInitialState();
                 const shallowState: EmbedStateStore = {};
 
-                Object.entries(state).forEach(([key, value]) => {
-                  if (value !== initial[key]) {
+                Object.entries(EmbedState.state).forEach(([key, value]) => {
+                  if (value !== EmbedState.initial[key]) {
                     shallowState[key] = value;
                   }
                 });
@@ -202,7 +199,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
                 return `${location.origin}/embed/${embed}/host?${searchParams.toString()}`;
               }}
             >
-              <Link2Icon />{' '}
+              <Link2Icon />{" "}
               {
                 strings.website.tools.embed.configuration.export.generate
                   .success.copy
