@@ -1,26 +1,25 @@
-import { createDefaultSkills } from '@blitzkit/core';
-import { Flex, Heading, Text } from '@radix-ui/themes';
-import { useEffect, useMemo, useState } from 'react';
-import { CompareTable } from '../../../components/Compare/CompareTable';
-import { Controls } from '../../../components/Compare/Controls';
-import { DamageWarning } from '../../../components/DamageWarning';
-import { PageWrapper } from '../../../components/PageWrapper';
-import { awaitableEquipmentDefinitions } from '../../../core/awaitables/equipmentDefinitions';
-import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
-import { awaitableProvisionDefinitions } from '../../../core/awaitables/provisionDefinitions';
-import { awaitableSkillDefinitions } from '../../../core/awaitables/skillDefinitions';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { tankCharacteristics } from '../../../core/blitzkit/tankCharacteristics';
-import { tankToCompareMember } from '../../../core/blitzkit/tankToCompareMember';
+import { createDefaultSkills } from "@blitzkit/core";
+import { Flex, Heading, Text } from "@radix-ui/themes";
+import { useEffect, useMemo, useState } from "react";
+import { CompareTable } from "../../../components/Compare/CompareTable";
+import { Controls } from "../../../components/Compare/Controls";
+import { DamageWarning } from "../../../components/DamageWarning";
+import { PageWrapper } from "../../../components/PageWrapper";
+import { awaitableEquipmentDefinitions } from "../../../core/awaitables/equipmentDefinitions";
+import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
+import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
+import { awaitableSkillDefinitions } from "../../../core/awaitables/skillDefinitions";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { tankCharacteristics } from "../../../core/blitzkit/tankCharacteristics";
+import { tankToCompareMember } from "../../../core/blitzkit/tankToCompareMember";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from '../../../hooks/useLocale';
-import { App } from '../../../stores/app';
-import { CompareEphemeral } from '../../../stores/compareEphemeral';
-import { ComparePersistent } from '../../../stores/comparePersistent';
-import { TankopediaPersistent } from '../../../stores/tankopediaPersistent';
+} from "../../../hooks/useLocale";
+import { App } from "../../../stores/app";
+import { CompareEphemeral } from "../../../stores/compareEphemeral";
+import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
 
 const [
   modelDefinitions,
@@ -41,13 +40,11 @@ export function Page({ locale }: LocaleAcceptorProps) {
     <LocaleProvider locale={locale}>
       <App.Provider>
         <TankopediaPersistent.Provider>
-          <ComparePersistent.Provider>
-            <CompareEphemeral.Provider
-              data={createDefaultSkills(skillDefinitions)}
-            >
-              <Content />
-            </CompareEphemeral.Provider>
-          </ComparePersistent.Provider>
+          <CompareEphemeral.Provider
+            data={createDefaultSkills(skillDefinitions)}
+          >
+            <Content />
+          </CompareEphemeral.Provider>
         </TankopediaPersistent.Provider>
       </App.Provider>
     </LocaleProvider>
@@ -72,18 +69,15 @@ function Content() {
             stockTurret: thisMember.tank.turrets[0],
             applyReactiveArmor: members.some(
               (member) =>
-                member.key !== thisMember.key &&
-                member.consumables.includes(33),
+                member.key !== thisMember.key && member.consumables.includes(33)
             ),
             applyDynamicArmor: members.some(
               (member) =>
-                member.key !== thisMember.key &&
-                member.consumables.includes(73),
+                member.key !== thisMember.key && member.consumables.includes(73)
             ),
             applySpallLiner: members.some(
               (member) =>
-                member.key !== thisMember.key &&
-                member.provisions.includes(101),
+                member.key !== thisMember.key && member.provisions.includes(101)
             ),
             assaultDistance: thisMember.assaultDistance,
           },
@@ -91,20 +85,20 @@ function Content() {
             equipmentDefinitions: equipmentDefinitions,
             provisionDefinitions: provisionDefinitions,
             tankModelDefinition: modelDefinitions.models[thisMember.tank.id],
-          },
-        ),
+          }
+        )
       ),
-    [members, crewSkills],
+    [members, crewSkills]
   );
   const mutateCompareEphemeral = CompareEphemeral.useMutation();
 
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
-    const tanksQuery = search.get('tanks');
+    const tanksQuery = search.get("tanks");
 
     if (tanksQuery === null) return;
 
-    const tanks = tanksQuery.split(',').map(Number);
+    const tanks = tanksQuery.split(",").map(Number);
 
     mutateCompareEphemeral((draft) => {
       draft.members = [];
@@ -122,12 +116,12 @@ function Content() {
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
 
-    search.set('tanks', members.map((member) => member.tank.id).join(','));
+    search.set("tanks", members.map((member) => member.tank.id).join(","));
 
     window.history.replaceState(
       {},
-      '',
-      `${window.location.pathname}?${search.toString()}`,
+      "",
+      `${window.location.pathname}?${search.toString()}`
     );
   }, [members]);
 

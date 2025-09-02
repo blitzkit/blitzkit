@@ -1,14 +1,14 @@
-import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
-import { Button, Dialog, Flex, SegmentedControl } from '@radix-ui/themes';
-import { awaitableProvisionDefinitions } from '../../core/awaitables/provisionDefinitions';
-import { tankToCompareMember } from '../../core/blitzkit/tankToCompareMember';
-import { useLocale } from '../../hooks/useLocale';
-import { CompareEphemeral } from '../../stores/compareEphemeral';
+import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { Button, Dialog, Flex, SegmentedControl } from "@radix-ui/themes";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
+import { useLocale } from "../../hooks/useLocale";
+import { CompareEphemeral } from "../../stores/compareEphemeral";
 import {
   ComparePersistent,
   type DeltaMode,
-} from '../../stores/comparePersistent';
-import { TankSearch } from '../TankSearch';
+} from "../../stores/comparePersistent";
+import { TankSearch } from "../TankSearch";
 
 interface ControlsProps {
   addTankDialogOpen: boolean;
@@ -23,7 +23,6 @@ export function Controls({
 }: ControlsProps) {
   const deltaMode = ComparePersistent.use((state) => state.deltaMode);
   const mutateCompareEphemeral = CompareEphemeral.useMutation();
-  const mutateComparePersistent = ComparePersistent.useMutation();
   const { strings } = useLocale();
 
   return (
@@ -58,7 +57,7 @@ export function Controls({
                 onSelect={(tank) => {
                   mutateCompareEphemeral((draft) => {
                     draft.members.push(
-                      tankToCompareMember(tank, provisionDefinitions),
+                      tankToCompareMember(tank, provisionDefinitions)
                     );
                     draft.sorting = undefined;
                   });
@@ -69,7 +68,7 @@ export function Controls({
                     draft.members.push(
                       ...tanks.map((tank) => {
                         return tankToCompareMember(tank, provisionDefinitions);
-                      }),
+                      })
                     );
                     draft.sorting = undefined;
                   });
@@ -98,18 +97,18 @@ export function Controls({
         variant="classic"
         value={deltaMode}
         onValueChange={(value) => {
-          mutateComparePersistent((draft) => {
+          ComparePersistent.mutate((draft) => {
             draft.deltaMode = value as DeltaMode;
           });
         }}
       >
-        <SegmentedControl.Item value={'none' satisfies DeltaMode}>
+        <SegmentedControl.Item value={"none" satisfies DeltaMode}>
           {strings.website.tools.compare.actions.deltas.none}
         </SegmentedControl.Item>
-        <SegmentedControl.Item value={'percentage' satisfies DeltaMode}>
+        <SegmentedControl.Item value={"percentage" satisfies DeltaMode}>
           {strings.website.tools.compare.actions.deltas.percentage}
         </SegmentedControl.Item>
-        <SegmentedControl.Item value={'absolute' satisfies DeltaMode}>
+        <SegmentedControl.Item value={"absolute" satisfies DeltaMode}>
           {strings.website.tools.compare.actions.deltas.absolute}
         </SegmentedControl.Item>
       </SegmentedControl.Root>
