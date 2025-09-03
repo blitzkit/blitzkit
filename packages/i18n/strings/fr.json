@@ -364,9 +364,9 @@
           "non_tech_tree": "# %s1 n'est pas dans l'arbre technologique\n\nVous ne pouvez pas rechercher un char prenium/de collection.",
           "tier_1": "# %s1 est un char de tier I\n\nLe char de tier 1 sont déverrouillé gratuitement pour tous les joueurs.",
           "already_researched": "# %s1 est déjà recherché\n\nEssayez de fournir un `char de départ` en utilisant la commande pour voir la progression d'une lignée.",
-          "start_end_equal": "# %s1 was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# %s1 and %s2 are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# %s1 higher tiered to %s2\n\nMake sure to provide %s3 as the `starting-tank` instead as it is the lower tiered tank."
+          "start_end_equal": "# %s1 a été fourni deux fois\n\nAssurez-vous que `starting-tank` et `target-tank` sont différents.",
+          "tanks_not_on_line": "%s1 et %s2 ne sont pas sur la même ligne \n\nAssurez-vous que « starting-tank » et « target-tank » sont sur la même ligne d'arbre technologique.",
+          "unordered": "# %s1 niveau supérieur à %s2\n\nAssurez-vous de fournir %s3 comme le `starting-tank` à la place car c'est le réservoir de niveau inférieur."
         }
       },
       "about": {
@@ -380,7 +380,7 @@
           },
           "embeds": {
             "name": "intègre",
-            "description": "How embeds work"
+            "description": "Comment fonctionnent les intégrations"
           },
           "introduction": {
             "name": "introduction",
@@ -402,7 +402,7 @@
       },
       "breakdown": {
         "name": "décomposition",
-        "description": "A period's breakdown by tanks played",
+        "description": "Répartition d'une période par chars joués",
         "body": {
           "total": "Total",
           "battles": "Batailles",
@@ -471,7 +471,7 @@
               "accuracy": "Précision"
             },
             "lethality": {
-              "title": "Lethality",
+              "title": "Létalité",
               "average_damage": "Dégâts moyens",
               "damage_per_tier": "Dégâts par tier",
               "damage_ratio": "Rapport de dégâts",
@@ -499,20 +499,20 @@
         },
         "embed": {
           "title": "Compte invalide ?",
-          "description": "Use the command again and select a username from the search results."
+          "description": "Utilisez à nouveau la commande et sélectionnez un nom d'utilisateur à partir des résultats de recherche."
         }
       },
       "search_clans": {
-        "name": "search-clans",
-        "description": "Search clans",
+        "name": "clans de recherche",
+        "description": "Rechercher des clans",
         "options": {
           "limit": {
             "name": "limite",
-            "description": "The max number of clan results (default: %s1)"
+            "description": "Nombre maximum de résultats du clan (par défaut: %s1)"
           }
         },
         "body": {
-          "title": "Clan search for %s1 in region %s2",
+          "title": "Recherche de clan %s1 dans la région %s2",
           "no_results": "Pas de clan trouvé"
         }
       },
@@ -535,69 +535,69 @@
         "description": "Statistiques des batailles de cotés",
         "subcommands": {
           "neighbors": {
-            "name": "neighbors",
-            "description": "Neighboring players on the leaderboard"
+            "name": "voisins",
+            "description": "Joueurs voisins dans le classement"
           },
           "league": {
             "name": "ligue",
-            "description": "Top players of a league"
+            "description": "Meilleurs joueurs d'une ligue"
           }
         },
         "options": {
           "limit": {
             "name": "limite",
-            "description": "How many neighbors to display (default: %s1)"
+            "description": "Combien de voisins afficher (par défaut : %s1)"
           },
           "season": {
-            "name": "season",
-            "description": "Season number (default: current)",
+            "name": "saison",
+            "description": "Numéro de saison (défaut : courant)",
             "choices": {
-              "current": "%s1 (current)"
+              "current": "%s1 (actuel)"
             }
           },
           "league": {
             "name": "ligue",
-            "description": "The league to display"
+            "description": "La ligue à afficher"
           }
         },
         "body": {
-          "top_players": "Top %s1 players",
-          "no_participation": "# %s1 didn't play rating in season %s2\n\nThis player did not participate in this season or did not get past calibration.",
-          "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
-          "deleted_player": "Deleted %s1",
-          "neighbors": "Rating neighbors",
-          "more": "+ %s1 more"
+          "top_players": "Top %s1 joueurs",
+          "no_participation": "%s1 n'a pas joué au classement dans la saison %s2",
+          "no_ongoing_season": "Pas de saison en cours\n\nIl n'y a pas de saison de notation en cours actuellement.",
+          "deleted_player": "%s1 supprimé",
+          "neighbors": "évaluer les voisins",
+          "more": "+ %s1 de plus"
         }
       },
       "today": {
         "name": "aujourd'hui",
-        "description": "Today's played tanks and statistics"
+        "description": "Les chars et les statistiques joués aujourd'hui"
       },
       "stats": {
         "name": "statistiques",
-        "description": "Quick statistics for a period"
+        "description": "Statistiques rapides pour une période"
       },
       "owned_tanks": {
-        "name": "owned-tanks",
-        "description": "Shows all own tanks in a tier",
+        "name": "chars possédés",
+        "description": "Affiche tous les chars d'un niveau",
         "body": {
-          "title": "# %s1's owned tier %s2 tanks\n\n"
+          "title": "# %s1 possédait des chars de rang %s2"
         }
       },
       "permissions": {
         "name": "permissions",
-        "description": "Checks wether the bot has the required permissions to function",
+        "description": "Vérifie si le bot a les permissions nécessaires pour fonctionner",
         "body": {
           "title": "# Permissions\n\n%s1",
-          "view_channels": "View channels: needed to find the message the refresh button was used on",
-          "read_message_history": "Read message history: needed to find the message to refresh",
-          "attach_files": "Attach files: needed to add images to image-based commands",
-          "external_emojis": "External emojis: needed to add national flags and tank class emojis"
+          "view_channels": "Afficher les canaux : nécessaire pour trouver le message sur lequel le bouton d'actualisation a été utilisé",
+          "read_message_history": "Lire l'historique des messages : nécessaire pour trouver le message à rafraîchir",
+          "attach_files": "Joindre des fichiers : nécessaire pour ajouter des images à des commandes basées sur l'image",
+          "external_emojis": "Émoticônes externes: nécessaire pour ajouter des drapeaux nationaux et des émojis de classe de char"
         }
       },
       "ping": {
         "name": "ping",
-        "description": "Check wether the bot is alive.",
+        "description": "Vérifiez si le bot est en vie.",
         "body": {
           "pong": "Pong 🏓",
           "pong_with_time": "Pong 🏓 - %s1ms"
@@ -605,7 +605,7 @@
         "subcommands": {
           "blitzkit": {
             "name": "blitzkit",
-            "description": "Ping BlitzKit"
+            "description": "Ping blitzkit"
           },
           "wotb": {
             "name": "wotb",
@@ -614,10 +614,10 @@
         }
       },
       "player_info": {
-        "name": "player-info",
-        "description": "Basic information about a player",
+        "name": "info-joueur",
+        "description": "Informations de base sur un joueur",
         "body": {
-          "title": "%s1's information",
+          "title": "Informations de %s1",
           "nickname": "Nickname",
           "battles": "Batailles",
           "winrate": "Taux de victoires",
@@ -635,7 +635,7 @@
             "description": "Today's rating statistics"
           },
           "season": {
-            "name": "season",
+            "name": "saison",
             "description": "This season's rating statistics"
           }
         },
