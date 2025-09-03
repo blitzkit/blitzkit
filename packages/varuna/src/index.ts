@@ -77,7 +77,9 @@ export class Varuna<Type, Arguments = void> {
   }
 
   private assertInitialized() {
-    if (!this.initialized) throw new Error("State used before initialization");
+    if (!this.initialized) {
+      throw new Error("Varuna store used before initialization");
+    }
   }
 
   get state() {
