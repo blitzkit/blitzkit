@@ -4,35 +4,34 @@ import {
   ScgReadStream,
   Textures,
   VertexAttribute,
-} from '@blitzkit/core';
-import { Document, Material, Node, Scene } from '@gltf-transform/core';
-import { dedup, prune } from '@gltf-transform/functions';
-import { times } from 'lodash-es';
-import { dirname } from 'path';
-import { Matrix4, Quaternion, Vector3, Vector4Tuple } from 'three';
-import { readDVPLFile } from '../readDVPLFile';
-import { readTexture } from '../readTexture';
-import { TextureMutation } from '../readTexture/constants';
+} from "@blitzkit/core";
+import { Document, Material, Node, Scene } from "@gltf-transform/core";
+import { dedup, prune } from "@gltf-transform/functions";
+import { times } from "lodash-es";
+import { dirname } from "path";
+import { readDVPLFile } from "../readDVPLFile";
+import { readTexture } from "../readTexture";
+import { TextureMutation } from "../readTexture/constants";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
-} from './constants';
+} from "./constants";
 
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
 const omitMeshNames = {
-  start: ['chassis_chassis_', 'chassis_track_crash_', 'HP_'],
-  end: ['_POINT'],
+  start: ["chassis_chassis_", "chassis_track_crash_", "HP_"],
+  end: ["_POINT"],
 };
 
 export async function extractModel(data: string, path: string) {
   const sc2Path = `${data}/3d/${path}.sc2`;
   const scgPath = `${data}/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
-    (await readDVPLFile(sc2Path)).buffer as ArrayBuffer,
+    (await readDVPLFile(sc2Path)).buffer as ArrayBuffer
   ).sc2();
   const scg = new ScgReadStream(
-    (await readDVPLFile(scgPath)).buffer as ArrayBuffer,
+    (await readDVPLFile(scgPath)).buffer as ArrayBuffer
   ).scg();
   const document = new Document();
   const scene = document.createScene();
@@ -41,8 +40,8 @@ export async function extractModel(data: string, path: string) {
 
   // create materials
   await Promise.all(
-    sc2['#dataNodes'].map(async (node) => {
-      const id = new DataView(node['#id']).getBigUint64(0, true);
+    sc2["#dataNodes"].map(async (node) => {
+      const id = new DataView(node["#id"]).getBigUint64(0, true);
 
       if (node.parentMaterialKey !== undefined) {
         /**
@@ -58,7 +57,7 @@ export async function extractModel(data: string, path: string) {
 
       if (node.textures) {
         textures = node.textures;
-      } else if (typeof node.configCount === 'number') {
+      } else if (typeof node.configCount === "number") {
         textures = node.configArchive_0.textures;
       }
 
@@ -66,26 +65,26 @@ export async function extractModel(data: string, path: string) {
         material.setBaseColorTexture(
           document
             .createTexture(node.materialName)
-            .setMimeType('image/jpeg')
+            .setMimeType("image/jpeg")
             .setImage(
               await readTexture(
-                `${data}/3d/${dirname(path)}/${textures.albedo}`,
-                TextureMutation.Albedo,
-              ),
-            ),
+                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+                TextureMutation.Albedo
+              )
+            )
         );
 
         if (textures.baseRMMap) {
           material.setMetallicRoughnessTexture(
             document
               .createTexture(node.materialName)
-              .setMimeType('image/jpeg')
+              .setMimeType("image/jpeg")
               .setImage(
                 await readTexture(
                   `${data}/3d/${dirname(path)}/${textures.baseRMMap}`,
-                  TextureMutation.RoughnessMetallicness,
-                ),
-              ),
+                  TextureMutation.RoughnessMetallicness
+                )
+              )
           );
         }
 
@@ -95,15 +94,15 @@ export async function extractModel(data: string, path: string) {
           material.setNormalTexture(
             document
               .createTexture(node.materialName)
-              .setMimeType('image/jpeg')
+              .setMimeType("image/jpeg")
               .setImage(
                 await readTexture(
                   `${data}/3d/${dirname(path)}/${
                     textures.baseNormalMap ?? textures.normalmap
                   }`,
-                  isBase ? TextureMutation.Normal : undefined,
-                ),
-              ),
+                  isBase ? TextureMutation.Normal : undefined
+                )
+              )
           );
         }
 
@@ -111,31 +110,31 @@ export async function extractModel(data: string, path: string) {
           material.setOcclusionTexture(
             document
               .createTexture(node.materialName)
-              .setMimeType('image/jpeg')
+              .setMimeType("image/jpeg")
               .setImage(
                 await readTexture(
                   `${data}/3d/${dirname(path)}/${textures.miscMap}`,
-                  TextureMutation.Miscellaneous,
-                ),
-              ),
+                  TextureMutation.Miscellaneous
+                )
+              )
           );
         }
 
         materials.set(
-          new DataView(node['#id']).getBigUint64(0, true),
-          material,
+          new DataView(node["#id"]).getBigUint64(0, true),
+          material
         );
       }
-    }),
+    })
   );
 
   // replace children materials with parents
   materials.forEach((material, id) => {
-    if (typeof material !== 'bigint') return;
+    if (typeof material !== "bigint") return;
 
     let resolvedMaterial: Material | bigint | undefined = material;
 
-    while (typeof resolvedMaterial === 'bigint') {
+    while (typeof resolvedMaterial === "bigint") {
       const linkedParentMaterial = materials.get(resolvedMaterial);
 
       resolvedMaterial = linkedParentMaterial;
@@ -155,36 +154,36 @@ export async function extractModel(data: string, path: string) {
       const node = document.createNode(hierarchy.name);
       const components = times(
         hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, '0')],
+        (index) => hierarchy.components[index.toString().padStart(4, "0")]
       );
 
       components.forEach((component) => {
-        switch (component['comp.typename']) {
-          case 'LodComponent':
+        switch (component["comp.typename"]) {
+          case "LodComponent":
             // found and used later by transform component
             // TODO: lod component always shows up before transform component; cache it before parsing transform
             break;
 
-          case 'TransformComponent': {
-            node.setTranslation(component['tc.localTranslation']);
-            node.setRotation(component['tc.localRotation']);
-            node.setScale(component['tc.localScale']);
+          case "TransformComponent": {
+            node.setTranslation(component["tc.localTranslation"]);
+            node.setRotation(component["tc.localRotation"]);
+            node.setScale(component["tc.localScale"]);
 
             break;
           }
 
-          case 'RenderComponent': {
-            const renderObject = component['rc.renderObj'];
+          case "RenderComponent": {
+            const renderObject = component["rc.renderObj"];
 
-            times(renderObject['ro.batchCount'], (batchIndex): void => {
+            times(renderObject["ro.batchCount"], (batchIndex): void => {
               const lodIndex = renderObject[`rb${batchIndex}.lodIndex`];
 
               if (lodIndex !== 0) return;
 
-              const batchKey = batchIndex.toString().padStart(4, '0');
-              const batch = renderObject['ro.batches'][batchKey];
-              const material = materials.get(batch['rb.nmatname']);
-              const polygonGroup = scg.get(batch['rb.datasource']);
+              const batchKey = batchIndex.toString().padStart(4, "0");
+              const batch = renderObject["ro.batches"][batchKey];
+              const material = materials.get(batch["rb.nmatname"]);
+              const polygonGroup = scg.get(batch["rb.datasource"]);
 
               if (!(material instanceof Material)) {
                 // probably shadow material
@@ -192,14 +191,14 @@ export async function extractModel(data: string, path: string) {
               }
               if (polygonGroup === undefined) {
                 throw new Error(
-                  `Missing polygon group ${batch['rb.datasource']}`,
+                  `Missing polygon group ${batch["rb.datasource"]}`
                 );
               }
 
               const lodNode = document.createNode(batchKey);
               const indicesAccessor = document
                 .createAccessor()
-                .setType('SCALAR')
+                .setType("SCALAR")
                 .setArray(new Uint16Array(polygonGroup.indices))
                 .setBuffer(buffer);
               const primitive = document
@@ -233,7 +232,7 @@ export async function extractModel(data: string, path: string) {
                 const vertexSize = vertexAttributeGltfVectorSizes[attribute];
                 const attributeAccessor = document
                   .createAccessor(name)
-                  .setType(vertexSize === 1 ? 'SCALAR' : `VEC${vertexSize}`)
+                  .setType(vertexSize === 1 ? "SCALAR" : `VEC${vertexSize}`)
                   .setArray(new Float32Array(value.flat()))
                   .setBuffer(buffer);
 
@@ -241,7 +240,7 @@ export async function extractModel(data: string, path: string) {
               });
 
               const mesh = document
-                .createMesh(batch['##name'])
+                .createMesh(batch["##name"])
                 .addPrimitive(primitive);
               lodNode.setMesh(mesh);
               node.addChild(lodNode);
@@ -253,24 +252,24 @@ export async function extractModel(data: string, path: string) {
           default: {
             if (ERROR_ON_UNKNOWN_COMPONENT) {
               throw new Error(
-                `Unhandled component type: ${component['comp.typename']}`,
+                `Unhandled component type: ${component["comp.typename"]}`
               );
             }
           }
         }
       });
 
-      if (hierarchy['#hierarchy']) {
-        parseHierarchies(hierarchy['#hierarchy'], node);
+      if (hierarchy["#hierarchy"]) {
+        parseHierarchies(hierarchy["#hierarchy"], node);
       }
 
       parent.addChild(node);
     });
   }
 
-  parseHierarchies(sc2['#hierarchy'], scene);
+  parseHierarchies(sc2["#hierarchy"], scene);
 
-  scene.addChild(document.createNode('test'));
+  scene.addChild(document.createNode("test"));
 
   await document.transform(prune({ keepAttributes: true }), dedup());
 
