@@ -1,8 +1,8 @@
-import { invalidate, useFrame } from '@react-three/fiber';
-import { clamp } from 'lodash-es';
-import { Quicklime, type QuicklimeEvent } from 'quicklime';
-import { useEffect, useRef } from 'react';
-import { Mesh, MeshStandardMaterial } from 'three';
+import { invalidate, useFrame } from "@react-three/fiber";
+import { clamp } from "lodash-es";
+import { Quicklime, type QuicklimeEvent } from "quicklime";
+import { useEffect, useRef } from "react";
+import { Mesh, MeshStandardMaterial } from "three";
 
 const SIZE = 2 ** 5;
 

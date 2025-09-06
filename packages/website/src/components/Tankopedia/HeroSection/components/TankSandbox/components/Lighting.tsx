@@ -11,7 +11,7 @@ const LIGHTS_COUNT = 5;
 const LIGHT_DISTANCE = 13;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 2;
-const INTENSITY = 30;
+const INTENSITY = 35;
 
 const N = 128;
 const TARGET_FRAME_RATE = 30;
@@ -64,7 +64,7 @@ export function Lighting() {
             position={position}
             intensity={INTENSITY}
             penumbra={1}
-            // castShadow={cast}
+            castShadow={cast}
             decay={1}
             color={color}
           />

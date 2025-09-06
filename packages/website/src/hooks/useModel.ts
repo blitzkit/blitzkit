@@ -1,3 +1,4 @@
+import { asset } from "@blitzkit/core";
 import { type ObjectMap, useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
 import { type GLTF, GLTFLoader } from "three-stdlib";
@@ -11,8 +12,7 @@ const cache: Record<
 > = {};
 
 export function useModel(id: number) {
-  // const gltf = useLoader(GLTFLoader, asset(`3d/tanks/models/${id}.glb`));
-  const gltf = useLoader(GLTFLoader, `/test.glb`);
+  const gltf = useLoader(GLTFLoader, asset(`3d/tanks/models/${id}.glb`));
 
   if (!cache[id]) {
     cache[id] = {

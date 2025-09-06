@@ -1,4 +1,3 @@
-import { writeFile } from "fs/promises";
 import sharp from "sharp";
 import { readTexture } from "./readTexture";
 
@@ -11,8 +10,8 @@ export async function readRoughnessMetallic(path: string) {
   const combined = Buffer.alloc(raw.width * raw.height * 3);
 
   for (let i = 0; i < raw.width * raw.height; i++) {
-    combined[i * 3 + 1] = roughness?.[i] ?? 0;
-    combined[i * 3 + 2] = metallicness?.[i] ?? 0;
+    combined[i * 3 + 1] = roughness[i];
+    combined[i * 3 + 2] = metallicness[i];
   }
 
   const image = await sharp(combined, {
@@ -20,8 +19,6 @@ export async function readRoughnessMetallic(path: string) {
   })
     .jpeg()
     .toBuffer();
-
-  writeFile("test.rm.jpg", image);
 
   return image;
 }

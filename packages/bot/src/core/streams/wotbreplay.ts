@@ -1,8 +1,8 @@
-import { ReadStream } from '@blitzkit/core';
-import AdmZip from 'adm-zip';
-import { readFile, writeFile } from 'fs/promises';
-import { Parser } from 'pickleparser';
-import protobuf from 'protobufjs';
+import { ReadStream } from "@blitzkit/core";
+import AdmZip from "adm-zip";
+import { readFile } from "fs/promises";
+import { Parser } from "pickleparser";
+import protobuf from "protobufjs";
 
 interface WotbReplayMetaJson {
   version: string;
@@ -24,25 +24,23 @@ export class WotbReplayReadStream extends ReadStream {
   async wotbReplay() {
     const pickleParser = new Parser();
     const zip = new AdmZip(Buffer.from(this.buffer));
-    const metaJsonBuffer = zip.getEntry('meta.json')?.getData();
-    const battleResultsDat = zip.getEntry('battle_results.dat')?.getData();
+    const metaJsonBuffer = zip.getEntry("meta.json")?.getData();
+    const battleResultsDat = zip.getEntry("battle_results.dat")?.getData();
 
     if (!metaJsonBuffer || !battleResultsDat)
-      throw new SyntaxError('meta.json not found');
+      throw new SyntaxError("meta.json not found");
 
     const metaJson = JSON.parse(
-      metaJsonBuffer.toString(),
+      metaJsonBuffer.toString()
     ) as WotbReplayMetaJson;
     const unpickledBattleResults = pickleParser.parse(battleResultsDat);
     const [, battleResultsString] = unpickledBattleResults as [number, string];
     const root = await protobuf.load(
-      `${__dirname}/../../protos/BattleResultsClient.proto`,
+      `${__dirname}/../../protos/BattleResultsClient.proto`
     );
     const BattleResults = root.lookupType(
-      'BattleResultsGenerated.BattleResultsClient',
+      "BattleResultsGenerated.BattleResultsClient"
     );
-
-    writeFile('test.dat', Buffer.from(battleResultsString));
 
     const reader = protobuf.Reader.create(Buffer.from(battleResultsString));
 
@@ -53,7 +51,7 @@ export class WotbReplayReadStream extends ReadStream {
   }
 }
 
-const replay = await readFile('temp/test3.wotbreplay');
+const replay = await readFile("temp/test3.wotbreplay");
 const stream = new WotbReplayReadStream(replay.buffer as ArrayBuffer);
 
 stream.wotbReplay();

@@ -17,8 +17,7 @@ export async function readNormal(path: string, isBase: boolean) {
      */
     let x = raw.data[index + 3] * (2 / 255) - 1;
     let y = raw.data[index + 1] * (2 / 255) - 1;
-    const underSqrt = 1 - x ** 2 - y ** 2;
-    let z = underSqrt > 0 ? Math.sqrt(underSqrt) : -Math.sqrt(-underSqrt);
+    let z = Math.sqrt(Math.max(0, 1 - x ** 2 - y ** 2));
 
     raw.data[index] = Math.round((x + 1) * (255 / 2));
     raw.data[index + 1] = Math.round((y + 1) * (255 / 2));

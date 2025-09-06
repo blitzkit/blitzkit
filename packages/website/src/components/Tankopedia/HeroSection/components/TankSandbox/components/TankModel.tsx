@@ -28,13 +28,6 @@ export function TankModel() {
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
 
-  nodes.forEach((n) => {
-    if (n instanceof Mesh && n.material instanceof MeshStandardMaterial) {
-      n.material.aoMapIntensity = 10;
-      console.log(n.geometry.attributes);
-    }
-  });
-
   useTankTransform(track, turret, turretContainer, gunContainer);
 
   return (

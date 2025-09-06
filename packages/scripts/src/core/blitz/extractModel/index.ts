@@ -12,7 +12,6 @@ import { dirname } from "path";
 import { readBaseColor } from "../readBaseColor";
 import { readDVPLFile } from "../readDVPLFile";
 import { readNormal } from "../readNormal";
-import { readOcclusion } from "../readOcclusion";
 import { readRoughnessMetallic } from "../readRoughnessMetallic";
 import {
   vertexAttributeGLTFName,
@@ -70,7 +69,10 @@ export async function extractModel(data: string, path: string) {
             .setMimeType("image/jpeg")
             .setImage(
               await readBaseColor(
-                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`
+                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+                textures.miscMap
+                  ? `${data}/3d/${dirname(path)}/${textures.miscMap}`
+                  : undefined
               )
             )
         );
@@ -83,19 +85,6 @@ export async function extractModel(data: string, path: string) {
               .setImage(
                 await readRoughnessMetallic(
                   `${data}/3d/${dirname(path)}/${textures.baseRMMap}`
-                )
-              )
-          );
-        }
-
-        if (textures.miscMap) {
-          material.setOcclusionTexture(
-            document
-              .createTexture(node.materialName)
-              .setMimeType("image/jpeg")
-              .setImage(
-                await readOcclusion(
-                  `${data}/3d/${dirname(path)}/${textures.miscMap}`
                 )
               )
           );
@@ -236,10 +225,6 @@ export async function extractModel(data: string, path: string) {
                   .setBuffer(buffer);
 
                 primitive.setAttribute(name, attributeAccessor);
-
-                if (attribute === VertexAttribute.TEXCOORD0) {
-                  primitive.setAttribute("TEXCOORD_2", attributeAccessor);
-                }
               });
 
               const mesh = document
