@@ -9,9 +9,11 @@ import { Document, Material, Node, Scene } from "@gltf-transform/core";
 import { dedup, prune } from "@gltf-transform/functions";
 import { times } from "lodash-es";
 import { dirname } from "path";
+import { readBaseColor } from "../readBaseColor";
 import { readDVPLFile } from "../readDVPLFile";
-import { readTexture } from "../readTexture";
-import { TextureMutation } from "../readTexture/constants";
+import { readNormal } from "../readNormal";
+import { readOcclusion } from "../readOcclusion";
+import { readRoughnessMetallic } from "../readRoughnessMetallic";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
@@ -67,9 +69,8 @@ export async function extractModel(data: string, path: string) {
             .createTexture(node.materialName)
             .setMimeType("image/jpeg")
             .setImage(
-              await readTexture(
-                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
-                TextureMutation.Albedo
+              await readBaseColor(
+                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`
               )
             )
         );
@@ -80,9 +81,21 @@ export async function extractModel(data: string, path: string) {
               .createTexture(node.materialName)
               .setMimeType("image/jpeg")
               .setImage(
-                await readTexture(
-                  `${data}/3d/${dirname(path)}/${textures.baseRMMap}`,
-                  TextureMutation.RoughnessMetallicness
+                await readRoughnessMetallic(
+                  `${data}/3d/${dirname(path)}/${textures.baseRMMap}`
+                )
+              )
+          );
+        }
+
+        if (textures.miscMap) {
+          material.setOcclusionTexture(
+            document
+              .createTexture(node.materialName)
+              .setMimeType("image/jpeg")
+              .setImage(
+                await readOcclusion(
+                  `${data}/3d/${dirname(path)}/${textures.miscMap}`
                 )
               )
           );
@@ -96,25 +109,11 @@ export async function extractModel(data: string, path: string) {
               .createTexture(node.materialName)
               .setMimeType("image/jpeg")
               .setImage(
-                await readTexture(
+                await readNormal(
                   `${data}/3d/${dirname(path)}/${
                     textures.baseNormalMap ?? textures.normalmap
                   }`,
-                  isBase ? TextureMutation.Normal : undefined
-                )
-              )
-          );
-        }
-
-        if (textures.miscMap) {
-          material.setOcclusionTexture(
-            document
-              .createTexture(node.materialName)
-              .setMimeType("image/jpeg")
-              .setImage(
-                await readTexture(
-                  `${data}/3d/${dirname(path)}/${textures.miscMap}`,
-                  TextureMutation.Miscellaneous
+                  isBase
                 )
               )
           );
@@ -237,6 +236,10 @@ export async function extractModel(data: string, path: string) {
                   .setBuffer(buffer);
 
                 primitive.setAttribute(name, attributeAccessor);
+
+                if (attribute === VertexAttribute.TEXCOORD0) {
+                  primitive.setAttribute("TEXCOORD_2", attributeAccessor);
+                }
               });
 
               const mesh = document

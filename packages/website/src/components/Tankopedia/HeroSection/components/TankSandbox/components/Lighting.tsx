@@ -64,7 +64,7 @@ export function Lighting() {
             position={position}
             intensity={INTENSITY}
             penumbra={1}
-            castShadow={cast}
+            // castShadow={cast}
             decay={1}
             color={color}
           />
