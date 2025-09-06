@@ -11,7 +11,7 @@ const LIGHTS_COUNT = 5;
 const LIGHT_DISTANCE = 13;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 2;
-const INTENSITY = 35;
+const INTENSITY = 50;
 
 const N = 128;
 const TARGET_FRAME_RATE = 30;

@@ -14,7 +14,7 @@ export function SceneProps() {
 
   useFrame(({ camera }) => {
     if (!material.current) return;
-    material.current.opacity = clamp(0.5 * camera.position.y, 0, 1);
+    material.current.opacity = clamp(0.5 * camera.position.y, 0, 0.5);
   });
 
   useEffect(() => {
