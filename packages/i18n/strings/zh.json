@@ -764,6 +764,12 @@
       }
     },
     "tools": {
+      "mixer": {
+        "name": "Mixer",
+        "button": "Mix and match",
+        "description": "Mix tank modules",
+        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz"
+      },
       "guess": {
         "name": "猜坦克",
         "button": "猜猜看",
@@ -787,6 +793,9 @@
         "tank_seo_title": "%s1 - %s2 阶 %s3 %s4 | %s5 战车百科 | 战车世界闪击战 (WoTB)",
         "tank_seo_description": "%s1 装甲，统计设备，装备，供给等。 %s2 每分钟伤害， %s3生命值， %s4毫米穿透， %s5kph 最高速度， %s6hp 生命值。",
         "visualizers": {
+          "reload": {
+            "skip": "跳过"
+          },
           "assault": {
             "title": "Assault shells"
           },
@@ -829,9 +838,7 @@
             "green_penetration": "可击穿区域",
             "hide_model_under_armor": "隐藏装甲下的模型",
             "opaque": "不透明",
-            "dev_wireframe": "开发选项：网格",
-            "environment": "环境",
-            "show_grid": "显示网格"
+            "dev_wireframe": "开发选项：网格"
           },
           "screenshot": {
             "download": "下载",
