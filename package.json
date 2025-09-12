@@ -16,6 +16,7 @@
     "build:prisma": "prisma generate",
     "build:sitemap": "bun scripts/sitemap.ts",
     "build:docs": "vitepress build docs",
+    "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
     "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
     "dev:bot": "bun run build:bot --dev && bun start:bot",
     "start:bot": "bun dist/bot/main.js",

@@ -11,6 +11,7 @@
     "build:ids": "bun src/discoverIds.ts",
     "build:bot": "bun src/buildBot.ts",
     "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
+    "build:proxyclient": "bun src/buildProxyClient.ts",
     "prunestrings": "bun src/pruneStrings.ts"
   },
   "dependencies": {
