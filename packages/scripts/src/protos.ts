@@ -1,6 +1,6 @@
 import { exec as execSync } from "child_process";
 import { existsSync } from "fs";
-import { readdir, rm, writeFile } from "fs/promises";
+import { readdir, rm } from "fs/promises";
 import { promisify } from "util";
 
 const MAX_COMMAND_LENGTH = 2 ** 11;
@@ -58,13 +58,4 @@ for (const root of roots) {
 
     await exec(command);
   }
-
-  await writeFile(
-    `${root}/index.ts`,
-    "// @ts-nocheck\n" +
-      files
-        .map((file) => file.replace(".proto", ""))
-        .map((file) => `export * from './${file}.ts';`)
-        .join("\n")
-  );
 }

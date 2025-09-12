@@ -18,7 +18,10 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@protos/*": ["./submodules/blitzkit-closed/protos/*"]
+    }
   },
   "exclude": ["node_modules/**/*", "dist", ".next"]
 }
