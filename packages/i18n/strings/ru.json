@@ -815,7 +815,7 @@
             "no_ricochet": "Разрывные снаряды не рикошетят"
           },
           "view_range": {
-            "camo": "Камо",
+            "camo": "Камуфляж",
             "percentage": "%s1%",
             "ghost_factory": "Промзона",
             "dead_rail": "Эшелон"
