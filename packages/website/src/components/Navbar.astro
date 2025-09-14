@@ -132,7 +132,7 @@ const strings = getStrings(locale);
 
         <Flex
           align="center"
-          gap={{ initial: "4", md: "6" }}
+          gap={{ initial: "3", md: "6" }}
           display={{ initial: "none", sm: "flex" }}
           justify="center"
           className="tools"
@@ -151,7 +151,7 @@ const strings = getStrings(locale);
                   weight={selected ? "medium" : "regular"}
                   color="gray"
                   highContrast={selected}
-                  size="2"
+                  size={{ initial: "1", md: "2" }}
                   href={`/${tool.id}`}
                   underline="hover"
                 >
