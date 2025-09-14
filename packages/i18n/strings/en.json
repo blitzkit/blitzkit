@@ -1445,18 +1445,6 @@
         "button": "Get started",
         "description": "Get started with BlitzKit",
         "seo_description": "Get started with BlitzKit"
-      },
-      "blitz_analysis": {
-        "name": "BlitzAnalysis[]",
-        "button": "Analyze now",
-        "description": "Rich historic average stats",
-        "seo_description": "Rich historic average stats in World of Tanks Blitz"
-      },
-      "blitz_insider": {
-        "name": "Blitz Insider",
-        "button": "Discover today",
-        "description": "In-game session stats",
-        "seo_description": "In-game session stats in World of Tanks Blitz"
       }
     },
 

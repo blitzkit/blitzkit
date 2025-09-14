@@ -1,9 +1,9 @@
 ---
-import { Box, Flex, Heading, Text } from '@radix-ui/themes';
-import ToolOpenGraph from '../components/ToolOpenGraph.astro';
-import { type Tool } from '../constants/tools';
-import { getStrings } from '../core/i18n/getStrings';
-import BaseLayout from './BaseLayout.astro';
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import ToolOpenGraph from "../components/ToolOpenGraph.astro";
+import { type Tool } from "../constants/tools";
+import { getStrings } from "../core/i18n/getStrings";
+import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
   tool: Tool;
@@ -14,7 +14,7 @@ const { locale } = Astro.params;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
-    (tool.stringsId ?? tool.id) as keyof typeof strings.website.tools
+    (tool.strings ?? tool.id) as keyof typeof strings.website.tools
   ];
 ---
 
@@ -24,7 +24,7 @@ const toolStrings =
   <Box
     style={{
       backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-      backgroundSize: 'cover',
+      backgroundSize: "cover",
     }}
   >
     <Flex
@@ -32,8 +32,8 @@ const toolStrings =
       align="center"
       py="6"
       style={{
-        backdropFilter: 'blur(4rem)',
-        WebkitBackdropFilter: 'blur(4rem)',
+        backdropFilter: "blur(4rem)",
+        WebkitBackdropFilter: "blur(4rem)",
       }}
     >
       <Heading size="7">{toolStrings.name}</Heading>

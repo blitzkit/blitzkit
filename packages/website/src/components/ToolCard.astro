@@ -1,24 +1,20 @@
 ---
-import { assertSecret } from '@blitzkit/core';
-import { CaretRightIcon } from '@radix-ui/react-icons';
-import { Box, Button, Code, Flex, Heading, Text } from '@radix-ui/themes';
-import type { Tool } from '../constants/tools';
-import { getStrings } from '../core/i18n/getStrings';
-import { LinkI18n } from './LinkI18n';
+import { CaretRightIcon } from "@radix-ui/react-icons";
+import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import type { Tool } from "../constants/tools";
+import { getStrings } from "../core/i18n/getStrings";
+import { LinkI18n } from "./LinkI18n";
 
 interface Props {
   tool: Tool;
 }
 
 const { tool } = Astro.props;
-const disabled = tool.branches?.every(
-  (branch) => branch !== assertSecret(import.meta.env.PUBLIC_BRANCH),
-);
 const { locale } = Astro.params;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
-    (tool.stringsId ?? tool.id) as keyof typeof strings.website.tools
+    (tool.strings ?? tool.id) as keyof typeof strings.website.tools
   ];
 ---
 
@@ -29,11 +25,12 @@ const toolStrings =
     background-position: center;
     height: 16rem;
 
-    &[data-disabled='true'] {
+    &[data-disabled="true"] {
       opacity: 0.25;
     }
 
-    &[data-significant='true'] {
+    &[data-significant="true"] {
+      width: 100%;
       height: min(20rem, 50vh);
     }
   }
@@ -49,90 +46,76 @@ const toolStrings =
 
 <Flex
   style={{ backgroundImage: `url(/assets/images/tools/${tool.id}.webp)` }}
-  data-disabled={disabled}
   data-significant={tool.significant}
   className="container"
   position="relative"
   overflow="hidden"
-  flexGrow={tool.significant ? undefined : '1'}
-  flexBasis={tool.significant ? undefined : { initial: undefined, sm: '0' }}
+  flexGrow={tool.significant ? undefined : "1"}
+  flexBasis={tool.significant ? undefined : { initial: undefined, sm: "0" }}
 >
   <LinkI18n
     {locale}
     className="link"
     underline="none"
-    href={disabled ? '#' : (tool.href ?? `/${tool.id}`)}
-    target={tool.href ? '_blank' : undefined}
+    href={tool.href ?? `/${tool.id}`}
+    target={tool.href ? "_blank" : undefined}
   >
     <Box
       flexGrow="1"
       style={{
         backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     />
 
     <Flex
-      px={{ initial: '6', md: tool.significant ? '8' : '6' }}
-      py={{ initial: '4', sm: tool.significant ? '6' : '4' }}
+      px={{ initial: "6", md: tool.significant ? "8" : "6" }}
+      py={{ initial: "4", sm: tool.significant ? "6" : "4" }}
       gap="4"
       align="center"
       justify="between"
       width="100%"
-      direction={{ initial: 'column', xs: 'row' }}
+      direction={{ initial: "column", xs: "row" }}
       style={{
-        backgroundColor: 'var(--color-panel-translucent)',
-        backdropFilter: 'blur(64px)',
-        WebkitBackdropFilter: 'blur(64px)',
+        backgroundColor: "var(--color-panel-translucent)",
+        backdropFilter: "blur(64px)",
+        WebkitBackdropFilter: "blur(64px)",
       }}
     >
       <Flex
         direction="column"
         justify="center"
-        align={{ initial: 'center', xs: 'start' }}
+        align={{ initial: "center", xs: "start" }}
       >
         <Heading
-          align={{ initial: 'center', sm: 'left' }}
-          size={{ initial: '6', sm: tool.significant ? '7' : '5' }}
+          align={{ initial: "center", sm: "left" }}
+          size={{ initial: "6", sm: tool.significant ? "7" : "5" }}
           weight="medium"
         >
           {toolStrings.name}
         </Heading>
         <Text
-          align={{ initial: 'center', sm: 'left' }}
-          size={{ initial: '3', sm: tool.significant ? '4' : '3' }}
+          align={{ initial: "center", sm: "left" }}
+          size={{ initial: "3", sm: tool.significant ? "4" : "3" }}
           color="gray"
         >
-          {
-            disabled ? (
-              <>
-                Unavailable on{' '}
-                <Code>{assertSecret(import.meta.env.PUBLIC_BRANCH)}</Code>
-              </>
-            ) : (
-              toolStrings.description
-            )
-          }
+          {toolStrings.description}
         </Text>
       </Flex>
 
-      {
-        !disabled && (
-          <Button
-            highContrast={tool.button.highContrast}
-            size={{
-              initial: undefined,
-              sm: tool.significant ? '3' : undefined,
-            }}
-            color={tool.button.color}
-            style={{ cursor: 'inherit' }}
-          >
-            {toolStrings.button}
-            <CaretRightIcon />
-          </Button>
-        )
-      }
+      <Button
+        highContrast={tool.button.highContrast}
+        size={{
+          initial: undefined,
+          sm: tool.significant ? "3" : undefined,
+        }}
+        color={tool.button.color}
+        style={{ cursor: "inherit" }}
+      >
+        {toolStrings.button}
+        <CaretRightIcon />
+      </Button>
     </Flex>
   </LinkI18n>
 </Flex>

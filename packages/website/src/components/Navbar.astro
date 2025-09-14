@@ -1,24 +1,24 @@
 ---
-import { assertSecret } from '@blitzkit/core';
+import { assertSecret } from "@blitzkit/core";
 import {
   Cross1Icon,
   DiscordLogoIcon,
   GearIcon,
   HamburgerMenuIcon,
-} from '@radix-ui/react-icons';
-import { Box, Code, Flex, IconButton, Link } from '@radix-ui/themes';
-import { TOOLS } from '../constants/tools';
-import { resolveBranchName } from '../core/blitzkit/branches';
-import { getStrings } from '../core/i18n/getStrings';
-import { Var } from '../core/radix/var';
-import { LinkI18n } from './LinkI18n';
+} from "@radix-ui/react-icons";
+import { Box, Code, Flex, IconButton, Link } from "@radix-ui/themes";
+import { TOOLS } from "../constants/tools";
+import { resolveBranchName } from "../core/blitzkit/branches";
+import { getStrings } from "../core/i18n/getStrings";
+import { Var } from "../core/radix/var";
+import { LinkI18n } from "./LinkI18n";
 
 export interface Props {
   integrated?: boolean;
 }
 
 const { integrated = false } = Astro.props;
-const toolsFiltered = TOOLS.filter((tool) => !('href' in tool));
+const toolsFiltered = TOOLS.filter((tool) => !tool.href && !tool.disabled);
 const { locale } = Astro.params;
 const branchName = resolveBranchName(locale);
 const isBranchNamed = branchName !== undefined;
@@ -39,47 +39,47 @@ const strings = getStrings(locale);
     height: 0;
   }
 
-  .navbar[data-expanded='false'] *[data-expanded] {
+  .navbar[data-expanded="false"] *[data-expanded] {
     display: none;
   }
 
-  .navbar[data-expanded='true'] {
+  .navbar[data-expanded="true"] {
     height: 100%;
   }
 
-  .navbar[data-expanded='false'][data-integrated='false'] .content {
+  .navbar[data-expanded="false"][data-integrated="false"] .content {
     background-color: var(--black-a8);
     backdrop-filter: blur(4rem);
     box-shadow: var(--shadow-3);
   }
 
-  .navbar[data-expanded='true'] .content {
+  .navbar[data-expanded="true"] .content {
     background-color: var(--gray-1);
   }
 
-  .navbar[data-expanded='true'] *[data-closed] {
+  .navbar[data-expanded="true"] *[data-closed] {
     display: none;
   }
 </style>
 
 <script>
-  const navbar = document.querySelector<HTMLDivElement>('.navbar');
-  const hamburger = document.querySelector<HTMLButtonElement>('.hamburger');
+  const navbar = document.querySelector<HTMLDivElement>(".navbar");
+  const hamburger = document.querySelector<HTMLButtonElement>(".hamburger");
 
-  navbar?.addEventListener('click', () => {
-    navbar.dataset.expanded = 'false';
+  navbar?.addEventListener("click", () => {
+    navbar.dataset.expanded = "false";
   });
-  hamburger?.addEventListener('click', (event) => {
+  hamburger?.addEventListener("click", (event) => {
     if (!navbar) return;
 
     event.stopPropagation();
-    navbar.dataset.expanded = `${navbar.dataset.expanded === 'false'}`;
+    navbar.dataset.expanded = `${navbar.dataset.expanded === "false"}`;
   });
 </script>
 
 {
   !integrated && (
-    <Box className="padder" height={{ initial: '3.5rem', sm: '3rem' }} />
+    <Box className="padder" height={{ initial: "3.5rem", sm: "3rem" }} />
   )
 }
 
@@ -94,16 +94,16 @@ const strings = getStrings(locale);
   position="fixed"
   style={{
     zIndex: 1,
-    backdropFilter: 'blur(4rem)',
+    backdropFilter: "blur(4rem)",
   }}
 >
   <Flex
     className="content"
     width="100%"
-    p={{ initial: '4', sm: '3' }}
+    p={{ initial: "4", sm: "3" }}
     direction="column"
     align="center"
-    style={{ backgroundColor: integrated ? undefined : Var('gray-1') }}
+    style={{ backgroundColor: integrated ? undefined : Var("gray-1") }}
   >
     <Flex gap="4" direction="column" maxWidth="80rem" width="100%">
       <Flex align="center">
@@ -131,30 +131,26 @@ const strings = getStrings(locale);
 
         <Flex
           align="center"
-          gap={{ initial: '4', md: '6' }}
-          display={{ initial: 'none', sm: 'flex' }}
+          gap={{ initial: "4", md: "6" }}
+          display={{ initial: "none", sm: "flex" }}
           justify="center"
           className="tools"
         >
           {
             toolsFiltered.map((tool) => {
-              const unavailableOnBranch = tool.branches?.every(
-                (branch) =>
-                  branch !== assertSecret(import.meta.env.PUBLIC_BRANCH),
-              );
               const selected = Astro.url.pathname.includes(`/${tool.id}`);
               const toolStrings =
                 strings.website.tools[
-                  (tool.stringsId ??
+                  (tool.strings ??
                     tool.id) as keyof typeof strings.website.tools
                 ];
 
-              if (unavailableOnBranch) return null;
+              if (toolStrings === undefined) console.log(tool.id);
 
               return (
                 <LinkI18n
                   {locale}
-                  weight={selected ? 'medium' : 'regular'}
+                  weight={selected ? "medium" : "regular"}
                   color="gray"
                   highContrast={selected}
                   size="2"
@@ -172,7 +168,7 @@ const strings = getStrings(locale);
 
         <Flex align="center" gap="4">
           <Link
-            style={{ display: 'flex', alignContent: 'center' }}
+            style={{ display: "flex", alignContent: "center" }}
             color="gray"
             href="https://discord.gg/nDt7AjGJQH"
             underline="none"
@@ -183,7 +179,7 @@ const strings = getStrings(locale);
 
           <LinkI18n
             {locale}
-            style={{ display: 'flex', alignContent: 'center' }}
+            style={{ display: "flex", alignContent: "center" }}
             color="gray"
             href="/settings"
             underline="none"
@@ -193,7 +189,7 @@ const strings = getStrings(locale);
 
           <!-- <NavbarAccount client:idle /> -->
 
-          <Flex align="center" display={{ initial: 'flex', sm: 'none' }}>
+          <Flex align="center" display={{ initial: "flex", sm: "none" }}>
             <IconButton variant="ghost" color="gray" className="hamburger">
               <Cross1Icon data-expanded />
               <HamburgerMenuIcon data-closed />
@@ -206,36 +202,28 @@ const strings = getStrings(locale);
         direction="column"
         data-expanded
         gap="3"
-        display={{ initial: 'flex', sm: 'none' }}
+        display={{ initial: "flex", sm: "none" }}
       >
         {
           toolsFiltered.map((tool) => {
-            const unavailableOnBranch = tool.branches?.every(
-              (branch) =>
-                branch !== assertSecret(import.meta.env.PUBLIC_BRANCH),
-            );
-
-            if (unavailableOnBranch) return null;
-
             const toolStrings =
               strings.website.tools[
-                (tool.stringsId ??
-                  tool.id) as keyof typeof strings.website.tools
+                (tool.strings ?? tool.id) as keyof typeof strings.website.tools
               ];
 
             return (
               <Link
                 color="gray"
                 highContrast
-                style={{ display: 'contents' }}
+                style={{ display: "contents" }}
                 href={`/${tool.id}`}
               >
                 <Box
                   style={{
-                    borderRadius: Var('radius-2'),
+                    borderRadius: Var("radius-2"),
                     backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-                    backgroundSize: '200%',
-                    backgroundPosition: 'right center',
+                    backgroundSize: "200%",
+                    backgroundPosition: "right center",
                   }}
                 >
                   <Flex
@@ -243,7 +231,7 @@ const strings = getStrings(locale);
                     justify="end"
                     flexGrow="1"
                     style={{
-                      background: `linear-gradient(90deg, transparent, ${Var('gray-1')} 90%)`,
+                      background: `linear-gradient(90deg, transparent, ${Var("gray-1")} 90%)`,
                     }}
                   >
                     {toolStrings.name}
@@ -261,11 +249,11 @@ const strings = getStrings(locale);
     data-expanded
     flexGrow="1"
     width="100%"
-    display={{ initial: 'block', sm: 'none' }}
+    display={{ initial: "block", sm: "none" }}
     style={{
-      backgroundColor: Var('black-a7'),
-      backdropFilter: 'blur(0.5rem)',
-      WebkitBackdropFilter: 'blur(0.5rem)',
+      backgroundColor: Var("black-a7"),
+      backdropFilter: "blur(0.5rem)",
+      WebkitBackdropFilter: "blur(0.5rem)",
     }}
   />
 </Flex>

@@ -1,37 +1,43 @@
 ---
-import { AstroSeo } from '@astrolib/seo';
-import { assertSecret } from '@blitzkit/core';
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@blitzkit/i18n';
-import { literals } from '@blitzkit/i18n/src/literals';
-import { Box, Flex, Heading, Link } from '@radix-ui/themes';
-import type { GetStaticPaths } from 'astro';
-import { AesonPlug } from '../../components/AesonPlug';
-import HomeHero from '../../components/HomeHero.astro';
-import { Plugs } from '../../components/Plugs';
-import ToolCard from '../../components/ToolCard.astro';
-import {
-  compareTool,
-  discordTool,
-  embedTool,
-  galleryTool,
-  guessTool,
-  moreTool,
-  performanceTool,
-  sessionTool,
-  tankopediaTool,
-  tierListTool,
-} from '../../constants/tools';
-import { getStrings } from '../../core/i18n/getStrings';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AstroSeo } from "@astrolib/seo";
+import { assertSecret } from "@blitzkit/core";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@blitzkit/i18n";
+import { literals } from "@blitzkit/i18n/src/literals";
+import { Box, Flex, Link } from "@radix-ui/themes";
+import type { GetStaticPaths } from "astro";
+import { AesonPlug } from "../../components/AesonPlug";
+import HomeHero from "../../components/HomeHero.astro";
+import { Plugs } from "../../components/Plugs";
+import ToolCard from "../../components/ToolCard.astro";
+import { TOOLS, type Tool } from "../../constants/tools";
+import { getStrings } from "../../core/i18n/getStrings";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const MAX_TOOLS_PER_ROW = 2;
 
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
 const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = getStrings(Astro.params.locale);
+const rows: Tool[][] = [];
+
+for (const tool of TOOLS) {
+  if (tool.disabled) continue;
+
+  const compatibleRow = rows.find(
+    (row) => row.length < MAX_TOOLS_PER_ROW && !row[0].significant
+  );
+
+  if (compatibleRow) {
+    compatibleRow.push(tool);
+  } else {
+    rows.push([tool]);
+  }
+}
 
 export const getStaticPaths = (() => {
   return [
     ...SUPPORTED_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
-      (locale) => ({ params: { locale } }),
+      (locale) => ({ params: { locale } })
     ),
     { params: { locale: undefined } },
   ];
@@ -44,11 +50,11 @@ export const getStaticPaths = (() => {
   canonical={Astro.url.href}
   openGraph={{
     url: Astro.url.href,
-    title: 'BlitzKit',
+    title: "BlitzKit",
     description: strings.website.home.seo_description,
-    site_name: 'BlitzKit',
+    site_name: "BlitzKit",
   }}
-  twitter={{ cardType: 'summary_large_image' }}
+  twitter={{ cardType: "summary_large_image" }}
 />
 
 <BaseLayout>
@@ -79,7 +85,7 @@ export const getStaticPaths = (() => {
           underline="always"
         >
           {literals(strings.website.home.help_translate, [
-            'BlitzKit',
+            "BlitzKit",
             strings.common.locales[locale],
           ])}
         </Link>
@@ -90,7 +96,7 @@ export const getStaticPaths = (() => {
   <Plugs client:idle />
 
   {
-    PUBLIC_ASSET_BRANCH === 'preview' && (
+    PUBLIC_ASSET_BRANCH === "preview" && (
       <Flex justify="center" my="8" px="4">
         <AesonPlug />
       </Flex>
@@ -99,57 +105,18 @@ export const getStaticPaths = (() => {
 
   <Flex p="4" justify="center" gap="4" mt="3">
     <Flex maxWidth="80rem" flexGrow="1" gap="4" direction="column">
-      <ToolCard tool={tankopediaTool} />
-
-      <Flex gap="4" direction={{ initial: 'column', sm: 'row' }}>
-        {/* <ToolCard tool={playerStatsTool} /> */}
-        <ToolCard tool={compareTool} />
-        <ToolCard tool={performanceTool} />
-      </Flex>
-
-      <Flex gap="4" direction={{ initial: 'column', sm: 'row' }}>
-        <!-- <ToolCard tool={chartsTool} /> -->
-        <ToolCard tool={guessTool} />
-        <ToolCard tool={galleryTool} />
-      </Flex>
-
-      <Flex gap="4" direction={{ initial: 'column', sm: 'row' }}>
-        <ToolCard tool={sessionTool} />
-        <ToolCard tool={discordTool} />
-      </Flex>
-
-      <Flex gap="4" direction={{ initial: 'column', sm: 'row' }}>
-        <ToolCard tool={tierListTool} />
-        <ToolCard tool={embedTool} />
-      </Flex>
-
-      <Flex gap="4" direction={{ initial: 'column', sm: 'row' }}>
-        <ToolCard tool={moreTool} />
-        <Box flexGrow="1" />
-      </Flex>
-
-      <Heading align="center" mt="6"
-        >{strings.website.home.other_projects.title}</Heading
-      >
-
-      <Flex gap="4" mb="6" direction={{ initial: 'column', sm: 'row' }}>
-        <ToolCard
-          tool={{
-            button: { color: 'blue' },
-            id: 'blitz-analysis',
-            stringsId: 'blitz_analysis',
-            href: 'https://blitzanalysiz.com/',
-          }}
-        />
-        <ToolCard
-          tool={{
-            button: { color: 'purple', highContrast: true },
-            id: 'blitz-insider',
-            stringsId: 'blitz_insider',
-            href: 'https://discord.gg/UjWf9eGgtR',
-          }}
-        />
-      </Flex>
+      {
+        rows.map((row) => (
+          <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
+            {row.map((tool) => (
+              <ToolCard tool={tool} />
+            ))}
+            {row.length < MAX_TOOLS_PER_ROW && !row[0].significant && (
+              <Box flexGrow="1" />
+            )}
+          </Flex>
+        ))
+      }
     </Flex>
   </Flex>
 

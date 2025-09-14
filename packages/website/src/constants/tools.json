@@ -1,0 +1,24 @@
+[
+  {
+    "id": "tanks",
+    "strings": "tankopedia",
+    "button": { "color": "purple" },
+    "significant": true
+  },
+
+  {
+    "id": "compare",
+    "button": { "color": "crimson" }
+  },
+
+  {
+    "id": "session",
+    "button": { "color": "blue" }
+  },
+
+  {
+    "id": "discord",
+    "href": "https://discord.com/application-directory/1097673957865443370",
+    "button": { "color": "indigo" }
+  }
+]
