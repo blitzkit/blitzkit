@@ -1,7 +1,9 @@
+import { Html } from "@react-three/drei";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import { useModel } from "../../../hooks/useModel";
 import { Mixer } from "../../../stores/mixer";
+import { Selector } from "./Selector";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
@@ -47,6 +49,28 @@ export function Model() {
           },
         });
       })}
+
+      <Html
+        position={[
+          0,
+          trackModel.origin.z + tankModel.turret_origin.z,
+          (trackModel.origin.y + tankModel.turret_origin.y) / 2,
+        ]}
+      >
+        <Selector>test hull</Selector>
+      </Html>
+
+      <Html
+        position={[
+          0,
+          trackModel.origin.z + tankModel.turret_origin.z,
+          trackModel.origin.y +
+            tankModel.turret_origin.y +
+            turretModel.gun_origin.y,
+        ]}
+      >
+        <Selector>test turret</Selector>
+      </Html>
 
       <group
         position={[
