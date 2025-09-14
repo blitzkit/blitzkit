@@ -1,7 +1,7 @@
 ---
-import { AstroSeo } from '@astrolib/seo';
-import { type Tool } from '../constants/tools';
-import { getStrings } from '../core/i18n/getStrings';
+import { AstroSeo } from "@astrolib/seo";
+import type { Tool } from "../constants/tools";
+import { getStrings } from "../core/i18n/getStrings";
 
 interface Props {
   tool: Tool;
@@ -12,7 +12,7 @@ const { locale } = Astro.params;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
-    (tool.stringsId ?? tool.id) as keyof typeof strings.website.tools
+    (tool.strings ?? tool.id) as keyof typeof strings.website.tools
   ];
 ---
 
@@ -23,11 +23,13 @@ const toolStrings =
   openGraph={{
     url: Astro.url.href,
     images: [
-      { url: `${Astro.url.origin}/assets/images/tools/${tool.id}.webp` },
+      {
+        url: `${Astro.url.origin}/assets/images/tools/${tool.id}.webp`,
+      },
     ],
     title: toolStrings.name,
     description: toolStrings.seo_description,
-    site_name: 'BlitzKit',
+    site_name: "BlitzKit",
   }}
-  twitter={{ cardType: 'summary_large_image' }}
+  twitter={{ cardType: "summary_large_image" }}
 />

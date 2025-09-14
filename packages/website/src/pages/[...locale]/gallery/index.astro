@@ -1,15 +1,15 @@
 ---
-import { galleryTool } from '../../../constants/tools';
-import ToolLayout from '../../../layouts/ToolLayout.astro';
-import type { getStaticPaths } from '../index.astro';
-import { Page } from './_index';
+import { tools } from "../../../constants/tools";
+import ToolLayout from "../../../layouts/ToolLayout.astro";
+import type { getStaticPaths } from "../index.astro";
+import { Page } from "./_index";
 
-export { getStaticPaths } from '../index.astro';
+export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.params;
 ---
 
-<ToolLayout tool={galleryTool}>
+<ToolLayout tool={tools.gallery}>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

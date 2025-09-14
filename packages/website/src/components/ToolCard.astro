@@ -1,6 +1,13 @@
 ---
 import { CaretRightIcon } from "@radix-ui/react-icons";
-import { Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  type ButtonProps,
+} from "@radix-ui/themes";
 import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
 import { LinkI18n } from "./LinkI18n";
@@ -45,7 +52,9 @@ const toolStrings =
 </style>
 
 <Flex
-  style={{ backgroundImage: `url(/assets/images/tools/${tool.id}.webp)` }}
+  style={{
+    backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
+  }}
   data-significant={tool.significant}
   className="container"
   position="relative"
@@ -105,12 +114,11 @@ const toolStrings =
       </Flex>
 
       <Button
-        highContrast={tool.button.highContrast}
         size={{
           initial: undefined,
           sm: tool.significant ? "3" : undefined,
         }}
-        color={tool.button.color}
+        color={tool.button as ButtonProps["color"]}
         style={{ cursor: "inherit" }}
       >
         {toolStrings.button}

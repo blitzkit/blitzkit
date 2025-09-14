@@ -1,82 +1,74 @@
-import { Button } from "@radix-ui/themes";
-import type { ComponentProps } from "react";
+import type { ButtonProps } from "@radix-ui/themes";
 
 export interface Tool {
   id: string;
   strings?: string;
+
+  button: ButtonProps["color"];
+  significant?: boolean;
   disabled?: boolean;
   href?: string;
-  button: {
-    highContrast?: boolean;
-    color: ComponentProps<typeof Button>["color"];
-  };
-  significant?: boolean;
 }
 
-export const TOOLS: Tool[] = [
-  {
+export const tools: Record<string, Tool> = {
+  tanks: {
     id: "tanks",
     strings: "tankopedia",
-    button: { color: "purple" },
+    button: "purple",
     significant: true,
   },
-  {
+  players: {
     id: "players",
     disabled: true,
-    button: { color: "blue" },
+    button: "blue",
   },
-  {
+  compare: {
     id: "compare",
-    button: { color: "crimson" },
+    button: "crimson",
   },
-  {
+  performance: {
     id: "performance",
-    button: { color: "jade" },
+    button: "jade",
   },
-  {
+  charts: {
     id: "charts",
     disabled: true,
-    button: { color: "bronze" },
+    button: "bronze",
   },
-  {
+  guess: {
     id: "guess",
-    button: { color: "cyan" },
+    button: "cyan",
   },
-  {
+  mixer: {
     id: "mixer",
     disabled: true,
-    button: { color: "red" },
+    button: "red",
   },
-  {
-    id: "charts",
-    disabled: true,
-    button: { color: "red" },
-  },
-  {
+  gallery: {
     id: "gallery",
-    button: { color: "gold" },
+    button: "gold",
   },
-  {
+  session: {
     id: "session",
-    button: { color: "blue" },
+    button: "blue",
   },
-  {
+  discord: {
     id: "discord",
     href: "https://discord.com/application-directory/1097673957865443370",
-    button: { color: "indigo" },
+    button: "indigo",
   },
-  {
+  tier_list: {
     id: "tier-list",
     strings: "tier_list",
-    button: { color: "orange" },
+    button: "orange",
   },
-  {
+  embed: {
     id: "embed",
-    button: { color: "red" },
+    button: "red",
   },
-  {
+  more: {
     id: "more",
     href: "https://discord.gg/nDt7AjGJQH",
-    button: { color: "plum" },
+    button: "plum",
   },
-];
+};

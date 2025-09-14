@@ -1,7 +1,7 @@
 ---
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import ToolOpenGraph from "../components/ToolOpenGraph.astro";
-import { type Tool } from "../constants/tools";
+import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
 import BaseLayout from "./BaseLayout.astro";
 
@@ -18,7 +18,7 @@ const toolStrings =
   ];
 ---
 
-<ToolOpenGraph tool={tool} />
+<ToolOpenGraph {tool} />
 
 <BaseLayout>
   <Box

@@ -9,7 +9,7 @@ import { AesonPlug } from "../../components/AesonPlug";
 import HomeHero from "../../components/HomeHero.astro";
 import { Plugs } from "../../components/Plugs";
 import ToolCard from "../../components/ToolCard.astro";
-import { TOOLS, type Tool } from "../../constants/tools";
+import { tools, type Tool } from "../../constants/tools";
 import { getStrings } from "../../core/i18n/getStrings";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -20,11 +20,15 @@ const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 const strings = getStrings(Astro.params.locale);
 const rows: Tool[][] = [];
 
-for (const tool of TOOLS) {
-  if (tool.disabled) continue;
+for (const id in tools) {
+  const tool = tools[id];
+
+  if ("disabled" in tool && tool.disabled) continue;
 
   const compatibleRow = rows.find(
-    (row) => row.length < MAX_TOOLS_PER_ROW && !row[0].significant
+    (row) =>
+      row.length < MAX_TOOLS_PER_ROW &&
+      !("significant" in row[0] && row[0].significant)
   );
 
   if (compatibleRow) {
@@ -109,11 +113,12 @@ export const getStaticPaths = (() => {
         rows.map((row) => (
           <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
             {row.map((tool) => (
-              <ToolCard tool={tool} />
+              <ToolCard {tool} />
             ))}
-            {row.length < MAX_TOOLS_PER_ROW && !row[0].significant && (
-              <Box flexGrow="1" />
-            )}
+            {row.length < MAX_TOOLS_PER_ROW &&
+              !("significant" in row[0] && row[0].significant) && (
+                <Box flexGrow="1" />
+              )}
           </Flex>
         ))
       }
