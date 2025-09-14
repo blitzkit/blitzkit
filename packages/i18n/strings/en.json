@@ -1445,6 +1445,12 @@
         "button": "Get started",
         "description": "Get started with BlitzKit",
         "seo_description": "Get started with BlitzKit"
+      },
+      "api": {
+        "name": "API",
+        "button": "To the docs",
+        "description": "BlitzKit hosted API",
+        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
       }
     },
 
