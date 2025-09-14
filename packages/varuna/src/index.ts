@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import { merge } from "lodash-es";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export class Varuna<Type, Arguments = void> {
   private listeners = new Set<(state: Type) => void>();
@@ -39,13 +39,16 @@ export class Varuna<Type, Arguments = void> {
   }
 
   useInitialization(...args: Arguments[]) {
-    if (this.initialized) return;
+    const initializedThisMount = useRef(false);
+
+    if (initializedThisMount.current) return;
 
     if (typeof this.creator !== "function") {
       throw new Error("Provider must be used with a function creator");
     }
 
     this.initialize((this.creator as (...args: Arguments[]) => Type)(...args));
+    initializedThisMount.current = true;
   }
 
   private dispatch() {
