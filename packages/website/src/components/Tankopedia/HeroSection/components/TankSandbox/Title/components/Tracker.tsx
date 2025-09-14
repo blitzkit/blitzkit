@@ -1,13 +1,12 @@
-import { Box, Progress } from '@radix-ui/themes';
-import { useProgress } from '@react-three/drei';
+import { Box, Progress } from "@radix-ui/themes";
+import { useStableProgress } from "../../../../../../../hooks/useStableProgress";
 
 interface Props {
   fontSize?: string;
 }
 
 export function Tracker({ fontSize }: Props) {
-  const { loaded, total } = useProgress();
-  const progress = total === 0 ? 0 : (loaded / total) * 100;
+  const progress = useStableProgress();
 
   return (
     <Box

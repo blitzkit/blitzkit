@@ -266,7 +266,6 @@ export function Controls({
       ref={orbitControls}
       enabled={Tankopedia.state.controlsEnabled}
       enableDamping={false}
-      autoRotateSpeed={1 / 4}
     />
   );
 }

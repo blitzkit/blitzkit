@@ -10,7 +10,7 @@ export interface Tool {
   href?: string;
 }
 
-export const tools = {
+export const tools: Record<string, Tool> = {
   tanks: {
     id: "tanks",
     strings: "tankopedia",
@@ -41,8 +41,7 @@ export const tools = {
   },
   mixer: {
     id: "mixer",
-    disabled: true,
-    button: "red",
+    button: "gray",
   },
   gallery: {
     id: "gallery",
@@ -76,4 +75,4 @@ export const tools = {
     href: "https://discord.gg/nDt7AjGJQH",
     button: "plum",
   },
-} satisfies Record<string, Tool>;
+};
