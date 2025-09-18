@@ -331,7 +331,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               </Dialog.Trigger>
 
               <Dialog.Content>
-                <Dialog.Title align="center">Select tank</Dialog.Title>
+                <Dialog.Title align="center">
+                  {strings.website.common.tank_search.select_dialog_title}
+                </Dialog.Title>
 
                 <Tabs.Root
                   value={tab}

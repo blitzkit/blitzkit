@@ -9,7 +9,7 @@ const { locale } = Astro.params;
 ---
 
 <BaseLayout integrated>
-  <PageWrapper color="gray" p="0" maxWidth="unset">
-    <Page {locale} client:load />
-  </PageWrapper>
-</BaseLayout>
+    <Page {locale} client:only="react">
+      <Page {locale} skeleton slot="fallback" />
+    </Page>
+ </BaseLayout>

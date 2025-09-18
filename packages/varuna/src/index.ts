@@ -39,6 +39,8 @@ export class Varuna<Type, Arguments = void> {
   }
 
   useInitialization(...args: Arguments[]) {
+    if (this.initialized) return;
+
     const initializedThisMount = useRef(false);
 
     if (initializedThisMount.current) return;
@@ -53,6 +55,7 @@ export class Varuna<Type, Arguments = void> {
 
   private dispatch() {
     const state = this.state;
+    console.log("dispatched");
     this.listeners.forEach((callback) => callback(state));
   }
 

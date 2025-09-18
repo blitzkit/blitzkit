@@ -16,7 +16,7 @@ interface TankControlProps {
 const provisionDefinitions = await awaitableProvisionDefinitions;
 
 export function TankControl({ index, slug }: TankControlProps) {
-  const { locale } = useLocale();
+  const { locale, strings } = useLocale();
   const [switchTankDialogOpen, setSwitchTankDialogOpen] = useState(false);
 
   return (
@@ -44,7 +44,9 @@ export function TankControl({ index, slug }: TankControlProps) {
         </Dialog.Trigger>
 
         <Dialog.Content>
-          <Dialog.Title align="center">Switch tanks</Dialog.Title>
+          <Dialog.Title align="center">
+            {strings.website.common.tank_search.swap_dialog_title}
+          </Dialog.Title>
 
           <Flex gap="4" direction="column">
             <Flex

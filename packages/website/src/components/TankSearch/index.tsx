@@ -33,7 +33,7 @@ import { SkeletonTankCard } from "./components/SkeletonTankCard";
 import { TankCardWrapper } from "./components/TankCardWrapper";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 
-type TankSearchProps = MaybeSkeletonComponentProps &
+export type TankSearchProps = MaybeSkeletonComponentProps &
   Omit<FlexProps, "onSelect"> & {
     compact?: boolean;
     onSelect?: (tank: TankDefinition) => void;
