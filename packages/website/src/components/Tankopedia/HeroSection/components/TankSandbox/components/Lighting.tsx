@@ -61,6 +61,7 @@ export function Lighting() {
 
         return (
           <HelpingSpotLight
+            key={index}
             position={position}
             intensity={INTENSITY}
             penumbra={1}
