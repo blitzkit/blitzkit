@@ -1,5 +1,5 @@
 import { asset } from "@blitzkit/core";
-import { CaretRightIcon } from "@radix-ui/react-icons";
+import { CaretRightIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
@@ -12,12 +12,12 @@ import {
 import { useRef, useState } from "react";
 import { MixerScene } from "../../../components/MixerScene";
 import { PageWrapper } from "../../../components/PageWrapper";
+import { ScreenshotButton } from "../../../components/ScreenshotButton";
 import {
   TankSearch,
   type TankSearchProps,
 } from "../../../components/TankSearch";
-import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { curateMixer } from "../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,
   useLocale,
@@ -26,48 +26,13 @@ import {
 import { Mixer } from "../../../stores/mixer";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
 
-const tankDefinitions = await awaitableTankDefinitions;
-const modelDefinitions = await awaitableModelDefinitions;
-const tanks = Object.values(tankDefinitions.tanks).filter((tank) => {
-  const tankModel = modelDefinitions.models[tank.id];
-  const turret = tank.turrets.at(-1)!;
-  const turretModel = tankModel.turrets[turret.id];
-
-  return tank.tier >= 10 && !turretModel.yaw;
-});
-
 export function Page({
   locale,
   skeleton,
 }: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
-  const hull = useRef(tanks[Math.floor(Math.random() * tanks.length)]);
-  const turretTank = useRef(tanks[Math.floor(Math.random() * tanks.length)]);
-  const turret = useRef(
-    turretTank.current.turrets[
-      Math.floor(Math.random() * turretTank.current.turrets.length)
-    ]
-  );
-  const gunTank = useRef(tanks[Math.floor(Math.random() * tanks.length)]);
-  const gunTurret = useRef(
-    gunTank.current.turrets[
-      Math.floor(Math.random() * gunTank.current.turrets.length)
-    ]
-  );
-  const gun = useRef(
-    gunTurret.current.guns[
-      Math.floor(Math.random() * gunTurret.current.guns.length)
-    ]
-  );
+  const initial = useRef(curateMixer());
 
-  Mixer.useInitialization({
-    hull: hull.current,
-    turret: { tank: turretTank.current, turret: turret.current },
-    gun: {
-      tank: gunTank.current,
-      turret: gunTurret.current,
-      gun: gun.current,
-    },
-  });
+  Mixer.useInitialization(initial.current);
 
   return (
     <PageWrapper color="gray" p="0" maxWidth="unset">
@@ -141,60 +106,90 @@ function ModuleSeparator() {
 }
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
-  const hullId = Mixer.use((state) => state.hull.id);
+  const hull = Mixer.use((state) => state.hull);
   const turretId = Mixer.use((state) => state.turret.tank.id);
   const gunId = Mixer.use((state) => state.gun.tank.id);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const { strings } = useLocale();
 
   return (
     <Box flexGrow="1" position="relative">
       <Box position="absolute" width="100%" height="100%" top="0" left="0">
-        {!skeleton && <MixerScene />}
+        {!skeleton && <MixerScene ref={canvas} />}
       </Box>
 
       <Flex
-        gap="2"
         align="center"
+        direction="column"
         position="absolute"
         bottom="4"
         left="50%"
         style={{ transform: "translateX(-50%)" }}
+        gap="4"
       >
-        <ModuleButton
-          skeleton={skeleton}
-          tank={hullId}
-          onSelect={(tank) => {
-            Mixer.mutate((draft) => {
-              draft.hull = tank;
-            });
-          }}
-        />
-        <ModuleSeparator />
-        <ModuleButton
-          skeleton={skeleton}
-          tank={turretId}
-          onSelect={(tank) => {
-            Mixer.mutate((draft) => {
-              draft.turret = {
-                tank,
-                turret: tank.turrets.at(-1)!,
-              };
-            });
-          }}
-        />
-        <ModuleSeparator />
-        <ModuleButton
-          skeleton={skeleton}
-          tank={gunId}
-          onSelect={(tank) => {
-            Mixer.mutate((draft) => {
-              draft.gun = {
-                tank,
-                turret: tank.turrets.at(-1)!,
-                gun: tank.turrets.at(-1)!.guns.at(-1)!,
-              };
-            });
-          }}
-        />
+        <Flex gap="2">
+          <ScreenshotButton
+            name={hull.slug}
+            canvas={canvas}
+            highContrast
+            variant="surface"
+          >
+            {strings.website.tools.mixer.screenshot}
+          </ScreenshotButton>
+          <Button
+            highContrast
+            variant="surface"
+            onClick={() => {
+              const mixed = curateMixer();
+
+              Mixer.mutate((draft) => {
+                Object.assign(draft, mixed);
+              });
+            }}
+          >
+            <UpdateIcon />
+            {strings.website.tools.mixer.randomize}
+          </Button>
+        </Flex>
+
+        <Flex gap="2" align="center">
+          <ModuleButton
+            skeleton={skeleton}
+            tank={hull.id}
+            onSelect={(tank) => {
+              Mixer.mutate((draft) => {
+                draft.hull = tank;
+              });
+            }}
+          />
+          <ModuleSeparator />
+          <ModuleButton
+            skeleton={skeleton}
+            tank={turretId}
+            onSelect={(tank) => {
+              Mixer.mutate((draft) => {
+                draft.turret = {
+                  tank,
+                  turret: tank.turrets.at(-1)!,
+                };
+              });
+            }}
+          />
+          <ModuleSeparator />
+          <ModuleButton
+            skeleton={skeleton}
+            tank={gunId}
+            onSelect={(tank) => {
+              Mixer.mutate((draft) => {
+                draft.gun = {
+                  tank,
+                  turret: tank.turrets.at(-1)!,
+                  gun: tank.turrets.at(-1)!.guns.at(-1)!,
+                };
+              });
+            }}
+          />
+        </Flex>
       </Flex>
     </Box>
   );

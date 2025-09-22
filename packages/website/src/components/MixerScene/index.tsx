@@ -1,14 +1,15 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { forwardRef, Suspense } from "react";
 import { Lighting } from "../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
 import { SceneProps } from "../Tankopedia/HeroSection/components/TankSandbox/components/SceneProps";
 import { MixerFallback } from "./components/MixerFallback";
 import { Model } from "./components/Model";
 
-export function MixerScene() {
+export const MixerScene = forwardRef<HTMLCanvasElement>((_, ref) => {
   return (
     <Canvas
+      ref={ref}
       shadows="soft"
       style={{ background: "black" }}
       camera={{
@@ -31,4 +32,4 @@ export function MixerScene() {
       </Suspense>
     </Canvas>
   );
-}
+});

@@ -6,9 +6,6 @@ import {
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import {
-  CameraIcon,
-  CopyIcon,
-  DownloadIcon,
   EnterFullScreenIcon,
   ExitFullScreenIcon,
   EyeOpenIcon,
@@ -39,9 +36,9 @@ import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/co
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
+import { ScreenshotButton } from "../../../../ScreenshotButton";
 import { SmallTankIcon } from "../../../../SmallTankIcon";
 import { TankSearch } from "../../../../TankSearch";
-import { screenshotReadyEvent } from "../TankSandbox/components/SceneProps";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
 import { QuickInputs } from "./components/QuickInputs";
@@ -440,77 +437,12 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
 
-              <Popover.Root>
-                <Popover.Trigger>
-                  <IconButton color="gray" variant="ghost">
-                    <CameraIcon />
-                  </IconButton>
-                </Popover.Trigger>
-
-                <Popover.Content>
-                  <Flex direction="column" gap="2">
-                    <Popover.Close>
-                      <Button
-                        onClick={() => {
-                          screenshotReadyEvent.dispatch(true);
-
-                          requestAnimationFrame(() => {
-                            if (!canvas.current) return;
-
-                            const anchor = document.createElement("a");
-
-                            anchor.setAttribute(
-                              "download",
-                              `${protagonistTank.name}.png`
-                            );
-                            anchor.setAttribute(
-                              "href",
-                              canvas.current.toDataURL("image/png")
-                            );
-                            anchor.click();
-
-                            screenshotReadyEvent.dispatch(false);
-                          });
-                        }}
-                      >
-                        <DownloadIcon />
-                        {
-                          strings.website.tools.tankopedia.sandbox.screenshot
-                            .download
-                        }
-                      </Button>
-                    </Popover.Close>
-                    <Popover.Close>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          screenshotReadyEvent.dispatch(true);
-
-                          requestAnimationFrame(() => {
-                            if (!canvas.current) return;
-
-                            canvas.current.toBlob((blob) => {
-                              if (!blob) return;
-
-                              navigator.clipboard.write([
-                                new ClipboardItem({ "image/png": blob }),
-                              ]);
-                            });
-
-                            screenshotReadyEvent.dispatch(false);
-                          });
-                        }}
-                      >
-                        <CopyIcon />
-                        {
-                          strings.website.tools.tankopedia.sandbox.screenshot
-                            .copy
-                        }
-                      </Button>
-                    </Popover.Close>
-                  </Flex>
-                </Popover.Content>
-              </Popover.Root>
+              <ScreenshotButton
+                color="gray"
+                variant="ghost"
+                canvas={canvas}
+                name={protagonistTank.slug}
+              />
 
               {fullScreenAvailable && (
                 <IconButton
