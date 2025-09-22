@@ -99,10 +99,10 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           isFullScreen
             ? "100vh"
             : disturbed
-              ? "calc(100svh - 6rem)"
+              ? "calc(100svh - 8rem)"
               : {
                   initial: "28rem",
-                  md: "calc(100svh - 12rem)",
+                  md: "calc(100svh - 14rem)",
                 }
         }
         maxWidth={isFullScreen ? undefined : "120rem"}
