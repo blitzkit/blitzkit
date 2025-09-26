@@ -1,14 +1,18 @@
 ---
-import '@fontsource/inter';
-import { Flex } from '@radix-ui/themes';
-import { BlitzKitTheme } from '../components/BlitzKitTheme';
-import { Checks } from '../components/Checks';
-import Footer from '../components/Footer.astro';
-import Navbar from '../components/Navbar.astro';
-import Party3 from '../components/Party3.astro';
-import './base.css';
-import { DEFAULT_LOCALE } from '@blitzkit/i18n';
-import Servicing from '../components/Servicing.astro';
+import { DEFAULT_LOCALE } from "@blitzkit/i18n";
+import strings from "@blitzkit/i18n/strings/en.json";
+import "@fontsource/inter";
+import { Flex } from "@radix-ui/themes";
+import Analytics from "../components/Analytics.astro";
+import { BlitzKitTheme } from "../components/BlitzKitTheme";
+import { Checks } from "../components/Checks";
+import Footer from "../components/Footer.astro";
+import LocaleRedirector from "../components/LocaleRedirector.astro";
+import Meta from "../components/Meta.astro";
+import Navbar from "../components/Navbar.astro";
+import PWA from "../components/PWA.astro";
+import Servicing from "../components/Servicing.astro";
+import "./base.css";
 
 export interface Props {
   noFooter?: boolean;
@@ -23,44 +27,17 @@ const locale = Astro.params.locale ?? DEFAULT_LOCALE;
 
 <html lang={locale}>
   <head>
-    <meta property="og:site_name" content="BlitzKit" />
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:site_name" content={strings.common.name} />
 
-    <Party3 />
-
-    <script>
-      import { SUPPORTED_LOCALES } from '@blitzkit/i18n';
-      import { getBestLocale } from '../core/i18n/getBestLocale';
-      const isAPI = window.location.pathname.startsWith('/api');
-      const isI18nPath = SUPPORTED_LOCALES.some((locale) =>
-        window.location.pathname.startsWith(`/${locale}`),
-      );
-      const bestLocale = getBestLocale();
-      const currentPathLocale = SUPPORTED_LOCALES.find((locale) =>
-        window.location.pathname.startsWith(`/${locale}`),
-      );
-
-      if (
-        !isAPI && // not an api, duh!
-        localStorage.getItem('preferred-locale') !== null && // no preference, so probably google's crawler
-        bestLocale !== currentPathLocale // we need to redirect
-      ) {
-        window.location.pathname = isI18nPath
-          ? window.location.pathname.replace(
-              `/${currentPathLocale}`,
-              bestLocale === undefined ? '' : `/${bestLocale}`,
-            )
-          : `/${bestLocale}${window.location.pathname}`;
-      }
-    </script>
+    <PWA />
+    <Meta />
+    <Analytics />
+    <LocaleRedirector />
 
     <slot name="head" />
   </head>
 
-  <body class={noNavbar ? 'no-navbar' : ''}>
+  <body class={noNavbar ? "no-navbar" : ""}>
     <BlitzKitTheme>
       <Flex direction="column" minHeight="100vh">
         <Navbar {integrated} />

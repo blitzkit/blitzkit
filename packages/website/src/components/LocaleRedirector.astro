@@ -1,0 +1,25 @@
+<script>
+  import { SUPPORTED_LOCALES } from "@blitzkit/i18n";
+  import { getBestLocale } from "../core/i18n/getBestLocale";
+  const isAPI = window.location.pathname.startsWith("/api");
+  const isI18nPath = SUPPORTED_LOCALES.some((locale) =>
+    window.location.pathname.startsWith(`/${locale}`)
+  );
+  const bestLocale = getBestLocale();
+  const currentPathLocale = SUPPORTED_LOCALES.find((locale) =>
+    window.location.pathname.startsWith(`/${locale}`)
+  );
+
+  if (
+    !isAPI && // not an api, duh!
+    localStorage.getItem("preferred-locale") !== null && // no preference, so probably google's crawler
+    bestLocale !== currentPathLocale // we need to redirect
+  ) {
+    window.location.pathname = isI18nPath
+      ? window.location.pathname.replace(
+          `/${currentPathLocale}`,
+          bestLocale === undefined ? "" : `/${bestLocale}`
+        )
+      : `/${bestLocale}${window.location.pathname}`;
+  }
+</script>

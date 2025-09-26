@@ -1,0 +1,5 @@
+---
+import { localizedHTML as favicons } from "astro-favicons/middleware";
+---
+
+<Fragment set:html={favicons(Astro.currentLocale)} />

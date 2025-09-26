@@ -6,6 +6,8 @@
   },
 
   "common": {
+    "name": "BlitzKit",
+
     "units": {
       "m": "%s1m",
       "mm": "%s1mm",
