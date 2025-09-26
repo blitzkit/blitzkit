@@ -46,18 +46,18 @@
     "@xmpp/client": "^0.13.6",
     "astro-favicons": "^3.1.5",
     "cheerio": "^1.1.2",
-    "googleapis": "^144.0.0",
+    "googleapis": "^160.0.0",
     "lodash-es": "^4.17.21",
-    "protobufjs": "^7.5.2",
+    "protobufjs": "^7.5.4",
     "quicklime": "^1.2.0",
-    "sharp": "^0.33.5"
+    "sharp": "^0.34.4"
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/bun": "^1.2.22",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.14.1",
-    "prettier": "^3.5.3",
-    "prisma": "^6.6.0",
-    "typescript": "^5.8.3"
+    "@types/node": "^24.5.2",
+    "prettier": "^3.6.2",
+    "prisma": "^6.16.2",
+    "typescript": "^5.9.2"
   }
 }

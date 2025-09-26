@@ -4,7 +4,7 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "ts-deepmerge": "^7.0.2"
+    "ts-deepmerge": "^7.0.3"
   },
   "devDependencies": {}
 }

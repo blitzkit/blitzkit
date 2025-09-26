@@ -17,15 +17,15 @@
   "dependencies": {
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
-    "@gltf-transform/core": "^4.0.10",
-    "@gltf-transform/extensions": "^4.0.10",
-    "@gltf-transform/functions": "^4.0.10",
-    "csv-parse": "^5.5.6",
+    "@gltf-transform/core": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1",
+    "csv-parse": "^6.1.0",
     "decompress": "^4.2.1",
-    "esbuild": "^0.19.12",
-    "fast-xml-parser": "^4.4.1",
+    "esbuild": "^0.25.10",
+    "fast-xml-parser": "^5.2.5",
     "progress": "^2.0.3",
-    "puppeteer": "^23.10.4"
+    "puppeteer": "^24.22.3"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",

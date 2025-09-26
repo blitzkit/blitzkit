@@ -4,20 +4,20 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@octokit/plugin-throttling": "^8.2.0",
-    "@octokit/rest": "^20.1.1",
-    "@prisma/client": "^6.6.0",
+    "@octokit/plugin-throttling": "^11.0.1",
+    "@octokit/rest": "^22.0.0",
+    "@prisma/client": "^6.16.2",
     "adm-zip": "^0.5.16",
     "crc": "^4.3.2",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.2.2",
     "lz4js": "^0.2.0",
     "pickleparser": "^0.2.1",
-    "protobufjs": "^7.4.0",
-    "ts-proto": "^2.2.2",
-    "yaml": "^2.5.0"
+    "protobufjs": "^7.5.4",
+    "ts-proto": "^2.7.7",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
-    "@types/adm-zip": "^0.5.5",
+    "@types/adm-zip": "^0.5.7",
     "@types/lz4js": "^0.2.1"
   }
 }
