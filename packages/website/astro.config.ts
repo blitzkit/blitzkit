@@ -16,6 +16,12 @@ export default defineConfig({
   output: "static",
   site: "https://blitzkit.app",
   outDir: "../../dist/website",
+  prefetch: {
+    defaultStrategy: "hover",
+    prefetchAll: true,
+  },
+
+  build: { concurrency: 4 },
 
   integrations: [
     favicons({
