@@ -28,6 +28,7 @@
     "markdown-to-jsx": "^7.7.13",
     "pwa-install-handler": "^2.6.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "urlon": "^3.1.0"
   }
 }
