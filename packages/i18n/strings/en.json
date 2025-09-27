@@ -841,9 +841,9 @@
         "title": "Install the BlitzKit App",
         "new": "NEW",
         "checking": "Checking compatibility...",
-        "incompatible": "Incompatible device.",
-        "incompatible_help": "Try manually.",
-        "install": "Install"
+        "instructions": "Instructions for Apple devices.",
+        "install": "Install",
+        "dismiss": "Dismiss"
       },
 
       "discord": {

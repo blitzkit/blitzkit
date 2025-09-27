@@ -1,5 +1,5 @@
 ---
-import { DownloadIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, Cross2Icon, DownloadIcon } from "@radix-ui/react-icons";
 import {
   Badge,
   Box,
@@ -14,13 +14,26 @@ import {
 import { getStrings } from "../core/i18n/getStrings";
 import type { LocaleAcceptorProps } from "../hooks/useLocale";
 
-type Props = LocaleAcceptorProps;
+type Props = LocaleAcceptorProps & {
+  floating?: boolean;
+};
 
-const { locale } = Astro.props;
+const { locale, floating } = Astro.props;
 const strings = getStrings(locale);
 ---
 
 <style>
+  #pwa-prompter[data-floating="true"] {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: 1;
+  }
+
+  #pwa-prompter[data-floating="true"] .card {
+    box-shadow: var(--shadow-6);
+  }
+
   .pwa-logo {
     width: 6rem;
     height: 6rem;
@@ -35,13 +48,21 @@ const strings = getStrings(locale);
   }
 
   #pwa-install,
-  #pwa-incompatible {
+  #pwa-incompatible,
+  #pwa-prompter[data-floating="true"],
+  #pwa-dismiss {
     display: none;
   }
 
   html.pwa-enabled #pwa-install,
-  html.pwa-disabled #pwa-incompatible {
+  html.pwa-disabled #pwa-incompatible,
+  html.pwa-enabled #pwa-prompter[data-floating="true"],
+  #pwa-prompter[data-floating="true"] #pwa-dismiss {
     display: unset;
+  }
+
+  .pwa-actions button {
+    flex: 1;
   }
 </style>
 
@@ -49,14 +70,20 @@ const strings = getStrings(locale);
   import { pwaInstallHandler } from "pwa-install-handler";
 
   const pwaInstallButton = document.getElementById("pwa-install");
+  const pwaDismissButton = document.getElementById("pwa-dismiss");
+  const pwaPrompter = document.getElementById("pwa-prompter");
 
   pwaInstallButton?.addEventListener("click", () => {
     pwaInstallHandler.install();
   });
+
+  pwaDismissButton?.addEventListener("click", () => {
+    pwaPrompter?.remove();
+  });
 </script>
 
-<Flex justify="center" mt="4">
-  <Card variant="classic">
+<Flex id="pwa-prompter" justify="center" mt="4" data-floating={floating}>
+  <Card variant="classic" className="card">
     <Inset>
       <Flex align="center">
         <Box className="pwa-logo" />
@@ -78,23 +105,30 @@ const strings = getStrings(locale);
             </Text>
           </Flex>
 
-          <Text color="tomato" id="pwa-incompatible">
-            {strings.website.home.pwa.incompatible}{" "}
-            <Link
-              underline="always"
-              target="_blank"
-              href="https://www.cdc.gov/niosh/mining/tools/installpwa.html"
-            >
-              {strings.website.home.pwa.incompatible_help}
-            </Link>
-          </Text>
+          <Link
+            id="pwa-incompatible"
+            trim="end"
+            underline="always"
+            target="_blank"
+            href="https://www.cdc.gov/niosh/mining/tools/installpwa.html"
+          >
+            {strings.website.home.pwa.instructions}
+          </Link>
 
-          <Button id="pwa-install" color="jade">
-            <Flex align="center" gap="1" justify="center">
-              <DownloadIcon />
-              {strings.website.home.pwa.install}
-            </Flex>
-          </Button>
+          <Flex className="pwa-actions" gap="2">
+            <Button id="pwa-dismiss" color="tomato" variant="outline">
+              <Flex align="center" gap="1" justify="center">
+                <Cross2Icon />
+                {strings.website.home.pwa.dismiss}
+              </Flex>
+            </Button>
+            <Button id="pwa-install" color="jade">
+              <Flex align="center" gap="1" justify="center">
+                <DownloadIcon />
+                {strings.website.home.pwa.install}
+              </Flex>
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Inset>

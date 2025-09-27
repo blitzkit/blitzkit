@@ -10,6 +10,7 @@ import LocaleRedirector from "../components/LocaleRedirector.astro";
 import Meta from "../components/Meta.astro";
 import Navbar from "../components/Navbar.astro";
 import PWA from "../components/PWA.astro";
+import PWAPrompter from "../components/PWAPrompter.astro";
 import Servicing from "../components/Servicing.astro";
 import "./base.css";
 
@@ -38,6 +39,12 @@ const locale = Astro.params.locale;
 
   <body class={noNavbar ? "no-navbar" : ""}>
     <BlitzKitTheme>
+      {
+        Astro.routePattern !== "/[...locale]" && (
+          <PWAPrompter {locale} floating />
+        )
+      }
+
       <Flex direction="column" minHeight="100vh">
         <Navbar {integrated} />
 
