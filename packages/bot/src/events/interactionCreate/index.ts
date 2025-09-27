@@ -1,4 +1,4 @@
-import { assertSecret } from '@blitzkit/core';
+import { assertSecret } from "@blitzkit/core";
 import {
   AttachmentBuilder,
   AutocompleteInteraction,
@@ -13,30 +13,30 @@ import {
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
   SlashCommandSubcommandsOnlyBuilder,
-} from 'discord.js';
-import { aboutCommand } from '../../commands/about';
-import { breakdownCommand } from '../../commands/breakdown';
-import { debugCommand } from '../../commands/debug';
-import { evolutionCommand } from '../../commands/evolution';
-import { fullStatsCommand } from '../../commands/fullStats';
-import { inactiveCommand } from '../../commands/inactive';
-import { verifyCommand } from '../../commands/link';
-import { ownedTanksCommand } from '../../commands/ownedTanks';
-import { permissionsCommand } from '../../commands/permissions';
-import { pingCommand } from '../../commands/ping';
-import { playerInfoCommand } from '../../commands/playerInfo';
-import { ratingCommand } from '../../commands/rating';
-import { ratingLeaderboardCommand } from '../../commands/ratingLeaderboard';
-import { replayCommand } from '../../commands/replay';
-import { researchCommand } from '../../commands/research';
-import { searchClansCommand } from '../../commands/searchClans';
-import { searchPlayersCommand } from '../../commands/searchPlayers';
-import { statsCommand } from '../../commands/stats';
-import { todayCommand } from '../../commands/today';
-import { RenderConfiguration } from '../../core/blitzkit/renderConfiguration';
-import { handleAutocomplete } from './handlers/autocomplete';
-import { handleButton } from './handlers/button';
-import { handleChatInputCommand } from './handlers/chatInputCommand';
+} from "discord.js";
+import { aboutCommand } from "../../commands/about";
+import { breakdownCommand } from "../../commands/breakdown";
+import { debugCommand } from "../../commands/debug";
+import { evolutionCommand } from "../../commands/evolution";
+import { fullStatsCommand } from "../../commands/fullStats";
+import { inactiveCommand } from "../../commands/inactive";
+import { verifyCommand } from "../../commands/link";
+import { ownedTanksCommand } from "../../commands/ownedTanks";
+import { permissionsCommand } from "../../commands/permissions";
+import { pingCommand } from "../../commands/ping";
+import { playerInfoCommand } from "../../commands/playerInfo";
+import { ratingCommand } from "../../commands/rating";
+import { ratingLeaderboardCommand } from "../../commands/ratingLeaderboard";
+import { replayCommand } from "../../commands/replay";
+import { researchCommand } from "../../commands/research";
+import { searchClansCommand } from "../../commands/searchClans";
+import { searchPlayersCommand } from "../../commands/searchPlayers";
+import { statsCommand } from "../../commands/stats";
+import { todayCommand } from "../../commands/today";
+import { RenderConfiguration } from "../../core/blitzkit/renderConfiguration";
+import { handleAutocomplete } from "./handlers/autocomplete";
+import { handleButton } from "./handlers/button";
+import { handleChatInputCommand } from "./handlers/chatInputCommand";
 
 export type InteractionRawReturnable =
   | string
@@ -44,7 +44,7 @@ export type InteractionRawReturnable =
   | ButtonBuilder
   | AttachmentBuilder
   | RenderConfiguration
-  | JSX.Element
+  | React.JSX.Element
   | null;
 export type InteractionIterableReturnable =
   | InteractionRawReturnable
@@ -58,7 +58,7 @@ interface CommandRegistryBase {
     | SlashCommandBuilder
     | SlashCommandSubcommandsOnlyBuilder
     | SlashCommandOptionsOnlyBuilder
-    | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
+    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 
   autocomplete?: (interaction: AutocompleteInteraction<CacheType>) => void;
   button?: (interaction: ButtonInteraction<CacheType>) => InteractionReturnable;
@@ -72,7 +72,7 @@ interface CommandRegistryImplicit extends CommandRegistryBase {
 interface CommandRegistryExplicit extends CommandRegistryBase {
   handlesInteraction?: false;
   handler: (
-    interaction: ChatInputCommandInteraction<CacheType>,
+    interaction: ChatInputCommandInteraction<CacheType>
   ) => InteractionReturnable;
 }
 
@@ -104,16 +104,16 @@ export const COMMANDS_RAW: Promise<CommandRegistry>[] = [
 export const commands = Promise.allSettled(COMMANDS_RAW).then((rawCommands) => {
   return rawCommands.reduce<Record<string, CommandRegistry>>(
     (commands, registry, index) => {
-      if (registry.status === 'rejected') {
+      if (registry.status === "rejected") {
         console.warn(
           `Command ${index} failed to load; skipping...`,
-          registry.reason,
+          registry.reason
         );
         return commands;
       }
       return { ...commands, [registry.value.command.name]: registry.value };
     },
-    {},
+    {}
   );
 });
 
@@ -121,12 +121,12 @@ const rest = new REST().setToken(assertSecret(import.meta.env.DISCORD_TOKEN));
 
 commands.then((awaitedCommands) => {
   const body = Object.values(awaitedCommands).map((registry) =>
-    registry.command.toJSON(),
+    registry.command.toJSON()
   );
 
   rest.put(
     Routes.applicationCommands(assertSecret(import.meta.env.DISCORD_CLIENT_ID)),
-    { body },
+    { body }
   );
 });
 

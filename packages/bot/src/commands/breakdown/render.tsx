@@ -6,23 +6,23 @@ import {
   getTankStats,
   getWN8Percentile,
   TankDefinition,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { Locale } from 'discord.js';
-import { chunk } from 'lodash-es';
-import * as Breakdown from '../../components/Breakdown';
-import { CommandWrapper } from '../../components/CommandWrapper';
-import { NoData } from '../../components/NoData';
-import { TitleBar } from '../../components/TitleBar';
-import { filtersToDescription } from '../../core/blitzkit/filtersToDescription';
-import { tankDefinitions } from '../../core/blitzkit/nonBlockingPromises';
-import { UserError } from '../../core/blitzkit/userError';
-import { filterStats, StatFilters } from '../../core/blitzstars/filterStats';
-import { getStatsInPeriod } from '../../core/blitzstars/getStatsInPeriod';
-import { blitzStarsTankAverages } from '../../core/blitzstars/tankAverages';
-import { ResolvedPeriod } from '../../core/discord/resolvePeriodFromCommand';
-import { ResolvedPlayer } from '../../core/discord/resolvePlayerFromCommand';
-import { translator } from '../../core/localization/translator';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { Locale } from "discord.js";
+import { chunk } from "lodash-es";
+import * as Breakdown from "../../components/Breakdown";
+import { CommandWrapper } from "../../components/CommandWrapper";
+import { NoData } from "../../components/NoData";
+import { TitleBar } from "../../components/TitleBar";
+import { filtersToDescription } from "../../core/blitzkit/filtersToDescription";
+import { tankDefinitions } from "../../core/blitzkit/nonBlockingPromises";
+import { UserError } from "../../core/blitzkit/userError";
+import { filterStats, StatFilters } from "../../core/blitzstars/filterStats";
+import { getStatsInPeriod } from "../../core/blitzstars/getStatsInPeriod";
+import { blitzStarsTankAverages } from "../../core/blitzstars/tankAverages";
+import { ResolvedPeriod } from "../../core/discord/resolvePeriodFromCommand";
+import { ResolvedPlayer } from "../../core/discord/resolvePlayerFromCommand";
+import { translator } from "../../core/localization/translator";
 
 const ROWS_PER_PAGE = 8;
 const MAX_PAGES = 9;
@@ -31,7 +31,7 @@ export async function renderBreakdown(
   { region, id }: ResolvedPlayer,
   { start, end, name }: ResolvedPeriod,
   filters: StatFilters,
-  locale: Locale,
+  locale: Locale
 ) {
   const { strings, unwrap } = translator(locale);
   const awaitedTankDefinitions = await tankDefinitions;
@@ -39,7 +39,7 @@ export async function renderBreakdown(
   const statsInPeriod = await getStatsInPeriod(region, id, start, end, locale);
   const { filteredOrder } = await filterStats(statsInPeriod, filters);
   const accountInfo = await getAccountInfo(region, id);
-  const clanData = await getClanAccountInfo(region, id, ['clan']);
+  const clanData = await getClanAccountInfo(region, id, ["clan"]);
   const tankStats = await getTankStats(region, id);
   const filterDescriptions = await filtersToDescription(filters, locale);
   const orderedCurrentStats: BlitzStats[] = [];
@@ -74,63 +74,63 @@ export async function renderBreakdown(
     orderedCareerWN8Full.push(
       tankAveragesEntry
         ? calculateWN8(tankAveragesEntry.all, tank.all)
-        : undefined,
+        : undefined
     );
   });
 
   const currentBattles = orderedCurrentStats.reduce(
     (accumulator, current) => accumulator + current.battles,
-    0,
+    0
   );
   const careerBattles = tankStats.reduce(
     (accumulator, current) => accumulator + current.all.battles,
-    0,
+    0
   );
   const currentWinrate =
     orderedCurrentStats.reduce(
       (accumulator, current) => accumulator + current.wins,
-      0,
+      0
     ) / currentBattles;
   const careerWinrate =
     tankStats.reduce(
       (accumulator, current) => accumulator + current.all.wins,
-      0,
+      0
     ) / careerBattles;
   const currentWN8 =
     orderedCurrentWN8.reduce<number>(
       (accumulator, current, index) =>
         accumulator + (current ?? 0) * orderedCurrentStats[index].battles,
-      0,
+      0
     ) /
     orderedCurrentStats.reduce(
       (accumulator, current, index) =>
         accumulator +
         (orderedCurrentWN8[index] === undefined ? 0 : current.battles),
-      0,
+      0
     );
   const careerWN8 =
     orderedCareerWN8Full.reduce<number>(
       (accumulator, current) => accumulator + (current ?? 0),
-      0,
+      0
     ) /
     tankStats.reduce(
       (accumulator, current, index) =>
         accumulator +
         (orderedCareerWN8Full[index] === undefined ? 0 : current.all.battles),
-      0,
+      0
     );
   const currentDamage =
     orderedCurrentStats.reduce(
       (accumulator, current) => accumulator + current.damage_dealt,
-      0,
+      0
     ) / currentBattles;
   const careerDamage =
     tankStats.reduce(
       (accumulator, current) => accumulator + current.all.damage_dealt,
-      0,
+      0
     ) / careerBattles;
 
-  const children: JSX.Element[] = [];
+  const children: React.JSX.Element[] = [];
 
   if (filteredOrder.length > 0) {
     children.push(
@@ -172,7 +172,7 @@ export async function renderBreakdown(
             delta: currentDamage - careerDamage,
           },
         ]}
-      />,
+      />
     );
 
     filteredOrder.forEach((id, index) => {
@@ -206,7 +206,7 @@ export async function renderBreakdown(
             {
               title: strings.bot.commands.breakdown.body.winrate,
               current: `${(100 * (current.wins / current.battles)).toFixed(
-                2,
+                2
               )}%`,
               career: `${(100 * (career.wins / career.battles)).toFixed(2)}%`,
               delta:
@@ -230,24 +230,24 @@ export async function renderBreakdown(
             {
               title: strings.bot.commands.breakdown.body.damage,
               current: Math.round(
-                current.damage_dealt / current.battles,
+                current.damage_dealt / current.battles
               ).toLocaleString(),
               career: Math.round(
-                career.damage_dealt / career.battles,
+                career.damage_dealt / career.battles
               ).toLocaleString(),
               delta:
                 current.damage_dealt / current.battles -
                 career.damage_dealt / career.battles,
             },
           ]}
-        />,
+        />
       );
     });
   }
 
   const pages = chunk(
     children,
-    Math.max(Math.ceil(children.length / MAX_PAGES), ROWS_PER_PAGE),
+    Math.max(Math.ceil(children.length / MAX_PAGES), ROWS_PER_PAGE)
   );
 
   if (filteredOrder.length > 0) {

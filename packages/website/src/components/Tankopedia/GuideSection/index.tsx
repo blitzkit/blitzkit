@@ -1,7 +1,7 @@
-import { CaretRightIcon } from '@radix-ui/react-icons';
-import { Box, Flex, Link, Text } from '@radix-ui/themes';
-import { Var } from '../../../core/radix/var';
-import type { TankGuide } from '../../../pages/[...locale]/tanks/[slug]/index.astro';
+import { CaretRightIcon } from "@radix-ui/react-icons";
+import { Box, Flex, Link, Text } from "@radix-ui/themes";
+import { Var } from "../../../core/radix/var";
+import type { TankGuide } from "../../../pages/[...locale]/tanks/[slug]/index.astro";
 
 interface Props {
   guide: TankGuide;
@@ -16,10 +16,10 @@ export function GuideSection({ guide }: Props) {
         underline="none"
         highContrast
         style={{
-          display: 'flex',
-          maxWidth: '35rem',
-          flexDirection: 'column',
-          gap: Var('space-4'),
+          display: "flex",
+          maxWidth: "35rem",
+          flexDirection: "column",
+          gap: Var("space-4"),
         }}
       >
         <Flex maxWidth="35rem" direction="column" gap="4">
@@ -28,9 +28,9 @@ export function GuideSection({ guide }: Props) {
               <Flex width="100%" justify="start" align="center" gap="2">
                 <img
                   style={{
-                    width: '1.5em',
-                    height: '1.5em',
-                    objectFit: 'contain',
+                    width: "1.5em",
+                    height: "1.5em",
+                    objectFit: "contain",
                   }}
                   src="https://guidesblitz.com/wp-content/uploads/2023/11/cropped-logo-1.png"
                 />
@@ -39,7 +39,7 @@ export function GuideSection({ guide }: Props) {
             </Text>
 
             <Text size="2">{guide.description}</Text>
-            <img style={{ width: '100%' }} src={guide.image} />
+            <img style={{ width: "100%" }} src={guide.image} />
 
             <Box
               position="absolute"
@@ -48,7 +48,7 @@ export function GuideSection({ guide }: Props) {
               height="100%"
               left="0"
               style={{
-                background: `linear-gradient(${Var('gray-a1')}, ${Var('gray-1')})`,
+                background: `linear-gradient(${Var("gray-a1")}, ${Var("gray-1")})`,
               }}
             />
           </Flex>

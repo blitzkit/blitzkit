@@ -29,24 +29,21 @@ import {
   toUniqueId,
   Unlock,
   Vector3,
-} from '@blitzkit/core';
-import {
-  DEFAULT_LOCALE,
-  SUPPORTED_LOCALE_BLITZ_MAP,
-  SUPPORTED_LOCALES,
-} from '@blitzkit/i18n';
-import { readdir } from 'fs/promises';
-import { deburr } from 'lodash-es';
-import { parse as parsePath } from 'path';
-import { Vector3Tuple } from 'three';
-import { parse as parseYaml } from 'yaml';
-import { readStringDVPL } from '../core/blitz/readStringDVPL';
-import { readXMLDVPL } from '../core/blitz/readXMLDVPL';
-import { readYAMLDVPL } from '../core/blitz/readYAMLDVPL';
-import { commitAssets } from '../core/github/commitAssets';
-import { DATA } from './constants';
-import { Avatar } from './skillIcons';
-import { TankParameters } from './tankIcons';
+} from "@blitzkit/core";
+import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
+import { readdir } from "fs/promises";
+import { deburr } from "lodash-es";
+import { parse as parsePath } from "path";
+import { Vector3Tuple } from "three";
+import { parse as parseYaml } from "yaml";
+import { readStringDVPL } from "../core/blitz/readStringDVPL";
+import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
+import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
+import { commitAssets } from "../core/github/commitAssets";
+import { DATA } from "./constants";
+import { Avatar } from "./skillIcons";
+import { TankParameters } from "./tankIcons";
 
 const nonAlphanumericRegex = /[^a-z0-9]/g;
 const multipleDashesRegex = /--+/g;
@@ -54,26 +51,26 @@ const trailingDashRegex = /-$/g;
 const leadingDashRegex = /^-/g;
 
 const nationSlugDiscriminators = {
-  china: 'cn',
-  european: 'eu',
-  france: 'fr',
-  germany: 'de',
-  japan: 'jp',
-  other: 'ot',
-  uk: 'gb',
-  usa: 'us',
-  ussr: 'ru',
+  china: "cn",
+  european: "eu",
+  france: "fr",
+  germany: "de",
+  japan: "jp",
+  other: "ot",
+  uk: "gb",
+  usa: "us",
+  ussr: "ru",
 };
 
 function parseResearchCost(raw: number | string) {
-  if (typeof raw === 'number') {
+  if (typeof raw === "number") {
     return {
-      research_cost_type: { $case: 'xp', value: raw },
+      research_cost_type: { $case: "xp", value: raw },
     } satisfies ResearchCost;
   } else {
     return {
       research_cost_type: {
-        $case: 'seasonal_tokens',
+        $case: "seasonal_tokens",
         value: {
           season: Number(/prx_season_(\d+):\d+/.exec(raw)![1]),
           tokens: Number(/prx_season_\d+:(\d+)/.exec(raw)![1]),
@@ -83,7 +80,7 @@ function parseResearchCost(raw: number | string) {
   }
 }
 
-type BlitzTankFilterDefinitionCategory = 'clip';
+type BlitzTankFilterDefinitionCategory = "clip";
 const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
   BlitzTankFilterDefinitionCategory,
   ConsumableTankCategoryFilterCategory
@@ -95,7 +92,7 @@ function vector3TupleToBlitzkit(tuple: Vector3Tuple) {
 }
 const blitzTankClassToBlitzkit: Record<BlitzTankClass, TankClass> = {
   lightTank: TankClass.LIGHT,
-  'AT-SPG': TankClass.TANK_DESTROYER,
+  "AT-SPG": TankClass.TANK_DESTROYER,
   heavyTank: TankClass.HEAVY,
   mediumTank: TankClass.MEDIUM,
 };
@@ -103,10 +100,10 @@ export interface BlitzStrings {
   [key: string]: string;
 }
 type ShellKind =
-  | 'ARMOR_PIERCING'
-  | 'ARMOR_PIERCING_CR'
-  | 'HIGH_EXPLOSIVE'
-  | 'HOLLOW_CHARGE';
+  | "ARMOR_PIERCING"
+  | "ARMOR_PIERCING_CR"
+  | "HIGH_EXPLOSIVE"
+  | "HOLLOW_CHARGE";
 type ShellDefinitionsList = Record<
   string,
   {
@@ -142,19 +139,19 @@ export interface ChassisDefinitionsList {
 }
 type VehicleDefinitionArmor = Record<
   string,
-  number | { vehicleDamageFactor: 0; '#text': number }
+  number | { vehicleDamageFactor: 0; "#text": number }
 >;
 interface UnlocksInner {
   cost: number | string;
-  '#text': number;
+  "#text": number;
 }
 type BlitzModuleType = {
-  [key in 'vehicle' | 'engine' | 'chassis' | 'turret' | 'gun']:
+  [key in "vehicle" | "engine" | "chassis" | "turret" | "gun"]:
     | UnlocksInner
     | UnlocksInner[];
 };
 type UnlocksListing = BlitzModuleType | undefined;
-type BlitzCrewType = 'commander' | 'radioman' | 'gunner' | 'driver' | 'loader';
+type BlitzCrewType = "commander" | "radioman" | "gunner" | "driver" | "loader";
 const blitzCrewTypeToBlitzkit: Record<BlitzCrewType, CrewType> = {
   commander: CrewType.COMMANDER,
   driver: CrewType.DRIVER,
@@ -163,11 +160,11 @@ const blitzCrewTypeToBlitzkit: Record<BlitzCrewType, CrewType> = {
   radioman: CrewType.RADIOMAN,
 };
 const blitzkitCrewTypeToBlitz: Record<CrewType, BlitzCrewType> = {
-  [CrewType.COMMANDER]: 'commander',
-  [CrewType.DRIVER]: 'driver',
-  [CrewType.GUNNER]: 'gunner',
-  [CrewType.LOADER]: 'loader',
-  [CrewType.RADIOMAN]: 'radioman',
+  [CrewType.COMMANDER]: "commander",
+  [CrewType.DRIVER]: "driver",
+  [CrewType.GUNNER]: "gunner",
+  [CrewType.LOADER]: "loader",
+  [CrewType.RADIOMAN]: "radioman",
 };
 interface VehicleDefinitions {
   invisibility: {
@@ -209,14 +206,14 @@ interface VehicleDefinitions {
           | {
               chanceToHitByProjectile: number;
               chanceToHitByExplosion: number;
-              '#text': number;
+              "#text": number;
             };
         rightTrack:
           | number
           | {
               chanceToHitByProjectile: number;
               chanceToHitByExplosion: number;
-              '#text': number;
+              "#text": number;
             };
       };
     };
@@ -251,7 +248,7 @@ interface VehicleDefinitions {
               | {
                   chanceToHitByProjectile: number;
                   chanceToHitByExplosion: number;
-                  '#text': number;
+                  "#text": number;
                 };
           };
           invisibilityFactorAtShot: number | number[];
@@ -294,17 +291,17 @@ interface VehicleDefinitions {
         {
           id: 0;
           armors: string;
-          type: 'default';
+          type: "default";
           enabled: true;
-          factorsModifiers: '';
-          default: '';
+          factorsModifiers: "";
+          default: "";
         },
         {
           id: 1;
           armors: string;
-          type: 'default';
+          type: "default";
           enabled: false;
-          factorsModifiers: '';
+          factorsModifiers: "";
         },
       ];
     };
@@ -316,8 +313,8 @@ export interface VehicleDefinitionList {
     userString: string;
     shortUserString?: string;
     description: string;
-    price: number | { gold: ''; '#text': number };
-    sellPrice?: { gold: ''; '#text': number };
+    price: number | { gold: ""; "#text": number };
+    sellPrice?: { gold: ""; "#text": number };
     enrichmentPermanentCost: number;
     notInShop?: boolean;
     tags: string;
@@ -399,7 +396,7 @@ export interface ConsumablesCommon {
       exclude?: { vehicle: ConsumablesVehicleFilter; nations?: string };
     };
     script: {
-      '#text': string;
+      "#text": string;
       automatic?: boolean;
       cooldown: number;
       duration?: number;
@@ -421,7 +418,7 @@ export interface ProvisionsCommon {
       exclude?: { vehicle: ConsumablesVehicleFilter; nations?: string };
     };
     script: {
-      '#text': string;
+      "#text": string;
       automatic?: boolean;
       shotEffect?: string;
       bonusValues?: { [key: string]: number };
@@ -539,10 +536,10 @@ const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
 };
 
 export async function definitions() {
-  console.log('Building definitions...');
+  console.log("Building definitions...");
 
   const gameDefinitions: GameDefinitions = {
-    version: (await readStringDVPL(`${DATA}/version.txt`)).split(' ')[0],
+    version: (await readStringDVPL(`${DATA}/version.txt`)).split(" ")[0],
     nations: (
       await readYAMLDVPL<AvailableNationsYaml>(`${DATA}/available_nations.yaml`)
     ).available_nations,
@@ -568,24 +565,24 @@ export async function definitions() {
     },
   };
   const nations = await readdir(`${DATA}/XML/item_defs/vehicles`).then(
-    (nations) => nations.filter((nation) => nation !== 'common'),
+    (nations) => nations.filter((nation) => nation !== "common")
   );
   const tankStringIdMap: Record<string, number> = {};
   const optionalDevices = await readXMLDVPL<{ root: OptionalDevices }>(
-    `${DATA}/XML/item_defs/vehicles/common/optional_devices.xml`,
+    `${DATA}/XML/item_defs/vehicles/common/optional_devices.xml`
   );
   const stringsI18n: Record<string, Record<string, string>> = {};
 
   await Promise.all(
-    SUPPORTED_LOCALES.map(async (locale) => {
+    locales.supported.map(async ({ locale }) => {
       const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
       const cache = await fetch(
-        `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
+        `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`
       )
         .then((response) => response.text())
         .then((string) => parseYaml(string) as BlitzStrings);
       const preInstalled = await readYAMLDVPL<BlitzStrings>(
-        `${DATA}/Strings/${blitzLocale}.yaml`,
+        `${DATA}/Strings/${blitzLocale}.yaml`
       );
 
       stringsI18n[locale] = {
@@ -594,28 +591,28 @@ export async function definitions() {
       };
 
       console.log(`Loaded strings for ${locale}`);
-    }),
+    })
   );
 
   function getString(name: string) {
-    const locales: Record<string, string> = {
-      [DEFAULT_LOCALE]: stringsI18n[DEFAULT_LOCALE][name],
+    const collection: Record<string, string> = {
+      [locales.default]: stringsI18n[locales.default][name],
     };
 
-    for (const locale of SUPPORTED_LOCALES) {
+    for (const { locale } of locales.supported) {
       const localizedString = stringsI18n[locale][name];
 
       if (
         localizedString === undefined ||
-        localizedString === locales[DEFAULT_LOCALE]
+        localizedString === collection[locales.default]
       ) {
         continue;
       }
 
-      locales[locale] = localizedString;
+      collection[locale] = localizedString;
     }
 
-    return { locales } satisfies I18nString;
+    return { locales: collection } satisfies I18nString;
   }
 
   const optionalDeviceSlots = await readXMLDVPL<{
@@ -626,65 +623,65 @@ export async function definitions() {
 
   for (const match of (
     await readStringDVPL(
-      `${DATA}/XML/item_defs/vehicles/common/consumables/list.xml`,
+      `${DATA}/XML/item_defs/vehicles/common/consumables/list.xml`
     )
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
-    if (match[1] === 'prototypes') continue;
+    if (match[1] === "prototypes") continue;
 
     Object.assign(
       consumables,
       (
         await readXMLDVPL<{ root: ConsumablesCommon }>(
-          `${DATA}/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`,
+          `${DATA}/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`
         )
-      ).root,
+      ).root
     );
   }
 
   for (const match of (
     await readStringDVPL(
-      `${DATA}/XML/item_defs/vehicles/common/provisions/list.xml`,
+      `${DATA}/XML/item_defs/vehicles/common/provisions/list.xml`
     )
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
-    if (match[1] === 'prototypes') continue;
+    if (match[1] === "prototypes") continue;
 
     Object.assign(
       provisions,
       (
         await readXMLDVPL<{ root: ConsumablesCommon }>(
-          `${DATA}/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`,
+          `${DATA}/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`
         )
-      ).root,
+      ).root
     );
   }
 
   const avatar = await readXMLDVPL<{ root: Avatar }>(
-    `${DATA}/XML/item_defs/tankmen/avatar.xml`,
+    `${DATA}/XML/item_defs/tankmen/avatar.xml`
   );
   const maps = await readYAMLDVPL<Maps>(`${DATA}/maps.yaml`);
   const tankXps = new Map<number, ResearchCost>();
   const camouflagesXml = await readXMLDVPL<{ root: CamouflagesXML }>(
-    `${DATA}/XML/item_defs/vehicles/common/camouflages.xml`,
+    `${DATA}/XML/item_defs/vehicles/common/camouflages.xml`
   );
   const camouflagesYaml = await readYAMLDVPL<CamouflagesYaml>(
-    `${DATA}/camouflages.yaml`,
+    `${DATA}/camouflages.yaml`
   );
   const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
   const squadBattleTypeStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
+    `${DATA}/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
   );
   const gameTypeSelectorStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
+    `${DATA}/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
   );
   const gameModeNativeNames: Record<string, number> = {};
   const combatRoles = await readYAMLDVPL<CombatRolesYaml>(
-    `${DATA}/XML/item_defs/vehicles/common/combat_roles.yaml`,
+    `${DATA}/XML/item_defs/vehicles/common/combat_roles.yaml`
   );
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
 
   for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
+    /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g
   )) {
     const id = Number(match[1]);
     const name = getString(match[2]);
@@ -696,7 +693,7 @@ export async function definitions() {
   }
 
   for (const match of gameTypeSelectorStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g,
+    /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g
   )) {
     Object.entries(gameModeNativeNames).forEach(([key, value]) => {
       if (key.toLowerCase() === match[2].toLowerCase()) {
@@ -730,7 +727,7 @@ export async function definitions() {
 
   for (const nation of nations) {
     const tankList = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`,
+      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
     );
 
     for (const tankKey in tankList.root) {
@@ -745,10 +742,10 @@ export async function definitions() {
       ).locales.en;
 
       let slug = deburr(name).toLowerCase();
-      slug = slug.replaceAll(nonAlphanumericRegex, '-');
-      slug = slug.replaceAll(multipleDashesRegex, '-');
-      slug = slug.replaceAll(trailingDashRegex, '');
-      slug = slug.replaceAll(leadingDashRegex, '');
+      slug = slug.replaceAll(nonAlphanumericRegex, "-");
+      slug = slug.replaceAll(multipleDashesRegex, "-");
+      slug = slug.replaceAll(trailingDashRegex, "");
+      slug = slug.replaceAll(leadingDashRegex, "");
 
       idToNation[tankId] = nation;
 
@@ -769,17 +766,17 @@ export async function definitions() {
     }
 
     console.warn(
-      `Multiple tanks share slug ${slug}: ${requesters.map(({ key }) => key).join(', ')}`,
+      `Multiple tanks share slug ${slug}: ${requesters.map(({ key }) => key).join(", ")}`
     );
 
     if (requesters.length !== 2) {
-      throw new Error('Unresolvable number of duplicates :(');
+      throw new Error("Unresolvable number of duplicates :(");
     }
 
-    const nonCanonical = requesters.find(({ key }) => key.endsWith('TUR'));
+    const nonCanonical = requesters.find(({ key }) => key.endsWith("TUR"));
 
     if (nonCanonical === undefined) {
-      console.log('Using nations to discriminate');
+      console.log("Using nations to discriminate");
       // both are non-tutorial tanks, will have to discriminate using nation
 
       requesters.forEach(({ id, key }) => {
@@ -793,13 +790,13 @@ export async function definitions() {
         slugs.set(id, `${slug}-${discriminator}`);
       });
     } else {
-      console.log('Using tutorial bot suffix to discriminate');
+      console.log("Using tutorial bot suffix to discriminate");
 
-      const canonical = requesters.find(({ key }) => !key.endsWith('TUR'));
+      const canonical = requesters.find(({ key }) => !key.endsWith("TUR"));
 
       if (canonical === undefined) {
         throw new Error(
-          'Two tutorial bots share the same slug? The world is truly broken.',
+          "Two tutorial bots share the same slug? The world is truly broken."
         );
       }
 
@@ -812,7 +809,7 @@ export async function definitions() {
 
   for (const nation of nations) {
     const tankList = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`,
+      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
     );
     const turretList = await readXMLDVPL<{
       root: TurretDefinitionsList;
@@ -839,16 +836,16 @@ export async function definitions() {
             const typeTyped = type as keyof BlitzModuleType;
             let rawId: number;
 
-            if (typeTyped === 'chassis') {
-              rawId = chassisList.root.ids[item['#text']];
-            } else if (typeTyped === 'engine') {
-              rawId = enginesList.root.ids[item['#text']];
-            } else if (typeTyped === 'gun') {
-              rawId = gunList.root.ids[item['#text']];
-            } else if (typeTyped === 'turret') {
-              rawId = turretList.root.ids[item['#text']];
-            } else if (typeTyped === 'vehicle') {
-              rawId = tankList.root[item['#text']].id;
+            if (typeTyped === "chassis") {
+              rawId = chassisList.root.ids[item["#text"]];
+            } else if (typeTyped === "engine") {
+              rawId = enginesList.root.ids[item["#text"]];
+            } else if (typeTyped === "gun") {
+              rawId = gunList.root.ids[item["#text"]];
+            } else if (typeTyped === "turret") {
+              rawId = turretList.root.ids[item["#text"]];
+            } else if (typeTyped === "vehicle") {
+              rawId = tankList.root[item["#text"]].id;
             }
 
             return {
@@ -856,16 +853,16 @@ export async function definitions() {
               type: blitzModuleTypeToBlitzkit[typeTyped],
               cost: {
                 type:
-                  typeof item.cost === 'number'
-                    ? 'xp'
-                    : item.cost.split(':')[0],
+                  typeof item.cost === "number"
+                    ? "xp"
+                    : item.cost.split(":")[0],
                 value:
-                  typeof item.cost === 'number'
+                  typeof item.cost === "number"
                     ? item.cost
-                    : Number(item.cost.split(':')[1]),
+                    : Number(item.cost.split(":")[1]),
               },
             } satisfies Unlock;
-          }),
+          })
         )
         .flat();
     }
@@ -880,17 +877,17 @@ export async function definitions() {
       const tank = tankList.root[tankKey];
       let tankPrice: TankPrice;
       const tankDefinition = await readXMLDVPL<{ root: VehicleDefinitions }>(
-        `${DATA}/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
+        `${DATA}/XML/item_defs/vehicles/${nation}/${tankKey}.xml`
       );
       const tankParameters = await readYAMLDVPL<TankParameters>(
-        `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
+        `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
       );
       const turretOrigin = tankDefinition.root.hull.turretPositions.turret
-        .split(' ')
+        .split(" ")
         .map(Number) as Vector3Tuple;
       const tankId = toUniqueId(nation, tank.id);
 
-      const tankTags = tank.tags.split(' ');
+      const tankTags = tank.tags.split(" ");
       const hullArmor: Armor = { spaced: [], thickness: {} };
       const equipment = tankDefinition.root.optDevicePreset;
       tankStringIdMap[`${nation}:${tankKey}`] = tankId;
@@ -898,16 +895,16 @@ export async function definitions() {
 
       if (slug === undefined) {
         throw new Error(
-          `Could not find slug for ${nation}/${tankKey} (${tankId})`,
+          `Could not find slug for ${nation}/${tankKey} (${tankId})`
         );
       }
 
       if (tank.sellPrice) {
         tankPrice = {
           type: TankPriceType.GOLD,
-          value: tank.sellPrice['#text'] * 2,
+          value: tank.sellPrice["#text"] * 2,
         };
-      } else if (typeof tank.price === 'number') {
+      } else if (typeof tank.price === "number") {
         tankPrice = {
           type: TankPriceType.CREDITS,
           value: tank.price,
@@ -915,12 +912,12 @@ export async function definitions() {
       } else {
         tankPrice = {
           type: TankPriceType.CREDITS,
-          value: tank.price['#text'] * 400,
+          value: tank.price["#text"] * 400,
         };
       }
 
       Object.keys(tankDefinition.root.hull.armor)
-        .filter((name) => name.startsWith('armor_'))
+        .filter((name) => name.startsWith("armor_"))
         .forEach((name) => {
           const armorIdString = name.match(/armor_(\d+)/)?.[1];
 
@@ -931,25 +928,25 @@ export async function definitions() {
           const armorId = parseInt(armorIdString);
           const armorRaw = tankDefinition.root.hull.armor[name];
 
-          if (typeof armorRaw === 'number') {
+          if (typeof armorRaw === "number") {
             hullArmor.thickness[armorId] = armorRaw;
           } else {
             if (!hullArmor.spaced) hullArmor.spaced = [];
-            hullArmor.thickness[armorId] = armorRaw['#text'];
+            hullArmor.thickness[armorId] = armorRaw["#text"];
             hullArmor.spaced.push(armorId);
           }
         });
       const crew: Crew[] = [];
-      const fixedCamouflage = tankTags.includes('eventCamouflage_user');
+      const fixedCamouflage = tankTags.includes("eventCamouflage_user");
       const totalUnlocks: UnlocksListing[] = [];
 
       Object.entries(tankDefinition.root.crew).forEach(([crewKey, value]) => {
         let entry: Crew;
         const index = crew.findIndex(
-          ({ type }) => blitzkitCrewTypeToBlitz[type] === crewKey,
+          ({ type }) => blitzkitCrewTypeToBlitz[type] === crewKey
         );
         if (index === -1) {
-          if (crewKey === '#text') return;
+          if (crewKey === "#text") return;
           entry = {
             type: blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
             count: 0,
@@ -960,10 +957,10 @@ export async function definitions() {
           entry = crew[index];
         }
 
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
           entry.count++;
 
-          if (value !== '') {
+          if (value !== "") {
             entry.substitute = value.split(/\n| /).map((member) => {
               return blitzCrewTypeToBlitzkit[member.trim() as BlitzCrewType];
             });
@@ -980,14 +977,14 @@ export async function definitions() {
       const camouflages = camouflagesXmlEntries
         .filter(([, camo]) => {
           if (!camo.vehicleFilter.include) return false;
-          if (camo.unlockCostCategory !== 'legendary-skins-gold') return false;
+          if (camo.unlockCostCategory !== "legendary-skins-gold") return false;
 
           const includeArray = Array.isArray(camo.vehicleFilter.include)
             ? camo.vehicleFilter.include
             : [camo.vehicleFilter.include];
 
           return includeArray.some((filter) => {
-            if ('vehicle' in filter && filter.vehicle?.name) {
+            if ("vehicle" in filter && filter.vehicle?.name) {
               return filter.vehicle.name === `${nation}:${tankKey}`;
             }
 
@@ -1009,7 +1006,7 @@ export async function definitions() {
         speed_forwards: tankDefinition.root.speedLimits.forward,
         speed_backwards: tankDefinition.root.speedLimits.backward,
         equipment_preset:
-          typeof equipment === 'string' ? equipment : equipment.at(-1)!,
+          typeof equipment === "string" ? equipment : equipment.at(-1)!,
         max_consumables: tankDefinition.root.consumableSlots,
         max_provisions: tankDefinition.root.provisionSlots,
         name:
@@ -1018,15 +1015,15 @@ export async function definitions() {
             : undefined) ?? getString(tank.userString),
         slug,
         nation,
-        type: tankTags.includes('collectible')
+        type: tankTags.includes("collectible")
           ? TankType.COLLECTOR
-          : (typeof tank.price === 'number' ? false : 'gold' in tank.price)
+          : (typeof tank.price === "number" ? false : "gold" in tank.price)
             ? TankType.PREMIUM
             : TankType.RESEARCHABLE,
         tier: tank.level,
         class: blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
-        testing: tankTags.includes('testTank'),
-        deprecated: tankTags.includes('deprecated'),
+        testing: tankTags.includes("testTank"),
+        deprecated: tankTags.includes("deprecated"),
         price: tankPrice,
         camouflage_still: tankDefinition.root.invisibility.still,
         camouflage_moving: tankDefinition.root.invisibility.moving,
@@ -1039,12 +1036,12 @@ export async function definitions() {
       if (tank.combatRole) {
         Object.entries(tank.combatRole).forEach(([gameMode, role]) => {
           const id = Object.entries(gameModeNativeNames).find(
-            ([key]) => key.toLowerCase() === gameMode.toLowerCase(),
+            ([key]) => key.toLowerCase() === gameMode.toLowerCase()
           )?.[1];
 
           if (id === undefined) {
             throw new Error(
-              `Unknown game mode in tank ${tankKey}: ${gameMode}`,
+              `Unknown game mode in tank ${tankKey}: ${gameMode}`
             );
           }
 
@@ -1074,11 +1071,11 @@ export async function definitions() {
         const track = tankDefinition.root.chassis[key];
         const trackId = toUniqueId(nation, chassisList.root.ids[key]);
         const terrainResistances = track.terrainResistance
-          .split(' ')
+          .split(" ")
           .map(Number);
         const trackArmorRaw = track.armor.leftTrack;
         const hullOrigin = track.hullPosition
-          .split(' ')
+          .split(" ")
           .map(Number) as Vector3Tuple;
 
         totalUnlocks.push(track.unlocks);
@@ -1098,9 +1095,9 @@ export async function definitions() {
 
         modelDefinitions.models[tankId].tracks[trackId] = {
           thickness:
-            typeof trackArmorRaw === 'number'
+            typeof trackArmorRaw === "number"
               ? trackArmorRaw
-              : trackArmorRaw['#text'],
+              : trackArmorRaw["#text"],
           origin: vector3TupleToBlitzkit(hullOrigin),
         };
       });
@@ -1126,28 +1123,28 @@ export async function definitions() {
         (turretKey, turretIndex) => {
           const turret = tankDefinition.root.turrets0[turretKey];
           const turretModel = Number(
-            parsePath(turret.models.undamaged).name.split('_')[1],
+            parsePath(turret.models.undamaged).name.split("_")[1]
           );
           const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
           const turretYaw = (
-            typeof turret.yawLimits === 'string'
+            typeof turret.yawLimits === "string"
               ? turret.yawLimits
               : turret.yawLimits.at(-1)!
           )
-            .split(' ')
+            .split(" ")
             .map(Number) as [number, number];
           const gunOrigin = (
-            typeof turret.gunPosition === 'string'
+            typeof turret.gunPosition === "string"
               ? turret.gunPosition
               : turret.gunPosition[0]
           )
-            .split(' ')
+            .split(" ")
             .map(Number) as Vector3Tuple;
           const turretArmor: Armor = { thickness: {}, spaced: [] };
 
           totalUnlocks.push(turret.unlocks);
           Object.keys(turret.armor)
-            .filter((name) => name.startsWith('armor_'))
+            .filter((name) => name.startsWith("armor_"))
             .forEach((name) => {
               const armorIdString = name.match(/armor_(\d+)/)?.[1];
 
@@ -1158,11 +1155,11 @@ export async function definitions() {
               const armorId = parseInt(armorIdString);
               const armorRaw = turret.armor[name];
 
-              if (typeof armorRaw === 'number') {
+              if (typeof armorRaw === "number") {
                 turretArmor.thickness[armorId] = armorRaw;
               } else {
                 if (!turretArmor.spaced) turretArmor.spaced = [];
-                turretArmor.thickness[armorId] = armorRaw['#text'];
+                turretArmor.thickness[armorId] = armorRaw["#text"];
                 turretArmor.spaced.push(armorId);
               }
             });
@@ -1194,12 +1191,12 @@ export async function definitions() {
               min: vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.min,
+                ].bbox.min
               ),
               max: vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.max,
+                ].bbox.max
               ),
             },
           };
@@ -1210,40 +1207,40 @@ export async function definitions() {
             const gunListEntry = gunList.root.shared[gunKey];
             const pitchLimitsRaw = gun.pitchLimits ?? gunListEntry.pitchLimits;
             const gunPitch = (
-              typeof pitchLimitsRaw === 'string'
+              typeof pitchLimitsRaw === "string"
                 ? pitchLimitsRaw
                 : pitchLimitsRaw.at(-1)!
             )
-              .split(' ')
+              .split(" ")
               .map(Number) as [number, number];
             const gunModel = Number(
-              parsePath(gun.models.undamaged).name.split('_')[1],
+              parsePath(gun.models.undamaged).name.split("_")[1]
             );
             const gunName = getString(gunListEntry.userString);
             const gunType =
-              'clip' in gun
+              "clip" in gun
                 ? gun.pumpGunMode
-                  ? 'autoReloader'
-                  : 'autoLoader'
-                : 'regular';
+                  ? "autoReloader"
+                  : "autoLoader"
+                : "regular";
             // const gunReload = gun.reloadTime;
             // const shellReloads =
-            const gunClipCount = gunType === 'regular' ? 1 : gun.clip!.count;
+            const gunClipCount = gunType === "regular" ? 1 : gun.clip!.count;
             const front = gun.extraPitchLimits?.front
-              ? gun.extraPitchLimits.front.split(' ').map(Number)
+              ? gun.extraPitchLimits.front.split(" ").map(Number)
               : undefined;
             const back = gun.extraPitchLimits?.back
-              ? gun.extraPitchLimits.back.split(' ').map(Number)
+              ? gun.extraPitchLimits.back.split(" ").map(Number)
               : undefined;
             const transition = gun.extraPitchLimits?.transition
-              ? typeof gun.extraPitchLimits.transition === 'number'
+              ? typeof gun.extraPitchLimits.transition === "number"
                 ? gun.extraPitchLimits.transition
                 : gun.extraPitchLimits.transition.at(-1)!
               : undefined;
             const gunArmor: Armor = { thickness: {}, spaced: [] };
             const shotDispersionFactors =
               gun.shotDispersionFactors ?? gunListEntry.shotDispersionFactors;
-            const maskName = `gun_${gunModel.toString().padStart(2, '0')}`;
+            const maskName = `gun_${gunModel.toString().padStart(2, "0")}`;
             const maskEnabled =
               tankParameters.maskSlice?.[maskName]?.enabled ?? false;
             let mask: number | undefined;
@@ -1251,7 +1248,7 @@ export async function definitions() {
 
             if (gun.extras?.trayShell) {
               const types = gun.extras.trayShell.kinds
-                .split(' ')
+                .split(" ")
                 .map((string) => {
                   const trimmed = string.trim();
 
@@ -1263,8 +1260,8 @@ export async function definitions() {
                 });
               const sectorNames = Object.keys(gun.extras.trayShell.sectors);
 
-              if (sectorNames.length !== 1 || sectorNames[0] !== 'sector') {
-                throw new SyntaxError('Invalid tray shell sector');
+              if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
+                throw new SyntaxError("Invalid tray shell sector");
               }
 
               const sector = gun.extras.trayShell.sectors.sector;
@@ -1287,7 +1284,7 @@ export async function definitions() {
 
             totalUnlocks.push(gun.unlocks);
             Object.keys(gun.armor)
-              .filter((name) => name.startsWith('armor_'))
+              .filter((name) => name.startsWith("armor_"))
               .forEach((name) => {
                 const armorIdString = name.match(/armor_(\d+)/)?.[1];
                 if (armorIdString === undefined) {
@@ -1295,11 +1292,11 @@ export async function definitions() {
                 }
                 const armorId = parseInt(armorIdString);
                 const armorRaw = gun.armor[name];
-                if (typeof armorRaw === 'number') {
+                if (typeof armorRaw === "number") {
                   gunArmor.thickness[armorId] = armorRaw;
                 } else {
                   if (!gunArmor.spaced) gunArmor.spaced = [];
-                  gunArmor.thickness[armorId] = armorRaw['#text'];
+                  gunArmor.thickness[armorId] = armorRaw["#text"];
                   gunArmor.spaced.push(armorId);
                 }
               });
@@ -1312,7 +1309,7 @@ export async function definitions() {
               tier: gunListEntry.level,
               shells: [],
               camouflage_loss:
-                typeof gun.invisibilityFactorAtShot === 'number'
+                typeof gun.invisibilityFactorAtShot === "number"
                   ? gun.invisibilityFactorAtShot
                   : gun.invisibilityFactorAtShot.at(-1)!,
               aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
@@ -1332,26 +1329,26 @@ export async function definitions() {
                     }
                   : undefined,
               gun_type:
-                gunType === 'regular'
+                gunType === "regular"
                   ? {
-                      $case: 'regular',
+                      $case: "regular",
                       value: {
                         reload: gun.reloadTime,
                       },
                     }
-                  : gunType === 'autoReloader'
+                  : gunType === "autoReloader"
                     ? {
-                        $case: 'auto_reloader',
+                        $case: "auto_reloader",
                         value: {
                           intra_clip: 60 / gun.clip!.rate,
                           shell_count: gunClipCount,
                           shell_reloads: gun
-                            .pumpGunReloadTimes!.split(' ')
+                            .pumpGunReloadTimes!.split(" ")
                             .map(Number),
                         },
                       }
                     : {
-                        $case: 'auto_loader',
+                        $case: "auto_loader",
                         value: {
                           intra_clip: 60 / gun.clip!.rate,
                           clip_reload: gun.reloadTime,
@@ -1367,9 +1364,9 @@ export async function definitions() {
               thickness:
                 gun.armor.gun === undefined
                   ? 0
-                  : typeof gun.armor.gun === 'number'
+                  : typeof gun.armor.gun === "number"
                     ? gun.armor.gun
-                    : gun.armor.gun['#text'],
+                    : gun.armor.gun["#text"],
               pitch: {
                 min: gunPitch[0],
                 max: gunPitch[1],
@@ -1398,8 +1395,8 @@ export async function definitions() {
               const shellId = toUniqueId(nation, shell.id);
               const shellName = getString(shell.userString);
               const penetrationRaw = gunShellEntry.piercingPower
-                .split(' ')
-                .filter((penetrationString) => penetrationString !== '')
+                .split(" ")
+                .filter((penetrationString) => penetrationString !== "")
                 .map(Number);
 
               tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
@@ -1415,7 +1412,7 @@ export async function definitions() {
                 ricochet: shell.ricochetAngle,
                 type: blitzShellKindToBlitzkit[shell.kind],
                 explosion_radius:
-                  shell.kind === 'HIGH_EXPLOSIVE'
+                  shell.kind === "HIGH_EXPLOSIVE"
                     ? (shell.explosionRadius ?? 0)
                     : undefined,
                 icon: shell.icon,
@@ -1427,7 +1424,7 @@ export async function definitions() {
               });
             });
           });
-        },
+        }
       );
 
       totalUnlocks.forEach((unlocks) => {
@@ -1436,8 +1433,8 @@ export async function definitions() {
         Object.entries(unlocks).forEach(([key, value]) => {
           (Array.isArray(value) ? value : [value]).forEach((vehicle) => {
             switch (key as keyof BlitzModuleType) {
-              case 'vehicle': {
-                const tankListEntry = tankList.root[vehicle['#text']];
+              case "vehicle": {
+                const tankListEntry = tankList.root[vehicle["#text"]];
                 const currentTank = tankDefinitions.tanks[tankId];
                 const successorId = toUniqueId(nation, tankListEntry.id);
 
@@ -1452,34 +1449,34 @@ export async function definitions() {
                 break;
               }
 
-              case 'gun': {
+              case "gun": {
                 gunXps.set(
-                  toUniqueId(nation, gunList.root.ids[vehicle['#text']]),
-                  parseResearchCost(vehicle.cost),
+                  toUniqueId(nation, gunList.root.ids[vehicle["#text"]]),
+                  parseResearchCost(vehicle.cost)
                 );
                 break;
               }
 
-              case 'turret': {
+              case "turret": {
                 turretXps.set(
-                  toUniqueId(nation, turretList.root.ids[vehicle['#text']]),
-                  parseResearchCost(vehicle.cost),
+                  toUniqueId(nation, turretList.root.ids[vehicle["#text"]]),
+                  parseResearchCost(vehicle.cost)
                 );
                 break;
               }
 
-              case 'engine': {
+              case "engine": {
                 engineXps.set(
-                  toUniqueId(nation, enginesList.root.ids[vehicle['#text']]),
-                  parseResearchCost(vehicle.cost),
+                  toUniqueId(nation, enginesList.root.ids[vehicle["#text"]]),
+                  parseResearchCost(vehicle.cost)
                 );
                 break;
               }
 
-              case 'chassis': {
+              case "chassis": {
                 trackXps.set(
-                  toUniqueId(nation, chassisList.root.ids[vehicle['#text']]),
-                  parseResearchCost(vehicle.cost),
+                  toUniqueId(nation, chassisList.root.ids[vehicle["#text"]]),
+                  parseResearchCost(vehicle.cost)
                 );
                 break;
               }
@@ -1520,18 +1517,18 @@ export async function definitions() {
 
   Object.entries(optionalDevices.root).forEach(
     ([optionalDeviceKey, optionalDeviceEntry]) => {
-      if (optionalDeviceKey === 'nextAvailableId') return;
+      if (optionalDeviceKey === "nextAvailableId") return;
 
       equipmentDefinitions.equipments[optionalDeviceEntry.id] = {
         name: getString(optionalDeviceEntry.userString),
         description: getString(optionalDeviceEntry.description),
       };
-    },
+    }
   );
 
   Object.entries(optionalDeviceSlots.root.presets).forEach(
     ([optionalDeviceSlotKey, optionalDeviceSlotEntry]) => {
-      if (optionalDeviceSlotKey === 'emptyPreset') return;
+      if (optionalDeviceSlotKey === "emptyPreset") return;
 
       equipmentDefinitions.presets[optionalDeviceSlotKey] = {
         slots: Object.values(optionalDeviceSlotEntry)
@@ -1545,7 +1542,7 @@ export async function definitions() {
           })
           .flat(),
       };
-    },
+    }
   );
 
   Object.entries(consumables).forEach(([key, consumable]) => {
@@ -1553,7 +1550,7 @@ export async function definitions() {
 
     const entry: Consumable = {
       id: consumable.id,
-      game_mode_exclusive: 'gameModeFilter' in consumable,
+      game_mode_exclusive: "gameModeFilter" in consumable,
       cooldown: consumable.script.cooldown,
       duration: consumable.script.duration,
       name: getString(consumable.userString),
@@ -1569,20 +1566,20 @@ export async function definitions() {
       if (includeRaw) {
         entry.include = [];
 
-        if ('minLevel' in includeRaw) {
+        if ("minLevel" in includeRaw) {
           entry.include.push({
             filter_type: {
-              $case: 'tiers',
+              $case: "tiers",
               value: {
                 min: includeRaw.minLevel,
                 max: includeRaw.maxLevel,
               },
             },
           });
-        } else if ('name' in includeRaw) {
+        } else if ("name" in includeRaw) {
           entry.include.push({
             filter_type: {
-              $case: 'ids',
+              $case: "ids",
               value: {
                 ids: includeRaw.name.split(/ +/).map((key) => {
                   return tankStringIdMap[key];
@@ -1590,14 +1587,14 @@ export async function definitions() {
               },
             },
           });
-        } else throw new SyntaxError('Unhandled include type');
+        } else throw new SyntaxError("Unhandled include type");
 
         if (consumable.vehicleFilter?.include.nations) {
           entry.include.push({
             filter_type: {
-              $case: 'nations',
+              $case: "nations",
               value: {
-                nations: consumable.vehicleFilter.include.nations.split(' '),
+                nations: consumable.vehicleFilter.include.nations.split(" "),
               },
             },
           });
@@ -1607,10 +1604,10 @@ export async function definitions() {
       if (excludeRaw) {
         entry.exclude = [];
 
-        if ('name' in excludeRaw) {
+        if ("name" in excludeRaw) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'ids',
+              $case: "ids",
               value: {
                 ids: excludeRaw.name.split(/ +/).map((key) => {
                   return tankStringIdMap[key];
@@ -1618,30 +1615,30 @@ export async function definitions() {
               },
             },
           });
-        } else if ('extendedTags' in excludeRaw) {
+        } else if ("extendedTags" in excludeRaw) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'categories',
+              $case: "categories",
               value: {
                 categories: excludeRaw.extendedTags
-                  .split(' ')
+                  .split(" ")
                   .map(
                     (item) =>
                       blitzTankFilterDefinitionCategoryToBlitzkit[
                         item as BlitzTankFilterDefinitionCategory
-                      ],
+                      ]
                   ),
               },
             },
           });
-        } else throw new SyntaxError('Unhandled exclude type');
+        } else throw new SyntaxError("Unhandled exclude type");
 
         if (consumable.vehicleFilter?.exclude?.nations) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'nations',
+              $case: "nations",
               value: {
-                nations: consumable.vehicleFilter.exclude.nations.split(' '),
+                nations: consumable.vehicleFilter.exclude.nations.split(" "),
               },
             },
           });
@@ -1657,7 +1654,7 @@ export async function definitions() {
       id: provision.id,
       exclude: [],
       include: [],
-      game_mode_exclusive: 'gameModeFilter' in provision,
+      game_mode_exclusive: "gameModeFilter" in provision,
       name: getString(provision.userString),
     };
     provisionDefinitions.provisions[provision.id] = entry;
@@ -1669,20 +1666,20 @@ export async function definitions() {
       if (includeRaw) {
         entry.include = [];
 
-        if ('minLevel' in includeRaw) {
+        if ("minLevel" in includeRaw) {
           entry.include.push({
             filter_type: {
-              $case: 'tiers',
+              $case: "tiers",
               value: {
                 min: includeRaw.minLevel,
                 max: includeRaw.maxLevel,
               },
             },
           });
-        } else if ('name' in includeRaw) {
+        } else if ("name" in includeRaw) {
           entry.include.push({
             filter_type: {
-              $case: 'ids',
+              $case: "ids",
               value: {
                 ids: includeRaw.name.split(/ +/).map((key) => {
                   return tankStringIdMap[key];
@@ -1690,14 +1687,14 @@ export async function definitions() {
               },
             },
           });
-        } else throw new SyntaxError('Unhandled include type');
+        } else throw new SyntaxError("Unhandled include type");
 
         if (provision.vehicleFilter?.include.nations) {
           entry.include.push({
             filter_type: {
-              $case: 'nations',
+              $case: "nations",
               value: {
-                nations: provision.vehicleFilter.include.nations.split(' '),
+                nations: provision.vehicleFilter.include.nations.split(" "),
               },
             },
           });
@@ -1707,10 +1704,10 @@ export async function definitions() {
       if (excludeRaw) {
         entry.exclude = [];
 
-        if ('name' in excludeRaw) {
+        if ("name" in excludeRaw) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'ids',
+              $case: "ids",
               value: {
                 ids: excludeRaw.name
                   .split(/ +/)
@@ -1718,30 +1715,30 @@ export async function definitions() {
               },
             },
           });
-        } else if ('extendedTags' in excludeRaw) {
+        } else if ("extendedTags" in excludeRaw) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'categories',
+              $case: "categories",
               value: {
                 categories: excludeRaw.extendedTags
-                  .split(' ')
+                  .split(" ")
                   .map(
                     (item) =>
                       blitzTankFilterDefinitionCategoryToBlitzkit[
                         item as BlitzTankFilterDefinitionCategory
-                      ],
+                      ]
                   ),
               },
             },
           });
-        } else throw new SyntaxError('Unhandled exclude type');
+        } else throw new SyntaxError("Unhandled exclude type");
 
         if (provision.vehicleFilter?.exclude?.nations) {
           entry.exclude!.push({
             filter_type: {
-              $case: 'nations',
+              $case: "nations",
               value: {
-                nations: provision.vehicleFilter.exclude.nations.split(' '),
+                nations: provision.vehicleFilter.exclude.nations.split(" "),
               },
             },
           });
@@ -1761,11 +1758,11 @@ export async function definitions() {
     value.default_abilities.forEach((ability) => {
       if (ability in consumableNativeNames) {
         gameDefinitions.roles[value.id].consumables.push(
-          consumableNativeNames[ability],
+          consumableNativeNames[ability]
         );
       } else if (ability in provisionNativeNames) {
         gameDefinitions.roles[value.id].provisions.push(
-          provisionNativeNames[ability],
+          provisionNativeNames[ability]
         );
       } else throw new Error(`Unknown ability ${ability}`);
     });
@@ -1775,7 +1772,7 @@ export async function definitions() {
     skillDefinitions.classes[
       blitzTankClassToBlitzkit[tankClass as BlitzTankClass]
     ] = {
-      skills: skills.split(' '),
+      skills: skills.split(" "),
     };
   });
 
@@ -1786,42 +1783,42 @@ export async function definitions() {
     };
   });
 
-  await commitAssets('definitions', [
+  await commitAssets("definitions", [
     {
       content: GameDefinitions.encode(gameDefinitions).finish(),
-      path: 'definitions/game.pb',
+      path: "definitions/game.pb",
     },
     {
       content: TankDefinitions.encode(tankDefinitions).finish(),
-      path: 'definitions/tanks.pb',
+      path: "definitions/tanks.pb",
     },
     {
       content: ModelDefinitions.encode(modelDefinitions).finish(),
-      path: 'definitions/models.pb',
+      path: "definitions/models.pb",
     },
     {
       content: EquipmentDefinitions.encode(equipmentDefinitions).finish(),
-      path: 'definitions/equipment.pb',
+      path: "definitions/equipment.pb",
     },
     {
       content: ConsumableDefinitions.encode(consumableDefinitions).finish(),
-      path: 'definitions/consumables.pb',
+      path: "definitions/consumables.pb",
     },
     {
       content: ProvisionDefinitions.encode(provisionDefinitions).finish(),
-      path: 'definitions/provisions.pb',
+      path: "definitions/provisions.pb",
     },
     {
       content: SkillDefinitions.encode(skillDefinitions).finish(),
-      path: 'definitions/skills.pb',
+      path: "definitions/skills.pb",
     },
     {
       content: MapDefinitions.encode(mapDefinitions).finish(),
-      path: 'definitions/maps.pb',
+      path: "definitions/maps.pb",
     },
     {
       content: CamouflageDefinitions.encode(camouflageDefinitions).finish(),
-      path: 'definitions/camouflages.pb',
+      path: "definitions/camouflages.pb",
     },
   ]);
 }
