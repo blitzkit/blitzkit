@@ -45,6 +45,7 @@ export default defineConfig({
               (strings) => strings.website.tools[stringId].name
             ),
             url: `/${tool.id}`,
+            icon: `public/assets/images/tools/${tool.id}.webp`,
           };
         }),
 
