@@ -1,6 +1,6 @@
-import { Flex, Skeleton } from '@radix-ui/themes';
-import { memo, useRef } from 'react';
-import { useIntersection } from '../../../hooks/useIntersection';
+import { Flex, Skeleton } from "@radix-ui/themes";
+import { memo, useRef } from "react";
+import { useIntersection } from "../../../hooks/useIntersection";
 
 interface SkeletonTankCardProps {
   onIntersection?: () => void;
@@ -8,7 +8,7 @@ interface SkeletonTankCardProps {
 
 export const SkeletonTankCard = memo(
   ({ onIntersection }: SkeletonTankCardProps) => {
-    const card = useRef<HTMLDivElement>(null);
+    const card = useRef<HTMLDivElement>(null!);
 
     useIntersection(() => onIntersection?.(), card, {
       disabled: onIntersection === undefined,
@@ -21,5 +21,5 @@ export const SkeletonTankCard = memo(
       </Flex>
     );
   },
-  () => true,
+  () => true
 );

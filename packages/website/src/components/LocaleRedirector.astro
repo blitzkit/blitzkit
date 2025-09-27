@@ -1,12 +1,13 @@
 <script>
-  import { SUPPORTED_LOCALES } from "@blitzkit/i18n";
+  import locales from "@blitzkit/i18n/locales.json";
   import { getBestLocale } from "../core/i18n/getBestLocale";
+
   const isAPI = window.location.pathname.startsWith("/api");
-  const isI18nPath = SUPPORTED_LOCALES.some((locale) =>
+  const isI18nPath = locales.supported.some(({ locale }) =>
     window.location.pathname.startsWith(`/${locale}`)
   );
   const bestLocale = getBestLocale();
-  const currentPathLocale = SUPPORTED_LOCALES.find((locale) =>
+  const currentPathLocale = locales.supported.find(({ locale }) =>
     window.location.pathname.startsWith(`/${locale}`)
   );
 

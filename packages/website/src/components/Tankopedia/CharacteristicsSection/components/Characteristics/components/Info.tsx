@@ -38,7 +38,7 @@ export function Info({
     const result = fuzzysort.single(statSearch, name);
 
     if (result) {
-      label = fuzzysort.highlight(result, (match, index) => (
+      label = result.highlight((match, index) => (
         <Mark key={index}>{match}</Mark>
       ));
       highlighted = true;

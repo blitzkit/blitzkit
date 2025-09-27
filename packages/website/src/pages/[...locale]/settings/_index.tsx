@@ -1,4 +1,3 @@
-import { DEFAULT_LOCALE } from "@blitzkit/i18n";
 import { Flex, Switch, Text } from "@radix-ui/themes";
 import { LocaleSwitcher } from "../../../components/LocaleSwitcher";
 import { PageWrapper } from "../../../components/PageWrapper";
@@ -9,7 +8,7 @@ import {
 } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 
-export function Page({ locale = DEFAULT_LOCALE }: LocaleAcceptorProps) {
+export function Page({ locale }: LocaleAcceptorProps) {
   return (
     <LocaleProvider locale={locale}>
       <Content locale={locale} />

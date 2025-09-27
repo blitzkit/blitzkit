@@ -1,15 +1,15 @@
 ---
-import { assertSecret, fetchGameDefinitions } from '@blitzkit/core';
-import { DEFAULT_LOCALE } from '@blitzkit/i18n';
-import { Box, Code, Flex, Heading, Link, Text } from '@radix-ui/themes';
-import packageJson from '../../../../package.json';
-import { getStrings } from '../core/i18n/getStrings';
-import { LinkI18n } from './LinkI18n';
-import { LocaleSwitcherThemeWrapper } from './LocaleSwitcher';
+import { assertSecret, fetchGameDefinitions } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
+import { Box, Code, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import packageJson from "../../../../package.json";
+import { getStrings } from "../core/i18n/getStrings";
+import { LinkI18n } from "./LinkI18n";
+import { LocaleSwitcherThemeWrapper } from "./LocaleSwitcher";
 
 const gameDefinitions = await fetchGameDefinitions();
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
-const locale = Astro.params.locale ?? DEFAULT_LOCALE;
+const locale = Astro.params.locale ?? locales.default;
 const strings = getStrings(locale);
 ---
 
@@ -28,13 +28,13 @@ const strings = getStrings(locale);
     flexGrow="1"
     gap="5"
     position="relative"
-    direction={{ initial: 'column', sm: 'row' }}
+    direction={{ initial: "column", sm: "row" }}
   >
     <Flex
       direction="column"
       align={{
-        initial: 'center',
-        sm: 'start',
+        initial: "center",
+        sm: "start",
       }}
     >
       <Heading>BlitzKit</Heading>
@@ -51,32 +51,32 @@ const strings = getStrings(locale);
     <Flex
       gap="6"
       width={{
-        initial: '100%',
-        sm: 'auto',
+        initial: "100%",
+        sm: "auto",
       }}
     >
       <Flex
         direction="column"
         gap="1"
         align={{
-          initial: 'end',
-          sm: 'start',
+          initial: "end",
+          sm: "start",
         }}
         flexGrow={{
-          initial: '1',
-          sm: '0',
+          initial: "1",
+          sm: "0",
         }}
         flexBasis={{
-          initial: '0',
-          sm: 'auto',
+          initial: "0",
+          sm: "auto",
         }}
       >
         <Heading size="3">{strings.website.footer.about.title}</Heading>
         <Flex
           direction="column"
           align={{
-            initial: 'end',
-            sm: 'start',
+            initial: "end",
+            sm: "start",
           }}
         >
           <LinkI18n {locale} href="/docs/about/credits" color="gray">
@@ -106,12 +106,12 @@ const strings = getStrings(locale);
         direction="column"
         gap="1"
         flexGrow={{
-          initial: '1',
-          sm: '0',
+          initial: "1",
+          sm: "0",
         }}
         flexBasis={{
-          initial: '0',
-          sm: 'auto',
+          initial: "0",
+          sm: "auto",
         }}
       >
         <Heading size="3">{strings.website.footer.legal.title}</Heading>
@@ -127,11 +127,11 @@ const strings = getStrings(locale);
     </Flex>
   </Flex>
 
-  <Flex gap="5" display={{ initial: 'flex', sm: 'none' }} width="100%">
+  <Flex gap="5" display={{ initial: "flex", sm: "none" }} width="100%">
     <Flex direction="column" gap="1" flexGrow="1" flexBasis="0" align="end">
       <Text size="2" color="gray">BlitzKit</Text>
       {
-        PUBLIC_ASSET_BRANCH !== 'preview' && (
+        PUBLIC_ASSET_BRANCH !== "preview" && (
           <Text size="2" color="gray">
             WoTB
           </Text>
@@ -145,7 +145,7 @@ const strings = getStrings(locale);
         {packageJson.version}
       </Code>
       {
-        PUBLIC_ASSET_BRANCH !== 'preview' && (
+        PUBLIC_ASSET_BRANCH !== "preview" && (
           <Code size="2" color="gray">
             {gameDefinitions.version}
           </Code>
@@ -157,14 +157,14 @@ const strings = getStrings(locale);
     </Flex>
   </Flex>
 
-  <Flex gap="2" align="center" display={{ initial: 'none', sm: 'flex' }}>
+  <Flex gap="2" align="center" display={{ initial: "none", sm: "flex" }}>
     <Text size="2" color="gray">BlitzKit</Text>
     <Code size="2" color="gray">
       {packageJson.version}
     </Code>
 
     {
-      PUBLIC_ASSET_BRANCH !== 'preview' && (
+      PUBLIC_ASSET_BRANCH !== "preview" && (
         <>
           <Text size="2" color="gray">
             WoTB

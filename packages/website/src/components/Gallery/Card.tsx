@@ -1,5 +1,5 @@
-import { asset, Avatar } from '@blitzkit/core';
-import { Cross1Icon, DownloadIcon } from '@radix-ui/react-icons';
+import { asset, Avatar } from "@blitzkit/core";
+import { Cross1Icon, DownloadIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
   Flex,
@@ -7,11 +7,11 @@ import {
   Link,
   Skeleton,
   Text,
-} from '@radix-ui/themes';
-import { useRef } from 'react';
-import { useIntersection } from '../../hooks/useIntersection';
-import { useLocale } from '../../hooks/useLocale';
-import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
+} from "@radix-ui/themes";
+import { useRef } from "react";
+import { useIntersection } from "../../hooks/useIntersection";
+import { useLocale } from "../../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 
 type GalleryCardProps = MaybeSkeletonComponentProps<{
   avatar: Avatar;
@@ -19,9 +19,9 @@ type GalleryCardProps = MaybeSkeletonComponentProps<{
 
 export function GalleryCard(props: GalleryCardProps) {
   const src = asset(
-    `gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
+    `gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`
   );
-  const card = useRef<HTMLDivElement>(null);
+  const card = useRef<HTMLDivElement>(null!);
   const { unwrap } = useLocale();
 
   useIntersection(() => props.skeleton && props.onIntersection?.(), card, {
@@ -35,7 +35,7 @@ export function GalleryCard(props: GalleryCardProps) {
       width="6rem"
       gap="1"
       ref={card}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: "pointer" }}
     >
       {props.skeleton && (
         <>
@@ -48,16 +48,16 @@ export function GalleryCard(props: GalleryCardProps) {
         <>
           <img
             style={{
-              width: '4rem',
-              height: '4.57rem',
+              width: "4rem",
+              height: "4.57rem",
               // aspect ratio 7 / 8
-              objectFit: 'cover',
+              objectFit: "cover",
             }}
             src={src}
             alt={unwrap(props.avatar.name)}
           />
 
-          <Text size="1" align="center" style={{ maxWidth: '100%' }}>
+          <Text size="1" align="center" style={{ maxWidth: "100%" }}>
             {unwrap(props.avatar.name)}
           </Text>
         </>
@@ -94,7 +94,7 @@ export function GalleryCard(props: GalleryCardProps) {
         </Flex>
 
         <Flex justify="center" mt="4">
-          <Dialog.Title align="center" style={{ maxWidth: '10rem' }}>
+          <Dialog.Title align="center" style={{ maxWidth: "10rem" }}>
             {unwrap(props.avatar.name)}
           </Dialog.Title>
         </Flex>

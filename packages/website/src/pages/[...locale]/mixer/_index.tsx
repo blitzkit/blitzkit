@@ -109,7 +109,7 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const hull = Mixer.use((state) => state.hull);
   const turretId = Mixer.use((state) => state.turret.tank.id);
   const gunId = Mixer.use((state) => state.gun.tank.id);
-  const canvas = useRef<HTMLCanvasElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null!);
   const { strings } = useLocale();
 
   return (

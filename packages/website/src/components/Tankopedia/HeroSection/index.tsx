@@ -16,7 +16,7 @@ const tankDefinitions = await awaitableTankDefinitions;
 export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const canvas = useRef<HTMLCanvasElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null!);
   const isFullScreen = useFullScreen();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const thicknessRange = useMemo(() => {

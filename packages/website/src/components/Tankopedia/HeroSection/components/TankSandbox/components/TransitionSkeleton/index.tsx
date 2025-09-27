@@ -26,8 +26,8 @@ export function TransitionSkeleton() {
   const gun = Duel.use((state) => state.protagonist.gun);
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
-  const turretContainer = useRef<Group>(null);
-  const gunContainer = useRef<Group>(null);
+  const turretContainer = useRef<Group>(null!);
+  const gunContainer = useRef<Group>(null!);
   const { gltf: armorGltf } = useArmor(tank.id);
   const { gltf: modelGltf } = useModel(tank.id);
   const modelNodes = Object.values(modelGltf.nodes);

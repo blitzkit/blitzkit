@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef } from 'react';
+import { type RefObject, useEffect, useRef } from "react";
 
 interface UseIntersectionOptions extends IntersectionObserverInit {
   disabled: boolean;
@@ -7,9 +7,9 @@ interface UseIntersectionOptions extends IntersectionObserverInit {
 export function useIntersection(
   callback: () => void,
   ref: RefObject<HTMLElement>,
-  options?: UseIntersectionOptions,
+  options?: UseIntersectionOptions
 ) {
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(null!);
 
   useEffect(() => {
     if (options?.disabled || !ref.current) return;

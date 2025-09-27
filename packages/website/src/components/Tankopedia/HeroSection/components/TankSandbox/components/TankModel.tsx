@@ -19,8 +19,8 @@ export function TankModel() {
   const turret = Duel.use((state) => state.protagonist.turret);
   const canvas = useThree((state) => state.gl.domElement);
   const hullContainer = useRef<Group>(null);
-  const turretContainer = useRef<Group>(null);
-  const gunContainer = useRef<Group>(null);
+  const turretContainer = useRef<Group>(null!);
+  const gunContainer = useRef<Group>(null!);
   const tankModelDefinition = useTankModelDefinition();
   const turretModelDefinition =
     tankModelDefinition.turrets[protagonist.turret.id];

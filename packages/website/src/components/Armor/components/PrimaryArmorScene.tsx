@@ -1,19 +1,19 @@
-import { memo, useRef } from 'react';
-import { Group } from 'three';
-import { correctZYTuple } from '../../../core/blitz/correctZYTuple';
-import { nameToArmorId } from '../../../core/blitzkit/nameToArmorId';
-import { resolveArmor } from '../../../core/blitzkit/resolveThickness';
-import { useArmor } from '../../../hooks/useArmor';
-import { useTankModelDefinition } from '../../../hooks/useTankModelDefinition';
-import { useTankTransform } from '../../../hooks/useTankTransform';
-import { Duel } from '../../../stores/duel';
-import { ModelTankWrapper } from './ModelTankWrapper';
-import { PrimaryArmorSceneComponent } from './PrimaryArmorSceneComponent';
+import { memo, useRef } from "react";
+import { Group } from "three";
+import { correctZYTuple } from "../../../core/blitz/correctZYTuple";
+import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
+import { resolveArmor } from "../../../core/blitzkit/resolveThickness";
+import { useArmor } from "../../../hooks/useArmor";
+import { useTankModelDefinition } from "../../../hooks/useTankModelDefinition";
+import { useTankTransform } from "../../../hooks/useTankTransform";
+import { Duel } from "../../../stores/duel";
+import { ModelTankWrapper } from "./ModelTankWrapper";
+import { PrimaryArmorSceneComponent } from "./PrimaryArmorSceneComponent";
 
 export const PrimaryArmorScene = memo(() => {
   const wrapper = useRef<Group>(null);
-  const turretContainer = useRef<Group>(null);
-  const gunContainer = useRef<Group>(null);
+  const turretContainer = useRef<Group>(null!);
+  const gunContainer = useRef<Group>(null!);
   const tank = Duel.use((state) => state.protagonist.tank);
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
@@ -28,7 +28,7 @@ export const PrimaryArmorScene = memo(() => {
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
   const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73),
+    state.protagonist.consumables.includes(73)
   );
 
   useTankTransform(track, turret, turretContainer, gunContainer);
@@ -37,20 +37,20 @@ export const PrimaryArmorScene = memo(() => {
     <ModelTankWrapper ref={wrapper}>
       <group position={hullOrigin}>
         {armorNodes.map((node) => {
-          const isHull = node.name.startsWith('hull_');
+          const isHull = node.name.startsWith("hull_");
           const isVisible = isHull;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
             tankModelDefinition.armor,
-            armorId,
+            armorId
           );
 
           if (
             !isVisible ||
             spaced ||
             thickness === undefined ||
-            (isDynamicArmorActive && node.name.includes('state_01')) ||
-            (!isDynamicArmorActive && node.name.includes('state_00'))
+            (isDynamicArmorActive && node.name.includes("state_01")) ||
+            (!isDynamicArmorActive && node.name.includes("state_00"))
           )
             return null;
 
@@ -67,21 +67,21 @@ export const PrimaryArmorScene = memo(() => {
       <group ref={turretContainer}>
         {armorNodes.map((node) => {
           const isCurrentTurret = node.name.startsWith(
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, '0')}`,
+            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`
           );
           const isVisible = isCurrentTurret;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
             turretModelDefinition.armor,
-            armorId,
+            armorId
           );
 
           if (
             !isVisible ||
             spaced ||
             thickness === undefined ||
-            (isDynamicArmorActive && node.name.includes('state_01')) ||
-            (!isDynamicArmorActive && node.name.includes('state_00'))
+            (isDynamicArmorActive && node.name.includes("state_01")) ||
+            (!isDynamicArmorActive && node.name.includes("state_00"))
           )
             return null;
 
@@ -101,21 +101,21 @@ export const PrimaryArmorScene = memo(() => {
         <group ref={gunContainer}>
           {armorNodes.map((node) => {
             const isCurrentGun = node.name.startsWith(
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, '0')}`,
+              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`
             );
             const isVisible = isCurrentGun;
             const armorId = nameToArmorId(node.name);
             const { spaced, thickness } = resolveArmor(
               gunModelDefinition.armor,
-              armorId,
+              armorId
             );
 
             if (
               !isVisible ||
               spaced ||
               thickness === undefined ||
-              (isDynamicArmorActive && node.name.includes('state_01')) ||
-              (!isDynamicArmorActive && node.name.includes('state_00'))
+              (isDynamicArmorActive && node.name.includes("state_01")) ||
+              (!isDynamicArmorActive && node.name.includes("state_00"))
             )
               return null;
 

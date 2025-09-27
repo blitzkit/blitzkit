@@ -1,7 +1,6 @@
-import type { SpotLightProps } from '@react-three/fiber';
-import { memo } from 'react';
+import { memo, type ComponentProps } from "react";
 
-interface Props extends SpotLightProps {
+interface Props extends ComponentProps<"spotLight"> {
   debug?: boolean;
 }
 

@@ -1,12 +1,12 @@
-import { DEFAULT_LOCALE } from '@blitzkit/i18n';
-import { GlobeIcon } from '@radix-ui/react-icons';
-import { Flex, Text } from '@radix-ui/themes';
-import type { LocaleAcceptorProps } from '../../hooks/useLocale';
-import { BlitzKitTheme } from '../BlitzKitTheme';
-import { LocaleSwitcher } from '../LocaleSwitcher';
+import locales from "@blitzkit/i18n/locales.json";
+import { GlobeIcon } from "@radix-ui/react-icons";
+import { Flex, Text } from "@radix-ui/themes";
+import type { LocaleAcceptorProps } from "../../hooks/useLocale";
+import { BlitzKitTheme } from "../BlitzKitTheme";
+import { LocaleSwitcher } from "../LocaleSwitcher";
 
 export function HomeLocaleSwitcher({
-  locale = DEFAULT_LOCALE,
+  locale = locales.default,
 }: LocaleAcceptorProps) {
   return (
     <BlitzKitTheme>

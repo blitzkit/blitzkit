@@ -1,5 +1,5 @@
 ---
-import { AstroSeo } from '@astrolib/seo';
+import { AstroSeo } from "@astrolib/seo";
 import {
   assertSecret,
   asset,
@@ -11,17 +11,17 @@ import {
   fetchSkillDefinitions,
   fetchTankDefinitions,
   TIER_ROMAN_NUMERALS,
-} from '@blitzkit/core';
-import { DEFAULT_LOCALE, unwrapper } from '@blitzkit/i18n';
-import { literals } from '@blitzkit/i18n/src/literals';
-import type { GetStaticPaths } from 'astro';
-import { load } from 'cheerio';
-import { tankCharacteristics } from '../../../../core/blitzkit/tankCharacteristics';
-import { getStrings } from '../../../../core/i18n/getStrings';
-import BaseLayout from '../../../../layouts/BaseLayout.astro';
-import { genericDefaultEquipmentMatrix } from '../../../../stores/duel/constants';
-import { getStaticPaths as parentGetStaticPaths } from '../index.astro';
-import { Page } from './_index';
+} from "@blitzkit/core";
+import { unwrapper } from "@blitzkit/i18n";
+import { literals } from "@blitzkit/i18n/src/literals";
+import type { GetStaticPaths } from "astro";
+import { load } from "cheerio";
+import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
+import { getStrings } from "../../../../core/i18n/getStrings";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { genericDefaultEquipmentMatrix } from "../../../../stores/duel/constants";
+import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
+import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
   const tankDefinitions = await fetchTankDefinitions();
@@ -32,13 +32,13 @@ export const getStaticPaths = (async () => {
       parentPaths.map((parent) => ({
         params: { ...parent.params, slug: tank.slug },
         props: { id: tank.id },
-      })),
+      }))
     )
     .flat();
 }) satisfies GetStaticPaths;
 
 const { id } = Astro.props;
-const locale = Astro.params.locale ?? DEFAULT_LOCALE;
+const locale = Astro.params.locale;
 const strings = getStrings(locale);
 const tankDefinitions = await fetchTankDefinitions();
 const skillDefinitions = await fetchSkillDefinitions();
@@ -56,7 +56,7 @@ const title = literals(strings.website.tools.tankopedia.tank_seo_title, [
     tank.nation as keyof typeof strings.common.nations_adjectives
   ],
   strings.common.tank_class_short[tank.class],
-  'BlitzKit',
+  "BlitzKit",
   strings.common.nations[tank.nation as keyof typeof strings.common.nations],
 ]);
 const url = import.meta.env.SITE + Astro.url.pathname;
@@ -87,7 +87,7 @@ const characteristics = tankCharacteristics(
     track: tank.tracks.at(-1)!,
     assaultDistance: 0,
   },
-  { equipmentDefinitions, provisionDefinitions, tankModelDefinition },
+  { equipmentDefinitions, provisionDefinitions, tankModelDefinition }
 );
 const description = literals(
   strings.website.tools.tankopedia.tank_seo_description,
@@ -98,7 +98,7 @@ const description = literals(
     Math.round(characteristics.penetration).toLocaleString(locale),
     Math.round(characteristics.speedForwards).toLocaleString(locale),
     Math.round(characteristics.health).toLocaleString(locale),
-  ],
+  ]
 );
 
 export interface TankGuide {
@@ -113,8 +113,8 @@ const guideResponse = await fetch(guideUrl);
 
 if (guideResponse.ok) {
   const $ = await guideResponse.text().then(load);
-  const description = $('.entry-content p').first().text();
-  const image = $('.entry-content img').first().attr('src')?.toString();
+  const description = $(".entry-content p").first().text();
+  const image = $(".entry-content img").first().attr("src")?.toString();
 
   if (description !== undefined || image !== undefined) {
     guide = {

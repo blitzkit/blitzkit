@@ -1,8 +1,8 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
-import { type MeshProps, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { clamp } from "lodash-es";
 import type { QuicklimeEvent } from "quicklime";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, type ComponentProps } from "react";
 import {
   Box3,
   Color,
@@ -19,8 +19,8 @@ import {
 import { unrotateDavaVector } from "../../../core/blitz/unrotateDavaVector";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import {
-  type ModelTransformEventData,
   modelTransformEvent,
+  type ModelTransformEventData,
 } from "../../../core/blitzkit/modelTransform";
 import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -36,7 +36,7 @@ type StaticArmorSceneComponentProps = {
   thickness: number;
   thicknessRange: ThicknessRange;
   node: Object3D;
-  onPointerDown?: MeshProps["onPointerDown"];
+  onPointerDown?: ComponentProps<"mesh">["onPointerDown"];
 } & (
   | {
       type: Exclude<ArmorType, ArmorType.External>;

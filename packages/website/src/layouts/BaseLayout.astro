@@ -1,5 +1,4 @@
 ---
-import { DEFAULT_LOCALE } from "@blitzkit/i18n";
 import strings from "@blitzkit/i18n/strings/en.json";
 import "@fontsource/inter";
 import { Flex } from "@radix-ui/themes";
@@ -22,7 +21,7 @@ export interface Props {
 
 const servicing = import.meta.env.SERVICING;
 const { noFooter, noNavbar, integrated } = Astro.props;
-const locale = Astro.params.locale ?? DEFAULT_LOCALE;
+const locale = Astro.params.locale;
 ---
 
 <html lang={locale}>

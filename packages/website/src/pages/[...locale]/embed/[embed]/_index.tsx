@@ -60,7 +60,7 @@ function Content({ embed }: PageProps) {
   const [backgroundImage, setBackgroundImage] = useState(
     "/assets/images/backgrounds/embed-default.webp"
   );
-  const fileInput = useRef<HTMLInputElement>();
+  const fileInput = useRef<HTMLInputElement>(null!);
   const { strings } = useLocale();
 
   useEffect(() => {
