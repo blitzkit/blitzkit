@@ -24,7 +24,7 @@ public/sitemap*
 target
 # packages/core/src/protos/*.ts
 /.vercel
-/.astro
+.astro
 .vercel
 /src
 /packages/bot/src/prisma
