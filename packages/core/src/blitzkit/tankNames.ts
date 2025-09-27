@@ -1,8 +1,8 @@
-import { deburr } from 'lodash-es';
-import { SUPPORTED_LOCALES } from '../../../i18n/src/strings';
-import { I18nString } from '../protos';
-import { fetchCamouflageDefinitions } from './camouflageDefinitions';
-import { fetchTankDefinitions } from './tankDefinitions';
+import locales from "@blitzkit/i18n/locales.json";
+import { deburr } from "lodash-es";
+import { I18nString } from "../protos";
+import { fetchCamouflageDefinitions } from "./camouflageDefinitions";
+import { fetchTankDefinitions } from "./tankDefinitions";
 
 export async function fetchTankNames() {
   const [tankDefinitions, camouflageDefinitions] = await Promise.all([
@@ -26,25 +26,27 @@ export async function fetchTankNames() {
         searchableNameDeburr,
         camouflages: tank.camouflages
           ?.map((id) =>
-            SUPPORTED_LOCALES.map(
-              (locale) =>
-                camouflageDefinitions.camouflages[id]?.name.locales[locale],
-            ),
+            locales.supported.map(
+              ({ locale }) =>
+                camouflageDefinitions.camouflages[id]?.name.locales[locale]
+            )
           )
           .flat()
           .filter(Boolean)
           .map(deburr)
-          .join(' '),
+          .join(" "),
         treeType: tank.type,
       };
-    }),
+    })
   );
 }
 
 export const SEARCH_KEYS = [
-  ...SUPPORTED_LOCALES.map((locale) => [
-    `searchableName.locales.${locale}`,
-    `searchableNameDeburr.locales.${locale}`,
-  ]).flat(),
-  'camouflages',
+  ...locales.supported
+    .map(({ locale }) => [
+      `searchableName.locales.${locale}`,
+      `searchableNameDeburr.locales.${locale}`,
+    ])
+    .flat(),
+  "camouflages",
 ];

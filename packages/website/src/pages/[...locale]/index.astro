@@ -1,7 +1,7 @@
 ---
 import { AstroSeo } from "@astrolib/seo";
 import { assertSecret } from "@blitzkit/core";
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import type { GetStaticPaths } from "astro";
@@ -16,7 +16,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const MAX_TOOLS_PER_ROW = 2;
 
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
-const locale = Astro.params.locale ?? DEFAULT_LOCALE;
+const locale = Astro.params.locale ?? locales.default;
 const strings = getStrings(Astro.params.locale);
 const rows: Tool[][] = [];
 
@@ -40,9 +40,9 @@ for (const id in tools) {
 
 export const getStaticPaths = (() => {
   return [
-    ...SUPPORTED_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map(
-      (locale) => ({ params: { locale } })
-    ),
+    ...locales.supported
+      .filter(({ locale }) => locale !== locales.default)
+      .map(({ locale }) => ({ params: { locale } })),
     { params: { locale: undefined } },
   ];
 }) satisfies GetStaticPaths;
@@ -81,7 +81,7 @@ export const getStaticPaths = (() => {
   </Flex> -->
 
   {
-    locale !== DEFAULT_LOCALE && (
+    locale !== locales.default && (
       <Flex justify="center" mb="4">
         <Link
           href="https://crowdin.com/project/blitzkrieg"
@@ -90,7 +90,9 @@ export const getStaticPaths = (() => {
         >
           {literals(strings.website.home.help_translate, [
             "BlitzKit",
-            strings.common.locales[locale],
+            strings.common.locales[
+              locale as keyof typeof strings.common.locales
+            ],
           ])}
         </Link>
       </Flex>

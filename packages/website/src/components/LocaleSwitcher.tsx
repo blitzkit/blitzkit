@@ -1,17 +1,16 @@
-import {} from '@blitzkit/core';
 import {
-  DEFAULT_LOCALE,
   STRINGS,
-  SUPPORTED_LOCALES,
   SUPPORTED_LOCALE_FLAGS,
-} from '@blitzkit/i18n';
-import { Select } from '@radix-ui/themes';
-import type { LocaleAcceptorProps } from '../hooks/useLocale';
-import { BlitzKitTheme } from './BlitzKitTheme';
+  type BlitzKitStrings,
+} from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
+import { Select } from "@radix-ui/themes";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import { BlitzKitTheme } from "./BlitzKitTheme";
 
 export function LocaleSwitcherThemeWrapper({ locale }: LocaleAcceptorProps) {
   return (
-    <BlitzKitTheme style={{ background: 'transparent' }}>
+    <BlitzKitTheme style={{ background: "transparent" }}>
       <LocaleSwitcher locale={locale} />
     </BlitzKitTheme>
   );
@@ -22,29 +21,33 @@ export function LocaleSwitcher({ locale }: LocaleAcceptorProps) {
     <Select.Root
       defaultValue={locale}
       onValueChange={(locale) => {
-        localStorage.setItem('preferred-locale', locale);
+        localStorage.setItem("preferred-locale", locale);
 
         let rawPath = window.location.pathname;
 
-        for (const supportedLocale of SUPPORTED_LOCALES) {
-          if (window.location.pathname.startsWith(`/${supportedLocale}`)) {
-            rawPath = rawPath.replace(`/${supportedLocale}`, '');
+        for (const supported of locales.supported) {
+          if (window.location.pathname.startsWith(`/${supported.locale}`)) {
+            rawPath = rawPath.replace(`/${supported.locale}`, "");
             break;
           }
         }
 
         window.location.pathname = `${
-          locale === DEFAULT_LOCALE ? '' : `/${locale}`
+          locale === locales.default ? "" : `/${locale}`
         }${rawPath}`;
       }}
     >
       <Select.Trigger variant="classic" />
 
       <Select.Content>
-        {SUPPORTED_LOCALES.map((locale) => (
+        {locales.supported.map(({ locale }) => (
           <Select.Item key={locale} value={locale}>
-            {SUPPORTED_LOCALE_FLAGS[locale]}{' '}
-            {STRINGS[locale].common.locales[locale]}
+            {SUPPORTED_LOCALE_FLAGS[locale]}{" "}
+            {
+              STRINGS[locale].common.locales[
+                locale as keyof BlitzKitStrings["common"]["locales"]
+              ]
+            }
           </Select.Item>
         ))}
       </Select.Content>
