@@ -18,6 +18,10 @@ import { pwaInfo } from "virtual:pwa-info";
     onOfflineReady() {
       console.log("PWA offline ready");
     },
+
+    onNeedRefresh() {
+      document.documentElement.classList.add("pwa-refresh");
+    },
   });
 
   pwaInstallHandler.addListener((canInstall) => {

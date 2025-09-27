@@ -140,7 +140,9 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
                 }}
               >
                 <Suspense>
-                  <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
+                  {!skeleton && (
+                    <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
+                  )}
                 </Suspense>
               </Box>
             </Box>

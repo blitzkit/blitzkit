@@ -1,15 +1,14 @@
 ---
-import { PageWrapper } from '../../../components/PageWrapper';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { Page } from './_index';
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
 
-export { getStaticPaths } from '../index.astro';
+export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.params;
 ---
 
 <BaseLayout noFooter>
-  <PageWrapper p="0" maxWidth="unset" color="cyan">
-    <Page {locale} client:load />
-  </PageWrapper>
+  <Page {locale} client:only="react">
+    <Page {locale} skeleton slot="fallback" />
+  </Page>
 </BaseLayout>

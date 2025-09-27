@@ -36,8 +36,6 @@ export class Varuna<Type, Arguments = void> {
   }
 
   useInitialization(...args: Arguments[]) {
-    if (this.initialized) return;
-
     const initializedThisMount = useRef(false);
 
     if (initializedThisMount.current) return;

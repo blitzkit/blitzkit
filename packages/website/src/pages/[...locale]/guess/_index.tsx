@@ -4,6 +4,7 @@ import { GuessBackground } from "../../../components/GuessBackground";
 import { Guesser } from "../../../components/Guesser";
 import { GuessRenderer } from "../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../components/GuessRendererLoader";
+import { PageWrapper } from "../../../components/PageWrapper";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import {
@@ -14,6 +15,7 @@ import {
 import { Duel } from "../../../stores/duel";
 import { Guess, GuessState } from "../../../stores/guess";
 import { Tankopedia } from "../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
   awaitableTankDefinitions,
@@ -22,7 +24,10 @@ const [tankDefinitions, modelDefinitions] = await Promise.all([
 
 const ids = Object.keys(tankDefinitions.tanks);
 
-export function Page({ locale }: LocaleAcceptorProps) {
+export function Page({
+  locale,
+  skeleton,
+}: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
   const id = Number(ids[Math.floor(Math.random() * ids.length)]);
   const tank = tankDefinitions.tanks[id];
 
@@ -30,22 +35,26 @@ export function Page({ locale }: LocaleAcceptorProps) {
 
   return (
     <LocaleProvider locale={locale}>
-      <Container />
+      <Container skeleton={skeleton} />
     </LocaleProvider>
   );
 }
 
-function Container() {
+function Container({ skeleton }: MaybeSkeletonComponentProps) {
   const tank = Guess.use((state) => state.tank);
   const model = modelDefinitions.models[tank.id];
 
   Tankopedia.useInitialization(model);
   Duel.useInitialization({ tank, model });
 
-  return <Content />;
+  return (
+    <PageWrapper p="0" maxWidth="unset" color="cyan">
+      <Content skeleton={skeleton} />
+    </PageWrapper>
+  );
 }
 
-function Content() {
+function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const { unwrap } = useLocale();
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
@@ -85,7 +94,7 @@ function Content() {
         style={{ transitionDuration }}
       >
         <Suspense fallback={<GuessRendererLoader />}>
-          <GuessRenderer />
+          {!skeleton && <GuessRenderer />}
         </Suspense>
       </Box>
 
