@@ -13,6 +13,9 @@ export default defineConfig({
   devToolbar: { enabled: false },
 
   vite: { server: { allowedHosts: [] } },
+  output: "static",
+  site: "https://blitzkit.app",
+  outDir: "../../dist/website",
 
   integrations: [
     favicons({
