@@ -1,5 +1,7 @@
 ---
 import { localizedHTML as favicons } from "astro-favicons/middleware";
+
+const { locale } = Astro.params;
 ---
 
-<Fragment set:html={favicons(Astro.currentLocale)} />
+<Fragment set:html={favicons(locale)} />
