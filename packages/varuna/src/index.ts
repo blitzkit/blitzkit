@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { merge } from "lodash-es";
+import { debounce, merge } from "lodash-es";
 import { useEffect, useRef, useState } from "react";
 
 export class Varuna<Type, Arguments = void> {
@@ -20,7 +20,6 @@ export class Varuna<Type, Arguments = void> {
     let data = initial;
 
     if (this.persistence && typeof localStorage !== "undefined") {
-      const instance = this;
       const dehydrated = localStorage.getItem(this.persistence);
 
       if (dehydrated) {
@@ -28,9 +27,7 @@ export class Varuna<Type, Arguments = void> {
         data = merge(data, rehydrated);
       }
 
-      window.addEventListener("beforeunload", () => {
-        localStorage.setItem(this.persistence!, JSON.stringify(instance.state));
-      });
+      window.addEventListener("beforeunload", this.store.bind(this));
     }
 
     this.initialized = true;
@@ -55,7 +52,6 @@ export class Varuna<Type, Arguments = void> {
 
   private dispatch() {
     const state = this.state;
-    console.log("dispatched");
     this.listeners.forEach((callback) => callback(state));
   }
 
@@ -97,6 +93,7 @@ export class Varuna<Type, Arguments = void> {
     this.assertInitialized();
     this._state = state;
     this.dispatch();
+    this.storeDeferred();
   }
 
   get initial() {
@@ -118,4 +115,10 @@ export class Varuna<Type, Arguments = void> {
 
     return slice;
   }
+
+  store() {
+    localStorage.setItem(this.persistence!, JSON.stringify(this.state));
+  }
+
+  storeDeferred = debounce(this.store.bind(this), 500);
 }
