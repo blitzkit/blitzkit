@@ -28,3 +28,4 @@ target
 .vercel
 /src
 /packages/bot/src/prisma
+dev-dist

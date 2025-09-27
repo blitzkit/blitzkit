@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.4.0",
     "@astrolib/seo": "^1.0.0-beta.8",
     "@fontsource/inter": "^5.2.8",
@@ -29,6 +30,8 @@
     "pwa-install-handler": "^2.6.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-promise-suspense": "^0.3.4",
+    "typescript": "^5.9.2",
     "urlon": "^3.1.0"
   }
 }

@@ -1,8 +1,8 @@
-import { getAccountInfo, idToRegion } from '@blitzkit/core';
-import { Text } from '@radix-ui/themes';
-import { useMemo } from 'react';
-import usePromise from 'react-promise-suspense';
-import { App } from '../stores/app';
+import { getAccountInfo, idToRegion } from "@blitzkit/core";
+import { Text } from "@radix-ui/themes";
+import { useMemo } from "react";
+import usePromise from "react-promise-suspense";
+import { App } from "../stores/app";
 
 export function WargamingAccountName() {
   const wargaming = App.use((state) => state.logins.wargaming);
@@ -13,7 +13,7 @@ export function WargamingAccountName() {
       idToRegion(wargaming.id),
       wargaming.id,
       [],
-      { access_token: wargaming.token },
+      { access_token: wargaming.token }
     );
 
     return data?.nickname as string | undefined;
