@@ -837,6 +837,15 @@
     },
 
     "home": {
+      "pwa": {
+        "title": "Install the BlitzKit App",
+        "new": "NEW",
+        "checking": "Checking compatibility...",
+        "incompatible": "Incompatible device.",
+        "incompatible_help": "Try manually.",
+        "install": "Install"
+      },
+
       "discord": {
         "join_short": "Join cool people!",
         "join_long": "Join super duper cool people!",

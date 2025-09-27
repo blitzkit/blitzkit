@@ -1,0 +1,102 @@
+---
+import { DownloadIcon } from "@radix-ui/react-icons";
+import {
+  Badge,
+  Box,
+  Button,
+  Card,
+  Flex,
+  Inset,
+  Link,
+  Spinner,
+  Text,
+} from "@radix-ui/themes";
+import { getStrings } from "../core/i18n/getStrings";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+
+type Props = LocaleAcceptorProps;
+
+const { locale } = Astro.props;
+const strings = getStrings(locale);
+---
+
+<style>
+  .pwa-logo {
+    width: 6rem;
+    height: 6rem;
+    background-image: url(/assets/images/pwa-promo.png);
+    background-position: center;
+    background-size: cover;
+  }
+
+  html.pwa-enabled .compatibility-checker,
+  html.pwa-disabled .compatibility-checker {
+    display: none;
+  }
+
+  #pwa-install,
+  #pwa-incompatible {
+    display: none;
+  }
+
+  html.pwa-enabled #pwa-install,
+  html.pwa-disabled #pwa-incompatible {
+    display: unset;
+  }
+</style>
+
+<script>
+  import { pwaInstallHandler } from "pwa-install-handler";
+
+  const pwaInstallButton = document.getElementById("pwa-install");
+
+  pwaInstallButton?.addEventListener("click", () => {
+    pwaInstallHandler.install();
+  });
+</script>
+
+<Flex justify="center" mt="4">
+  <Card variant="classic">
+    <Inset>
+      <Flex align="center">
+        <Box className="pwa-logo" />
+
+        <Flex direction="column" gap="2" px="4" py="3">
+          <Flex align="center" gap="2">
+            <Text size="4" weight="medium">
+              {strings.website.home.pwa.title}
+            </Text>
+            <Badge color="jade" variant="outline">
+              {strings.website.home.pwa.new}
+            </Badge>
+          </Flex>
+
+          <Flex className="compatibility-checker" align="center" gap="2">
+            <Spinner />
+            <Text color="gray">
+              {strings.website.home.pwa.checking}
+            </Text>
+          </Flex>
+
+          <Text color="tomato" id="pwa-incompatible">
+            {strings.website.home.pwa.incompatible}{" "}
+            <Link
+              underline="always"
+              target="_blank"
+              href="https://www.cdc.gov/niosh/mining/tools/installpwa.html"
+            >
+              {strings.website.home.pwa.incompatible_help}
+            </Link>
+          </Text>
+
+          <Button id="pwa-install" color="jade">
+            <Flex align="center" gap="1" justify="center">
+              <DownloadIcon />
+              {strings.website.home.pwa.install}
+            </Flex>
+          </Button>
+        </Flex>
+      </Flex>
+    </Inset>
+  </Card>
+</Flex>

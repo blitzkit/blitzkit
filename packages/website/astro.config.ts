@@ -12,6 +12,8 @@ import { tools } from "./src/constants/tools";
 export default defineConfig({
   devToolbar: { enabled: false },
 
+  vite: { server: { allowedHosts: [] } },
+
   integrations: [
     favicons({
       name: strings.common.name,
@@ -75,7 +77,7 @@ export default defineConfig({
       },
     }),
 
-    AstroPWA({ manifest: false }),
+    AstroPWA({ manifest: false, devOptions: { enabled: true } }),
 
     react(),
   ],
