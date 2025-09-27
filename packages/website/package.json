@@ -20,6 +20,7 @@
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.14.1",
     "astro-favicons": "^3.1.5",
+    "compare-versions": "^6.1.1",
     "fuzzysort": "^3.1.0",
     "pwa-install-handler": "^2.6.3",
     "react": "^19.1.1",
