@@ -1,13 +1,23 @@
-## BlitzKit
+# BlitzKit
 
-Your premier source for all things Blitz.
+Tools for everything and anything World of Tanks Blitz. This GitHub repository contains the code for BlitzKit and all its services.
 
-### https://blitzkit.app/
+## Submodules
 
-![BlitzKit website](https://i.imgur.com/KaxUxmt.png)
+| Submodule                                                    | Title       | Source                                                      | Memo                                                                                                                                                                        |
+| ------------------------------------------------------------ | ----------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [submodules/blitzkit-closed](submodules/blitzkit-closed)     | ClosedKit   | [blitzkit/closed](https://github.com/blitzkit/closed)       | Closed source, sensitive code hidden from the public to prevent bad actors from abusing the game. Discuss with `@tresabhi` on Discord for **special permission** to access. |
+| [submodules/blitzkit-internal](submodules/blitzkit-internal) | InternalKit | [blitzkit/internal](https://github.com/blitzkit/internal)   | Closed source, sensitive internal documentation hidden from the public to prevent bad actors from abusing the game. Access to this submodule is **not negotiable**.         |
+| [submodules/CUE4Parse](submodules/CUE4Parse)                 | CUE4Parse   | [FabianFG/CUE4Parse](https://github.com/FabianFG/CUE4Parse) | An Unreal Engine archives and packages parsing library in C#.                                                                                                               |
 
-## Invite the bot
+## Packages
 
-Go to [application directory for BlitzKit](https://discord.com/application-directory/1097673957865443370) and click "Add to Server." Voila! You're ready to go.
-
-![BlitzKit application directory](https://i.imgur.com/YWCtOuJ.png)
+| Package                              | Title                | Source                                                                                                                                                                                     | Memo                                                                                                                     |
+| ------------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| [packages/app](packages/app)         | BlitzKit             | [Play Store](https://play.google.com/store/apps/details?id=com.tresabhi.blitzkit), [App Store](https://apps.apple.com/app/4321), [Microsoft Store](https://apps.microsoft.com/detail/zyxw) | The native app of BlitzKit for all platforms. Unavailable from stores at this time.                                      |
+| [packages/bot](packages/bot)         | BlitzKit Discord Bot | [Discord Application Directory](https://discord.com/discovery/applications/1097673957865443370)                                                                                            | The one-in-all Discord bot for statistics.                                                                               |
+| [packages/core](packages/core)       |                      |                                                                                                                                                                                            | Mutual internal code shared between all other packages.                                                                  |
+| [packages/i18n](packages/i18n)       |                      | [Crowdin](https://crowdin.com/project/blitzkrieg)                                                                                                                                          | Translations served as JSON shared across all other packages, including some utility code.                               |
+| [packages/scripts](packages/scripts) |                      |                                                                                                                                                                                            | CLI utilities for the development and deployment of BlitzKit services.                                                   |
+| [packages/varuna](packages/varuna)   | Varuna               | [NPM](https://www.npmjs.com/package/varuna)                                                                                                                                                | React and Astro oriented state management library, awaiting separation from BlitzKit. Unavailable from NPM at this time. |
+| [packages/website](packages/website) | BlitzKit             | https://blitzkit.app                                                                                                                                                                       | The BlitzKit website providing a wide range of tools, APIs, and interconnecting all other services.                      |
