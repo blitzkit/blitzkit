@@ -748,7 +748,7 @@
         "checking": "Checking compatibility...",
         "instructions": "Instructions for Apple devices.",
         "install": "Install",
-        "dismiss": "Dismiss"
+        "dismiss": "Отклонить"
       },
       "discord": {
         "join_short": "Присоединяйтесь к крутым ребятам!",
@@ -781,7 +781,7 @@
         "description": "Модули смешанного танка",
         "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
         "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "randomize": "Случайный выбор"
       },
       "guess": {
         "name": "Угадайте танк",
