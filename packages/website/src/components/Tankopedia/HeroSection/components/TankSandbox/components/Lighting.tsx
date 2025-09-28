@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { Color, SpotLight, SpotLightHelper } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { isHalloween } from "../../../../../../core/blitzkit/isHalloween";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
 const LIGHTS_COUNT = 5;
@@ -19,7 +18,6 @@ const TARGET_FRAME_RATE = 30;
 
 export function Lighting() {
   const [cast, setCast] = useState(true);
-  const revealed = Tankopedia.use((state) => state.revealed);
 
   const topLight = useRef<SpotLight>(null!);
   const frontLight = useRef<SpotLight>(null!);
@@ -31,7 +29,7 @@ export function Lighting() {
   const samples = useRef<number[]>([]);
 
   useFrame(({ clock }) => {
-    if (!cast || !revealed) return;
+    if (!cast || clock.elapsedTime < TARGET_FRAME_RATE * N) return;
 
     const dt = clock.elapsedTime - last.current;
     last.current = clock.elapsedTime;
