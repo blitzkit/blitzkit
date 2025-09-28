@@ -8,7 +8,6 @@ import type { GetStaticPaths } from "astro";
 import { AesonPlug } from "../../components/AesonPlug";
 import HomeHero from "../../components/HomeHero.astro";
 import { Plugs } from "../../components/Plugs";
-import PWAPrompter from "../../components/PWAPrompter.astro";
 import ToolCard from "../../components/ToolCard.astro";
 import { tools, type Tool } from "../../constants/tools";
 import { getStrings } from "../../core/i18n/getStrings";
@@ -64,8 +63,6 @@ export const getStaticPaths = (() => {
 
 <BaseLayout>
   <HomeHero />
-
-  <PWAPrompter {locale} />
 
   <!-- <Flex justify="center" py="6" px="4" justify="center">
     <Flex
