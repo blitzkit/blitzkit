@@ -87,7 +87,20 @@ export default defineConfig({
       },
     }),
 
-    AstroPWA({ manifest: false, devOptions: { enabled: true } }),
+    AstroPWA({
+      manifest: false,
+      devOptions: { enabled: true },
+      workbox: {
+        globPatterns: ["**/*.{html,css,js,png,webp,svg,xml,json}"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) =>
+              url.href.startsWith(import.meta.env.PUBLIC_ASSET_BASE),
+            handler: "NetworkFirst",
+          },
+        ],
+      },
+    }),
 
     react(),
   ],
