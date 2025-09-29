@@ -4,18 +4,20 @@
   "version": "0.1.0",
   "identifier": "com.tresabhi.blitzkit",
   "build": {
-    "beforeDevCommand": "bun run dev",
-    "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "bun run build",
-    "frontendDist": "../dist"
+    "beforeDevCommand": "cd ../website && bun run dev",
+    "_beforeBuildCommand": "cd ../website && bun run build",
+    "frontendDist": "../../../dist/website/client",
+    "devUrl": "http://localhost:4321"
   },
   "app": {
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "blitzkit",
-        "width": 800,
-        "height": 600
+        "url": "http://localhost:4321",
+        "title": "BlitzKit",
+        "fullscreen": false,
+        "resizable": true,
+        "maximized": true
       }
     ],
     "security": {

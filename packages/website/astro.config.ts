@@ -1,3 +1,4 @@
+import node from "@astrojs/node";
 import react from "@astrojs/react";
 import { wrapper } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
@@ -9,19 +10,25 @@ import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
 import { tools } from "./src/constants/tools";
 
+const POSSIBLE_TARGETS = ["app", "web"];
+
+const target = process.env.PUBLIC_TARGET;
+
+if (!target || !POSSIBLE_TARGETS.includes(target)) {
+  throw new Error("Invalid target");
+}
+
 export default defineConfig({
   devToolbar: { enabled: false },
 
   vite: { server: { allowedHosts: [] } },
-  output: "static",
+  output: target === "web" ? "static" : "server",
   site: "https://blitzkit.app",
   outDir: "../../dist/website",
-  prefetch: {
-    defaultStrategy: "hover",
-    prefetchAll: true,
-  },
+  prefetch: { defaultStrategy: "hover", prefetchAll: true },
 
   build: { concurrency: 4 },
+  adapter: target === "app" ? node({ mode: "standalone" }) : undefined,
 
   integrations: [
     favicons({

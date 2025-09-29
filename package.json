@@ -18,6 +18,7 @@
     "build:docs": "vitepress build docs",
     "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
     "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
+    "build:app": "cd packages/app && bun run build",
     "dev:bot": "bun run build:bot --dev && bun start:bot",
     "start:bot": "bun dist/bot/main.js",
     "dev:docs": "vitepress dev docs",

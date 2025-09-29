@@ -3,13 +3,14 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "build": "PUBLIC_TARGET=app astro build",
+    "preview": "PUBLIC_TARGET=app astro preview",
     "lint": "astro check",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@astrojs/node": "^9.4.4",
     "@astrojs/react": "^4.4.0",
     "@astrolib/seo": "^1.0.0-beta.8",
     "@fontsource/inter": "^5.2.8",
