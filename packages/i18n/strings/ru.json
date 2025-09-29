@@ -5,6 +5,7 @@
     "fox": "Съешь же ещё этих мягких французских булок, да выпей чаю."
   },
   "common": {
+    "name": "BlitzKit",
     "units": {
       "m": "%s1м",
       "mm": "%s1мм",
@@ -671,6 +672,8 @@
         "copied": "Скопировано!"
       },
       "tank_search": {
+        "select_dialog_title": "Search for tanks",
+        "swap_dialog_title": "Swap tank",
         "clear_filters": "Сбросить фильтры",
         "search_bar_hint": "Поиск танков...",
         "recent": "Недавние",
@@ -739,6 +742,14 @@
       }
     },
     "home": {
+      "pwa": {
+        "title": "Install the BlitzKit App",
+        "new": "NEW",
+        "checking": "Checking compatibility...",
+        "instructions": "Instructions for Apple devices.",
+        "install": "Install",
+        "dismiss": "Отклонить"
+      },
       "discord": {
         "join_short": "Присоединяйтесь к крутым ребятам!",
         "join_long": "Присоединяйся к супер-дупер крутым ребятам!",
@@ -768,7 +779,9 @@
         "name": "Смешиватель",
         "button": "Смешать и собрать",
         "description": "Модули смешанного танка",
-        "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz"
+        "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
+        "screenshot": "Screenshot",
+        "randomize": "Случайный выбор"
       },
       "guess": {
         "name": "Угадайте танк",
@@ -1314,17 +1327,11 @@
         "description": "Начните с BlitzKit",
         "seo_description": "Начните с BlitzKit"
       },
-      "blitz_analysis": {
-        "name": "BlitzAnalysis[]",
-        "button": "Анализируй",
-        "description": "Богатая статистика",
-        "seo_description": "Богатые статистика по World of Tanks Blitz"
-      },
-      "blitz_insider": {
-        "name": "Blitz Insider",
-        "button": "Открой для себя",
-        "description": "Статистика сеанса игры",
-        "seo_description": "Статистика сеанса игры в World of Tanks Blitz"
+      "api": {
+        "name": "API",
+        "button": "To the docs",
+        "description": "BlitzKit hosted API",
+        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
       }
     },
     "footer": {
