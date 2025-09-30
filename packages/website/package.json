@@ -2,9 +2,9 @@
   "name": "@blitzkit/website",
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "PUBLIC_TARGET=app astro build",
-    "preview": "PUBLIC_TARGET=app astro preview",
+    "dev": "PUBLIC_TARGET=web astro dev",
+    "build": "PUBLIC_TARGET=web astro build",
+    "preview": "PUBLIC_TARGET=web astro preview",
     "lint": "astro check",
     "astro": "astro"
   },
@@ -21,6 +21,7 @@
     "@react-three/fiber": "^9.3.0",
     "@types/react": "^19.1.14",
     "@types/react-dom": "^19.1.9",
+    "@types/three": "^0.180.0",
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.14.1",
     "astro-favicons": "^3.1.5",
@@ -32,6 +33,8 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-promise-suspense": "^0.3.4",
+    "three": "^0.180.0",
+    "three-stdlib": "^2.36.0",
     "typescript": "^5.9.2",
     "urlon": "^3.1.0"
   }

@@ -1,6 +1,7 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
 import { OrbitControls } from "@react-three/drei";
 import { invalidate, useFrame, useThree } from "@react-three/fiber";
+import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
@@ -8,6 +9,7 @@ import { awaitableModelDefinitions } from "../../../../../../core/awaitables/mod
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { Pose, poseEvent } from "../../../../../../core/blitzkit/pose";
+import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
 import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 
@@ -99,12 +101,12 @@ export function Controls({
   });
 
   useEffect(() => {
-    const unsubscribeTankopediaEphemeral = Tankopedia.on(
-      (state) => state.controlsEnabled,
-      (enabled) => {
-        if (orbitControls.current) orbitControls.current.enabled = enabled;
-      }
-    );
+    function handleControlsEnabled(event: QuicklimeEvent<boolean>) {
+      if (!orbitControls.current) return;
+      orbitControls.current.enabled = event.data;
+    }
+
+    controlsEnabledEvent.on(handleControlsEnabled);
 
     function handlePoseEvent(event: Pose) {
       const hasImprovedVerticalStabilizer = hasEquipment(
@@ -203,7 +205,7 @@ export function Controls({
     poseEvent.on(handlePoseEvent);
 
     return () => {
-      unsubscribeTankopediaEphemeral();
+      controlsEnabledEvent.off(handleControlsEnabled);
       poseEvent.off(handlePoseEvent);
     };
   }, [camera, protagonistTank.id, antagonistTank.id]);
@@ -264,7 +266,7 @@ export function Controls({
       enableZoom={zoomable}
       zoomSpeed={zoomable ? undefined : 0}
       ref={orbitControls}
-      enabled={Tankopedia.state.controlsEnabled}
+      enabled={controlsEnabledEvent.last!}
       enableDamping={false}
     />
   );

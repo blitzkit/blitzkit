@@ -1,11 +1,25 @@
+import { useThree, type ThreeEvent } from "@react-three/fiber";
+import type { QuicklimeEvent } from "quicklime";
+import { useCallback, useEffect, useRef } from "react";
+import { Group, Vector2 } from "three";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
+import {
+  modelTransformEvent,
+  type ModelTransformEventData,
+} from "../../../core/blitzkit/modelTransform";
+import { controlsEnabledEvent } from "../../../core/controlsEnabled";
 import { useModel } from "../../../hooks/useModel";
 import { Mixer } from "../../../stores/mixer";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
 export function Model() {
+  const canvas = useThree((state) => state.gl.domElement);
+
+  const turretGroup = useRef<Group>(null!);
+  const gunGroup = useRef<Group>(null!);
+
   const hull = Mixer.use((state) => state.hull);
   const turret = Mixer.use((state) => state.turret);
   const gun = Mixer.use((state) => state.gun);
@@ -31,6 +45,54 @@ export function Model() {
   const gunTurretModel = gunTankModel.turrets[gun.turret.id];
   const gunModel = gunTurretModel.guns[gun.gun.id];
 
+  const pointer = useRef(new Vector2());
+  const delta = useRef(new Vector2());
+
+  const handlePointerDown = useCallback((event: ThreeEvent<PointerEvent>) => {
+    event.stopPropagation();
+
+    controlsEnabledEvent.dispatch(false);
+    pointer.current.set(event.clientX, event.clientY);
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  }, []);
+  const handlePointerMove = useCallback((event: PointerEvent) => {
+    const bounds = canvas.getBoundingClientRect();
+
+    delta.current.set(event.clientX, event.clientY).sub(pointer.current);
+    pointer.current.set(event.clientX, event.clientY);
+
+    modelTransformEvent.dispatch({
+      pitch:
+        modelTransformEvent.last!.pitch +
+        delta.current.y * (Math.PI / bounds.height),
+      yaw:
+        modelTransformEvent.last!.yaw +
+        delta.current.x * (Math.PI / bounds.width),
+    });
+  }, []);
+  const handlePointerUp = useCallback(() => {
+    controlsEnabledEvent.dispatch(true);
+
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", handlePointerUp);
+  }, []);
+
+  useEffect(() => {
+    function handleModelTransform(
+      event: QuicklimeEvent<ModelTransformEventData>
+    ) {
+      turretGroup.current.rotation.z = event.data.yaw;
+    }
+
+    modelTransformEvent.on(handleModelTransform);
+
+    return () => {
+      modelTransformEvent.off(handleModelTransform);
+    };
+  }, []);
+
   return (
     <group rotation={[-Math.PI / 2, 0, 0]}>
       {hullNodes.map((node) => {
@@ -49,6 +111,8 @@ export function Model() {
       })}
 
       <group
+        ref={turretGroup}
+        rotation={[0, 0, modelTransformEvent.last!.yaw]}
         position={[
           tankModel.turret_origin.x +
             trackModel.origin.x -
@@ -74,7 +138,15 @@ export function Model() {
 
           return jsxTree(node, {
             mesh(_, props, key) {
-              return <mesh {...props} key={key} castShadow receiveShadow />;
+              return (
+                <mesh
+                  {...props}
+                  key={key}
+                  castShadow
+                  receiveShadow
+                  onPointerDown={handlePointerDown}
+                />
+              );
             },
           });
         })}

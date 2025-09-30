@@ -82,7 +82,6 @@ interface Tankopedia {
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
-  controlsEnabled: boolean;
   model: ModelDefinition;
   editStatic: boolean;
   highlightArmor?: {
