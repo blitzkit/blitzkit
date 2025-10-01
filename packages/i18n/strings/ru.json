@@ -672,8 +672,8 @@
         "copied": "Скопировано!"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
-        "swap_dialog_title": "Swap tank",
+        "select_dialog_title": "Поиск танка",
+        "swap_dialog_title": "Заменить танк",
         "clear_filters": "Сбросить фильтры",
         "search_bar_hint": "Поиск танков...",
         "recent": "Недавние",
@@ -743,11 +743,11 @@
     },
     "home": {
       "pwa": {
-        "title": "Install the BlitzKit App",
-        "new": "NEW",
-        "checking": "Checking compatibility...",
-        "instructions": "Instructions for Apple devices.",
-        "install": "Install",
+        "title": "Установите приложение BlitzKit",
+        "new": "НОВИНКА",
+        "checking": "Проверка совместимости...",
+        "instructions": "Инструкция для устройств Apple.",
+        "install": "Установка",
         "dismiss": "Отклонить"
       },
       "discord": {
@@ -776,15 +776,15 @@
     },
     "tools": {
       "mixer": {
-        "name": "Смешиватель",
+        "name": "Смешать",
         "button": "Смешать и собрать",
         "description": "Модули смешанного танка",
         "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
-        "screenshot": "Screenshot",
+        "screenshot": "Скриншот",
         "randomize": "Случайный выбор"
       },
       "guess": {
-        "name": "Угадайте танк",
+        "name": "Угадай танк",
         "button": "Угадать",
         "description": "Мини-игра «Силуэт»",
         "seo_description": "Играйте угадывая силуэт танка из World of Tanks Blitz",
@@ -1329,9 +1329,9 @@
       },
       "api": {
         "name": "API",
-        "button": "To the docs",
-        "description": "BlitzKit hosted API",
-        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
+        "button": "К документации",
+        "description": "API сервера BlitzKit",
+        "seo_description": "Статический API сервера BlitzKit для World of Tanks Blitz"
       }
     },
     "footer": {
