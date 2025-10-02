@@ -13,27 +13,27 @@ import {
   RatingInfo,
   RatingLeaderboard,
   Region,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
 import {
   APIApplicationCommandOptionChoice,
   Locale,
   SlashCommandSubcommandBuilder,
-} from 'discord.js';
-import { range } from 'lodash-es';
-import markdownEscape from 'markdown-escape';
-import { CommandWrapper } from '../components/CommandWrapper';
-import * as Leaderboard from '../components/Leaderboard';
-import { TitleBar } from '../components/TitleBar';
-import { UserError } from '../core/blitzkit/userError';
-import { addRegionChoices } from '../core/discord/addRegionChoices';
-import { addUsernameChoices } from '../core/discord/addUsernameChoices';
-import { autocompleteUsername } from '../core/discord/autocompleteUsername';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { localizationObject } from '../core/discord/localizationObject';
-import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
-import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
+} from "discord.js";
+import { range } from "lodash-es";
+import markdownEscape from "markdown-escape";
+import { CommandWrapper } from "../components/CommandWrapper";
+import * as Leaderboard from "../components/Leaderboard";
+import { TitleBar } from "../components/TitleBar";
+import { UserError } from "../core/blitzkit/userError";
+import { addRegionChoices } from "../core/discord/addRegionChoices";
+import { addUsernameChoices } from "../core/discord/addUsernameChoices";
+import { autocompleteUsername } from "../core/discord/autocompleteUsername";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { localizationObject } from "../core/discord/localizationObject";
+import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
+import { translator } from "../core/localization/translator";
+import { CommandRegistry } from "../events/interactionCreate";
 
 interface SimplifiedPlayer {
   id: number;
@@ -51,7 +51,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
     const onGoingSeason = await isOnGoingRatingSeason();
     const seasonNumbers = range(
       FIRST_MINIMAL_ARCHIVED_RATING_SEASON,
-      latestArchivedSeasonNumber + (onGoingSeason ? 1 : 0) + 1,
+      latestArchivedSeasonNumber + (onGoingSeason ? 1 : 0) + 1
     );
 
     function addOptions(option: SlashCommandSubcommandBuilder) {
@@ -66,51 +66,50 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                 (strings) =>
                   strings.bot.commands.rating_leaderboard.options.limit.name,
                 undefined,
-                true,
-              ),
+                true
+              )
             )
             .setDescription(
               literals(
                 strings.bot.commands.rating_leaderboard.options.limit
                   .description,
-                [`${DEFAULT_LIMIT}`],
-              ),
+                { count: DEFAULT_LIMIT }
+              )
             )
             .setDescriptionLocalizations(
               localizationObject(
                 (strings) =>
                   strings.bot.commands.rating_leaderboard.options.limit
                     .description,
-                [`${DEFAULT_LIMIT}`],
-              ),
+                { count: DEFAULT_LIMIT }
+              )
             )
             .setRequired(false)
             .setMinValue(5)
-            .setMaxValue(30),
+            .setMaxValue(30)
         )
         .addStringOption((option) =>
           option
             .setName(
-              strings.bot.commands.rating_leaderboard.options.season.name,
+              strings.bot.commands.rating_leaderboard.options.season.name
             )
             .setNameLocalizations(
               localizationObject(
                 (strings) =>
                   strings.bot.commands.rating_leaderboard.options.season.name,
                 undefined,
-                true,
-              ),
+                true
+              )
             )
             .setDescription(
-              strings.bot.commands.rating_leaderboard.options.season
-                .description,
+              strings.bot.commands.rating_leaderboard.options.season.description
             )
             .setDescriptionLocalizations(
               localizationObject(
                 (strings) =>
                   strings.bot.commands.rating_leaderboard.options.season
-                    .description,
-              ),
+                    .description
+              )
             )
             .setRequired(false)
             .addChoices(
@@ -124,7 +123,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       ? literals(
                           strings.bot.commands.rating_leaderboard.options.season
                             .choices.current,
-                          [`${number}`],
+                          { season: number }
                         )
                       : `${number}`,
                     value: `${number}`,
@@ -133,27 +132,27 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                           (strings) =>
                             strings.bot.commands.rating_leaderboard.options
                               .season.choices.current,
-                          [`${number}`],
+                          { season: number }
                         )
                       : undefined,
                   } satisfies APIApplicationCommandOptionChoice<string>;
                 })
-                .reverse(),
-            ),
+                .reverse()
+            )
         );
     }
 
     resolve({
-      command: createLocalizedCommand('rating-leaderboard', [
+      command: createLocalizedCommand("rating-leaderboard", [
         {
-          subcommand: 'neighbors',
+          subcommand: "neighbors",
           modify(option: SlashCommandSubcommandBuilder) {
             option.addStringOption(addUsernameChoices);
             addOptions(option);
           },
         },
         {
-          subcommand: 'league',
+          subcommand: "league",
           modify(option: SlashCommandSubcommandBuilder) {
             option
               .addStringOption((option) => {
@@ -161,7 +160,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
 
                 return option
                   .setName(
-                    strings.bot.commands.rating_leaderboard.options.league.name,
+                    strings.bot.commands.rating_leaderboard.options.league.name
                   )
                   .setNameLocalizations(
                     localizationObject(
@@ -169,19 +168,19 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                         strings.bot.commands.rating_leaderboard.options.league
                           .name,
                       undefined,
-                      true,
-                    ),
+                      true
+                    )
                   )
                   .setDescription(
                     strings.bot.commands.rating_leaderboard.options.league
-                      .description,
+                      .description
                   )
                   .setDescriptionLocalizations(
                     localizationObject(
                       (strings) =>
                         strings.bot.commands.rating_leaderboard.options.league
-                          .description,
-                    ),
+                          .description
+                    )
                   )
                   .addChoices(
                     ...LEAGUES.map(
@@ -195,10 +194,10 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                             (strings) =>
                               (
                                 strings.common.leagues as Record<string, string>
-                              )[name],
+                              )[name]
                           ),
-                        }) satisfies APIApplicationCommandOptionChoice<string>,
-                    ),
+                        }) satisfies APIApplicationCommandOptionChoice<string>
+                    )
                   )
                   .setRequired(true);
               })
@@ -213,10 +212,10 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
       async handler(interaction) {
         const { strings } = translator(interaction.locale);
         const subcommand = interaction.options.getSubcommand(true) as
-          | 'league'
-          | 'neighbors';
-        const limit = interaction.options.getInteger('limit') ?? DEFAULT_LIMIT;
-        const seasonOption = interaction.options.getString('season');
+          | "league"
+          | "neighbors";
+        const limit = interaction.options.getInteger("limit") ?? DEFAULT_LIMIT;
+        const seasonOption = interaction.options.getString("season");
         const season = seasonOption
           ? parseInt(seasonOption)
           : onGoingSeason
@@ -232,11 +231,11 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
         let playerId: number | undefined;
         let regionRatingInfo: RatingInfo | null;
 
-        if (subcommand === 'league') {
+        if (subcommand === "league") {
           const leagueIndex = parseInt(
-            interaction.options.getString('league')!,
+            interaction.options.getString("league")!
           );
-          const region = interaction.options.getString('region') as Region;
+          const region = interaction.options.getString("region") as Region;
           regionRatingInfo = await (isCurrentSeason
             ? getRatingInfo(region)
             : null);
@@ -259,8 +258,8 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       position: player.number,
                       clan: player.clan_tag,
                       nickname: player.nickname,
-                    }) satisfies SimplifiedPlayer,
-                ),
+                    }) satisfies SimplifiedPlayer
+                )
               )
             : await getArchivedRatingLeaderboard(region, season!).then(
                 async (players) => {
@@ -269,17 +268,17 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       ? 0
                       : players.version!.value.entries.findIndex(
                           (player) =>
-                            player.score < LEAGUES[leagueIndex - 1].minScore,
+                            player.score < LEAGUES[leagueIndex - 1].minScore
                         );
                   const lastPlayerIndex = firstPlayerIndex + limit - 1;
                   const trimmed = players.version!.value.entries.slice(
                     firstPlayerIndex,
-                    lastPlayerIndex + 1,
+                    lastPlayerIndex + 1
                   );
                   const clanData = await getClanAccountInfo(
                     region,
                     trimmed.map(({ id }) => id),
-                    ['clan'],
+                    ["clan"]
                   );
 
                   return trimmed.map(
@@ -294,16 +293,16 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                           literals(
                             strings.bot.commands.rating_leaderboard.body
                               .deleted_player,
-                            [`${player.id}`],
+                            { id: player.id }
                           ),
-                      }) satisfies SimplifiedPlayer,
+                      }) satisfies SimplifiedPlayer
                   );
-                },
+                }
               );
           const leagueInfo = LEAGUES[leagueIndex];
           archivedLeaderboard = await getArchivedRatingLeaderboard(
             region,
-            season,
+            season
           );
 
           players = result;
@@ -316,12 +315,12 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
               ? (strings.common.leagues as Record<string, string>)[
                   LEAGUES[leagueInfo.index].name
                 ]
-              : ''
+              : ""
           } - ${strings.common.regions.short[region]}`;
           titleImage = imgur(leagueInfo.icon);
           titleDescription = literals(
             strings.bot.commands.rating_leaderboard.body.top_players,
-            [`${limit}`],
+            { count: limit }
           );
         } else {
           const { region, id } = await resolvePlayerFromCommand(interaction);
@@ -338,7 +337,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
           }
 
           const accountInfo = await getAccountInfo(region, id);
-          const clan = (await getClanAccountInfo(region, id, ['clan']))?.clan;
+          const clan = (await getClanAccountInfo(region, id, ["clan"]))?.clan;
           const neighbors = isCurrentSeason
             ? await getRatingNeighbors(region, id, Math.round(limit / 2)).then(
                 (players) =>
@@ -350,13 +349,13 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                         score: player.score,
                         clan: player.clan_tag,
                         nickname: player.nickname,
-                      }) satisfies SimplifiedPlayer,
-                  ),
+                      }) satisfies SimplifiedPlayer
+                  )
               )
             : await getArchivedRatingLeaderboard(region, season!).then(
                 async (players) => {
                   const playerIndex = players.version!.value.entries.findIndex(
-                    (player) => player.id === id,
+                    (player) => player.id === id
                   );
 
                   if (playerIndex === -1) {
@@ -364,20 +363,20 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       literals(
                         strings.bot.commands.rating_leaderboard.body
                           .no_participation,
-                        [markdownEscape(accountInfo.nickname), `${season}`],
-                      ),
+                        { player: markdownEscape(accountInfo.nickname), season }
+                      )
                     );
                   }
 
                   const halfRange = Math.round(limit / 2);
                   const trimmed = players.version!.value.entries.slice(
                     playerIndex - halfRange,
-                    playerIndex + halfRange + 1,
+                    playerIndex + halfRange + 1
                   );
                   const clanData = await getClanAccountInfo(
                     region,
                     trimmed.map((player) => player.id),
-                    ['clan'],
+                    ["clan"]
                   );
 
                   return trimmed.map((player, index) => ({
@@ -389,18 +388,18 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       ? clanData[index]!.account_name
                       : `Deleted ${player.id}`,
                   }));
-                },
+                }
               );
           archivedLeaderboard = await getArchivedRatingLeaderboard(
             region,
-            season,
+            season
           );
 
           players = neighbors;
           titleImage = clan
             ? `https://wotblitz-gc.gcdn.co/icons/clanEmblems1x/clan-icon-v2-${clan.emblem_set_id}.png`
             : undefined;
-          titleName = neighbors ? accountInfo.nickname : '';
+          titleName = neighbors ? accountInfo.nickname : "";
           titleDescription =
             strings.bot.commands.rating_leaderboard.body.neighbors;
           playersAfter =
@@ -414,7 +413,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
         const items = players.map((player) => {
           const midnightIndex =
             archivedLeaderboard?.version!.value.entries.findIndex(
-              (item) => item.id === player.id,
+              (item) => item.id === player.id
             );
           const midnightScore =
             midnightIndex === undefined
@@ -453,7 +452,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                   <Leaderboard.Gap
                     message={literals(
                       strings.bot.commands.rating_leaderboard.body.more,
-                      [`${playersAfter.toLocaleString(interaction.locale)}`],
+                      { count: playersAfter.toLocaleString(interaction.locale) }
                     )}
                   />
                 )}
@@ -465,5 +464,5 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
 
       autocomplete: autocompleteUsername,
     });
-  },
+  }
 );

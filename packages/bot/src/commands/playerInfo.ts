@@ -1,19 +1,19 @@
-import { getAccountInfo } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import markdownEscape from 'markdown-escape';
-import { addUsernameChoices } from '../core/discord/addUsernameChoices';
-import { autocompleteUsername } from '../core/discord/autocompleteUsername';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { embedInfo } from '../core/discord/embedInfo';
-import { markdownTable } from '../core/discord/markdownTable';
-import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
-import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
+import { getAccountInfo } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import markdownEscape from "markdown-escape";
+import { addUsernameChoices } from "../core/discord/addUsernameChoices";
+import { autocompleteUsername } from "../core/discord/autocompleteUsername";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { embedInfo } from "../core/discord/embedInfo";
+import { markdownTable } from "../core/discord/markdownTable";
+import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
+import { translator } from "../core/localization/translator";
+import { CommandRegistry } from "../events/interactionCreate";
 
 export const playerInfoCommand = new Promise<CommandRegistry>((resolve) => {
   resolve({
     command:
-      createLocalizedCommand('player-info').addStringOption(addUsernameChoices),
+      createLocalizedCommand("player-info").addStringOption(addUsernameChoices),
 
     async handler(interaction) {
       const { strings } = translator(interaction.locale);
@@ -22,9 +22,9 @@ export const playerInfoCommand = new Promise<CommandRegistry>((resolve) => {
       const accountInfo = await getAccountInfo(region, id);
 
       return embedInfo(
-        literals(strings.bot.commands.player_info.body.title, [
-          markdownEscape(accountInfo.nickname),
-        ]),
+        literals(strings.bot.commands.player_info.body.title, {
+          name: markdownEscape(accountInfo.nickname),
+        }),
 
         markdownTable([
           [
@@ -51,16 +51,16 @@ export const playerInfoCommand = new Promise<CommandRegistry>((resolve) => {
           [
             strings.bot.commands.player_info.body.created,
             new Date(accountInfo.created_at * 1000).toLocaleDateString(
-              interaction.locale,
+              interaction.locale
             ),
           ],
           [
             strings.bot.commands.player_info.body.last_battle,
             new Date(accountInfo.last_battle_time * 1000).toLocaleDateString(
-              interaction.locale,
+              interaction.locale
             ),
           ],
-        ]),
+        ])
       );
     },
 

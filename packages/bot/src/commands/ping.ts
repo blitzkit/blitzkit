@@ -1,15 +1,15 @@
-import { literals } from '@blitzkit/i18n';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
+import { literals } from "@blitzkit/i18n";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { translator } from "../core/localization/translator";
+import { CommandRegistry } from "../events/interactionCreate";
 
 export const pingCommand = new Promise<CommandRegistry>((resolve) => {
   resolve({
     handlesInteraction: true,
 
-    command: createLocalizedCommand('ping', [
-      { subcommand: 'blitzkit' },
-      { subcommand: 'wotb' },
+    command: createLocalizedCommand("ping", [
+      { subcommand: "blitzkit" },
+      { subcommand: "wotb" },
     ]),
 
     async handler(interaction) {
@@ -17,17 +17,17 @@ export const pingCommand = new Promise<CommandRegistry>((resolve) => {
       const subcommand = interaction.options.getSubcommand();
       const executionStart = Date.now();
 
-      if (subcommand === 'blitzkit') {
+      if (subcommand === "blitzkit") {
         await interaction.editReply(strings.bot.commands.ping.body.pong);
       } else {
-        await fetch('https://api.wotblitz.com/');
+        await fetch("https://api.wotblitz.com/");
       }
 
       const executionTime = Date.now() - executionStart;
       interaction.editReply(
-        literals(strings.bot.commands.ping.body.pong_with_time, [
-          `${Math.round(executionTime)}`,
-        ]),
+        literals(strings.bot.commands.ping.body.pong_with_time, {
+          time: executionTime.toFixed(0),
+        })
       );
     },
   });

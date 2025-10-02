@@ -8,42 +8,42 @@ import {
   getRatingInfo,
   getRatingNeighbors,
   imgur,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { SlashCommandSubcommandBuilder } from 'discord.js';
-import markdownEscape from 'markdown-escape';
-import { Glow } from '../components/AllStatsOverview/components/HeroStat/components/Glow';
-import { CommandWrapper } from '../components/CommandWrapper';
-import { DeltaCaret } from '../components/DeltaCaret';
-import { TitleBar } from '../components/TitleBar';
-import { normalizeLeagueIcon } from '../core/blitz/normalizeLeagueIcon';
-import { iconPng } from '../core/blitzkit/iconPng';
-import { addUsernameChoices } from '../core/discord/addUsernameChoices';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
-import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
-import { theme } from '../stitches.config';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { SlashCommandSubcommandBuilder } from "discord.js";
+import markdownEscape from "markdown-escape";
+import { Glow } from "../components/AllStatsOverview/components/HeroStat/components/Glow";
+import { CommandWrapper } from "../components/CommandWrapper";
+import { DeltaCaret } from "../components/DeltaCaret";
+import { TitleBar } from "../components/TitleBar";
+import { normalizeLeagueIcon } from "../core/blitz/normalizeLeagueIcon";
+import { iconPng } from "../core/blitzkit/iconPng";
+import { addUsernameChoices } from "../core/discord/addUsernameChoices";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
+import { translator } from "../core/localization/translator";
+import { CommandRegistry } from "../events/interactionCreate";
+import { theme } from "../stitches.config";
 
 const LEAGUE_ACCENT = [
-  '_purple',
-  '_sand',
-  '_amber',
-  '_mauve',
-  '_brown',
+  "_purple",
+  "_sand",
+  "_amber",
+  "_mauve",
+  "_brown",
 ] as const;
 
 export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
   resolve({
-    command: createLocalizedCommand('rating', [
+    command: createLocalizedCommand("rating", [
       {
-        subcommand: 'today',
+        subcommand: "today",
         modify(option: SlashCommandSubcommandBuilder) {
           option.addStringOption(addUsernameChoices);
         },
       },
       {
-        subcommand: 'season',
+        subcommand: "season",
         modify(option: SlashCommandSubcommandBuilder) {
           option.addStringOption(addUsernameChoices);
         },
@@ -52,11 +52,11 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
 
     async handler(interaction) {
       const subcommand = interaction.options.getSubcommand(true) as
-        | 'season'
-        | 'today';
+        | "season"
+        | "today";
       const { strings } = translator(interaction.locale);
       const { id, region } = await resolvePlayerFromCommand(interaction);
-      const clan = (await getClanAccountInfo(region, id, ['clan']))?.clan;
+      const clan = (await getClanAccountInfo(region, id, ["clan"]))?.clan;
       const clanImage = clan ? emblemURL(clan.emblem_set_id) : undefined;
 
       const ratingInfo = await getRatingInfo(region);
@@ -67,20 +67,20 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
 
       const leaderboard = await getArchivedRatingLeaderboard(
         region,
-        ratingInfo.current_season - (subcommand === 'today' ? 0 : 1),
+        ratingInfo.current_season - (subcommand === "today" ? 0 : 1)
       );
 
-      if (leaderboard.version!.$case === 'v1') {
+      if (leaderboard.version!.$case === "v1") {
         throw new Error(
-          'Encountered bkrl minimal format in latest season. Wait till next cron?',
+          "Encountered bkrl minimal format in latest season. Wait till next cron?"
         );
       }
 
       const accountInfo = await getAccountInfo(region, id, [
-        'statistics.rating',
+        "statistics.rating",
       ]);
       const statsIndex = leaderboard.version!.value.entries.findIndex(
-        (entry) => entry.id === id,
+        (entry) => entry.id === id
       );
       const statsA = leaderboard
         ? leaderboard.version!.value.entries[statsIndex!]
@@ -90,9 +90,9 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
       const statsB2Array = (await getRatingNeighbors(region, id, 0)).neighbors;
 
       if (statsB2Array === undefined) {
-        return literals(strings.bot.commands.rating.errors.no_participation, [
-          markdownEscape(accountInfo.nickname),
-        ]);
+        return literals(strings.bot.commands.rating.errors.no_participation, {
+          name: markdownEscape(accountInfo.nickname),
+        });
       }
 
       const [statsB2] = statsB2Array;
@@ -102,15 +102,15 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
         return strings.bot.commands.rating.errors.unrecorded_stats;
       }
       if (!statsB1) {
-        return literals(strings.bot.commands.rating.errors.no_participation, [
-          markdownEscape(accountInfo.nickname),
-        ]);
+        return literals(strings.bot.commands.rating.errors.no_participation, {
+          name: markdownEscape(accountInfo.nickname),
+        });
       }
 
       const reward = ratingInfo.rewards.find(
         (reward) =>
           statsB2.number >= reward.from_position &&
-          statsB2.number <= reward.to_position,
+          statsB2.number <= reward.to_position
       );
       const positionDelta = leaderboard
         ? statsB2.number - positionA!
@@ -118,11 +118,11 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
       const delta = deltaBkrlBlitzStats(
         statsA,
         accountInfo.statistics.rating!,
-        statsB2,
+        statsB2
       );
       const leagueTheme = LEAGUE_ACCENT[league.index];
       let rewardImage = reward
-        ? reward.type === 'vehicle'
+        ? reward.type === "vehicle"
           ? reward.vehicle.preview_image_url
           : reward.stuff.image_url
         : undefined;
@@ -131,7 +131,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
         const { ok } = await fetch(rewardImage);
 
         if (!ok) {
-          rewardImage = imgur('kP88vqr');
+          rewardImage = imgur("kP88vqr");
         }
       }
 
@@ -147,24 +147,24 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
 
           <div
             style={{
-              position: 'relative',
-              display: 'flex',
-              overflow: 'hidden',
+              position: "relative",
+              display: "flex",
+              overflow: "hidden",
             }}
           >
             <div
               style={{
-                position: 'relative',
+                position: "relative",
                 padding: 16,
                 backgroundColor: theme.colors[`appBackground2${leagueTheme}`],
                 borderRadius: 4,
                 border: `1px solid ${
                   theme.colors[`componentInteractive${leagueTheme}`]
                 }`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
               {reward === undefined && (
@@ -172,17 +172,17 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                   endOpacity={3 / 4}
                   color={theme.colors[`solidBackground${leagueTheme}`]}
                   style={{
-                    transform: 'translateX(-16px) rotate(90deg)',
+                    transform: "translateX(-16px) rotate(90deg)",
                   }}
                 />
               )}
 
               <div
                 style={{
-                  display: 'flex',
+                  display: "flex",
                   gap: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <img
@@ -190,24 +190,24 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                   style={{
                     width: 64,
                     height: 64,
-                    objectFit: 'contain',
+                    objectFit: "contain",
                   }}
                   src={normalizeLeagueIcon(
-                    ratingInfo.leagues[league.index].big_icon,
+                    ratingInfo.leagues[league.index].big_icon
                   )}
                 />
 
                 <div
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
+                    display: "flex",
+                    flexDirection: "column",
                   }}
                 >
                   <div
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <span
@@ -232,7 +232,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                           }}
                         >
                           {Math.abs(delta.score).toLocaleString(
-                            interaction.locale,
+                            interaction.locale
                           )}
                         </span>
                       </>
@@ -241,9 +241,9 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
 
                   <div
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <span
@@ -267,7 +267,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                           }}
                         >
                           {Math.abs(positionDelta).toLocaleString(
-                            interaction.locale,
+                            interaction.locale
                           )}
                         </span>
                       </>
@@ -279,23 +279,23 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               {reward && (
                 <div
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 8,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <div
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
+                      display: "flex",
+                      flexDirection: "column",
                     }}
                   >
                     <div
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
                       }}
                     >
                       <span
@@ -303,13 +303,13 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                           color: theme.colors[`textHighContrast${leagueTheme}`],
                           fontSize: 16,
                           maxWidth: 136,
-                          textAlign: 'right',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                          overflow: 'hidden',
+                          textAlign: "right",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
                         }}
                       >
-                        {reward.type === 'vehicle'
+                        {reward.type === "vehicle"
                           ? reward.vehicle.user_string
                           : reward.stuff.title}
                       </span>
@@ -317,9 +317,9 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
 
                     <div
                       style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
                       }}
                     >
                       <span
@@ -329,7 +329,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                         }}
                       >
                         Reward
-                        {reward.type === 'stuff' ? ` x${reward.count}` : ''}
+                        {reward.type === "stuff" ? ` x${reward.count}` : ""}
                       </span>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                     style={{
                       width: 64,
                       height: 64,
-                      objectFit: 'cover',
+                      objectFit: "cover",
                     }}
                     src={await iconPng(rewardImage!)}
                   />
@@ -350,7 +350,7 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                   endOpacity={3 / 4}
                   color={theme.colors[`solidBackground${leagueTheme}`]}
                   style={{
-                    transform: 'translateX(16px) rotate(-90deg)',
+                    transform: "translateX(16px) rotate(-90deg)",
                   }}
                 />
               )}
@@ -362,10 +362,10 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
                 direction="reverse"
                 color={theme.colors[`solidBackground${leagueTheme}`]}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   top: -40,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
+                  left: "50%",
+                  transform: "translateX(-50%)",
                 }}
               />
             )}
@@ -373,32 +373,32 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               <Glow
                 color={theme.colors[`solidBackground${leagueTheme}`]}
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   bottom: -40,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
+                  left: "50%",
+                  transform: "translateX(-50%)",
                 }}
               />
             )}
           </div>
 
           {delta.battles > 0 && (
-            <div style={{ padding: '8px 0', display: 'flex' }}>
+            <div style={{ padding: "8px 0", display: "flex" }}>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 4,
                   flex: 1,
-                  flexDirection: 'column',
+                  flexDirection: "column",
                 }}
               >
                 <span
                   style={{
                     fontSize: 24,
                     color: theme.colors.textHighContrast,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                   }}
                 >
                   {delta.battles.toLocaleString(interaction.locale)}
@@ -414,19 +414,19 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 4,
                   flex: 1,
-                  flexDirection: 'column',
+                  flexDirection: "column",
                 }}
               >
                 <span
                   style={{
                     fontSize: 24,
                     color: theme.colors.textHighContrast,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                   }}
                 >
                   {(100 * (delta.wins / delta.battles)).toFixed(0)}%
@@ -442,23 +442,23 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 4,
                   flex: 1,
-                  flexDirection: 'column',
+                  flexDirection: "column",
                 }}
               >
                 <span
                   style={{
                     fontSize: 24,
                     color: theme.colors.textHighContrast,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                   }}
                 >
                   {Math.round(delta.damage / delta.battles).toLocaleString(
-                    interaction.locale,
+                    interaction.locale
                   )}
                 </span>
                 <span
@@ -472,19 +472,19 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 4,
                   flex: 1,
-                  flexDirection: 'column',
+                  flexDirection: "column",
                 }}
               >
                 <span
                   style={{
                     fontSize: 24,
                     color: theme.colors.textHighContrast,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                   }}
                 >
                   {(100 * (delta.survived / delta.battles)).toFixed(0)}%
@@ -500,19 +500,19 @@ export const ratingCommand = new Promise<CommandRegistry>((resolve) => {
               </div>
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   gap: 4,
                   flex: 1,
-                  flexDirection: 'column',
+                  flexDirection: "column",
                 }}
               >
                 <span
                   style={{
                     fontSize: 24,
                     color: theme.colors.textHighContrast,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                   }}
                 >
                   {(delta.kills / delta.battles).toFixed(2)}

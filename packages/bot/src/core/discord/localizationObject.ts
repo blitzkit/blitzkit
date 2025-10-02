@@ -1,15 +1,15 @@
-import { BlitzKitStrings, literals as literalsFunc } from '@blitzkit/i18n';
-import { Locale } from 'discord.js';
-import { SUPPORTED_LOCALES_DISCORD } from '../localization/strings/constants';
-import { translator } from '../localization/translator';
+import { BlitzKitStrings, literals as literalsFunc } from "@blitzkit/i18n";
+import { Locale } from "discord.js";
+import { SUPPORTED_LOCALES_DISCORD } from "../localization/strings/constants";
+import { translator } from "../localization/translator";
 
 const validNameRegex =
   /^[\p{Ll}\p{Lm}\p{Lo}\p{N}\p{sc=Devanagari}\p{sc=Thai}_-]+$/u;
 
 export function localizationObject(
   path: (strings: BlitzKitStrings) => string,
-  literals: string[] = [],
-  strict = false,
+  literals?: Record<string, string | number>,
+  strict = false
 ) {
   return SUPPORTED_LOCALES_DISCORD.reduce<Partial<Record<Locale, string>>>(
     (localizations, locale) => {
@@ -20,7 +20,7 @@ export function localizationObject(
 
       if (!isValid) {
         console.warn(
-          `Invalid localization for ${locale} (${path}): ${translation}; skipping...`,
+          `Invalid localization for ${locale} (${path}): ${translation}; skipping...`
         );
         return localizations;
       }
@@ -30,6 +30,6 @@ export function localizationObject(
         [locale]: translation,
       };
     },
-    {},
+    {}
   );
 }
