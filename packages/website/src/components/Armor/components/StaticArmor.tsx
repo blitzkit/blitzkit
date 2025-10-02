@@ -7,6 +7,7 @@ import { hasEquipment } from "../../../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../../../core/blitzkit/modelTransform";
 import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../../../core/blitzkit/resolveThickness";
+import { controlsEnabledEvent } from "../../../core/controlsEnabled";
 import { useArmor } from "../../../hooks/useArmor";
 import { useModel } from "../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../hooks/useTankModelDefinition";
@@ -154,9 +155,8 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
 
             position.set(event.clientX, event.clientY);
 
-            Tankopedia.mutate((draft) => {
-              draft.controlsEnabled = false;
-            });
+            controlsEnabledEvent.dispatch(false);
+
             Tankopedia.mutate((draft) => {
               draft.shot = undefined;
               draft.highlightArmor = undefined;
@@ -192,9 +192,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            Tankopedia.mutate((draft) => {
-              draft.controlsEnabled = true;
-            });
+            controlsEnabledEvent.dispatch(true);
             window.removeEventListener("pointermove", handlePointerMove);
             window.removeEventListener("pointerup", handlePointerUp);
           }
@@ -243,9 +241,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = false;
-              });
+              controlsEnabledEvent.dispatch(false);
               Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
@@ -284,9 +280,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = true;
-              });
+              controlsEnabledEvent.dispatch(true);
               window.removeEventListener("pointermove", handlePointerMove);
               window.removeEventListener("pointerup", handlePointerUp);
             }
@@ -324,9 +318,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = false;
-              });
+              controlsEnabledEvent.dispatch(false);
               Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
@@ -364,9 +356,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = true;
-              });
+              controlsEnabledEvent.dispatch(true);
 
               window.removeEventListener("pointermove", handlePointerMove);
               window.removeEventListener("pointerup", handlePointerUp);

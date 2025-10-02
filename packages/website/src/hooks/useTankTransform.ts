@@ -4,24 +4,24 @@ import {
   K_HAT,
   TrackDefinition,
   TurretDefinition,
-} from '@blitzkit/core';
-import { invalidate } from '@react-three/fiber';
-import type { QuicklimeEvent } from 'quicklime';
-import { type RefObject, useEffect } from 'react';
-import { Euler, Group, Vector3 } from 'three';
-import { degToRad } from 'three/src/math/MathUtils.js';
-import { correctZYTuple } from '../core/blitz/correctZYTuple';
+} from "@blitzkit/core";
+import { invalidate } from "@react-three/fiber";
+import type { QuicklimeEvent } from "quicklime";
+import { type RefObject, useEffect } from "react";
+import { Euler, Group, Vector3 } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
+import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
-} from '../core/blitzkit/modelTransform';
-import { useTankModelDefinition } from './useTankModelDefinition';
+} from "../core/blitzkit/modelTransform";
+import { useTankModelDefinition } from "./useTankModelDefinition";
 
 export function useTankTransform(
   track: TrackDefinition,
   turret: TurretDefinition,
   turretContainer: RefObject<Group>,
-  gunContainer: RefObject<Group>,
+  gunContainer: RefObject<Group>
 ) {
   const tankModelDefinition = useTankModelDefinition();
 
@@ -37,7 +37,7 @@ export function useTankTransform(
     const gunRotation = new Euler();
 
     function handleModelTransform(
-      event: QuicklimeEvent<ModelTransformEventData>,
+      event: QuicklimeEvent<ModelTransformEventData>
     ) {
       handleModelTransformInner(event.data);
     }
@@ -70,13 +70,13 @@ export function useTankTransform(
 
       if (tankModelDefinition.initial_turret_rotation) {
         const initialPitch = -degToRad(
-          tankModelDefinition.initial_turret_rotation.pitch,
+          tankModelDefinition.initial_turret_rotation.pitch
         );
         const initialYaw = -degToRad(
-          tankModelDefinition.initial_turret_rotation.yaw,
+          tankModelDefinition.initial_turret_rotation.yaw
         );
         const initialRoll = -degToRad(
-          tankModelDefinition.initial_turret_rotation.roll,
+          tankModelDefinition.initial_turret_rotation.roll
         );
 
         turretPosition

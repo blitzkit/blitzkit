@@ -113,7 +113,6 @@ export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   editStatic: false,
   skills: createDefaultSkills(skillDefinitions),
   model,
-  controlsEnabled: true,
   xpMultiplier: 1,
   display: TankopediaDisplay.Model,
 }));

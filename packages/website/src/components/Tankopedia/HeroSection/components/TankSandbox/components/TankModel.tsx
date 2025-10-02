@@ -5,6 +5,7 @@ import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawL
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
 import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
+import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
 import { useModel } from "../../../../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
 import { useTankTransform } from "../../../../../../hooks/useTankTransform";
@@ -62,9 +63,7 @@ export function TankModel() {
             position.set(event.clientX, event.clientY);
             event.stopPropagation();
 
-            Tankopedia.mutate((draft) => {
-              draft.controlsEnabled = false;
-            });
+            controlsEnabledEvent.dispatch(false);
 
             window.addEventListener("pointermove", handlePointerMove);
             window.addEventListener("pointerup", handlePointerUp);
@@ -81,9 +80,7 @@ export function TankModel() {
           translateTexture(deltaX + deltaY);
         }
         function handlePointerUp() {
-          Tankopedia.mutate((draft) => {
-            draft.controlsEnabled = true;
-          });
+          controlsEnabledEvent.dispatch(true);
 
           window.removeEventListener("pointermove", handlePointerMove);
           window.removeEventListener("pointerup", handlePointerUp);
@@ -123,9 +120,7 @@ export function TankModel() {
 
             position.set(event.clientX, event.clientY);
 
-            Tankopedia.mutate((draft) => {
-              draft.controlsEnabled = false;
-            });
+            controlsEnabledEvent.dispatch(false);
             Tankopedia.mutate((draft) => {
               draft.shot = undefined;
               draft.highlightArmor = undefined;
@@ -161,9 +156,7 @@ export function TankModel() {
             modelTransformEvent.dispatch({ pitch, yaw });
           }
           function handlePointerUp() {
-            Tankopedia.mutate((draft) => {
-              draft.controlsEnabled = true;
-            });
+            controlsEnabledEvent.dispatch(true);
             window.removeEventListener("pointermove", handlePointerMove);
             window.removeEventListener("pointerup", handlePointerUp);
           }
@@ -205,9 +198,7 @@ export function TankModel() {
             function onPointerDown(event: ThreeEvent<PointerEvent>) {
               event.stopPropagation();
 
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = false;
-              });
+              controlsEnabledEvent.dispatch(false);
               Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
                 draft.highlightArmor = undefined;
@@ -246,9 +237,7 @@ export function TankModel() {
               modelTransformEvent.dispatch({ pitch, yaw });
             }
             function handlePointerUp() {
-              Tankopedia.mutate((draft) => {
-                draft.controlsEnabled = true;
-              });
+              controlsEnabledEvent.dispatch(true);
               window.removeEventListener("pointermove", handlePointerMove);
               window.removeEventListener("pointerup", handlePointerUp);
             }
