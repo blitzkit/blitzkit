@@ -1,5 +1,10 @@
-export function literals(string: string, literals: string[]) {
-  return literals.reduce((accumulator, literal, index) => {
-    return accumulator.replace(`%s${index + 1}`, literal);
-  }, string);
+export function literals(
+  string: string,
+  literals?: Record<string, string | number>
+) {
+  for (const key in literals) {
+    string = string.replaceAll(`{${key}}`, `${literals[key]}`);
+  }
+
+  return string;
 }
