@@ -1,8 +1,10 @@
 # BlitzKit
 
-Tools for everything and anything World of Tanks Blitz.
+Tools for everything and anything, World of Tanks Blitz.
 
-This GitHub repository contains the code for BlitzKit and all its services. You may need to checkout sensitive closed-source submodules in order to locally develop some aspects of BlitzKit. Communicate with `@tresabhi` on Discord to get started or talk about sensitive content like environment variables or submodules.
+This GitHub repository contains the code for BlitzKit and all its services. If you are here, looking to use BlitzKit, go to https://blitzkit.app/.
+
+If you intend to contribute to the code, note that you may need to check out sensitive, closed-source submodules to locally develop certain aspects of BlitzKit. Communicate with `@tresabhi` on Discord to get started or discuss sensitive content, such as environment variables or submodules.
 
 ## Packages
 
@@ -13,8 +15,8 @@ This GitHub repository contains the code for BlitzKit and all its services. You 
 | [packages/core](packages/core)       |                      |                                                                                                                                                                                            | Mutual internal code shared between all other packages.                                                                  |
 | [packages/i18n](packages/i18n)       |                      | [Crowdin](https://crowdin.com/project/blitzkrieg)                                                                                                                                          | Translations served as JSON shared across all other packages, including some utility code.                               |
 | [packages/scripts](packages/scripts) |                      |                                                                                                                                                                                            | CLI utilities for the development and deployment of BlitzKit services.                                                   |
-| [packages/varuna](packages/varuna)   | Varuna               | [NPM](https://www.npmjs.com/package/varuna)                                                                                                                                                | React and Astro oriented state management library, awaiting separation from BlitzKit. Unavailable from NPM at this time. |
-| [packages/website](packages/website) | BlitzKit             | https://blitzkit.app                                                                                                                                                                       | The BlitzKit website providing a wide range of tools, APIs, and interconnecting all other services.                      |
+| [packages/varuna](packages/varuna)   | Varuna               | [NPM](https://www.npmjs.com/package/varuna)                                                                                                                                                | React and Astro-oriented state management library, awaiting separation from BlitzKit. Unavailable from NPM at this time. |
+| [packages/website](packages/website) | BlitzKit | https://blitzkit.app | The BlitzKit website provides a wide range of tools, APIs, and interconnects all other services.                      |
 
 ## Submodules
 
@@ -29,7 +31,7 @@ This GitHub repository contains the code for BlitzKit and all its services. You 
 | Name                                                          | Source                                                                           | BlitzKit Default                    | Memo                                                                                                                                |
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `PUBLIC_WARGAMING_APPLICATION_ID`                             | [Wargaming Developer's Room](https://developers.wargaming.net/)                  |                                     | Application ID needed to communicate with Wargaming APIs.                                                                           |
-| `PUBLIC_PROMOTE_OPENTEST`                                     |                                                                                  | `false`                             | Optional boolean dictating wether the website advertises [the opentest subdomain of BlitzKit](https://opentest.blitzkit.app/).      |
+| `PUBLIC_PROMOTE_OPENTEST`                                     |                                                                                  | `false`                             | Optional boolean dictating whether the website advertises [the opentest subdomain of BlitzKit](https://opentest.blitzkit.app/).      |
 | `ALLOW_ROBOTS`                                                |                                                                                  | `true`                              | Toggles between `Allow: /` and `Disallow: /` in the website's `/robots.txt`. This is usually `false` for all BlitzKit's subdomains. |
 | `WOTB_GLOSSARY`, `WOTB_GLOSSARY_DOMAIN`, `WOTB_GLOSSARY_PATH` |                                                                                  |                                     |                                                                                                                                     |
 | `PUBLIC_GOOGLE_TAG_MANAGER_ID`                                | [Google Tag Manager](https://tagmanager.google.com/)                             | `G-GL2JVHCGPQ`                      | Google Tag Manager's unique identifier for analytical purposes.                                                                     |
