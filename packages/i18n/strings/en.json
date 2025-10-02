@@ -1,7 +1,7 @@
 {
   "test": {
     "default": "test",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is %s1 because it has the color of %s2. I like it so much that I will say its name 3 times! %s1! %s1! %s1! Once again, it's %s2, not %s3.",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "The quick brown fox jumps over the lazy dog."
   },
 
@@ -9,13 +9,13 @@
     "name": "BlitzKit",
 
     "units": {
-      "m": "%s1m",
-      "mm": "%s1mm",
-      "deg": "%s1°",
-      "hp": "%s1hp",
-      "x": "x%s1",
-      "percentage": "%s1%",
-      "deg_s": "%s1°/s"
+      "m": "{value}m",
+      "mm": "{value}mm",
+      "deg": "{value}°",
+      "hp": "{value}hp",
+      "x": "x{value}",
+      "percentage": "{value}%",
+      "deg_s": "{value}°/s"
     },
 
     "gun_types": {
@@ -206,11 +206,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Could not find clan\nCouldn't find \"%s1\". Try selecting a clan from the search result.",
-        "player_not_found": "# Could not find user\nI couldn't find user \"%s1\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
+        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
         "player_not_linked": "# Use `/link` to get started\nI don't know who you are but you can tell me today!",
-        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"%s1\".",
-        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"%s1\". Try typing the name of the tank instead of a number.",
+        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
+        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
         "no_tank_stats": "# No tank stats available\nThis player doesn't have any stats available. This may not be the player you are looking for.",
         "get_help": "Help Discord server",
         "uncaught_error": "# BlitzKit ran into an error!\nWe're so sorry about this. Feel free to [join the official Discord server](https://discord.gg/nDt7AjGJQH) to get help.",
@@ -315,7 +315,7 @@
           "description": "Tier",
 
           "choices": {
-            "tier": "Tier %s1 - %s2"
+            "tier": "Tier {tier_1} - {tier_2}"
           }
         }
       },
@@ -323,13 +323,13 @@
       "periods": {
         "career": "Career",
         "today": "Today",
-        "days": "%s1 days",
-        "custom": "%s1 - %s2 days"
+        "days": "{days} days",
+        "custom": "{day_1} - {day_2} days"
       },
 
       "filters": {
         "none": "No filters",
-        "tier": "Tier %s1"
+        "tier": "Tier {tier}"
       },
 
       "no_data": {
@@ -356,24 +356,6 @@
     },
 
     "commands": {
-      "auction": {
-        "name": "auction",
-        "description": "Tanks available right now in the auction",
-
-        "body": {
-          "title": "Blitz Auction",
-          "subtitle": "%s1 available • next prices %s2\nBid now: %s3",
-          "next": "Next price: %s1",
-          "available": "Available: %s1 / %s2"
-        },
-        "errors": {
-          "no_auction": "# No ongoing auction\n\nCurrently, there are no tanks available for purchase in the auction. If you think this is an error, please report this discrepancy in [the official Discord Server](https://discord.gg/nDt7AjGJQH)."
-        },
-        "actions": {
-          "bid": "Bid now"
-        }
-      },
-
       "replay": {
         "name": "replay",
         "description": "Display replay results"
@@ -397,20 +379,20 @@
         "body": {
           "subtitle": "Research",
           "total": "Total",
-          "research": "Research: %s1",
-          "upgrades": "Upgrades: %s1",
-          "purchase": "Purchase: %s1",
-          "equipment": "Equipment: %s1",
+          "research": "Research: {cost}",
+          "upgrades": "Upgrades: {cost}",
+          "purchase": "Purchase: {cost}",
+          "equipment": "Equipment: {cost}",
           "estimation": "# This is an estimation!\n\nThis list may include already researched tanks because of the inaccurate information Wargaming provides. Try providing a `starting-tank` from the line when using the command if you can."
         },
 
         "errors": {
-          "non_tech_tree": "# %s1 is not on the tech tree\n\nYou cannot research a premium/collector tank.",
-          "tier_1": "# %s1 is a tier I\n\nTier I tanks are always unlocked for free for all players.",
-          "already_researched": "# %s1 is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# %s1 was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# %s1 and %s2 are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# %s1 higher tiered to %s2\n\nMake sure to provide %s3 as the `starting-tank` instead as it is the lower tiered tank."
+          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
+          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
+          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
+          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
+          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
         }
       },
 
@@ -456,7 +438,7 @@
           "wn8": "WN8",
           "winrate": "Winrate",
           "damage": "Damage",
-          "unknown_tank": "Unknown tank %s1"
+          "unknown_tank": "Unknown tank {id}"
         }
       },
 
@@ -499,13 +481,13 @@
         "options": {
           "threshold": {
             "name": "threshold",
-            "description": "The number of days inactive (default: %s1 days)"
+            "description": "The number of days inactive (default: {days} days)"
           }
         },
 
         "body": {
-          "subtitle": "Inactive for %s1+ days",
-          "listing": "%s1 days"
+          "subtitle": "Inactive for {days}+ days",
+          "listing": "{days} days"
         }
       },
 
@@ -552,7 +534,7 @@
         "body": {
           "accounts_linked": "Accounts linked",
           "no_role_permissions": {
-            "title": "%s1 failed to verify",
+            "title": "{name} failed to verify",
             "description": "I don't have the permission to manage roles."
           }
         },
@@ -570,12 +552,12 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "The max number of clan results (default: %s1)"
+            "description": "The max number of clan results (default: {limit})"
           }
         },
 
         "body": {
-          "title": "Clan search for %s1 in region %s2",
+          "title": "Clan search for {search} in region {region}",
           "no_results": "No clans found"
         }
       },
@@ -587,12 +569,12 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "The max number of player results (default: %s1)"
+            "description": "The max number of player results (default: {limit})"
           }
         },
 
         "body": {
-          "title": "Player search for %s1 in region %s2",
+          "title": "Player search for {search} in region {region}",
           "no_results": "No players found"
         }
       },
@@ -616,7 +598,7 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "How many neighbors to display (default: %s1)"
+            "description": "How many neighbors to display (default: {count})"
           },
 
           "season": {
@@ -624,7 +606,7 @@
             "description": "Season number (default: current)",
 
             "choices": {
-              "current": "%s1 (current)"
+              "current": "{season} (current)"
             }
           },
 
@@ -635,12 +617,12 @@
         },
 
         "body": {
-          "top_players": "Top %s1 players",
-          "no_participation": "# %s1 didn't play rating in season %s2\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "Top {count} players",
+          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
-          "deleted_player": "Deleted %s1",
+          "deleted_player": "Deleted {id}",
           "neighbors": "Rating neighbors",
-          "more": "+ %s1 more"
+          "more": "+ {count} more"
         }
       },
 
@@ -659,7 +641,7 @@
         "description": "Shows all own tanks in a tier",
 
         "body": {
-          "title": "# %s1's owned tier %s2 tanks\n\n"
+          "title": "# {name}'s owned tier {tier} tanks\n\n"
         }
       },
 
@@ -668,7 +650,7 @@
         "description": "Checks wether the bot has the required permissions to function",
 
         "body": {
-          "title": "# Permissions\n\n%s1",
+          "title": "# Permissions\n\n{body}",
           "view_channels": "View channels: needed to find the message the refresh button was used on",
           "read_message_history": "Read message history: needed to find the message to refresh",
           "attach_files": "Attach files: needed to add images to image-based commands",
@@ -682,7 +664,7 @@
 
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - %s1ms"
+          "pong_with_time": "Pong 🏓 - {time}ms"
         },
 
         "subcommands": {
@@ -702,7 +684,7 @@
         "description": "Basic information about a player",
 
         "body": {
-          "title": "%s1's information",
+          "title": "{name}'s information",
           "nickname": "Nickname",
           "battles": "Battles",
           "winrate": "Winrate",
@@ -735,7 +717,7 @@
         },
 
         "errors": {
-          "no_participation": "# %s1 hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
           "unrecorded_stats": "# Statistics currently unavailable\n\nWargaming may be currently be facing server downtime. If there is an on-going season, statistics should be available withing 24 hours."
         }
       }
@@ -772,8 +754,8 @@
         "recent": "Recently viewed",
         "select_all": "Select all",
         "count_singular": "1 tank",
-        "count_plural": "%s1 tanks",
-        "sorting_by": "Sorting by %s1",
+        "count_plural": "{count} tanks",
+        "sorting_by": "Sorting by {name}",
         "no_tanks_found": {
           "body": "No tanks found.",
           "search_again": "Try searching again.",
@@ -853,16 +835,16 @@
       },
 
       "hero": {
-        "credit": "By %s1 ❤️"
+        "credit": "By {name} ❤️"
       },
       "hot_tanks": {
         "title": "Popular tanks",
-        "subtitle": "Last %s1 days"
+        "subtitle": "Last {days} days"
       },
       "other_projects": {
         "title": "Other cool projects"
       },
-      "help_translate": "Please help translate %s1 to %s2!",
+      "help_translate": "Please help translate {name} to {language_2}!",
       "seo_description": "Tools for everything World of Tanks Blitz"
     },
 
@@ -895,7 +877,7 @@
           "next": "Next",
           "no_results": "No results"
         },
-        "stats": "%s1 / %s2 guessed correctly"
+        "stats": "{correct} / {total} guessed correctly"
       },
 
       "tankopedia": {
@@ -905,8 +887,8 @@
         "button": "Find tanks",
         "description": "Blitz tank encyclopedia",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
-        "tank_seo_title": "%s1 - Tier %s2 %s3 %s4 | %s5 Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "%s1 armor, statistics, equipment, provisions, and more. %s2 DPM, %s3hp alpha, %s4mm penetration, %s5kph top speed, %s6hp health.",
+        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
 
         "visualizers": {
           "reload": {
@@ -936,7 +918,6 @@
 
           "view_range": {
             "camo": "Camo",
-            "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
           },
@@ -999,15 +980,15 @@
                 "track": "Tracks"
               },
               "status": {
-                "penetration": "%s1hp penetration",
+                "penetration": "{damage}hp penetration",
                 "blocked": "Blocked",
                 "ricochet": "Ricochet",
-                "splash": "%s1hp splash"
+                "splash": "{damage}hp splash"
               },
               "stats": {
-                "thickness_and_angle": "%s1mm %s2°",
-                "nominal": "%s1mm nominal",
-                "ricochet_loss": "%s1% penetration"
+                "thickness_and_angle": "{thickness}mm {angle}°",
+                "nominal": "{thickness}mm nominal",
+                "ricochet_loss": "{loss}% penetration"
               }
             }
           },
@@ -1047,8 +1028,8 @@
         "tech_tree": {
           "title": "Tech tree",
           "battle": "1 battle",
-          "battles": "%s1 battles",
-          "route": "Route %s1 of %s2"
+          "battles": "{count} battles",
+          "route": "Route {index} of {count}"
         },
 
         "game_modes": {
@@ -1057,7 +1038,7 @@
 
         "review": {
           "title": "Review videos",
-          "join": "Apply to %s1 YouTuber program"
+          "join": "Apply to {name} YouTuber program"
         },
 
         "configuration": {
@@ -1096,15 +1077,15 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare",
-            "class": "Tier %s1 %s2",
-            "tier": "All of tier %s1",
+            "class": "Tier {tier} {class}",
+            "tier": "All of tier {tier}",
             "all": "All tanks"
           },
           "values": {
-            "shell_index": "Shell %s1",
-            "at_distance": "At %s1m",
+            "shell_index": "Shell {index}",
+            "at_distance": "At {distance}m",
             "at_distance_slider_label": "Distance",
-            "dispersion_at_distance": "Dispersion at %s1m",
+            "dispersion_at_distance": "Dispersion at {distance}m",
             "gun_flexibility": "Gun flexibility",
             "speed": "Speed",
             "terrain_coefficients": "Terrain coefficients",
@@ -1260,9 +1241,9 @@
         "description": "Tank performance statistics",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
-          "body": "Estimated stats based on %s1 players. Updated %s2 ago.",
-          "hours": "%s1 hours",
-          "minutes": "%s1 minutes"
+          "body": "Estimated stats based on {count} players. Updated {age} ago.",
+          "hours": "{count} hours",
+          "minutes": "{count} minutes"
         },
         "player_count": {
           "label": "Player count"
@@ -1294,10 +1275,10 @@
         "button": "Browse all",
         "description": "Blitz player avatars",
         "seo_description": "All World of Tanks Blitz player avatars",
-        "last_updated": "Last updated on %s1",
+        "last_updated": "Last updated on {time}",
         "search": {
           "hint": "Search avatars...",
-          "results": "%s1 avatars"
+          "results": "{count} avatars"
         }
       },
       "session": {
@@ -1312,8 +1293,8 @@
           "no_results": "No players found"
         },
         "controls": {
-          "title": "Tracking %s1",
-          "subtitle": "Since %s1",
+          "title": "Tracking {count}",
+          "subtitle": "Since {time}",
           "reset": "Reset",
           "change": "Change"
         },
@@ -1376,7 +1357,7 @@
               "cancel": "Cancel",
               "success": {
                 "title": "Copy URL",
-                "info": "Generated the URL for %s1. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
                 "back": "Back",
                 "copy": "Copy URL"
               }
