@@ -193,9 +193,9 @@ export async function renderBreakdown(
           title={
             tankDefinition
               ? unwrap(tankDefinition.name)
-              : literals(strings.bot.commands.breakdown.body.unknown_tank, [
-                  `${id}`,
-                ])
+              : literals(strings.bot.commands.breakdown.body.unknown_tank, {
+                  id,
+                })
           }
           stats={[
             {

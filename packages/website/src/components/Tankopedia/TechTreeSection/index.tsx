@@ -158,7 +158,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
                 pl="1"
               >
                 <Text size="2">
-                  {literals(strings.common.units.x, [`${multiplier}`])}
+                  {literals(strings.common.units.x, { value: multiplier })}
                 </Text>
               </Flex>
             );
@@ -218,10 +218,10 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <CaretLeftIcon />
             </IconButton>
             <Text>
-              {literals(strings.website.tools.tankopedia.tech_tree.route, [
-                `${lineIndex + 1}`,
-                `${lines.length}`,
-              ])}
+              {literals(strings.website.tools.tankopedia.tech_tree.route, {
+                index: lineIndex + 1,
+                count: lines.length,
+              })}
             </Text>
             <IconButton
               size="2"

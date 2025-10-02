@@ -431,9 +431,9 @@ export const TankSearch = memo<TankSearchProps>(
             <Text color="gray">
               {tanksFiltered.length === 1
                 ? strings.website.common.tank_search.count_singular
-                : literals(strings.website.common.tank_search.count_plural, [
-                    `${tanksFiltered.length.toLocaleString(locale)}`,
-                  ])}
+                : literals(strings.website.common.tank_search.count_plural, {
+                    count: tanksFiltered.length.toLocaleString(locale),
+                  })}
             </Text>
 
             {onSelectAll && (
@@ -460,9 +460,11 @@ export const TankSearch = memo<TankSearchProps>(
 
           {tankopediaSort.by !== "meta.none" && (
             <Text color="gray">
-              {literals(strings.website.common.tank_search.sorting_by, [
-                strings.website.common.tank_search.sort[tankopediaSort.by],
-              ])}
+              {literals(strings.website.common.tank_search.sorting_by, {
+                name: strings.website.common.tank_search.sort[
+                  tankopediaSort.by
+                ],
+              })}
               {SORT_UNITS[tankopediaSort.by] === undefined
                 ? ""
                 : ` (${SORT_UNITS[tankopediaSort.by]})`}

@@ -1,8 +1,8 @@
 ---
-import { Code, Flex, Heading, Text } from '@radix-ui/themes';
-import { resolveBranchName } from '../core/blitzkit/branches';
-import { getStrings } from '../core/i18n/getStrings';
-import { literals } from '@blitzkit/i18n/src/literals';
+import { Code, Flex, Heading, Text } from "@radix-ui/themes";
+import { resolveBranchName } from "../core/blitzkit/branches";
+import { getStrings } from "../core/i18n/getStrings";
+import { literals } from "@blitzkit/i18n/src/literals";
 
 const { locale } = Astro.params;
 const branchName = resolveBranchName(locale);
@@ -45,7 +45,7 @@ const strings = getStrings(locale);
     );
   }
 
-  #home-hero[data-variant='pride'] {
+  #home-hero[data-variant="pride"] {
     --g-1-dark: var(--crimson-3);
     --g-1-light: var(--crimson-7);
     --g-2-dark: var(--orange-3);
@@ -58,7 +58,7 @@ const strings = getStrings(locale);
     --g-7-light: var(--purple-7);
   }
 
-  #home-hero[data-variant='spooky'] {
+  #home-hero[data-variant="spooky"] {
     --g-1-dark: var(--orange-3);
     --g-1-light: var(--orange-7);
     --g-2-dark: var(--tomato-3);
@@ -73,23 +73,23 @@ const strings = getStrings(locale);
 </style>
 
 <script>
-  import { clamp, times } from 'lodash-es';
+  import { clamp, times } from "lodash-es";
 
   const n = 5;
-  const homeHero = document.getElementById('home-hero');
+  const homeHero = document.getElementById("home-hero");
 
   if (homeHero) {
     switch (new Date().getMonth()) {
       case 5:
-        homeHero.dataset.variant = 'pride';
+        homeHero.dataset.variant = "pride";
         break;
 
       case 9:
-        homeHero.dataset.variant = 'spooky';
+        homeHero.dataset.variant = "spooky";
         break;
     }
 
-    window.addEventListener('pointermove', (event) => {
+    window.addEventListener("pointermove", (event) => {
       const x = event.clientX / window.innerWidth;
       const c = clamp(
         (1 -
@@ -97,7 +97,7 @@ const strings = getStrings(locale);
             window.innerHeight) **
           2,
         0,
-        1,
+        1
       );
 
       // https://www.desmos.com/calculator/ndz2poxk32
@@ -128,13 +128,13 @@ const strings = getStrings(locale);
     width="100%"
   >
     <Flex direction="column" align="center" gap="1">
-      <Heading size={{ initial: '8', xs: '9' }} weight="bold" align="center">
-        <Flex align="center" gap={{ initial: '2', xs: '4' }}>
+      <Heading size={{ initial: "8", xs: "9" }} weight="bold" align="center">
+        <Flex align="center" gap={{ initial: "2", xs: "4" }}>
           BlitzKit
           {
             isBranchNamed && (
               <Code
-                size={{ initial: '7', xs: '8' }}
+                size={{ initial: "7", xs: "8" }}
                 color="gray"
                 variant="outline"
               >
@@ -146,7 +146,9 @@ const strings = getStrings(locale);
       </Heading>
 
       <Text color="gray" align="center" size="4"
-        >{literals(strings.website.home.hero.credit, ['TrèsAbhi'])}</Text
+        >{
+          literals(strings.website.home.hero.credit, { name: "TrèsAbhi" })
+        }</Text
       >
     </Flex>
   </Flex>

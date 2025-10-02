@@ -49,15 +49,16 @@ const tankModelDefinitions = await fetchModelDefinitions();
 const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
 const unwrap = unwrapper(locale);
-const title = literals(strings.website.tools.tankopedia.tank_seo_title, [
-  unwrap(tank.name),
-  TIER_ROMAN_NUMERALS[tank.tier],
-  strings.common.nations_adjectives[
-    tank.nation as keyof typeof strings.common.nations_adjectives
-  ],
-  strings.common.tank_class_short[tank.class],
-  "BlitzKit",
-]);
+const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
+  name: unwrap(tank.name),
+  tier: TIER_ROMAN_NUMERALS[tank.tier],
+  nationality:
+    strings.common.nations_adjectives[
+      tank.nation as keyof typeof strings.common.nations_adjectives
+    ],
+  class: strings.common.tank_class_short[tank.class],
+  website: "BlitzKit",
+});
 const url = import.meta.env.SITE + Astro.url.pathname;
 
 const icon = asset(`icons/tanks/big/${id}.webp`);
@@ -90,14 +91,14 @@ const characteristics = tankCharacteristics(
 );
 const description = literals(
   strings.website.tools.tankopedia.tank_seo_description,
-  [
-    unwrap(tank.name),
-    Math.round(characteristics.dpm).toLocaleString(locale),
-    Math.round(characteristics.damage).toLocaleString(locale),
-    Math.round(characteristics.penetration).toLocaleString(locale),
-    Math.round(characteristics.speedForwards).toLocaleString(locale),
-    Math.round(characteristics.health).toLocaleString(locale),
-  ]
+  {
+    name: unwrap(tank.name),
+    dpm: Math.round(characteristics.dpm).toLocaleString(locale),
+    alpha: Math.round(characteristics.damage).toLocaleString(locale),
+    penetration: Math.round(characteristics.penetration).toLocaleString(locale),
+    speed: Math.round(characteristics.speedForwards).toLocaleString(locale),
+    health: Math.round(characteristics.health).toLocaleString(locale),
+  }
 );
 
 export interface TankGuide {

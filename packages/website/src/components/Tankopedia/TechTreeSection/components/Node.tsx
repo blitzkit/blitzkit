@@ -135,7 +135,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                     ? strings.website.tools.tankopedia.tech_tree.battle
                     : literals(
                         strings.website.tools.tankopedia.tech_tree.battles,
-                        [`${games}`]
+                        { count: games }
                       ))}
               </Text>
             )}

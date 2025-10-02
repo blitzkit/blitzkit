@@ -1,16 +1,16 @@
-import type { AssaultRanges } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { Box, Flex, Text } from '@radix-ui/themes';
-import { clamp } from 'three/src/math/MathUtils.js';
+import type { AssaultRanges } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { clamp } from "three/src/math/MathUtils.js";
 import {
   fakeLogSquishyHigh,
   fakeLogSquishyLow,
-} from '../../../../../../../core/blitzkit/fakeLog';
-import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
-import { Var } from '../../../../../../../core/radix/var';
-import { useLocale } from '../../../../../../../hooks/useLocale';
-import { VisualizerCard } from '../VisualizerCard';
-import { AssaultCursor } from './components/Cursor';
+} from "../../../../../../../core/blitzkit/fakeLog";
+import type { TankCharacteristics } from "../../../../../../../core/blitzkit/tankCharacteristics";
+import { Var } from "../../../../../../../core/radix/var";
+import { useLocale } from "../../../../../../../hooks/useLocale";
+import { VisualizerCard } from "../VisualizerCard";
+import { AssaultCursor } from "./components/Cursor";
 
 interface Props {
   ranges: AssaultRanges;
@@ -48,27 +48,29 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
           p="3"
           pt="8"
           pr="5"
-          style={{ backgroundColor: Var('gray-1') }}
+          style={{ backgroundColor: Var("gray-1") }}
           flexGrow="1"
         >
           <Flex flexGrow="1">
-            <Box position="relative" width={Var('space-8')}>
+            <Box position="relative" width={Var("space-8")}>
               {ranges.map((range, index) => (
                 <Text
                   key={index}
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     left: 0,
                     bottom: `${fakeLogSquishyLow(range.factor / maxFactor) * 100}%`,
-                    transform: 'translateY(50%)',
+                    transform: "translateY(50%)",
                   }}
                   color="gray"
                   size="1"
                   wrap="nowrap"
                 >
-                  {literals(strings.common.units.hp, [
-                    `${Math.round(stats.damageWithoutAssault * range.factor)}`,
-                  ])}
+                  {literals(strings.common.units.hp, {
+                    value: Math.round(
+                      stats.damageWithoutAssault * range.factor
+                    ),
+                  })}
                 </Text>
               ))}
             </Box>
@@ -77,8 +79,8 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
               {ranges.map((range, index) => {
                 const mix =
                   clamp(2 * (range.factor / maxFactor - 1) + 1, 0, 1) * 100;
-                const color0 = `color-mix(in hsl, ${Var('tomato-9')}, ${Var('jade-9')} ${mix}%)`;
-                const color1 = `color-mix(in hsl, ${Var('tomato-7')}, ${Var('jade-7')} ${mix}%)`;
+                const color0 = `color-mix(in hsl, ${Var("tomato-9")}, ${Var("jade-9")} ${mix}%)`;
+                const color1 = `color-mix(in hsl, ${Var("tomato-7")}, ${Var("jade-7")} ${mix}%)`;
                 const last = ranges[index - 1];
                 const lastFakeDistance = last?.fakeDistance ?? 0;
                 const fakeWidth = range.fakeDistance - lastFakeDistance;
@@ -105,8 +107,8 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                   width="100%"
                   height="1pt"
                   style={{
-                    transform: 'translateY(50%)',
-                    backgroundColor: Var('gray-11'),
+                    transform: "translateY(50%)",
+                    backgroundColor: Var("gray-11"),
                   }}
                 />
               ))}
@@ -118,7 +120,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
             </Flex>
           </Flex>
 
-          <Flex ml="8" height={Var('space-7')}>
+          <Flex ml="8" height={Var("space-7")}>
             {ranges.map((range, index) => {
               const last = ranges[index - 1];
               const lastFakeDistance = last?.fakeDistance ?? 0;
@@ -137,15 +139,15 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                     color="gray"
                     mt="2"
                     style={{
-                      position: 'absolute',
+                      position: "absolute",
                       right: 0,
-                      transform: 'translateX(50%)',
-                      writingMode: 'vertical-rl',
+                      transform: "translateX(50%)",
+                      writingMode: "vertical-rl",
                     }}
                   >
-                    {literals(strings.common.units.m, [
-                      `${Math.round(range.distance)}`,
-                    ])}
+                    {literals(strings.common.units.m, {
+                      value: Math.round(range.distance),
+                    })}
                   </Text>
                 </Box>
               );

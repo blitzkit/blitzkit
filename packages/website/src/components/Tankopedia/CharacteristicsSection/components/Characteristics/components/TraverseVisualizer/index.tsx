@@ -1,20 +1,20 @@
-import { literals } from '@blitzkit/i18n';
-import { Checkbox, Code, Flex, Tabs, Text } from '@radix-ui/themes';
-import { useEffect, useRef, useState } from 'react';
-import type { TankCharacteristics } from '../../../../../../../core/blitzkit/tankCharacteristics';
-import { useLocale } from '../../../../../../../hooks/useLocale';
-import { VisualizerCard } from '../VisualizerCard';
+import { literals } from "@blitzkit/i18n";
+import { Checkbox, Code, Flex, Tabs, Text } from "@radix-ui/themes";
+import { useEffect, useRef, useState } from "react";
+import type { TankCharacteristics } from "../../../../../../../core/blitzkit/tankCharacteristics";
+import { useLocale } from "../../../../../../../hooks/useLocale";
+import { VisualizerCard } from "../VisualizerCard";
 
 export interface StatsAcceptorProps {
   stats: TankCharacteristics;
 }
 
-type Terrain = 'Hard' | 'Medium' | 'Soft';
+type Terrain = "Hard" | "Medium" | "Soft";
 
 export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
   const hull = useRef<HTMLDivElement>(null);
   const turret = useRef<HTMLImageElement>(null);
-  const [terrain, setTerrain] = useState<Terrain>('Hard');
+  const [terrain, setTerrain] = useState<Terrain>("Hard");
   const [rotateHull, setRotateHull] = useState(true);
   const [rotateTurret, setRotateTurret] = useState(true);
   const { strings } = useLocale();
@@ -63,10 +63,10 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
       <div
         ref={hull}
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           animationDuration: `${
             rotateHull ? 360 / stats[`hullTraverse${terrain}Terrain`] : 0
           }s`,
@@ -75,12 +75,12 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
         <img
           draggable="false"
           style={{
-            width: isTurretless ? '22rem' : '12rem',
-            height: isTurretless ? '22rem' : '12rem',
-            objectFit: 'contain',
-            filter: 'drop-shadow(0px 0px 4px black)',
+            width: isTurretless ? "22rem" : "12rem",
+            height: isTurretless ? "22rem" : "12rem",
+            objectFit: "contain",
+            filter: "drop-shadow(0px 0px 4px black)",
           }}
-          src={`/assets/images/tankopedia/visualizers/hull-traverse/hull${isTurretless ? '-only' : ''}.png`}
+          src={`/assets/images/tankopedia/visualizers/hull-traverse/hull${isTurretless ? "-only" : ""}.png`}
         />
 
         {!isTurretless && (
@@ -88,14 +88,14 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
             draggable="false"
             ref={turret}
             style={{
-              width: '27rem',
-              height: '27rem',
-              objectFit: 'contain',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              filter: 'drop-shadow(0px 0px 4px black)',
-              transform: 'translate(-50%, -50%)',
+              width: "27rem",
+              height: "27rem",
+              objectFit: "contain",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              filter: "drop-shadow(0px 0px 4px black)",
+              transform: "translate(-50%, -50%)",
               animationDuration: `${
                 rotateTurret ? 360 / stats.turretTraverseSpeed : 0
               }s`,
@@ -110,7 +110,7 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
         bottom="0"
         left="50%"
         style={{
-          transform: 'translateX(-50%)',
+          transform: "translateX(-50%)",
         }}
       >
         <Tabs.Root
@@ -137,16 +137,16 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
         left="50%"
         bottom="7"
         style={{
-          transform: 'translateX(-50%)',
+          transform: "translateX(-50%)",
         }}
       >
         <Text color="gray" size="1">
           {strings.website.tools.tankopedia.visualizers.rotator.effective}
         </Text>
         <Code size="1" variant="ghost">
-          {literals(strings.common.units.deg_s, [
-            `${(turretSpeedDeg + hullSpeedDeg).toFixed(1)}`,
-          ])}
+          {literals(strings.common.units.deg_s, {
+            value: (turretSpeedDeg + hullSpeedDeg).toFixed(1),
+          })}
         </Code>
       </Flex>
 
@@ -160,15 +160,15 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
           gap="5"
           justify="center"
           style={{
-            transform: 'translateX(-50%)',
-            userSelect: 'none',
+            transform: "translateX(-50%)",
+            userSelect: "none",
           }}
         >
           <Flex
             align="center"
             gap="2"
             onClick={() => setRotateHull((state) => !state)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             <Checkbox variant="classic" checked={rotateHull} />
             <Text size="2">
@@ -180,7 +180,7 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
             align="center"
             gap="2"
             onClick={() => setRotateTurret((state) => !state)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             <Checkbox variant="classic" checked={rotateTurret} />
             <Text size="2">

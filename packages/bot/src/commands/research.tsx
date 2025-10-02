@@ -8,31 +8,31 @@ import {
   TANK_ICONS,
   TankType,
   TIER_ROMAN_NUMERALS,
-} from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { escapeMarkdown, Locale } from 'discord.js';
-import { CommandWrapper } from '../components/CommandWrapper';
-import { TitleBar } from '../components/TitleBar';
-import { resolveTankId } from '../core/blitz/resolveTankId';
-import { buildTechTreeLine } from '../core/blitzkit/buildTechTreeLine';
-import { iconPng } from '../core/blitzkit/iconPng';
-import { tankDefinitions } from '../core/blitzkit/nonBlockingPromises';
-import { resolveAncestry } from '../core/blitzkit/resolveAncestry';
-import { tankIconPng } from '../core/blitzkit/tankIconPng';
-import { addUsernameChoices } from '../core/discord/addUsernameChoices';
-import { autocompleteTanks } from '../core/discord/autocompleteTanks';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { localizationObject } from '../core/discord/localizationObject';
-import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
-import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
-import { theme } from '../stitches.config';
+} from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { escapeMarkdown, Locale } from "discord.js";
+import { CommandWrapper } from "../components/CommandWrapper";
+import { TitleBar } from "../components/TitleBar";
+import { resolveTankId } from "../core/blitz/resolveTankId";
+import { buildTechTreeLine } from "../core/blitzkit/buildTechTreeLine";
+import { iconPng } from "../core/blitzkit/iconPng";
+import { tankDefinitions } from "../core/blitzkit/nonBlockingPromises";
+import { resolveAncestry } from "../core/blitzkit/resolveAncestry";
+import { tankIconPng } from "../core/blitzkit/tankIconPng";
+import { addUsernameChoices } from "../core/discord/addUsernameChoices";
+import { autocompleteTanks } from "../core/discord/autocompleteTanks";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { localizationObject } from "../core/discord/localizationObject";
+import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
+import { translator } from "../core/localization/translator";
+import { CommandRegistry } from "../events/interactionCreate";
+import { theme } from "../stitches.config";
 
 export const researchCommand = new Promise<CommandRegistry>((resolve) => {
   const { strings } = translator(Locale.EnglishUS);
 
   resolve({
-    command: createLocalizedCommand('research')
+    command: createLocalizedCommand("research")
       .addStringOption((option) =>
         option
           .setName(strings.bot.commands.research.options.target_tank.name)
@@ -41,20 +41,20 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
               (strings) =>
                 strings.bot.commands.research.options.target_tank.name,
               undefined,
-              true,
-            ),
+              true
+            )
           )
           .setDescription(
-            strings.bot.commands.research.options.target_tank.description,
+            strings.bot.commands.research.options.target_tank.description
           )
           .setDescriptionLocalizations(
             localizationObject(
               (strings) =>
-                strings.bot.commands.research.options.target_tank.description,
-            ),
+                strings.bot.commands.research.options.target_tank.description
+            )
           )
           .setAutocomplete(true)
-          .setRequired(true),
+          .setRequired(true)
       )
       .addStringOption((option) =>
         option
@@ -64,20 +64,20 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
               (strings) =>
                 strings.bot.commands.research.options.starting_tank.name,
               undefined,
-              true,
-            ),
+              true
+            )
           )
           .setDescription(
-            strings.bot.commands.research.options.starting_tank.description,
+            strings.bot.commands.research.options.starting_tank.description
           )
           .setDescriptionLocalizations(
             localizationObject(
               (strings) =>
-                strings.bot.commands.research.options.starting_tank.description,
-            ),
+                strings.bot.commands.research.options.starting_tank.description
+            )
           )
           .setAutocomplete(true)
-          .setRequired(false),
+          .setRequired(false)
       )
       .addStringOption(addUsernameChoices),
 
@@ -85,11 +85,11 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
       const { strings, unwrap } = translator(interaction.locale);
       const awaitedTankDefinitions = await tankDefinitions;
       const targetTankId = await resolveTankId(
-        interaction.options.getString('target-tank', true),
+        interaction.options.getString("target-tank", true),
         interaction.locale,
-        true,
+        true
       );
-      const startingTankRaw = interaction.options.getString('starting-tank');
+      const startingTankRaw = interaction.options.getString("starting-tank");
       const targetTank = awaitedTankDefinitions.tanks[targetTankId];
       const { id, region } = await resolvePlayerFromCommand(interaction);
       let startingTankId: number;
@@ -99,46 +99,45 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
         startingTankId = await resolveTankId(
           startingTankRaw,
           interaction.locale,
-          true,
+          true
         );
 
         if (targetTankId === startingTankId) {
           return literals(
             strings.bot.commands.research.errors.start_end_equal,
-            [escapeMarkdown(unwrap(targetTank.name))],
+            { tank: escapeMarkdown(unwrap(targetTank.name)) }
           );
         }
 
         const startingTank = awaitedTankDefinitions.tanks[startingTankId];
 
         if (startingTank.tier > targetTank.tier) {
-          return literals(strings.bot.commands.research.errors.unordered, [
-            escapeMarkdown(unwrap(startingTank.name)),
-            escapeMarkdown(unwrap(targetTank.name)),
-            escapeMarkdown(unwrap(targetTank.name)),
-          ]);
+          return literals(strings.bot.commands.research.errors.unordered, {
+            tank_1: escapeMarkdown(unwrap(startingTank.name)),
+            tank_2: escapeMarkdown(unwrap(targetTank.name)),
+          });
         }
 
         if (!targetTankAncestry.includes(startingTankId)) {
           return literals(
             strings.bot.commands.research.errors.tanks_not_on_line,
-            [
-              escapeMarkdown(unwrap(targetTank.name)),
-              escapeMarkdown(unwrap(startingTank.name)),
-            ],
+            {
+              tank_1: escapeMarkdown(unwrap(targetTank.name)),
+              tank_2: escapeMarkdown(unwrap(startingTank.name)),
+            }
           );
         }
       } else {
         if (targetTank.type !== TankType.RESEARCHABLE) {
-          return literals(strings.bot.commands.research.errors.non_tech_tree, [
-            escapeMarkdown(unwrap(targetTank.name)),
-          ]);
+          return literals(strings.bot.commands.research.errors.non_tech_tree, {
+            tank: escapeMarkdown(unwrap(targetTank.name)),
+          });
         }
 
         if (targetTank.tier === 1) {
-          return literals(strings.bot.commands.research.errors.tier_1, [
-            escapeMarkdown(unwrap(targetTank.name)),
-          ]);
+          return literals(strings.bot.commands.research.errors.tier_1, {
+            tank: escapeMarkdown(unwrap(targetTank.name)),
+          });
         }
 
         const tankStats = await getTankStats(region, id);
@@ -150,18 +149,18 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
         if (tankStats.some(({ tank_id }) => tank_id === targetTankId)) {
           return literals(
             strings.bot.commands.research.errors.already_researched,
-            [escapeMarkdown(unwrap(targetTank.name))],
+            { tank: escapeMarkdown(unwrap(targetTank.name)) }
           );
         }
 
         const foundAncestor = targetTankAncestry.find(
           (id) =>
             awaitedTankDefinitions.tanks[id].tier === 1 ||
-            tankStats.some(({ tank_id }) => tank_id === id),
+            tankStats.some(({ tank_id }) => tank_id === id)
         );
 
         if (foundAncestor === undefined) {
-          throw new Error('No first owned tech tree found.');
+          throw new Error("No first owned tech tree found.");
         }
 
         startingTankId = foundAncestor;
@@ -169,12 +168,12 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
       const techTreeLine = await buildTechTreeLine(
         startingTankId,
-        targetTankId,
+        targetTankId
       );
 
       const line = [...techTreeLine, startingTankId].reverse();
       const { nickname } = await getAccountInfo(region, id);
-      const clan = (await getClanAccountInfo(region, id, ['clan']))?.clan;
+      const clan = (await getClanAccountInfo(region, id, ["clan"]))?.clan;
       const clanImage = clan ? emblemURL(clan.emblem_set_id) : undefined;
       const costs = await Promise.all(
         line.map(async (id) => {
@@ -187,18 +186,18 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
           tank.turrets.forEach((turret) => {
             if (
               turret.research_cost !== undefined &&
-              typeof turret.research_cost.research_cost_type!.value === 'number'
+              typeof turret.research_cost.research_cost_type!.value === "number"
             ) {
               turretXps.set(
                 turret.id,
-                turret.research_cost.research_cost_type!.value,
+                turret.research_cost.research_cost_type!.value
               );
             }
 
             turret.guns.forEach((gun) => {
               if (
                 gun.research_cost !== undefined &&
-                typeof gun.research_cost.research_cost_type!.value === 'number'
+                typeof gun.research_cost.research_cost_type!.value === "number"
               ) {
                 gunXps.set(gun.id, gun.research_cost.research_cost_type!.value);
               }
@@ -208,11 +207,11 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
           tank.engines.forEach((engine) => {
             if (
               engine.research_cost !== undefined &&
-              typeof engine.research_cost.research_cost_type!.value === 'number'
+              typeof engine.research_cost.research_cost_type!.value === "number"
             ) {
               engineXps.set(
                 engine.id,
-                engine.research_cost.research_cost_type!.value,
+                engine.research_cost.research_cost_type!.value
               );
             }
           });
@@ -220,11 +219,11 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
           tank.tracks.forEach((track) => {
             if (
               track.research_cost !== undefined &&
-              typeof track.research_cost.research_cost_type!.value === 'number'
+              typeof track.research_cost.research_cost_type!.value === "number"
             ) {
               trackXps.set(
                 track.id,
-                track.research_cost.research_cost_type!.value,
+                track.research_cost.research_cost_type!.value
               );
             }
           });
@@ -249,10 +248,10 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
             purchase: tank.price.value,
             equipment: equipmentPriceMatrix[tank.tier].reduce(
               (a, b) => a + 3 * b,
-              0,
+              0
             ),
           };
-        }),
+        })
       );
 
       const image = (
@@ -267,14 +266,14 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
               gap: 8,
             }}
           >
             <div
               style={{
-                display: 'flex',
+                display: "flex",
                 borderRadius: 4,
                 backgroundColor: theme.colors.appBackground2,
                 border: theme.borderStyles.subtle,
@@ -285,10 +284,10 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
               <div
                 style={{
                   flex: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
                   right: 24,
                 }}
               >
@@ -304,23 +303,23 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
               <div
                 style={{
                   flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                   gap: 8,
-                  padding: '16px 0',
+                  padding: "16px 0",
                 }}
               >
                 <div
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 4,
-                    alignItems: 'center',
+                    alignItems: "center",
                   }}
                 >
                   <img
                     alt="XP icon"
-                    src={await iconPng(asset('icons/currencies/xp.webp'))}
+                    src={await iconPng(asset("icons/currencies/xp.webp"))}
                     width={16}
                     height={16}
                   />
@@ -330,7 +329,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                       color: theme.colors.textHighContrast,
                     }}
                   >
-                    Experience:{' '}
+                    Experience:{" "}
                     {costs
                       .reduce((a, b) => a + (b.research ?? 0) + b.upgrades, 0)
                       .toLocaleString(interaction.locale)}
@@ -339,14 +338,14 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
                 <div
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 4,
-                    alignItems: 'center',
+                    alignItems: "center",
                   }}
                 >
                   <img
                     alt="Silver icon"
-                    src={await iconPng(asset('icons/currencies/silver.webp'))}
+                    src={await iconPng(asset("icons/currencies/silver.webp"))}
                     width={16}
                     height={16}
                   />
@@ -356,7 +355,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                       color: theme.colors.textHighContrast,
                     }}
                   >
-                    Purchase:{' '}
+                    Purchase:{" "}
                     {costs
                       .reduce((a, b) => a + b.purchase, 0)
                       .toLocaleString(interaction.locale)}
@@ -365,14 +364,14 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
                 <div
                   style={{
-                    display: 'flex',
+                    display: "flex",
                     gap: 4,
-                    alignItems: 'center',
+                    alignItems: "center",
                   }}
                 >
                   <img
                     alt="Silver icon"
-                    src={await iconPng(asset('icons/currencies/silver.webp'))}
+                    src={await iconPng(asset("icons/currencies/silver.webp"))}
                     width={16}
                     height={16}
                   />
@@ -382,7 +381,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                       color: theme.colors.textHighContrast,
                     }}
                   >
-                    Equipment:{' '}
+                    Equipment:{" "}
                     {costs
                       .reduce((a, b) => a + b.equipment, 0)
                       .toLocaleString(interaction.locale)}
@@ -399,7 +398,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                   <div
                     key={id}
                     style={{
-                      display: 'flex',
+                      display: "flex",
                       borderRadius: 4,
                       backgroundColor: theme.colors.appBackground2,
                       border: theme.borderStyles.subtle,
@@ -408,9 +407,9 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                     <div
                       style={{
                         width: 48,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
                       <span
@@ -426,9 +425,9 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                     <div
                       style={{
                         flex: 1,
-                        display: 'flex',
-                        position: 'relative',
-                        right: '5%',
+                        display: "flex",
+                        position: "relative",
+                        right: "5%",
                       }}
                     >
                       <img
@@ -437,23 +436,23 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         style={{
                           height: 100,
                           width: 100,
-                          objectFit: 'contain',
-                          position: 'absolute',
-                          left: '25%',
+                          objectFit: "contain",
+                          position: "absolute",
+                          left: "25%",
                           top: 0,
                         }}
                       />
 
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                           gap: 4,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          position: 'absolute',
+                          alignItems: "center",
+                          justifyContent: "center",
+                          position: "absolute",
                           bottom: 8,
-                          left: '50%',
-                          transform: 'translateX(-50%)',
+                          left: "50%",
+                          transform: "translateX(-50%)",
                         }}
                       >
                         <img
@@ -476,23 +475,23 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                     <div
                       style={{
                         flex: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
                         gap: 8,
-                        padding: '16px 0',
+                        padding: "16px 0",
                       }}
                     >
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                           gap: 4,
-                          alignItems: 'center',
+                          alignItems: "center",
                         }}
                       >
                         <img
                           alt="XP icon"
-                          src={await iconPng(asset('icons/currencies/xp.webp'))}
+                          src={await iconPng(asset("icons/currencies/xp.webp"))}
                           width={16}
                           height={16}
                         />
@@ -504,11 +503,11 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         >
                           {literals(
                             strings.bot.commands.research.body.research,
-                            [
-                              `${costs[index].research?.toLocaleString(
-                                interaction.locale,
-                              )}`,
-                            ],
+                            {
+                              cost: costs[index].research?.toLocaleString(
+                                interaction.locale
+                              ),
+                            }
                           )}
                         </span>
                       </div>
@@ -516,15 +515,15 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                       {costs[index].upgrades > 0 && (
                         <div
                           style={{
-                            display: 'flex',
+                            display: "flex",
                             gap: 4,
-                            alignItems: 'center',
+                            alignItems: "center",
                           }}
                         >
                           <img
                             alt="Free XP icon"
                             src={await iconPng(
-                              asset('icons/currencies/free-xp.webp'),
+                              asset("icons/currencies/free-xp.webp")
                             )}
                             width={16}
                             height={16}
@@ -537,7 +536,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                           >
                             {literals(
                               strings.bot.commands.research.body.upgrades,
-                              [costs[index].upgrades.toLocaleString()],
+                              { cost: costs[index].upgrades.toLocaleString() }
                             )}
                           </span>
                         </div>
@@ -545,15 +544,15 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                           gap: 4,
-                          alignItems: 'center',
+                          alignItems: "center",
                         }}
                       >
                         <img
                           alt="Silver icon"
                           src={await iconPng(
-                            asset('icons/currencies/silver.webp'),
+                            asset("icons/currencies/silver.webp")
                           )}
                           width={16}
                           height={16}
@@ -566,26 +565,26 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         >
                           {literals(
                             strings.bot.commands.research.body.purchase,
-                            [
-                              costs[index].purchase.toLocaleString(
-                                interaction.locale,
+                            {
+                              cost: costs[index].purchase.toLocaleString(
+                                interaction.locale
                               ),
-                            ],
+                            }
                           )}
                         </span>
                       </div>
 
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                           gap: 4,
-                          alignItems: 'center',
+                          alignItems: "center",
                         }}
                       >
                         <img
                           alt="Silver icon"
                           src={await iconPng(
-                            asset('icons/currencies/silver.webp'),
+                            asset("icons/currencies/silver.webp")
                           )}
                           width={16}
                           height={16}
@@ -598,18 +597,18 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         >
                           {literals(
                             strings.bot.commands.research.body.equipment,
-                            [
-                              costs[index].equipment.toLocaleString(
-                                interaction.locale,
+                            {
+                              cost: costs[index].equipment.toLocaleString(
+                                interaction.locale
                               ),
-                            ],
+                            }
                           )}
                         </span>
                       </div>
                     </div>
                   </div>
                 );
-              }),
+              })
             )}
           </div>
         </CommandWrapper>
@@ -621,7 +620,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
     },
 
     autocomplete(interaction) {
-      autocompleteTanks(interaction, true, ['target-tank', 'starting-tank']);
+      autocompleteTanks(interaction, true, ["target-tank", "starting-tank"]);
     },
   });
 });

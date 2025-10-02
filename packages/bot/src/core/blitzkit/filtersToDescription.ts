@@ -1,12 +1,12 @@
-import { fetchTankDefinitions, TIER_ROMAN_NUMERALS } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { Locale } from 'discord.js';
-import { StatFilters } from '../blitzstars/filterStats';
-import { translator } from '../localization/translator';
+import { fetchTankDefinitions, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { Locale } from "discord.js";
+import { StatFilters } from "../blitzstars/filterStats";
+import { translator } from "../localization/translator";
 
 export async function filtersToDescription(
   { nation, tier, type, class: tankClass, tank }: StatFilters,
-  locale: Locale,
+  locale: Locale
 ) {
   const { strings, bkLocale } = translator(locale);
   const awaitedTankDefinitions = await fetchTankDefinitions();
@@ -18,11 +18,13 @@ export async function filtersToDescription(
     info.push((strings.common.nations as Record<string, string>)[nation]);
   if (tier) {
     info.push(
-      literals(strings.bot.common.filters.tier, [TIER_ROMAN_NUMERALS[tier]]),
+      literals(strings.bot.common.filters.tier, {
+        tier: TIER_ROMAN_NUMERALS[tier],
+      })
     );
   }
   if (tankClass) info.push(strings.common.tank_class_short[tankClass]);
   if (type) info.push(strings.common.tree_type[type]);
 
-  return info.length === 0 ? strings.bot.common.filters.none : info.join(', ');
+  return info.length === 0 ? strings.bot.common.filters.none : info.join(", ");
 }

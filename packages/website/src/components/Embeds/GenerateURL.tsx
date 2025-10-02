@@ -155,7 +155,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
               {literals(
                 strings.website.tools.embed.configuration.export.generate
                   .success.info,
-                [`${copyUser?.nickname}`]
+                { name: copyUser?.nickname }
               )}
             </Text>
           </Flex>

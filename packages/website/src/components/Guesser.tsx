@@ -139,10 +139,10 @@ export function Guesser() {
 
       <Flex justify="center" style={{ userSelect: "none" }}>
         <Text>
-          {literals(strings.website.tools.guess.stats, [
-            `${correctGuesses}`,
-            `${totalGuesses}`,
-          ])}
+          {literals(strings.website.tools.guess.stats, {
+            correct: correctGuesses,
+            total: totalGuesses,
+          })}
         </Text>
       </Flex>
 

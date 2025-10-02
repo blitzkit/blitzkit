@@ -53,32 +53,38 @@ function LayerEntry({
       <td>
         {layer.type === null && (
           <Text size="2" color={shotStatusColor}>
-            {literals(strings.common.units.mm, [
-              Math.round(layer.distance * 1000).toLocaleString(locale),
-            ])}
+            {literals(strings.common.units.mm, {
+              value: Math.round(layer.distance * 1000).toLocaleString(locale),
+            })}
           </Text>
         )}
 
         {layer.type === ArmorType.External && (
           <Text size="2" color={shotStatusColor}>
-            {literals(strings.common.units.mm, [
-              Math.round(layer.thickness).toLocaleString(locale),
-            ])}
+            {literals(strings.common.units.mm, {
+              value: Math.round(layer.thickness).toLocaleString(locale),
+            })}
           </Text>
         )}
         {(layer.type === ArmorType.Primary ||
           layer.type === ArmorType.Spaced) && (
           <Text size="2" color={shotStatusColor}>
-            {literals(
-              angle === undefined
-                ? strings.common.units.mm
-                : strings.website.tools.tankopedia.sandbox.dynamic.shot_card
+            {angle === undefined
+              ? literals(strings.common.units.mm, {
+                  value: Math.round(layer.thicknessAngled).toLocaleString(
+                    locale
+                  ),
+                })
+              : literals(
+                  strings.website.tools.tankopedia.sandbox.dynamic.shot_card
                     .stats.thickness_and_angle,
-              [
-                Math.round(layer.thicknessAngled).toLocaleString(locale),
-                radToDeg(angle ?? 0).toFixed(0),
-              ]
-            )}
+                  {
+                    thickness: Math.round(layer.thicknessAngled).toLocaleString(
+                      locale
+                    ),
+                    angle: radToDeg(angle ?? 0).toFixed(0),
+                  }
+                )}
           </Text>
         )}
       </td>
@@ -89,7 +95,7 @@ function LayerEntry({
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
                 .ricochet_loss,
-              [Math.max(-100, -50 * layer.distance).toFixed(0)]
+              { loss: Math.max(-100, -50 * layer.distance).toFixed(0) }
             )}
           </Text>
         )}
@@ -100,7 +106,7 @@ function LayerEntry({
             {literals(
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.stats
                 .nominal,
-              [Math.round(layer.thickness).toLocaleString(locale)]
+              { thickness: Math.round(layer.thickness).toLocaleString(locale) }
             )}
           </Text>
         )}
@@ -132,7 +138,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
               strings.website.tools.tankopedia.sandbox.dynamic.shot_card.status[
                 shot.in.status
               ],
-              [Math.round(shot.damage).toLocaleString(locale)]
+              { damage: Math.round(shot.damage).toLocaleString(locale) }
             )}
           </Text>
 
@@ -202,7 +208,7 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
               {literals(
                 strings.website.tools.tankopedia.sandbox.dynamic.shot_card
                   .status[shot.out.status],
-                [Math.round(shot.damage).toLocaleString(locale)]
+                { damage: Math.round(shot.damage).toLocaleString(locale) }
               )}
             </Text>
 

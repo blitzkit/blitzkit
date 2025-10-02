@@ -1,15 +1,15 @@
-import { asset, isExplosive } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { Box, Flex, Text } from '@radix-ui/themes';
-import { useRef, useState } from 'react';
-import { clamp, degToRad, radToDeg } from 'three/src/math/MathUtils.js';
-import { Var } from '../../../../../../../core/radix/var';
-import { useLocale } from '../../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../../stores/duel';
-import type { StatsAcceptorProps } from '../TraverseVisualizer';
-import { VisualizerCard } from '../VisualizerCard';
-import { VisualizerCornerStat } from '../VisualizerCornerStat';
-import { ShellSwitcher } from './components/ShellSwitcher';
+import { asset, isExplosive } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { Box, Flex, Text } from "@radix-ui/themes";
+import { useRef, useState } from "react";
+import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { Var } from "../../../../../../../core/radix/var";
+import { useLocale } from "../../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../../stores/duel";
+import type { StatsAcceptorProps } from "../TraverseVisualizer";
+import { VisualizerCard } from "../VisualizerCard";
+import { VisualizerCornerStat } from "../VisualizerCornerStat";
+import { ShellSwitcher } from "./components/ShellSwitcher";
 
 export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
   const shell = Duel.use((state) => state.protagonist.shell);
@@ -30,7 +30,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
     <Flex direction="column" mb="6" align="center">
       <VisualizerCard
         mb="0"
-        style={{ width: '100%' }}
+        style={{ width: "100%" }}
         ref={container}
         onPointerMove={(event) => {
           if (!container.current || explodes) return;
@@ -50,7 +50,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           top="0"
           left="0"
           style={{
-            background: `linear-gradient(to right, transparent, ${Var('gray-a4')})`,
+            background: `linear-gradient(to right, transparent, ${Var("gray-a4")})`,
           }}
         >
           <Box
@@ -73,20 +73,20 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             background: `conic-gradient(
               at 0 50%,
 
-              ${Var('ruby-a2')},
-              ${Var('ruby-a1')} ${Math.PI / 2 - ricochet}rad,
+              ${Var("ruby-a2")},
+              ${Var("ruby-a1")} ${Math.PI / 2 - ricochet}rad,
 
-              ${Var('jade-a2')} ${Math.PI / 2 - ricochet}rad,
-              ${Var('jade-a4')} ${Math.PI / 2 - normalization}rad,
+              ${Var("jade-a2")} ${Math.PI / 2 - ricochet}rad,
+              ${Var("jade-a4")} ${Math.PI / 2 - normalization}rad,
 
-              ${Var('cyan-a5')} ${Math.PI / 2 - normalization}rad,
-              ${Var('cyan-a3')} ${Math.PI / 2 + normalization}rad,
+              ${Var("cyan-a5")} ${Math.PI / 2 - normalization}rad,
+              ${Var("cyan-a3")} ${Math.PI / 2 + normalization}rad,
 
-              ${Var('jade-a2')} ${Math.PI / 2 + normalization}rad,
-              ${Var('jade-a4')} ${Math.PI / 2 + ricochet}rad,
+              ${Var("jade-a2")} ${Math.PI / 2 + normalization}rad,
+              ${Var("jade-a4")} ${Math.PI / 2 + ricochet}rad,
 
-              ${Var('ruby-a1')} ${Math.PI / 2 + ricochet}rad,
-              ${Var('ruby-a2')} 180deg
+              ${Var("ruby-a1")} ${Math.PI / 2 + ricochet}rad,
+              ${Var("ruby-a2")} 180deg
             `,
           }}
         />
@@ -97,7 +97,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           top="50%"
           height="18rem"
           style={{
-            transformOrigin: 'top center',
+            transformOrigin: "top center",
             transform: `translateX(-50%) rotate(${-Math.PI / 2 - angle}rad)`,
           }}
         >
@@ -107,8 +107,8 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             height="100%"
             bottom="100%"
             style={{
-              transform: 'translateX(-50%)',
-              backgroundColor: Var('gray-a8'),
+              transform: "translateX(-50%)",
+              backgroundColor: Var("gray-a8"),
             }}
           />
           <Box
@@ -116,22 +116,22 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             width="3px"
             height="100%"
             style={{
-              transform: 'translateX(-50%)',
-              background: `linear-gradient(${Var('gray-a11')}, ${Var('gray-a4')})`,
+              transform: "translateX(-50%)",
+              background: `linear-gradient(${Var("gray-a11")}, ${Var("gray-a4")})`,
             }}
           />
 
           <img
             src={asset(`icons/shells/${shell.icon}.webp`)}
             style={{
-              objectFit: 'contain',
-              transform: 'translate(-50%, -50%) rotate(-45deg)',
-              position: 'absolute',
-              width: '2rem',
-              height: '2rem',
-              top: '6rem',
+              objectFit: "contain",
+              transform: "translate(-50%, -50%) rotate(-45deg)",
+              position: "absolute",
+              width: "2rem",
+              height: "2rem",
+              top: "6rem",
               left: 0,
-              filter: 'drop-shadow(0px 0px 0.25rem black)',
+              filter: "drop-shadow(0px 0px 0.25rem black)",
             }}
           />
         </Box>
@@ -142,7 +142,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           top="50%"
           height="16rem"
           style={{
-            transformOrigin: 'top center',
+            transformOrigin: "top center",
             transform: `translateX(-50%) rotate(${-Math.PI / 2 - effectiveAngle}rad)`,
           }}
         >
@@ -152,17 +152,17 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             height="100%"
             top="-100%"
             style={{
-              transform: 'translateX(-50%)',
-              background: `linear-gradient(${Var('gray-a4')}, ${Var('gray-a11')})`,
+              transform: "translateX(-50%)",
+              background: `linear-gradient(${Var("gray-a4")}, ${Var("gray-a11")})`,
             }}
           />
         </Box>
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.ricochet.angle}
-          value={literals(strings.common.units.deg, [
-            radToDeg(Math.abs(angle)).toFixed(0),
-          ])}
+          value={literals(strings.common.units.deg, {
+            value: radToDeg(Math.abs(angle)).toFixed(0),
+          })}
           side="top-left"
         />
         <VisualizerCornerStat
@@ -171,10 +171,12 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           }
           value={
             doesRicochet
-              ? '-'
-              : literals(strings.common.units.deg, [
-                  radToDeg(Math.min(normalization, Math.abs(angle))).toFixed(0),
-                ])
+              ? "-"
+              : literals(strings.common.units.deg, {
+                  value: radToDeg(
+                    Math.min(normalization, Math.abs(angle))
+                  ).toFixed(0),
+                })
           }
           side="top-right"
         />
@@ -185,10 +187,10 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           }
           value={
             doesRicochet
-              ? '-'
-              : literals(strings.common.units.deg, [
-                  radToDeg(Math.abs(effectiveAngle)).toFixed(0),
-                ])
+              ? "-"
+              : literals(strings.common.units.deg, {
+                  value: radToDeg(Math.abs(effectiveAngle)).toFixed(0),
+                })
           }
           side="bottom-left"
         />
@@ -196,10 +198,10 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           label={strings.website.tools.tankopedia.visualizers.ricochet.armor}
           value={
             doesRicochet
-              ? '-'
-              : literals(strings.common.units.percentage, [
-                  armorPercentage.toFixed(0),
-                ])
+              ? "-"
+              : literals(strings.common.units.percentage, {
+                  value: armorPercentage.toFixed(0),
+                })
           }
           side="bottom-right"
         />
@@ -215,7 +217,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             top="0"
             left="0"
             style={{
-              background: `radial-gradient(${Var('black-a7')}, ${Var('black-a11')})`,
+              background: `radial-gradient(${Var("black-a7")}, ${Var("black-a11")})`,
             }}
           >
             <Text color="gray" align="center">

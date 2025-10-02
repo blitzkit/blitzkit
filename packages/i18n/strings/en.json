@@ -844,7 +844,7 @@
       "other_projects": {
         "title": "Other cool projects"
       },
-      "help_translate": "Please help translate {name} to {language_2}!",
+      "help_translate": "Please help translate {name} to {language}!",
       "seo_description": "Tools for everything World of Tanks Blitz"
     },
 
@@ -1293,7 +1293,7 @@
           "no_results": "No players found"
         },
         "controls": {
-          "title": "Tracking {count}",
+          "title": "Tracking {name}",
           "subtitle": "Since {time}",
           "reset": "Reset",
           "change": "Change"

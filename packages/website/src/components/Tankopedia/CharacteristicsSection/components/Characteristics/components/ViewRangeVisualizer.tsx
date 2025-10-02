@@ -1,20 +1,20 @@
-import { literals } from '@blitzkit/i18n';
-import { EyeOpenIcon } from '@radix-ui/react-icons';
-import { Box, Card, Code, Flex, Slider, Tabs, Text } from '@radix-ui/themes';
-import { useRef, useState } from 'react';
-import { Var } from '../../../../../../core/radix/var';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import type { StatsAcceptorProps } from './TraverseVisualizer';
+import { literals } from "@blitzkit/i18n";
+import { EyeOpenIcon } from "@radix-ui/react-icons";
+import { Box, Card, Code, Flex, Slider, Tabs, Text } from "@radix-ui/themes";
+import { useRef, useState } from "react";
+import { Var } from "../../../../../../core/radix/var";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
 const maps = [
   {
-    id: 'ghost-factory',
-    string: 'ghost_factory',
+    id: "ghost-factory",
+    string: "ghost_factory",
     size: 512,
   },
   {
-    id: 'dead-rail',
-    string: 'dead_rail',
+    id: "dead-rail",
+    string: "dead_rail",
     size: 512,
   },
 ] as const;
@@ -32,7 +32,7 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
 
   return (
     <Card
-      style={{ aspectRatio: '1 / 1', touchAction: 'none' }}
+      style={{ aspectRatio: "1 / 1", touchAction: "none" }}
       mb="6"
       variant="classic"
     >
@@ -61,8 +61,8 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
           style={{
             backgroundImage: `url(/assets/images/tankopedia/visualizers/range/${map.id}.png)`,
             filter: `grayscale(0.5) brightness(0.8) contrast(1.2)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
 
@@ -75,16 +75,18 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
           align="center"
           justify="center"
           style={{
-            aspectRatio: '1 / 1',
-            transform: 'translate(-50%, -50%)',
-            background: `radial-gradient(${Var('black-a6')}, ${Var('gray-a12')})`,
-            borderRadius: '50%',
+            aspectRatio: "1 / 1",
+            transform: "translate(-50%, -50%)",
+            background: `radial-gradient(${Var("black-a6")}, ${Var("gray-a12")})`,
+            borderRadius: "50%",
           }}
         >
-          <Text style={{ userSelect: 'none' }}>
+          <Text style={{ userSelect: "none" }}>
             <Flex align="center" gap="1">
               <EyeOpenIcon width="1.25rem" height="1.25rem" />
-              {literals(strings.common.units.m, [resolvedViewRange.toFixed(0)])}
+              {literals(strings.common.units.m, {
+                value: resolvedViewRange.toFixed(0),
+              })}
             </Flex>
           </Text>
         </Flex>
@@ -100,8 +102,8 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
         gap="3"
         align="center"
         style={{
-          backgroundColor: Var('black-a7'),
-          backdropFilter: 'blur(4rem)',
+          backgroundColor: Var("black-a7"),
+          backdropFilter: "blur(4rem)",
         }}
       >
         <Text size="2">
@@ -120,11 +122,9 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
 
         <Code size="1" color="gray" variant="ghost">
           <Flex justify="center" width="2em">
-            {literals(
-              strings.website.tools.tankopedia.visualizers.view_range
-                .percentage,
-              [`${Math.round(camouflage * 100)}`.padStart(3, ' ')],
-            )}
+            {literals(strings.common.units.percentage, {
+              percentage: `${Math.round(camouflage * 100)}`.padStart(3, " "),
+            })}
           </Flex>
         </Code>
       </Flex>
@@ -136,7 +136,7 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
         left="0"
         width="100%"
         style={{
-          background: `radial-gradient(at 50% 100%, ${Var('gray-1')}, transparent 70%)`,
+          background: `radial-gradient(at 50% 100%, ${Var("gray-1")}, transparent 70%)`,
         }}
       >
         <Tabs.Root

@@ -359,31 +359,33 @@ export function GunFlexibilityVisualizer({
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.max}
-          value={literals(strings.common.units.deg, [
-            radToDeg(maxPitch).toFixed(0),
-          ])}
+          value={literals(strings.common.units.deg, {
+            value: radToDeg(maxPitch).toFixed(0),
+          })}
           side="bottom-left"
         />
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.min}
-          value={literals(strings.common.units.deg, [
-            radToDeg(minPitch).toFixed(0),
-          ])}
+          value={literals(strings.common.units.deg, {
+            value: radToDeg(minPitch).toFixed(0),
+          })}
           side="bottom-right"
         />
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.pitch}
-          value={literals(strings.common.units.deg, [
-            radToDeg(pitch).toFixed(0),
-          ])}
+          value={literals(strings.common.units.deg, {
+            value: radToDeg(pitch).toFixed(0),
+          })}
           side="top-left"
         />
 
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.yaw}
-          value={literals(strings.common.units.deg, [radToDeg(yaw).toFixed(0)])}
+          value={literals(strings.common.units.deg, {
+            value: radToDeg(yaw).toFixed(0),
+          })}
           side="top-right"
         />
       </VisualizerCard>

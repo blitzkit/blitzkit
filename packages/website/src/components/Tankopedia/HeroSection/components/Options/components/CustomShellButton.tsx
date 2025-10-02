@@ -151,7 +151,7 @@ export function CustomShellButton() {
                   }}
                 >
                   <TextField.Slot side="right">
-                    {literals(strings.common.units.mm, [""])}
+                    {literals(strings.common.units.mm, { value: "" })}
                   </TextField.Slot>
                 </TextField.Root>
               </Flex>
@@ -188,7 +188,7 @@ export function CustomShellButton() {
                   }}
                 >
                   <TextField.Slot side="right">
-                    {literals(strings.common.units.mm, [""])}
+                    {literals(strings.common.units.mm, { value: "" })}
                   </TextField.Slot>
                 </TextField.Root>
               </Flex>
@@ -212,9 +212,9 @@ export function CustomShellButton() {
                       minWidth="8rem"
                     >
                       <Text color="gray">
-                        {literals(strings.common.units.deg, [
-                          (customShell.normalization ?? 0).toFixed(0),
-                        ])}
+                        {literals(strings.common.units.deg, {
+                          value: (customShell.normalization ?? 0).toFixed(0),
+                        })}
                       </Text>
                       <Slider
                         variant="classic"
@@ -243,9 +243,9 @@ export function CustomShellButton() {
 
                     <Flex align="center" gap="2" flexGrow="1" maxWidth="15rem">
                       <Text color="gray">
-                        {literals(strings.common.units.deg, [
-                          (customShell.ricochet ?? 90).toFixed(0),
-                        ])}
+                        {literals(strings.common.units.deg, {
+                          value: (customShell.ricochet ?? 90).toFixed(0),
+                        })}
                       </Text>
                       <Slider
                         variant="classic"

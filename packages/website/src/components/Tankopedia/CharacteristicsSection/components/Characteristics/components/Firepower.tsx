@@ -119,7 +119,7 @@ export function Firepower({
               name={literals(
                 strings.website.tools.tankopedia.characteristics.values
                   .shell_index,
-                [`${index + 1}`]
+                { index: index + 1 }
               )}
               decimals={2}
               deltaType="lowerIsBetter"
@@ -191,7 +191,7 @@ export function Firepower({
         name={literals(
           strings.website.tools.tankopedia.characteristics.values
             .dispersion_at_distance,
-          ["100"]
+          { distance: 100 }
         )}
       />
       <InfoWithDelta

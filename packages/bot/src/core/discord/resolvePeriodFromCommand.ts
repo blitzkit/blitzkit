@@ -1,11 +1,11 @@
-import { getTimeDaysAgo, Region } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { CacheType, ChatInputCommandInteraction } from 'discord.js';
-import { getPeriodNow } from '../blitzkit/getPeriodNow';
-import { getPeriodStart } from '../blitzkit/getPeriodStart';
-import { translator } from '../localization/translator';
-import { PeriodType } from './addPeriodSubCommands';
-import { getPeriodOptionName } from './getPeriodOptionName';
+import { getTimeDaysAgo, Region } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
+import { getPeriodNow } from "../blitzkit/getPeriodNow";
+import { getPeriodStart } from "../blitzkit/getPeriodStart";
+import { translator } from "../localization/translator";
+import { PeriodType } from "./addPeriodSubCommands";
+import { getPeriodOptionName } from "./getPeriodOptionName";
 
 export interface ResolvedPeriod {
   name: string;
@@ -16,7 +16,7 @@ export interface ResolvedPeriod {
 export function resolvePeriodFromCommand(
   region: Region,
   interaction: ChatInputCommandInteraction<CacheType>,
-  forcedPeriod?: PeriodType,
+  forcedPeriod?: PeriodType
 ) {
   const { strings } = translator(interaction.locale);
   let name: string;
@@ -26,16 +26,16 @@ export function resolvePeriodFromCommand(
     ? forcedPeriod
     : (interaction.options.getSubcommand() as PeriodType);
 
-  if (periodSubcommand === 'custom') {
-    const startOption = interaction.options.getInteger('start', true);
-    const endOption = interaction.options.getInteger('end', true);
+  if (periodSubcommand === "custom") {
+    const startOption = interaction.options.getInteger("start", true);
+    const endOption = interaction.options.getInteger("end", true);
     const startDaysAgoMin = Math.min(startOption, endOption);
     const endDaysAgoMax = Math.max(startOption, endOption);
 
-    name = literals(strings.bot.common.periods.custom, [
-      `${startDaysAgoMin}`,
-      `${endDaysAgoMax}`,
-    ]);
+    name = literals(strings.bot.common.periods.custom, {
+      day_1: startDaysAgoMin,
+      day_2: endDaysAgoMax,
+    });
     start = getTimeDaysAgo(region, endDaysAgoMax);
     end = getTimeDaysAgo(region, startDaysAgoMin);
   } else {

@@ -277,14 +277,14 @@ function Content() {
         >
           <Flex mt="2" mb="2" direction="column" gap="2">
             <Heading size="5">
-              {literals(strings.website.tools.session.controls.title, [
-                `${accountInfo?.nickname}`,
-              ])}
+              {literals(strings.website.tools.session.controls.title, {
+                name: accountInfo?.nickname,
+              })}
             </Heading>
             <Text color="gray">
-              {literals(strings.website.tools.session.controls.subtitle, [
-                new Date(session.player.since).toLocaleString(locale),
-              ])}
+              {literals(strings.website.tools.session.controls.subtitle, {
+                time: new Date(session.player.since).toLocaleString(locale),
+              })}
             </Text>
           </Flex>
 

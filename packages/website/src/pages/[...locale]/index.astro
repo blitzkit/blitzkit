@@ -88,12 +88,13 @@ export const getStaticPaths = (() => {
           target="_blank"
           underline="always"
         >
-          {literals(strings.website.home.help_translate, [
-            "BlitzKit",
-            strings.common.locales[
-              locale as keyof typeof strings.common.locales
-            ],
-          ])}
+          {literals(strings.website.home.help_translate, {
+            name: "BlitzKit",
+            language:
+              strings.common.locales[
+                locale as keyof typeof strings.common.locales
+              ],
+          })}
         </Link>
       </Flex>
     )

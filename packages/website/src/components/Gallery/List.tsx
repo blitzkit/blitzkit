@@ -50,9 +50,9 @@ export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
         {skeleton ? (
           <InlineSkeleton width="7rem" />
         ) : (
-          literals(strings.website.tools.gallery.search.results, [
-            filtered.length.toLocaleString(locale),
-          ])
+          literals(strings.website.tools.gallery.search.results, {
+            count: filtered.length.toLocaleString(locale),
+          })
         )}
       </Text>
 

@@ -38,16 +38,17 @@ export function CompareOptions(props: FlexProps) {
         <SegmentedControl.Item value={`${TankopediaRelativeAgainst.Class}`}>
           {literals(
             strings.website.tools.tankopedia.characteristics.compare.class,
-            [
-              TIER_ROMAN_NUMERALS[tank.tier],
-              strings.common.tank_class_short_plural_lowercase[tank.class],
-            ]
+            {
+              tier: TIER_ROMAN_NUMERALS[tank.tier],
+              class:
+                strings.common.tank_class_short_plural_lowercase[tank.class],
+            }
           )}
         </SegmentedControl.Item>
         <SegmentedControl.Item value={`${TankopediaRelativeAgainst.Tier}`}>
           {literals(
             strings.website.tools.tankopedia.characteristics.compare.tier,
-            [TIER_ROMAN_NUMERALS[tank.tier]]
+            { tier: TIER_ROMAN_NUMERALS[tank.tier] }
           )}
         </SegmentedControl.Item>
         <SegmentedControl.Item value={`${TankopediaRelativeAgainst.All}`}>

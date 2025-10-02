@@ -92,14 +92,14 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
       >
         {!hasCustomShell && (
           <Text color="gray" size={{ initial: "1", sm: "2" }}>
-            {literals(strings.common.units.mm, [
-              (
+            {literals(strings.common.units.mm, {
+              value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
                   antagonistShell.type
                 ) * antagonistShell.penetration.near
               ).toFixed(0),
-            ])}
+            })}
           </Text>
         )}
 
@@ -156,9 +156,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                     discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
                     secondaryDiscriminator={
                       <Text style={{ fontSize: "0.75em" }}>
-                        {literals(strings.common.units.mm, [
-                          gun.shells[0].caliber.toFixed(0),
-                        ])}
+                        {literals(strings.common.units.mm, {
+                          value: gun.shells[0].caliber.toFixed(0),
+                        })}
                       </Text>
                     }
                   />

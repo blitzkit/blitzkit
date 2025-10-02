@@ -32,7 +32,7 @@ function Content() {
         {strings.website.home.hot_tanks.title}
       </Heading>
       <Text color="gray" align="center" mb="5" size="2">
-        {literals(strings.website.home.hot_tanks.subtitle, ["7"])}
+        {literals(strings.website.home.hot_tanks.subtitle, { days: 7 })}
       </Text>
 
       <Flex justify="center" gap="4" wrap="wrap">

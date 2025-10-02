@@ -1,11 +1,11 @@
-import { idToRegion, Region } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { CacheType, ChatInputCommandInteraction } from 'discord.js';
-import markdownEscape from 'markdown-escape';
-import { searchPlayersAcrossRegionsBotWrapper } from '../../blitz/searchPlayersAcrossRegionsBotWrapper';
-import { getBlitzFromDiscord } from '../../blitzkit/getBlitzFromDiscord';
-import { UserError } from '../../blitzkit/userError';
-import { translator } from '../../localization/translator';
+import { idToRegion, Region } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { CacheType, ChatInputCommandInteraction } from "discord.js";
+import markdownEscape from "markdown-escape";
+import { searchPlayersAcrossRegionsBotWrapper } from "../../blitz/searchPlayersAcrossRegionsBotWrapper";
+import { getBlitzFromDiscord } from "../../blitzkit/getBlitzFromDiscord";
+import { UserError } from "../../blitzkit/userError";
+import { translator } from "../../localization/translator";
 
 export interface ResolvedPlayer {
   region: Region;
@@ -13,10 +13,10 @@ export interface ResolvedPlayer {
 }
 
 export async function resolvePlayerFromCommand(
-  interaction: ChatInputCommandInteraction<CacheType>,
+  interaction: ChatInputCommandInteraction<CacheType>
 ) {
   const { strings } = translator(interaction.locale);
-  const commandUsername = interaction.options.getString('username');
+  const commandUsername = interaction.options.getString("username");
 
   if (commandUsername !== null) {
     const id = parseInt(commandUsername);
@@ -27,7 +27,7 @@ export async function resolvePlayerFromCommand(
     } else {
       const accounts = await searchPlayersAcrossRegionsBotWrapper(
         commandUsername,
-        interaction.locale,
+        interaction.locale
       );
 
       if (accounts[0]) {
@@ -37,9 +37,9 @@ export async function resolvePlayerFromCommand(
         } satisfies ResolvedPlayer;
       } else {
         throw new UserError(
-          literals(strings.bot.common.errors.player_not_found, [
-            markdownEscape(commandUsername),
-          ]),
+          literals(strings.bot.common.errors.player_not_found, {
+            search: markdownEscape(commandUsername),
+          })
         );
       }
     }

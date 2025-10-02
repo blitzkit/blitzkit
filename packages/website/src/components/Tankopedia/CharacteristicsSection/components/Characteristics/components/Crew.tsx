@@ -1,15 +1,15 @@
-import { CREW_MEMBER_NAMES, CrewType } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
-import { AccessibilityIcon, InfoCircledIcon } from '@radix-ui/react-icons';
-import { Flex, Heading, IconButton, Popover, Text } from '@radix-ui/themes';
-import { Fragment } from 'react/jsx-runtime';
-import { awaitableProvisionDefinitions } from '../../../../../../core/awaitables/provisionDefinitions';
-import { useEquipment } from '../../../../../../hooks/useEquipment';
-import { useLocale } from '../../../../../../hooks/useLocale';
-import { Duel } from '../../../../../../stores/duel';
-import { InfoWithDelta } from './InfoWithDelta';
-import { StatsTableWrapper } from './StatsTableWrapper';
-import type { StatsAcceptorProps } from './TraverseVisualizer';
+import { CREW_MEMBER_NAMES, CrewType } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
+import { AccessibilityIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { Flex, Heading, IconButton, Popover, Text } from "@radix-ui/themes";
+import { Fragment } from "react/jsx-runtime";
+import { awaitableProvisionDefinitions } from "../../../../../../core/awaitables/provisionDefinitions";
+import { useEquipment } from "../../../../../../hooks/useEquipment";
+import { useLocale } from "../../../../../../hooks/useLocale";
+import { Duel } from "../../../../../../stores/duel";
+import { InfoWithDelta } from "./InfoWithDelta";
+import { StatsTableWrapper } from "./StatsTableWrapper";
+import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
 const provisionDefinitions = await awaitableProvisionDefinitions;
 
@@ -24,7 +24,7 @@ export function Crew({ stats }: StatsAcceptorProps) {
         provisionDefinitions.provisions[provision].crew
           ? total + provisionDefinitions.provisions[provision].crew! / 100
           : total,
-      0,
+      0
     ) + (hasImprovedVentilation ? 0.08 : 0);
   const commanderMastery = 1 + provisionCrewBonus;
 
@@ -65,8 +65,8 @@ export function Crew({ stats }: StatsAcceptorProps) {
                 ]
               }${
                 member.count > 1
-                  ? ` ${literals(strings.common.units.x, [`${member.count}`])}`
-                  : ''
+                  ? ` ${literals(strings.common.units.x, { value: member.count })}`
+                  : ""
               }`}
               decimals={0}
               noRanking
@@ -93,9 +93,9 @@ export function Crew({ stats }: StatsAcceptorProps) {
                             ? strings.website.tools.tankopedia.crew[
                                 CREW_MEMBER_NAMES[sub]
                               ]
-                            : sub,
+                            : sub
                         )
-                        .join(', ')}
+                        .join(", ")}
                     </Flex>
                   </>
                 }

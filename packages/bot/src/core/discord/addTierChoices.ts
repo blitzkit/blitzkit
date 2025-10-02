@@ -1,13 +1,13 @@
-import { numberToRomanNumeral } from '@blitzkit/core';
-import { literals } from '@blitzkit/i18n';
+import { numberToRomanNumeral } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
 import {
   APIApplicationCommandOptionChoice,
   Locale,
   SlashCommandStringOption,
-} from 'discord.js';
-import { range } from 'lodash-es';
-import { translator } from '../localization/translator';
-import { localizationObject } from './localizationObject';
+} from "discord.js";
+import { range } from "lodash-es";
+import { translator } from "../localization/translator";
+import { localizationObject } from "./localizationObject";
 
 export function addTierChoices(option: SlashCommandStringOption) {
   const { strings } = translator(Locale.EnglishUS);
@@ -18,30 +18,30 @@ export function addTierChoices(option: SlashCommandStringOption) {
       localizationObject(
         (strings) => strings.bot.common.options.tier.name,
         undefined,
-        true,
-      ),
+        true
+      )
     )
     .setDescription(strings.bot.common.options.tier.description)
     .setDescriptionLocalizations(
       localizationObject(
-        (strings) => strings.bot.common.options.tier.description,
-      ),
+        (strings) => strings.bot.common.options.tier.description
+      )
     )
     .setChoices(
       ...range(10, 0).map(
         (tier) =>
           ({
-            name: literals(strings.bot.common.options.tier.choices.tier, [
-              `${tier}`,
-              numberToRomanNumeral(tier),
-            ]),
+            name: literals(strings.bot.common.options.tier.choices.tier, {
+              tier_1: tier,
+              tier_2: numberToRomanNumeral(tier),
+            }),
             value: `${tier}`,
             name_localizations: localizationObject(
               (strings) => strings.bot.common.options.tier.choices.tier,
-              [`${tier}`, numberToRomanNumeral(tier)],
+              { tier_1: tier, tier_2: numberToRomanNumeral(tier) }
             ),
-          }) satisfies APIApplicationCommandOptionChoice,
-      ),
+          }) satisfies APIApplicationCommandOptionChoice
+      )
     )
     .setRequired(true);
 }
