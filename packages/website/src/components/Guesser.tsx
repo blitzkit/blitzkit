@@ -1,4 +1,5 @@
 import {
+  asset,
   SEARCH_KEYS,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
@@ -110,6 +111,7 @@ export function Guesser() {
 
                 return (
                   <SearchResults.Item
+                    key={result.id}
                     onClick={() => {
                       if (!input.current) return;
 
@@ -118,6 +120,12 @@ export function Guesser() {
                       setResults(null);
                     }}
                     text={unwrap(result.name)}
+                    prefix={
+                      <img
+                        style={{ width: "1em", height: "1em" }}
+                        src={asset(`flags/circle/${result.nation}.webp`)}
+                      />
+                    }
                     discriminator={
                       <Flex
                         align="center"
