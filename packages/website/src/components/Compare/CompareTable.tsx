@@ -51,10 +51,9 @@ export function CompareTable({ stats }: CompareTableProps) {
       variant="surface"
       style={{
         position: "absolute",
-        maxWidth: "100%",
-        maxHeight: "100%",
+        width: "100%",
         height: "100%",
-        // height: 'calc(100vh - 128px)'
+        borderRadius: 0,
       }}
     >
       <Table.Header>
