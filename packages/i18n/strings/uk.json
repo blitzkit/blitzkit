@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "тест",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is %s1 because it has the color of %s2. I like it so much that I will say its name 3 times! %s1! %s1! %s1! Once again, it's %s2, not %s3.",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "%s1м",
-      "mm": "%s1мм",
-      "deg": "%s1°",
-      "hp": "%s1хп",
-      "x": "х%s1",
-      "percentage": "%s1%",
-      "deg_s": "%s1°/с"
+      "m": "{value}m",
+      "mm": "{value}mm",
+      "deg": "{value}°",
+      "hp": "{value}hp",
+      "x": "x{value}",
+      "percentage": "{value}%",
+      "deg_s": "{value}°/s"
     },
     "gun_types": {
       "auto_loader": "Магазинна система заряджання",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Не вдалося знайти клан\nНе вдалося знайти клан \"%s1\". Спробуйте вибрати клан з пошукового результату.",
-        "player_not_found": "# Не вдалося знайти користувача\nЯ не зміг знайти користувача \"%s1\". Спробуйте вибрати користувача з результату пошуку, ввести коректний нікнейм, або використати команду '/link'.",
+        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
+        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
         "player_not_linked": "# Використайте команду \"/link\" щоб почати\nЯ не знаю, хто ви, але ви можете сказати мені сьогодні!",
-        "tank_name_not_found": "# Танк не знайдено\nНе вдалось знайти танк за ім'ям \"%s1\".",
-        "tank_id_not_found": "# Танк не знайдено\nНе вдалось знайти танк за ID \"%s1\". Спробуйте ввести назву танка замість числа.",
+        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
+        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
         "no_tank_stats": "# Немає статистики для танка\nЦей гравець не має статистики.\nМожливо, це не той гравець, якого ви шукаєте.",
         "get_help": "Допомогти Discord серверу",
         "uncaught_error": "# Упс! BlitzKit зіткнувся з помилкою!\nНам дуже шкода. Можете попросити допомоги на [офіційному сервері Discord](https://discord.gg/nDt7AjGJQH).",
@@ -284,19 +284,19 @@
           "name": "рівень",
           "description": "Рівень",
           "choices": {
-            "tier": "Рівень %s1 - %s2"
+            "tier": "Tier {tier_1} - {tier_2}"
           }
         }
       },
       "periods": {
         "career": "Кар'єра",
         "today": "Сьогодні",
-        "days": "%s1 днів",
-        "custom": "%s1 - %s2 днів"
+        "days": "{days} days",
+        "custom": "{day_1} - {day_2} days"
       },
       "filters": {
         "none": "Немає фільтрів",
-        "tier": "Рівень %s1"
+        "tier": "Tier {tier}"
       },
       "no_data": {
         "battles_in_period": "За цей період боїв не було",
@@ -319,22 +319,6 @@
       }
     },
     "commands": {
-      "auction": {
-        "name": "аукціон",
-        "description": "Танки доступні зараз на аукціоні",
-        "body": {
-          "title": "Бліц Аукціон",
-          "subtitle": "%s1 доступно • наступна ціна %s2\nПоточна ставка: %s3",
-          "next": "Наступна ціна:%s1",
-          "available": "Доступно: %s1 / %s2"
-        },
-        "errors": {
-          "no_auction": "# Немає поточного аукціону\n\nНаразі немає танків, доступних для купівлі на аукціоні. Якщо ви вважаєте це помилкою, будь ласка, повідомте про цю невідповідність на [офіційний Дискорд сервер](https://discord.gg/nDt7AjGJQH)."
-        },
-        "actions": {
-          "bid": "Поточна ставка"
-        }
-      },
       "replay": {
         "name": "реплей",
         "description": "Показати результати реплею"
@@ -355,19 +339,19 @@
         "body": {
           "subtitle": "Дослідження",
           "total": "Загалом",
-          "research": "Дослідження: %s1",
-          "upgrades": "Покращення: %s1",
-          "purchase": "Придбання: %s1",
-          "equipment": "Спорядження: %s1",
+          "research": "Research: {cost}",
+          "upgrades": "Upgrades: {cost}",
+          "purchase": "Purchase: {cost}",
+          "equipment": "Equipment: {cost}",
           "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
         },
         "errors": {
-          "non_tech_tree": "# %s1 не в технічному дереві\n\nВи не можете досліджувати преміум/колекційний танк.",
-          "tier_1": "# %s1 це рівень I\n\nТанки рівню I завжди відкриті для всіх гравців безкоштовно.",
-          "already_researched": "# %s1 уже досліджено!\n\nСпробуйте забезпечити `starting-tank` коли використовуєте команду щоб подивитись підсумки гілки, яку ви вже дослідили.",
-          "start_end_equal": "# %s1 було надано двічі\n\nПереконайся, що `starting-tank` та `target-tank` різні.",
-          "tanks_not_on_line": ".",
-          "unordered": ""
+          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
+          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
+          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
+          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
+          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
         }
       },
       "about": {
@@ -410,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "Відсоток перемог",
           "damage": "Шкода",
-          "unknown_tank": "Невідомий танк %s1"
+          "unknown_tank": "Unknown tank {id}"
         }
       },
       "debug": {
@@ -446,12 +430,12 @@
         "options": {
           "threshold": {
             "name": "поріг",
-            "description": "Кількість днів неактивності (за замовчуванням: %s1 днів)"
+            "description": "The number of days inactive (default: {days} days)"
           }
         },
         "body": {
-          "subtitle": "Неактивний %s1+ днів",
-          "listing": "%s1 днів"
+          "subtitle": "Inactive for {days}+ days",
+          "listing": "{days} days"
         }
       },
       "full_stats": {
@@ -494,7 +478,7 @@
         "body": {
           "accounts_linked": "Прив'язані акаунти",
           "no_role_permissions": {
-            "title": "%s1 не вдалося перевірити",
+            "title": "{name} failed to verify",
             "description": "У мене немає дозволу керувати ролями."
           }
         },
@@ -509,11 +493,11 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "Максимальна кількість результатів клану (за замовчуванням: %s1)"
+            "description": "The max number of clan results (default: {limit})"
           }
         },
         "body": {
-          "title": "Clan search for %s1 in region %s2",
+          "title": "Clan search for {search} in region {region}",
           "no_results": "Жодного клану не знайдено"
         }
       },
@@ -523,11 +507,11 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "The max number of player results (default: %s1)"
+            "description": "The max number of player results (default: {limit})"
           }
         },
         "body": {
-          "title": "Player search for %s1 in region %s2",
+          "title": "Player search for {search} in region {region}",
           "no_results": "Гравця не знайдено"
         }
       },
@@ -547,13 +531,13 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": ""
+            "description": "How many neighbors to display (default: {count})"
           },
           "season": {
             "name": "сезон",
             "description": "Базова інформація про гравця",
             "choices": {
-              "current": "%s1 (current)"
+              "current": "{season} (current)"
             }
           },
           "league": {
@@ -562,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top %s1 players",
-          "no_participation": "# %s1 didn't play rating in season %s2\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "Top {count} players",
+          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
-          "deleted_player": "Deleted %s1",
+          "deleted_player": "Deleted {id}",
           "neighbors": "Rating neighbors",
-          "more": "+ %s1 more"
+          "more": "+ {count} more"
         }
       },
       "today": {
@@ -582,14 +566,14 @@
         "name": "отримані танки",
         "description": "Показує всі ваші танки даного рівня",
         "body": {
-          "title": "# %s1's owned tier %s2 tanks\n\n"
+          "title": "# {name}'s owned tier {tier} tanks\n\n"
         }
       },
       "permissions": {
         "name": "дозволи",
         "description": "Checks wether the bot has the required permissions to function",
         "body": {
-          "title": "# Permissions\n\n%s1",
+          "title": "# Permissions\n\n{body}",
           "view_channels": "View channels: needed to find the message the refresh button was used on",
           "read_message_history": "Read message history: needed to find the message to refresh",
           "attach_files": "Attach files: needed to add images to image-based commands",
@@ -601,7 +585,7 @@
         "description": "Check wether the bot is alive.",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - %s1ms"
+          "pong_with_time": "Pong 🏓 - {time}ms"
         },
         "subcommands": {
           "blitzkit": {
@@ -618,7 +602,7 @@
         "name": "player-info",
         "description": "Базова інформація про гравця",
         "body": {
-          "title": "%s1's information",
+          "title": "{name}'s information",
           "nickname": "Нік",
           "battles": "Бої",
           "winrate": "Відсоток перемог",
@@ -647,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# %s1 hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
           "unrecorded_stats": "# Statistics currently unavailable\n\nWargaming may be currently be facing server downtime. If there is an on-going season, statistics should be available withing 24 hours."
         }
       }
@@ -675,12 +659,13 @@
         "select_dialog_title": "Search for tanks",
         "swap_dialog_title": "Swap tank",
         "clear_filters": "Clear filters",
+        "login": "Login to use this",
         "search_bar_hint": "Шукайте техніку...",
         "recent": "Недавно переглянуті",
         "select_all": "Вибрати все",
         "count_singular": "1 танк",
-        "count_plural": "%s1 танків",
-        "sorting_by": "Сортувати за %s1",
+        "count_plural": "{count} tanks",
+        "sorting_by": "Sorting by {name}",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
@@ -756,16 +741,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "Зроблено %s1 ❤"
+        "credit": "By {name} ❤️"
       },
       "hot_tanks": {
         "title": "Популярні танки",
-        "subtitle": "Останні %s1 дні(в)"
+        "subtitle": "Last {days} days"
       },
       "other_projects": {
         "title": "Інші класні проєкти"
       },
-      "help_translate": "Будь ласка, допоможіть перекласти %s1 на %s2!",
+      "help_translate": "Please help translate {name} to {language}!",
       "seo_description": "Інструменти для всього, пов'язаного з WoT Blitz"
     },
     "docs": {
@@ -795,7 +780,7 @@
           "next": "Next",
           "no_results": "Немає результатів"
         },
-        "stats": "%s1 / %s2 guessed correctly"
+        "stats": "{correct} / {total} guessed correctly"
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -803,8 +788,8 @@
         "button": "Знайти танки",
         "description": "Танкова енциклопедія",
         "seo_description": "Характеристики, броня та інше для всіх танків WoT Blitz",
-        "tank_seo_title": "%s1 - Рівень %s2 %s3 %s4 | %s5 Танкопедія | WoT Blitz",
-        "tank_seo_description": "%s1 броня, характеристики, обладнання, амуніція та більше. %s2 шкода на хвилину, %s3 разова шкода, %s4 мм пробиття, %s5 км/год максимальна швидкість, %s6 міцність.",
+        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
         "visualizers": {
           "reload": {
             "skip": "Skip"
@@ -829,7 +814,6 @@
           },
           "view_range": {
             "camo": "Camo",
-            "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
           },
@@ -873,7 +857,6 @@
               "reset": "Reset"
             },
             "advanced": "Advanced highlighting",
-            "shooter": "Shooter:",
             "shot_card": {
               "element": {
                 "primary": "Primary",
@@ -884,15 +867,15 @@
                 "track": "Tracks"
               },
               "status": {
-                "penetration": "%s1hp penetration",
+                "penetration": "{damage}hp penetration",
                 "blocked": "Blocked",
                 "ricochet": "Рикошет",
-                "splash": "%s1hp splash"
+                "splash": "{damage}hp splash"
               },
               "stats": {
-                "thickness_and_angle": "%s1mm %s2°",
-                "nominal": "%s1mm nominal",
-                "ricochet_loss": "%s1% penetration"
+                "thickness_and_angle": "{thickness}mm {angle}°",
+                "nominal": "{thickness}mm nominal",
+                "ricochet_loss": "{loss}% penetration"
               }
             }
           },
@@ -930,15 +913,15 @@
         "tech_tree": {
           "title": "Звичайний",
           "battle": "1 бій",
-          "battles": "%s1 battles",
-          "route": "Route %s1 of %s2"
+          "battles": "{count} battles",
+          "route": "Route {index} of {count}"
         },
         "game_modes": {
           "title": "Game mode abilities"
         },
         "review": {
           "title": "Review videos",
-          "join": "Apply to %s1 YouTuber program"
+          "join": "Apply to {name} YouTuber program"
         },
         "configuration": {
           "title": "Configuration",
@@ -974,15 +957,15 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare against",
-            "class": "Tier %s1 %s2",
-            "tier": "All of tier %s1",
+            "class": "Tier {tier} {class}",
+            "tier": "All of tier {tier}",
             "all": "Усі танки"
           },
           "values": {
-            "shell_index": "Снаряд %s1",
-            "at_distance": "At %s1m",
+            "shell_index": "Shell {index}",
+            "at_distance": "At {distance}m",
             "at_distance_slider_label": "Відстань",
-            "dispersion_at_distance": "Dispersion at %s1m",
+            "dispersion_at_distance": "Dispersion at {distance}m",
             "gun_flexibility": "Gun flexibility",
             "speed": "Швидкість",
             "terrain_coefficients": "Terrain coefficients",
@@ -1131,9 +1114,9 @@
         "description": "Tank performance statistics",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
-          "body": "Estimated stats based on %s1 players. Updated %s2 ago.",
-          "hours": "%s1 hours",
-          "minutes": "%s1 minutes"
+          "body": "Estimated stats based on {count} players. Updated {age} ago.",
+          "hours": "{count} hours",
+          "minutes": "{count} minutes"
         },
         "player_count": {
           "label": "Player count"
@@ -1165,10 +1148,10 @@
         "button": "Browse all",
         "description": "Blitz player avatars",
         "seo_description": "All World of Tanks Blitz player avatars",
-        "last_updated": "Last updated on %s1",
+        "last_updated": "Last updated on {time}",
         "search": {
           "hint": "Search avatars...",
-          "results": "%s1 avatars"
+          "results": "{count} avatars"
         }
       },
       "session": {
@@ -1183,8 +1166,8 @@
           "no_results": "Гравця не знайдено"
         },
         "controls": {
-          "title": "Відстежуємо %s1",
-          "subtitle": "Від %s1",
+          "title": "Tracking {name}",
+          "subtitle": "Since {time}",
           "reset": "Скинути",
           "change": "Змінити"
         },
@@ -1244,7 +1227,7 @@
               "cancel": "Cancel",
               "success": {
                 "title": "Copy URL",
-                "info": "Generated the URL for %s1. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
                 "back": "Назад",
                 "copy": "Copy URL"
               }
