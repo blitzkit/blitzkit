@@ -1,17 +1,17 @@
-import { HeightIcon, WidthIcon } from '@radix-ui/react-icons';
-import { Flex, TextField } from '@radix-ui/themes';
-import type { QuicklimeEvent } from 'quicklime';
-import { useEffect, useRef } from 'react';
-import { degToRad, radToDeg } from 'three/src/math/MathUtils.js';
-import { applyPitchYawLimits } from '../../../../../../../core/blitz/applyPitchYawLimits';
+import { HeightIcon, WidthIcon } from "@radix-ui/react-icons";
+import { Flex, TextField } from "@radix-ui/themes";
+import type { QuicklimeEvent } from "quicklime";
+import { useEffect, useRef } from "react";
+import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { applyPitchYawLimits } from "../../../../../../../core/blitz/applyPitchYawLimits";
 import {
   type ModelTransformEventData,
   modelTransformEvent,
-} from '../../../../../../../core/blitzkit/modelTransform';
-import { useEquipment } from '../../../../../../../hooks/useEquipment';
-import { useTankModelDefinition } from '../../../../../../../hooks/useTankModelDefinition';
-import { Duel } from '../../../../../../../stores/duel';
-import './index.css';
+} from "../../../../../../../core/blitzkit/modelTransform";
+import { useEquipment } from "../../../../../../../hooks/useEquipment";
+import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
+import { Duel } from "../../../../../../../stores/duel";
+import "./index.css";
 
 export function QuickInputs() {
   const protagonist = Duel.use((state) => state.protagonist);
@@ -28,12 +28,12 @@ export function QuickInputs() {
 
   useEffect(() => {
     function handleTransformEvent(
-      event: QuicklimeEvent<ModelTransformEventData>,
+      event: QuicklimeEvent<ModelTransformEventData>
     ) {
       if (!pitchInput.current || !yawInput.current) return;
 
       pitchInput.current.value = (
-        -radToDeg(event.data.pitch) +
+        radToDeg(event.data.pitch) +
         (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
       ).toFixed(1);
 
@@ -56,11 +56,11 @@ export function QuickInputs() {
       width="4rem"
       direction="column"
       style={{
-        pointerEvents: 'auto',
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        transitionDuration: '0.2s',
+        pointerEvents: "auto",
+        position: "absolute",
+        top: "50%",
+        transform: "translateY(-50%)",
+        transitionDuration: "0.2s",
       }}
       className="quick-inputs"
     >
@@ -68,14 +68,14 @@ export function QuickInputs() {
         variant="classic"
         size="1"
         radius="full"
-        style={{ flex: 1, textAlign: 'right' }}
+        style={{ flex: 1, textAlign: "right" }}
         defaultValue="0.0"
         onBlur={() => {
           const value = Number(yawInput.current!.value);
 
           if (isNaN(value)) {
             yawInput.current!.value = radToDeg(
-              modelTransformEvent.last!.yaw,
+              modelTransformEvent.last!.yaw
             ).toFixed(1);
             return;
           }
@@ -86,23 +86,23 @@ export function QuickInputs() {
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
           yawInput.current!.value = radToDeg(
-            modelTransformEvent.last!.yaw,
+            modelTransformEvent.last!.yaw
           ).toFixed(1);
         }}
         onKeyDown={(event) => {
-          if (event.key === 'Enter') {
+          if (event.key === "Enter") {
             yawInput.current?.blur();
           }
         }}
         onFocus={() => yawInput.current?.focus()}
         ref={yawInput}
       >
-        <TextField.Slot style={{ userSelect: 'none' }}>
+        <TextField.Slot style={{ userSelect: "none" }}>
           <WidthIcon />
         </TextField.Slot>
         <TextField.Slot />
@@ -112,31 +112,31 @@ export function QuickInputs() {
         variant="classic"
         size="1"
         radius="full"
-        style={{ flex: 1, textAlign: 'right' }}
+        style={{ flex: 1, textAlign: "right" }}
         defaultValue="0.0"
         onBlur={() => {
           const value = Number(pitchInput.current!.value);
           if (isNaN(value)) {
             pitchInput.current!.value = (
-              -radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
+              radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
             ).toFixed(1);
             return;
           }
           const [pitch, yaw] = applyPitchYawLimits(
-            degToRad(-value + initialGunPitch),
+            degToRad(value + initialGunPitch),
             modelTransformEvent.last!.yaw,
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
           modelTransformEvent.dispatch({ pitch, yaw });
           pitchInput.current!.value = (
-            -radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
+            radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
           ).toFixed(1);
         }}
         onKeyDown={(event) => {
-          if (event.key === 'Enter') {
+          if (event.key === "Enter") {
             pitchInput.current?.blur();
           }
         }}
@@ -145,7 +145,7 @@ export function QuickInputs() {
       >
         <TextField.Slot
           style={{
-            userSelect: 'none',
+            userSelect: "none",
           }}
         >
           <HeightIcon />
