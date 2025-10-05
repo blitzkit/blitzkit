@@ -339,19 +339,19 @@
         "body": {
           "subtitle": "Исследование",
           "total": "Всего",
-          "research": "Research: {cost}",
-          "upgrades": "Upgrades: {cost}",
-          "purchase": "Purchase: {cost}",
-          "equipment": "Equipment: {cost}",
+          "research": "Исследование: {cost}",
+          "upgrades": "Улучшения: {cost}",
+          "purchase": "Покупка: {cost}",
+          "equipment": "Снаряжение: {cost}",
           "estimation": "# Это приблизительная оценка!\n\nВ этот список могут входить уже исследованные танки из-за неточной информации, предоставляемой Wargaming. Попробуйте указать «стартовый-танк» в строке при использовании команды, если сможете."
         },
         "errors": {
-          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
-          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
-          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
+          "non_tech_tree": "# {tank} отсутствует в дереве танков\n\nВы не можете исследовать премиумный / коллекционный танк.",
+          "tier_1": "# {tank} — танк I уровня\n\nУровень I всегда открыт бесплатно для всех игроков.",
+          "already_researched": "# {tank} уже исследован\n\nПопробуйте предоставить «starting-tank» при использовании команды для просмотра итогов уже исследованной ветки.",
+          "start_end_equal": "# {tank} был предоставлен дважды\n\nУбедитесь, что «starting-tank» и «target-tank» различаются.",
+          "tanks_not_on_line": "# {tank_1} и {tank_2} находятся не в одной ветке\n\nУбедитесь, что «starting-tank» и «target-tank» находятся на той же ветке дерева танков.",
+          "unordered": "# У {tank_1} более высокий уровень чем у {tank_2}\n\nОбязательно укажите {tank_2} в качестве «starting-tank», так как это танк более низкого уровня."
         }
       },
       "about": {
@@ -394,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "Коэффициент побед",
           "damage": "Урон",
-          "unknown_tank": "Unknown tank {id}"
+          "unknown_tank": "Неизвестный танк {id}"
         }
       },
       "debug": {
@@ -430,11 +430,11 @@
         "options": {
           "threshold": {
             "name": "порог",
-            "description": "The number of days inactive (default: {days} days)"
+            "description": "Количество дней не активности (по умолчанию: {days} дней)"
           }
         },
         "body": {
-          "subtitle": "Inactive for {days}+ days",
+          "subtitle": "Неактивен {days}+ дней",
           "listing": "{days} дней"
         }
       },
@@ -478,7 +478,7 @@
         "body": {
           "accounts_linked": "Аккаунты привязаны",
           "no_role_permissions": {
-            "title": "{name} failed to verify",
+            "title": "{name} не удалось проверить",
             "description": "У меня нет разрешения на управление ролями."
           }
         },
@@ -566,7 +566,7 @@
         "name": "cобственные-танки",
         "description": "Показывает все принадлежащие танки на уровне",
         "body": {
-          "title": "# {name}'s owned tier {tier} tanks\n\n"
+          "title": "# {name} принадлежат танки {tier} уровня\n\n"
         }
       },
       "permissions": {
@@ -659,13 +659,13 @@
         "select_dialog_title": "Поиск танка",
         "swap_dialog_title": "Заменить танк",
         "clear_filters": "Сбросить фильтры",
-        "login": "Login to use this",
+        "login": "Войти, чтобы воспользоваться",
         "search_bar_hint": "Поиск танков...",
         "recent": "Недавние",
         "select_all": "Выбрать всё",
         "count_singular": "1 танк",
-        "count_plural": "{count} tanks",
-        "sorting_by": "Sorting by {name}",
+        "count_plural": "Танков: {count}",
+        "sorting_by": "Сортировать по {name}",
         "no_tanks_found": {
           "body": "Танков не найдено.",
           "search_again": "Попробуйте повторить поиск.",
@@ -741,16 +741,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "От {name} ❤️"
       },
       "hot_tanks": {
         "title": "Популярные танки",
-        "subtitle": "Last {days} days"
+        "subtitle": "За последнее {days} дней"
       },
       "other_projects": {
         "title": "Другие классные проекты"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "Пожалуйста, помогите перевести {name} на {language}!",
       "seo_description": "Инструменты для World of Tanks Blitz"
     },
     "docs": {
@@ -761,7 +761,7 @@
     },
     "tools": {
       "mixer": {
-        "name": "Смешиватель",
+        "name": "Смешать",
         "button": "Смешать и собрать",
         "description": "Модули смешанного танка",
         "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
@@ -769,7 +769,7 @@
         "randomize": "Случайно"
       },
       "guess": {
-        "name": "Угадайте танк",
+        "name": "Угадай танк",
         "button": "Угадать",
         "description": "Мини-игра «Силуэт»",
         "seo_description": "Играйте угадывая силуэт танка из World of Tanks Blitz",
@@ -780,7 +780,7 @@
           "next": "Следующий",
           "no_results": "Ничего не найденo"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "{correct} / {total} угадано верно"
       },
       "tankopedia": {
         "search": "Поиск характеристик...",
@@ -788,8 +788,8 @@
         "button": "Поиск танков",
         "description": "Танковая энциклопедия Blitz",
         "seo_description": "Статистика, броня и многое другое по всем танкам World of Tanks Blitz",
-        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
+        "tank_seo_title": "{name} — {class} {nationality} {tier} уровня | Танкопедия {website} | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "Броня, статистика, оборудование, снабжение {name} и многое другое. DPM {dpm}, альфа {alpha}оп,  пробитие{penetration}мм,  лучшая скорость{speed}км/ч, здоровье {health}оп.",
         "visualizers": {
           "reload": {
             "skip": "Пропуск"
@@ -867,15 +867,15 @@
                 "track": "Гусеницы"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
+                "penetration": "Пробитие на {damage}оп",
                 "blocked": "Не пробил",
                 "ricochet": "Рикошет",
-                "splash": "{damage}hp splash"
+                "splash": "Урон осколками на {damage}оп"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
-                "nominal": "{thickness}mm nominal",
-                "ricochet_loss": "{loss}% penetration"
+                "thickness_and_angle": "{thickness}мм {angle}°",
+                "nominal": "{thickness}1мм номинала",
+                "ricochet_loss": "{loss}% пробития"
               }
             }
           },
@@ -914,14 +914,14 @@
           "title": "Дерево танков",
           "battle": "1 бой",
           "battles": "{count} боёв",
-          "route": "Route {index} of {count}"
+          "route": "Ветка {index} из {count}"
         },
         "game_modes": {
           "title": "Способности в игровых режимах"
         },
         "review": {
           "title": "Видеообзоры",
-          "join": "Apply to {name} YouTuber program"
+          "join": "Предложить ютубера для программы {name}"
         },
         "configuration": {
           "title": "Конфигурация",
@@ -957,15 +957,15 @@
           "title": "Характеристики",
           "compare": {
             "label": "Сравнивать с",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{class} {tier} уровня",
+            "tier": "Все {tier} уровня",
             "all": "Все танки"
           },
           "values": {
-            "shell_index": "Shell {index}",
-            "at_distance": "At {distance}m",
+            "shell_index": "Снаряд {index}",
+            "at_distance": "На {distance}м",
             "at_distance_slider_label": "Дистанция",
-            "dispersion_at_distance": "Dispersion at {distance}m",
+            "dispersion_at_distance": "Разброс на {distance}м",
             "gun_flexibility": "Углы наводки",
             "speed": "Скорость",
             "terrain_coefficients": "Сопротивление грунтам",
@@ -1114,9 +1114,9 @@
         "description": "Статистика эффективности танков",
         "seo_description": "Лучшие танки и их эффективность в World of Tanks Blitz",
         "estimation": {
-          "body": "Estimated stats based on {count} players. Updated {age} ago.",
-          "hours": "{count} hours",
-          "minutes": "{count} minutes"
+          "body": "Примерная статистика на основе {count} игроков. Обновлено {age} назад.",
+          "hours": "{count} часов",
+          "minutes": "{count} минут"
         },
         "player_count": {
           "label": "Количество игроков"
@@ -1148,10 +1148,10 @@
         "button": "Просмотреть",
         "description": "Аватары игрока Blitz",
         "seo_description": "Все аватары игрока World of Tanks Blitz",
-        "last_updated": "Last updated on {time}",
+        "last_updated": "Последнее обновление {time}",
         "search": {
           "hint": "Поиск аватаров...",
-          "results": "{count} avatars"
+          "results": "Аватаров: {count}"
         }
       },
       "session": {
@@ -1166,8 +1166,8 @@
           "no_results": "Игроков не найдено"
         },
         "controls": {
-          "title": "Tracking {name}",
-          "subtitle": "Since {time}",
+          "title": "Отслеживание {name}",
+          "subtitle": "Начиная с {time}",
           "reset": "Сброс",
           "change": "Изменить"
         },
@@ -1227,7 +1227,7 @@
               "cancel": "Отмена",
               "success": {
                 "title": "Скопировать URL",
-                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "Сгенерирован URL для {name}. Встройка начнет отслеживание, как только URL будет вставлен. Можно сбросить, щелкнув правой кнопкой мыши на ПК или долгим нажатием на мобильном телефоне и выбором «Сброс».",
                 "back": "Назад",
                 "copy": "Скопировать URL"
               }
