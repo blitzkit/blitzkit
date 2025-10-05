@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "teste",
-    "long": "Ceci est une longue chaîne de test. Vous ne DEVEZ JAMAIS le voir dans l'interface utilisateur. Mon fruit préféré est %s1, car il a la couleur %s2. Je l'aime tellement que je vais dire son nom 3 fois ! %s1! %s1! %s1 ! Encore une fois, c'est %s2, pas %s3.",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "Le renard brun et rapide saute par-dessus le chien paresseux."
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "%s1m",
-      "mm": "%s1mm",
-      "deg": "%s1°",
-      "hp": "%s1ps",
-      "x": "x%s1",
-      "percentage": "%s1%",
-      "deg_s": "%s1°/s"
+      "m": "{value}m",
+      "mm": "{value}mm",
+      "deg": "{value}°",
+      "hp": "{value}hp",
+      "x": "x{value}",
+      "percentage": "{value}%",
+      "deg_s": "{value}°/s"
     },
     "gun_types": {
       "auto_loader": "Chargement auto",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Impossible de trouver le clan\nImpossible de trouver «%s1 ». Essayez de sélectionner un clan dans le résultat de la recherche.",
-        "player_not_found": "# Impossible de trouver l'utilisateur\nJe n'ai pas pu trouver l'utilisateur \"%s1\". Essayez de choisir un utilisateur dans le résultat de la recherche, en tapant un nom d'utilisateur valide, ou en utilisant la commande `/link`.",
+        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
+        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
         "player_not_linked": "# Utilisez `/link` pour commencer\nJe ne sais pas qui vous êtes, mais vous pouvez me le dire aujourd'hui !",
-        "tank_name_not_found": "Impossible de trouver le char sous le nom \"%s1\".",
-        "tank_id_not_found": "# Réservoir introuvable\nImpossible de trouver le char avec l'ID \"%s1\". Essayez de taper le nom du char au lieu d'un nombre.",
+        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
+        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
         "no_tank_stats": "# Aucune statistique de tank disponible\nCe joueur n'a pas de statistiques disponibles. Ce n'est peut-être pas le joueur que vous cherchez.",
         "get_help": "Aidez le serveur Discord",
         "uncaught_error": "# Blitzkit a rencontré une erreur !\nNous sommes désolés de cela. N'hésitez pas à [rejoindre le serveur officiel Discord](https://discord.gg/nDt7AjGJQH) pour obtenir de l'aide.",
@@ -284,19 +284,19 @@
           "name": "rang",
           "description": "Rang",
           "choices": {
-            "tier": "Rang %s1 - %s2"
+            "tier": "Tier {tier_1} - {tier_2}"
           }
         }
       },
       "periods": {
         "career": "Carrière",
         "today": "Aujourd'hui",
-        "days": "%s1 jour",
-        "custom": "%s1 - %s2 jours"
+        "days": "{days} days",
+        "custom": "{day_1} - {day_2} days"
       },
       "filters": {
         "none": "Aucun filtre",
-        "tier": "Rang %s1"
+        "tier": "Tier {tier}"
       },
       "no_data": {
         "battles_in_period": "",
@@ -319,22 +319,6 @@
       }
     },
     "commands": {
-      "auction": {
-        "name": "Char cible",
-        "description": "Des chars sont disponibles dès maintenant dans la vente aux enchères",
-        "body": {
-          "title": "Enchères Blitz",
-          "subtitle": "%s1 disponible • prochains prix %s2\nOffre : %s3",
-          "next": "Prochain prix : %s1",
-          "available": "Disponible : %s1 / %s2"
-        },
-        "errors": {
-          "no_auction": "# Pas de vente aux enchères\n\nActuellement, il n'y a pas de chars disponibles à l'achat dans la vente aux enchères. Si vous pensez qu'il s'agit d'une erreur, veuillez signaler cette anomalie dans [le serveur officiel Discord](https://discord.gg/nDt7AjGJQH)."
-        },
-        "actions": {
-          "bid": "Enchérir maintenant"
-        }
-      },
       "replay": {
         "name": "rejouer",
         "description": "Afficher les résultats de la relecture"
@@ -355,19 +339,19 @@
         "body": {
           "subtitle": "Recherche",
           "total": "Total",
-          "research": "Recherche: %s1",
-          "upgrades": "Améliorations : %s1",
-          "purchase": "Achat : %s1",
-          "equipment": "Equipment: %s1",
+          "research": "Research: {cost}",
+          "upgrades": "Upgrades: {cost}",
+          "purchase": "Purchase: {cost}",
+          "equipment": "Equipment: {cost}",
           "estimation": "# Ceci est une estimation !\n\nCette liste peut inclure des chars déjà recherchés en raison de l'information inexacte fournie par Wargaming. Essayez de fournir un `char de départ` depuis la ligne lorsque vous utilisez la commande si vous le pouvez."
         },
         "errors": {
-          "non_tech_tree": "# %s1 n'est pas dans l'arbre technologique\n\nVous ne pouvez pas rechercher un char prenium/de collection.",
-          "tier_1": "# %s1 est un char de tier I\n\nLe char de tier 1 sont déverrouillé gratuitement pour tous les joueurs.",
-          "already_researched": "# %s1 est déjà recherché\n\nEssayez de fournir un `char de départ` en utilisant la commande pour voir la progression d'une lignée.",
-          "start_end_equal": "# %s1 a été fourni deux fois\n\nAssurez-vous que `starting-tank` et `target-tank` sont différents.",
-          "tanks_not_on_line": "%s1 et %s2 ne sont pas sur la même ligne \n\nAssurez-vous que « starting-tank » et « target-tank » sont sur la même ligne d'arbre technologique.",
-          "unordered": "# %s1 niveau supérieur à %s2\n\nAssurez-vous de fournir %s3 comme le `starting-tank` à la place car c'est le réservoir de niveau inférieur."
+          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
+          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
+          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
+          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
+          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
         }
       },
       "about": {
@@ -410,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "Taux de victoires",
           "damage": "Dégâts",
-          "unknown_tank": "Char %s1 inconnu"
+          "unknown_tank": "Unknown tank {id}"
         }
       },
       "debug": {
@@ -446,12 +430,12 @@
         "options": {
           "threshold": {
             "name": "seuil",
-            "description": "Le nombre de jours inactifs (par défaut: %s1 jours)"
+            "description": "The number of days inactive (default: {days} days)"
           }
         },
         "body": {
-          "subtitle": "Inactif depuis %s1+ de jours",
-          "listing": "%s1 jour"
+          "subtitle": "Inactive for {days}+ days",
+          "listing": "{days} days"
         }
       },
       "full_stats": {
@@ -494,7 +478,7 @@
         "body": {
           "accounts_linked": "Comptes liés",
           "no_role_permissions": {
-            "title": "La vérification de %s1 a échoué",
+            "title": "{name} failed to verify",
             "description": "Je n'ai pas l'autorisation de gérer les rôles."
           }
         },
@@ -509,11 +493,11 @@
         "options": {
           "limit": {
             "name": "limite",
-            "description": "Nombre maximum de résultats du clan (par défaut: %s1)"
+            "description": "The max number of clan results (default: {limit})"
           }
         },
         "body": {
-          "title": "Recherche de clan %s1 dans la région %s2",
+          "title": "Clan search for {search} in region {region}",
           "no_results": "Pas de clan trouvé"
         }
       },
@@ -523,11 +507,11 @@
         "options": {
           "limit": {
             "name": "limite",
-            "description": "Le nombre maximum de résultats de joueur (par défaut: %s1)"
+            "description": "The max number of player results (default: {limit})"
           }
         },
         "body": {
-          "title": "Recherche de %s1 dans la région %s2",
+          "title": "Player search for {search} in region {region}",
           "no_results": "Pas de joueur de trouvé"
         }
       },
@@ -547,13 +531,13 @@
         "options": {
           "limit": {
             "name": "limite",
-            "description": "Combien de voisins afficher (par défaut : %s1)"
+            "description": "How many neighbors to display (default: {count})"
           },
           "season": {
             "name": "saison",
             "description": "Numéro de saison (défaut : courant)",
             "choices": {
-              "current": "%s1 (actuel)"
+              "current": "{season} (current)"
             }
           },
           "league": {
@@ -562,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top %s1 joueurs",
-          "no_participation": "%s1 n'a pas joué au classement dans la saison %s2",
+          "top_players": "Top {count} players",
+          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "Pas de saison en cours\n\nIl n'y a pas de saison de notation en cours actuellement.",
-          "deleted_player": "%s1 supprimé",
+          "deleted_player": "Deleted {id}",
           "neighbors": "évaluer les voisins",
-          "more": "+ %s1 de plus"
+          "more": "+ {count} more"
         }
       },
       "today": {
@@ -582,14 +566,14 @@
         "name": "chars possédés",
         "description": "Affiche tous les chars d'un niveau",
         "body": {
-          "title": "# %s1 possédait des chars de rang %s2"
+          "title": "# {name}'s owned tier {tier} tanks\n\n"
         }
       },
       "permissions": {
         "name": "permissions",
         "description": "Vérifie si le bot a les permissions nécessaires pour fonctionner",
         "body": {
-          "title": "# Permissions\n\n%s1",
+          "title": "# Permissions\n\n{body}",
           "view_channels": "Afficher les canaux : nécessaire pour trouver le message sur lequel le bouton d'actualisation a été utilisé",
           "read_message_history": "Lire l'historique des messages : nécessaire pour trouver le message à rafraîchir",
           "attach_files": "Joindre des fichiers : nécessaire pour ajouter des images à des commandes basées sur l'image",
@@ -601,7 +585,7 @@
         "description": "Vérifiez si le bot est en vie.",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - %s1ms"
+          "pong_with_time": "Pong 🏓 - {time}ms"
         },
         "subcommands": {
           "blitzkit": {
@@ -618,7 +602,7 @@
         "name": "info-joueur",
         "description": "Informations de base sur un joueur",
         "body": {
-          "title": "Informations de %s1",
+          "title": "{name}'s information",
           "nickname": "Nickname",
           "battles": "Batailles",
           "winrate": "Taux de victoires",
@@ -647,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# %s1 hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
           "unrecorded_stats": "# Statistics currently unavailable\n\nWargaming may be currently be facing server downtime. If there is an on-going season, statistics should be available withing 24 hours."
         }
       }
@@ -675,12 +659,13 @@
         "select_dialog_title": "Search for tanks",
         "swap_dialog_title": "Swap tank",
         "clear_filters": "Clear filters",
+        "login": "Login to use this",
         "search_bar_hint": "Search tanks...",
         "recent": "Recently viewed",
         "select_all": "Select all",
         "count_singular": "1 tank",
-        "count_plural": "%s1 tanks",
-        "sorting_by": "Sorting by %s1",
+        "count_plural": "{count} tanks",
+        "sorting_by": "Sorting by {name}",
         "no_tanks_found": {
           "body": "No tanks found.",
           "search_again": "Try searching again.",
@@ -756,16 +741,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "By %s1 ❤️"
+        "credit": "By {name} ❤️"
       },
       "hot_tanks": {
         "title": "Popular tanks",
-        "subtitle": "Last %s1 days"
+        "subtitle": "Last {days} days"
       },
       "other_projects": {
         "title": "Other cool projects"
       },
-      "help_translate": "Please help translate %s1 to %s2!",
+      "help_translate": "Please help translate {name} to {language}!",
       "seo_description": "Tools for everything World of Tanks Blitz"
     },
     "docs": {
@@ -795,7 +780,7 @@
           "next": "Next",
           "no_results": "No results"
         },
-        "stats": "%s1 / %s2 guessed correctly"
+        "stats": "{correct} / {total} guessed correctly"
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -803,8 +788,8 @@
         "button": "Find tanks",
         "description": "Blitz tank encyclopedia",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
-        "tank_seo_title": "%s1 - Tier %s2 %s3 %s4 | %s5 Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "%s1 armor, statistics, equipment, provisions, and more. %s2 DPM, %s3hp alpha, %s4mm penetration, %s5kph top speed, %s6hp health.",
+        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
         "visualizers": {
           "reload": {
             "skip": "Skip"
@@ -829,7 +814,6 @@
           },
           "view_range": {
             "camo": "Camo",
-            "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
           },
@@ -873,7 +857,6 @@
               "reset": "Reset"
             },
             "advanced": "Advanced highlighting",
-            "shooter": "Shooter:",
             "shot_card": {
               "element": {
                 "primary": "Primary",
@@ -884,15 +867,15 @@
                 "track": "Tracks"
               },
               "status": {
-                "penetration": "%s1hp penetration",
+                "penetration": "{damage}hp penetration",
                 "blocked": "Blocked",
                 "ricochet": "Ricochet",
-                "splash": "%s1hp splash"
+                "splash": "{damage}hp splash"
               },
               "stats": {
-                "thickness_and_angle": "%s1mm %s2°",
-                "nominal": "%s1mm nominal",
-                "ricochet_loss": "%s1% penetration"
+                "thickness_and_angle": "{thickness}mm {angle}°",
+                "nominal": "{thickness}mm nominal",
+                "ricochet_loss": "{loss}% penetration"
               }
             }
           },
@@ -930,15 +913,15 @@
         "tech_tree": {
           "title": "Arbre technologique",
           "battle": "1 battle",
-          "battles": "%s1 battles",
-          "route": "Route %s1 of %s2"
+          "battles": "{count} battles",
+          "route": "Route {index} of {count}"
         },
         "game_modes": {
           "title": "Game mode abilities"
         },
         "review": {
           "title": "Review videos",
-          "join": "Apply to %s1 YouTuber program"
+          "join": "Apply to {name} YouTuber program"
         },
         "configuration": {
           "title": "Configuration",
@@ -974,15 +957,15 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare against",
-            "class": "Tier %s1 %s2",
-            "tier": "All of tier %s1",
+            "class": "Tier {tier} {class}",
+            "tier": "All of tier {tier}",
             "all": "All tanks"
           },
           "values": {
-            "shell_index": "Shell %s1",
-            "at_distance": "At %s1m",
+            "shell_index": "Shell {index}",
+            "at_distance": "At {distance}m",
             "at_distance_slider_label": "Distance",
-            "dispersion_at_distance": "Dispersion at %s1m",
+            "dispersion_at_distance": "Dispersion at {distance}m",
             "gun_flexibility": "Gun flexibility",
             "speed": "Speed",
             "terrain_coefficients": "Terrain coefficients",
@@ -1131,9 +1114,9 @@
         "description": "Tank performance statistics",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
-          "body": "Estimated stats based on %s1 players. Updated %s2 ago.",
-          "hours": "%s1 hours",
-          "minutes": "%s1 minutes"
+          "body": "Estimated stats based on {count} players. Updated {age} ago.",
+          "hours": "{count} hours",
+          "minutes": "{count} minutes"
         },
         "player_count": {
           "label": "Player count"
@@ -1165,10 +1148,10 @@
         "button": "Browse all",
         "description": "Blitz player avatars",
         "seo_description": "All World of Tanks Blitz player avatars",
-        "last_updated": "Last updated on %s1",
+        "last_updated": "Last updated on {time}",
         "search": {
           "hint": "Search avatars...",
-          "results": "%s1 avatars"
+          "results": "{count} avatars"
         }
       },
       "session": {
@@ -1183,8 +1166,8 @@
           "no_results": "Pas de joueur de trouvé"
         },
         "controls": {
-          "title": "Tracking %s1",
-          "subtitle": "Since %s1",
+          "title": "Tracking {name}",
+          "subtitle": "Since {time}",
           "reset": "Reset",
           "change": "Change"
         },
@@ -1244,7 +1227,7 @@
               "cancel": "Cancel",
               "success": {
                 "title": "Copy URL",
-                "info": "Generated the URL for %s1. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
                 "back": "Back",
                 "copy": "Copy URL"
               }

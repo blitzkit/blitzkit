@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "test",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is %s1 because it has the color of %s2. I like it so much that I will say its name 3 times! %s1! %s1! %s1! Once again, it's %s2, not %s3.",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "すばしっこい茶色のキツネが怠け者の犬を飛び越した。"
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "%s1m",
-      "mm": "%s1mm",
-      "deg": "%s1°",
-      "hp": "%s1hp",
-      "x": "x%s1",
-      "percentage": "%s1%",
-      "deg_s": "%s1°/s"
+      "m": "{value}m",
+      "mm": "{value}mm",
+      "deg": "{value}°",
+      "hp": "{value}hp",
+      "x": "x{value}",
+      "percentage": "{value}%",
+      "deg_s": "{value}°/s"
     },
     "gun_types": {
       "auto_loader": "自動装填砲",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# クランが見つかりませんでした\n\"%s1\"は見つかりませんでした。検索結果からクランを選択してください。",
-        "player_not_found": "# ユーザーが見つかりませんでした\nユーザー「\"%s1\"」は見つかりませんでした。検索結果からユーザーを選択するか、有効な名前を入力してください。`/link`コマンドを使用することも可能です。",
+        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
+        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
         "player_not_linked": "# `/link`を使用して始めましょう\nはじめまして！あなたが誰か、私に教えてください。",
-        "tank_name_not_found": "# 車輌が見つかりませんでした\n\"%s1\"という名前の車輌は見つかりませんでした。",
-        "tank_id_not_found": "# 車輌が見つかりませんでした\n\"%s1\"というIDの車輌は見つかりませんでした。番号ではなく名前で検索してください。",
+        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
+        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
         "no_tank_stats": "# 利用可能な車輌統計がありません\nこのプレイヤーには利用可能な統計がありません。あなたが探しているプレイヤーではない可能性があります。",
         "get_help": "Discordサーバーに参加する",
         "uncaught_error": "# BlitzKitがエラーに遭遇しました！\n申し訳ありません。お気軽に[公式Discordサーバー](https://discord.gg/nDt7AjGJQH)にお問い合わせください。",
@@ -284,19 +284,19 @@
           "name": "tier",
           "description": "Tier",
           "choices": {
-            "tier": "Tier %s1 - %s2"
+            "tier": "Tier {tier_1} - {tier_2}"
           }
         }
       },
       "periods": {
         "career": "Career",
         "today": "Today",
-        "days": "%s1 days",
-        "custom": "%s1 - %s2 days"
+        "days": "{days} days",
+        "custom": "{day_1} - {day_2} days"
       },
       "filters": {
         "none": "フィルターなし",
-        "tier": "Tier %s1"
+        "tier": "Tier {tier}"
       },
       "no_data": {
         "battles_in_period": "No battles played in this period",
@@ -319,22 +319,6 @@
       }
     },
     "commands": {
-      "auction": {
-        "name": "オークション",
-        "description": "現在オークションで購入可能な車輌",
-        "body": {
-          "title": "Blitzオークション",
-          "subtitle": "%s1 残り• 次の価格 %s2\n今すぐ入札: %s3",
-          "next": "次の価格: %s1",
-          "available": "残り: %s1 / %s2"
-        },
-        "errors": {
-          "no_auction": "# 進行中のオークションはありません\n現在、オークションで購入可能な車輌はありません。もしこれが間違いの場合、[公式Discardサーバー](https://discord.gg/nDt7AjGJQH)に報告してください。"
-        },
-        "actions": {
-          "bid": "今すぐ入札"
-        }
-      },
       "replay": {
         "name": "replay",
         "description": "Display replay results"
@@ -355,19 +339,19 @@
         "body": {
           "subtitle": "Research",
           "total": "トータル",
-          "research": "Research: %s1",
-          "upgrades": "Upgrades: %s1",
-          "purchase": "Purchase: %s1",
-          "equipment": "Equipment: %s1",
+          "research": "Research: {cost}",
+          "upgrades": "Upgrades: {cost}",
+          "purchase": "Purchase: {cost}",
+          "equipment": "Equipment: {cost}",
           "estimation": "# This is an estimation!\n\nThis list may include already researched tanks because of the inaccurate information Wargaming provides. Try providing a `starting-tank` from the line when using the command if you can."
         },
         "errors": {
-          "non_tech_tree": "# %s1 is not on the tech tree\n\nYou cannot research a premium/collector tank.",
-          "tier_1": "# %s1 is a tier I\n\nTier I tanks are always unlocked for free for all players.",
-          "already_researched": "# %s1 is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# %s1 was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# %s1 and %s2 are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# %s1 higher tiered to %s2\n\nMake sure to provide %s3 as the `starting-tank` instead as it is the lower tiered tank."
+          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
+          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
+          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
+          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
+          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
         }
       },
       "about": {
@@ -410,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "勝率",
           "damage": "ダメージ",
-          "unknown_tank": "Unknown tank %s1"
+          "unknown_tank": "Unknown tank {id}"
         }
       },
       "debug": {
@@ -446,12 +430,12 @@
         "options": {
           "threshold": {
             "name": "threshold",
-            "description": "The number of days inactive (default: %s1 days)"
+            "description": "The number of days inactive (default: {days} days)"
           }
         },
         "body": {
-          "subtitle": "Inactive for %s1+ days",
-          "listing": "%s1 days"
+          "subtitle": "Inactive for {days}+ days",
+          "listing": "{days} days"
         }
       },
       "full_stats": {
@@ -494,7 +478,7 @@
         "body": {
           "accounts_linked": "Accounts linked",
           "no_role_permissions": {
-            "title": "%s1 failed to verify",
+            "title": "{name} failed to verify",
             "description": "I don't have the permission to manage roles."
           }
         },
@@ -509,11 +493,11 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "The max number of clan results (default: %s1)"
+            "description": "The max number of clan results (default: {limit})"
           }
         },
         "body": {
-          "title": "Clan search for %s1 in region %s2",
+          "title": "Clan search for {search} in region {region}",
           "no_results": "No clans found"
         }
       },
@@ -523,11 +507,11 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "The max number of player results (default: %s1)"
+            "description": "The max number of player results (default: {limit})"
           }
         },
         "body": {
-          "title": "Player search for %s1 in region %s2",
+          "title": "Player search for {search} in region {region}",
           "no_results": "No players found"
         }
       },
@@ -547,13 +531,13 @@
         "options": {
           "limit": {
             "name": "limit",
-            "description": "How many neighbors to display (default: %s1)"
+            "description": "How many neighbors to display (default: {count})"
           },
           "season": {
             "name": "season",
             "description": "Season number (default: current)",
             "choices": {
-              "current": "%s1 (current)"
+              "current": "{season} (current)"
             }
           },
           "league": {
@@ -562,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top %s1 players",
-          "no_participation": "# %s1 didn't play rating in season %s2\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "Top {count} players",
+          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
-          "deleted_player": "Deleted %s1",
+          "deleted_player": "Deleted {id}",
           "neighbors": "Rating neighbors",
-          "more": "+ %s1 more"
+          "more": "+ {count} more"
         }
       },
       "today": {
@@ -582,14 +566,14 @@
         "name": "owned-tanks",
         "description": "Shows all own tanks in a tier",
         "body": {
-          "title": "# %s1's owned tier %s2 tanks\n\n"
+          "title": "# {name}'s owned tier {tier} tanks\n\n"
         }
       },
       "permissions": {
         "name": "permissions",
         "description": "Checks wether the bot has the required permissions to function",
         "body": {
-          "title": "# Permissions\n\n%s1",
+          "title": "# Permissions\n\n{body}",
           "view_channels": "View channels: needed to find the message the refresh button was used on",
           "read_message_history": "Read message history: needed to find the message to refresh",
           "attach_files": "Attach files: needed to add images to image-based commands",
@@ -601,7 +585,7 @@
         "description": "Check wether the bot is alive.",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - %s1ms"
+          "pong_with_time": "Pong 🏓 - {time}ms"
         },
         "subcommands": {
           "blitzkit": {
@@ -618,7 +602,7 @@
         "name": "player-info",
         "description": "Basic information about a player",
         "body": {
-          "title": "%s1's information",
+          "title": "{name}'s information",
           "nickname": "Nickname",
           "battles": "戦闘数",
           "winrate": "勝率",
@@ -647,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# %s1 hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
           "unrecorded_stats": "# Statistics currently unavailable\n\nWargaming may be currently be facing server downtime. If there is an on-going season, statistics should be available withing 24 hours."
         }
       }
@@ -675,12 +659,13 @@
         "select_dialog_title": "Search for tanks",
         "swap_dialog_title": "Swap tank",
         "clear_filters": "Clear filters",
+        "login": "Login to use this",
         "search_bar_hint": "車輌名を入力…",
         "recent": "最近の閲覧",
         "select_all": "全て選択",
         "count_singular": "1 輌",
-        "count_plural": "%s1輌",
-        "sorting_by": ":%s1で並び替え",
+        "count_plural": "{count} tanks",
+        "sorting_by": "Sorting by {name}",
         "no_tanks_found": {
           "body": "該当する車輌が存在しません。",
           "search_again": "もう一度検索してください。",
@@ -756,16 +741,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "By %s1 ❤️"
+        "credit": "By {name} ❤️"
       },
       "hot_tanks": {
         "title": "人気の車輌",
-        "subtitle": "過去 %s1日間"
+        "subtitle": "Last {days} days"
       },
       "other_projects": {
         "title": "他のプロジェクト"
       },
-      "help_translate": "%s1の %s2への翻訳にご協力ください！",
+      "help_translate": "Please help translate {name} to {language}!",
       "seo_description": "World of Tanks Blitz全般のツール"
     },
     "docs": {
@@ -795,7 +780,7 @@
           "next": "Next",
           "no_results": "該当なし"
         },
-        "stats": "%s1 / %s2 guessed correctly"
+        "stats": "{correct} / {total} guessed correctly"
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -803,8 +788,8 @@
         "button": "戦車を探す",
         "description": "Blitz戦車百科",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
-        "tank_seo_title": "%s1 - Tier %s2 %s3 %s4 | %s5 Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "%s1 armor, statistics, equipment, provisions, and more. %s2 DPM, %s3hp alpha, %s4mm penetration, %s5kph top speed, %s6hp health.",
+        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
         "visualizers": {
           "reload": {
             "skip": "Skip"
@@ -829,7 +814,6 @@
           },
           "view_range": {
             "camo": "Camo",
-            "percentage": "%s1%",
             "ghost_factory": "Ghost Factory",
             "dead_rail": "Dead Rail"
           },
@@ -873,7 +857,6 @@
               "reset": "リセット"
             },
             "advanced": "高度なハイライト",
-            "shooter": "自車両",
             "shot_card": {
               "element": {
                 "primary": "主装甲",
@@ -884,15 +867,15 @@
                 "track": "履帯"
               },
               "status": {
-                "penetration": "%s1hp 貫通",
+                "penetration": "{damage}hp penetration",
                 "blocked": "非貫通",
                 "ricochet": "跳弾",
-                "splash": "%s1hp 爆風ダメージ"
+                "splash": "{damage}hp splash"
               },
               "stats": {
-                "thickness_and_angle": "%s1mm %s2°",
-                "nominal": "%s1mm 装甲",
-                "ricochet_loss": "%s1% penetration"
+                "thickness_and_angle": "{thickness}mm {angle}°",
+                "nominal": "{thickness}mm nominal",
+                "ricochet_loss": "{loss}% penetration"
               }
             }
           },
@@ -930,15 +913,15 @@
         "tech_tree": {
           "title": "技術ツリー",
           "battle": "1 戦",
-          "battles": "%s1 戦",
-          "route": "ルート %s1 / %s2"
+          "battles": "{count} battles",
+          "route": "Route {index} of {count}"
         },
         "game_modes": {
           "title": "ゲームモードアビリティ"
         },
         "review": {
           "title": "Review videos",
-          "join": "%s1 YouTuberプログラムに応募する"
+          "join": "Apply to {name} YouTuber program"
         },
         "configuration": {
           "title": "構成",
@@ -974,15 +957,15 @@
           "title": "性能値",
           "compare": {
             "label": "比較対象",
-            "class": "Tier %s1 %s2",
-            "tier": "Tier %s1 全車輌",
+            "class": "Tier {tier} {class}",
+            "tier": "All of tier {tier}",
             "all": "全車輌"
           },
           "values": {
-            "shell_index": "Shell %s1",
-            "at_distance": "At %s1m",
+            "shell_index": "Shell {index}",
+            "at_distance": "At {distance}m",
             "at_distance_slider_label": "距離",
-            "dispersion_at_distance": "%s1m での散布界",
+            "dispersion_at_distance": "Dispersion at {distance}m",
             "gun_flexibility": "主砲旋回上限",
             "speed": "最高速度",
             "terrain_coefficients": "地形走破能力",
@@ -1131,9 +1114,9 @@
         "description": "車輌の戦闘統計",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
-          "body": "%s1 人のプレイヤーの推定統計。 %s2前に更新されました。",
-          "hours": "%s1 時間",
-          "minutes": "%s1 分"
+          "body": "Estimated stats based on {count} players. Updated {age} ago.",
+          "hours": "{count} hours",
+          "minutes": "{count} minutes"
         },
         "player_count": {
           "label": "統計期間:"
@@ -1165,10 +1148,10 @@
         "button": "全て見る",
         "description": "Blitzアバター図鑑",
         "seo_description": "World of Tanks Blitz の 全ての プレイヤーアバター",
-        "last_updated": "最終更新: %s1",
+        "last_updated": "Last updated on {time}",
         "search": {
           "hint": "アバターを検索...",
-          "results": "検索結果: %s1 個"
+          "results": "{count} avatars"
         }
       },
       "session": {
@@ -1183,8 +1166,8 @@
           "no_results": "プレイヤーが見つかりませんでした"
         },
         "controls": {
-          "title": "%s1 を追跡中",
-          "subtitle": "開始日時: %s1",
+          "title": "Tracking {name}",
+          "subtitle": "Since {time}",
           "reset": "リセット",
           "change": "変更"
         },
@@ -1244,7 +1227,7 @@
               "cancel": "Cancel",
               "success": {
                 "title": "Copy URL",
-                "info": "Generated the URL for %s1. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
                 "back": "戻る",
                 "copy": "Copy URL"
               }
