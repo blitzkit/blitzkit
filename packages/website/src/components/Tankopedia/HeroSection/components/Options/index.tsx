@@ -6,13 +6,15 @@ import {
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import {
+  Crosshair1Icon,
   EnterFullScreenIcon,
   ExitFullScreenIcon,
   EyeOpenIcon,
+  ShadowInnerIcon,
+  ShadowNoneIcon,
 } from "@radix-ui/react-icons";
 import {
   Button,
-  Checkbox,
   Dialog,
   DropdownMenu,
   Flex,
@@ -284,78 +286,100 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         bottom={revealed ? "4" : "-100%"}
         left="50%"
         style={{ transform: "translateX(-50%)", transitionDuration: "200ms" }}
+        gap="2"
       >
         <Flex
-          direction="column"
+          gap="2"
           align="center"
           style={{ transitionDuration: "200ms" }}
           position="relative"
           bottom={display === TankopediaDisplay.DynamicArmor ? "0" : "-7rem"}
         >
-          <Flex
-            align="center"
-            gap="2"
-            mb="1"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              TankopediaPersistent.mutate((draft) => {
-                draft.advancedHighlighting = !draft.advancedHighlighting;
-              });
-            }}
-          >
-            <Checkbox variant="classic" checked={advancedHighlighting} />
-            <Text color="gray" size="2">
-              {strings.website.tools.tankopedia.sandbox.dynamic.advanced}
-            </Text>
-          </Flex>
-
-          <Flex align="center" gap="2">
-            <Text color="gray" size="2">
-              {strings.website.tools.tankopedia.sandbox.dynamic.shooter}
-            </Text>
-
-            <Dialog.Root
-              open={antagonistSelectorOpen}
-              onOpenChange={setAntagonistSelectorOpen}
-            >
-              <Dialog.Trigger>
-                <Button variant="ghost">
-                  <Flex gap="2" align="center">
-                    <SmallTankIcon id={antagonistTank.id} size={16} />
-                    {unwrap(antagonistTank.name)}
-                  </Flex>
-                </Button>
-              </Dialog.Trigger>
-
-              <Dialog.Content>
-                <Dialog.Title align="center">
-                  {strings.website.common.tank_search.select_dialog_title}
-                </Dialog.Title>
-
-                <Tabs.Root
-                  value={tab}
-                  onValueChange={setTab}
-                  style={{ position: "relative" }}
+          {disturbed && (
+            <>
+              {display === TankopediaDisplay.DynamicArmor && (
+                <IconButton
+                  size="2"
+                  highContrast
+                  onClick={() => {
+                    TankopediaPersistent.mutate((draft) => {
+                      draft.advancedHighlighting = !draft.advancedHighlighting;
+                    });
+                  }}
+                  color={advancedHighlighting ? undefined : "gray"}
+                  variant={advancedHighlighting ? "solid" : "surface"}
                 >
-                  <TankSearch
-                    compact
-                    onSelect={(tank) => {
-                      Duel.mutate((draft) => {
-                        draft.antagonist.tank = tank;
-                        draft.antagonist.engine = tank.engines.at(-1)!;
-                        draft.antagonist.track = tank.tracks.at(-1)!;
-                        draft.antagonist.turret = tank.turrets.at(-1)!;
-                        draft.antagonist.gun =
-                          draft.antagonist.turret.guns.at(-1)!;
-                        draft.antagonist.shell = draft.antagonist.gun.shells[0];
-                      });
-                      setAntagonistSelectorOpen(false);
-                    }}
-                  />
-                </Tabs.Root>
-              </Dialog.Content>
-            </Dialog.Root>
-          </Flex>
+                  {advancedHighlighting ? (
+                    <ShadowInnerIcon />
+                  ) : (
+                    <ShadowNoneIcon />
+                  )}
+                </IconButton>
+              )}
+
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <IconButton
+                    size="2"
+                    variant="surface"
+                    highContrast
+                    color="gray"
+                  >
+                    <EyeOpenIcon />
+                  </IconButton>
+                </DropdownMenu.Trigger>
+
+                <DropdownMenu.Content>
+                  <DropdownMenu.Item
+                    onClick={() => poseEvent.emit(Pose.HullDown)}
+                  >
+                    {strings.website.tools.tankopedia.sandbox.poses.hull_down}
+                  </DropdownMenu.Item>
+
+                  <DropdownMenu.Item
+                    onClick={() => poseEvent.emit(Pose.FaceHug)}
+                  >
+                    {strings.website.tools.tankopedia.sandbox.poses.face_hug}
+                  </DropdownMenu.Item>
+
+                  <DropdownMenu.Item
+                    onClick={() => poseEvent.emit(Pose.Default)}
+                  >
+                    {strings.website.tools.tankopedia.sandbox.poses.default}
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
+
+              <ScreenshotButton
+                color="gray"
+                size="2"
+                variant="surface"
+                highContrast
+                canvas={canvas}
+                name={protagonistTank.slug}
+              />
+
+              {fullScreenAvailable && (
+                <IconButton
+                  size="2"
+                  highContrast
+                  onClick={() => {
+                    if (isFullScreen) {
+                      document.exitFullscreen();
+                    } else document.body.requestFullscreen();
+                  }}
+                  color={isFullScreen ? undefined : "gray"}
+                  variant={isFullScreen ? "solid" : "surface"}
+                >
+                  {isFullScreen ? (
+                    <ExitFullScreenIcon />
+                  ) : (
+                    <EnterFullScreenIcon />
+                  )}
+                </IconButton>
+              )}
+            </>
+          )}
         </Flex>
 
         <Flex gap="3" align="center" mt="2">
@@ -407,61 +431,47 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             </SegmentedControl.Item>
           </SegmentedControl.Root>
 
-          {disturbed && (
-            <>
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <IconButton variant="ghost" color="gray">
-                    <EyeOpenIcon />
-                  </IconButton>
-                </DropdownMenu.Trigger>
+          {display === TankopediaDisplay.DynamicArmor && (
+            <Dialog.Root
+              open={antagonistSelectorOpen}
+              onOpenChange={setAntagonistSelectorOpen}
+            >
+              <Dialog.Trigger>
+                <Button variant="solid" highContrast>
+                  <Crosshair1Icon />
+                  {unwrap(antagonistTank.name)}
+                  <SmallTankIcon id={antagonistTank.id} size={16} />
+                </Button>
+              </Dialog.Trigger>
 
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item
-                    onClick={() => poseEvent.emit(Pose.HullDown)}
-                  >
-                    {strings.website.tools.tankopedia.sandbox.poses.hull_down}
-                  </DropdownMenu.Item>
+              <Dialog.Content>
+                <Dialog.Title align="center">
+                  {strings.website.common.tank_search.select_dialog_title}
+                </Dialog.Title>
 
-                  <DropdownMenu.Item
-                    onClick={() => poseEvent.emit(Pose.FaceHug)}
-                  >
-                    {strings.website.tools.tankopedia.sandbox.poses.face_hug}
-                  </DropdownMenu.Item>
-
-                  <DropdownMenu.Item
-                    onClick={() => poseEvent.emit(Pose.Default)}
-                  >
-                    {strings.website.tools.tankopedia.sandbox.poses.default}
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-
-              <ScreenshotButton
-                color="gray"
-                variant="ghost"
-                canvas={canvas}
-                name={protagonistTank.slug}
-              />
-
-              {fullScreenAvailable && (
-                <IconButton
-                  color="gray"
-                  variant="ghost"
-                  onClick={() => {
-                    if (isFullScreen) {
-                      document.exitFullscreen();
-                    } else document.body.requestFullscreen();
-                  }}
+                <Tabs.Root
+                  value={tab}
+                  onValueChange={setTab}
+                  style={{ position: "relative" }}
                 >
-                  {isFullScreen ? (
-                    <ExitFullScreenIcon />
-                  ) : (
-                    <EnterFullScreenIcon />
-                  )}
-                </IconButton>
-              )}
-            </>
+                  <TankSearch
+                    compact
+                    onSelect={(tank) => {
+                      Duel.mutate((draft) => {
+                        draft.antagonist.tank = tank;
+                        draft.antagonist.engine = tank.engines.at(-1)!;
+                        draft.antagonist.track = tank.tracks.at(-1)!;
+                        draft.antagonist.turret = tank.turrets.at(-1)!;
+                        draft.antagonist.gun =
+                          draft.antagonist.turret.guns.at(-1)!;
+                        draft.antagonist.shell = draft.antagonist.gun.shells[0];
+                      });
+                      setAntagonistSelectorOpen(false);
+                    }}
+                  />
+                </Tabs.Root>
+              </Dialog.Content>
+            </Dialog.Root>
           )}
         </Flex>
       </Flex>
