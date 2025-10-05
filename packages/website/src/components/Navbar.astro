@@ -11,6 +11,7 @@ import { getStrings } from "../core/i18n/getStrings";
 import { Var } from "../core/radix/var";
 import { LinkI18n } from "./LinkI18n";
 import { tools } from "../constants/tools";
+import { NavbarAccount } from "./NavbarAccount";
 
 export interface Props {
   integrated?: boolean;
@@ -182,7 +183,7 @@ const strings = getStrings(locale);
             <GearIcon width="1em" height="1em" />
           </LinkI18n>
 
-          <!-- <NavbarAccount client:idle /> -->
+          <NavbarAccount {locale} client:idle />
 
           <Flex align="center" display={{ initial: "flex", sm: "none" }}>
             <IconButton variant="ghost" color="gray" className="hamburger">
@@ -200,7 +201,7 @@ const strings = getStrings(locale);
         display={{ initial: "flex", sm: "none" }}
       >
         {
-          toolsFiltered.map(( tool) => {
+          toolsFiltered.map((tool) => {
             const toolStrings =
               strings.website.tools[
                 (tool.strings ?? tool.id) as keyof typeof strings.website.tools

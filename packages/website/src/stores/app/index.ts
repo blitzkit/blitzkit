@@ -6,7 +6,7 @@ export interface WargamingLogin {
   expires: number;
 }
 
-interface App {
+export interface App {
   developerMode: boolean;
   policiesAgreementIndex: number;
   logins: {

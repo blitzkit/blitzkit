@@ -11,13 +11,15 @@ import { Callout, Flex, Link, Text, type FlexProps } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
 import { times, uniq } from "lodash-es";
 import { memo, useEffect, useMemo, useState } from "react";
+import usePromise from "react-promise-suspense";
 import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
 import { awaitableModelDefinitions } from "../../core/awaitables/modelDefinitions";
 import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
-import { filterTank } from "../../core/blitzkit/filterTank";
+import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";
+import { App } from "../../stores/app";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { SORT_UNITS } from "../../stores/tankopediaPersistent/constants";
@@ -54,15 +56,34 @@ const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
 export const TankSearch = memo<TankSearchProps>(
   ({ compact, onSelect, onSelectAll, skeleton, ...props }) => {
     const { strings, locale } = useLocale();
-
+    const wargaming = App.use((state) => state.logins.wargaming);
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankopediaSort = TankSort.use();
     const tankFilters = TankFilters.use();
-    const tanksFiltered = useMemo(() => {
+
+    const filtered = usePromise(
+      () => {
+        if (tankFilters.search === null) {
+          return filterTanks(
+            tankFilters,
+            awaitedTanksDefinitionsArray,
+            wargaming?.id
+          );
+        } else {
+          return Promise.resolve(
+            fuzzysort
+              .go(tankFilters.search, tankNames, {
+                keys: SEARCH_KEYS,
+              })
+              .map((result) => tankDefinitions.tanks[result.obj.id])
+          );
+        }
+      },
+      // react-promise-suspense has awful type annotations
+      [tankFilters] as any
+    );
+    const sorted = useMemo(() => {
       if (tankFilters.search === null) {
-        const filtered = awaitedTanksDefinitionsArray.filter((tank) =>
-          filterTank(tankFilters, tank)
-        );
         let sorted: TankDefinition[];
 
         switch (tankopediaSort.by) {
@@ -396,17 +417,12 @@ export const TankSearch = memo<TankSearchProps>(
           ? sorted
           : sorted.reverse();
       } else {
-        const searchedRaw = fuzzysort.go(tankFilters.search, tankNames, {
-          keys: SEARCH_KEYS,
-        });
-        const searchedTanks = searchedRaw.map(
-          (result) => tankDefinitions.tanks[result.obj.id]
-        );
-        return searchedTanks;
+        return filtered;
       }
     }, [tankFilters, tankopediaSort]);
+
     const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED_CARDS);
-    const tanks = tanksFiltered.slice(0, loadedCards);
+    const tanks = sorted.slice(0, loadedCards);
 
     useEffect(() => {
       setLoadedCards(DEFAULT_LOADED_CARDS);
@@ -420,19 +436,17 @@ export const TankSearch = memo<TankSearchProps>(
           onSelect={onSelect}
         />
 
-        {!tankFilters.search && !tankFilters.searching && (
-          <FilterControl compact={compact} />
-        )}
+        {!tankFilters.search && !tankFilters.searching && <FilterControl />}
 
         {!skeleton && !compact && <RecentlyViewed />}
 
         <Flex mt="2" gap="1" align="center" justify="center" direction="column">
           <Flex gap="2">
             <Text color="gray">
-              {tanksFiltered.length === 1
+              {sorted.length === 1
                 ? strings.website.common.tank_search.count_singular
                 : literals(strings.website.common.tank_search.count_plural, {
-                    count: tanksFiltered.length.toLocaleString(locale),
+                    count: sorted.length.toLocaleString(locale),
                   })}
             </Text>
 
@@ -442,10 +456,10 @@ export const TankSearch = memo<TankSearchProps>(
                 href="#"
                 onClick={(event) => {
                   event.preventDefault();
-                  onSelectAll(tanksFiltered);
+                  onSelectAll(sorted);
                   TankopediaPersistent.mutate((draft) => {
                     draft.recentlyViewed = uniq([
-                      ...tanksFiltered.map(({ id }) => id),
+                      ...sorted.map(({ id }) => id),
                       ...draft.recentlyViewed,
                     ])
                       .filter((id) => id in tankDefinitions.tanks)
@@ -499,14 +513,14 @@ export const TankSearch = memo<TankSearchProps>(
                 ))}
 
                 {times(
-                  Math.min(PREVIEW_COUNT, tanksFiltered.length - loadedCards),
+                  Math.min(PREVIEW_COUNT, sorted.length - loadedCards),
                   (index) => {
                     return (
                       <SkeletonTankCard
                         key={index}
                         onIntersection={() => {
                           setLoadedCards((state) =>
-                            Math.min(state + 2, tanksFiltered.length)
+                            Math.min(state + 2, sorted.length)
                           );
                         }}
                       />

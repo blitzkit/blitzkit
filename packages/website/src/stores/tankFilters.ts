@@ -22,6 +22,7 @@ export interface TankFilters {
   searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
+  ownership: "all" | "owned" | "unowned";
 }
 
 export const TankFilters = new Varuna<TankFilters>({
@@ -34,4 +35,5 @@ export const TankFilters = new Varuna<TankFilters>({
   searching: false,
   gunType: [],
   shells: [null, null, null],
+  ownership: "all",
 });

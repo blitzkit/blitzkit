@@ -8,13 +8,25 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { Suspense } from "react";
+import {
+  LocaleProvider,
+  type LocaleAcceptorProps,
+} from "../../hooks/useLocale";
 import { App } from "../../stores/app";
 import { BlitzKitTheme } from "../BlitzKitTheme";
 import { WargamingAccountName } from "../WargamingAccountName";
 import { WargamingIcon } from "../WargamingIcon";
 import { WargamingLoginButton } from "../WargamingLoginButton";
 
-export function NavbarAccount() {
+export function NavbarAccount({ locale }: LocaleAcceptorProps) {
+  return (
+    <LocaleProvider locale={locale}>
+      <Content />
+    </LocaleProvider>
+  );
+}
+
+function Content() {
   const logins = App.use((state) => state.logins);
 
   return (

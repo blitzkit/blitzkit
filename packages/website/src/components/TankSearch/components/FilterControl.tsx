@@ -6,6 +6,11 @@ import {
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import {
+  ComponentBooleanIcon,
+  LockClosedIcon,
+  LockOpen2Icon,
+} from "@radix-ui/react-icons";
+import {
   Box,
   Flex,
   IconButton,
@@ -13,15 +18,17 @@ import {
   Link,
   Popover,
   Text,
+  Tooltip,
+  type FlexProps,
 } from "@radix-ui/themes";
 import { isEqual, times } from "lodash-es";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { Var } from "../../../core/radix/var";
 import { useLocale } from "../../../hooks/useLocale";
+import { App } from "../../../stores/app";
 import { TankFilters } from "../../../stores/tankFilters";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { classIcons } from "../../ClassIcon";
-import { ExperimentIcon } from "../../ExperimentIcon";
 import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
 import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
 import { GunRegularIcon } from "../../GunRegularIcon";
@@ -108,28 +115,80 @@ function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
   );
 }
 
-export function FilterControl({ compact }: FilterControlProps) {
+function OwnershipFilter(props: FlexProps) {
+  const tankFilters = TankFilters.use();
+  const wargaming = App.use((state) => state.logins.wargaming);
+
+  return (
+    <Flex
+      overflow="hidden"
+      style={{ borderRadius: "var(--radius-full)" }}
+      direction="column"
+      {...props}
+    >
+      <IconButton
+        disabled={!wargaming}
+        variant={tankFilters.ownership === "all" ? "solid" : "soft"}
+        radius="none"
+        color={tankFilters.ownership === "all" ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.ownership = "all";
+          });
+        }}
+      >
+        <ComponentBooleanIcon />
+      </IconButton>
+
+      <IconButton
+        disabled={!wargaming}
+        variant={tankFilters.ownership === "owned" ? "solid" : "soft"}
+        radius="none"
+        color={tankFilters.ownership === "owned" ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.ownership = "owned";
+          });
+        }}
+      >
+        <LockOpen2Icon />
+      </IconButton>
+
+      <IconButton
+        disabled={!wargaming}
+        variant={tankFilters.ownership === "unowned" ? "solid" : "soft"}
+        radius="none"
+        color={tankFilters.ownership === "unowned" ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.ownership = "unowned";
+          });
+        }}
+      >
+        <LockClosedIcon />
+      </IconButton>
+    </Flex>
+  );
+}
+
+export function FilterControl() {
   const tankFilters = TankFilters.use();
   const { strings } = useLocale();
   const clearable = !isEqual(tankFilters, TankFilters.initial);
+  const wargaming = App.use((state) => state.logins.wargaming);
 
   return (
     <Flex direction="column" align="center">
-      <Flex
-        height="fit-content"
-        gap="2"
-        align={{ initial: "start", md: "center" }}
-        justify="center"
-      >
+      <Flex height="fit-content" gap="1" align="start" justify="center">
         <Flex
           flexShrink="0"
-          direction={compact ? "row" : { initial: "row", md: "column" }}
           overflow="hidden"
-          style={{ borderRadius: "var(--radius-5)" }}
+          style={{ borderRadius: "var(--radius-4)" }}
         >
-          <Flex
-            direction={compact ? "column" : { md: "row", initial: "column" }}
-          >
+          <Flex direction="column">
             {times(5, (index) => {
               const tier = index + 1;
               const selected = tankFilters.tiers?.includes(tier);
@@ -167,9 +226,7 @@ export function FilterControl({ compact }: FilterControlProps) {
             }}
           />
 
-          <Flex
-            direction={compact ? "column" : { md: "row", initial: "column" }}
-          >
+          <Flex direction="column">
             {times(5, (index) => {
               const tier = index + 6;
               const selected = tankFilters.tiers?.includes(tier);
@@ -202,13 +259,10 @@ export function FilterControl({ compact }: FilterControlProps) {
 
         <Flex
           flexShrink="0"
-          direction={compact ? "row" : { initial: "row", md: "column" }}
           overflow="hidden"
-          style={{ borderRadius: "var(--radius-5)" }}
+          style={{ borderRadius: "var(--radius-4)" }}
         >
-          <Flex
-            direction={compact ? "column" : { md: "row", initial: "column" }}
-          >
+          <Flex direction="column">
             {gameDefinitions.nations
               .slice(0, Math.ceil(gameDefinitions.nations.length / 2))
               .map((nation) => {
@@ -250,9 +304,7 @@ export function FilterControl({ compact }: FilterControlProps) {
             }}
           />
 
-          <Flex
-            direction={compact ? "column" : { md: "row", initial: "column" }}
-          >
+          <Flex direction="column">
             {gameDefinitions.nations
               .slice(Math.ceil(gameDefinitions.nations.length / 2))
               .map((nation) => {
@@ -289,298 +341,274 @@ export function FilterControl({ compact }: FilterControlProps) {
         </Flex>
 
         <Flex
-          direction={compact ? "row" : { initial: "row", md: "column" }}
-          align="start"
-          gap={{ initial: "2", md: "1" }}
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-full)" }}
+          direction="column"
         >
-          <Flex gap="2" align="start">
-            <Flex
-              overflow="hidden"
-              style={{ borderRadius: "var(--radius-full)" }}
-              direction={compact ? "column" : { md: "row", initial: "column" }}
-            >
-              {TANK_CLASSES.map((tankClass) => {
-                const Icon = classIcons[tankClass];
-                const selected = tankFilters.classes?.includes(tankClass);
+          {TANK_CLASSES.map((tankClass) => {
+            const Icon = classIcons[tankClass];
+            const selected = tankFilters.classes?.includes(tankClass);
 
-                return (
-                  <IconButton
-                    key={tankClass}
-                    variant={selected ? "solid" : "soft"}
-                    radius="none"
-                    color={selected ? undefined : "gray"}
-                    highContrast
-                    onClick={() => {
-                      TankFilters.mutate((draft) => {
-                        if (tankFilters.classes.includes(tankClass)) {
-                          draft.classes = draft.classes.filter(
-                            (c) => c !== tankClass
-                          );
-                        } else {
-                          draft.classes = [...draft.classes, tankClass];
-                        }
-                      });
-                    }}
-                  >
-                    <Icon style={{ width: "1em", height: "1em" }} />
-                  </IconButton>
-                );
-              })}
-            </Flex>
-
-            <Flex
-              overflow="hidden"
-              style={{ borderRadius: "var(--radius-full)" }}
-              direction={compact ? "column" : { md: "row", initial: "column" }}
-            >
+            return (
               <IconButton
-                variant={
-                  tankFilters.gunType.includes("regular") ? "solid" : "soft"
-                }
+                key={tankClass}
+                variant={selected ? "solid" : "soft"}
                 radius="none"
-                color={
-                  tankFilters.gunType.includes("regular") ? undefined : "gray"
-                }
+                color={selected ? undefined : "gray"}
                 highContrast
                 onClick={() => {
                   TankFilters.mutate((draft) => {
-                    if (tankFilters.gunType.includes("regular")) {
-                      draft.gunType = draft.gunType.filter(
-                        (t) => t !== "regular"
+                    if (tankFilters.classes.includes(tankClass)) {
+                      draft.classes = draft.classes.filter(
+                        (c) => c !== tankClass
                       );
                     } else {
-                      draft.gunType = [...draft.gunType, "regular"];
+                      draft.classes = [...draft.classes, tankClass];
                     }
                   });
                 }}
               >
-                <GunRegularIcon style={{ width: "1em", height: "1em" }} />
+                <Icon style={{ width: "1em", height: "1em" }} />
               </IconButton>
-              <IconButton
-                variant={
-                  tankFilters.gunType.includes("auto_loader") ? "solid" : "soft"
-                }
-                radius="none"
-                color={
-                  tankFilters.gunType.includes("auto_loader")
-                    ? undefined
-                    : "gray"
-                }
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    if (tankFilters.gunType.includes("auto_loader")) {
-                      draft.gunType = draft.gunType.filter(
-                        (t) => t !== "auto_loader"
-                      );
-                    } else {
-                      draft.gunType = [...draft.gunType, "auto_loader"];
-                    }
-                  });
-                }}
-              >
-                <GunAutoloaderIcon style={{ width: "1em", height: "1em" }} />
-              </IconButton>
-              <IconButton
-                variant={
-                  tankFilters.gunType.includes("auto_reloader")
-                    ? "solid"
-                    : "soft"
-                }
-                radius="none"
-                color={
-                  tankFilters.gunType.includes("auto_reloader")
-                    ? undefined
-                    : "gray"
-                }
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    if (tankFilters.gunType.includes("auto_reloader")) {
-                      draft.gunType = draft.gunType.filter(
-                        (t) => t !== "auto_reloader"
-                      );
-                    } else {
-                      draft.gunType = [...draft.gunType, "auto_reloader"];
-                    }
-                  });
-                }}
-              >
-                <GunAutoreloaderIcon style={{ width: "1em", height: "1em" }} />
-              </IconButton>
-            </Flex>
-
-            <Flex
-              overflow="hidden"
-              style={{ borderRadius: "var(--radius-full)" }}
-              direction={compact ? "column" : { md: "row", initial: "column" }}
-            >
-              <ShellFilter index={0} />
-              <ShellFilter index={1} premium />
-              <ShellFilter index={2} />
-            </Flex>
-          </Flex>
-
-          <Flex gap="2" align="start">
-            <Flex
-              overflow="hidden"
-              style={{ borderRadius: "var(--radius-full)" }}
-              direction={compact ? "column" : { md: "row", initial: "column" }}
-            >
-              <IconButton
-                variant={
-                  tankFilters.types?.includes(TankType.RESEARCHABLE)
-                    ? "solid"
-                    : "soft"
-                }
-                radius="none"
-                color={
-                  tankFilters.types?.includes(TankType.RESEARCHABLE)
-                    ? undefined
-                    : "gray"
-                }
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    if (tankFilters.types.includes(TankType.RESEARCHABLE)) {
-                      draft.types = draft.types.filter(
-                        (t) => t !== TankType.RESEARCHABLE
-                      );
-                    } else {
-                      draft.types = [...draft.types, TankType.RESEARCHABLE];
-                    }
-                  });
-                }}
-              >
-                <ResearchedIcon style={{ width: "1em", height: "1em" }} />
-              </IconButton>
-              <IconButton
-                variant={
-                  tankFilters.types?.includes(TankType.PREMIUM)
-                    ? "solid"
-                    : "soft"
-                }
-                radius="none"
-                color={
-                  tankFilters.types?.includes(TankType.PREMIUM)
-                    ? "amber"
-                    : "gray"
-                }
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    if (tankFilters.types.includes(TankType.PREMIUM)) {
-                      draft.types = draft.types.filter(
-                        (t) => t !== TankType.PREMIUM
-                      );
-                    } else {
-                      draft.types = [...draft.types, TankType.PREMIUM];
-                    }
-                  });
-                }}
-              >
-                <Text
-                  color={
-                    tankFilters.types?.includes(TankType.PREMIUM)
-                      ? undefined
-                      : "amber"
-                  }
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
-                  <ResearchedIcon style={{ width: "1em", height: "1em" }} />
-                </Text>
-              </IconButton>
-              <IconButton
-                variant={
-                  tankFilters.types?.includes(TankType.COLLECTOR)
-                    ? "solid"
-                    : "soft"
-                }
-                radius="none"
-                color={
-                  tankFilters.types?.includes(TankType.COLLECTOR)
-                    ? "blue"
-                    : "gray"
-                }
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    if (tankFilters.types.includes(TankType.COLLECTOR)) {
-                      draft.types = draft.types.filter(
-                        (t) => t !== TankType.COLLECTOR
-                      );
-                    } else {
-                      draft.types = [...draft.types, TankType.COLLECTOR];
-                    }
-                  });
-                }}
-              >
-                <Text
-                  color={
-                    tankFilters.types?.includes(TankType.COLLECTOR)
-                      ? undefined
-                      : "blue"
-                  }
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
-                  <ResearchedIcon style={{ width: "1em", height: "1em" }} />
-                </Text>
-              </IconButton>
-            </Flex>
-
-            <Flex
-              overflow="hidden"
-              style={{ borderRadius: "var(--radius-full)" }}
-              direction={compact ? "column" : { md: "row", initial: "column" }}
-            >
-              <IconButton
-                variant={tankFilters.testing === "include" ? "solid" : "soft"}
-                radius="none"
-                color={tankFilters.testing === "include" ? undefined : "gray"}
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    draft.testing = "include";
-                  });
-                }}
-              >
-                <ExperimentIcon
-                  style={{ width: "1em", height: "1em", color: "currentColor" }}
-                />
-              </IconButton>
-              <IconButton
-                variant={tankFilters.testing === "exclude" ? "solid" : "soft"}
-                radius="none"
-                color={tankFilters.testing === "exclude" ? undefined : "gray"}
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    draft.testing = "exclude";
-                  });
-                }}
-              >
-                <ScienceOffIcon
-                  style={{ width: "1em", height: "1em", color: "currentColor" }}
-                />
-              </IconButton>
-              <IconButton
-                variant={tankFilters.testing === "only" ? "solid" : "soft"}
-                radius="none"
-                color={tankFilters.testing === "only" ? undefined : "gray"}
-                highContrast
-                onClick={() => {
-                  TankFilters.mutate((draft) => {
-                    draft.testing = "only";
-                  });
-                }}
-              >
-                <ScienceIcon
-                  style={{ width: "1em", height: "1em", color: "currentColor" }}
-                />
-              </IconButton>
-            </Flex>
-          </Flex>
+            );
+          })}
         </Flex>
+
+        <Flex
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-full)" }}
+          direction="column"
+        >
+          <IconButton
+            variant={tankFilters.gunType.includes("regular") ? "solid" : "soft"}
+            radius="none"
+            color={tankFilters.gunType.includes("regular") ? undefined : "gray"}
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.gunType.includes("regular")) {
+                  draft.gunType = draft.gunType.filter((t) => t !== "regular");
+                } else {
+                  draft.gunType = [...draft.gunType, "regular"];
+                }
+              });
+            }}
+          >
+            <GunRegularIcon style={{ width: "1em", height: "1em" }} />
+          </IconButton>
+          <IconButton
+            variant={
+              tankFilters.gunType.includes("auto_loader") ? "solid" : "soft"
+            }
+            radius="none"
+            color={
+              tankFilters.gunType.includes("auto_loader") ? undefined : "gray"
+            }
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.gunType.includes("auto_loader")) {
+                  draft.gunType = draft.gunType.filter(
+                    (t) => t !== "auto_loader"
+                  );
+                } else {
+                  draft.gunType = [...draft.gunType, "auto_loader"];
+                }
+              });
+            }}
+          >
+            <GunAutoloaderIcon style={{ width: "1em", height: "1em" }} />
+          </IconButton>
+          <IconButton
+            variant={
+              tankFilters.gunType.includes("auto_reloader") ? "solid" : "soft"
+            }
+            radius="none"
+            color={
+              tankFilters.gunType.includes("auto_reloader") ? undefined : "gray"
+            }
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.gunType.includes("auto_reloader")) {
+                  draft.gunType = draft.gunType.filter(
+                    (t) => t !== "auto_reloader"
+                  );
+                } else {
+                  draft.gunType = [...draft.gunType, "auto_reloader"];
+                }
+              });
+            }}
+          >
+            <GunAutoreloaderIcon style={{ width: "1em", height: "1em" }} />
+          </IconButton>
+        </Flex>
+
+        <Flex
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-full)" }}
+          direction="column"
+        >
+          <ShellFilter index={0} />
+          <ShellFilter index={1} premium />
+          <ShellFilter index={2} />
+        </Flex>
+
+        <Flex
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-full)" }}
+          direction="column"
+        >
+          <IconButton
+            variant={
+              tankFilters.types?.includes(TankType.RESEARCHABLE)
+                ? "solid"
+                : "soft"
+            }
+            radius="none"
+            color={
+              tankFilters.types?.includes(TankType.RESEARCHABLE)
+                ? undefined
+                : "gray"
+            }
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.types.includes(TankType.RESEARCHABLE)) {
+                  draft.types = draft.types.filter(
+                    (t) => t !== TankType.RESEARCHABLE
+                  );
+                } else {
+                  draft.types = [...draft.types, TankType.RESEARCHABLE];
+                }
+              });
+            }}
+          >
+            <ResearchedIcon style={{ width: "1em", height: "1em" }} />
+          </IconButton>
+          <IconButton
+            variant={
+              tankFilters.types?.includes(TankType.PREMIUM) ? "solid" : "soft"
+            }
+            radius="none"
+            color={
+              tankFilters.types?.includes(TankType.PREMIUM) ? "amber" : "gray"
+            }
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.types.includes(TankType.PREMIUM)) {
+                  draft.types = draft.types.filter(
+                    (t) => t !== TankType.PREMIUM
+                  );
+                } else {
+                  draft.types = [...draft.types, TankType.PREMIUM];
+                }
+              });
+            }}
+          >
+            <Text
+              color={
+                tankFilters.types?.includes(TankType.PREMIUM)
+                  ? undefined
+                  : "amber"
+              }
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <ResearchedIcon style={{ width: "1em", height: "1em" }} />
+            </Text>
+          </IconButton>
+          <IconButton
+            variant={
+              tankFilters.types?.includes(TankType.COLLECTOR) ? "solid" : "soft"
+            }
+            radius="none"
+            color={
+              tankFilters.types?.includes(TankType.COLLECTOR) ? "blue" : "gray"
+            }
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                if (tankFilters.types.includes(TankType.COLLECTOR)) {
+                  draft.types = draft.types.filter(
+                    (t) => t !== TankType.COLLECTOR
+                  );
+                } else {
+                  draft.types = [...draft.types, TankType.COLLECTOR];
+                }
+              });
+            }}
+          >
+            <Text
+              color={
+                tankFilters.types?.includes(TankType.COLLECTOR)
+                  ? undefined
+                  : "blue"
+              }
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <ResearchedIcon style={{ width: "1em", height: "1em" }} />
+            </Text>
+          </IconButton>
+        </Flex>
+
+        <Flex
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-full)" }}
+          direction="column"
+        >
+          <IconButton
+            variant={tankFilters.testing === "include" ? "solid" : "soft"}
+            radius="none"
+            color={tankFilters.testing === "include" ? undefined : "gray"}
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                draft.testing = "include";
+              });
+            }}
+          >
+            <ComponentBooleanIcon />
+          </IconButton>
+          <IconButton
+            variant={tankFilters.testing === "exclude" ? "solid" : "soft"}
+            radius="none"
+            color={tankFilters.testing === "exclude" ? undefined : "gray"}
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                draft.testing = "exclude";
+              });
+            }}
+          >
+            <ScienceOffIcon
+              style={{ width: "1em", height: "1em", color: "currentColor" }}
+            />
+          </IconButton>
+          <IconButton
+            variant={tankFilters.testing === "only" ? "solid" : "soft"}
+            radius="none"
+            color={tankFilters.testing === "only" ? undefined : "gray"}
+            highContrast
+            onClick={() => {
+              TankFilters.mutate((draft) => {
+                draft.testing = "only";
+              });
+            }}
+          >
+            <ScienceIcon
+              style={{ width: "1em", height: "1em", color: "currentColor" }}
+            />
+          </IconButton>
+        </Flex>
+
+        {wargaming ? (
+          <OwnershipFilter />
+        ) : (
+          <Tooltip content={strings.website.common.tank_search.login}>
+            <OwnershipFilter />
+          </Tooltip>
+        )}
       </Flex>
 
       {clearable && (

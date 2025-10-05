@@ -750,6 +750,7 @@
         "select_dialog_title": "Search for tanks",
         "swap_dialog_title": "Swap tank",
         "clear_filters": "Clear filters",
+        "login": "Login to use this",
         "search_bar_hint": "Search tanks...",
         "recent": "Recently viewed",
         "select_all": "Select all",
