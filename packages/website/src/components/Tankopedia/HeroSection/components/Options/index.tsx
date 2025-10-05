@@ -293,7 +293,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           align="center"
           style={{ transitionDuration: "200ms" }}
           position="relative"
-          bottom={display === TankopediaDisplay.DynamicArmor ? "0" : "-7rem"}
         >
           {disturbed && (
             <>
