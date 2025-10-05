@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "тест",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
+    "long": "Это длинная тестовая строка. Вы НИКОГДА не должны видеть её в пользовательском интерфейсе. Мой любимый фрукт — {fruit}, потому что это цвет {color}. Он мне так нравится, так что я скажу его 3 раза {fruit}! {fruit}! {fruit}! И ещё раз, это {color}, а не {not_color}.",
     "fox": "Съешь же ещё этих мягких французских булок, да выпей чаю."
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "{value}m",
-      "mm": "{value}mm",
+      "m": "{value}м",
+      "mm": "{value}мм",
       "deg": "{value}°",
-      "hp": "{value}hp",
+      "hp": "{value}оп",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}°/с"
     },
     "gun_types": {
       "auto_loader": "Барабан",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
-        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "clan_not_found": "# Не удалось найти клан\nНе найден «{search}». Попробуйте выбрать клан из результатов поиска.",
+        "player_not_found": "# Не удалось найти пользователя\nНе удалось найти пользователя «{search}». Попробуйте выбрать пользователя из результатов поиска, введя правильное имя пользователя или используя команду «/link».",
         "player_not_linked": "# Используйте «/link», чтобы начать\nЯ не знаю, кто ты, но давай познакомимся сегодня!",
-        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
-        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
+        "tank_name_not_found": "# Танк не найден\nНе удалось найти танк с названием «{search}».",
+        "tank_id_not_found": "# Танк не найден\nНе удалось найти танк с ID «{search}». Попробуйте ввести название танка вместо числа.",
         "no_tank_stats": "# Статистика танка недоступна\nУ этого игрока нет доступной статистики. Возможно, это не тот игрок, которого вы ищете.",
         "get_help": "Получить помощь",
         "uncaught_error": "# BlitzKit столкнулся с ошибкой!\nНам очень жаль. Не стесняйтесь и [присоединяйтесь к официальному серверу Discord](https://discord.gg/nDt7AjGJQH), чтобы получить помощь.",
@@ -284,19 +284,19 @@
           "name": "уровень",
           "description": "Уровень",
           "choices": {
-            "tier": "Tier {tier_1} - {tier_2}"
+            "tier": "Уровень {tier_1} - {tier_2}"
           }
         }
       },
       "periods": {
         "career": "Карьера",
         "today": "Cегодня",
-        "days": "{days} days",
-        "custom": "{day_1} - {day_2} days"
+        "days": "{days} дней",
+        "custom": "{day_1} - {day_2} дней"
       },
       "filters": {
         "none": "Без фильтров",
-        "tier": "Tier {tier}"
+        "tier": " {tier} уровня"
       },
       "no_data": {
         "battles_in_period": "За этот период боёв не было",
@@ -435,7 +435,7 @@
         },
         "body": {
           "subtitle": "Inactive for {days}+ days",
-          "listing": "{days} days"
+          "listing": "{days} дней"
         }
       },
       "full_stats": {
@@ -493,11 +493,11 @@
         "options": {
           "limit": {
             "name": "лимит",
-            "description": "The max number of clan results (default: {limit})"
+            "description": "Максимальное количество результатов клана (по умолчанию: {limit})"
           }
         },
         "body": {
-          "title": "Clan search for {search} in region {region}",
+          "title": "Поиск клана {search} в регионе {region}",
           "no_results": "Кланов не найдено"
         }
       },
@@ -507,11 +507,11 @@
         "options": {
           "limit": {
             "name": "лимит",
-            "description": "The max number of player results (default: {limit})"
+            "description": "Максимальное число результатов игрока (по умолчанию: {limit})"
           }
         },
         "body": {
-          "title": "Player search for {search} in region {region}",
+          "title": "Поиск игрока {search} в регионе {region}",
           "no_results": "Игроков не найдено"
         }
       },
@@ -531,13 +531,13 @@
         "options": {
           "limit": {
             "name": "лимит",
-            "description": "How many neighbors to display (default: {count})"
+            "description": "Количество отображаемых ближайших игроков (по умолчанию: {count})"
           },
           "season": {
             "name": "сезон",
             "description": "Номер сезона (по умолчанию: текущий)",
             "choices": {
-              "current": "{season} (current)"
+              "current": "{season} (текущий)"
             }
           },
           "league": {
@@ -546,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top {count} players",
-          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "Топ {count} игроков",
+          "no_participation": "# {player} не играл в рейтинг в сезоне {season}\n\nЭтот игрок не участвовал в этом сезоне или не получил прошлую калибровку.",
           "no_ongoing_season": "# Нет текущего сезона\n\nВ данный момент нет рейтингового сезона.",
-          "deleted_player": "Deleted {id}",
+          "deleted_player": "Удаленный {id}",
           "neighbors": "Рейтинг ближайших игроков",
-          "more": "+ {count} more"
+          "more": "+ ещё {count}"
         }
       },
       "today": {
@@ -573,7 +573,7 @@
         "name": "разрешения",
         "description": "Проверяет, есть ли у бота необходимые разрешения для работы",
         "body": {
-          "title": "# Permissions\n\n{body}",
+          "title": "# Разрешения\n\n{body}",
           "view_channels": "Просмотр каналов: необходимо найти сообщение, на котором была использована кнопка обновления",
           "read_message_history": "Просмотр истории сообщений: необходимо найти сообщение для обновления",
           "attach_files": "Прикрепить файлы: необходимо для добавления изображений в команды на основе изображения",
@@ -585,7 +585,7 @@
         "description": "Проверьте, что бот жив.",
         "body": {
           "pong": "Понг 🏓",
-          "pong_with_time": "Pong 🏓 - {time}ms"
+          "pong_with_time": "Понг 🏓 — {time}мс"
         },
         "subcommands": {
           "blitzkit": {
@@ -602,7 +602,7 @@
         "name": "информация-об-игроке",
         "description": "Основная информация о игроке",
         "body": {
-          "title": "{name}'s information",
+          "title": "Информация о {name}",
           "nickname": "Никнейм",
           "battles": "Боёв",
           "winrate": "Коэффициент побед",
@@ -631,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name} не получил рейтинга\n\nЭтот игрок в этом сезоне не участвовал в рейтинговом режиме.",
           "unrecorded_stats": "# Статистика недоступна в настоящее время\n\nВ настоящее время Wargaming, возможно, сталкивается с простоями сервера. Если сезон продолжается, статистика должна быть доступна в течение 24 часов."
         }
       }
@@ -913,7 +913,7 @@
         "tech_tree": {
           "title": "Дерево танков",
           "battle": "1 бой",
-          "battles": "{count} battles",
+          "battles": "{count} боёв",
           "route": "Route {index} of {count}"
         },
         "game_modes": {
