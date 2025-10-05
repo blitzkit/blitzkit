@@ -19,6 +19,7 @@ const TARGET_FRAME_RATE = 30;
 export function Lighting() {
   const [cast, setCast] = useState(true);
 
+  const t0 = useRef(0);
   const topLight = useRef<SpotLight>(null!);
   const frontLight = useRef<SpotLight>(null!);
 
@@ -28,8 +29,15 @@ export function Lighting() {
   const last = useRef<number>(0);
   const samples = useRef<number[]>([]);
 
-  useFrame(({ clock }) => {
-    if (!cast || clock.elapsedTime < TARGET_FRAME_RATE * N) return;
+  useFrame(({ clock, frameloop }) => {
+    if (frameloop === "never") {
+      t0.current = clock.elapsedTime;
+      samples.current = [];
+      return;
+    }
+    if (!cast || clock.elapsedTime - t0.current < TARGET_FRAME_RATE * N) {
+      return;
+    }
 
     const dt = clock.elapsedTime - last.current;
     last.current = clock.elapsedTime;
