@@ -8,11 +8,12 @@ export function Title() {
   const { unwrap } = useLocale();
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
+  const disturbed = Tankopedia.use((state) => state.disturbed);
   const name = unwrap(protagonist.name);
   const fontSize = revealed
-    ? revealed
-      ? "2rem"
-      : `min(16vh, ${125 / name.length}vw)`
+    ? disturbed
+      ? "1.5rem"
+      : "2rem"
     : `min(12vh, ${75 / name.length}vw)`;
 
   return (
@@ -28,7 +29,7 @@ export function Title() {
       position="absolute"
       align="center"
       justify="center"
-      top={revealed ? "6rem" : "50%"}
+      top={revealed ? (disturbed ? "3rem" : "6rem") : "50%"}
       left="50%"
       width="100%"
       height={revealed ? fontSize : "100%"}

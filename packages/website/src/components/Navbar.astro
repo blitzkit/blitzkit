@@ -29,7 +29,7 @@ const strings = getStrings(locale);
 
 <style>
   .navbar,
-  .padder {
+  .navbar-padder {
     transition-duration: 1s;
   }
 
@@ -37,7 +37,7 @@ const strings = getStrings(locale);
     transform: translateY(-100%);
   }
 
-  body.no-navbar .padder {
+  body.no-navbar .navbar-padder {
     height: 0;
   }
 
@@ -79,7 +79,7 @@ const strings = getStrings(locale);
   });
 </script>
 
-<Box className="padder" height={{ initial: "3.5rem", sm: "3rem" }} />
+<Box className="navbar-padder" height={{ initial: "3.5rem", sm: "3rem" }} />
 
 <Flex
   direction="column"
