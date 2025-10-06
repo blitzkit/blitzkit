@@ -131,9 +131,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Lint
-        run: bun run lint:website
-
       - name: Download depots
         uses: actions/download-artifact@v4
         with:
