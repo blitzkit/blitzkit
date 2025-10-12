@@ -45,7 +45,7 @@ const methods = [
   camouflageIcons,
   boosterIcons,
   tankIcons,
-  blitzkitTankIcons,
+  // blitzkitTankIcons,
   // popularTanks,
   glossary,
 ];
