@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@protos/*": ["./submodules/blitzkit-closed/protos/*"]
+      "@protos/*": ["./packages/closed/protos/*"]
     }
   },
   "exclude": ["node_modules/**/*", "dist", ".next"]
