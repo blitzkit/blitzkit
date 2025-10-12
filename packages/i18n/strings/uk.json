@@ -643,6 +643,8 @@
       "body": "This page has moved. Redirecting..."
     },
     "settings": {
+      "title": "Settings",
+      "description": "Change BlitzKit settings",
       "dev_mode": "Development mode",
       "language": "Мова"
     },
