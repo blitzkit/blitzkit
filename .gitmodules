@@ -1,6 +1,3 @@
-[submodule "submodules/blitzkit-closed"]
-	path = submodules/blitzkit-closed
-	url = https://github.com/tresabhi/blitzkit-closed
 [submodule "submodules/CUE4Parse"]
 	path = submodules/CUE4Parse
 	url = https://github.com/FabianFG/CUE4Parse
