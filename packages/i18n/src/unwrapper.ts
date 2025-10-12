@@ -1,5 +1,5 @@
-import { I18nString } from "@blitzkit/core";
-import locales from "@blitzkit/i18n/locales.json";
+import { I18nString } from "../../core/src";
+import locales from "../locales.json";
 
 export function unwrapper(locale = locales.default) {
   return function (i18nString: I18nString) {
