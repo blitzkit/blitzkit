@@ -643,6 +643,8 @@
       "body": "此页面已被移动。正在重定向……"
     },
     "settings": {
+      "title": "Settings",
+      "description": "Change BlitzKit settings",
       "dev_mode": "开发者模式",
       "language": "语言"
     },
