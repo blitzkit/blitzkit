@@ -2,16 +2,16 @@ import {
   AverageDefinitionsEntry,
   formatCompact,
   type BlitzkitStats,
-} from '@blitzkit/core';
-import { Table } from '@radix-ui/themes';
-import { memo, useCallback } from 'react';
-import { awaitableAverageDefinitions } from '../../core/awaitables/averageDefinitions';
-import { useAveragesExclusionRatio } from '../../hooks/useAveragesExclusionRatio';
-import { useLocale } from '../../hooks/useLocale';
-import { Performance } from '../../stores/performance';
-import { StickyRowHeaderCell } from '../StickyRowHeaderCell';
+} from "@blitzkit/core";
+import { Table } from "@radix-ui/themes";
+import { memo, useCallback } from "react";
+import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
+import { useAveragesExclusionRatio } from "../../hooks/useAveragesExclusionRatio";
+import { useLocale } from "../../hooks/useLocale";
+import { Performance } from "../../stores/performance";
+import { StickyRowHeaderCell } from "../StickyRowHeaderCell";
 
-interface AverageDefinitionsEntryWithId extends AverageDefinitionsEntry {
+export interface AverageDefinitionsEntryWithId extends AverageDefinitionsEntry {
   id: number;
 }
 
@@ -24,7 +24,7 @@ const averageDefinitions = await awaitableAverageDefinitions;
 export const Total = memo<TotalProps>(
   ({ tanks }) => {
     const playerCountPeriod = Performance.use(
-      (state) => state.playerCountPeriod,
+      (state) => state.playerCountPeriod
     );
     const { strings, locale } = useLocale();
     const ratio = useAveragesExclusionRatio();
@@ -32,10 +32,10 @@ export const Total = memo<TotalProps>(
       (slice: (tank: BlitzkitStats) => number) => {
         return tanks.reduce(
           (acc, tank) => acc + tank.samples[playerCountPeriod] * slice(tank.mu),
-          0,
+          0
         );
       },
-      [tanks],
+      [tanks]
     );
 
     const battles = sum(({ battles }) => battles);
@@ -55,14 +55,14 @@ export const Total = memo<TotalProps>(
 
     return (
       <Table.Row>
-        <StickyRowHeaderCell style={{ overflow: 'hidden', display: 'flex' }}>
+        <StickyRowHeaderCell style={{ overflow: "hidden", display: "flex" }}>
           {strings.website.tools.performance.table.tanks.total}
         </StickyRowHeaderCell>
         <Table.Cell align="center">{(winrate * 100).toFixed(1)}%</Table.Cell>
         <Table.Cell align="center">
           {formatCompact(
             locale,
-            ratio * averageDefinitions.samples[playerCountPeriod],
+            ratio * averageDefinitions.samples[playerCountPeriod]
           )}
         </Table.Cell>
         <Table.Cell align="center">
@@ -87,5 +87,5 @@ export const Total = memo<TotalProps>(
       </Table.Row>
     );
   },
-  (prev, next) => prev.tanks === next.tanks,
+  (prev, next) => prev.tanks === next.tanks
 );
