@@ -643,6 +643,8 @@
       "body": "Эта страница перемещена. Перенаправление..."
     },
     "settings": {
+      "title": "Settings",
+      "description": "Change BlitzKit settings",
       "dev_mode": "Режим разработчика",
       "language": "Язык"
     },
