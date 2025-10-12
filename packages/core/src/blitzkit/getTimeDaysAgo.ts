@@ -1,4 +1,4 @@
-import { Region } from '@blitzkit/core';
+import { Region } from "../blitz/regions";
 
 const TIME_ZONE_MAPPINGS: Record<Region, number> = {
   com: -5, // Central North American Time

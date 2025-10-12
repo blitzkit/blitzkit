@@ -1,10 +1,7 @@
-import {
-  BlitzStats,
-  FetchBlitzParams,
-  Region,
-  fetchBlitz,
-} from '@blitzkit/core';
-import { normalizeIds } from './normalizeIds';
+import { BlitzStats } from "../statistics";
+import { FetchBlitzParams, fetchBlitz } from "./fetchBlitz";
+import { normalizeIds } from "./normalizeIds";
+import { Region } from "./regions";
 
 export interface SupplementaryStats {
   WN8?: number;
@@ -83,15 +80,15 @@ export async function getAccountInfo<
   region: Region,
   ids: Ids,
   extra: string[] = [],
-  params: FetchBlitzParams = {},
+  params: FetchBlitzParams = {}
 ) {
-  const object = await fetchBlitz<AccountInfo>(region, 'account/info', {
+  const object = await fetchBlitz<AccountInfo>(region, "account/info", {
     account_id: normalizeIds(ids),
-    extra: extra.length === 0 ? undefined : extra.join(','),
+    extra: extra.length === 0 ? undefined : extra.join(","),
     ...params,
   });
 
-  if (typeof ids === 'number') {
+  if (typeof ids === "number") {
     return object[ids as number] as ReturnType;
   } else {
     return ids.map((id) => object[id]) as ReturnType;

@@ -1,4 +1,6 @@
-import { asset, RatingLeaderboard, Region } from '@blitzkit/core';
+import { Region } from "../blitz/regions";
+import { RatingLeaderboard } from "../protos";
+import { asset } from "./asset";
 
 const cache: Record<Region, Record<number, RatingLeaderboard>> = {
   asia: {},
@@ -8,7 +10,7 @@ const cache: Record<Region, Record<number, RatingLeaderboard>> = {
 
 export async function getArchivedRatingLeaderboard(
   region: Region,
-  season: number,
+  season: number
 ) {
   if (!cache[region][season]) {
     const info = await fetch(asset(`regions/${region}/rating/${season}.pb`))

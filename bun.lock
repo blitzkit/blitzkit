@@ -57,21 +57,23 @@
     "packages/core": {
       "name": "@blitzkit/core",
       "dependencies": {
+        "@blitzkit/i18n": "workspace:*",
+        "@bufbuild/protobuf": "^2.9.0",
         "@octokit/plugin-throttling": "^11.0.1",
         "@octokit/rest": "^22.0.0",
         "@prisma/client": "^6.16.2",
+        "@types/adm-zip": "^0.5.7",
+        "@types/lz4js": "^0.2.1",
+        "@types/three": "^0.180.0",
         "adm-zip": "^0.5.16",
         "crc": "^4.3.2",
         "dotenv": "^17.2.2",
         "lz4js": "^0.2.0",
         "pickleparser": "^0.2.1",
         "protobufjs": "^7.5.4",
+        "three": "^0.180.0",
         "ts-proto": "^2.7.7",
         "yaml": "^2.8.1",
-      },
-      "devDependencies": {
-        "@types/adm-zip": "^0.5.7",
-        "@types/lz4js": "^0.2.1",
       },
     },
     "packages/i18n": {
@@ -2740,8 +2742,6 @@
     "@babel/register/make-dir": ["make-dir@2.1.0", "", { "dependencies": { "pify": "^4.0.1", "semver": "^5.6.0" } }, "sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA=="],
 
     "@blitzkit/app/typescript": ["typescript@5.6.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw=="],
-
-    "@blitzkit/core/@prisma/client": ["@prisma/client@6.16.2", "", { "peerDependencies": { "prisma": "*", "typescript": ">=5.1.0" }, "optionalPeers": ["prisma", "typescript"] }, "sha512-E00PxBcalMfYO/TWnXobBVUai6eW/g5OsifWQsQDzJYm7yaY+IRLo7ZLsaefi0QkTpxfuhFcQ/w180i6kX3iJw=="],
 
     "@discordjs/rest/@discordjs/collection": ["@discordjs/collection@2.1.1", "", {}, "sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg=="],
 

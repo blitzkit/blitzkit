@@ -1,5 +1,5 @@
-import { Region, RegionSubdomain } from '@blitzkit/core';
+import { Region, RegionSubdomain } from "./regions";
 
 export function regionToRegionSubdomain(regionDomain: Region): RegionSubdomain {
-  return regionDomain === 'com' ? 'na' : regionDomain;
+  return regionDomain === "com" ? "na" : regionDomain;
 }

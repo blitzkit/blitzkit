@@ -1,5 +1,6 @@
-import { fetchBlitz, Region } from '@blitzkit/core';
-import { normalizeIds } from './normalizeIds';
+import { fetchBlitz } from "./fetchBlitz";
+import { normalizeIds } from "./normalizeIds";
+import { Region } from "./regions";
 
 interface IndividualClanInfo {
   recruiting_options: {
@@ -38,11 +39,11 @@ export async function getClanInfo<
   Ids extends number | number[],
   ReturnType = Ids extends number ? IndividualClanInfo : IndividualClanInfo[],
 >(region: Region, ids: Ids) {
-  const object = await fetchBlitz<ClanInfo>(region, 'clans/info', {
+  const object = await fetchBlitz<ClanInfo>(region, "clans/info", {
     clan_id: normalizeIds(ids),
   });
 
-  if (typeof ids === 'number') {
+  if (typeof ids === "number") {
     return object[ids as number] as ReturnType;
   } else {
     return ids.map((id) => object[id]) as ReturnType;

@@ -1,7 +1,8 @@
-import { RatingLeague, RatingReward, Region } from '@blitzkit/core';
-import { context } from '../blitzkit/context';
-import { patientFetch } from '../blitzkit/patientFetch';
-import { regionToRegionSubdomain } from './regionToRegionSubdomain';
+import { context } from "../blitzkit/context";
+import { patientFetch } from "../blitzkit/patientFetch";
+import { RatingLeague, RatingReward } from "./rating";
+import { Region } from "./regions";
+import { regionToRegionSubdomain } from "./regionToRegionSubdomain";
 
 export type RatingInfo =
   | {
@@ -26,12 +27,12 @@ export async function getRatingInfo(region: Region) {
   if (cache[region]) return cache[region]!;
 
   const response = await patientFetch(
-    context === 'website'
+    context === "website"
       ? `/api/${region}/rating/current/info`
       : `https://${regionToRegionSubdomain(
-          region,
+          region
         )}.wotblitz.com/en/api/rating-leaderboards/season/`,
-    undefined,
+    undefined
   );
   const data = (await response.json()) as RatingInfo;
 

@@ -1,27 +1,29 @@
-import { LeagueTop, RatingPlayer, Region } from '@blitzkit/core';
-import { context } from '../blitzkit/context';
-import { patientFetch } from '../blitzkit/patientFetch';
-import { regionToRegionSubdomain } from './regionToRegionSubdomain';
+import { context } from "../blitzkit/context";
+import { patientFetch } from "../blitzkit/patientFetch";
+import { RatingPlayer } from "../statistics";
+import { LeagueTop } from "./rating";
+import { Region } from "./regions";
+import { regionToRegionSubdomain } from "./regionToRegionSubdomain";
 
 export async function getRatingLeague(
   region: Region,
   league: number,
-  usePatientFetcher = false,
+  usePatientFetcher = false
 ) {
   const fetcher = (url: string) =>
     usePatientFetcher
-      ? patientFetch(url, undefined, { cache: 'no-store' })
-      : fetch(url, { cache: 'no-store' });
+      ? patientFetch(url, undefined, { cache: "no-store" })
+      : fetch(url, { cache: "no-store" });
   const response = await fetcher(
-    context === 'website'
+    context === "website"
       ? `/api/${region}/rating/current/league/${league}`
       : `https://${regionToRegionSubdomain(
-          region,
-        )}.wotblitz.com/en/api/rating-leaderboards/league/${league}/top/`,
+          region
+        )}.wotblitz.com/en/api/rating-leaderboards/league/${league}/top/`
   );
   const json = await response.json();
 
-  return context === 'website'
+  return context === "website"
     ? (json as RatingPlayer[])
     : (json as LeagueTop).result;
 }

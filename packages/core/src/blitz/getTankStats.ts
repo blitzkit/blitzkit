@@ -1,16 +1,13 @@
-import {
-  fetchBlitz,
-  FetchBlitzParams,
-  Region,
-  TanksStats,
-} from '@blitzkit/core';
+import { TanksStats } from "../types";
+import { FetchBlitzParams, fetchBlitz } from "./fetchBlitz";
+import { Region } from "./regions";
 
 export async function getTankStats(
   region: Region,
   id: number,
-  params?: FetchBlitzParams,
+  params?: FetchBlitzParams
 ) {
-  const tankStats = await fetchBlitz<TanksStats>(region, 'tanks/stats', {
+  const tankStats = await fetchBlitz<TanksStats>(region, "tanks/stats", {
     account_id: id,
     ...params,
   });

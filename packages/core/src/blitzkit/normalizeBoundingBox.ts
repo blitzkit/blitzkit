@@ -1,4 +1,5 @@
-import { BoundingBox, Vector3 } from '@blitzkit/core';
+import { Vector3 } from "three";
+import { BoundingBox } from "../protos";
 
 export function normalizeBoundingBox(boundingBox: BoundingBox) {
   return {

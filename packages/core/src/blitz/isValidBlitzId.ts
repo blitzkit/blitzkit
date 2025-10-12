@@ -1,4 +1,6 @@
-import { Region, assertSecret, idToRegion } from '@blitzkit/core';
+import { assertSecret } from "../blitzkit";
+import { idToRegion } from "./idToRegion";
+import { Region } from "./regions";
 
 export async function isValidBlitzId(id: number, token?: string) {
   let region: Region;
@@ -11,20 +13,20 @@ export async function isValidBlitzId(id: number, token?: string) {
 
   const json = await fetch(
     `https://api.wotblitz.${region}/wotb/account/info/?account_id=${id}&application_id=${assertSecret(
-      import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID,
+      import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID
     )}${
-      token === undefined ? '' : `&access_token=${token}`
-    }&fields=account_id%2C-account_id`,
+      token === undefined ? "" : `&access_token=${token}`
+    }&fields=account_id%2C-account_id`
   ).then(
     (response) =>
       response.json() as Promise<
         | {
-            status: 'ok';
+            status: "ok";
             data: Record<number, {} | null>;
           }
-        | { status: 'error' }
-      >,
+        | { status: "error" }
+      >
   );
 
-  return json.status === 'ok' && json.data[id] !== null;
+  return json.status === "ok" && json.data[id] !== null;
 }

@@ -1,24 +1,25 @@
-import { RatingNeighbors, Region } from '@blitzkit/core';
-import { patientFetch } from '../blitzkit/patientFetch';
-import { withCORSProxy } from '../blitzkit/withCORSProxy';
-import { regionToRegionSubdomain } from './regionToRegionSubdomain';
+import { patientFetch } from "../blitzkit/patientFetch";
+import { withCORSProxy } from "../blitzkit/withCORSProxy";
+import { RatingNeighbors } from "./rating";
+import { Region } from "./regions";
+import { regionToRegionSubdomain } from "./regionToRegionSubdomain";
 
 export async function getRatingNeighbors(
   region: Region,
   id: number,
   count: number,
-  usePatientFetcher = false,
+  usePatientFetcher = false
 ) {
   const fetcher = (url: string) =>
     usePatientFetcher
-      ? patientFetch(url, undefined, { cache: 'no-store' })
-      : fetch(url, { cache: 'no-store' });
+      ? patientFetch(url, undefined, { cache: "no-store" })
+      : fetch(url, { cache: "no-store" });
   const response = await fetcher(
     withCORSProxy(
       `https://${regionToRegionSubdomain(
-        region,
-      )}.wotblitz.com/en/api/rating-leaderboards/user/${id}/?neighbors=${count}`,
-    ),
+        region
+      )}.wotblitz.com/en/api/rating-leaderboards/user/${id}/?neighbors=${count}`
+    )
   );
   const json = (await response.json()) as RatingNeighbors;
 

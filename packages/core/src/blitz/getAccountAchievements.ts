@@ -1,5 +1,6 @@
-import { fetchBlitz, Region } from '@blitzkit/core';
-import { normalizeIds } from './normalizeIds';
+import { fetchBlitz } from "./fetchBlitz";
+import { normalizeIds } from "./normalizeIds";
+import { Region } from "./regions";
 
 interface IndividualAccountAchievements {
   achievements: {
@@ -22,11 +23,11 @@ export async function getAccountAchievements<
 >(region: Region, ids: Ids) {
   const object = await fetchBlitz<AccountAchievements>(
     region,
-    'account/achievements',
-    { account_id: normalizeIds(ids) },
+    "account/achievements",
+    { account_id: normalizeIds(ids) }
   );
 
-  if (typeof ids === 'number') {
+  if (typeof ids === "number") {
     return object[ids as number] as ReturnType;
   } else {
     return ids.map((id) => object[id]) as ReturnType;

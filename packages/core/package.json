@@ -4,20 +4,22 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
+    "@blitzkit/i18n": "workspace:*",
+    "@bufbuild/protobuf": "^2.9.0",
     "@octokit/plugin-throttling": "^11.0.1",
     "@octokit/rest": "^22.0.0",
     "@prisma/client": "^6.16.2",
+    "@types/adm-zip": "^0.5.7",
+    "@types/lz4js": "^0.2.1",
+    "@types/three": "^0.180.0",
     "adm-zip": "^0.5.16",
     "crc": "^4.3.2",
     "dotenv": "^17.2.2",
     "lz4js": "^0.2.0",
     "pickleparser": "^0.2.1",
     "protobufjs": "^7.5.4",
+    "three": "^0.180.0",
     "ts-proto": "^2.7.7",
     "yaml": "^2.8.1"
-  },
-  "devDependencies": {
-    "@types/adm-zip": "^0.5.7",
-    "@types/lz4js": "^0.2.1"
   }
 }

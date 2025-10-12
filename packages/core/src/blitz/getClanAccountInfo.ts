@@ -1,5 +1,6 @@
-import { fetchBlitz, Region } from '@blitzkit/core';
-import { normalizeIds } from './normalizeIds';
+import { fetchBlitz } from "./fetchBlitz";
+import { normalizeIds } from "./normalizeIds";
+import { Region } from "./regions";
 
 type IndividualClanAccountInfo = {
   account_id: number;
@@ -30,14 +31,14 @@ export async function getClanAccountInfo<
 >(region: Region, ids: Ids, extra: string[] = []) {
   const object = await fetchBlitz<ClanAccountInfo>(
     region,
-    'clans/accountinfo',
+    "clans/accountinfo",
     {
       account_id: normalizeIds(ids),
-      extra: extra.length === 0 ? undefined : extra.join(','),
-    },
+      extra: extra.length === 0 ? undefined : extra.join(","),
+    }
   );
 
-  if (typeof ids === 'number') {
+  if (typeof ids === "number") {
     return object[ids as number] as ReturnType;
   } else {
     return ids.map((id) => object[id]) as ReturnType;

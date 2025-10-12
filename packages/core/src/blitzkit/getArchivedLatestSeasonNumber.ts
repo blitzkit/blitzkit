@@ -1,4 +1,5 @@
-import { assertSecret, getRatingInfo } from '@blitzkit/core';
+import { getRatingInfo } from "../blitz/getRatingInfo";
+import { assertSecret } from "./assertSecret";
 
 interface GitHubTrees {
   tree: { path: string; url: string }[];
@@ -11,21 +12,21 @@ export async function getArchivedLatestSeasonNumber() {
     return cachedLatestArchivedSeasonNumber;
   }
 
-  const ratingInfo = await getRatingInfo('com');
+  const ratingInfo = await getRatingInfo("com");
 
   if (ratingInfo.detail) {
     const regionsURL = (
       (await fetch(
         `https://api.github.com/repos/tresabhi/${assertSecret(
-          import.meta.env.PUBLIC_ASSET_REPO,
-        )}/git/trees/main`,
+          import.meta.env.PUBLIC_ASSET_REPO
+        )}/git/trees/main`
       ).then((response) => response.json())) as GitHubTrees
-    ).tree.find(({ path }) => path === 'regions')!.url;
+    ).tree.find(({ path }) => path === "regions")!.url;
     const comURL = (
       (await fetch(regionsURL).then((response) =>
-        response.json(),
+        response.json()
       )) as GitHubTrees
-    ).tree.find(({ path }) => path === 'com')!.url;
+    ).tree.find(({ path }) => path === "com")!.url;
     const ratingURL = (
       (await fetch(comURL).then((response) => response.json())) as {
         tree: [{ url: string }];
@@ -36,7 +37,7 @@ export async function getArchivedLatestSeasonNumber() {
         (await fetch(ratingURL).then((response) => response.json())) as {
           tree: { path: string }[];
         }
-      ).tree.map(({ path }) => Number(path)),
+      ).tree.map(({ path }) => Number(path))
     );
 
     cachedLatestArchivedSeasonNumber = latestSeason;

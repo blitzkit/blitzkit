@@ -1,4 +1,5 @@
-import { fetchBlitz, Region } from '@blitzkit/core';
+import { fetchBlitz } from '../fetchBlitz';
+import { Region } from '../regions';
 import { usernamePattern } from './constants';
 
 export interface AccountListItem {

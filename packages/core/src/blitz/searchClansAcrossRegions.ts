@@ -1,5 +1,6 @@
-import { fetchBlitz, Region } from '@blitzkit/core';
-import { ClanList } from './clans';
+import { ClanList } from "./clans";
+import { fetchBlitz } from "./fetchBlitz";
+import { Region } from "./regions";
 
 export async function searchClansAcrossRegions(search: string, limit = 25) {
   const trimmed = search.trim();
@@ -10,38 +11,38 @@ export async function searchClansAcrossRegions(search: string, limit = 25) {
 
   return (
     await Promise.all([
-      fetchBlitz<ClanList>('com', 'clans/list', {
+      fetchBlitz<ClanList>("com", "clans/list", {
         search,
         limit: normalizedLimit,
       }).then((value) =>
         value
           .map((account) => ({
             ...account,
-            region: 'com' as Region,
+            region: "com" as Region,
           }))
-          .splice(0, normalizedLimit),
+          .splice(0, normalizedLimit)
       ),
-      fetchBlitz<ClanList>('eu', 'clans/list', {
+      fetchBlitz<ClanList>("eu", "clans/list", {
         search,
         limit: normalizedLimit,
       }).then((value) =>
         value
           .map((account) => ({
             ...account,
-            region: 'eu' as Region,
+            region: "eu" as Region,
           }))
-          .splice(0, normalizedLimit),
+          .splice(0, normalizedLimit)
       ),
-      fetchBlitz<ClanList>('asia', 'clans/list', {
+      fetchBlitz<ClanList>("asia", "clans/list", {
         search,
         limit: normalizedLimit,
       }).then((value) =>
         value
           .map((account) => ({
             ...account,
-            region: 'asia' as Region,
+            region: "asia" as Region,
           }))
-          .splice(0, normalizedLimit),
+          .splice(0, normalizedLimit)
       ),
     ])
   )

@@ -1,5 +1,5 @@
-import { SkillDefinitions } from '@blitzkit/core';
-import { permanentSkills } from '../blitz/permanentSkills';
+import { SkillDefinitions } from "..";
+import { permanentSkills } from "../blitz/permanentSkills";
 
 export function createDefaultSkills(skillDefinitions: SkillDefinitions) {
   const skills: Record<string, number> = {};
