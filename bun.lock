@@ -94,6 +94,7 @@
     "packages/scripts": {
       "name": "@blitzkit/scripts",
       "dependencies": {
+        "@blitzkit/closed": "workspace:*",
         "@blitzkit/core": "workspace:*",
         "@blitzkit/i18n": "workspace:*",
         "@gltf-transform/core": "^4.2.1",
