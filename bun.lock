@@ -91,6 +91,7 @@
         "@gltf-transform/core": "^4.2.1",
         "@gltf-transform/extensions": "^4.2.1",
         "@gltf-transform/functions": "^4.2.1",
+        "crc": "^4.3.2",
         "csv-parse": "^6.1.0",
         "decompress": "^4.2.1",
         "esbuild": "^0.25.10",
