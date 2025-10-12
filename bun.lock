@@ -55,6 +55,14 @@
         "@types/markdown-escape": "^1.1.3",
       },
     },
+    "packages/closed": {
+      "name": "@blitzkit/closed",
+      "dependencies": {
+        "@blitzkit/core": "workspace:*",
+        "@types/lz4js": "^0.2.1",
+        "lz4js": "^0.2.0",
+      },
+    },
     "packages/core": {
       "name": "@blitzkit/core",
       "dependencies": {
@@ -372,6 +380,8 @@
     "@blitzkit/app": ["@blitzkit/app@workspace:packages/app"],
 
     "@blitzkit/bot": ["@blitzkit/bot@workspace:packages/bot"],
+
+    "@blitzkit/closed": ["@blitzkit/closed@workspace:packages/closed"],
 
     "@blitzkit/core": ["@blitzkit/core@workspace:packages/core"],
 

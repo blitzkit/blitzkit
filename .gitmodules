@@ -4,3 +4,6 @@
 [submodule "submodules/blitzkit-internal"]
 	path = submodules/blitzkit-internal
 	url = https://github.com/blitzkit/internal
+[submodule "packages/closed"]
+	path = packages/closed
+	url = https://github.com/blitzkit/closed.git
