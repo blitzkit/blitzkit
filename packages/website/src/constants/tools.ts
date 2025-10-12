@@ -35,13 +35,17 @@ export const tools: Record<string, Tool> = {
     disabled: true,
     button: "bronze",
   },
-  guess: {
-    id: "guess",
-    button: "cyan",
+  playlist: {
+    id: "playlist",
+    button: "tomato",
   },
   mixer: {
     id: "mixer",
     button: "gray",
+  },
+  guess: {
+    id: "guess",
+    button: "cyan",
   },
   gallery: {
     id: "gallery",

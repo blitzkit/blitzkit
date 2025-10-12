@@ -12,7 +12,7 @@ const { locale } = Astro.params;
 
 <ToolOpenGraph tool={tools.performance} />
 
-<BaseLayout noFooter>
+<BaseLayout {locale} noFooter>
   <Page client:only="react" {locale}>
     <Page skeleton slot="fallback" {locale} />
   </Page>

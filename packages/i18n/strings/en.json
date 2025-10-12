@@ -859,6 +859,14 @@
     },
 
     "tools": {
+      "playlist": {
+        "name": "Playlist",
+        "description": "Tank playlist generator",
+        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
+        "button": "Generate",
+        "pool_size": "{count} possible tanks"
+      },
+
       "mixer": {
         "name": "Mixer",
         "button": "Mix and match",
