@@ -44,6 +44,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@prisma/client": "^6.17.1",
     "@types/xmpp__client": "^0.13.3",
     "@xmpp/client": "^0.13.6",
     "astro-favicons": "^3.1.5",
@@ -52,7 +53,8 @@
     "lodash-es": "^4.17.21",
     "protobufjs": "^7.5.4",
     "quicklime": "^1.2.0",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@types/bun": "^1.2.22",
