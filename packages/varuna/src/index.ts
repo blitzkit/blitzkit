@@ -109,7 +109,10 @@ export class Varuna<Type, Arguments = void> {
     const instance = this;
     const [slice, setSlice] = useState(initial);
 
-    useEffect(() => instance.on(slicer, setSlice), []);
+    useEffect(() => {
+      setSlice(slicer(instance.state));
+      return instance.on(slicer, setSlice);
+    }, []);
 
     return slice;
   }
