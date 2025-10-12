@@ -39,82 +39,95 @@ export async function extractModel(data: string, path: string) {
   const buffer = document.createBuffer();
   const materials = new Map<bigint, Material | bigint | undefined>();
 
-  // create materials
-  await Promise.all(
-    sc2["#dataNodes"].map(async (node) => {
-      const id = new DataView(node["#id"]).getBigUint64(0, true);
+  for (const node of sc2["#dataNodes"]) {
+    const id = new DataView(node["#id"]).getBigUint64(0, true);
 
-      if (node.parentMaterialKey !== undefined) {
-        /**
-         * material depends on a parent and doesn't seem to have any
-         * properties so we just point it to the parent
-         */
-        materials.set(id, node.parentMaterialKey);
-        return;
+    if (node.parentMaterialKey !== undefined) {
+      /**
+       * material depends on a parent and doesn't seem to have any
+       * properties so we just point it to the parent
+       */
+      materials.set(id, node.parentMaterialKey);
+      continue;
+    }
+
+    const material = document.createMaterial(node.materialName);
+    let textures: Textures | undefined = undefined;
+
+    if (node.textures) {
+      textures = node.textures;
+    } else if (typeof node.configCount === "number") {
+      textures = node.configArchive_0.textures;
+    }
+
+    if (textures) {
+      material.setBaseColorTexture(
+        document
+          .createTexture(node.materialName)
+          .setMimeType("image/webp")
+          .setImage(
+            await readBaseColor(
+              `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+              textures.miscMap
+                ? `${data}/3d/${dirname(path)}/${textures.miscMap}`
+                : undefined
+            )
+          )
+      );
+
+      if (node.configCount) {
+        for (
+          let configIndex = 0;
+          configIndex < node.configCount;
+          configIndex++
+        ) {
+          const archive = node[`configArchive_${configIndex}`];
+
+          if (
+            archive.configName !== "Default" ||
+            !archive.enabledPresets?.AlphaTest
+          ) {
+            continue;
+          }
+
+          material.setAlphaMode("BLEND").setDoubleSided(true);
+        }
       }
 
-      const material = document.createMaterial(node.materialName);
-      let textures: Textures | undefined = undefined;
-
-      if (node.textures) {
-        textures = node.textures;
-      } else if (typeof node.configCount === "number") {
-        textures = node.configArchive_0.textures;
-      }
-
-      if (textures) {
-        material.setBaseColorTexture(
+      if (textures.baseRMMap) {
+        material.setMetallicRoughnessTexture(
           document
             .createTexture(node.materialName)
-            .setMimeType("image/jpeg")
+            .setMimeType("image/webp")
             .setImage(
-              await readBaseColor(
-                `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
-                textures.miscMap
-                  ? `${data}/3d/${dirname(path)}/${textures.miscMap}`
-                  : undefined
+              await readRoughnessMetallic(
+                `${data}/3d/${dirname(path)}/${textures.baseRMMap}`
               )
             )
         );
+      }
 
-        if (textures.baseRMMap) {
-          material.setMetallicRoughnessTexture(
-            document
-              .createTexture(node.materialName)
-              .setMimeType("image/jpeg")
-              .setImage(
-                await readRoughnessMetallic(
-                  `${data}/3d/${dirname(path)}/${textures.baseRMMap}`
-                )
+      if (textures.baseNormalMap ?? textures.normalmap) {
+        const isBase = textures.baseNormalMap !== undefined;
+
+        material.setNormalTexture(
+          document
+            .createTexture(node.materialName)
+            .setMimeType("image/webp")
+            .setImage(
+              await readNormal(
+                `${data}/3d/${dirname(path)}/${
+                  textures.baseNormalMap ?? textures.normalmap
+                }`,
+                isBase
               )
-          );
-        }
-
-        if (textures.baseNormalMap ?? textures.normalmap) {
-          const isBase = textures.baseNormalMap !== undefined;
-
-          material.setNormalTexture(
-            document
-              .createTexture(node.materialName)
-              .setMimeType("image/jpeg")
-              .setImage(
-                await readNormal(
-                  `${data}/3d/${dirname(path)}/${
-                    textures.baseNormalMap ?? textures.normalmap
-                  }`,
-                  isBase
-                )
-              )
-          );
-        }
-
-        materials.set(
-          new DataView(node["#id"]).getBigUint64(0, true),
-          material
+            )
         );
       }
-    })
-  );
+
+      materials.set(new DataView(node["#id"]).getBigUint64(0, true), material);
+    }
+  }
 
   // replace children materials with parents
   materials.forEach((material, id) => {

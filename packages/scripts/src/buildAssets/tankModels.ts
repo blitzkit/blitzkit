@@ -31,11 +31,11 @@ export async function tankModels() {
 
     let index = 0;
     for (const [tankKey, tank] of entries) {
-      console.log(`  ${++index} / ${entries.length} : ${tankKey}`);
-
       if (tankKey.includes("tutorial_bot")) continue;
 
       const id = toUniqueId(nation, tank.id);
+
+      console.log(`  ${++index} / ${entries.length} : ${tankKey}`);
 
       const parameters = await readYAMLDVPL<TankParameters>(
         `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`

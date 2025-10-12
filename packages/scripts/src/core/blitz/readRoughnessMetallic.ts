@@ -17,7 +17,7 @@ export async function readRoughnessMetallic(path: string) {
   const image = await sharp(combined, {
     raw: { width: raw.width, height: raw.height, channels: 3 },
   })
-    .jpeg()
+    .webp()
     .toBuffer();
 
   return image;

@@ -25,5 +25,5 @@ export async function readNormal(path: string, isBase: boolean) {
     raw.data[index + 3] = 255;
   }
 
-  return await sharp(raw.data, { raw }).jpeg().toBuffer();
+  return await sharp(raw.data, { raw }).webp().toBuffer();
 }

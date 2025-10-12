@@ -6,10 +6,7 @@ export async function readBaseColor(path: string, occlusionPath?: string) {
   const occlusionRaw = occlusionPath
     ? await readTexture(occlusionPath)
     : undefined;
-  const base = await sharp(baseRaw.data, { raw: baseRaw })
-    .removeAlpha()
-    .raw()
-    .toBuffer();
+  const base = await sharp(baseRaw.data, { raw: baseRaw }).raw().toBuffer();
   const occlusion = occlusionRaw
     ? await sharp(occlusionRaw.data, { raw: occlusionRaw })
         .extractChannel(3)
@@ -17,7 +14,7 @@ export async function readBaseColor(path: string, occlusionPath?: string) {
         .toBuffer()
     : undefined;
 
-  const combined = Buffer.alloc(baseRaw.width * baseRaw.height * 3);
+  const combined = Buffer.alloc(baseRaw.width * baseRaw.height * 4);
 
   for (let i = 0; i < baseRaw.width * baseRaw.height; i++) {
     let c = 1;
@@ -33,15 +30,16 @@ export async function readBaseColor(path: string, occlusionPath?: string) {
       c = occlusion![occlusionI] / 255;
     }
 
-    combined[i * 3 + 0] = Math.round(base[i * 3 + 0] * c);
-    combined[i * 3 + 1] = Math.round(base[i * 3 + 1] * c);
-    combined[i * 3 + 2] = Math.round(base[i * 3 + 2] * c);
+    combined[i * 4 + 0] = Math.round(base[i * 4 + 0] * c);
+    combined[i * 4 + 1] = Math.round(base[i * 4 + 1] * c);
+    combined[i * 4 + 2] = Math.round(base[i * 4 + 2] * c);
+    combined[i * 4 + 3] = base[i * 4 + 3];
   }
 
   const image = await sharp(combined, {
-    raw: { width: baseRaw.width, height: baseRaw.height, channels: 3 },
+    raw: { width: baseRaw.width, height: baseRaw.height, channels: 4 },
   })
-    .jpeg()
+    .webp()
     .toBuffer();
 
   return image;
