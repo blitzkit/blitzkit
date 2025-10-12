@@ -1,4 +1,4 @@
-name: Build Assets
+name: Assets
 
 on:
   push:
@@ -21,7 +21,7 @@ on:
         description: Root dir of ZIP which houses the executable and Data dir
 
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.cdn_branch }}
@@ -67,7 +67,7 @@ jobs:
         with:
           root-reserve-mb: 512
           swap-size-mb: 1024
-          remove-dotnet: 'true'
+          remove-dotnet: "true"
 
       - uses: actions/checkout@v4
         with:

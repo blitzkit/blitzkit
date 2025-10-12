@@ -1,10 +1,10 @@
-name: Host Bot
+name: Host
 
 on:
   push:
     branches: main
   schedule:
-    - cron: '0 */5 * * *'
+    - cron: "0 */5 * * *"
   workflow_dispatch:
   release:
     types: [created, published, released, edited]
