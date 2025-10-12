@@ -1,11 +1,20 @@
 ---
+import { AstroSeo } from "@astrolib/seo";
+import { getStrings } from "../../../core/i18n/getStrings";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.params;
+
+const strings = getStrings(locale);
 ---
+
+<AstroSeo
+  title={strings.website.settings.title}
+  description={strings.website.settings.description}
+/>
 
 <BaseLayout>
   <Page {locale} client:load />

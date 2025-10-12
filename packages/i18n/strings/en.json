@@ -731,6 +731,8 @@
     },
 
     "settings": {
+      "title": "Settings",
+      "description": "Change BlitzKit settings",
       "dev_mode": "Development mode",
       "language": "Language"
     },
