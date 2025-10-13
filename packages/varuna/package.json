@@ -3,7 +3,8 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
+    "@types/react": "^19.2.2",
     "immer": "^10.1.3",
-    "react": "^19.1.1"
+    "react": "^19.2.0"
   }
 }

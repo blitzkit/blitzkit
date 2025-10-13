@@ -7,12 +7,13 @@ import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import { filterTanks } from "../core/blitzkit/filterTanks";
 import { useLocale } from "../hooks/useLocale";
 import { TankFilters } from "../stores/tankFilters";
+import { LinkI18n } from "./LinkI18n";
 import { FilterControl } from "./TankSearch/components/FilterControl";
 
 const tankDefinitions = await awaitableTankDefinitions;
 
 export function PlaylistPool() {
-  const { strings } = useLocale();
+  const { strings, locale } = useLocale();
   const filters = TankFilters.use();
   const randomTankList = useMemo(() => {
     const list = Object.values(tankDefinitions.tanks);
@@ -52,7 +53,10 @@ export function PlaylistPool() {
           width="100%"
         >
           {tanksTrimmed.map((tank) => (
-            <Box
+            <LinkI18n
+              target="_blank"
+              locale={locale}
+              href={`/tanks/${tank.slug}`}
               key={tank.id}
               style={{
                 aspectRatio: "4 / 3",
@@ -72,8 +76,8 @@ export function PlaylistPool() {
           width="100%"
           height="100%"
           style={{
-            background:
-              "linear-gradient(transparent, var(--gray-1) calc(100% - 2rem))",
+            background: "linear-gradient(transparent, var(--gray-1))",
+            pointerEvents: "none",
           }}
         />
       </Box>

@@ -860,6 +860,11 @@
 
     "tools": {
       "playlist": {
+        "table": {
+          "tank": "Tank"
+        },
+        "no_login_warning": "You are not logged in. BlitzKit will not keep track of your played tanks.",
+        "generate": "Generate playlist",
         "name": "Playlist",
         "description": "Tank playlist generator",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
