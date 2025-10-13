@@ -1,10 +1,8 @@
 import { readFile, writeFile } from "fs/promises";
 
 const IMPORT = "@protos/auto_legacy_proxy_client";
-const SOURCE =
-  "../../submodules/blitzkit-closed/protos/auto_legacy_proxy_client.proto";
-const TARGET =
-  "../../submodules/blitzkit-closed/src/unreal/methodPopulatedProxyClient.ts";
+const SOURCE = "../../packages/closed/protos/auto_legacy_proxy_client.proto";
+const TARGET = "../../packages/closed/src/unreal/methodPopulatedProxyClient.ts";
 
 const requestPattern = /message (\w+)Request {/g;
 const source = await readFile(SOURCE).then((buffer) => buffer.toString());

@@ -137,6 +137,9 @@ jobs:
       - name: Build protos
         run: bun run build:protos
 
+      - name: Build proxy client
+        run: bun run build:proxyclient
+
       - name: Download depots
         uses: actions/download-artifact@v4
         with:

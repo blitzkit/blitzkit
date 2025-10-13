@@ -51,6 +51,9 @@ jobs:
       - name: Build protos
         run: bun run build:protos
 
+      - name: Build proxy client
+        run: bun run build:proxyclient
+
       - name: Build website
         run: bun run build:website
 
