@@ -1,5 +1,4 @@
-import { Vector3 } from "three";
-import { BoundingBox } from "../protos";
+import { BoundingBox, Vector3 } from "../protos";
 
 export function normalizeBoundingBox(boundingBox: BoundingBox) {
   return {
