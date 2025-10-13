@@ -14,11 +14,6 @@
     "allowJs": true,
     "incremental": true,
     "isolatedModules": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
       "@protos/*": ["./packages/closed/protos/*"]
     }

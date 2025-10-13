@@ -6,8 +6,8 @@ import { promisify } from "util";
 const MAX_COMMAND_LENGTH = 2 ** 11;
 
 const roots = [
-  // "packages/core/src/protos",
-  "submodules/blitzkit-closed/protos",
+  // "../../packages/core/src/protos",
+  "../../packages/closed/protos",
 ];
 
 const exec = promisify(execSync);

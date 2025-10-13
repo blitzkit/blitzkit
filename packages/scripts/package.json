@@ -12,11 +12,12 @@
     "build:bot": "bun src/buildBot.ts",
     "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
     "build:proxyclient": "bun src/buildProxyClient.ts",
-    "prunestrings": "bun src/pruneStrings.ts"
+    "prunestrings": "bun src/pruneStrings.ts",
+    "build:protos": "bun src/protos.ts"
   },
   "dependencies": {
-    "@blitzkit/core": "workspace:*",
     "@blitzkit/closed": "workspace:*",
+    "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@gltf-transform/core": "^4.2.1",
     "@gltf-transform/extensions": "^4.2.1",
@@ -29,7 +30,8 @@
     "fast-xml-parser": "^5.2.5",
     "lz4js": "^0.2.0",
     "progress": "^2.0.3",
-    "puppeteer": "^24.22.3"
+    "puppeteer": "^24.22.3",
+    "ts-proto": "^2.7.7"
   },
   "devDependencies": {
     "@types/decompress": "^4.2.7",

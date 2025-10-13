@@ -96,6 +96,7 @@
         "lz4js": "^0.2.0",
         "progress": "^2.0.3",
         "puppeteer": "^24.22.3",
+        "ts-proto": "^2.7.7",
       },
       "devDependencies": {
         "@types/decompress": "^4.2.7",

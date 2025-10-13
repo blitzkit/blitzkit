@@ -35,7 +35,7 @@
     "update": "yarn upgrade --latest",
     "tunnel": "cloudflared tunnel --url http://localhost:3000",
     "discoverids": "scripts/discoverIds.ts",
-    "build:protos": "bun packages/scripts/src/protos.ts",
+    "build:protos": "cd packages/scripts && bun run build:protos",
     "preview:website": "cd packages/website && bun run preview",
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
