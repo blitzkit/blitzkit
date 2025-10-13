@@ -7,6 +7,7 @@ export interface Playlist {
     tank: TankDefinition;
     battles?: number;
     wins?: number;
+    checked: boolean;
   }[];
 }
 

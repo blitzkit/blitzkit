@@ -14,7 +14,7 @@ const tanks = Object.values(tankDefinitions.tanks);
 
 export async function generatePlaylist() {
   const id = App.state.logins.wargaming?.id;
-  const filtered = await filterTanks(TankFilters.state, tanks);
+  const filtered = await filterTanks(TankFilters.state, tanks, id);
   const statsList = id ? await getTankStats(idToRegion(id), id) : undefined;
   const stats: Record<number, IndividualTankStats> = {};
 
