@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { PageWrapper } from "../../../components/PageWrapper";
-import { PlaylistPool } from "../../../components/PlaylistFilters";
 import { PlaylistGenerator } from "../../../components/PlaylistGenerator";
-import { PlaylistOrder } from "../../../components/PLaylistOrder";
+import { PlaylistOrder } from "../../../components/PlaylistOrder";
 import { LocaleProvider } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { Playlist } from "../../../stores/playlist";
@@ -30,8 +29,7 @@ export function Page({
 
   return (
     <LocaleProvider locale={locale}>
-      <PageWrapper color="tomato" direction="row" maxWidth="100rem">
-        <PlaylistPool />
+      <PageWrapper color="tomato" direction="row">
         {!list && <PlaylistGenerator />}
         {list && <PlaylistOrder />}
       </PageWrapper>

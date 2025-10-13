@@ -860,6 +860,7 @@
 
     "tools": {
       "playlist": {
+        "clear": "Clear",
         "table": {
           "tank": "Tank"
         },
