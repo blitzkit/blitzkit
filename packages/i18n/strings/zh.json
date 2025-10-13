@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
+        "clan_not_found": "# 找不到军团\n找不到 \"{search}\". 请尝试选从搜索结果中择一个军团。",
         "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
         "player_not_linked": "# 使用 `/link` 来开始\n我不知道你是谁，但你今天可以告诉我！",
-        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
-        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
+        "tank_name_not_found": "# 找不到坦克\n找不到名称为 \"{search}\"的坦克。",
+        "tank_id_not_found": "# 找不到坦克\n找不到ID为 \"{search}\"的坦克. 尝试输入坦克的名称。",
         "no_tank_stats": "# 没有这辆战车的数据\n这个玩家没有可用资料。 这可能不是你要找的玩家。",
         "get_help": "Discord的协助服务器",
         "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[官方Discord](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
@@ -394,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "胜率",
           "damage": "伤害",
-          "unknown_tank": "Unknown tank {id}"
+          "unknown_tank": "未知坦克{id}"
         }
       },
       "debug": {
@@ -549,7 +549,7 @@
           "top_players": "Top {count} players",
           "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "# 没有进行中的赛季\n\n目前没有赛季。",
-          "deleted_player": "Deleted {id}",
+          "deleted_player": "删除{id}",
           "neighbors": "对邻居进行评分",
           "more": "+ {count} more"
         }
@@ -573,7 +573,7 @@
         "name": "权限",
         "description": "检查机器人是否拥有运行所需的权限",
         "body": {
-          "title": "# Permissions\n\n{body}",
+          "title": "# 权限\n\n{body}",
           "view_channels": "查看频道：需要找到重新整理按钮使用的讯息",
           "read_message_history": "读取消息历史: 需要找到消息以刷新",
           "attach_files": "附加文件：需要将图像添加到基于图像的命令",
@@ -602,7 +602,7 @@
         "name": "玩家信息",
         "description": "玩家基本信息",
         "body": {
-          "title": "{name}'s information",
+          "title": "{name}的信息",
           "nickname": "昵称",
           "battles": "战斗场次",
           "winrate": "胜率",
@@ -631,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
+          "no_participation": "# {name}还没有玩过评级模式。",
           "unrecorded_stats": "# 统计数据目前无法使用\n\nWargaming 可能暂停了服务器。 如果有连续的赛季，统计数据可能在24小时内提供。"
         }
       }
@@ -643,8 +643,8 @@
       "body": "此页面已被移动。正在重定向……"
     },
     "settings": {
-      "title": "Settings",
-      "description": "Change BlitzKit settings",
+      "title": "设置",
+      "description": "调整BlitzKit设置",
       "dev_mode": "开发者模式",
       "language": "语言"
     },
@@ -658,8 +658,8 @@
         "copied": "已拷贝！"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
-        "swap_dialog_title": "Swap tank",
+        "select_dialog_title": "搜索坦克",
+        "swap_dialog_title": "交换坦克",
         "clear_filters": "清除筛选",
         "login": "Login to use this",
         "search_bar_hint": "搜寻战车……",
@@ -730,12 +730,12 @@
     },
     "home": {
       "pwa": {
-        "title": "Install the BlitzKit App",
+        "title": "安装Blitz Kit App",
         "new": "NEW",
-        "checking": "Checking compatibility...",
+        "checking": "正在检查兼容性……",
         "instructions": "Instructions for Apple devices.",
-        "install": "Install",
-        "dismiss": "Dismiss"
+        "install": "安装",
+        "dismiss": "忽略"
       },
       "discord": {
         "join_short": "加入超級酷的人群！",
