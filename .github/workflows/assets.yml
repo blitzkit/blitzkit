@@ -82,6 +82,9 @@ jobs:
         if: github.event.inputs.zip_url == ''
         run: bun install
 
+      - name: Build protos
+        run: bun run build:protos
+
       - name: (Steam) Setup DepotDownloader
         if: github.event.inputs.zip_url == ''
         run: bun run setup:depotdownloader
@@ -130,6 +133,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install
+
+      - name: Build protos
+        run: bun run build:protos
 
       - name: Download depots
         uses: actions/download-artifact@v4
