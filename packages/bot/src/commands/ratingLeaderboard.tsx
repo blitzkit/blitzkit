@@ -10,13 +10,13 @@ import {
   imgur,
   isOnGoingRatingSeason,
   LEAGUES,
-  RatingInfo,
+  type RatingInfo,
   RatingLeaderboard,
-  Region,
+  type Region,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   Locale,
   SlashCommandSubcommandBuilder,
 } from "discord.js";
@@ -33,7 +33,7 @@ import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { localizationObject } from "../core/discord/localizationObject";
 import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 
 interface SimplifiedPlayer {
   id: number;

@@ -1,4 +1,4 @@
-import { ClanList, fetchBlitz, Region } from "@blitzkit/core";
+import { type ClanList, fetchBlitz, type Region } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { Locale } from "discord.js";
 import markdownEscape from "markdown-escape";
@@ -8,7 +8,7 @@ import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { embedInfo } from "../core/discord/embedInfo";
 import { localizationObject } from "../core/discord/localizationObject";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 
 const DEFAULT_LIMIT = 25;
 

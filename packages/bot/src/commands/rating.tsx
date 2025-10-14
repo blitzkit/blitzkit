@@ -22,7 +22,7 @@ import { addUsernameChoices } from "../core/discord/addUsernameChoices";
 import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 import { theme } from "../stitches.config";
 
 const LEAGUE_ACCENT = [

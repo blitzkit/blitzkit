@@ -1,7 +1,7 @@
 import {
-  AccountList,
+  type AccountList,
   fetchBlitz,
-  Region,
+  type Region,
   usernamePattern,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
@@ -13,7 +13,7 @@ import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { embedInfo } from "../core/discord/embedInfo";
 import { localizationObject } from "../core/discord/localizationObject";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 
 const DEFAULT_LIMIT = 25;
 

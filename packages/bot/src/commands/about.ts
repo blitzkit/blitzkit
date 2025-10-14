@@ -1,28 +1,31 @@
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { translator } from '../core/localization/translator';
-import { COMMANDS_RAW, CommandRegistry } from '../events/interactionCreate';
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { translator } from "../core/localization/translator";
+import {
+  COMMANDS_RAW,
+  type CommandRegistry,
+} from "../events/interactionCreate";
 
 const subcommands = [
-  'embeds',
-  'introduction',
-  'invite',
-  'timezones',
-  'credits',
+  "embeds",
+  "introduction",
+  "invite",
+  "timezones",
+  "credits",
 ] as const;
 type Subcommand = (typeof subcommands)[number];
 
 const DOCS: Record<Subcommand, string> = {
-  embeds: 'guide/embeds',
-  introduction: 'guide/introduction',
-  invite: 'guide/invite',
-  timezones: 'guide/timezones',
-  credits: 'about/credits',
+  embeds: "guide/embeds",
+  introduction: "guide/introduction",
+  invite: "guide/invite",
+  timezones: "guide/timezones",
+  credits: "about/credits",
 };
 
 export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
   resolve({
-    command: createLocalizedCommand('about', [
-      { subcommand: 'commands' },
+    command: createLocalizedCommand("about", [
+      { subcommand: "commands" },
       ...subcommands.map((subcommand) => ({ subcommand })),
     ]),
 
@@ -30,7 +33,7 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
       const subcommand = interaction.options.getSubcommand();
       const { strings } = translator(interaction.locale);
 
-      if (subcommand === 'commands') {
+      if (subcommand === "commands") {
         return `${strings.bot.commands.about.subcommands.commands.body}${(
           await Promise.all(COMMANDS_RAW)
         )
@@ -40,7 +43,7 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
             (b.command.name_localizations?.[interaction.locale] ??
               b.command.name)
               ? -1
-              : 1,
+              : 1
           )
           .map(
             (registry) =>
@@ -51,9 +54,9 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
                 registry.command.description_localizations?.[
                   interaction.locale
                 ] ?? registry.command.description
-              }`,
+              }`
           )
-          .join('\n')}`;
+          .join("\n")}`;
       }
 
       const url = `https://raw.githubusercontent.com/tresabhi/blitzkit/main/docs/${DOCS[subcommand as Subcommand]}.md`;

@@ -1,6 +1,6 @@
-import { times } from 'lodash-es';
-import { Vector3Tuple, Vector4Tuple } from 'three';
-import { WindowsReadStream } from './windows';
+import { times } from "lodash-es";
+import type { Vector3Tuple, Vector4Tuple } from "three";
+import { WindowsReadStream } from "./windows";
 
 enum DxgiFormat {
   UNKNOWN = 0,
@@ -109,7 +109,7 @@ enum DxgiFormat {
   NV12 = 103,
   P010 = 104,
   P016 = 105,
-  '420_OPAQUE' = 106,
+  "420_OPAQUE" = 106,
   YUY2 = 107,
   Y210 = 108,
   Y216 = 109,
@@ -221,7 +221,7 @@ export class DdsReadStream extends WindowsReadStream {
 
       default:
         throw new TypeError(
-          `Unsupported DXGI format: ${DxgiFormat[dxgiFormat]} (${dxgiFormat})`,
+          `Unsupported DXGI format: ${DxgiFormat[dxgiFormat]} (${dxgiFormat})`
         );
     }
   }
@@ -277,16 +277,16 @@ export class DdsReadStream extends WindowsReadStream {
 
   resolveDxgiFormat(header: ReturnType<typeof this.header>) {
     switch (header.pf.fourCC) {
-      case 'DXT1':
+      case "DXT1":
         return DxgiFormat.BC1_UNORM;
 
-      case 'DXT3':
+      case "DXT3":
         return DxgiFormat.BC2_UNORM;
 
-      case 'DXT5':
+      case "DXT5":
         return DxgiFormat.BC3_UNORM;
 
-      case 'DX10':
+      case "DX10":
         return this.headerDxt10().dxgiFormat;
 
       default:
@@ -296,13 +296,13 @@ export class DdsReadStream extends WindowsReadStream {
 
   assetFactor4(width: number, height: number) {
     if (width % 4 !== 0 || height % 4 !== 0) {
-      throw new RangeError('Width and height must be divisible by 4');
+      throw new RangeError("Width and height must be divisible by 4");
     }
   }
   iterateBlocks(
     width: number,
     height: number,
-    blockIterator: () => (index: number) => Vector4Tuple,
+    blockIterator: () => (index: number) => Vector4Tuple
   ) {
     this.assetFactor4(width, height);
     const data = Buffer.alloc(width * height * 4);
@@ -356,15 +356,15 @@ export class DdsReadStream extends WindowsReadStream {
     const alpha = int0 < int1;
     const color2 = alpha
       ? (color0.map(
-          (channel0, index) => (channel0 + color1[index]) / 2,
+          (channel0, index) => (channel0 + color1[index]) / 2
         ) as Vector4Tuple)
       : (color0.map(
-          (channel0, index) => (2 * channel0 + color1[index]) / 3,
+          (channel0, index) => (2 * channel0 + color1[index]) / 3
         ) as Vector4Tuple);
     const color3 = alpha
       ? ([0, 0, 0, 0] as Vector4Tuple)
       : (color0.map(
-          (channel0, index) => (channel0 + 2 * color1[index]) / 3,
+          (channel0, index) => (channel0 + 2 * color1[index]) / 3
         ) as Vector4Tuple);
 
     return {
@@ -415,17 +415,17 @@ export class DdsReadStream extends WindowsReadStream {
     const m = buffer[6] & 0b1111;
 
     return [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p].map(
-      (alpha) => alpha / 15,
+      (alpha) => alpha / 15
     );
   }
   bc2ColorInterpolations() {
     const color0 = this.R5G6B5();
     const color1 = this.R5G6B5();
     const color2 = color0.map(
-      (channel0, index) => (2 * channel0 + color1[index]) / 3,
+      (channel0, index) => (2 * channel0 + color1[index]) / 3
     ) as Vector3Tuple;
     const color3 = color0.map(
-      (channel0, index) => (channel0 + 2 * color1[index]) / 3,
+      (channel0, index) => (channel0 + 2 * color1[index]) / 3
     ) as Vector3Tuple;
 
     return {

@@ -1,5 +1,5 @@
 import {
-  BlitzStats,
+  type BlitzStats,
   calculateWN8,
   getAccountInfo,
   getClanAccountInfo,
@@ -17,11 +17,11 @@ import { TitleBar } from "../../components/TitleBar";
 import { filtersToDescription } from "../../core/blitzkit/filtersToDescription";
 import { tankDefinitions } from "../../core/blitzkit/nonBlockingPromises";
 import { UserError } from "../../core/blitzkit/userError";
-import { filterStats, StatFilters } from "../../core/blitzstars/filterStats";
+import { filterStats, type StatFilters } from "../../core/blitzstars/filterStats";
 import { getStatsInPeriod } from "../../core/blitzstars/getStatsInPeriod";
 import { blitzStarsTankAverages } from "../../core/blitzstars/tankAverages";
-import { ResolvedPeriod } from "../../core/discord/resolvePeriodFromCommand";
-import { ResolvedPlayer } from "../../core/discord/resolvePlayerFromCommand";
+import type { ResolvedPeriod } from "../../core/discord/resolvePeriodFromCommand";
+import type { ResolvedPlayer } from "../../core/discord/resolvePlayerFromCommand";
 import { translator } from "../../core/localization/translator";
 
 const ROWS_PER_PAGE = 8;

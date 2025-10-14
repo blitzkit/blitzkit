@@ -1,14 +1,14 @@
-import { NATION_IDS } from '@blitzkit/core';
-import { readdir } from 'fs/promises';
-import sharp from 'sharp';
-import { Vector3Tuple } from 'three';
-import { readDVPLFile } from '../core/blitz/readDVPLFile';
-import { readXMLDVPL } from '../core/blitz/readXMLDVPL';
-import { readYAMLDVPL } from '../core/blitz/readYAMLDVPL';
-import { commitAssets } from '../core/github/commitAssets';
-import { FileChange } from '../core/github/commitMultipleFiles';
-import { DATA } from './constants';
-import { VehicleDefinitionList } from './definitions';
+import { NATION_IDS } from "@blitzkit/core";
+import { readdir } from "fs/promises";
+import sharp from "sharp";
+import type { Vector3Tuple } from "three";
+import { readDVPLFile } from "../core/blitz/readDVPLFile";
+import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
+import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
+import { commitAssets } from "../core/github/commitAssets";
+import type { FileChange } from "../core/github/commitMultipleFiles";
+import { DATA } from "./constants";
+import type { VehicleDefinitionList } from "./definitions";
 
 export interface TankParameters {
   resourcesPath: {
@@ -43,35 +43,35 @@ export interface TankParameters {
 }
 
 export async function tankIcons() {
-  console.log('Building tank icons...');
+  console.log("Building tank icons...");
 
   const changes: FileChange[] = [];
   const nations = await readdir(`${DATA}/XML/item_defs/vehicles`).then(
-    (nations) => nations.filter((nation) => nation !== 'common'),
+    (nations) => nations.filter((nation) => nation !== "common")
   );
 
   await Promise.all(
     nations.map(async (nation) => {
       const tanks = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-        `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`,
+        `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
       );
 
       await Promise.all(
         Object.entries(tanks.root).map(async ([tankKey, tank]) => {
-          if (tankKey.includes('tutorial_bot')) return;
+          if (tankKey.includes("tutorial_bot")) return;
 
           const nationVehicleId = tank.id;
           const id = (nationVehicleId << 8) + (NATION_IDS[nation] << 4) + 1;
 
           const parameters = await readYAMLDVPL<TankParameters>(
-            `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
+            `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
           );
           const smallPath = `${DATA}/${parameters.resourcesPath.smallIconPath
-            .replace(/~res:\//, '')
-            .replace(/\..+/, '')}.packed.webp`;
+            .replace(/~res:\//, "")
+            .replace(/\..+/, "")}.packed.webp`;
           const bigPath = `${DATA}/${parameters.resourcesPath.bigIconPath
-            .replace(/~res:\//, '')
-            .replace(/\..+/, '')}.packed.webp`;
+            .replace(/~res:\//, "")
+            .replace(/\..+/, "")}.packed.webp`;
           const big = await sharp(await readDVPLFile(bigPath))
             .trim()
             .toBuffer();
@@ -91,10 +91,10 @@ export async function tankIcons() {
               path: `icons/tanks/small/${id}.webp`,
             });
           }
-        }),
+        })
       );
-    }),
+    })
   );
 
-  await commitAssets('tank icons', changes);
+  await commitAssets("tank icons", changes);
 }

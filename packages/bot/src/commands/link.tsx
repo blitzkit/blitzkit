@@ -9,7 +9,7 @@ import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
 import { embedInfo } from '../core/discord/embedInfo';
 import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
 import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
+import type { CommandRegistry } from '../events/interactionCreate';
 import { theme } from '../stitches.config';
 
 export const verifyCommand = new Promise<CommandRegistry>((resolve) => {

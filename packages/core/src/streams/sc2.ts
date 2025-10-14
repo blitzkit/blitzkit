@@ -1,4 +1,4 @@
-import { Vector3Tuple, Vector4Tuple } from "three";
+import type { Vector3Tuple, Vector4Tuple } from "three";
 import { ScpgReadStream } from "./scpg";
 
 export interface SC2 {

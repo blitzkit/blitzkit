@@ -11,7 +11,7 @@ import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { localizationObject } from "../core/discord/localizationObject";
 import { resolveClanFromCommand } from "../core/discord/resolveClanFromCommand";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 
 const DEFAULT_THRESHOLD = 7;
 

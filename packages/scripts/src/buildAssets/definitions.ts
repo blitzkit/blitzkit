@@ -1,7 +1,7 @@
 import {
   Armor,
   AssaultRanges,
-  BlitzTankClass,
+  type BlitzTankClass,
   CamouflageDefinitions,
   Consumable,
   ConsumableDefinitions,
@@ -35,15 +35,15 @@ import locales from "@blitzkit/i18n/locales.json";
 import { readdir } from "fs/promises";
 import { deburr } from "lodash-es";
 import { parse as parsePath } from "path";
-import { Vector3Tuple } from "three";
+import type { Vector3Tuple } from "three";
 import { parse as parseYaml } from "yaml";
 import { readStringDVPL } from "../core/blitz/readStringDVPL";
 import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
 import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
 import { commitAssets } from "../core/github/commitAssets";
 import { DATA } from "./constants";
-import { Avatar } from "./skillIcons";
-import { TankParameters } from "./tankIcons";
+import type { Avatar } from "./skillIcons";
+import type { TankParameters } from "./tankIcons";
 
 const nonAlphanumericRegex = /[^a-z0-9]/g;
 const multipleDashesRegex = /--+/g;

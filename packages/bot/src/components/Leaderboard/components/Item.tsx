@@ -1,7 +1,7 @@
-import { ComponentProps } from 'react';
-import { theme } from '../../../stitches.config';
+import { type ComponentProps } from "react";
+import { theme } from "../../../stitches.config";
 
-interface ItemProps extends ComponentProps<'div'> {
+interface ItemProps extends ComponentProps<"div"> {
   position: number;
   deltaPosition?: number;
   score?: number;
@@ -25,15 +25,15 @@ export function Item({
     <div
       {...props}
       style={{
-        cursor: 'pointer',
-        display: 'flex',
+        cursor: "pointer",
+        display: "flex",
         padding: 8,
         backgroundColor: highlight
           ? theme.colors.componentInteractive_blue
           : theme.colors.componentInteractive,
         borderRadius: 4,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         gap: 8,
       }}
     >
@@ -50,9 +50,9 @@ export function Item({
 
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           gap: 4,
         }}
       >
@@ -83,22 +83,22 @@ export function Item({
       {deltaPosition !== undefined && deltaPosition !== 0 && (
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             gap: 4,
           }}
         >
           <img
-            alt={deltaPosition > 0 ? 'Increase' : 'Decrease'}
+            alt={deltaPosition > 0 ? "Increase" : "Decrease"}
             style={{
               width: 8,
               height: 8,
             }}
             src={
               deltaPosition > 0
-                ? 'https://i.imgur.com/qbjiXa1.png'
-                : 'https://i.imgur.com/3uyNhun.png'
+                ? "https://i.imgur.com/qbjiXa1.png"
+                : "https://i.imgur.com/3uyNhun.png"
             }
           />
           <span
@@ -119,11 +119,11 @@ export function Item({
 
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           gap: 4,
-          alignItems: 'center',
+          alignItems: "center",
           width: 96,
-          justifyContent: 'flex-end',
+          justifyContent: "flex-end",
         }}
       >
         {deltaScore !== 0 && deltaScore !== undefined && (
@@ -140,15 +140,15 @@ export function Item({
         )}
         {deltaScore !== 0 && deltaScore !== undefined && (
           <img
-            alt={deltaScore > 0 ? 'Increase' : 'Decrease'}
+            alt={deltaScore > 0 ? "Increase" : "Decrease"}
             style={{
               width: 8,
               height: 8,
             }}
             src={
               deltaScore > 0
-                ? 'https://i.imgur.com/qbjiXa1.png'
-                : 'https://i.imgur.com/3uyNhun.png'
+                ? "https://i.imgur.com/qbjiXa1.png"
+                : "https://i.imgur.com/3uyNhun.png"
             }
           />
         )}

@@ -1,7 +1,7 @@
 import { literals } from "@blitzkit/i18n";
 import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import type { CommandRegistry } from "../events/interactionCreate";
 
 export const pingCommand = new Promise<CommandRegistry>((resolve) => {
   resolve({

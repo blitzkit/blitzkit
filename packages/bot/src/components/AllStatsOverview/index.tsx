@@ -1,7 +1,7 @@
 import {
   getWN8Percentile,
   Percentile,
-  SupplementaryStats,
+  type SupplementaryStats,
 } from '@blitzkit/core';
 import { Locale } from 'discord.js';
 import { translator } from '../../core/localization/translator';

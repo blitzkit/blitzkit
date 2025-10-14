@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from "react";
 
 interface RowProps {
   children: ReactNode;
@@ -8,7 +8,7 @@ export function Row({ children }: RowProps) {
   return (
     <div
       style={{
-        display: 'flex',
+        display: "flex",
         gap: 8,
       }}
     >

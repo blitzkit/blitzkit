@@ -1,4 +1,4 @@
-import { Vector3Tuple } from 'three';
+import type { Vector3Tuple } from "three";
 
 export const equipmentPriceMatrix: Record<number, Vector3Tuple> = {
   1: [100, 200, 300],

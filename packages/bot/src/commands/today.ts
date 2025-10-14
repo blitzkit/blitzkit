@@ -14,7 +14,7 @@ import { resolvePeriodFromButton } from '../core/discord/resolvePeriodFromButton
 import { resolvePeriodFromCommand } from '../core/discord/resolvePeriodFromCommand';
 import { resolvePlayerFromButton } from '../core/discord/resolvePlayerFromButton';
 import { resolvePlayerFromCommand } from '../core/discord/resolvePlayerFromCommand';
-import { CommandRegistry } from '../events/interactionCreate';
+import { type CommandRegistry } from '../events/interactionCreate';
 import { renderBreakdown } from './breakdown/render';
 
 export const todayCommand = new Promise<CommandRegistry>(async (resolve) => {
