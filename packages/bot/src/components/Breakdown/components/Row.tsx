@@ -6,8 +6,8 @@ import {
 } from '@blitzkit/core';
 import { createColors } from 'bepaint';
 import {
-  AccentColor,
-  GrayColor,
+  type AccentColor,
+  type GrayColor,
   PALETTES,
 } from '../../../core/radix/radixColors';
 import { RowStat } from './RowStat';

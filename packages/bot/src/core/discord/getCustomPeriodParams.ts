@@ -1,17 +1,17 @@
-import { ChatInputCommandInteraction } from 'discord.js';
-import { PeriodType } from './addPeriodSubCommands';
+import { ChatInputCommandInteraction } from "discord.js";
+import type { PeriodType } from "./addPeriodSubCommands";
 
 export function getCustomPeriodParams(
   interaction: ChatInputCommandInteraction,
-  forcedNonCustomPeriod = false,
+  forcedNonCustomPeriod = false
 ) {
   if (
     !forcedNonCustomPeriod &&
-    (interaction.options.getSubcommand() as PeriodType) === 'custom'
+    (interaction.options.getSubcommand() as PeriodType) === "custom"
   ) {
     return {
-      start: interaction.options.getInteger('start', true),
-      end: interaction.options.getInteger('end', true),
+      start: interaction.options.getInteger("start", true),
+      end: interaction.options.getInteger("end", true),
     };
   }
 

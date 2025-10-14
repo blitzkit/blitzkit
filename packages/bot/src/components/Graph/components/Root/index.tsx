@@ -1,9 +1,9 @@
-import { times } from 'lodash-es';
-import { ReactNode } from 'react';
-import { theme } from '../../../../stitches.config';
-import { Margin } from '../Margin';
-import { MarginOrientation } from '../Margin/constants';
-import { GRAPH_HEIGHT, GRAPH_WIDTH } from './constants';
+import { times } from "lodash-es";
+import { type ReactNode } from "react";
+import { theme } from "../../../../stitches.config";
+import { Margin } from "../Margin";
+import { MarginOrientation } from "../Margin/constants";
+import { GRAPH_HEIGHT, GRAPH_WIDTH } from "./constants";
 
 export interface MarginInputProps {
   min: number;
@@ -32,12 +32,12 @@ export function Root({
   xTitle,
 }: RootProps) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div
         style={{
           paddingLeft: 64,
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: "flex",
+          justifyContent: "space-between",
         }}
       >
         <span style={{ fontSize: 16, color: theme.colors.textHighContrast }}>
@@ -48,7 +48,7 @@ export function Root({
         </span>
       </div>
 
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ display: "flex", gap: 16 }}>
         {verticalMargin && (
           <Margin {...verticalMargin} verticalSeparations={separations} />
         )}
@@ -94,9 +94,9 @@ export function Root({
         <div
           style={{
             paddingLeft: 64,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span style={{ fontSize: 16, color: theme.colors.textLowContrast }}>

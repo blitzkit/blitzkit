@@ -1,13 +1,13 @@
-import { Region, emptyAllStats, getTankStats } from '@blitzkit/core';
-import { Locale } from 'discord.js';
+import { type Region, emptyAllStats, getTankStats } from "@blitzkit/core";
+import { Locale } from "discord.js";
 import {
-  GetHistoriesOptions,
-  Histories,
-  History,
+  type GetHistoriesOptions,
+  type Histories,
+  type History,
   getHistoriesDefaultOptions,
-} from '../../types/histories';
-import { UserError } from '../blitzkit/userError';
-import { translator } from '../localization/translator';
+} from "../../types/histories";
+import { UserError } from "../blitzkit/userError";
+import { translator } from "../localization/translator";
 
 export interface TankHistory extends History {
   tank_id: number;
@@ -36,12 +36,12 @@ export async function getTankHistories(
   server: Region,
   id: number,
   locale: Locale,
-  options?: Partial<GetTankHistoriesOptions>,
+  options?: Partial<GetTankHistoriesOptions>
 ) {
   const { strings } = translator(locale);
   const mergedOptions = { ...getTankHistoriesDefaultOptions, ...options };
   const tankHistoriesResponse = await fetch(
-    `https://www.blitzstars.com/api/tankhistories/for/${id}/`,
+    `https://www.blitzstars.com/api/tankhistories/for/${id}/`
   );
   const tankHistories = (
     (await tankHistoriesResponse.json()) as TankHistoriesRaw
@@ -51,7 +51,7 @@ export async function getTankHistories(
         all: history.all,
         last_battle_time: history.last_battle_time,
         tank_id: history.tank_id,
-      }) satisfies TankHistory,
+      }) satisfies TankHistory
   );
   const compliantTanks: number[] = [];
   const lastBattles: Record<number, number> = {};
@@ -73,7 +73,7 @@ export async function getTankHistories(
       lastBattles[tank_id] = battles;
 
       return complies;
-    },
+    }
   );
 
   const latestNodes: TankHistories = [];
@@ -112,7 +112,7 @@ export async function getTankHistories(
               all: emptyAllStats,
               last_battle_time: -Infinity,
               tank_id: tankId,
-            } satisfies TankHistory),
+            } satisfies TankHistory)
         );
       }
     });

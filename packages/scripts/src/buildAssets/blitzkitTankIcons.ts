@@ -2,7 +2,7 @@ import { BLITZKIT_TANK_ICON_SIZE, fetchTankDefinitions } from "@blitzkit/core";
 import { launch } from "puppeteer";
 import sharp from "sharp";
 import { commitAssets } from "../core/github/commitAssets";
-import { FileChange } from "../core/github/commitMultipleFiles";
+import { type FileChange } from "../core/github/commitMultipleFiles";
 
 export async function blitzkitTankIcons() {
   console.log("Building blitzkit tank icons...");

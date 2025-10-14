@@ -1,6 +1,6 @@
-import { TanksStats } from "../types";
-import { FetchBlitzParams, fetchBlitz } from "./fetchBlitz";
-import { Region } from "./regions";
+import type { TanksStats } from "../types";
+import { type FetchBlitzParams, fetchBlitz } from "./fetchBlitz";
+import type { Region } from "./regions";
 
 export async function getTankStats(
   region: Region,

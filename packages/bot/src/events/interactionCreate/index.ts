@@ -4,15 +4,15 @@ import {
   AutocompleteInteraction,
   ButtonBuilder,
   ButtonInteraction,
-  CacheType,
+  type CacheType,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  Interaction,
+  type Interaction,
   REST,
   Routes,
   SlashCommandBuilder,
-  SlashCommandOptionsOnlyBuilder,
-  SlashCommandSubcommandsOnlyBuilder,
+  type SlashCommandOptionsOnlyBuilder,
+  type SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 import { aboutCommand } from "../../commands/about";
 import { breakdownCommand } from "../../commands/breakdown";

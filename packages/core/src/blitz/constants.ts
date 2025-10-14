@@ -1,5 +1,5 @@
-import { TankClass, TankType } from '../protos';
-import { BlitzStats } from '../statistics';
+import { TankClass, TankType } from "../protos";
+import type { BlitzStats } from "../statistics";
 
 export const TANK_TYPES = [
   TankType.RESEARCHABLE,
@@ -8,9 +8,9 @@ export const TANK_TYPES = [
 ];
 
 export const TANK_TYPE_COMMAND_NAMES = {
-  [TankType.RESEARCHABLE]: 'researchable',
-  [TankType.PREMIUM]: 'premium',
-  [TankType.COLLECTOR]: 'collector',
+  [TankType.RESEARCHABLE]: "researchable",
+  [TankType.PREMIUM]: "premium",
+  [TankType.COLLECTOR]: "collector",
 };
 
 export const TANK_CLASSES = [

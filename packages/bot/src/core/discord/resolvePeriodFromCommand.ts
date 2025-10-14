@@ -1,10 +1,10 @@
-import { getTimeDaysAgo, Region } from "@blitzkit/core";
+import { getTimeDaysAgo, type Region } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { CacheType, ChatInputCommandInteraction } from "discord.js";
+import { type CacheType, ChatInputCommandInteraction } from "discord.js";
 import { getPeriodNow } from "../blitzkit/getPeriodNow";
 import { getPeriodStart } from "../blitzkit/getPeriodStart";
 import { translator } from "../localization/translator";
-import { PeriodType } from "./addPeriodSubCommands";
+import type { PeriodType } from "./addPeriodSubCommands";
 import { getPeriodOptionName } from "./getPeriodOptionName";
 
 export interface ResolvedPeriod {

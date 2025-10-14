@@ -1,4 +1,4 @@
-import { MessageFns } from '../protos';
+import type { MessageFns } from '../protos';
 
 export async function fetchPB<Type>(url: string, message: MessageFns<Type>) {
   const response = await fetch(url);

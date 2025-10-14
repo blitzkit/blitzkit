@@ -1,6 +1,6 @@
-import { idToRegion, Region } from "@blitzkit/core";
+import { idToRegion, type Region } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { CacheType, ChatInputCommandInteraction } from "discord.js";
+import { type CacheType, ChatInputCommandInteraction } from "discord.js";
 import markdownEscape from "markdown-escape";
 import { searchPlayersAcrossRegionsBotWrapper } from "../../blitz/searchPlayersAcrossRegionsBotWrapper";
 import { getBlitzFromDiscord } from "../../blitzkit/getBlitzFromDiscord";

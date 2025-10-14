@@ -1,13 +1,13 @@
 import {
   ButtonBuilder,
   ButtonStyle,
-  ComponentEmojiResolvable,
-} from 'discord.js';
+  type ComponentEmojiResolvable,
+} from "discord.js";
 
 export function buttonLink(
   url: string,
   label: string,
-  emoji?: ComponentEmojiResolvable,
+  emoji?: ComponentEmojiResolvable
 ) {
   const button = new ButtonBuilder()
     .setStyle(ButtonStyle.Link)

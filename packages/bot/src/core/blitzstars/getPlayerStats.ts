@@ -1,4 +1,4 @@
-import { BlitzStats, Region } from '@blitzkit/core';
+import type { BlitzStats, Region } from "@blitzkit/core";
 
 interface IndividualPlayerStats {
   clan: { clan_id: number; name: string; tag: string };
@@ -25,13 +25,13 @@ export async function getPlayerStats<
   ReturnType = Ids extends number ? PlayerStats : PlayerStats[],
 >(region: Region, ids: Ids) {
   const stats = await Promise.all(
-    ((typeof ids === 'number' ? [ids] : ids) as number[]).map((id) =>
+    ((typeof ids === "number" ? [ids] : ids) as number[]).map((id) =>
       fetch(`https://www.blitzstars.com/api/playerstats/${id}`).then(
-        (response) => response.json() as Promise<PlayerStats>,
-      ),
-    ),
+        (response) => response.json() as Promise<PlayerStats>
+      )
+    )
   );
 
-  if (typeof ids === 'number') return stats[0] as ReturnType;
+  if (typeof ids === "number") return stats[0] as ReturnType;
   return stats as ReturnType;
 }

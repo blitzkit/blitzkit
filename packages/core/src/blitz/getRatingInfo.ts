@@ -1,7 +1,7 @@
 import { context } from "../blitzkit/context";
 import { patientFetch } from "../blitzkit/patientFetch";
-import { RatingLeague, RatingReward } from "./rating";
-import { Region } from "./regions";
+import type { RatingLeague, RatingReward } from "./rating";
+import type { Region } from "./regions";
 import { regionToRegionSubdomain } from "./regionToRegionSubdomain";
 
 export type RatingInfo =

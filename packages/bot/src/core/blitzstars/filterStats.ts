@@ -1,10 +1,10 @@
-import { TankClass, TankType } from '@blitzkit/core';
-import { SupplementaryStats } from '@blitzkit/core/src/blitz/getAccountInfo';
-import { calculateWN8 } from '@blitzkit/core/src/statistics/calculateWN8';
-import { BlitzStats } from '@blitzkit/core/src/statistics/compositeStats';
-import { sumAllStats } from '@blitzkit/core/src/statistics/sumAllStats';
-import { tankDefinitions } from '../blitzkit/nonBlockingPromises';
-import { blitzStarsTankAverages } from './tankAverages';
+import { TankClass, TankType } from "@blitzkit/core";
+import type { SupplementaryStats } from "@blitzkit/core/src/blitz/getAccountInfo";
+import { calculateWN8 } from "@blitzkit/core/src/statistics/calculateWN8";
+import type { BlitzStats } from "@blitzkit/core/src/statistics/compositeStats";
+import { sumAllStats } from "@blitzkit/core/src/statistics/sumAllStats";
+import { tankDefinitions } from "../blitzkit/nonBlockingPromises";
+import { blitzStarsTankAverages } from "./tankAverages";
 
 export interface StatFilters {
   nation?: string;
@@ -16,7 +16,7 @@ export interface StatFilters {
 
 export async function filterStats(
   { diff, order }: DiffedTankStats,
-  filters: StatFilters,
+  filters: StatFilters
 ) {
   // tank, if provided, takes priority over all other filters
   if (filters.tank) filters = { tank: filters.tank };
@@ -45,14 +45,14 @@ export async function filterStats(
   const battlesOfTanksWithAverages = filteredOrder.reduce<number>(
     (accumulator, id) =>
       awaitedTankAverages[id] ? accumulator + diff[id].battles : accumulator,
-    0,
+    0
   );
   const battlesOfTanksWithTankDefinition = filteredOrder.reduce<number>(
     (accumulator, id) =>
       awaitedTankDefinitions.tanks[id]
         ? accumulator + diff[id].battles
         : accumulator,
-    0,
+    0
   );
   const supplementary = {
     WN8:
@@ -63,7 +63,7 @@ export async function filterStats(
               calculateWN8(awaitedTankAverages[id].all, diff[id]) *
                 diff[id].battles
             : accumulator,
-        0,
+        0
       ) / battlesOfTanksWithAverages,
     tier:
       filteredOrder.reduce<number>(
@@ -72,7 +72,7 @@ export async function filterStats(
             ? accumulator +
               awaitedTankDefinitions.tanks[id]!.tier * diff[id].battles
             : accumulator,
-        0,
+        0
       ) / battlesOfTanksWithTankDefinition,
   } satisfies SupplementaryStats;
 

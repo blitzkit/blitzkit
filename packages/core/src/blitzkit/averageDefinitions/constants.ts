@@ -1,6 +1,6 @@
 import { emptyAllStats } from '../../blitz/constants';
 import { Samples } from '../../protos';
-import { BlitzkitStats } from '../../statistics';
+import type { BlitzkitStats } from '../../statistics';
 
 export const emptyAverageDefinitionsAllStats: BlitzkitStats = {
   ...emptyAllStats,

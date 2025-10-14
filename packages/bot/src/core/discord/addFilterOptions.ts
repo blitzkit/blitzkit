@@ -4,7 +4,7 @@ import {
   TANK_TYPES,
 } from '@blitzkit/core';
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   Locale,
   SlashCommandBuilder,
   SlashCommandSubcommandBuilder,

@@ -1,7 +1,7 @@
 import { literals } from "@blitzkit/i18n";
 import { Locale } from "discord.js";
 import { translator } from "../localization/translator";
-import { PeriodSize } from "./addPeriodSubCommands";
+import type { PeriodSize } from "./addPeriodSubCommands";
 
 export function getPeriodOptionName(period: PeriodSize, locale: Locale) {
   const { strings } = translator(locale);

@@ -1,5 +1,5 @@
 import { emptyAllStats } from '../blitz';
-import { BlitzStats } from '../statistics';
+import type { BlitzStats } from '../statistics';
 
 export interface IndividualTankStats {
   all: BlitzStats;

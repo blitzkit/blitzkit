@@ -1,5 +1,5 @@
 import { fetchTankDefinitions } from '../blitzkit';
-import { BlitzStats } from './compositeStats/constants';
+import type { BlitzStats } from './compositeStats/constants';
 
 export async function getTierWeights(
   stats: Record<number, BlitzStats>,

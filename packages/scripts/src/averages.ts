@@ -1,10 +1,10 @@
 import {
   AverageDefinitions,
   AverageDefinitionsEntry,
-  AverageDefinitionsManifest,
-  IndividualTankStats,
+  type AverageDefinitionsManifest,
+  type IndividualTankStats,
   REGIONS,
-  Region,
+  type Region,
   Samples,
   averageDefinitionsAllStatsKeys,
   emptySamples,

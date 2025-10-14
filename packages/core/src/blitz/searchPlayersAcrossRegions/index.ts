@@ -1,6 +1,6 @@
-import { fetchBlitz } from '../fetchBlitz';
-import { Region } from '../regions';
-import { usernamePattern } from './constants';
+import { fetchBlitz } from "../fetchBlitz";
+import type { Region } from "../regions";
+import { usernamePattern } from "./constants";
 
 export interface AccountListItem {
   nickname: string;
@@ -19,7 +19,7 @@ export async function searchPlayersAcrossRegions(search: string, limit = 25) {
   if (usernamePattern.test(trimmed)) {
     return (
       await Promise.all([
-        fetchBlitz<AccountList>('com', 'account/list', {
+        fetchBlitz<AccountList>("com", "account/list", {
           search,
           limit: normalizedLimit,
         }).then(
@@ -27,10 +27,10 @@ export async function searchPlayersAcrossRegions(search: string, limit = 25) {
             value &&
             value.map((account) => ({
               ...account,
-              region: 'com' as Region,
-            })),
+              region: "com" as Region,
+            }))
         ),
-        fetchBlitz<AccountList>('eu', 'account/list', {
+        fetchBlitz<AccountList>("eu", "account/list", {
           search,
           limit: normalizedLimit,
         }).then(
@@ -38,10 +38,10 @@ export async function searchPlayersAcrossRegions(search: string, limit = 25) {
             value &&
             value.map((account) => ({
               ...account,
-              region: 'eu' as Region,
-            })),
+              region: "eu" as Region,
+            }))
         ),
-        fetchBlitz<AccountList>('asia', 'account/list', {
+        fetchBlitz<AccountList>("asia", "account/list", {
           search,
           limit: normalizedLimit,
         }).then(
@@ -49,8 +49,8 @@ export async function searchPlayersAcrossRegions(search: string, limit = 25) {
             value &&
             value.map((account) => ({
               ...account,
-              region: 'asia' as Region,
-            })),
+              region: "asia" as Region,
+            }))
         ),
       ])
     )
@@ -61,4 +61,4 @@ export async function searchPlayersAcrossRegions(search: string, limit = 25) {
   }
 }
 
-export * from './constants';
+export * from "./constants";

@@ -1,5 +1,5 @@
 import locales from "../locales.json";
-import { BlitzKitStrings, STRINGS } from "./strings";
+import { type BlitzKitStrings, STRINGS } from "./strings";
 
 export function wrapper(slicer: (strings: BlitzKitStrings) => string) {
   const defaultString = slicer(STRINGS[locales.default] as BlitzKitStrings);

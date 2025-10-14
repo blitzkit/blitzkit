@@ -1,4 +1,4 @@
-import { Region } from "../blitz/regions";
+import type { Region } from "../blitz/regions";
 import { RatingLeaderboard } from "../protos";
 import { asset } from "./asset";
 

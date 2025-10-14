@@ -1,11 +1,11 @@
-import { Percentile } from '@blitzkit/core';
-import { createColors } from 'bepaint';
+import { Percentile } from "@blitzkit/core";
+import { createColors } from "bepaint";
 import {
-  AccentColor,
-  GrayColor,
+  type AccentColor,
+  type GrayColor,
   PALETTES,
-} from '../../../core/radix/radixColors';
-import { PercentileIndicator } from '../../PercentileIndicator';
+} from "../../../core/radix/radixColors";
+import { PercentileIndicator } from "../../PercentileIndicator";
 
 interface RowStatProps {
   name: string;
@@ -22,7 +22,7 @@ export function RowStat({
   delta,
   percentile,
   minimized = false,
-  color = 'slate',
+  color = "slate",
 }: RowStatProps) {
   const theme = createColors(PALETTES[`${color}Dark`]);
 
@@ -30,29 +30,29 @@ export function RowStat({
     <div
       className="session-tracker-row-stat"
       style={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 4,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center",
         flex: 1,
       }}
     >
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           gap: 4,
-          alignItems: 'center',
-          justifyContent: 'center',
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {percentile === undefined && delta !== undefined && delta !== 0 && (
           <img
-            alt={delta > 0 ? 'Increase' : 'Decrease'}
+            alt={delta > 0 ? "Increase" : "Decrease"}
             src={
               (delta ?? 0) > 0
-                ? 'https://i.imgur.com/qbjiXa1.png'
-                : 'https://i.imgur.com/3uyNhun.png'
+                ? "https://i.imgur.com/qbjiXa1.png"
+                : "https://i.imgur.com/3uyNhun.png"
             }
             style={{ width: 12, height: 12 }}
           />
@@ -66,7 +66,7 @@ export function RowStat({
             color: theme.textHighContrast,
             fontWeight: 700,
             fontSize: 16,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
           {value}
@@ -77,7 +77,7 @@ export function RowStat({
         <span
           style={{
             color: theme.textLowContrast,
-            textAlign: 'center',
+            textAlign: "center",
             fontSize: 12,
           }}
         >

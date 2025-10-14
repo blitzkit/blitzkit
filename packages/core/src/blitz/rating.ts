@@ -1,4 +1,4 @@
-import { RatingPlayer } from '../statistics';
+import { type RatingPlayer } from '../statistics';
 
 export const LEAGUES = [
   { name: 'diamond', minScore: 5000, index: 0, icon: 'YOw6mZ4' },

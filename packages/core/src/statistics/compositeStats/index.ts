@@ -1,10 +1,10 @@
-import { calculateWN8 } from '../calculateWN8';
+import { calculateWN8 } from "../calculateWN8";
 import {
-  BlitzkitStats,
-  CompositeStats,
+  type BlitzkitStats,
+  type CompositeStats,
   compositeStatsFormatting,
-  CompositeStatsKey,
-} from './constants';
+  type CompositeStatsKey,
+} from "./constants";
 
 export function compositeStats(stats: BlitzkitStats, average: BlitzkitStats) {
   return {
@@ -52,9 +52,9 @@ export function compositeStats(stats: BlitzkitStats, average: BlitzkitStats) {
 export function formatCompositeStat(
   value: number,
   key: CompositeStatsKey,
-  composite: CompositeStats,
+  composite: CompositeStats
 ) {
-  if (composite.cumulative_battles === 0) return '--';
+  if (composite.cumulative_battles === 0) return "--";
 
   const formatting = compositeStatsFormatting[key];
   const resolvedValue = (formatting.coefficient ?? 1) * value;
@@ -62,7 +62,7 @@ export function formatCompositeStat(
     formatting.localeFormat
       ? Math.round(resolvedValue).toLocaleString()
       : resolvedValue.toFixed(formatting.fixed)
-  }${formatting.unit ?? ''}`;
+  }${formatting.unit ?? ""}`;
 }
 
-export * from './constants';
+export * from "./constants";

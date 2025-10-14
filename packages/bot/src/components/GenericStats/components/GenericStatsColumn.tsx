@@ -1,5 +1,5 @@
-import { GenericStat } from '..';
-import { GenericStatsRow } from './GenericStatsRow';
+import { type GenericStat } from "..";
+import { GenericStatsRow } from "./GenericStatsRow";
 
 interface GenericStatsColumnProps {
   stats: GenericStat[];
@@ -7,7 +7,7 @@ interface GenericStatsColumnProps {
 
 export function GenericStatsColumn({ stats }: GenericStatsColumnProps) {
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
       {stats.map((stat) => (
         <GenericStatsRow key={stat[0]} stat={stat} />
       ))}

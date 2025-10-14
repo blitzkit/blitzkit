@@ -1,4 +1,4 @@
-import { Region } from "@blitzkit/core";
+import type { Region } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { ChatInputCommandInteraction } from "discord.js";
 import markdownEscape from "markdown-escape";

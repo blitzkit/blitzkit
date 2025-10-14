@@ -1,8 +1,8 @@
 import { context } from "../blitzkit/context";
 import { patientFetch } from "../blitzkit/patientFetch";
-import { RatingPlayer } from "../statistics";
-import { LeagueTop } from "./rating";
-import { Region } from "./regions";
+import type { RatingPlayer } from "../statistics";
+import type { LeagueTop } from "./rating";
+import type { Region } from "./regions";
 import { regionToRegionSubdomain } from "./regionToRegionSubdomain";
 
 export async function getRatingLeague(

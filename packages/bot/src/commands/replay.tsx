@@ -20,7 +20,7 @@ import { blitzStarsTankAverages } from '../core/blitzstars/tankAverages';
 import { buttonLink } from '../core/discord/buttonLink';
 import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
 import { translator } from '../core/localization/translator';
-import { CommandRegistry } from '../events/interactionCreate';
+import { type CommandRegistry } from '../events/interactionCreate';
 import { theme } from '../stitches.config';
 
 type WotInspectorReplaySubmission =

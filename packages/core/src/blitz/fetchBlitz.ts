@@ -1,19 +1,19 @@
-import { assertSecret, EventManager } from '../blitzkit';
-import { patientFetch } from '../blitzkit/patientFetch';
-import { Region } from './regions';
+import { assertSecret, EventManager } from "../blitzkit";
+import { patientFetch } from "../blitzkit/patientFetch";
+import type { Region } from "./regions";
 
-const RETRY_ERRORS = ['REQUEST_LIMIT_EXCEEDED', 'SOURCE_NOT_AVAILABLE'];
+const RETRY_ERRORS = ["REQUEST_LIMIT_EXCEEDED", "SOURCE_NOT_AVAILABLE"];
 
 export const retryAbleBlitzFetchEvent = new EventManager();
 export const blitzFetchQueueAvailableEvent = new EventManager();
 
 type BlitzResponse<Data extends object> =
   | {
-      status: 'error';
+      status: "error";
       error: { field: string; message: string; code: 402; value: null };
     }
   | {
-      status: 'ok';
+      status: "ok";
       data: Data;
     };
 
@@ -36,11 +36,11 @@ async function manageQueue() {
     const request = queue.shift()!;
     const data = (await patientFetch(request.url)
       .then((response) => response.json())
-      .catch((error) => ({ status: 'error', error }))) as BlitzResponse<
+      .catch((error) => ({ status: "error", error }))) as BlitzResponse<
       typeof request.resolve
     >;
 
-    if (data.status === 'ok') {
+    if (data.status === "ok") {
       request.resolve(data.data);
     } else {
       if (RETRY_ERRORS.includes(data.error.message)) {
@@ -67,19 +67,19 @@ export type FetchBlitzParams = Record<string, string | number | undefined>;
 export function fetchBlitz<Data extends object>(
   region: Region,
   path: string,
-  params: FetchBlitzParams = {},
+  params: FetchBlitzParams = {}
 ) {
   return new Promise<Data>((resolve) => {
     queue.push({
       url: `https://api.wotblitz.${region}/wotb/${path}/?${Object.entries({
         application_id: assertSecret(
-          import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID,
+          import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID
         ),
         ...params,
       })
         .filter(([_, value]) => value !== undefined)
         .map(([key, value]) => `${key}=${encodeURIComponent(value!)}`)
-        .join('&')}`,
+        .join("&")}`,
       resolve(data) {
         resolve(data as Data);
       },

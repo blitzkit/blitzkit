@@ -1,4 +1,4 @@
-import { Region } from './regions';
+import { type Region } from './regions';
 
 export const MIN_REGION_IDS: Record<Region, number> = {
   asia: 20e8,

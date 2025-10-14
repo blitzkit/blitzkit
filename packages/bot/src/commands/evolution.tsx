@@ -1,48 +1,48 @@
-import { emblemURL, getAccountInfo, getClanAccountInfo } from '@blitzkit/core';
-import { Locale, SlashCommandSubcommandGroupBuilder } from 'discord.js';
-import { CommandWrapper } from '../components/CommandWrapper';
-import * as Graph from '../components/Graph';
-import { LineColor } from '../components/Graph/components/Line/constants';
-import { NoData } from '../components/NoData';
-import { TitleBar } from '../components/TitleBar';
-import { resolveTankId } from '../core/blitz/resolveTankId';
-import { getBlitzStarsLinkButton } from '../core/blitzstars/getBlitzStarsLinkButton';
-import { getPlayerHistories } from '../core/blitzstars/getPlayerHistories';
-import { getTankHistories } from '../core/blitzstars/getTankHistories';
-import { addPeriodSubCommands } from '../core/discord/addPeriodSubCommands';
-import { addTankChoices } from '../core/discord/addTankChoices';
-import { addUsernameChoices } from '../core/discord/addUsernameChoices';
-import { autocompleteTanks } from '../core/discord/autocompleteTanks';
-import { autocompleteUsername } from '../core/discord/autocompleteUsername';
-import { buttonRefresh } from '../core/discord/buttonRefresh';
-import { commandToURL } from '../core/discord/commandToURL';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { getCustomPeriodParams } from '../core/discord/getCustomPeriodParams';
-import { resolvePeriodFromButton } from '../core/discord/resolvePeriodFromButton';
+import { emblemURL, getAccountInfo, getClanAccountInfo } from "@blitzkit/core";
+import { Locale, SlashCommandSubcommandGroupBuilder } from "discord.js";
+import { CommandWrapper } from "../components/CommandWrapper";
+import * as Graph from "../components/Graph";
+import { LineColor } from "../components/Graph/components/Line/constants";
+import { NoData } from "../components/NoData";
+import { TitleBar } from "../components/TitleBar";
+import { resolveTankId } from "../core/blitz/resolveTankId";
+import { getBlitzStarsLinkButton } from "../core/blitzstars/getBlitzStarsLinkButton";
+import { getPlayerHistories } from "../core/blitzstars/getPlayerHistories";
+import { getTankHistories } from "../core/blitzstars/getTankHistories";
+import { addPeriodSubCommands } from "../core/discord/addPeriodSubCommands";
+import { addTankChoices } from "../core/discord/addTankChoices";
+import { addUsernameChoices } from "../core/discord/addUsernameChoices";
+import { autocompleteTanks } from "../core/discord/autocompleteTanks";
+import { autocompleteUsername } from "../core/discord/autocompleteUsername";
+import { buttonRefresh } from "../core/discord/buttonRefresh";
+import { commandToURL } from "../core/discord/commandToURL";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { getCustomPeriodParams } from "../core/discord/getCustomPeriodParams";
+import { resolvePeriodFromButton } from "../core/discord/resolvePeriodFromButton";
 import {
-  ResolvedPeriod,
+  type ResolvedPeriod,
   resolvePeriodFromCommand,
-} from '../core/discord/resolvePeriodFromCommand';
-import { resolvePlayerFromButton } from '../core/discord/resolvePlayerFromButton';
+} from "../core/discord/resolvePeriodFromCommand";
+import { resolvePlayerFromButton } from "../core/discord/resolvePlayerFromButton";
 import {
-  ResolvedPlayer,
+  type ResolvedPlayer,
   resolvePlayerFromCommand,
-} from '../core/discord/resolvePlayerFromCommand';
-import { CommandRegistry } from '../events/interactionCreate';
+} from "../core/discord/resolvePlayerFromCommand";
+import type { CommandRegistry } from "../events/interactionCreate";
 
-type EvolutionStatType = 'player' | 'tank';
+type EvolutionStatType = "player" | "tank";
 
 async function render(
   { region, id }: ResolvedPlayer,
   { start, end, name }: ResolvedPeriod,
-  type: 'player' | 'tank',
+  type: "player" | "tank",
   tankId: number | null,
-  locale: Locale,
+  locale: Locale
 ) {
   const accountInfo = await getAccountInfo(region, id);
-  const clan = (await getClanAccountInfo(region, id, ['clan']))?.clan;
+  const clan = (await getClanAccountInfo(region, id, ["clan"]))?.clan;
   const logo = clan ? emblemURL(clan.emblem_set_id) : undefined;
-  const histories = await (type === 'player'
+  const histories = await (type === "player"
     ? getPlayerHistories(region, id, {
         start,
         end,
@@ -61,7 +61,7 @@ async function render(
       [
         history.all.battles,
         (history.all.wins / history.all.battles) * 100,
-      ] as Graph.PlotItem,
+      ] as Graph.PlotItem
   );
   const times = histories.map((history) => history.last_battle_time);
   const minTime = Math.min(...times);
@@ -82,7 +82,7 @@ async function render(
           verticalMargin={{
             min: minY,
             max: maxY,
-            suffix: '%',
+            suffix: "%",
             precision: 2,
           }}
           horizontalMargin={{
@@ -110,22 +110,22 @@ async function render(
 export const evolutionCommand = new Promise<CommandRegistry>(
   async (resolve) => {
     resolve({
-      command: createLocalizedCommand('evolution', [
+      command: createLocalizedCommand("evolution", [
         {
-          group: 'player',
+          group: "player",
           modify(option: SlashCommandSubcommandGroupBuilder) {
             addPeriodSubCommands(option, (option) =>
-              option.addStringOption(addUsernameChoices),
+              option.addStringOption(addUsernameChoices)
             );
           },
         },
         {
-          group: 'tank',
+          group: "tank",
           modify(option: SlashCommandSubcommandGroupBuilder) {
             addPeriodSubCommands(option, (option) =>
               option
                 .addStringOption(addTankChoices)
-                .addStringOption(addUsernameChoices),
+                .addStringOption(addUsernameChoices)
             );
           },
         },
@@ -136,9 +136,9 @@ export const evolutionCommand = new Promise<CommandRegistry>(
           interaction.options.getSubcommandGroup() as EvolutionStatType;
         const player = await resolvePlayerFromCommand(interaction);
         const period = resolvePeriodFromCommand(player.region, interaction);
-        const tankIdRaw = interaction.options.getString('tank')!;
+        const tankIdRaw = interaction.options.getString("tank")!;
         const tankId =
-          commandGroup === 'tank'
+          commandGroup === "tank"
             ? await resolveTankId(tankIdRaw, interaction.locale)
             : null;
         const path = commandToURL(interaction, {
@@ -153,13 +153,13 @@ export const evolutionCommand = new Promise<CommandRegistry>(
             period,
             commandGroup,
             tankId,
-            interaction.locale,
+            interaction.locale
           ),
           buttonRefresh(interaction, path),
           await getBlitzStarsLinkButton(
             player.region,
             player.id,
-            tankId ?? undefined,
+            tankId ?? undefined
           ),
         ];
       },
@@ -171,7 +171,7 @@ export const evolutionCommand = new Promise<CommandRegistry>(
 
       async button(interaction) {
         const url = new URL(`https://example.com/${interaction.customId}`);
-        const path = url.pathname.split('/');
+        const path = url.pathname.split("/");
         const commandGroup = path[2] as EvolutionStatType;
         const player = await resolvePlayerFromButton(interaction);
         const period = resolvePeriodFromButton(player.region, interaction);
@@ -180,10 +180,10 @@ export const evolutionCommand = new Promise<CommandRegistry>(
           player,
           period,
           commandGroup,
-          parseInt(url.searchParams.get('tankId') ?? '0') || null,
-          interaction.locale,
+          parseInt(url.searchParams.get("tankId") ?? "0") || null,
+          interaction.locale
         );
       },
     });
-  },
+  }
 );

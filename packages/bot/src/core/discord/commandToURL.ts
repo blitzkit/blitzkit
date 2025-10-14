@@ -1,4 +1,4 @@
-import { CacheType, ChatInputCommandInteraction } from 'discord.js';
+import { type CacheType, ChatInputCommandInteraction } from "discord.js";
 
 export interface Parameters {
   [key: string]: string | number | boolean | undefined | null;
@@ -9,7 +9,7 @@ export interface Parameters {
 
 export function commandToURL(
   interaction: ChatInputCommandInteraction<CacheType>,
-  parameters?: Parameters,
+  parameters?: Parameters
 ) {
   const pathname = [
     interaction.commandName,
@@ -17,11 +17,11 @@ export function commandToURL(
     interaction.options.getSubcommand(false),
   ]
     .filter(Boolean)
-    .join('/');
+    .join("/");
   const params = (parameters ? Object.entries(parameters) : [])
     .filter(([, value]) => value !== undefined && value !== null)
     .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+    .join("&");
 
-  return `${pathname}${params.length > 0 ? `?${params}` : ''}`;
+  return `${pathname}${params.length > 0 ? `?${params}` : ""}`;
 }

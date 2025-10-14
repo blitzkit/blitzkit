@@ -11,7 +11,7 @@ import { NoData } from '../components/NoData';
 import { TierWeights } from '../components/TierWeights';
 import { TitleBar } from '../components/TitleBar';
 import { filtersToDescription } from '../core/blitzkit/filtersToDescription';
-import { filterStats, StatFilters } from '../core/blitzstars/filterStats';
+import { filterStats, type StatFilters } from '../core/blitzstars/filterStats';
 import { getBlitzStarsLinkButton } from '../core/blitzstars/getBlitzStarsLinkButton';
 import { getStatsInPeriod } from '../core/blitzstars/getStatsInPeriod';
 import { addPeriodicFilterOptions } from '../core/discord/addPeriodicFilterOptions';
@@ -26,15 +26,15 @@ import { getFiltersFromButton } from '../core/discord/getFiltersFromButton';
 import { getFiltersFromCommand } from '../core/discord/getFiltersFromCommand';
 import { resolvePeriodFromButton } from '../core/discord/resolvePeriodFromButton';
 import {
-  ResolvedPeriod,
+  type ResolvedPeriod,
   resolvePeriodFromCommand,
 } from '../core/discord/resolvePeriodFromCommand';
 import { resolvePlayerFromButton } from '../core/discord/resolvePlayerFromButton';
 import {
-  ResolvedPlayer,
+  type ResolvedPlayer,
   resolvePlayerFromCommand,
 } from '../core/discord/resolvePlayerFromCommand';
-import { CommandRegistry } from '../events/interactionCreate';
+import type { CommandRegistry } from '../events/interactionCreate';
 
 async function render(
   { region, id }: ResolvedPlayer,

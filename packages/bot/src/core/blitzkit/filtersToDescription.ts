@@ -1,7 +1,7 @@
 import { fetchTankDefinitions, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { Locale } from "discord.js";
-import { StatFilters } from "../blitzstars/filterStats";
+import { type StatFilters } from "../blitzstars/filterStats";
 import { translator } from "../localization/translator";
 
 export async function filtersToDescription(

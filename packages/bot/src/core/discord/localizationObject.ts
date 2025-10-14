@@ -1,4 +1,4 @@
-import { BlitzKitStrings, literals as literalsFunc } from "@blitzkit/i18n";
+import { type BlitzKitStrings, literals as literalsFunc } from "@blitzkit/i18n";
 import { Locale } from "discord.js";
 import { SUPPORTED_LOCALES_DISCORD } from "../localization/strings/constants";
 import { translator } from "../localization/translator";

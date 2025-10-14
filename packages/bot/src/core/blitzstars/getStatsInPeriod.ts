@@ -1,11 +1,11 @@
-import { BlitzStats, emptyAllStats, Region } from '@blitzkit/core';
-import { Locale } from 'discord.js';
-import { DiffedTankStats } from './filterStats';
+import { type BlitzStats, emptyAllStats, type Region } from "@blitzkit/core";
+import { Locale } from "discord.js";
+import type { DiffedTankStats } from "./filterStats";
 import {
   getTankHistories,
-  TankHistories,
-  TankHistoryRaw,
-} from './getTankHistories';
+  type TankHistories,
+  type TankHistoryRaw,
+} from "./getTankHistories";
 
 const emptyTankHistoryNode: TankHistoryRaw = {
   account_id: 0,
@@ -22,7 +22,7 @@ export async function getStatsInPeriod(
   id: number,
   start: number,
   end: number,
-  locale: Locale,
+  locale: Locale
 ) {
   const history = await getTankHistories(server, id, locale, {
     includeLatestHistories: true,
@@ -43,8 +43,8 @@ export async function getStatsInPeriod(
   // find the ones played within the range
   const inRangeTanks = tanks.filter((tankId) =>
     tankSortedHistory[tankId].some(
-      (node) => node.last_battle_time > start && node.last_battle_time < end,
-    ),
+      (node) => node.last_battle_time > start && node.last_battle_time < end
+    )
   );
   const playedTanks: number[] = [];
 

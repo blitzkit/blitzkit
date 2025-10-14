@@ -1,8 +1,8 @@
-import { IndividualTankStats, emptyIndividualTankStats } from '../types';
+import { type IndividualTankStats, emptyIndividualTankStats } from "../types";
 
 export function deltaTankStats(
   tanksA: IndividualTankStats[],
-  tanksB: IndividualTankStats[],
+  tanksB: IndividualTankStats[]
 ) {
   return tanksB
     .map((b) => {

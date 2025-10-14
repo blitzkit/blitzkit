@@ -1,6 +1,6 @@
-import { ClanList } from "./clans";
+import type { ClanList } from "./clans";
 import { fetchBlitz } from "./fetchBlitz";
-import { Region } from "./regions";
+import type { Region } from "./regions";
 
 export async function searchClansAcrossRegions(search: string, limit = 25) {
   const trimmed = search.trim();

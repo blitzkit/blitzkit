@@ -1,11 +1,11 @@
-import { REGIONS } from '@blitzkit/core';
+import { REGIONS } from "@blitzkit/core";
 import {
-  APIApplicationCommandOptionChoice,
+  type APIApplicationCommandOptionChoice,
   Locale,
   SlashCommandStringOption,
-} from 'discord.js';
-import { translator } from '../localization/translator';
-import { localizationObject } from './localizationObject';
+} from "discord.js";
+import { translator } from "../localization/translator";
+import { localizationObject } from "./localizationObject";
 
 export function addRegionChoices(option: SlashCommandStringOption) {
   const { strings } = translator(Locale.EnglishUS);
@@ -16,14 +16,14 @@ export function addRegionChoices(option: SlashCommandStringOption) {
       localizationObject(
         (strings) => strings.bot.common.options.region.name,
         undefined,
-        true,
-      ),
+        true
+      )
     )
     .setDescription(strings.bot.common.options.region.description)
     .setDescriptionLocalizations(
       localizationObject(
-        (strings) => strings.bot.common.options.region.description,
-      ),
+        (strings) => strings.bot.common.options.region.description
+      )
     )
     .addChoices(
       ...REGIONS.map(
@@ -32,10 +32,10 @@ export function addRegionChoices(option: SlashCommandStringOption) {
             value: region,
             name: strings.common.regions.normal[region],
             name_localizations: localizationObject(
-              (strings) => strings.common.regions.normal[region],
+              (strings) => strings.common.regions.normal[region]
             ),
-          }) satisfies APIApplicationCommandOptionChoice,
-      ),
+          }) satisfies APIApplicationCommandOptionChoice
+      )
     )
     .setRequired(true);
 }

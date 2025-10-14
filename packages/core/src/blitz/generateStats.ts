@@ -1,14 +1,14 @@
-import { BlitzStats, calculateWN8 } from "../statistics";
+import { type BlitzStats, calculateWN8 } from "../statistics";
 
 export type Stat = keyof ReturnType<typeof generateStats>;
 
 export const STAT_NAMES: Record<Stat, string> = {
-  battles: 'Battles',
-  winrate: 'Winrate',
-  wn8: 'WN8',
-  averageDamage: 'Damage',
-  damage: 'Accumulated damage',
-  wins: 'Wins',
+  battles: "Battles",
+  winrate: "Winrate",
+  wn8: "WN8",
+  averageDamage: "Damage",
+  damage: "Accumulated damage",
+  wins: "Wins",
 };
 
 export const STAT_KEYS = Object.keys(STAT_NAMES) as Stat[];
@@ -29,7 +29,7 @@ export function prettifyStats(s: ReturnType<typeof generateStats>) {
     battles: `${s.battles}`,
     wins: `${s.wins}`,
     winrate: `${(s.winrate * 100).toFixed(0)}%`,
-    wn8: s.wn8 ? s.wn8.toFixed(0) : '--',
+    wn8: s.wn8 ? s.wn8.toFixed(0) : "--",
     damage: `${s.damage}`,
     averageDamage: s.averageDamage.toFixed(0),
   } satisfies Record<Stat, string>;

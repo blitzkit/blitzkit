@@ -1,6 +1,6 @@
 import { fetchBlitz } from "./fetchBlitz";
 import { normalizeIds } from "./normalizeIds";
-import { Region } from "./regions";
+import type { Region } from "./regions";
 
 interface IndividualAccountAchievements {
   achievements: {

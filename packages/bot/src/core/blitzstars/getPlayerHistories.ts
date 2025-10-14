@@ -1,11 +1,11 @@
-import { Region, emptyAllStats, getAccountInfo } from '@blitzkit/core';
+import { type Region, emptyAllStats, getAccountInfo } from '@blitzkit/core';
 import {
-  GetHistoriesOptions,
-  Histories,
-  History,
+  type GetHistoriesOptions,
+  type Histories,
+  type History,
   getHistoriesDefaultOptions,
 } from '../../types/histories';
-import { PlayerStats } from './getPlayerStats';
+import type { PlayerStats } from './getPlayerStats';
 
 export async function getPlayerHistories(
   server: Region,

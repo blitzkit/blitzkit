@@ -1,6 +1,6 @@
-import { GenericStat } from '..';
-import { theme } from '../../../stitches.config';
-import { PercentileIndicator } from '../../PercentileIndicator';
+import { type GenericStat } from "..";
+import { theme } from "../../../stitches.config";
+import { PercentileIndicator } from "../../PercentileIndicator";
 
 interface GenericStatsRowProps {
   stat: GenericStat;
@@ -10,18 +10,18 @@ export function GenericStatsRow({ stat }: GenericStatsRowProps) {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}
     >
       <span
         style={{
           color: theme.colors.textLowContrast,
           fontSize: 16,
-          whiteSpace: 'nowrap',
+          whiteSpace: "nowrap",
           maxWidth: 128,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         {stat[0]}
@@ -32,9 +32,9 @@ export function GenericStatsRow({ stat }: GenericStatsRowProps) {
           color: theme.colors.textHighContrast,
           fontWeight: 700,
           fontSize: 16,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           gap: 4,
         }}
       >

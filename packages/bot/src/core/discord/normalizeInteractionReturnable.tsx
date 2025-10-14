@@ -3,12 +3,12 @@ import {
   AttachmentBuilder,
   ButtonBuilder,
   EmbedBuilder,
-  InteractionEditReplyOptions,
-  InteractionReplyOptions,
-  MessageEditOptions,
+  type InteractionEditReplyOptions,
+  type InteractionReplyOptions,
+  type MessageEditOptions,
 } from "discord.js";
-import { InteractionReturnable } from "../../events/interactionCreate";
-import { Writeable } from "../../types/writable";
+import type { InteractionReturnable } from "../../events/interactionCreate";
+import type { Writeable } from "../../types/writable";
 import { jsxToPngThreaded } from "../blitzkit/jsxToPngThreaded";
 import { RenderConfiguration } from "../blitzkit/renderConfiguration";
 

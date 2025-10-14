@@ -19,7 +19,7 @@ import { chunkLines } from "../core/discord/chunkLines";
 import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { resolvePlayerFromCommand } from "../core/discord/resolvePlayerFromCommand";
 import { translator } from "../core/localization/translator";
-import { CommandRegistry } from "../events/interactionCreate";
+import { type CommandRegistry } from "../events/interactionCreate";
 
 export const ownedTanksCommand = new Promise<CommandRegistry>((resolve) => {
   resolve({
