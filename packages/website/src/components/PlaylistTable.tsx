@@ -39,6 +39,10 @@ export function PlaylistTable() {
             {strings.website.tools.playlist.table.last_played}
           </StickyColumnHeaderCell>
 
+          <StickyColumnHeaderCell width="1">
+            {strings.website.tools.playlist.table.battles}
+          </StickyColumnHeaderCell>
+
           <StickyColumnHeaderCell width="0" />
 
           <StickyColumnHeaderCell width="0" />

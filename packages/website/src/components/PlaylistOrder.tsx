@@ -1,11 +1,10 @@
-import { Box, Button, Flex } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { useLocale } from "../hooks/useLocale";
-import { Playlist } from "../stores/playlist";
 import { CurrentlyPlaying } from "./CurrentlyPlaying";
+import { PlaylistActions } from "./PlaylistActions";
 import { PlaylistTable } from "./PlaylistTable";
 
 export function PlaylistOrder() {
-  const { strings } = useLocale();
 
   return (
     <Flex
@@ -18,15 +17,7 @@ export function PlaylistOrder() {
     >
       <CurrentlyPlaying />
 
-      <Button
-        onClick={() => {
-          Playlist.mutate((draft) => {
-            draft.list = undefined;
-          });
-        }}
-      >
-        {strings.website.tools.playlist.clear}
-      </Button>
+      <PlaylistActions />
 
       <Box flexGrow="1" width="100%" position="relative">
         <PlaylistTable />

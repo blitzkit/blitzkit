@@ -860,12 +860,16 @@
 
     "tools": {
       "playlist": {
-        "clear": "Clear",
+        "reset": "Reset",
+        "shuffle": "Shuffle",
+        "sort": "Sort by",
+
         "table": {
           "index": "#",
           "never": "Never",
           "tank": "Tank",
-          "last_played": "Last played"
+          "last_played": "Last played",
+          "battles": "Battles"
         },
         "no_login_warning": "You are not logged in. BlitzKit will not keep track of your played tanks.",
         "generate": "Generate playlist",

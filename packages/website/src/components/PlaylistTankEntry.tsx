@@ -8,7 +8,13 @@ interface Props extends PlaylistEntry {
   index: number;
 }
 
-export function PlaylistTankEntry({ tank, checked, last, index }: Props) {
+export function PlaylistTankEntry({
+  tank,
+  checked,
+  last,
+  battles,
+  index,
+}: Props) {
   const { locale, strings } = useLocale();
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
   const nowDays = Date.now() / (1000 * 60 * 60 * 24);
@@ -25,6 +31,8 @@ export function PlaylistTankEntry({ tank, checked, last, index }: Props) {
           ? rtf.format(Math.floor(lastDays - nowDays), "day")
           : strings.website.tools.playlist.table.never}
       </Table.Cell>
+
+      <Table.Cell>{battles}</Table.Cell>
 
       <Table.Cell
         onClick={() => {
