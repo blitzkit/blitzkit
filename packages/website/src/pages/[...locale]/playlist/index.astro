@@ -8,7 +8,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.params;
 ---
 
-<ToolLayout {locale} tool={tools.playlist}>
+<ToolLayout {locale} tool={tools.playlist} noFooter>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

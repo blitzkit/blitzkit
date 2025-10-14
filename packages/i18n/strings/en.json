@@ -862,7 +862,10 @@
       "playlist": {
         "clear": "Clear",
         "table": {
-          "tank": "Tank"
+          "index": "#",
+          "never": "Never",
+          "tank": "Tank",
+          "last_played": "Last played"
         },
         "no_login_warning": "You are not logged in. BlitzKit will not keep track of your played tanks.",
         "generate": "Generate playlist",

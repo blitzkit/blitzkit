@@ -35,6 +35,8 @@ export async function generatePlaylist() {
       tank,
       battles: stats[tank.id]?.all.battles,
       wins: stats[tank.id]?.all.wins,
+      last: stats[tank.id]?.last_battle_time,
+      checked: false,
     }));
   });
 }

@@ -8,9 +8,11 @@ import BaseLayout from "./BaseLayout.astro";
 interface Props {
   tool: Tool;
   locale: string;
+  noNavbar?: boolean;
+  noFooter?: boolean;
 }
 
-const { tool, locale } = Astro.props;
+const { tool, locale, noNavbar, noFooter } = Astro.props;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
@@ -20,7 +22,7 @@ const toolStrings =
 
 <ToolOpenGraph {tool} />
 
-<BaseLayout {locale}>
+<BaseLayout {locale} {noNavbar} {noFooter}>
   <Box
     style={{
       backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,

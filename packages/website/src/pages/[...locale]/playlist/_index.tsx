@@ -29,7 +29,7 @@ export function Page({
 
   return (
     <LocaleProvider locale={locale}>
-      <PageWrapper color="tomato" direction="row">
+      <PageWrapper color="tomato" direction="row" maxWidth="unset" p="0">
         {!list && <PlaylistGenerator />}
         {list && <PlaylistOrder />}
       </PageWrapper>
