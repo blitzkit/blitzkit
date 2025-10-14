@@ -16,7 +16,8 @@
     "isolatedModules": true,
     "paths": {
       "@protos/*": ["./packages/closed/protos/*"]
-    }
+    },
+    "verbatimModuleSyntax": true
   },
-  "exclude": ["node_modules/**/*", "dist", ".next"]
+  "exclude": ["node_modules/**/*", "dist"]
 }
