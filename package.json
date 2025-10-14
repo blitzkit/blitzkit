@@ -1,12 +1,12 @@
 {
   "name": "blitzkit",
   "version": "1.28.4",
-  "dependencies": {
-    "lodash-es": "^4.17.21"
-  },
-  "description": "🎉 Tools for everything World of Tanks Blitz",
-  "license": "MIT",
+  "license": "BlitzKit License",
   "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build:assets": "cd packages/scripts && bun run build:assets",
     "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
@@ -40,10 +40,5 @@
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
     "prunestrings": "cd packages/scripts && bun prunestrings"
-  },
-  "type": "module",
-  "types": "./types.d.ts",
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

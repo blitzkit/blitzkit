@@ -3,9 +3,6 @@
   "workspaces": {
     "": {
       "name": "blitzkit",
-      "dependencies": {
-        "lodash-es": "^4.17.21",
-      },
     },
     "packages/app": {
       "name": "@blitzkit/app",
