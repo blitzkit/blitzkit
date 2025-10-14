@@ -10,18 +10,18 @@ import {
   Region,
   REGIONS,
   regionToRegionSubdomain,
-} from '@blitzkit/core';
-import { chunk } from 'lodash';
-import { argv } from 'process';
-import { commitAssets } from './core/github/commitAssets';
-import { FileChange } from './core/github/commitMultipleFiles';
+} from "@blitzkit/core";
+import { chunk } from "lodash-es";
+import { argv } from "process";
+import { commitAssets } from "./core/github/commitAssets";
+import { FileChange } from "./core/github/commitMultipleFiles";
 
 const region = argv
-  .find((arg) => arg.startsWith('--region='))
-  ?.split('=')[1] as Region | undefined;
+  .find((arg) => arg.startsWith("--region="))
+  ?.split("=")[1] as Region | undefined;
 
 if (region === undefined || !REGIONS.includes(region)) {
-  throw new Error('No valid region specified');
+  throw new Error("No valid region specified");
 }
 
 console.log(`Building rating leaderboard for ${region}`);
@@ -29,11 +29,11 @@ console.log(`Building rating leaderboard for ${region}`);
 const regionSubdomain = regionToRegionSubdomain(region);
 const NEIGHBORS = 2 ** 8;
 const PLAYERS = await patientFetchJSON<RatingInfo>(
-  `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/season/`,
+  `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/season/`
 ).then((data) => (data.detail === undefined ? data.count : undefined));
 
 if (PLAYERS === undefined) {
-  throw new Error('No current rating season running');
+  throw new Error("No current rating season running");
 }
 
 const players: Record<number, RatingPlayer> = {};
@@ -43,7 +43,7 @@ let registered = 0;
 
 async function branchFromPlayer(id: number) {
   const { neighbors } = await patientFetchJSON<RatingNeighbors>(
-    `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/user/${id}/?neighbors=${NEIGHBORS}`,
+    `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/user/${id}/?neighbors=${NEIGHBORS}`
   );
 
   const firstPlayer = neighbors[0];
@@ -66,7 +66,7 @@ async function branchFromPlayer(id: number) {
     `Registered ${registered} / ${PLAYERS} (${(
       (registered / PLAYERS!) *
       100
-    ).toFixed(2)}%)`,
+    ).toFixed(2)}%)`
   );
 
   await Promise.all(branches);
@@ -74,7 +74,7 @@ async function branchFromPlayer(id: number) {
 
 async function branchFromLeague(id: number) {
   const { result } = await patientFetchJSON<{ result: RatingPlayer[] }>(
-    `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/league/${id}/top/`,
+    `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/league/${id}/top/`
   );
 
   const firstPlayer = result[0];
@@ -86,7 +86,7 @@ async function branchFromLeague(id: number) {
   ]);
 }
 
-console.log('Branching from leagues...');
+console.log("Branching from leagues...");
 await Promise.all([
   branchFromLeague(0),
   branchFromLeague(1),
@@ -95,7 +95,7 @@ await Promise.all([
   branchFromLeague(4),
 ]);
 
-console.log('Converting to an array...');
+console.log("Converting to an array...");
 for (let index = 0; index < PLAYERS; index++) {
   const listing = players[index + 1];
   if (listing) {
@@ -106,18 +106,18 @@ for (let index = 0; index < PLAYERS; index++) {
   }
 }
 
-console.log('Requesting further stats...');
+console.log("Requesting further stats...");
 const entries: RatingLeaderboardEntryV2[] = [];
 let chunkIndex = 0;
 for (const leaderboardChunk of chunk(entriesV1, 100)) {
   console.log(
-    `Chunk ${chunkIndex + 1} of ${Math.ceil(entriesV1.length / 100)}`,
+    `Chunk ${chunkIndex + 1} of ${Math.ceil(entriesV1.length / 100)}`
   );
 
   const stats = await getAccountInfo(
     region,
     leaderboardChunk.map(({ id }) => id),
-    ['statistics.rating'],
+    ["statistics.rating"]
   );
 
   stats.forEach((stat, index) => {
@@ -153,12 +153,12 @@ for (const leaderboardChunk of chunk(entriesV1, 100)) {
 }
 
 const info = await patientFetchJSON<RatingInfo & { detail: undefined }>(
-  `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/season/`,
+  `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/season/`
 );
-const normalizedServer = regionSubdomain === 'na' ? 'com' : regionSubdomain;
+const normalizedServer = regionSubdomain === "na" ? "com" : regionSubdomain;
 
 const content = RatingLeaderboard.encode({
-  version: { $case: 'v2', value: { entries } },
+  version: { $case: "v2", value: { entries } },
 }).finish();
 
 const changes: FileChange[] = [
