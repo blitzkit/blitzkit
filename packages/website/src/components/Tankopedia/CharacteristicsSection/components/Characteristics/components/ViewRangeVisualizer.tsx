@@ -123,7 +123,7 @@ export function ViewRangeVisualizer({ stats }: StatsAcceptorProps) {
         <Code size="1" color="gray" variant="ghost">
           <Flex justify="center" width="2em">
             {literals(strings.common.units.percentage, {
-              percentage: `${Math.round(camouflage * 100)}`.padStart(3, " "),
+              value: `${Math.round(camouflage * 100)}`.padStart(3, " "),
             })}
           </Flex>
         </Code>
