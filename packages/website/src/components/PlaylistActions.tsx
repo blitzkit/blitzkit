@@ -46,9 +46,10 @@ export function PlaylistActions() {
                 Playlist.mutate((draft) => {
                   draft.list = draft.list?.filter(
                     (entry) =>
-                      !entry.now ||
-                      !entry.then ||
-                      entry.now.battles === entry.then.battles
+                      (!entry.now ||
+                        !entry.then ||
+                        entry.now.battles === entry.then.battles) &&
+                      !entry.checked
                   );
                 });
               }}
