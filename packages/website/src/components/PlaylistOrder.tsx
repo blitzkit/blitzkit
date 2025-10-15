@@ -1,11 +1,9 @@
 import { Box, Flex } from "@radix-ui/themes";
-import { useLocale } from "../hooks/useLocale";
 import { CurrentlyPlaying } from "./CurrentlyPlaying";
 import { PlaylistActions } from "./PlaylistActions";
 import { PlaylistTable } from "./PlaylistTable";
 
 export function PlaylistOrder() {
-
   return (
     <Flex
       direction="column"

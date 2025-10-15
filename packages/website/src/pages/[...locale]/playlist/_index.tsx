@@ -16,7 +16,7 @@ export function Page({
   locale,
   skeleton,
 }: Props & MaybeSkeletonComponentProps) {
-  const list = Playlist.use((state) => state.list);
+  const generated = Playlist.use((state) => state.list !== undefined);
   const wargaming = App.use((state) => state.logins.wargaming);
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export function Page({
   return (
     <LocaleProvider locale={locale}>
       <PageWrapper color="tomato" direction="row" maxWidth="unset" p="0">
-        {!list && <PlaylistGenerator />}
-        {list && <PlaylistOrder />}
+        {!generated && <PlaylistGenerator />}
+        {generated && <PlaylistOrder />}
       </PageWrapper>
     </LocaleProvider>
   );
