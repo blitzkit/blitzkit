@@ -862,14 +862,22 @@
       "playlist": {
         "reset": "Reset",
         "shuffle": "Shuffle",
-        "sort": "Sort by",
+        "remove": "Remove played",
+
+        "sort": {
+          "button": "Sort by",
+          "last_played": "Last played",
+          "least_played": "Least played"
+        },
 
         "table": {
           "index": "#",
           "never": "Never",
           "tank": "Tank",
           "last_played": "Last played",
-          "battles": "Battles"
+          "battles": "Career battles",
+          "unrecorded": "--",
+          "wins": "Wins"
         },
         "no_login_warning": "You are not logged in. BlitzKit will not keep track of your played tanks.",
         "generate": "Generate playlist",

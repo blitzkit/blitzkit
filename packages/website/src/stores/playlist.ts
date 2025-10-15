@@ -1,12 +1,10 @@
-import type { TankDefinition } from "@blitzkit/core";
 import { Varuna } from "varuna";
 
 export interface PlaylistEntry {
-  tank: TankDefinition;
-  battles?: number;
-  wins?: number;
-  checked: boolean;
-  last?: number;
+  id: number;
+  then?: { battles: number; wins: number; last: number };
+  now?: { battles: number; wins: number; last: number };
+  checked?: boolean;
 }
 
 export interface Playlist {

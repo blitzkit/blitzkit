@@ -2,6 +2,7 @@ import { Box, Flex } from "@radix-ui/themes";
 import { CurrentlyPlaying } from "./CurrentlyPlaying";
 import { PlaylistActions } from "./PlaylistActions";
 import { PlaylistTable } from "./PlaylistTable";
+import { PlaylistTracking } from "./PlaylistTracking";
 
 export function PlaylistOrder() {
   return (
@@ -15,6 +16,7 @@ export function PlaylistOrder() {
     >
       <CurrentlyPlaying />
       <PlaylistActions />
+      <PlaylistTracking />
 
       <Box flexGrow="1" width="100%" position="relative">
         <PlaylistTable />

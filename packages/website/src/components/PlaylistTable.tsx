@@ -31,27 +31,31 @@ export function PlaylistTable() {
             </Text>
           </StickyColumnHeaderCell>
 
+          <StickyColumnHeaderCell width="0" />
+
+          <StickyColumnHeaderCell width="0" />
+
           <StickyColumnHeaderCell width="1">
             {strings.website.tools.playlist.table.tank}
           </StickyColumnHeaderCell>
 
           <StickyColumnHeaderCell width="1">
-            {strings.website.tools.playlist.table.last_played}
+            {strings.website.tools.playlist.table.wins}
           </StickyColumnHeaderCell>
 
           <StickyColumnHeaderCell width="1">
             {strings.website.tools.playlist.table.battles}
           </StickyColumnHeaderCell>
 
-          <StickyColumnHeaderCell width="0" />
-
-          <StickyColumnHeaderCell width="0" />
+          <StickyColumnHeaderCell width="1">
+            {strings.website.tools.playlist.table.last_played}
+          </StickyColumnHeaderCell>
         </Table.Row>
       </Table.Header>
 
       <Table.Body>
         {list.map((props, index) => (
-          <PlaylistTankEntry key={props.tank.id} index={index} {...props} />
+          <PlaylistTankEntry key={props.id} index={index} {...props} />
         ))}
       </Table.Body>
     </StickyTableRoot>
