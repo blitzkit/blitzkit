@@ -19,6 +19,7 @@ import {
   Popover,
   Text,
   Tooltip,
+  type ButtonProps,
   type FlexProps,
 } from "@radix-ui/themes";
 import { isEqual, times } from "lodash-es";
@@ -37,10 +38,6 @@ import { ResearchedIcon } from "../../ResearchedIcon";
 import { ScienceIcon } from "../../ScienceIcon";
 import { ScienceOffIcon } from "../../ScienceOffIcon";
 
-interface FilterControlProps {
-  compact?: boolean;
-}
-
 const gameDefinitions = await awaitableGameDefinitions;
 
 const shellTypeIcons: Record<ShellType, string> = {
@@ -50,13 +47,21 @@ const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.HEAT]: "hc",
 };
 
+const size: ButtonProps["size"] = { initial: "1", xs: "2" };
+
 function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
   const shells = TankFilters.use((state) => state.shells);
 
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <IconButton variant="soft" radius="none" color="gray" highContrast>
+        <IconButton
+          size={size}
+          variant="soft"
+          radius="none"
+          color="gray"
+          highContrast
+        >
           {shells[index] === null && (
             <Text color="gray" style={{ display: "contents" }}>
               <MissingShellIcon width="1em" height="1em" />
@@ -83,6 +88,7 @@ function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
 
               return (
                 <IconButton
+                  size={size}
                   key={shellType}
                   value={`${shellType}`}
                   radius="none"
@@ -127,6 +133,7 @@ function OwnershipFilter(props: FlexProps) {
       {...props}
     >
       <IconButton
+        size={size}
         disabled={!wargaming}
         variant={tankFilters.ownership === "all" ? "solid" : "soft"}
         radius="none"
@@ -142,6 +149,7 @@ function OwnershipFilter(props: FlexProps) {
       </IconButton>
 
       <IconButton
+        size={size}
         disabled={!wargaming}
         variant={tankFilters.ownership === "owned" ? "solid" : "soft"}
         radius="none"
@@ -157,6 +165,7 @@ function OwnershipFilter(props: FlexProps) {
       </IconButton>
 
       <IconButton
+        size={size}
         disabled={!wargaming}
         variant={tankFilters.ownership === "unowned" ? "solid" : "soft"}
         radius="none"
@@ -195,6 +204,7 @@ export function FilterControl() {
 
               return (
                 <IconButton
+                  size={size}
                   key={tier}
                   variant={selected ? "solid" : "soft"}
                   radius="none"
@@ -233,6 +243,7 @@ export function FilterControl() {
 
               return (
                 <IconButton
+                  size={size}
                   key={tier}
                   variant={selected ? "solid" : "soft"}
                   radius="none"
@@ -270,6 +281,7 @@ export function FilterControl() {
 
                 return (
                   <IconButton
+                    size={size}
                     key={nation}
                     variant={selected ? "solid" : "soft"}
                     color={selected ? undefined : "gray"}
@@ -312,6 +324,7 @@ export function FilterControl() {
 
                 return (
                   <IconButton
+                    size={size}
                     key={nation}
                     style={{ flex: 1 }}
                     variant={selected ? "solid" : "soft"}
@@ -351,6 +364,7 @@ export function FilterControl() {
 
             return (
               <IconButton
+                size={size}
                 key={tankClass}
                 variant={selected ? "solid" : "soft"}
                 radius="none"
@@ -380,6 +394,7 @@ export function FilterControl() {
           direction="column"
         >
           <IconButton
+            size={size}
             variant={tankFilters.gunType.includes("regular") ? "solid" : "soft"}
             radius="none"
             color={tankFilters.gunType.includes("regular") ? undefined : "gray"}
@@ -397,6 +412,7 @@ export function FilterControl() {
             <GunRegularIcon style={{ width: "1em", height: "1em" }} />
           </IconButton>
           <IconButton
+            size={size}
             variant={
               tankFilters.gunType.includes("auto_loader") ? "solid" : "soft"
             }
@@ -420,6 +436,7 @@ export function FilterControl() {
             <GunAutoloaderIcon style={{ width: "1em", height: "1em" }} />
           </IconButton>
           <IconButton
+            size={size}
             variant={
               tankFilters.gunType.includes("auto_reloader") ? "solid" : "soft"
             }
@@ -460,6 +477,7 @@ export function FilterControl() {
           direction="column"
         >
           <IconButton
+            size={size}
             variant={
               tankFilters.types?.includes(TankType.RESEARCHABLE)
                 ? "solid"
@@ -487,6 +505,7 @@ export function FilterControl() {
             <ResearchedIcon style={{ width: "1em", height: "1em" }} />
           </IconButton>
           <IconButton
+            size={size}
             variant={
               tankFilters.types?.includes(TankType.PREMIUM) ? "solid" : "soft"
             }
@@ -519,6 +538,7 @@ export function FilterControl() {
             </Text>
           </IconButton>
           <IconButton
+            size={size}
             variant={
               tankFilters.types?.includes(TankType.COLLECTOR) ? "solid" : "soft"
             }
@@ -558,6 +578,7 @@ export function FilterControl() {
           direction="column"
         >
           <IconButton
+            size={size}
             variant={tankFilters.testing === "include" ? "solid" : "soft"}
             radius="none"
             color={tankFilters.testing === "include" ? undefined : "gray"}
@@ -571,6 +592,7 @@ export function FilterControl() {
             <ComponentBooleanIcon />
           </IconButton>
           <IconButton
+            size={size}
             variant={tankFilters.testing === "exclude" ? "solid" : "soft"}
             radius="none"
             color={tankFilters.testing === "exclude" ? undefined : "gray"}
@@ -586,6 +608,7 @@ export function FilterControl() {
             />
           </IconButton>
           <IconButton
+            size={size}
             variant={tankFilters.testing === "only" ? "solid" : "soft"}
             radius="none"
             color={tankFilters.testing === "only" ? undefined : "gray"}

@@ -77,13 +77,14 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
         </AlertDialog.Content>
       </AlertDialog.Root>
 
-      <Flex justify="center" width="100%" align="center">
+      <Flex justify="center" width="100%" align="center" px="4">
         <Flex
           flexGrow="1"
           gap="9"
           align="center"
           justify="center"
           maxWidth="80rem"
+          direction={{ initial: "column-reverse", md: "row" }}
         >
           <Flex direction="column" gap="4" align="center">
             <FilterControl />
@@ -109,6 +110,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
             flexBasis="0"
             align="center"
             gap="4"
+            width="100%"
           >
             <Grid
               columns="repeat(auto-fill, minmax(4rem, 1fr))"
