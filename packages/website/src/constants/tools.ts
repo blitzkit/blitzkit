@@ -37,6 +37,7 @@ export const tools: Record<string, Tool> = {
   },
   playlist: {
     id: "playlist",
+    disabled: true,
     button: "tomato",
   },
   mixer: {
