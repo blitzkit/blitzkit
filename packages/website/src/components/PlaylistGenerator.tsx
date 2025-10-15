@@ -123,6 +123,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
               {tanksTrimmed.map((tank) =>
                 skeleton ? (
                   <Box
+                    key={tank.id}
                     width="100%"
                     height="100%"
                     style={{ aspectRatio: "4 / 3" }}
@@ -132,10 +133,10 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
                   </Box>
                 ) : (
                   <LinkI18n
+                    key={tank.id}
                     target="_blank"
                     locale={locale}
                     href={`/tanks/${tank.slug}`}
-                    key={tank.id}
                     style={{
                       aspectRatio: "4 / 3",
                       backgroundSize: "cover",
