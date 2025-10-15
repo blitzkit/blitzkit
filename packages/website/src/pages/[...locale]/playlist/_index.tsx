@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { PageWrapper } from "../../../components/PageWrapper";
 import { PlaylistGenerator } from "../../../components/PlaylistGenerator";
 import { PlaylistOrder } from "../../../components/PlaylistOrder";
@@ -17,20 +16,13 @@ export function Page({
   skeleton,
 }: Props & MaybeSkeletonComponentProps) {
   const generated = Playlist.use((state) => state.list !== undefined);
-  const wargaming = App.use((state) => state.logins.wargaming);
 
-  useEffect(() => {
-    if (wargaming) {
-      TankFilters.mutate((draft) => {
-        draft.ownership = "owned";
-      });
-    }
-  }, []);
+  if (App.state.logins.wargaming) TankFilters.state.ownership = "owned";
 
   return (
     <LocaleProvider locale={locale}>
       <PageWrapper color="tomato" direction="row" maxWidth="unset" p="0">
-        {!generated && <PlaylistGenerator />}
+        {!generated && <PlaylistGenerator skeleton={skeleton} />}
         {generated && <PlaylistOrder />}
       </PageWrapper>
     </LocaleProvider>

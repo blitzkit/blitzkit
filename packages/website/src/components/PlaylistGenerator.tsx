@@ -1,7 +1,6 @@
 import { fisherYates, tankIcon } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Grid, Skeleton, Text } from "@radix-ui/themes";
 import { useMemo } from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
@@ -10,6 +9,7 @@ import { generatePlaylist } from "../core/blitzkit/generatePlaylist";
 import { useLocale } from "../hooks/useLocale";
 import { App } from "../stores/app";
 import { TankFilters } from "../stores/tankFilters";
+import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { LinkI18n } from "./LinkI18n";
 import { FilterControl } from "./TankSearch/components/FilterControl";
 
@@ -17,7 +17,7 @@ const tankDefinitions = await awaitableTankDefinitions;
 
 const POOL_HEIGHT = "16rem";
 
-export function PlaylistGenerator() {
+export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
   const { strings, locale } = useLocale();
   const wargaming = App.use((state) => state.logins.wargaming);
   const filters = TankFilters.use();
@@ -47,15 +47,6 @@ export function PlaylistGenerator() {
           <Button onClick={generatePlaylist} size="3">
             {strings.website.tools.playlist.generate}
           </Button>
-
-          {!wargaming && (
-            <Text color="gray">
-              <Flex align="center" gap="1">
-                <ExclamationTriangleIcon />
-                {strings.website.tools.playlist.no_login_warning}
-              </Flex>
-            </Text>
-          )}
         </Flex>
 
         <Flex
@@ -73,21 +64,32 @@ export function PlaylistGenerator() {
             maxHeight={POOL_HEIGHT}
             width="100%"
           >
-            {tanksTrimmed.map((tank) => (
-              <LinkI18n
-                target="_blank"
-                locale={locale}
-                href={`/tanks/${tank.slug}`}
-                key={tank.id}
-                style={{
-                  aspectRatio: "4 / 3",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundImage: `url(${tankIcon(tank.id)})`,
-                  backgroundRepeat: "no-repeat",
-                }}
-              />
-            ))}
+            {tanksTrimmed.map((tank) =>
+              skeleton ? (
+                <Box
+                  width="100%"
+                  height="100%"
+                  style={{ aspectRatio: "4 / 3" }}
+                  p="1"
+                >
+                  <Skeleton width="100%" height="100%" />
+                </Box>
+              ) : (
+                <LinkI18n
+                  target="_blank"
+                  locale={locale}
+                  href={`/tanks/${tank.slug}`}
+                  key={tank.id}
+                  style={{
+                    aspectRatio: "4 / 3",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundImage: `url(${tankIcon(tank.id)})`,
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+              )
+            )}
 
             <Box
               position="absolute"

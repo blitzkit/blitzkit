@@ -863,7 +863,7 @@
         "reset": "Reset",
         "shuffle": "Shuffle",
         "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your playlist",
+        "tracking": "BlitzKit is tracking your battles",
 
         "sort": {
           "button": "Sort by",
@@ -881,7 +881,6 @@
           "wins": "Wins"
         },
 
-        "no_login_warning": "You are not logged in. BlitzKit will not keep track of your played tanks.",
         "generate": "Generate playlist",
         "name": "Playlist",
         "description": "Tank playlist generator",
