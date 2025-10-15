@@ -14,7 +14,6 @@ export function PlaylistOrder() {
       maxHeight="100%"
     >
       <CurrentlyPlaying />
-
       <PlaylistActions />
 
       <Box flexGrow="1" width="100%" position="relative">

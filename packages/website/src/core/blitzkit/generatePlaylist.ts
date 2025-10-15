@@ -1,4 +1,5 @@
 import {
+  fisherYates,
   getTankStats,
   idToRegion,
   type IndividualTankStats,
@@ -24,14 +25,10 @@ export async function generatePlaylist() {
     }
   }
 
-  for (let i = filtered.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
-  }
+  fisherYates(filtered);
 
   Playlist.mutate((draft) => {
-    draft.list = filtered.map((tank, index) => ({
-      index,
+    draft.list = filtered.map((tank) => ({
       tank,
       battles: stats[tank.id]?.all.battles,
       wins: stats[tank.id]?.all.wins,

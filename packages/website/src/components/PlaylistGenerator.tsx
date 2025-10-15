@@ -1,4 +1,4 @@
-import { tankIcon } from "@blitzkit/core";
+import { fisherYates, tankIcon } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
@@ -21,16 +21,10 @@ export function PlaylistGenerator() {
   const { strings, locale } = useLocale();
   const wargaming = App.use((state) => state.logins.wargaming);
   const filters = TankFilters.use();
-  const randomTankList = useMemo(() => {
-    const list = Object.values(tankDefinitions.tanks);
-
-    for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-    }
-
-    return list;
-  }, [filters]);
+  const randomTankList = useMemo(
+    () => fisherYates(Object.values(tankDefinitions.tanks)),
+    [filters]
+  );
   const tanks = usePromise(
     () => filterTanks(filters, randomTankList, wargaming?.id),
     // react-promise-suspense has awful type annotations

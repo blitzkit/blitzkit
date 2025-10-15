@@ -1,3 +1,4 @@
+import { fisherYates } from "@blitzkit/core";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { Button, Flex } from "@radix-ui/themes";
 import { useLocale } from "../hooks/useLocale";
@@ -20,7 +21,14 @@ export function PlaylistActions() {
         {strings.website.tools.playlist.reset}
       </Button>
 
-      <Button variant="outline">
+      <Button
+        variant="outline"
+        onClick={() => {
+          Playlist.mutate((draft) => {
+            if (draft.list) fisherYates(draft.list);
+          });
+        }}
+      >
         {strings.website.tools.playlist.shuffle}
       </Button>
 
