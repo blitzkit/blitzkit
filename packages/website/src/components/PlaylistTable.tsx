@@ -20,6 +20,7 @@ export function PlaylistTable() {
         height: "100%",
         width: "100%",
         borderRadius: 0,
+        whiteSpace: "nowrap",
       }}
       variant="surface"
     >

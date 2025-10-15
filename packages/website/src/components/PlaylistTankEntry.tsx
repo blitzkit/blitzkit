@@ -35,6 +35,7 @@ export const PlaylistTankEntry = memo<Props>(
           }}
         >
           <Checkbox
+            size="3"
             variant="classic"
             checked={
               (checked === undefined &&
