@@ -28,9 +28,7 @@ export function PageWrapper({
       style={{
         flex: noFlex1 ? undefined : 1,
         display: "flex",
-        minHeight: noMinHeight
-          ? "unset"
-          : `calc(100svh - ${NAVBAR_HEIGHT}px - 7.75rem)`,
+        minHeight: noMinHeight ? "unset" : `calc(100svh - ${NAVBAR_HEIGHT}px)`,
         flexDirection: "column",
         ...containerProps?.style,
       }}
