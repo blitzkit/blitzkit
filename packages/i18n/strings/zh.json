@@ -284,7 +284,7 @@
           "name": "阶级",
           "description": "阶级",
           "choices": {
-            "tier": "Tier {tier_1} - {tier_2}"
+            "tier": "坦克等级 {tier_1} - {tier_2}"
           }
         }
       },
@@ -296,7 +296,7 @@
       },
       "filters": {
         "none": "无筛选器",
-        "tier": "Tier {tier}"
+        "tier": "坦克等级 {tier}"
       },
       "no_data": {
         "battles_in_period": "在这段时间里没有参与任何战斗",
@@ -347,7 +347,7 @@
         },
         "errors": {
           "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
-          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
+          "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
           "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
           "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
           "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
