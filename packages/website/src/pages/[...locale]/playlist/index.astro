@@ -2,18 +2,17 @@
 import ToolOpenGraph from "../../../components/ToolOpenGraph.astro";
 import { tools } from "../../../constants/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import type { getStaticPaths } from "../index.astro";
-import { Page } from "./_index";
+import { Page } from "./_index.tsx";
 
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.params;
 ---
 
-<ToolOpenGraph tool={tools.performance} />
+<ToolOpenGraph tool={tools.playlist} />
 
 <BaseLayout {locale} noFooter>
-  <Page client:only="react" {locale}>
-    <Page skeleton slot="fallback" {locale} />
+  <Page {locale} client:only="react">
+    <Page {locale} skeleton slot="fallback" />
   </Page>
 </BaseLayout>

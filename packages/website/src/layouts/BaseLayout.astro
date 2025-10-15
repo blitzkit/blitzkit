@@ -16,11 +16,11 @@ export interface Props {
   noFooter?: boolean;
   noNavbar?: boolean;
   integrated?: boolean;
+  locale: string;
 }
 
 const servicing = import.meta.env.SERVICING;
-const { noFooter, noNavbar, integrated } = Astro.props;
-const locale = Astro.params.locale;
+const { noFooter, noNavbar, integrated, locale } = Astro.props;
 ---
 
 <html lang={locale}>

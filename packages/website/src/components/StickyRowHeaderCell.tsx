@@ -1,15 +1,13 @@
-import { Table } from '@radix-ui/themes';
-import type { RowHeaderCellProps } from '@radix-ui/themes/src/components/table.js';
+import { Table } from "@radix-ui/themes";
+import type { RowHeaderCellProps } from "@radix-ui/themes/src/components/table.js";
 
 export function StickyRowHeaderCell({ style, ...props }: RowHeaderCellProps) {
   return (
     <Table.RowHeaderCell
       style={{
-        display: 'flex',
-        position: 'sticky',
+        position: "sticky",
         left: 0,
-        backgroundColor: 'var(--color-panel)',
-        boxShadow: 'var(--shadow-6)',
+        backgroundColor: "var(--color-panel)",
         ...style,
       }}
       {...props}

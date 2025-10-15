@@ -762,6 +762,38 @@
       }
     },
     "tools": {
+      "playlist": {
+        "reset": "リセット",
+        "shuffle": "Shuffle",
+        "remove": "Remove played",
+        "tracking": "BlitzKit is tracking your battles",
+        "sort": {
+          "button": "並べ替え項目",
+          "last_played": "Last played",
+          "least_played": "Least played"
+        },
+        "table": {
+          "index": "#",
+          "never": "Never",
+          "tank": "車輌名",
+          "last_played": "Last played",
+          "battles": "Career battles",
+          "unrecorded": "--",
+          "wins": "勝利"
+        },
+        "large_warning": {
+          "title": "That's a lot of tanks!",
+          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "cancel": "Cancel",
+          "proceed": "Proceed"
+        },
+        "generate": "Generate playlist",
+        "name": "Playlist",
+        "description": "Tank playlist generator",
+        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
+        "button": "Generate",
+        "pool_size": "{count} possible tanks"
+      },
       "mixer": {
         "name": "Mixer",
         "button": "Mix and match",
