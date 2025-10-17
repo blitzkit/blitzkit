@@ -797,7 +797,7 @@
       "mixer": {
         "name": "Смешать",
         "button": "Смешать и собрать",
-        "description": "Модули смешанного танка",
+        "description": "Смешай модули разных танков",
         "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
         "screenshot": "Скриншот",
         "randomize": "Случайно"
