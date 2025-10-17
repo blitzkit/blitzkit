@@ -764,40 +764,40 @@
     "tools": {
       "playlist": {
         "reset": "Сброс",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your battles",
+        "shuffle": "Перемешать",
+        "remove": "Удалить сыгранные",
+        "tracking": "BlitzKit отслеживает ваши бои",
         "sort": {
           "button": "Сортировка",
-          "last_played": "Last played",
-          "least_played": "Least played"
+          "last_played": "Последняя игра",
+          "least_played": "Последний сыгранный"
         },
         "table": {
           "index": "#",
-          "never": "Never",
+          "never": "Никогда",
           "tank": "Танк",
-          "last_played": "Last played",
-          "battles": "Career battles",
-          "unrecorded": "--",
+          "last_played": "Последняя игра",
+          "battles": "Сражения",
+          "unrecorded": "—",
           "wins": "Победы"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "title": "Слишком много танков!",
+          "description": "Вы уверены, что хотите создать плейлист из {count} танков? Это {time} часов игры с 50% побед!",
           "cancel": "Отмена",
-          "proceed": "Proceed"
+          "proceed": "Продолжить"
         },
-        "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
-        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "button": "Generate",
-        "pool_size": "{count} possible tanks"
+        "generate": "Создать плейлист",
+        "name": "Плейлист",
+        "description": "Генератор танкового плейлиста",
+        "seo_description": "Не знаешь на чём сыграть в World of Tanks Blitz? Используйте плейлист BlitzKit, чтобы получить предложения!",
+        "button": "Сгенерировать",
+        "pool_size": "Отобрано танков: {count}"
       },
       "mixer": {
         "name": "Смешать",
         "button": "Смешать и собрать",
-        "description": "Модули смешанного танка",
+        "description": "Смешай модули разных танков",
         "seo_description": "Смешивание и сбор корпусов, башен и пушек танков из World of Tanks Blitz",
         "screenshot": "Скриншот",
         "randomize": "Случайно"
@@ -981,7 +981,7 @@
             "title": "Навыки экипажа",
             "clear": "Очистить",
             "maximize": "Макс.",
-            "info": "Желтые навыки применяются только при особых условиях. Удерживайте пробел, чтобы быстро переключаться между уровнями 0 и 7."
+            "info": "Желтые навыки применяются только при особых условиях. Удерживайте пробел, чтобы быстро переключаться между уровнями от 0 до 7."
           },
           "miscellaneous": {
             "title": "Прочее"
