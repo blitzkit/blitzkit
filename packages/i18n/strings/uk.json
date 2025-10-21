@@ -342,7 +342,7 @@
           "research": "Research: {cost}",
           "upgrades": "Upgrades: {cost}",
           "purchase": "Purchase: {cost}",
-          "equipment": "Equipment: {cost}",
+          "equipment": "Спорядження: {cost}",
           "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
         },
         "errors": {
