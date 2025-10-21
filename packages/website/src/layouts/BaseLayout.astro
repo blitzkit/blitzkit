@@ -5,6 +5,7 @@ import { Flex } from "@radix-ui/themes";
 import Analytics from "../components/Analytics.astro";
 import { BlitzKitTheme } from "../components/BlitzKitTheme";
 import { Checks } from "../components/Checks";
+import EasterEggs from "../components/EasterEggs.astro";
 import Footer from "../components/Footer.astro";
 import LocaleRedirector from "../components/LocaleRedirector.astro";
 import Meta from "../components/Meta.astro";
@@ -30,6 +31,7 @@ const { noFooter, noNavbar, integrated, locale } = Astro.props;
     <Meta />
     <Analytics />
     <LocaleRedirector />
+    <EasterEggs />
 
     <slot name="head" />
   </head>

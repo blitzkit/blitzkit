@@ -28,8 +28,7 @@ const strings = getStrings(locale);
 ---
 
 <style>
-  .navbar,
-  .navbar-padder {
+  .navbar {
     transition-duration: 1s;
   }
 
@@ -37,7 +36,7 @@ const strings = getStrings(locale);
     transform: translateY(-100%);
   }
 
-  body.no-navbar .navbar-padder {
+  body.no-navbar {
     height: 0;
   }
 
@@ -53,6 +52,18 @@ const strings = getStrings(locale);
     background-color: var(--black-a8);
     backdrop-filter: blur(4rem);
     box-shadow: var(--shadow-3);
+  }
+
+  body.halloween .navbar[data-expanded="false"] .content {
+    background-color: var(--red-a8);
+  }
+
+  .halloween-blood {
+    display: none;
+  }
+
+  body.halloween .halloween-blood {
+    display: block;
   }
 
   .navbar[data-expanded="true"] .content {
@@ -79,8 +90,6 @@ const strings = getStrings(locale);
   });
 </script>
 
-<Box className="navbar-padder" height={{ initial: "3.5rem", sm: "3rem" }} />
-
 <Flex
   direction="column"
   align="center"
@@ -89,11 +98,8 @@ const strings = getStrings(locale);
   className="navbar"
   width="100%"
   top="0"
-  position="fixed"
-  style={{
-    zIndex: 1,
-    backdropFilter: "blur(4rem)",
-  }}
+  position="sticky"
+  style={{ zIndex: 1, backdropFilter: "blur(4rem)" }}
 >
   <Flex
     className="content"
@@ -101,7 +107,6 @@ const strings = getStrings(locale);
     p={{ initial: "4", sm: "3" }}
     direction="column"
     align="center"
-    style={{ backgroundColor: integrated ? undefined : Var("gray-1") }}
   >
     <Flex gap="4" direction="column" maxWidth="80rem" width="100%">
       <Flex align="center">
@@ -242,14 +247,17 @@ const strings = getStrings(locale);
   </Flex>
 
   <Box
-    data-expanded
-    flexGrow="1"
+    className="halloween-blood"
+    position="absolute"
+    left="0"
+    top="100%"
     width="100%"
-    display={{ initial: "block", sm: "none" }}
+    height="4rem"
     style={{
-      backgroundColor: Var("black-a7"),
-      backdropFilter: "blur(0.5rem)",
-      WebkitBackdropFilter: "blur(0.5rem)",
+      backgroundImage: "url(/assets/images/halloween-blood.svg)",
+      backgroundRepeat: "repeat-x",
+      backgroundSize: "8rem",
+      pointerEvents: "none",
     }}
   />
 </Flex>
