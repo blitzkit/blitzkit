@@ -1,9 +1,9 @@
-import sharp from 'sharp';
+import sharp from "sharp";
 
 const cache: Record<string, Buffer> = {};
 
 export async function iconPng(url: string) {
-  if (!url.endsWith('.webp')) return url;
+  if (!url.endsWith(".webp")) return url;
 
   if (!cache[url]) {
     const imageResponse = await fetch(url);
@@ -12,5 +12,5 @@ export async function iconPng(url: string) {
     cache[url] = imageBufferPNG;
   }
 
-  return `data:image/png;base64,${cache[url].toString('base64')}`;
+  return `data:image/png;base64,${cache[url].toString("base64")}`;
 }

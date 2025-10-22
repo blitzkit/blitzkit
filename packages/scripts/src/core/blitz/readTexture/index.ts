@@ -1,9 +1,7 @@
 import { DdsReadStream, PvrReadStream } from "@blitzkit/core";
 import { existsSync } from "fs";
-import sharp from "sharp";
 import { DATA_COMPRESSED } from "../../../buildAssets/constants";
 import { readDVPLFile } from "../readDVPLFile";
-import { TextureMutation } from "./constants";
 
 export async function readTexture(path: string) {
   const ddsTexturePath = path.replace(".tex", ".dx11.dds");

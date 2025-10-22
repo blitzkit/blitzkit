@@ -20,6 +20,7 @@ import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristi
 import { getStrings } from "../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import { genericDefaultEquipmentMatrix } from "../../../../stores/duel/constants";
+import type { TankGuide } from "../../../../types/tankGuide";
 import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
@@ -99,12 +100,6 @@ const description = literals(
     health: Math.round(characteristics.health).toLocaleString(locale),
   }
 );
-
-export interface TankGuide {
-  url: string;
-  description?: string;
-  image?: string;
-}
 
 const guideUrl = `${assertSecret(import.meta.env.PUBLIC_GUIDE_WEBSITE)}/${tank.slug}`;
 let guide: TankGuide | undefined = undefined;

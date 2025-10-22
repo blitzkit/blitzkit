@@ -17,7 +17,7 @@ import {
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
-import type { TankGuide } from "./index.astro";
+import type { TankGuide } from "../../../../types/tankGuide";
 
 type PageProps = MaybeSkeletonComponentProps &
   LocaleAcceptorProps & {

@@ -1,7 +1,7 @@
 import { CaretRightIcon } from "@radix-ui/react-icons";
 import { Box, Flex, Link, Text } from "@radix-ui/themes";
 import { Var } from "../../../core/radix/var";
-import type { TankGuide } from "../../../pages/[...locale]/tanks/[slug]/index.astro";
+import type { TankGuide } from "../../../types/tankGuide";
 
 interface Props {
   guide: TankGuide;
@@ -48,7 +48,9 @@ export function GuideSection({ guide }: Props) {
               height="100%"
               left="0"
               style={{
-                background: `linear-gradient(${Var("gray-a1")}, ${Var("gray-1")})`,
+                background: `linear-gradient(${Var("gray-a1")}, ${Var(
+                  "gray-1"
+                )})`,
               }}
             />
           </Flex>

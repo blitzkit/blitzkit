@@ -40,5 +40,8 @@
   "type": "module",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "typescript": "^5.9.3"
+  }
 }

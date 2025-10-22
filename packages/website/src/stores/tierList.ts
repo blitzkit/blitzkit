@@ -1,6 +1,6 @@
-import { enableMapSet } from 'immer';
-import { Varuna } from 'varuna';
-import { tierListRows } from '../components/TierList/Table/constants';
+import { enableMapSet } from "immer";
+import { Varuna } from "varuna";
+import { tierListRows } from "../components/TierList/Table/constants";
 
 export interface TierList {
   dragging: boolean;
