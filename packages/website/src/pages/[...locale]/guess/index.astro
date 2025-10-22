@@ -4,10 +4,10 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<BaseLayout noFooter>
+<BaseLayout {locale} noFooter>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

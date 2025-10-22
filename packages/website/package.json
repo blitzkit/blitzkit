@@ -5,7 +5,7 @@
     "dev": "PUBLIC_TARGET=web astro dev",
     "build": "PUBLIC_TARGET=web astro build",
     "preview": "PUBLIC_TARGET=web astro preview",
-    "lint": "astro check",
+    "lint": "PUBLIC_TARGET=web astro check",
     "astro": "astro"
   },
   "dependencies": {

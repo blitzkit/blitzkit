@@ -5,9 +5,9 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<ToolLayout tool={tools.embed}>
+<ToolLayout {locale} tool={tools.embed}>
   <Page {locale} />
 </ToolLayout>

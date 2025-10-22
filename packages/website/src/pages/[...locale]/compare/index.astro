@@ -6,11 +6,11 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<ToolOpenGraph tool={tools.compare} />
+<ToolOpenGraph {locale} tool={tools.compare} />
 
-<BaseLayout noFooter>
+<BaseLayout {locale} noFooter>
   <Page {locale} client:load />
 </BaseLayout>

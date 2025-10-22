@@ -5,10 +5,10 @@ import { getStrings } from "../core/i18n/getStrings";
 
 interface Props {
   tool: Tool;
+  locale: string;
 }
 
-const { tool } = Astro.props;
-const { locale } = Astro.params;
+const { locale, tool } = Astro.props;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[

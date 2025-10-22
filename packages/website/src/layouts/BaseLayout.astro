@@ -45,7 +45,7 @@ const { noFooter, noNavbar, integrated, locale } = Astro.props;
 
         {servicing ? <Servicing /> : <slot />}
 
-        {!noFooter && <Footer />}
+        {!noFooter && <Footer {locale} />}
       </Flex>
     </BlitzKitTheme>
   </body>

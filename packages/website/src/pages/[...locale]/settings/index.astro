@@ -6,7 +6,7 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 
 const strings = getStrings(locale);
 ---
@@ -16,6 +16,6 @@ const strings = getStrings(locale);
   description={strings.website.settings.description}
 />
 
-<BaseLayout>
+<BaseLayout {locale}>
   <Page {locale} client:load />
 </BaseLayout>

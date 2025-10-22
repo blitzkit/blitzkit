@@ -4,7 +4,7 @@ import { resolveBranchName } from "../core/blitzkit/branches";
 import { getStrings } from "../core/i18n/getStrings";
 import { literals } from "@blitzkit/i18n/src/literals";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 const branchName = resolveBranchName(locale);
 const isBranchNamed = branchName !== undefined;
 const strings = getStrings(locale);

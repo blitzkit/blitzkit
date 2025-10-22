@@ -31,14 +31,13 @@ export const getStaticPaths = (async () => {
     .map((tank) =>
       parentPaths.map((parent) => ({
         params: { ...parent.params, slug: tank.slug },
-        props: { id: tank.id },
+        props: { ...parent.props, id: tank.id },
       }))
     )
     .flat();
 }) satisfies GetStaticPaths;
 
-const { id } = Astro.props;
-const locale = Astro.params.locale;
+const { id, locale } = Astro.props;
 const strings = getStrings(locale);
 const tankDefinitions = await fetchTankDefinitions();
 const skillDefinitions = await fetchSkillDefinitions();
@@ -137,7 +136,7 @@ if (guideResponse.ok) {
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:image:src" content={icon} />
 
-<BaseLayout integrated>
+<BaseLayout {locale} integrated>
   <Page {locale} id={id} {guide} client:only="react">
     <Page {locale} id={id} {guide} skeleton slot="fallback" />
   </Page>

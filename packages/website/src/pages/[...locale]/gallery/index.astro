@@ -6,10 +6,10 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<ToolLayout tool={tools.gallery}>
+<ToolLayout {locale} tool={tools.gallery}>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

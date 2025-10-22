@@ -1,25 +1,25 @@
 ---
-import { AstroSeo } from '@astrolib/seo';
-import type { GetStaticPaths } from 'astro';
-import { readFile } from 'fs/promises';
-import BaseLayout from '../../../../../layouts/BaseLayout.astro';
-import { getStaticPaths as parentGetStaticPaths } from '../../../index.astro';
-import { Page } from './_index';
+import { AstroSeo } from "@astrolib/seo";
+import type { GetStaticPaths } from "astro";
+import { readFile } from "fs/promises";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as parentGetStaticPaths } from "../../../index.astro";
+import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
   const parentPaths = parentGetStaticPaths();
-  const ROOT = '../../../../../../../../docs/';
-  const files = import.meta.glob('../../../../../../../../docs/**/*.md', {
+  const ROOT = "../../../../../../../../docs/";
+  const files = import.meta.glob("../../../../../../../../docs/**/*.md", {
     eager: true,
   });
 
   return (
     await Promise.all(
       Object.keys(files).map(async (file) => {
-        const couple = file.replace(ROOT, '').split('/');
-        couple[1] = couple[1].replace('.md', '');
+        const couple = file.replace(ROOT, "").split("/");
+        couple[1] = couple[1].replace(".md", "");
         const content = await readFile(
-          `../../docs/${couple[0]}/${couple[1]}.md`,
+          `../../docs/${couple[0]}/${couple[1]}.md`
         ).then((buffer) => buffer.toString());
 
         return parentPaths.map((parent) => ({
@@ -28,16 +28,16 @@ export const getStaticPaths = (async () => {
             directory: couple[0],
             document: couple[1],
           },
-          props: { content },
+          props: { ...parent.props, content },
         }));
-      }),
+      })
     )
   ).flat();
 }) satisfies GetStaticPaths;
 
-const { content } = Astro.props;
+const { content, locale } = Astro.props;
 
-const title = content.split('\n')[0].replace('# ', '');
+const title = content.split("\n")[0].replace("# ", "");
 ---
 
 <AstroSeo
@@ -48,11 +48,11 @@ const title = content.split('\n')[0].replace('# ', '');
     url: Astro.url.href,
     title,
     description: title,
-    site_name: 'BlitzKit',
+    site_name: "BlitzKit",
   }}
-  twitter={{ cardType: 'summary_large_image' }}
+  twitter={{ cardType: "summary_large_image" }}
 />
 
-<BaseLayout>
+<BaseLayout {locale}>
   <Page content={content} />
 </BaseLayout>

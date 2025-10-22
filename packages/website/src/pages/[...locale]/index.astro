@@ -16,8 +16,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 const MAX_TOOLS_PER_ROW = 2;
 
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
-const locale = Astro.params.locale ?? locales.default;
-const strings = getStrings(Astro.params.locale);
+const { locale } = Astro.props;
+const strings = getStrings(locale);
 const rows: Tool[][] = [];
 
 for (const id in tools) {
@@ -42,8 +42,8 @@ export const getStaticPaths = (() => {
   return [
     ...locales.supported
       .filter(({ locale }) => locale !== locales.default)
-      .map(({ locale }) => ({ params: { locale } })),
-    { params: { locale: undefined } },
+      .map(({ locale }) => ({ params: { locale }, props: { locale } })),
+    { params: { locale: undefined }, props: { locale: locales.default } },
   ];
 }) satisfies GetStaticPaths;
 ---
@@ -61,7 +61,7 @@ export const getStaticPaths = (() => {
   twitter={{ cardType: "summary_large_image" }}
 />
 
-<BaseLayout>
+<BaseLayout {locale}>
   <HomeHero />
 
   <!-- <Flex justify="center" py="6" px="4" justify="center">

@@ -1,23 +1,25 @@
 ---
-import { AstroSeo } from '@astrolib/seo';
-import { MagicWandIcon, StarFilledIcon } from '@radix-ui/react-icons';
-import { Flex, Heading, Link } from '@radix-ui/themes';
-import { compareVersions } from 'compare-versions';
-import { PageWrapper } from '../../../../components/PageWrapper';
-import { getStrings } from '../../../../core/i18n/getStrings';
-import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { AstroSeo } from "@astrolib/seo";
+import { MagicWandIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { Flex, Heading, Link } from "@radix-ui/themes";
+import { compareVersions } from "compare-versions";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { getStrings } from "../../../../core/i18n/getStrings";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
 
-export { getStaticPaths } from '../../index.astro';
+export { getStaticPaths } from "../../index.astro";
 
 // this can't be used in template literal :(
-const ROOT = '../../../../../../../docs/changelogs/';
-const strings = getStrings(Astro.params.locale);
+const ROOT = "../../../../../../../docs/changelogs/";
+
+const { locale } = Astro.props;
+const strings = getStrings(locale);
 const versions = Object.keys(
-  import.meta.glob('../../../../../../../docs/changelogs/*.md', {
+  import.meta.glob("../../../../../../../docs/changelogs/*.md", {
     eager: true,
-  }),
+  })
 )
-  .map((file) => file.replace(ROOT, '').replace('.md', ''))
+  .map((file) => file.replace(ROOT, "").replace(".md", ""))
   .sort(compareVersions)
   .reverse();
 ---
@@ -30,26 +32,26 @@ const versions = Object.keys(
     url: Astro.url.href,
     title: strings.website.docs.patches.name,
     description: strings.website.docs.patches.seo_description,
-    site_name: 'BlitzKit',
+    site_name: "BlitzKit",
   }}
-  twitter={{ cardType: 'summary_large_image' }}
+  twitter={{ cardType: "summary_large_image" }}
 />
 
-<BaseLayout>
+<BaseLayout {locale}>
   <PageWrapper align="center">
     <Heading mt="6" mb="4">BlitzKit patches</Heading>
 
     <Flex direction="column" gap="2" align="center">
       {
         versions.map((version) => {
-          const split = version.split('.').map(Number);
+          const split = version.split(".").map(Number);
           const isMajor = split[2] === 0;
 
           return (
             <Link
               size="5"
               href={`/docs/changelogs/${version}`}
-              mb={isMajor ? '6' : '0'}
+              mb={isMajor ? "6" : "0"}
             >
               <Flex align="center" gap="2">
                 {!isMajor && <MagicWandIcon />}

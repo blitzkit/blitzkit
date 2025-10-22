@@ -6,7 +6,7 @@ import { Page } from "./_index.tsx";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
 <ToolOpenGraph tool={tools.playlist} />

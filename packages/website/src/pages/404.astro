@@ -1,14 +1,14 @@
 ---
-import { DiscordLogoIcon, HomeIcon } from '@radix-ui/react-icons';
-import { Button, Flex, Heading, Link, Text } from '@radix-ui/themes';
-import { LinkI18n } from '../components/LinkI18n';
-import { PageWrapper } from '../components/PageWrapper';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { DiscordLogoIcon, HomeIcon } from "@radix-ui/react-icons";
+import { Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { LinkI18n } from "../components/LinkI18n";
+import { PageWrapper } from "../components/PageWrapper";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<BaseLayout>
+<BaseLayout {locale}>
   <PageWrapper align="center" justify="center" gap="0">
     <Heading>404: page not found</Heading>
     <Text color="gray">Where would you like to go?</Text>

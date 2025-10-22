@@ -5,11 +5,9 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
-
-
+const { locale } = Astro.props;
 ---
 
-<ToolLayout tool={tools.tier_list}>
+<ToolLayout {locale} tool={tools.tier_list}>
   <Page {locale} client:load />
 </ToolLayout>

@@ -21,7 +21,7 @@ const { integrated = false } = Astro.props;
 const toolsFiltered = Object.values(tools).filter(
   (tool) => !tool.href && !tool.disabled
 );
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 const branchName = resolveBranchName(locale);
 const isBranchNamed = branchName !== undefined;
 const strings = getStrings(locale);

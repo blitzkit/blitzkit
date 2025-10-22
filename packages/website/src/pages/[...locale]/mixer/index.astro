@@ -6,12 +6,12 @@ import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<ToolOpenGraph tool={tools.mixer} />
+<ToolOpenGraph {locale} tool={tools.mixer} />
 
-<BaseLayout integrated>
+<BaseLayout {locale} integrated>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

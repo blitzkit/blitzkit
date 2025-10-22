@@ -1,11 +1,11 @@
 ---
-import EmbedLayout from '../../../../../layouts/EmbedLayout.astro';
-import type { getStaticPaths } from '../index.astro';
-import { Page } from './_index';
+import EmbedLayout from "../../../../../layouts/EmbedLayout.astro";
+import type { getStaticPaths } from "../index.astro";
+import { Page } from "./_index";
 
-export { getStaticPaths } from '../index.astro';
+export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.params;
+const { locale } = Astro.props;
 ---
 
 <EmbedLayout>

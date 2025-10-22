@@ -1,18 +1,19 @@
 ---
-import { getStrings } from '../core/i18n/getStrings';
+import locales from "@blitzkit/i18n/locales.json";
+import { getStrings } from "../core/i18n/getStrings";
 
 export interface Props {
   path: string;
+  locale: string;
 }
 
-const { path } = Astro.props;
-const { locale } = Astro.params;
+const { path, locale } = Astro.props;
 
 const strings = getStrings(locale);
-const resolvedPath = `/${locale === undefined ? '' : `${locale}/`}${path}`;
+const resolvedPath = `/${locale === locales.default ? "" : `${locale}/`}${path}`;
 ---
 
-<html>
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <link rel="canonical" href={`${Astro.url.origin}${resolvedPath}`} />
@@ -22,15 +23,15 @@ const resolvedPath = `/${locale === undefined ? '' : `${locale}/`}${path}`;
   <body>
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'black',
-        color: 'white',
-        fontFamily: 'sans-serif',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "black",
+        color: "white",
+        fontFamily: "sans-serif",
       }}
     >
       <h2>{strings.website.redirect.title}</h2>
