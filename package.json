@@ -3,10 +3,6 @@
   "version": "1.29.0",
   "license": "BlitzKit License",
   "private": true,
-  "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build:assets": "cd packages/scripts && bun run build:assets",
     "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
@@ -40,5 +36,9 @@
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
     "prunestrings": "cd packages/scripts && bun prunestrings"
-  }
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ]
 }

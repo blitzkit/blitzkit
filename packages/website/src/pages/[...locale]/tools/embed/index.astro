@@ -6,4 +6,4 @@ export { getStaticPaths } from "../../index.astro";
 const { locale } = Astro.props;
 ---
 
-<LegacyRedirect {locales} path="embed" />
+<LegacyRedirect {locale} path="embed" />

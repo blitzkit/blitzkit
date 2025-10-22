@@ -39,7 +39,7 @@ const { noFooter, noNavbar, integrated, locale } = Astro.props;
   <body class={noNavbar ? "no-navbar" : ""}>
     <BlitzKitTheme>
       <Flex direction="column" minHeight="100vh">
-        <Navbar {integrated} />
+        <Navbar {locale} {integrated} />
 
         <Checks {locale} client:only="react" />
 

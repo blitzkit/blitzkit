@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "incremental": true,

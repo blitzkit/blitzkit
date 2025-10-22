@@ -1,8 +1,4 @@
 {
   "extends": ["../../tsconfig.json", "astro/tsconfigs/base"],
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "types": ["vite/client"]
-  }
+  "compilerOptions": { "jsx": "react-jsx" }
 }
