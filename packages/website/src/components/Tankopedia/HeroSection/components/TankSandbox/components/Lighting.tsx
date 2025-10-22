@@ -65,7 +65,7 @@ export function Lighting() {
         ] as const;
         const color = new Color();
 
-        if (isHalloween()) color.set(1, 0.25, 0.25);
+        if (isHalloween()) color.set(1, 0, 0);
 
         return (
           <HelpingSpotLight

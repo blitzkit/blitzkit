@@ -1,0 +1,27 @@
+<script>
+  import { isHalloween } from "../core/blitzkit/isHalloween";
+
+  const HALLOWEEN_SATURATION_DELTA = 0.35;
+  const HALLOWEEN_SATURATION_TAU = 0.5;
+  const HALLOWEEN_BRIGHTNESS_DELTA = 0.1;
+  const HALLOWEEN_BRIGHTNESS_TAU = 7;
+
+  function halloweenFrame() {
+    const t = Date.now() / 1000;
+
+    document.body.style.filter = `saturate(${
+      1 -
+      HALLOWEEN_SATURATION_DELTA *
+        (1 + (0.5 + 0.5 * Math.sin(HALLOWEEN_SATURATION_TAU * t)))
+    }) brightness(${
+      1 -
+      HALLOWEEN_BRIGHTNESS_DELTA *
+        (1 + (0.5 + 0.5 * Math.sin(HALLOWEEN_BRIGHTNESS_TAU * t)))
+    })`;
+  }
+
+  if (isHalloween()) {
+    document.body.classList.add("halloween");
+    setInterval(halloweenFrame, 1000 / 30);
+  }
+</script>
