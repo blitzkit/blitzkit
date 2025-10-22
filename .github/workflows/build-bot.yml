@@ -20,12 +20,16 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - uses: oven-sh/setup-bun@v1
+      - uses: arduino/setup-protoc@v3
 
       - name: Install dependencies
         run: bun install
 
       - name: Build Prisma
         run: bun run build:prisma
+
+      - name: Build protos
+        run: bun run build:protos
 
       - name: Build bot
         run: bun run build:bot

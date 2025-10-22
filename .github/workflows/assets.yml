@@ -29,7 +29,6 @@ concurrency:
 
 env:
   DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   VIDEOS_SHEET: ${{ secrets.VIDEOS_SHEET }}
@@ -73,6 +72,8 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
+
+      - uses: arduino/setup-protoc@v3
 
       - name: (Steam) Setup bun
         uses: oven-sh/setup-bun@v1

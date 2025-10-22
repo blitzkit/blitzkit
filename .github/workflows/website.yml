@@ -43,8 +43,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - uses: oven-sh/setup-bun@v1
-      - uses: actions/configure-pages@v5
       - uses: arduino/setup-protoc@v3
+      - uses: actions/configure-pages@v5
 
       - name: Install dependencies
         run: bun install

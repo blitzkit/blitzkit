@@ -11,7 +11,6 @@ concurrency:
 
 env:
   DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   PUBLIC_ASSET_BRANCH: ${{ secrets.PUBLIC_ASSET_BRANCH }}
   PUBLIC_ASSET_REPO: ${{ secrets.PUBLIC_ASSET_REPO }}
@@ -29,9 +28,13 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
 
       - uses: oven-sh/setup-bun@v1
+      - uses: arduino/setup-protoc@v3
 
       - name: Install dependencies
         run: bun install
+
+      - name: Build protos
+        run: bun run build:protos
 
       - name: Find reviews
         run: bun packages/scripts/src/reviews.ts
