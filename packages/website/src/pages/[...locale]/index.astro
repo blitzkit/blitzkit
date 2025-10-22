@@ -116,7 +116,7 @@ export const getStaticPaths = (() => {
         rows.map((row) => (
           <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
             {row.map((tool) => (
-              <ToolCard {tool} />
+              <ToolCard {locale} {tool} />
             ))}
             {row.length < MAX_TOOLS_PER_ROW &&
               !("significant" in row[0] && row[0].significant) && (

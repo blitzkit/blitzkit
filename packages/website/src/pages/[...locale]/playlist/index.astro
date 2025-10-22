@@ -9,7 +9,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<ToolOpenGraph tool={tools.playlist} />
+<ToolOpenGraph {locale} tool={tools.playlist} />
 
 <BaseLayout {locale} noFooter>
   <Page {locale} client:only="react">

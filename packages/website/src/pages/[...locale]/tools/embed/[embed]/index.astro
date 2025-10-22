@@ -1,8 +1,8 @@
 ---
-import type { GetStaticPaths } from 'astro';
-import { embedConfigurations } from '../../../../../constants/embeds';
-import LegacyRedirect from '../../../../../layouts/LegacyRedirect.astro';
-import { getStaticPaths as parentGetStaticPaths } from '../index.astro';
+import type { GetStaticPaths } from "astro";
+import { embedConfigurations } from "../../../../../constants/embeds";
+import LegacyRedirect from "../../../../../layouts/LegacyRedirect.astro";
+import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
 
 export const getStaticPaths = (() => {
   const parentPaths = parentGetStaticPaths();
@@ -14,12 +14,13 @@ export const getStaticPaths = (() => {
           ...parent.params,
           embed: embed as keyof typeof embedConfigurations,
         },
-      })),
+      }))
     )
     .flat();
 }) satisfies GetStaticPaths;
 
 const { embed } = Astro.params;
+const { locale } = Astro.props;
 ---
 
-<LegacyRedirect path={`embed/${embed}`} />
+<LegacyRedirect {locale} path={`embed/${embed}`} />

@@ -1,8 +1,8 @@
 ---
-import { fetchTankDefinitions } from '@blitzkit/core';
-import type { GetStaticPaths } from 'astro';
-import LegacyRedirect from '../../../../../layouts/LegacyRedirect.astro';
-import { getStaticPaths as parentGetStaticPaths } from '../index.astro';
+import { fetchTankDefinitions } from "@blitzkit/core";
+import type { GetStaticPaths } from "astro";
+import LegacyRedirect from "../../../../../layouts/LegacyRedirect.astro";
+import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
 
 export const getStaticPaths = (async () => {
   const tankDefinitions = await fetchTankDefinitions();
@@ -12,14 +12,15 @@ export const getStaticPaths = (async () => {
     .map((tank) =>
       parentPaths.map((parent) => ({
         params: { ...parent.params, id: tank.id },
-      })),
+      }))
     )
     .flat();
 }) satisfies GetStaticPaths;
 
 const { id } = Astro.params;
+const { locale } = Astro.props;
 const tankDefinitions = await fetchTankDefinitions();
 const tank = tankDefinitions.tanks[id];
 ---
 
-<LegacyRedirect path={`tanks/${tank.slug}`} />
+<LegacyRedirect {locale} path={`tanks/${tank.slug}`} />

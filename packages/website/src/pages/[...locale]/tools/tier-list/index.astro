@@ -1,7 +1,9 @@
 ---
-import LegacyRedirect from '../../../../layouts/LegacyRedirect.astro';
+import LegacyRedirect from "../../../../layouts/LegacyRedirect.astro";
 
-export { getStaticPaths } from '../../index.astro';
+export { getStaticPaths } from "../../index.astro";
+
+const { locale } = Astro.props;
 ---
 
-<LegacyRedirect path="tier-list" />
+<LegacyRedirect {locale} path="tier-list" />
