@@ -35,6 +35,7 @@ env:
   PUBLIC_BRANCH: ${{ secrets.PUBLIC_BRANCH }}
   PUBLIC_GUIDE_WEBSITE: ${{ secrets.PUBLIC_GUIDE_WEBSITE }}
   SERVICING: ${{ secrets.SERVICING }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   host:

@@ -53,6 +53,7 @@ env:
   PUBLIC_ASSET_FAST_USER: blitzkit
   PUBLIC_ASSET_FAST_REPO: assets
   PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   download_client:

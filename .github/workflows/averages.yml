@@ -25,6 +25,7 @@ env:
   PUBLIC_DISCORD_SERVER_ID: ${{ secrets.PUBLIC_DISCORD_SERVER_ID }}
   PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
   PUBLIC_BRANCH: ${{ secrets.PUBLIC_BRANCH }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   build:
