@@ -72,6 +72,8 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
       - uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
       - uses: oven-sh/setup-bun@v1
         if: github.event.inputs.zip_url == ''
       - if: github.event.inputs.zip_url == ''
@@ -120,6 +122,8 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
       - uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
       - uses: oven-sh/setup-bun@v1
       - run: bun run setup
 

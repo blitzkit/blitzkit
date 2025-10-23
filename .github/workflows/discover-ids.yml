@@ -27,6 +27,8 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - uses: oven-sh/setup-bun@v1
       - uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
       - run: bun run setup
 
       - name: Discover IDs
