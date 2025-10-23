@@ -142,8 +142,6 @@ jobs:
             fi
           done
 
-          for u in "${urls[@]}"; do echo "$u"; done
-
           for url in "${urls[@]}"; do
             dest="temp/archives/$(basename "$url")"
             wget -q -O "$dest" "$url" &
