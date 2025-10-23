@@ -41,19 +41,10 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
-
       - uses: oven-sh/setup-bun@v1
       - uses: arduino/setup-protoc@v3
       - uses: actions/configure-pages@v5
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build protos
-        run: bun run build:protos
-
-      - name: Build proxy client
-        run: bun run build:proxyclient
+      - run: bun run setup
 
       - name: Build website
         run: bun run build:website

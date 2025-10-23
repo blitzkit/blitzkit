@@ -7,10 +7,8 @@
     "build:assets": "cd packages/scripts && bun run build:assets",
     "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
     "build:bot": "cd packages/scripts && bun run build:bot",
-    "build:website": "bun build:prisma && cd packages/website && bun run build",
+    "build:website": "cd packages/website && bun run build",
     "build:prisma": "prisma generate",
-    "build:sitemap": "bun scripts/sitemap.ts",
-    "build:docs": "vitepress build docs",
     "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
     "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
     "build:app": "cd packages/app && bun run build",
@@ -35,7 +33,8 @@
     "preview:website": "cd packages/website && bun run preview",
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
-    "prunestrings": "cd packages/scripts && bun prunestrings"
+    "prunestrings": "cd packages/scripts && bun prunestrings",
+    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient"
   },
   "type": "module",
   "workspaces": [

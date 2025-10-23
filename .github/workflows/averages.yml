@@ -35,15 +35,9 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
-
       - uses: oven-sh/setup-bun@v1
       - uses: arduino/setup-protoc@v3
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build protos
-        run: bun run build:protos
+      - run: bun run setup
 
       - name: Build averages
         env:
