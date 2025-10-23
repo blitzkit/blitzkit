@@ -134,7 +134,6 @@ jobs:
           while :; do
             part=$(printf "%03d" $i)
             url="${ARCHIVE_URL}.${part}"
-            
             if wget --spider -q "$url"; then
               urls+=("$url")
               ((i++))
@@ -143,18 +142,17 @@ jobs:
             fi
           done
 
-          for u in "${urls[@]}"; do
-            echo "$u"
-          done
+          for u in "${urls[@]}"; do echo "$u"; done
 
           for url in "${urls[@]}"; do
-            part=$(basename "$url")
-            wget -q -O "temp/archives/$part" "$url" &
+            dest="temp/archives/$(basename "$url")"
+            wget -q -O "$dest" "$url" &
           done
-
           wait
 
-          7z x temp/archives/part.001 -otemp/game
+          first=$(ls temp/archives/*.001 | head -n 1)
+          7z x "$first" -otemp/game
+
           rm -rf temp/archives
 
       - name: Archive game
