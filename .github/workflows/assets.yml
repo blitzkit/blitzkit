@@ -68,56 +68,65 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - if: github.event.inputs.zip_url != ''
+      - if: github.event.inputs.archive_url != ''
         uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 512
           swap-size-mb: 1024
           remove-dotnet: "true"
+          remove-haskell: "true"
+          remove-android: "true"
+          remove-codeql: "true"
+          remove-docker-images: "true"
 
       - uses: actions/checkout@v4
+        if: github.event.inputs.archive_url == ''
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
+
       - uses: arduino/setup-protoc@v3
+        if: github.event.inputs.archive_url == ''
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
+
       - uses: oven-sh/setup-bun@v1
-        if: github.event.inputs.zip_url == ''
-      - if: github.event.inputs.zip_url == ''
-        run: bun run setup
+        if: github.event.inputs.archive_url == ''
+
+      - run: bun run setup
+        if: github.event.inputs.archive_url == ''
 
       - name: (Steam) Setup DepotDownloader
-        if: github.event.inputs.zip_url == ''
+        if: github.event.inputs.archive_url == ''
         run: bun run setup:depotdownloader
 
       - name: (Steam) Download client
-        if: github.event.inputs.zip_url == ''
+        if: github.event.inputs.archive_url == ''
         run: |
           chmod +x ./temp/depotDownloader/DepotDownloader
           ./temp/depotDownloader/DepotDownloader -q -os windows -app 444200 -username ${{ secrets.DEPOT_DOWNLOADER_USERNAME }} -password "${{ secrets.DEPOT_DOWNLOADER_PASSWORD }}"
 
       - name: (Steam) Apply patches
-        if: github.event.inputs.zip_url == ''
+        if: github.event.inputs.archive_url == ''
         run: bun setup:patches --depot
 
       - name: (ZIP) Download client
-        if: github.event.inputs.zip_url != ''
+        if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.zip')
         env:
-          ZIP_URL: ${{ github.event.inputs.zip_url }}
-          ZIP_ROOT: ${{ github.event.inputs.zip_root }}
+          ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
+          ARCHIVE_ROOT: ${{ github.event.inputs.archive_root }}
         run: |
-          wget -q -O client.zip $ZIP_URL
-          unzip -q client.zip -d client
-          rm client.zip
-          mkdir -p depots/444202/0
-          mv client/$ZIP_ROOT/* depots/444202/0
+          wget -q -O temp/archive.zip $ARCHIVE_URL
+          unzip -q temp/archive.zip -d temp/archive
+          rm temp/archive.zip
+          mkdir -p temp/game
+          mv temp/archive/$ARCHIVE_ROOT/* temp/game
 
-      - name: Archive depots
+      - name: Archive game
         uses: actions/upload-artifact@v4
         with:
-          name: depots
-          path: depots
+          name: game
+          path: temp/game
 
   build_assets:
     name: Build assets
@@ -135,20 +144,14 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - run: bun run setup
 
-      - name: Download depots
+      - name: Download game
         uses: actions/download-artifact@v4
         with:
-          name: depots
-          path: depots
+          name: game
+          path: temp/game
 
       - name: AppArmor hack
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
       - name: Start server and build assets
-        run: |
-          bun dev:website --verbosepa & 
-          SERVER_PID=$!
-
-          bun run build:assets --all-targets --depot --production
-
-          kill $SERVER_PID || true
+        run: bun run build:assets --all-targets --manual
