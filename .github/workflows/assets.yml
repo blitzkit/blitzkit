@@ -73,6 +73,11 @@ jobs:
           remove-codeql: "true"
           remove-docker-images: "true"
 
+      - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
+        run: |
+          sudo apt update
+          sudo apt install -y p7zip-full
+
       - uses: actions/checkout@v4
         if: github.event.inputs.archive_url == ''
         with:
@@ -114,6 +119,32 @@ jobs:
           rm temp/archive.zip
           mkdir -p temp/game
           mv temp/archive/app/* temp/game
+
+      - name: (WGPKG) Download client
+        if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
+        env:
+          ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
+        run: |
+          mkdir -p temp/archives
+
+          i = 1
+          while :; do
+            part = $(printf "%03d" $i)
+            url = "${ARCHIVE_URL}.${part}"
+            
+            echo "Downloading $url"
+
+            if wget -q -O "temp/archives/part.${part}" "$url"; then
+              ((i++))
+            else
+              echo "Last part: $part"
+              rm -f "temp/archives/part.${part}"
+              break
+            fi
+          done
+
+          7z x temp/archives/part.001 -otemp/game
+          rm -rf temp/archives
 
       - name: Archive game
         uses: actions/upload-artifact@v4
