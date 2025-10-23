@@ -21,12 +21,6 @@ on:
         required: false
         description: Archive URL to download instead of Steam client
 
-      archive_root:
-        type: string
-        required: false
-        description: Root dir of archive which houses the executable and Data dir
-        default: app
-
   schedule:
     - cron: "0 2 * * *"
 
@@ -114,13 +108,12 @@ jobs:
         if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.zip')
         env:
           ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
-          ARCHIVE_ROOT: ${{ github.event.inputs.archive_root }}
         run: |
           wget -q -O temp/archive.zip $ARCHIVE_URL
           unzip -q temp/archive.zip -d temp/archive
           rm temp/archive.zip
           mkdir -p temp/game
-          mv temp/archive/$ARCHIVE_ROOT/* temp/game
+          mv temp/archive/app/* temp/game
 
       - name: Archive game
         uses: actions/upload-artifact@v4
