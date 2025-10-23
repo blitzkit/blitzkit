@@ -9,7 +9,7 @@ on:
       asset_repo:
         type: choice
         required: false
-        description: What CDN to write to
+        description: What asset repo to write to
         options:
           - blitzkit/assets
           - blitzkit/assets-preview
