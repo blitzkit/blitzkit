@@ -126,11 +126,12 @@ jobs:
           ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
         run: |
           mkdir -p temp/archives
+          mkdir -p temp/game
 
-          i = 1
+          i=1
           while :; do
-            part = $(printf "%03d" $i)
-            url = "${ARCHIVE_URL}.${part}"
+            part=$(printf "%03d" $i)
+            url="${ARCHIVE_URL}.${part}"
             
             echo "Downloading $url"
 
