@@ -129,20 +129,30 @@ jobs:
           mkdir -p temp/game
 
           i=1
+          urls=()
+
           while :; do
             part=$(printf "%03d" $i)
             url="${ARCHIVE_URL}.${part}"
             
-            echo "Downloading $url"
-
-            if wget -q -O "temp/archives/part.${part}" "$url"; then
+            if wget --spider -q "$url"; then
+              urls+=("$url")
               ((i++))
             else
-              echo "Last part: $part"
-              rm -f "temp/archives/part.${part}"
               break
             fi
           done
+
+          for u in "${urls[@]}"; do
+            echo "$u"
+          done
+
+          for url in "${urls[@]}"; do
+            part=$(basename "$url")
+            wget -q -O "temp/archives/$part" "$url" &
+          done
+
+          wait
 
           7z x temp/archives/part.001 -otemp/game
           rm -rf temp/archives
