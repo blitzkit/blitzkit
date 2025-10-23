@@ -6,25 +6,32 @@ on:
 
   workflow_dispatch:
     inputs:
-      cdn_branch:
+      asset_repo:
+        type: choice
+        required: false
+        description: What CDN to write to
+        options:
+          - blitzkit/assets
+          - blitzkit/assets-preview
+          - blitzkit/assets-dev
+        default: blitzkit/assets
+
+      archive_url:
         type: string
         required: false
-        default: main
-        description: What CDN branch to write to
-      zip_url:
+        description: Archive URL to download instead of Steam client
+
+      archive_root:
         type: string
         required: false
-        description: ZIP URL to download instead of Steam client
-      zip_root:
-        type: string
-        required: false
-        description: Root dir of ZIP which houses the executable and Data dir
+        description: Root dir of archive which houses the executable and Data dir
+        default: app
 
   schedule:
     - cron: "0 2 * * *"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.cdn_branch }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.asset_repo }}
   cancel-in-progress: true
 
 env:
@@ -36,7 +43,7 @@ env:
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
   WOTB_DLC_CDN: ${{ secrets.WOTB_DLC_CDN }}
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
-  PUBLIC_ASSET_REPO: blitzkit/assets
+  PUBLIC_ASSET_REPO: ${{ github.event.inputs.asset_repo }}
   PUBLIC_ASSET_BRANCH: main
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
