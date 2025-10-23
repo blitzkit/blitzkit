@@ -60,8 +60,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: (ZIP) Maximize build space
-        if: github.event.inputs.zip_url != ''
+      - if: github.event.inputs.zip_url != ''
         uses: easimon/maximize-build-space@master
         with:
           root-reserve-mb: 512
@@ -72,19 +71,11 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
-
       - uses: arduino/setup-protoc@v3
-
-      - name: (Steam) Setup bun
-        uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v1
         if: github.event.inputs.zip_url == ''
-
-      - name: (Steam) Install dependencies
-        if: github.event.inputs.zip_url == ''
-        run: bun install
-
-      - name: Build protos
-        run: bun run build:protos
+      - if: github.event.inputs.zip_url == ''
+        run: bun run setup
 
       - name: (Steam) Setup DepotDownloader
         if: github.event.inputs.zip_url == ''
