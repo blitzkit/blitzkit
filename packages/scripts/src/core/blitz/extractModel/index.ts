@@ -67,7 +67,9 @@ export async function extractModel(data: string, path: string) {
           .setMimeType("image/webp")
           .setImage(
             await readBaseColor(
-              `${data}/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+              `${data}/3d/${dirname(path)}/${
+                textures.baseColorMap ?? textures.albedo
+              }`,
               textures.miscMap
                 ? `${data}/3d/${dirname(path)}/${textures.miscMap}`
                 : undefined

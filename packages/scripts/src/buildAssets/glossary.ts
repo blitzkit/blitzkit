@@ -1,13 +1,13 @@
-import { Avatar, fetchGlossary, Gallery } from '@blitzkit/core';
-import locales from '@blitzkit/i18n/locales.json';
-import { extname } from 'path';
-import ProgressBar from 'progress';
-import { commitAssets } from '../core/github/commitAssets';
-import { FileChange } from '../core/github/commitMultipleFiles';
+import { Avatar, fetchGlossary, Gallery } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
+import { extname } from "path";
+import ProgressBar from "progress";
+import { AssetUploader } from "../core/github/assetUploader";
 
 export async function glossary() {
-  console.log('Building glossary...');
+  console.log("Building glossary...");
 
+  using uploader = new AssetUploader("glossary");
   const avatars: Record<string, { avatar: Avatar; url: string }> = {};
 
   await Promise.all(
@@ -15,15 +15,15 @@ export async function glossary() {
       const glossary = await fetchGlossary(supported.blitz ?? supported.locale);
 
       console.log(
-        `Found ${Object.keys(glossary).length} things for ${supported.locale}`,
+        `Found ${Object.keys(glossary).length} things for ${supported.locale}`
       );
 
       for (const key in glossary) {
         const glossaryEntry = glossary[key];
 
         if (
-          !key.startsWith('avatar') ||
-          key.endsWith('_part') ||
+          !key.startsWith("avatar") ||
+          key.endsWith("_part") ||
           glossaryEntry.image_url === null
         ) {
           continue;
@@ -45,16 +45,15 @@ export async function glossary() {
           };
         }
       }
-    }),
+    })
   );
 
-  const changes: FileChange[] = [];
   const gallery: Gallery = { avatars: [] };
   const totalCount = Object.keys(avatars).length;
 
   const bar = new ProgressBar(
     `Fetching avatars of ${totalCount} things :bar`,
-    totalCount,
+    totalCount
   );
 
   await Promise.all(
@@ -72,19 +71,19 @@ export async function glossary() {
         .then((response) => response.arrayBuffer())
         .then((buffer) => new Uint8Array(buffer));
 
-      changes.push({
+      await uploader.add({
         path: `gallery/avatars/${key}${avatar.extension}`,
         content,
       });
 
       bar.tick();
-    }),
+    })
   );
 
-  changes.push({
-    path: 'definitions/gallery.pb',
+  await uploader.add({
+    path: "definitions/gallery.pb",
     content: Gallery.encode(gallery).finish(),
   });
 
-  await commitAssets('glossary', changes);
+  await uploader.flush();
 }

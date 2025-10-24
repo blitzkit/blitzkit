@@ -1,75 +1,72 @@
-import { readdir } from 'fs/promises';
-import sharp from 'sharp';
-import { readDVPLFile } from '../core/blitz/readDVPLFile';
-import { commitAssets } from '../core/github/commitAssets';
-import { FileChange } from '../core/github/commitMultipleFiles';
-import { DATA } from './constants';
+import { readdir } from "fs/promises";
+import sharp from "sharp";
+import { readDVPLFile } from "../core/blitz/readDVPLFile";
+import { AssetUploader } from "../core/github/assetUploader";
+import { DATA } from "./constants";
 
 export async function flags() {
-  console.log('Building flags...');
+  console.log("Building flags...");
 
-  const changes = [
-    ...(await Promise.all(
-      (await readdir(`${DATA}/Gfx/Lobby/flags`))
-        .filter(
-          (flag) =>
-            flag.startsWith('flag_profile-stat_') &&
-            !flag.endsWith('@2x.packed.webp'),
-        )
-        .map(async (flag) => {
-          const image = sharp(
-            await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`),
-          );
-          const content = await image.trim({ threshold: 100 }).toBuffer();
-          const name = flag.match(/flag_profile-stat_(.+)\.packed\.webp/)![1];
+  using uploader = new AssetUploader("flags");
+  const circleFiles = await readdir(`${DATA}/Gfx/Lobby/flags`).then((files) =>
+    files.filter(
+      (flag) =>
+        flag.startsWith("flag_profile-stat_") &&
+        !flag.endsWith("@2x.packed.webp")
+    )
+  );
+  const scratchedFiles = await readdir(`${DATA}/Gfx/Lobby/flags`).then(
+    (files) =>
+      files.filter(
+        (flag) =>
+          flag.startsWith("flag_tutor-tank_") &&
+          !flag.endsWith("@2x.packed.webp")
+      )
+  );
+  const fadedFiles = await readdir(`${DATA}/Gfx/Lobby/flags`).then((files) =>
+    files.filter(
+      (flag) =>
+        flag.startsWith("flag_filter_") && flag.endsWith("@2x.packed.webp")
+    )
+  );
 
-          return {
-            content,
-            path: `flags/circle/${name}.webp`,
-          } satisfies FileChange;
-        }),
-    )),
-    ...(await Promise.all(
-      (await readdir(`${DATA}/Gfx/Lobby/flags`))
-        .filter(
-          (flag) =>
-            flag.startsWith('flag_tutor-tank_') &&
-            !flag.endsWith('@2x.packed.webp'),
-        )
-        .map(async (flag) => {
-          const content = await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`);
-          const name = flag.match(/flag_tutor-tank_(.+)\.packed\.webp/)![1];
+  for (const flag of circleFiles) {
+    const image = sharp(await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`));
+    const content = await image.trim({ threshold: 100 }).toBuffer();
+    const name = flag.match(/flag_profile-stat_(.+)\.packed\.webp/)![1];
 
-          return {
-            path: `flags/scratched/${name}.webp`,
-            content,
-          } satisfies FileChange;
-        }),
-    )),
-    ...(await Promise.all(
-      (await readdir(`${DATA}/Gfx/Lobby/flags`))
-        .filter(
-          (flag) =>
-            flag.startsWith('flag_filter_') && flag.endsWith('@2x.packed.webp'),
-        )
-        .map(async (flag) => {
-          const content = await sharp(
-            await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`),
-          )
-            .trim({
-              threshold: 100,
-              background: { r: 0, g: 0, b: 0, alpha: 0 },
-            })
-            .toBuffer();
-          const name = flag.match(/flag_filter_(.+)@2x\.packed\.webp/)![1];
+    uploader.add({
+      content,
+      path: `flags/circle/${name}.webp`,
+    });
+  }
 
-          return {
-            content,
-            path: `flags/fade_small/${name}.webp`,
-          } satisfies FileChange;
-        }),
-    )),
-  ];
+  for (const flag of scratchedFiles) {
+    const content = await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`);
+    const name = flag.match(/flag_tutor-tank_(.+)\.packed\.webp/)![1];
 
-  await commitAssets('flags', changes);
+    uploader.add({
+      path: `flags/scratched/${name}.webp`,
+      content,
+    });
+  }
+
+  for (const flag of fadedFiles) {
+    const content = await sharp(
+      await readDVPLFile(`${DATA}/Gfx/Lobby/flags/${flag}`)
+    )
+      .trim({
+        threshold: 100,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      })
+      .toBuffer();
+    const name = flag.match(/flag_filter_(.+)@2x\.packed\.webp/)![1];
+
+    uploader.add({
+      content,
+      path: `flags/fade_small/${name}.webp`,
+    });
+  }
+
+  await uploader.flush();
 }

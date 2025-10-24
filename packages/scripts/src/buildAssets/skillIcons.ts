@@ -2,8 +2,7 @@ import { TankClass } from "@blitzkit/core";
 import sharp from "sharp";
 import { readDVPLFile } from "../core/blitz/readDVPLFile";
 import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
-import { commitAssets } from "../core/github/commitAssets";
-import type { FileChange } from "../core/github/commitMultipleFiles";
+import { AssetUploader } from "../core/github/assetUploader";
 import { DATA } from "./constants";
 
 interface SkillIcon {
@@ -31,20 +30,18 @@ export async function skillIcons() {
   const avatar = await readXMLDVPL<{ root: Avatar }>(
     `${DATA}/XML/item_defs/tankmen/avatar.xml`
   );
-  const changes = await Promise.all(
-    Object.values(avatar.root.skills).map(async (skill) => {
-      const icon = Array.isArray(skill.icon) ? skill.icon[0] : skill.icon;
-      const name = icon.name.split("/").at(-1)!.replace(/_\d$/, "");
-      const path = `${DATA}${icon.name.replace("~res:", "")}.packed.webp`;
-      const image = sharp(await readDVPLFile(path)).trim();
-      const content = await image.toBuffer();
+  using uploader = new AssetUploader("skill icons");
 
-      return {
-        content,
-        path: `icons/skills/${name}.webp`,
-      } satisfies FileChange;
-    })
-  );
+  for (const key in avatar.root.skills) {
+    const skill = avatar.root.skills[key];
+    const icon = Array.isArray(skill.icon) ? skill.icon[0] : skill.icon;
+    const name = icon.name.split("/").at(-1)!.replace(/_\d$/, "");
+    const path = `${DATA}${icon.name.replace("~res:", "")}.packed.webp`;
+    const image = sharp(await readDVPLFile(path)).trim();
+    const content = await image.toBuffer();
 
-  commitAssets("skill icons", changes);
+    await uploader.add({ content, path: `icons/skills/${name}.webp` });
+  }
+
+  await uploader.flush();
 }

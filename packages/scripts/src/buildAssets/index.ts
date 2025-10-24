@@ -20,6 +20,7 @@ import { gameModeBanners } from "./gameModeBanners";
 import { glossary } from "./glossary";
 import { migration } from "./migration";
 import { moduleIcons } from "./moduleIcons";
+import { popularTanks } from "./popularTanks";
 import { shellIcons } from "./shellIcons";
 import { skillIcons } from "./skillIcons";
 import { tankArmors } from "./tankArmors";
@@ -29,8 +30,8 @@ import { tankModels } from "./tankModels";
 if (!targets && !allTargets) throw new Error("No target(s) specified");
 
 const methods = [
-  migration,
   definitions,
+  tankIcons,
   tankModels,
   tankArmors,
   gameModeBanners,
@@ -43,10 +44,9 @@ const methods = [
   consumableProvisionIcons,
   camouflageIcons,
   boosterIcons,
-  tankIcons,
-  // blitzkitTankIcons,
-  // popularTanks,
   glossary,
+  migration,
+  popularTanks,
 ];
 
 for (const method of methods) {

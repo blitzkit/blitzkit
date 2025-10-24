@@ -99,7 +99,7 @@ export class AssetUploader {
     }
 
     if (diff.status === DiffStatus.Unchanged) {
-      console.log(`🔵 (${diff.change.toLocaleString()}B) ${change.path}`);
+      console.log(`🔵 ${change.path}`);
     } else {
       console.log(
         `${diff.status === DiffStatus.New ? "🟢" : "🟡"} (${

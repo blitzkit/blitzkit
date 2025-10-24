@@ -1,5 +1,5 @@
 import { throttle } from "lodash-es";
-import type { FileChange } from "./commitMultipleFiles";
+import { FileChange } from "./assetUploader";
 import { octokit } from "./octokit";
 
 export interface GithubChangeBlob {

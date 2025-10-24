@@ -40,7 +40,7 @@ import { parse as parseYaml } from "yaml";
 import { readStringDVPL } from "../core/blitz/readStringDVPL";
 import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
 import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
-import { commitAssets } from "../core/github/commitAssets";
+import { AssetUploader } from "../core/github/assetUploader";
 import { DATA } from "./constants";
 import type { Avatar } from "./skillIcons";
 import type { TankParameters } from "./tankIcons";
@@ -302,7 +302,7 @@ interface VehicleDefinitions {
           type: "default";
           enabled: false;
           factorsModifiers: "";
-        },
+        }
       ];
     };
   };
@@ -538,6 +538,7 @@ const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
 export async function definitions() {
   console.log("Building definitions...");
 
+  using uploader = new AssetUploader("definitions");
   const gameDefinitions: GameDefinitions = {
     version: (await readStringDVPL(`${DATA}/version.txt`)).split(" ")[0],
     nations: (
@@ -766,7 +767,9 @@ export async function definitions() {
     }
 
     console.warn(
-      `Multiple tanks share slug ${slug}: ${requesters.map(({ key }) => key).join(", ")}`
+      `Multiple tanks share slug ${slug}: ${requesters
+        .map(({ key }) => key)
+        .join(", ")}`
     );
 
     if (requesters.length !== 2) {
@@ -1018,8 +1021,8 @@ export async function definitions() {
         type: tankTags.includes("collectible")
           ? TankType.COLLECTOR
           : (typeof tank.price === "number" ? false : "gold" in tank.price)
-            ? TankType.PREMIUM
-            : TankType.RESEARCHABLE,
+          ? TankType.PREMIUM
+          : TankType.RESEARCHABLE,
         tier: tank.level,
         class: blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
         testing: tankTags.includes("testTank"),
@@ -1337,24 +1340,24 @@ export async function definitions() {
                       },
                     }
                   : gunType === "autoReloader"
-                    ? {
-                        $case: "auto_reloader",
-                        value: {
-                          intra_clip: 60 / gun.clip!.rate,
-                          shell_count: gunClipCount,
-                          shell_reloads: gun
-                            .pumpGunReloadTimes!.split(" ")
-                            .map(Number),
-                        },
-                      }
-                    : {
-                        $case: "auto_loader",
-                        value: {
-                          intra_clip: 60 / gun.clip!.rate,
-                          clip_reload: gun.reloadTime,
-                          shell_count: gunClipCount,
-                        },
+                  ? {
+                      $case: "auto_reloader",
+                      value: {
+                        intra_clip: 60 / gun.clip!.rate,
+                        shell_count: gunClipCount,
+                        shell_reloads: gun
+                          .pumpGunReloadTimes!.split(" ")
+                          .map(Number),
                       },
+                    }
+                  : {
+                      $case: "auto_loader",
+                      value: {
+                        intra_clip: 60 / gun.clip!.rate,
+                        clip_reload: gun.reloadTime,
+                        shell_count: gunClipCount,
+                      },
+                    },
             } satisfies GunDefinition);
 
             modelDefinitions.models[tankId].turrets[turretId].guns[gunId] = {
@@ -1365,8 +1368,8 @@ export async function definitions() {
                 gun.armor.gun === undefined
                   ? 0
                   : typeof gun.armor.gun === "number"
-                    ? gun.armor.gun
-                    : gun.armor.gun["#text"],
+                  ? gun.armor.gun
+                  : gun.armor.gun["#text"],
               pitch: {
                 min: gunPitch[0],
                 max: gunPitch[1],
@@ -1413,7 +1416,7 @@ export async function definitions() {
                 type: blitzShellKindToBlitzkit[shell.kind],
                 explosion_radius:
                   shell.kind === "HIGH_EXPLOSIVE"
-                    ? (shell.explosionRadius ?? 0)
+                    ? shell.explosionRadius ?? 0
                     : undefined,
                 icon: shell.icon,
                 penetration: {
@@ -1783,42 +1786,42 @@ export async function definitions() {
     };
   });
 
-  await commitAssets("definitions", [
-    {
-      content: GameDefinitions.encode(gameDefinitions).finish(),
-      path: "definitions/game.pb",
-    },
-    {
-      content: TankDefinitions.encode(tankDefinitions).finish(),
-      path: "definitions/tanks.pb",
-    },
-    {
-      content: ModelDefinitions.encode(modelDefinitions).finish(),
-      path: "definitions/models.pb",
-    },
-    {
-      content: EquipmentDefinitions.encode(equipmentDefinitions).finish(),
-      path: "definitions/equipment.pb",
-    },
-    {
-      content: ConsumableDefinitions.encode(consumableDefinitions).finish(),
-      path: "definitions/consumables.pb",
-    },
-    {
-      content: ProvisionDefinitions.encode(provisionDefinitions).finish(),
-      path: "definitions/provisions.pb",
-    },
-    {
-      content: SkillDefinitions.encode(skillDefinitions).finish(),
-      path: "definitions/skills.pb",
-    },
-    {
-      content: MapDefinitions.encode(mapDefinitions).finish(),
-      path: "definitions/maps.pb",
-    },
-    {
-      content: CamouflageDefinitions.encode(camouflageDefinitions).finish(),
-      path: "definitions/camouflages.pb",
-    },
-  ]);
+  await uploader.add({
+    content: GameDefinitions.encode(gameDefinitions).finish(),
+    path: "definitions/game.pb",
+  });
+  await uploader.add({
+    content: TankDefinitions.encode(tankDefinitions).finish(),
+    path: "definitions/tanks.pb",
+  });
+  await uploader.add({
+    content: ModelDefinitions.encode(modelDefinitions).finish(),
+    path: "definitions/models.pb",
+  });
+  await uploader.add({
+    content: EquipmentDefinitions.encode(equipmentDefinitions).finish(),
+    path: "definitions/equipment.pb",
+  });
+  await uploader.add({
+    content: ConsumableDefinitions.encode(consumableDefinitions).finish(),
+    path: "definitions/consumables.pb",
+  });
+  await uploader.add({
+    content: ProvisionDefinitions.encode(provisionDefinitions).finish(),
+    path: "definitions/provisions.pb",
+  });
+  await uploader.add({
+    content: SkillDefinitions.encode(skillDefinitions).finish(),
+    path: "definitions/skills.pb",
+  });
+  await uploader.add({
+    content: MapDefinitions.encode(mapDefinitions).finish(),
+    path: "definitions/maps.pb",
+  });
+  await uploader.add({
+    content: CamouflageDefinitions.encode(camouflageDefinitions).finish(),
+    path: "definitions/camouflages.pb",
+  });
+
+  await uploader.flush();
 }

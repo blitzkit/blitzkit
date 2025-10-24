@@ -4,22 +4,22 @@ import {
   Reviews,
   Video,
   youtubers,
-} from '@blitzkit/core';
-import { google } from 'googleapis';
-import { cloneDeep, uniqBy } from 'lodash-es';
-import { commitAssets } from './core/github/commitAssets';
+} from "@blitzkit/core";
+import { google } from "googleapis";
+import { cloneDeep, uniqBy } from "lodash-es";
+import { AssetUploader } from "./core/github/assetUploader";
 
 const MAX_QUERIES = 64;
 
-console.log('Finding reviews...');
+console.log("Finding reviews...");
 
-const currentReviews = await fetch(asset('definitions/reviews.pb'))
+const currentReviews = await fetch(asset("definitions/reviews.pb"))
   .then((response) => response.arrayBuffer())
   .then((buffer) => Reviews.decode(new Uint8Array(buffer)));
 const auth = await google.auth.getClient({
-  scopes: ['https://www.googleapis.com/auth/youtube.readonly'],
+  scopes: ["https://www.googleapis.com/auth/youtube.readonly"],
 });
-const youtube = google.youtube({ version: 'v3', auth });
+const youtube = google.youtube({ version: "v3", auth });
 
 const tankDefinitions = await fetchTankDefinitions();
 const tanks = Object.values(tankDefinitions.tanks);
@@ -43,7 +43,7 @@ for (const tank of tanksSanitized) {
 
   try {
     const results = await youtube.search.list({
-      part: ['snippet'],
+      part: ["snippet"],
       q: `World of Tanks Blitz ${tank.name}`,
     });
 
@@ -54,9 +54,9 @@ for (const tank of tanksSanitized) {
         (item) =>
           item.snippet?.channelId &&
           item.id?.videoId &&
-          youtubers.some(({ id }) => id === item.snippet?.channelId),
+          youtubers.some(({ id }) => id === item.snippet?.channelId)
       ),
-      (item) => item.snippet!.channelId,
+      (item) => item.snippet!.channelId
     );
 
     reviews.reviews[tank.id] = {
@@ -66,7 +66,7 @@ for (const tank of tanksSanitized) {
           ({
             id: item.id!.videoId!,
             author: item.snippet!.channelId!,
-          }) satisfies Video,
+          } satisfies Video)
       ),
     };
 
@@ -78,9 +78,11 @@ for (const tank of tanksSanitized) {
     break;
   }
 }
-await commitAssets('reviews', [
-  {
-    content: Reviews.encode(reviews).finish(),
-    path: 'definitions/reviews.pb',
-  },
-]);
+
+using uploader = new AssetUploader("reviews");
+
+await uploader.add({
+  content: Reviews.encode(reviews).finish(),
+  path: "definitions/reviews.pb",
+});
+await uploader.flush();

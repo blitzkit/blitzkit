@@ -13,8 +13,7 @@ import {
 } from "@blitzkit/core";
 import { chunk } from "lodash-es";
 import { argv } from "process";
-import { commitAssets } from "./core/github/commitAssets";
-import { FileChange } from "./core/github/commitMultipleFiles";
+import { AssetUploader } from "./core/github/assetUploader";
 
 const region = argv
   .find((arg) => arg.startsWith("--region="))
@@ -156,16 +155,15 @@ const info = await patientFetchJSON<RatingInfo & { detail: undefined }>(
   `https://${regionSubdomain}.wotblitz.com/en/api/rating-leaderboards/season/`
 );
 const normalizedServer = regionSubdomain === "na" ? "com" : regionSubdomain;
-
 const content = RatingLeaderboard.encode({
   version: { $case: "v2", value: { entries } },
 }).finish();
 
-const changes: FileChange[] = [
-  {
-    path: `regions/${normalizedServer}/rating/${info.current_season}.pb`,
-    content,
-  },
-];
+using uploader = new AssetUploader(`rating leaderboard ${regionSubdomain}`);
 
-commitAssets(`rating leaderboard ${regionSubdomain}`, changes);
+await uploader.add({
+  path: `regions/${normalizedServer}/rating/${info.current_season}.pb`,
+  content,
+});
+
+await uploader.flush();

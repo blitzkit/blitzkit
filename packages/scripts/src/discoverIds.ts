@@ -9,11 +9,10 @@ import {
   getAccountInfo,
   idToRegion,
   retryAbleBlitzFetchEvent,
-} from '@blitzkit/core';
-import { chunk, times, uniq } from 'lodash-es';
-import { compress, decompress } from 'lz4js';
-import { commitAssets } from './core/github/commitAssets';
-import { FileChange } from './core/github/commitMultipleFiles';
+} from "@blitzkit/core";
+import { chunk, times, uniq } from "lodash-es";
+import { compress, decompress } from "lz4js";
+import { AssetUploader } from "./core/github/assetUploader";
 
 const CHUNK_SIZE = 2 ** 21;
 const RUN_TIME = 1000 * 60 * 60 * 5.5;
@@ -24,12 +23,12 @@ const TERMINATION_THRESHOLD = 1000;
 const startTime = Date.now();
 const indexableRegions = [...REGIONS];
 let ids: number[] = [];
-const preDiscoveredManifest = (await fetch(asset('ids/manifest.json')).then(
-  (response) => response.json(),
+const preDiscoveredManifest = (await fetch(asset("ids/manifest.json")).then(
+  (response) => response.json()
 )) as DiscoveredIdsDefinitions;
 
 console.log(
-  `Fetching ${preDiscoveredManifest.chunks} pre-discovered chunks...`,
+  `Fetching ${preDiscoveredManifest.chunks} pre-discovered chunks...`
 );
 
 let chunkIndex = 0;
@@ -39,23 +38,23 @@ while (chunkIndex < preDiscoveredManifest.chunks) {
       const buffer = await response.arrayBuffer();
       const decompressed = decompress(new Uint8Array(buffer)).buffer;
       return new DidsReadStream(decompressed as ArrayBuffer).dids();
-    },
+    }
   );
 
   // no spread syntax: https://github.com/oven-sh/bun/issues/11734
   ids = ids.concat(preDiscovered);
 
   console.log(
-    `Pre-discovered ${preDiscovered.length} ids (chunk ${chunkIndex})`,
+    `Pre-discovered ${preDiscovered.length} ids (chunk ${chunkIndex})`
   );
 
   chunkIndex++;
 }
 
 const regionalIdIndex: Record<Region, number> = {
-  asia: ids.findLast((id) => idToRegion(id) === 'asia') ?? MIN_REGION_IDS.asia,
-  com: ids.findLast((id) => idToRegion(id) === 'com') ?? MIN_REGION_IDS.com,
-  eu: ids.findLast((id) => idToRegion(id) === 'eu') ?? MIN_REGION_IDS.eu,
+  asia: ids.findLast((id) => idToRegion(id) === "asia") ?? MIN_REGION_IDS.asia,
+  com: ids.findLast((id) => idToRegion(id) === "com") ?? MIN_REGION_IDS.com,
+  eu: ids.findLast((id) => idToRegion(id) === "eu") ?? MIN_REGION_IDS.eu,
 };
 const zeroStreak: Record<Region, number> = { asia: 0, com: 0, eu: 0 };
 let regionIndex = 0;
@@ -64,7 +63,7 @@ let outOfTimeFlagged = false;
 async function verify(region: Region, ids: number[]) {
   const infos = await getAccountInfo(region, ids, undefined, {
     // cheeky way of requesting nothing
-    fields: 'account_id,-account_id',
+    fields: "account_id,-account_id",
   });
   const filtered = ids.filter((_, index) => {
     const info = infos[index];
@@ -85,7 +84,7 @@ const interval = setInterval(async () => {
   const region = indexableRegions[regionIndex];
   const idsToVerify = times(
     ACCOUNTS_PER_CALL,
-    (index) => regionalIdIndex[region] + index,
+    (index) => regionalIdIndex[region] + index
   );
   const verified = await verify(region, idsToVerify);
 
@@ -105,8 +104,8 @@ const interval = setInterval(async () => {
         indexableRegions.splice(sliceableIndex, 1);
 
         if (indexableRegions.length === 0) {
-          console.log('All players discovered exhaustively!');
-          post();
+          console.log("All players discovered exhaustively!");
+          await post();
         }
       }
     }
@@ -117,46 +116,50 @@ const interval = setInterval(async () => {
 
   if (Date.now() - startTime > RUN_TIME && !outOfTimeFlagged) {
     outOfTimeFlagged = true;
-    console.log('Out of time');
-    post();
+    console.log("Out of time");
+    await post();
   }
 
   regionIndex = (regionIndex + 1) % indexableRegions.length;
   regionalIdIndex[region] += ACCOUNTS_PER_CALL;
 }, 1000 / MAX_REQUESTS);
 
-function post() {
+async function post() {
   clearInterval(interval);
   ids = uniq(ids).sort((a, b) => a - b);
   console.log(`Uploading ${ids.length} ids...`);
 
+  using uploader = new AssetUploader("discovered ids");
   const idsChunked = chunk(ids, CHUNK_SIZE);
-  const files = idsChunked.map((chunk, index) => {
+
+  let index = 0;
+  for (const chunk of idsChunked) {
     const didsWriteStream = new DidsWriteStream().dids(chunk);
     const buffer = didsWriteStream.uint8Array;
     const content = compress(buffer);
 
     console.log(
-      `Chunk ${index} with ${chunk.length} ids (compressed: ${content.length}; uncompressed: ${buffer.length})`,
+      `Chunk ${index} with ${chunk.length} ids (compressed: ${content.length}; uncompressed: ${buffer.length})`
     );
 
-    return {
+    await uploader.add({
       content,
       path: `ids/${index}.dids.lz4`,
-    } satisfies FileChange;
+    });
+
+    index++;
+  }
+
+  await uploader.add({
+    content: new TextEncoder().encode(
+      JSON.stringify({
+        chunks: idsChunked.length,
+        count: ids.length,
+        time: Date.now(),
+      } satisfies DiscoveredIdsDefinitions)
+    ),
+    path: "ids/manifest.json",
   });
 
-  commitAssets('discovered ids', [
-    ...files,
-    {
-      content: new TextEncoder().encode(
-        JSON.stringify({
-          chunks: idsChunked.length,
-          count: ids.length,
-          time: Date.now(),
-        } satisfies DiscoveredIdsDefinitions),
-      ),
-      path: 'ids/manifest.json',
-    },
-  ]);
+  await uploader.flush();
 }

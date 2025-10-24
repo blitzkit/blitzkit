@@ -11,10 +11,10 @@ import {
   getAccountInfo,
   getTankStats,
   idToRegion,
-} from '@blitzkit/core';
-import { chunk, times } from 'lodash-es';
-import { commitAssets } from './core/github/commitAssets';
-import { fetchPreDiscoveredIds } from './core/github/fetchPreDiscoveredIds';
+} from "@blitzkit/core";
+import { chunk, times } from "lodash-es";
+import { AssetUploader } from "./core/github/assetUploader";
+import { fetchPreDiscoveredIds } from "./core/github/fetchPreDiscoveredIds";
 
 interface DataPoint {
   x: number;
@@ -23,7 +23,7 @@ interface DataPoint {
 }
 
 type OptionalSecondLevel<T> = {
-  [P in keyof T]: P extends 'samples'
+  [P in keyof T]: P extends "samples"
     ? T[P]
     : {
         [K in keyof T[P]]?: T[P][K];
@@ -46,16 +46,16 @@ const startTime = Date.now();
 const preDiscoveredIds = await fetchPreDiscoveredIds();
 const playerIds: Record<Region, number[][]> = {
   asia: chunk(
-    preDiscoveredIds.filter((id) => idToRegion(id) === 'asia'),
-    PLAYER_IDS_PER_CALL,
+    preDiscoveredIds.filter((id) => idToRegion(id) === "asia"),
+    PLAYER_IDS_PER_CALL
   ),
   com: chunk(
-    preDiscoveredIds.filter((id) => idToRegion(id) === 'com'),
-    PLAYER_IDS_PER_CALL,
+    preDiscoveredIds.filter((id) => idToRegion(id) === "com"),
+    PLAYER_IDS_PER_CALL
   ),
   eu: chunk(
-    preDiscoveredIds.filter((id) => idToRegion(id) === 'eu'),
-    PLAYER_IDS_PER_CALL,
+    preDiscoveredIds.filter((id) => idToRegion(id) === "eu"),
+    PLAYER_IDS_PER_CALL
   ),
 };
 let regionIndex = 0;
@@ -71,10 +71,10 @@ times(THREADS, async () => {
     const regionIds = playerIds[region];
     const [ids] = regionIds.splice(
       Math.floor(Math.random() * regionIds.length),
-      1,
+      1
     );
     const accountInfo = await getAccountInfo(region, ids, undefined, {
-      fields: 'last_battle_time,statistics.all.battles',
+      fields: "last_battle_time,statistics.all.battles",
     });
 
     const filteredIds = ids.filter((_, index) => {
@@ -103,9 +103,9 @@ times(THREADS, async () => {
     const players = await Promise.all(
       filteredIds.map((id) =>
         getTankStats(region, id, {
-          fields: 'last_battle_time,battle_life_time,all,tank_id',
-        }),
-      ),
+          fields: "last_battle_time,battle_life_time,all,tank_id",
+        })
+      )
     );
 
     players.forEach((tanks) => {
@@ -114,7 +114,7 @@ times(THREADS, async () => {
 
         if (!tankIds.includes(tank.tank_id)) {
           console.log(
-            `Found new tank: ${tank.tank_id} (${tankIds.length + 1})`,
+            `Found new tank: ${tank.tank_id} (${tankIds.length + 1})`
           );
           tankIds.push(tank.tank_id);
           tanksSorted[tank.tank_id] = [];
@@ -140,9 +140,10 @@ async function postWork() {
   console.log(
     `Generating statistics based on ${samples.d_120.toLocaleString()} players (${samples.total.toLocaleString()} checked in total) and ${
       tankIds.length
-    } tanks...`,
+    } tanks...`
   );
 
+  using uploader = new AssetUploader("averages");
   const averages: Record<number, AverageDefinitionsEntry> = {};
 
   tankIds.forEach((id) => {
@@ -179,7 +180,7 @@ async function postWork() {
       const data: DataPoint[] = dataWY.map(({ w, y }, index) => ({
         w,
         x:
-          (key === 'battle_life_time'
+          (key === "battle_life_time"
             ? tanks[index].battle_life_time
             : tanks[index].all[key]) / w,
         y,
@@ -190,7 +191,7 @@ async function postWork() {
       function sum(slicer: (data: DataPoint) => number) {
         return data.reduce(
           (accumulator, data) => accumulator + slicer(data),
-          0,
+          0
         );
       }
 
@@ -231,14 +232,14 @@ async function postWork() {
     latest,
   };
 
-  commitAssets('averages', [
-    {
-      path: `averages/${latest}.pb`,
-      content: AverageDefinitions.encode(averageDefinitions).finish(),
-    },
-    {
-      path: 'averages/manifest.json',
-      content: new TextEncoder().encode(JSON.stringify(manifest)),
-    },
-  ]);
+  await uploader.add({
+    path: `averages/${latest}.pb`,
+    content: AverageDefinitions.encode(averageDefinitions).finish(),
+  });
+  await uploader.add({
+    path: "averages/manifest.json",
+    content: new TextEncoder().encode(JSON.stringify(manifest)),
+  });
+
+  await uploader.flush();
 }
