@@ -104,6 +104,7 @@ jobs:
         run: |
           chmod +x ./temp/depotDownloader/DepotDownloader
           ./temp/depotDownloader/DepotDownloader -q -os windows -app 444200 -username ${{ secrets.DEPOT_DOWNLOADER_USERNAME }} -password "${{ secrets.DEPOT_DOWNLOADER_PASSWORD }}"
+          mkdir -p temp/game
           mv depots/444202/*/* temp/game
           rm -rf depots
 
