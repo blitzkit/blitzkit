@@ -77,9 +77,9 @@ export async function commitMultipleFiles(
         // console.log(`🔵 (${diff.change.toLocaleString()}B) ${change.path}`);
       } else {
         console.log(
-          `${
-            diff.status === DiffStatus.New ? "🟢" : "🟡"
-          } (${diff.change > 0 ? "+" : ""}${diff.change.toLocaleString()}B) ${change.path}`
+          `${diff.status === DiffStatus.New ? "🟢" : "🟡"} (${
+            diff.change > 0 ? "+" : ""
+          }${diff.change.toLocaleString()}B) ${change.path}`
         );
         changes.push(change);
       }
