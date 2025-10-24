@@ -107,7 +107,7 @@ jobs:
 
       - name: (Steam) Apply patches
         if: github.event.inputs.archive_url == ''
-        run: bun setup:patches --depot
+        run: bun setup:patches --manual
 
       - name: (ZIP) Download client
         if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.zip')
