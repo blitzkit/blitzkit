@@ -5,11 +5,7 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
-import {
-  ComponentBooleanIcon,
-  LockClosedIcon,
-  LockOpen2Icon,
-} from "@radix-ui/react-icons";
+import { LockClosedIcon, LockOpen2Icon } from "@radix-ui/react-icons";
 import {
   Box,
   Flex,
@@ -71,7 +67,9 @@ function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
             <img
               style={{ width: "1em", height: "1em" }}
               src={asset(
-                `icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`
+                `icons/shells/${shellTypeIcons[shells[index]]}${
+                  premium ? "_premium" : ""
+                }.webp`
               )}
             />
           )}
@@ -107,7 +105,9 @@ function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
                 >
                   <img
                     src={asset(
-                      `icons/shells/${shellTypeIcons[shellType]}${premium ? "_premium" : ""}.webp`
+                      `icons/shells/${shellTypeIcons[shellType]}${
+                        premium ? "_premium" : ""
+                      }.webp`
                     )}
                     style={{ width: "1em", height: "1em" }}
                   />
@@ -135,29 +135,13 @@ function OwnershipFilter(props: FlexProps) {
       <IconButton
         size={size}
         disabled={!wargaming}
-        variant={tankFilters.ownership === "all" ? "solid" : "soft"}
+        variant={tankFilters.showOwned ? "solid" : "soft"}
         radius="none"
-        color={tankFilters.ownership === "all" ? undefined : "gray"}
+        color={tankFilters.showOwned ? undefined : "gray"}
         highContrast
         onClick={() => {
           TankFilters.mutate((draft) => {
-            draft.ownership = "all";
-          });
-        }}
-      >
-        <ComponentBooleanIcon />
-      </IconButton>
-
-      <IconButton
-        size={size}
-        disabled={!wargaming}
-        variant={tankFilters.ownership === "owned" ? "solid" : "soft"}
-        radius="none"
-        color={tankFilters.ownership === "owned" ? undefined : "gray"}
-        highContrast
-        onClick={() => {
-          TankFilters.mutate((draft) => {
-            draft.ownership = "owned";
+            draft.showOwned = !draft.showOwned;
           });
         }}
       >
@@ -167,13 +151,13 @@ function OwnershipFilter(props: FlexProps) {
       <IconButton
         size={size}
         disabled={!wargaming}
-        variant={tankFilters.ownership === "unowned" ? "solid" : "soft"}
+        variant={tankFilters.showUnowned ? "solid" : "soft"}
         radius="none"
-        color={tankFilters.ownership === "unowned" ? undefined : "gray"}
+        color={tankFilters.showUnowned ? undefined : "gray"}
         highContrast
         onClick={() => {
           TankFilters.mutate((draft) => {
-            draft.ownership = "unowned";
+            draft.showUnowned = !draft.showUnowned;
           });
         }}
       >
@@ -579,27 +563,13 @@ export function FilterControl() {
         >
           <IconButton
             size={size}
-            variant={tankFilters.testing === "include" ? "solid" : "soft"}
+            variant={tankFilters.showNonTesting ? "solid" : "soft"}
             radius="none"
-            color={tankFilters.testing === "include" ? undefined : "gray"}
+            color={tankFilters.showNonTesting ? undefined : "gray"}
             highContrast
             onClick={() => {
               TankFilters.mutate((draft) => {
-                draft.testing = "include";
-              });
-            }}
-          >
-            <ComponentBooleanIcon />
-          </IconButton>
-          <IconButton
-            size={size}
-            variant={tankFilters.testing === "exclude" ? "solid" : "soft"}
-            radius="none"
-            color={tankFilters.testing === "exclude" ? undefined : "gray"}
-            highContrast
-            onClick={() => {
-              TankFilters.mutate((draft) => {
-                draft.testing = "exclude";
+                draft.showNonTesting = !draft.showNonTesting;
               });
             }}
           >
@@ -607,15 +577,16 @@ export function FilterControl() {
               style={{ width: "1em", height: "1em", color: "currentColor" }}
             />
           </IconButton>
+
           <IconButton
             size={size}
-            variant={tankFilters.testing === "only" ? "solid" : "soft"}
+            variant={tankFilters.showTesting ? "solid" : "soft"}
             radius="none"
-            color={tankFilters.testing === "only" ? undefined : "gray"}
+            color={tankFilters.showTesting ? undefined : "gray"}
             highContrast
             onClick={() => {
               TankFilters.mutate((draft) => {
-                draft.testing = "only";
+                draft.showTesting = !draft.showTesting;
               });
             }}
           >

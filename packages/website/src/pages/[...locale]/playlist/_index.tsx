@@ -17,9 +17,7 @@ export function Page({
 }: Props & MaybeSkeletonComponentProps) {
   const generated = Playlist.use((state) => state.list !== undefined);
 
-  if (App.state.logins.wargaming && TankFilters.state.ownership !== "owned") {
-    TankFilters.state.ownership = "owned";
-  }
+  if (App.state.logins.wargaming) TankFilters.state.showUnowned = false;
 
   return (
     <LocaleProvider locale={locale}>

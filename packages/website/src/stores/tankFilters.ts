@@ -17,12 +17,15 @@ export interface TankFilters {
   nations: string[];
   classes: TankClass[];
   types: TankType[];
-  testing: "include" | "exclude" | "only";
   search: string | null;
   searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
-  ownership: "all" | "owned" | "unowned";
+
+  showTesting: boolean;
+  showNonTesting: boolean;
+  showOwned: boolean;
+  showUnowned: boolean;
 }
 
 export const TankFilters = new Varuna<TankFilters>({
@@ -30,10 +33,13 @@ export const TankFilters = new Varuna<TankFilters>({
   nations: [],
   classes: [],
   types: [],
-  testing: "include",
   search: null,
   searching: false,
   gunType: [],
   shells: [null, null, null],
-  ownership: "all",
+
+  showTesting: true,
+  showNonTesting: true,
+  showOwned: true,
+  showUnowned: true,
 });

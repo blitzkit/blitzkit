@@ -487,7 +487,7 @@ export const TankSearch = memo<TankSearchProps>(
           )}
         </Flex>
 
-        {tankFilters.testing === "only" && (
+        {tankFilters.showTesting && !tankFilters.showNonTesting && (
           <Flex justify="center" mt="4">
             <Callout.Root color="amber">
               <Callout.Icon>
