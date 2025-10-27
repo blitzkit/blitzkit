@@ -3,6 +3,7 @@ import { Flex, Heading, IconButton, Table } from "@radix-ui/themes";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { CompareCellDirection } from "../CompareCell";
 import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 import { CompareRow } from "./CompareRow";
 import { CompareSectionTitle } from "./CompareSectionTitle";
@@ -79,7 +80,7 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           name={strings.website.tools.tankopedia.characteristics.values.reload}
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           value={(stats) =>
             stats.shellReload ??
             stats.shellReloads!.reduce((a, b) => a + b, 0) /
@@ -95,7 +96,7 @@ export function Body({ stats }: BodyProps) {
           <>
             <CompareRow
               stats={stats}
-              deltaType="lowerIsBetter"
+              deltaType={CompareCellDirection.LOWER_IS_BETTER}
               value="intraClip"
               decimals={2}
             />
@@ -107,7 +108,7 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           value="shellRicochet"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={0}
         />
         <CompareRow stats={stats} value="shellVelocity" decimals={0} />
@@ -116,48 +117,48 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           value="aimTime"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={2}
         />
         <CompareRow
           stats={stats}
           value="dispersion"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow
           stats={stats}
           indent
           value="dispersionMoving"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow
           stats={stats}
           indent
           value="dispersionHullTraversing"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow
           stats={stats}
           indent
           value="dispersionTurretTraversing"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow
           stats={stats}
           indent
           value="dispersionShooting"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow
           stats={stats}
           indent
           value="dispersionGunDamaged"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={3}
         />
         <CompareRow stats={stats} value="gunDepression" decimals={1} />
@@ -186,21 +187,21 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           value="hardTerrainCoefficientRaw"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={2}
         />
         <CompareRow
           stats={stats}
           indent
           value="mediumTerrainCoefficientRaw"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={2}
         />
         <CompareRow
           stats={stats}
           indent
           value="softTerrainCoefficientRaw"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={2}
         />
         <CompareRow
@@ -246,7 +247,7 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           value="fireChance"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           display={(stats) => (stats.fireChance * 100).toFixed(0)}
           deltaNominalDisplay={(delta) => (delta * 100).toFixed(0)}
         />
@@ -288,28 +289,28 @@ export function Body({ stats }: BodyProps) {
         <CompareRow
           stats={stats}
           value="volume"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={1}
         />
         <CompareRow
           stats={stats}
           indent
           value="width"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={1}
         />
         <CompareRow
           stats={stats}
           indent
           value="height"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={1}
         />
         <CompareRow
           stats={stats}
           indent
           value="length"
-          deltaType="lowerIsBetter"
+          deltaType={CompareCellDirection.LOWER_IS_BETTER}
           decimals={1}
         />
       </Table.Body>

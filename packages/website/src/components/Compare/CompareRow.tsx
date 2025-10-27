@@ -6,17 +6,17 @@ import {
 import { Flex, IconButton, Table, Text } from "@radix-ui/themes";
 import { useRef } from "react";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
-import { Var } from "../../core/radix/var";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
 import { ComparePersistent } from "../../stores/comparePersistent";
+import { CompareCell, CompareCellDirection } from "../CompareCell";
 import { StickyRowHeaderCell } from "../StickyRowHeaderCell";
 
 type CompareRowProps = {
   display?: (
     member: Awaited<TankCharacteristics>
   ) => number | string | undefined;
-  deltaType?: "higherIsBetter" | "lowerIsBetter";
+  deltaType?: CompareCellDirection;
   decimals?: number;
   deltaNominalDisplay?: (delta: number) => string | number;
   indent?: boolean;
@@ -33,7 +33,7 @@ type CompareRowProps = {
 
 export function CompareRow({
   display,
-  deltaType = "higherIsBetter",
+  deltaType = CompareCellDirection.HIGHER_IS_BETTER,
   decimals,
   deltaNominalDisplay,
   indent,
@@ -108,33 +108,18 @@ export function CompareRow({
       {values.map((value, index) => {
         const delta = value - values[0];
         const deltaPercentage = value / values[0] - 1;
-        const normalizedDeltaPercentage = Math.round(
-          Math.min(100, Math.abs(deltaPercentage) * 2 * 100 + 25)
-        );
         const resolvedDisplayValue = display
           ? display(stats[index])
           : decimals === undefined
-            ? value
-            : value?.toFixed(decimals);
+          ? value
+          : value?.toFixed(decimals);
 
         return (
-          <Table.Cell
+          <CompareCell
             key={index}
-            style={{
-              backgroundColor:
-                index === 0 ||
-                value === undefined ||
-                values[0] === undefined ||
-                value === values[0]
-                  ? undefined
-                  : (
-                        deltaType === "higherIsBetter"
-                          ? value > values[0]
-                          : value < values[0]
-                      )
-                    ? `color-mix(in srgb, ${Var("green-7")} ${normalizedDeltaPercentage}%, ${Var("green-3")})`
-                    : `color-mix(in srgb, ${Var("red-7")} ${normalizedDeltaPercentage}%, ${Var("red-3")})`,
-            }}
+            truth={values[0]}
+            value={value}
+            direction={deltaType}
           >
             <Flex
               align="center"
@@ -160,8 +145,8 @@ export function CompareRow({
                           deltaNominalDisplay
                             ? deltaNominalDisplay(delta)
                             : decimals === undefined
-                              ? delta
-                              : delta.toFixed(decimals)
+                            ? delta
+                            : delta.toFixed(decimals)
                         }`}
                         )
                       </Text>
@@ -179,7 +164,7 @@ export function CompareRow({
                   </>
                 )}
             </Flex>
-          </Table.Cell>
+          </CompareCell>
         );
       })}
     </Table.Row>

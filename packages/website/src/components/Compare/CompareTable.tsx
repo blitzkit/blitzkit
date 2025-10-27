@@ -107,8 +107,8 @@ export function CompareTable({ stats }: CompareTableProps) {
                                     crewSkills[skill] === 0
                                       ? Var("gray-11")
                                       : permanentSkills.includes(skill)
-                                        ? Var("crimson-11")
-                                        : Var("amber-11"),
+                                      ? Var("crimson-11")
+                                      : Var("amber-11"),
                                 }}
                               />
                             ))}
