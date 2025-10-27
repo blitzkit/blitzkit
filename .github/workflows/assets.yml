@@ -37,8 +37,8 @@ env:
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
   WOTB_DLC_CDN: ${{ secrets.WOTB_DLC_CDN }}
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
-  PUBLIC_ASSET_REPO: ${{ github.event.inputs.asset_repo }}
-  PUBLIC_ASSET_BRANCH: main
+  PUBLIC_ASSET_REPO: ${{ github.event.inputs.asset_repo != '' && github.event.inputs.asset_repo || secrets.PUBLIC_ASSET_REPO }}
+  PUBLIC_ASSET_BRANCH: ${{ secrets.PUBLIC_ASSET_BRANCH }}
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
   PUBLIC_PROMOTE_OPENTEST: ${{ secrets.PUBLIC_PROMOTE_OPENTEST }}
