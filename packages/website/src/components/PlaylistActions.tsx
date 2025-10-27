@@ -37,26 +37,26 @@ export function PlaylistActions() {
           {strings.website.tools.playlist.shuffle}
         </Button>
 
+        <Button
+          size={{ initial: "1", xs: "2" }}
+          variant="outline"
+          onClick={() => {
+            Playlist.mutate((draft) => {
+              draft.list = draft.list?.filter(
+                (entry) =>
+                  (!entry.now ||
+                    !entry.then ||
+                    entry.now.battles === entry.then.battles) &&
+                  !entry.checked
+              );
+            });
+          }}
+        >
+          {strings.website.tools.playlist.remove}
+        </Button>
+
         {wargaming && (
           <>
-            <Button
-              size={{ initial: "1", xs: "2" }}
-              variant="outline"
-              onClick={() => {
-                Playlist.mutate((draft) => {
-                  draft.list = draft.list?.filter(
-                    (entry) =>
-                      (!entry.now ||
-                        !entry.then ||
-                        entry.now.battles === entry.then.battles) &&
-                      !entry.checked
-                  );
-                });
-              }}
-            >
-              {strings.website.tools.playlist.remove}
-            </Button>
-
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
                 <Button size={{ initial: "1", xs: "2" }}>
