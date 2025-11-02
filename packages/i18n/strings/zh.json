@@ -493,11 +493,11 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "The max number of clan results (default: {limit})"
+            "description": "公会结果的最大显示数量 (默认：{limit})"
           }
         },
         "body": {
-          "title": "Clan search for {search} in region {region}",
+          "title": "在地区 {region} 中搜索公会 {search}",
           "no_results": "没有找到该公会"
         }
       },
@@ -507,11 +507,11 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "The max number of player results (default: {limit})"
+            "description": "玩家结果的最大显示数量 (默认：{limit})"
           }
         },
         "body": {
-          "title": "Player search for {search} in region {region}",
+          "title": "在地区 {region} 中搜索玩家 {search}",
           "no_results": "未找到玩家"
         }
       },
@@ -531,13 +531,13 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "How many neighbors to display (default: {count})"
+            "description": "显示附近有多少玩家（默认：{count}）"
           },
           "season": {
             "name": "赛季",
             "description": "赛季数 (默认：当前)",
             "choices": {
-              "current": "{season} (current)"
+              "current": "{season} (当前)"
             }
           },
           "league": {
@@ -546,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top {count} players",
-          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "前 {count} 玩家",
+          "no_participation": "# {player} 没有在赛季 {season} 中进行过评价战斗\n\n该玩家没有参加该赛季或没有完成校准。",
           "no_ongoing_season": "# 没有进行中的赛季\n\n目前没有赛季。",
           "deleted_player": "删除{id}",
           "neighbors": "对邻居进行评分",
-          "more": "+ {count} more"
+          "more": "+ {count} 更多"
         }
       },
       "today": {
@@ -566,7 +566,7 @@
         "name": "已拥有的战车",
         "description": "显示该阶级中所有您已拥有的战车",
         "body": {
-          "title": "# {name}'s owned tier {tier} tanks\n\n"
+          "title": "# {name} 所拥有的 {tier} 阶战车\n\n"
         }
       },
       "permissions": {
@@ -585,7 +585,7 @@
         "description": "检查机器人是否处于活动状态。",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - {time}ms"
+          "pong_with_time": "Pong 🏓 - {time} 微秒"
         },
         "subcommands": {
           "blitzkit": {
@@ -661,13 +661,13 @@
         "select_dialog_title": "搜索坦克",
         "swap_dialog_title": "交换坦克",
         "clear_filters": "清除筛选",
-        "login": "Login to use this",
+        "login": "登录以使用它",
         "search_bar_hint": "搜寻战车……",
         "recent": "最近查看的",
         "select_all": "全选",
         "count_singular": "1辆战车",
-        "count_plural": "{count} tanks",
-        "sorting_by": "Sorting by {name}",
+        "count_plural": "{count} 辆战车",
+        "sorting_by": "按 {name} 排序",
         "no_tanks_found": {
           "body": "找不到战车。",
           "search_again": "请尝试重新搜索。",
@@ -688,7 +688,7 @@
           "fire.caliber": "口径",
           "fire.standardPenetration": "标准炮弹穿透力",
           "fire.premiumPenetration": "加值炮弹穿透力",
-          "fire.tertiaryPenetration": "tertiary penetration",
+          "fire.tertiaryPenetration": "第三种炮弹穿透力",
           "fire.damage": "炮弹伤害值",
           "fire.moduleDamage": "模组伤害值",
           "fire.shellVelocity": "炮弹飞行速度",
@@ -733,7 +733,7 @@
         "title": "安装Blitz Kit App",
         "new": "NEW",
         "checking": "正在检查兼容性……",
-        "instructions": "Instructions for Apple devices.",
+        "instructions": "Apple 设备的说明。",
         "install": "安装",
         "dismiss": "忽略"
       },
@@ -743,16 +743,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "由 {name} 制作 ❤️"
       },
       "hot_tanks": {
         "title": "受欢迎的坦克",
-        "subtitle": "Last {days} days"
+        "subtitle": "过去 {days} 天"
       },
       "other_projects": {
         "title": "其他酷炫的项目"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "请帮忙将 {name} 翻译成 {language}！",
       "seo_description": "战车世界闪击战 全方位工具"
     },
     "docs": {
@@ -764,38 +764,38 @@
     "tools": {
       "playlist": {
         "reset": "重置",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your battles",
+        "shuffle": "换一批",
+        "remove": "移除已游玩的",
+        "tracking": "BlitzKit 正在追踪您的战斗记录",
         "sort": {
           "button": "排序依据",
-          "last_played": "Last played",
-          "least_played": "Least played"
+          "last_played": "最后一次游玩",
+          "least_played": "最少游玩的"
         },
         "table": {
           "index": "#",
-          "never": "Never",
+          "never": "从不",
           "tank": "战车",
-          "last_played": "Last played",
-          "battles": "Career battles",
+          "last_played": "最后一次游玩",
+          "battles": "生涯战斗数",
           "unrecorded": "--",
           "wins": "胜利"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "title": "战车数量太多了！",
+          "description": "您确定要创建包含 {count} 个坦克的游玩列表吗？以50%胜率计算，这需要 {time} 小时的游玩时间！",
           "cancel": "取消",
-          "proceed": "Proceed"
+          "proceed": "继续操作"
         },
-        "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
-        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "button": "Generate",
-        "pool_size": "{count} possible tanks"
+        "generate": "创建游玩列表",
+        "name": "遊玩列表",
+        "description": "战车游玩列表生成器",
+        "seo_description": "想不到在战车世界闪击战玩什么? 使用BlitzKit 游玩列表来获得建议！",
+        "button": "生成",
+        "pool_size": "{count} 辆可生成战车"
       },
       "mixer": {
-        "name": "Mixer",
+        "name": "组装",
         "button": "Mix and match",
         "description": "Mix tank modules",
         "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
