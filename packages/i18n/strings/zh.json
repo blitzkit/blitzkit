@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "测试",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
+    "long": "这是一个测试用长字符串。你绝对不会在用户界面中看见这些。我最喜欢的水果是{fruit}因为它的颜色是{color}的。我如此喜欢它，以至于我会把它的名字念3次！{fruit}！{fruit}！{fruit}！重申一次，它是{color}的而不是{not_color}的。",
     "fox": "褐色的狐狸迅速地跳过那只懒狗"
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "{value}m",
-      "mm": "{value}mm",
-      "deg": "{value}°",
-      "hp": "{value}hp",
+      "m": "{value} 米",
+      "mm": "{value} 毫米",
+      "deg": "{value} 度°",
+      "hp": "{value} 生命值",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}度°/秒"
     },
     "gun_types": {
       "auto_loader": "弹夹型战车",
@@ -187,7 +187,7 @@
     "common": {
       "errors": {
         "clan_not_found": "# 找不到军团\n找不到 \"{search}\". 请尝试选从搜索结果中择一个军团。",
-        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "player_not_found": "# 找不到玩家\n无法找到玩家 “{search}”。 尝试从搜索结果中选择玩家，或输入一个有效的玩家名称， 或使用“/link”命令。",
         "player_not_linked": "# 使用 `/link` 来开始\n我不知道你是谁，但你今天可以告诉我！",
         "tank_name_not_found": "# 找不到坦克\n找不到名称为 \"{search}\"的坦克。",
         "tank_id_not_found": "# 找不到坦克\n找不到ID为 \"{search}\"的坦克. 尝试输入坦克的名称。",
@@ -291,8 +291,8 @@
       "periods": {
         "career": "玩家资料",
         "today": "今日：",
-        "days": "{days} days",
-        "custom": "{day_1} - {day_2} days"
+        "days": "{days} 天",
+        "custom": "{day_1} - {day_2} 天"
       },
       "filters": {
         "none": "无筛选器",
@@ -339,19 +339,19 @@
         "body": {
           "subtitle": "研发",
           "total": "全部",
-          "research": "Research: {cost}",
-          "upgrades": "Upgrades: {cost}",
-          "purchase": "Purchase: {cost}",
-          "equipment": "Equipment: {cost}",
+          "research": "研发：{cost}",
+          "upgrades": "升级：{cost}",
+          "purchase": "购买：{cost}",
+          "equipment": "装备：{cost}",
           "estimation": "# 这是一个估计值！\n\n这个列表可能包含已经研发过的战车，因为 Wargaming 提供了不正确的资料。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
         },
         "errors": {
-          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发一个 加值/收藏家 战车。",
           "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
-          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
+          "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始战车”， 以查看全部您已研发过的战车。",
+          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始战车\" 和 \"目标战车\" 是不同的。",
+          "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始战车” 和 “目标战车” 在同一研发线路中。",
+          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始战车，因为它的阶级更低。"
         }
       },
       "about": {
@@ -430,12 +430,12 @@
         "options": {
           "threshold": {
             "name": "阈值",
-            "description": "The number of days inactive (default: {days} days)"
+            "description": "未上线天数（ 默认：{days} 天）"
           }
         },
         "body": {
-          "subtitle": "Inactive for {days}+ days",
-          "listing": "{days} days"
+          "subtitle": "{days}+ 天未上线",
+          "listing": "{days} 天"
         }
       },
       "full_stats": {
@@ -478,7 +478,7 @@
         "body": {
           "accounts_linked": "帐号已绑定",
           "no_role_permissions": {
-            "title": "{name} failed to verify",
+            "title": "{name} 验证失败",
             "description": "我没有管理身份的权限。"
           }
         },
