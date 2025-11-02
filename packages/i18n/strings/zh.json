@@ -7,7 +7,7 @@
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "{value} 米",
+      "m": "{value} 公尺",
       "mm": "{value} 毫米",
       "deg": "{value} 度°",
       "hp": "{value} 生命值",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# 找不到军团\n找不到 \"{search}\". 请尝试选从搜索结果中择一个军团。",
+        "clan_not_found": "# 找不到公会\n找不到\"{search}\"。请尝试从搜索结果中选择一个公会。",
         "player_not_found": "# 找不到玩家\n无法找到玩家 “{search}”。 尝试从搜索结果中选择玩家，或输入一个有效的玩家名称， 或使用“/link”命令。",
         "player_not_linked": "# 使用 `/link` 来开始\n我不知道你是谁，但你今天可以告诉我！",
-        "tank_name_not_found": "# 找不到坦克\n找不到名称为 \"{search}\"的坦克。",
-        "tank_id_not_found": "# 找不到坦克\n找不到ID为 \"{search}\"的坦克. 尝试输入坦克的名称。",
+        "tank_name_not_found": "# 找不到坦克\n找不到名为 “{search}” 的坦克。",
+        "tank_id_not_found": "# 找不到坦克\n无法找到ID为 “{search}” 的坦克。 请尝试输入坦克的名称而不是数字。",
         "no_tank_stats": "# 没有这辆战车的数据\n这个玩家没有可用资料。 这可能不是你要找的玩家。",
         "get_help": "Discord的协助服务器",
         "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[官方Discord](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
@@ -284,7 +284,7 @@
           "name": "阶级",
           "description": "阶级",
           "choices": {
-            "tier": "坦克等级 {tier_1} - {tier_2}"
+            "tier": "{tier_1} - {tier_2} 阶"
           }
         }
       },
@@ -296,7 +296,7 @@
       },
       "filters": {
         "none": "无筛选器",
-        "tier": "坦克等级 {tier}"
+        "tier": "{tier} 阶"
       },
       "no_data": {
         "battles_in_period": "在这段时间里没有参与任何战斗",
@@ -348,10 +348,10 @@
         "errors": {
           "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发一个 加值/收藏家 战车。",
           "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
-          "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始战车”， 以查看全部您已研发过的战车。",
-          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始战车\" 和 \"目标战车\" 是不同的。",
-          "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始战车” 和 “目标战车” 在同一研发线路中。",
-          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始战车，因为它的阶级更低。"
+          "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始坦克”， 以查看全部您已研发过的坦克。",
+          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
+          "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始坦克” 和 “目标坦克” 在同一研发线路中。",
+          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的阶级更低。"
         }
       },
       "about": {
@@ -394,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "胜率",
           "damage": "伤害",
-          "unknown_tank": "未知坦克{id}"
+          "unknown_tank": "未知坦克 {id}"
         }
       },
       "debug": {
@@ -730,12 +730,12 @@
     },
     "home": {
       "pwa": {
-        "title": "安装Blitz Kit App",
-        "new": "NEW",
+        "title": "安装 BlitzKit 应用程序",
+        "new": "新增",
         "checking": "正在检查兼容性……",
         "instructions": "Apple 设备的说明。",
         "install": "安装",
-        "dismiss": "忽略"
+        "dismiss": "取消"
       },
       "discord": {
         "join_short": "加入超級酷的人群！",
@@ -796,11 +796,11 @@
       },
       "mixer": {
         "name": "组装",
-        "button": "Mix and match",
-        "description": "Mix tank modules",
-        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "button": "混合搭配",
+        "description": "混合战车模块",
+        "seo_description": "战车世界闪击战的车体, 炮塔, 主炮混合搭配",
+        "screenshot": "屏幕截图",
+        "randomize": "随机搭配"
       },
       "guess": {
         "name": "猜坦克",
@@ -814,7 +814,7 @@
           "next": "下一个",
           "no_results": "沒有結果"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "猜对了 {correct} / {total}"
       },
       "tankopedia": {
         "search": "搜索属性……",
@@ -822,14 +822,14 @@
         "button": "搜索战车",
         "description": "闪击战战车百科全书",
         "seo_description": "战车世界闪击战的所有坦克参数， 装甲， 等等...",
-        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
+        "tank_seo_title": "{name} - {tier} 阶 {nationality} {class} | {website} 战车百科 | 战车世界闪击战 (WoTB)",
+        "tank_seo_description": "{name} 装甲，统计资料，装备，规定配给等。 {dpm} 每分钟伤害， {alpha} 伤害值， {penetration}毫米 穿透， {speed}公里/小時 最高速度， {health} 生命值。",
         "visualizers": {
           "reload": {
             "skip": "跳过"
           },
           "assault": {
-            "title": "Assault shells"
+            "title": "突击弹"
           },
           "rotator": {
             "hull": "车体",
@@ -852,10 +852,10 @@
             "dead_rail": "死亡铁道"
           },
           "flexibility": {
-            "yaw": "Yaw",
-            "pitch": "Pitch",
-            "min": "Min",
-            "max": "Max"
+            "yaw": "水平角度",
+            "pitch": "俯仰角度",
+            "min": "最少俯角",
+            "max": "最大仰角"
           }
         },
         "sandbox": {
@@ -901,15 +901,15 @@
                 "track": "履带"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
+                "penetration": "{damage}生命值 击穿",
                 "blocked": "抵挡伤害",
                 "ricochet": "跳弹",
-                "splash": "{damage}hp splash"
+                "splash": "{damage}生命值 溅射"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
-                "nominal": "{thickness}mm nominal",
-                "ricochet_loss": "{loss}% penetration"
+                "thickness_and_angle": "{thickness}毫米 {angle}度°",
+                "nominal": "{thickness}毫米 装甲厚度",
+                "ricochet_loss": "{loss}% 击穿"
               }
             }
           },
@@ -947,15 +947,15 @@
         "tech_tree": {
           "title": "科技树",
           "battle": "一场比赛",
-          "battles": "{count} battles",
-          "route": "Route {index} of {count}"
+          "battles": "{count} 战斗场次",
+          "route": "路线 {index} / {count}"
         },
         "game_modes": {
           "title": "游戏模式技能"
         },
         "review": {
           "title": "回顾影片",
-          "join": "Apply to {name} YouTuber program"
+          "join": "应用到 {name} YouTuber程序"
         },
         "configuration": {
           "title": "配置设定",
@@ -991,15 +991,15 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier}阶 {class}",
+            "tier": "所有 {tier} 阶",
             "all": "所有战车"
           },
           "values": {
-            "shell_index": "Shell {index}",
-            "at_distance": "At {distance}m",
+            "shell_index": "炮弹 {index}",
+            "at_distance": "在 {distance} 公尺",
             "at_distance_slider_label": "距离",
-            "dispersion_at_distance": "Dispersion at {distance}m",
+            "dispersion_at_distance": "在 {distance} 公尺的扩散度",
             "gun_flexibility": "炮管转动界限",
             "speed": "速度",
             "terrain_coefficients": "地形系数",
@@ -1015,13 +1015,13 @@
             "dpmEffective": "60秒内生效",
             "shells": "炮弹 ",
             "mostOptimalShellIndex": "最优炮弹",
-            "shellReloads": "Reloads",
+            "shellReloads": "装填时间",
             "shellReload": "装填时间",
             "intraClip": "炮弹装填",
             "caliber": "口径",
             "penetration": "穿深",
             "damage": "伤害",
-            "damageWithoutAssault": "Damage without assault shells",
+            "damageWithoutAssault": "无突击弹的伤害",
             "clipDamage": "弹匣伤害期望值",
             "moduleDamage": "模组伤害",
             "explosionRadius": "溅射半径",
@@ -1148,9 +1148,9 @@
         "description": "战车性能统计",
         "seo_description": "最好的战车及其在战车世界闪击战中的表现",
         "estimation": {
-          "body": "Estimated stats based on {count} players. Updated {age} ago.",
-          "hours": "{count} hours",
-          "minutes": "{count} minutes"
+          "body": "基于 {count} 个玩家的估计数据。更新于 {age} 之前。",
+          "hours": "{count} 小时",
+          "minutes": "{count} 分钟"
         },
         "player_count": {
           "label": "玩家数量"
@@ -1182,10 +1182,10 @@
         "button": "浏览全部",
         "description": "Blitz玩家头像",
         "seo_description": "所有战车世界闪击战玩家头像",
-        "last_updated": "Last updated on {time}",
+        "last_updated": "最后更新于 {time}",
         "search": {
           "hint": "搜索頭像……",
-          "results": "{count} avatars"
+          "results": "{count} 头像"
         }
       },
       "session": {
@@ -1200,8 +1200,8 @@
           "no_results": "找不到玩家"
         },
         "controls": {
-          "title": "Tracking {name}",
-          "subtitle": "Since {time}",
+          "title": "正在追踪 {name}",
+          "subtitle": "起始于 {time}",
           "reset": "重置",
           "change": "变更"
         },
@@ -1261,7 +1261,7 @@
               "cancel": "取消",
               "success": {
                 "title": "拷贝 URL",
-                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "已为 {name} 生成 URL。 当 URL 粘贴后，嵌入功能将开始追踪。 您可以随时在 PC 上点击右键或手机上长按并选择「重置」来重置。",
                 "back": "返回",
                 "copy": "拷贝 URL"
               }
@@ -1345,10 +1345,10 @@
         "seo_description": "开始使用 BlitzKit"
       },
       "api": {
-        "name": "API",
-        "button": "To the docs",
-        "description": "BlitzKit hosted API",
-        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
+        "name": "应用程序接口(API)",
+        "button": "前往文档",
+        "description": "BlitzKit 已托管的应用程序接口(API)",
+        "seo_description": "BlitzKit 托管的《战车世界：闪击战》静态应用程序接口（API）"
       }
     },
     "footer": {
