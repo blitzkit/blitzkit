@@ -10,6 +10,7 @@
     "build:website": "cd packages/website && bun run build",
     "build:prisma": "prisma generate",
     "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
+    "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
     "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
     "build:app": "cd packages/app && bun run build",
     "dev:bot": "bun run build:bot --dev && bun start:bot",
@@ -34,7 +35,7 @@
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
     "prunestrings": "cd packages/scripts && bun prunestrings",
-    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient"
+    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccesssor"
   },
   "type": "module",
   "workspaces": [

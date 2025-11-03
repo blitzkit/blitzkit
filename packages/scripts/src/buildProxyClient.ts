@@ -4,21 +4,18 @@ const IMPORT = "@protos/auto_legacy_proxy_client";
 const SOURCE = "../../packages/closed/protos/auto_legacy_proxy_client.proto";
 const TARGET = "../../packages/closed/src/unreal/methodPopulatedProxyClient.ts";
 
-const requestPattern = /message (\w+)Request {/g;
+const requestPattern = /^message (\w+)Request {/gm;
 const source = await readFile(SOURCE).then((buffer) => buffer.toString());
 const requests = source.matchAll(requestPattern);
 
 const imports: string[] = [];
-const methods: { name: string; method: string }[] = [];
+const names: string[] = [];
 
 for (const match of requests) {
   const name = match[1];
-  // const method =
-  //   name.charAt(0).toLowerCase() + name.slice(1).replace(/Async$/, "");
-  const method = name;
 
   imports.push(`${name}Request`, `${name}Response`);
-  methods.push({ name, method });
+  names.push(name);
 }
 
 let content = "";
@@ -31,9 +28,9 @@ content += 'import { BaseProxyClient } from "./baseProxyClient";\n\n';
 
 content +=
   "export abstract class MethodPopulatedProxyClient extends BaseProxyClient {\n";
-content += methods
-  .map(({ name, method }) => {
-    return `  ${method}(data: ${name}Request) {
+content += names
+  .map((name) => {
+    return `  ${name}(data: ${name}Request) {
     return this.request("${name}Request", ${name}Request, data, ${name}Response);
   }\n`;
   })
