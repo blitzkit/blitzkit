@@ -35,4 +35,4 @@ jobs:
       - run: bun run setup
 
       - name: Find reviews
-        run: bun packages/scripts/src/reviews.ts
+        run: bun run build:reviews
