@@ -908,7 +908,7 @@
               },
               "stats": {
                 "thickness_and_angle": "{thickness}мм {angle}°",
-                "nominal": "{thickness}1мм номинала",
+                "nominal": "{thickness}мм номинала",
                 "ricochet_loss": "{loss}% пробития"
               }
             }
