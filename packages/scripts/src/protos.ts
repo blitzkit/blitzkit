@@ -14,7 +14,7 @@ const exec = promisify(execSync);
 
 let executableFileExtension: string;
 
-console.log(await readdir("node_modules/.bin"));
+console.log(await readdir("../../node_modules/.bin"));
 
 if (existsSync("node_modules/.bin/protoc-gen-ts_proto.exe")) {
   executableFileExtension = ".exe";
