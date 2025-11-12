@@ -1,14 +1,21 @@
 import {
   availableProvisions,
+  createDefaultProvisions,
+  createDefaultSkills,
   fetchConsumableDefinitions,
   fetchEquipmentDefinitions,
+  fetchModelDefinitions,
   fetchProvisionDefinitions,
+  fetchSkillDefinitions,
   fetchTankDefinitions,
   TankDefinition,
 } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
+import strings from "@blitzkit/i18n/strings/en.json";
 import { writeFile } from "fs/promises";
 import { isEqual } from "lodash-es";
+import { tankCharacteristics } from "../../website/src/core/blitzkit/tankCharacteristics";
+import { genericDefaultEquipmentMatrix } from "../../website/src/stores/duel/constants";
 
 const domain = "https://opentest.blitzkit.app";
 
@@ -17,12 +24,16 @@ const currentTankDefinitions = await fetchTankDefinitions();
 const currentConsumableDefinitions = await fetchConsumableDefinitions();
 const currentProvisionDefinitions = await fetchProvisionDefinitions();
 const currentEquipmentDefinitions = await fetchEquipmentDefinitions();
+const currentSkillDefinitions = await fetchSkillDefinitions();
+const currentModelDefinitions = await fetchModelDefinitions();
 
 import.meta.env.PUBLIC_ASSET_BASE = "https://blitzkit.github.io/assets-preview";
 const previewTankDefinitions = await fetchTankDefinitions();
 const previewConsumableDefinitions = await fetchConsumableDefinitions();
 const previewProvisionDefinitions = await fetchProvisionDefinitions();
 const previewEquipmentDefinitions = await fetchEquipmentDefinitions();
+const previewSkillDefinitions = await fetchSkillDefinitions();
+const previewModelDefinitions = await fetchModelDefinitions();
 
 let notes = "# BlitzKit OpenTest Patch Notes\n\n";
 
@@ -71,6 +82,14 @@ if (changedTanks.length > 0) {
     const previewTurret = preview.turrets.at(-1)!;
     const currentGun = currentTurret.guns.at(-1)!;
     const previewGun = previewTurret.guns.at(-1)!;
+    const currentShell = currentGun.shells[0];
+    const previewShell = previewGun.shells[0];
+    const currentEngine = current.engines.at(-1)!;
+    const previewEngine = preview.engines.at(-1)!;
+    const currentTracks = current.tracks.at(-1)!;
+    const previewTracks = preview.tracks.at(-1)!;
+    const currentTankModel = currentModelDefinitions.models[current.id];
+    const previewTankModel = previewModelDefinitions.models[preview.id];
 
     const currentConsumables = Object.values(
       currentConsumableDefinitions.consumables
@@ -145,6 +164,82 @@ if (changedTanks.length > 0) {
       )
       .map((id) => currentEquipmentDefinitions.equipments[id]);
 
+    const currentCharacteristics = tankCharacteristics(
+      {
+        tank: current,
+        gun: currentGun,
+        shell: currentShell,
+        applyDynamicArmor: false,
+        applyReactiveArmor: false,
+        applySpallLiner: false,
+        assaultDistance: 0,
+        crewSkills: createDefaultSkills(currentSkillDefinitions),
+        camouflage: true,
+        consumables: [],
+        engine: currentEngine,
+        provisions: createDefaultProvisions(
+          current,
+          currentGun,
+          currentProvisionDefinitions
+        ),
+        equipmentMatrix: genericDefaultEquipmentMatrix,
+        stockEngine: current.engines[0],
+        stockGun: current.turrets[0].guns[0],
+        stockTrack: current.tracks[0],
+        stockTurret: current.turrets[0],
+        track: currentTracks,
+        turret: currentTurret,
+      },
+      {
+        equipmentDefinitions: currentEquipmentDefinitions,
+        provisionDefinitions: currentProvisionDefinitions,
+        tankModelDefinition: currentTankModel,
+      }
+    );
+    const previewCharacteristics = tankCharacteristics(
+      {
+        tank: preview,
+        gun: previewGun,
+        shell: previewShell,
+        applyDynamicArmor: false,
+        applyReactiveArmor: false,
+        applySpallLiner: false,
+        assaultDistance: 0,
+        crewSkills: createDefaultSkills(previewSkillDefinitions),
+        camouflage: true,
+        consumables: [],
+        engine: previewEngine,
+        provisions: createDefaultProvisions(
+          preview,
+          previewGun,
+          previewProvisionDefinitions
+        ),
+        equipmentMatrix: genericDefaultEquipmentMatrix,
+        stockEngine: preview.engines[0],
+        stockGun: preview.turrets[0].guns[0],
+        stockTrack: preview.tracks[0],
+        stockTurret: preview.turrets[0],
+        track: previewTracks,
+        turret: previewTurret,
+      },
+      {
+        equipmentDefinitions: previewEquipmentDefinitions,
+        provisionDefinitions: previewProvisionDefinitions,
+        tankModelDefinition: previewTankModel,
+      }
+    );
+    const changedCharacteristics: string[] = [];
+
+    for (const key in currentCharacteristics) {
+      const characteristicKey = key as keyof typeof currentCharacteristics;
+      if (
+        currentCharacteristics[characteristicKey] !==
+        previewCharacteristics[characteristicKey]
+      ) {
+        changedCharacteristics.push(characteristicKey);
+      }
+    }
+
     // notes += `- [${preview.name.locales.en}](${domain}/tanks/${preview.slug})\n`;
     notes += `- ${preview.name.locales.en}\n`;
 
@@ -183,6 +278,31 @@ if (changedTanks.length > 0) {
         ),
       ].join(", ");
       notes += `\n`;
+    }
+
+    if (changedCharacteristics.length > 0) {
+      notes += `  - Characteristics:\n`;
+
+      for (const characteristicUntyped of changedCharacteristics) {
+        const characteristic =
+          characteristicUntyped as keyof typeof currentCharacteristics;
+        const name =
+          strings.website.tools.tankopedia.characteristics.values[
+            characteristic
+          ];
+        const before = currentCharacteristics[characteristic];
+        const after = previewCharacteristics[characteristic];
+
+        notes += `    - ${
+          typeof before === "number" && typeof after === "number"
+            ? after > before
+              ? "⬆️"
+              : "🔻"
+            : "✏️"
+        } ${name}: \`${
+          typeof before === "number" ? before.toFixed(2) : before
+        }\` → \`${typeof after === "number" ? after.toFixed(2) : after}\`\n`;
+      }
     }
   }
 }
