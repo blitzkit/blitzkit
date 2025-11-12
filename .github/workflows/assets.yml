@@ -117,10 +117,10 @@ jobs:
         env:
           ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
         run: |
+          mkdir -p temp/game
           wget -q -O temp/archive.zip $ARCHIVE_URL
           unzip -q temp/archive.zip -d temp/archive
           rm temp/archive.zip
-          mkdir -p temp/game
           mv temp/archive/app/* temp/game
 
       - name: (WGPKG) Download client
