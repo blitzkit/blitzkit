@@ -14,6 +14,8 @@ const exec = promisify(execSync);
 
 let executableFileExtension: string;
 
+console.log(await readdir("node_modules/.bin"));
+
 if (existsSync("node_modules/.bin/protoc-gen-ts_proto.exe")) {
   executableFileExtension = ".exe";
 } else {
@@ -32,7 +34,7 @@ for (const root of roots) {
   while (files.length > 0) {
     let command = [
       "protoc",
-      `--plugin=./node_modules/.bin/protoc-gen-ts_proto${executableFileExtension}`,
+      `--plugin=node_modules/.bin/protoc-gen-ts_proto${executableFileExtension}`,
       "--ts_proto_opt=esModuleInterop=true",
       "--ts_proto_opt=oneof=unions-value",
       // "--ts_proto_opt=removeEnumPrefix=true",
