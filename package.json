@@ -34,7 +34,8 @@
     "build:reviews": "cd packages/scripts && bun build:reviews",
     "build:ids": "cd packages/scripts && bun build:ids",
     "prunestrings": "cd packages/scripts && bun prunestrings",
-    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient"
+    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient",
+    "patchnotes": "cd packages/scripts && bun run patchnotes"
   },
   "type": "module",
   "workspaces": [

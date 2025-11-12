@@ -43,7 +43,8 @@
     "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
     "build:proxyclient": "bun src/buildProxyClient.ts",
     "prunestrings": "bun src/pruneStrings.ts",
-    "build:protos": "bun src/protos.ts"
+    "build:protos": "bun src/protos.ts",
+    "patchnotes": "bun src/patchNotes.ts"
   },
   "type": "module"
 }
