@@ -9,6 +9,7 @@ import {
   fetchSkillDefinitions,
   fetchTankDefinitions,
   TankDefinition,
+  tankIcon,
 } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import strings from "@blitzkit/i18n/strings/en.json";
@@ -47,11 +48,13 @@ for (const id in previewTankDefinitions.tanks) {
 
 newTanks.sort((a, b) => b.tier - a.tier);
 
+import.meta.env.PUBLIC_ASSET_BASE = "https://blitzkit.github.io/assets-preview";
 if (newTanks.length > 0) {
   notes += "## New Tanks\n\n";
 
   for (const tank of newTanks) {
-    notes += `- [${tank.name.locales.en}](${domain}/tanks/${tank.slug})\n`;
+    notes += `### [${tank.name.locales.en}](${domain}/tanks/${tank.slug})\n`;
+    notes += `![](${tankIcon(tank.id)})\n\n`;
   }
 
   notes += "\n";
@@ -74,6 +77,7 @@ for (const stringId in previewTankDefinitions.tanks) {
 
 changedTanks.sort((a, b) => b[1].tier - a[1].tier);
 
+import.meta.env.PUBLIC_ASSET_BASE = "https://blitzkit.github.io/assets";
 if (changedTanks.length > 0) {
   notes += "## Changed Tanks\n\n";
 
@@ -240,11 +244,11 @@ if (changedTanks.length > 0) {
       }
     }
 
-    // notes += `- [${preview.name.locales.en}](${domain}/tanks/${preview.slug})\n`;
-    notes += `- ${preview.name.locales.en}\n`;
+    notes += `### [${preview.name.locales.en}](${domain}/tanks/${preview.slug})\n`;
+    notes += `![](${tankIcon(preview.id)})\n\n`;
 
     if (addedConsumables.length + removedConsumables.length > 0) {
-      notes += `  - Consumables: `;
+      notes += `Consumables: `;
       notes += [
         ...addedConsumables.map(
           (consumable) => `🟢 ${consumable.name.locales.en}`
@@ -257,7 +261,7 @@ if (changedTanks.length > 0) {
     }
 
     if (addedProvisions.length + removedProvisions.length > 0) {
-      notes += `  - Provisions: `;
+      notes += `Provisions: `;
       notes += [
         ...addedProvisions.map(
           (provision) => `🟢 ${provision.name.locales.en}`
@@ -270,7 +274,7 @@ if (changedTanks.length > 0) {
     }
 
     if (addedEquipment.length + removedEquipment.length > 0) {
-      notes += `  - Equipment: `;
+      notes += `-Equipment: `;
       notes += [
         ...addedEquipment.map((equipment) => `🟢 ${equipment.name.locales.en}`),
         ...removedEquipment.map(
@@ -281,7 +285,7 @@ if (changedTanks.length > 0) {
     }
 
     if (changedCharacteristics.length > 0) {
-      notes += `  - Characteristics:\n`;
+      notes += `Characteristics:\n`;
 
       for (const characteristicUntyped of changedCharacteristics) {
         const characteristic =
@@ -293,7 +297,7 @@ if (changedTanks.length > 0) {
         const before = currentCharacteristics[characteristic];
         const after = previewCharacteristics[characteristic];
 
-        notes += `    - ${
+        notes += `- ${
           typeof before === "number" && typeof after === "number"
             ? after > before
               ? "⬆️"
