@@ -4,6 +4,7 @@ import { readdir, rm } from "fs/promises";
 import { promisify } from "util";
 
 const MAX_COMMAND_LENGTH = 2 ** 11;
+const TS_PROTO_EXECUTABLE = "./node_modules/.bin/protoc-gen-ts_proto";
 
 const roots = [
   // "../../packages/core/src/protos",
@@ -14,7 +15,7 @@ const exec = promisify(execSync);
 
 let executableFileExtension: string;
 
-if (existsSync("../../node_modules/.bin/protoc-gen-ts_proto.exe")) {
+if (existsSync(`${TS_PROTO_EXECUTABLE}.exe`)) {
   executableFileExtension = ".exe";
 } else {
   executableFileExtension = "";
@@ -32,7 +33,7 @@ for (const root of roots) {
   while (files.length > 0) {
     let command = [
       "protoc",
-      `--plugin=../../node_modules/.bin/protoc-gen-ts_proto${executableFileExtension}`,
+      `--plugin=${TS_PROTO_EXECUTABLE}${executableFileExtension}`,
       "--ts_proto_opt=esModuleInterop=true",
       "--ts_proto_opt=oneof=unions-value",
       // "--ts_proto_opt=removeEnumPrefix=true",
