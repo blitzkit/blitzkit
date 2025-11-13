@@ -661,7 +661,7 @@
         "select_dialog_title": "Поиск танка",
         "swap_dialog_title": "Заменить танк",
         "clear_filters": "Сбросить фильтры",
-        "login": "Войти, чтобы воспользоваться",
+        "login": "Войдите, чтобы воспользоваться",
         "search_bar_hint": "Поиск танков...",
         "recent": "Недавние",
         "select_all": "Выбрать всё",
@@ -908,7 +908,7 @@
               },
               "stats": {
                 "thickness_and_angle": "{thickness}мм {angle}°",
-                "nominal": "{thickness}1мм номинала",
+                "nominal": "{thickness}мм номинала",
                 "ricochet_loss": "{loss}% пробития"
               }
             }

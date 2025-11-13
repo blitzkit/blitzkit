@@ -6,4 +6,5 @@ export const youtubers = [
   { id: 'UCLMEfqtlwLDN-UXX21RiEww', name: 'WoT Blitz Best Replays' },
   { id: 'UC3fZbetRUFoJL0IEN7IhG0Q', name: 'EconomicsMate' },
   { id: 'UCtsUVwBlhEnUunAKLn2dtsg', name: 'Megalion69' },
+  { id: 'UCJjATWiGfOHoQYfutEwAIIg', name: 'WoTB Joe' },
 ];

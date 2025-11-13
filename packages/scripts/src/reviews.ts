@@ -70,7 +70,7 @@ for (const tank of tanksSanitized) {
       ),
     };
 
-    console.log(`${++done} done; found ${items.length} for ${tank.name}`);
+    console.log(`${++done} done; found ${items.length} for ${tank.name.locales.en}`);
 
     await new Promise((resolve) => setTimeout(resolve, 1000 / 5));
   } catch (error) {

@@ -1,23 +1,23 @@
 {
   "test": {
     "default": "测试",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
+    "long": "这是一个测试用长字符串。你绝对不会在用户界面中看见这些。我最喜欢的水果是{fruit}因为它的颜色是{color}的。我如此喜欢它，以至于我会把它的名字念3次！{fruit}！{fruit}！{fruit}！重申一次，它是{color}的而不是{not_color}的。",
     "fox": "褐色的狐狸迅速地跳过那只懒狗"
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "{value}m",
-      "mm": "{value}mm",
-      "deg": "{value}°",
-      "hp": "{value}hp",
+      "m": "{value} 公尺",
+      "mm": "{value} 毫米",
+      "deg": "{value} 度°",
+      "hp": "{value} 生命值",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}度°/秒"
     },
     "gun_types": {
-      "auto_loader": "弹夹型战车",
-      "auto_reloader": "自动装填型战车",
+      "auto_loader": "弹夹型坦克",
+      "auto_reloader": "自动装填型坦克",
       "regular": "单发"
     },
     "shells": {
@@ -101,8 +101,8 @@
     },
     "tank_class_short": {
       "-1": "未识别",
-      "0": "轻型战车",
-      "1": "中型战车",
+      "0": "轻型坦克",
+      "1": "中型坦克",
       "2": "重型战车",
       "3": "驱逐战车"
     },
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# 找不到军团\n找不到 \"{search}\". 请尝试选从搜索结果中择一个军团。",
-        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "clan_not_found": "# 找不到公会\n找不到\"{search}\"。请尝试从搜索结果中选择一个公会。",
+        "player_not_found": "# 找不到玩家\n无法找到玩家 “{search}”。 尝试从搜索结果中选择玩家，或输入一个有效的玩家名称， 或使用“/link”命令。",
         "player_not_linked": "# 使用 `/link` 来开始\n我不知道你是谁，但你今天可以告诉我！",
-        "tank_name_not_found": "# 找不到坦克\n找不到名称为 \"{search}\"的坦克。",
-        "tank_id_not_found": "# 找不到坦克\n找不到ID为 \"{search}\"的坦克. 尝试输入坦克的名称。",
+        "tank_name_not_found": "# 找不到坦克\n找不到名为 “{search}” 的坦克。",
+        "tank_id_not_found": "# 找不到坦克\n无法找到ID为 “{search}” 的坦克。 请尝试输入坦克的名称而不是数字。",
         "no_tank_stats": "# 没有这辆战车的数据\n这个玩家没有可用资料。 这可能不是你要找的玩家。",
         "get_help": "Discord的协助服务器",
         "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[官方Discord](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
@@ -284,19 +284,19 @@
           "name": "阶级",
           "description": "阶级",
           "choices": {
-            "tier": "坦克等级 {tier_1} - {tier_2}"
+            "tier": "{tier_1} - {tier_2} 阶"
           }
         }
       },
       "periods": {
         "career": "玩家资料",
         "today": "今日：",
-        "days": "{days} days",
-        "custom": "{day_1} - {day_2} days"
+        "days": "{days} 天",
+        "custom": "{day_1} - {day_2} 天"
       },
       "filters": {
         "none": "无筛选器",
-        "tier": "坦克等级 {tier}"
+        "tier": "{tier} 阶"
       },
       "no_data": {
         "battles_in_period": "在这段时间里没有参与任何战斗",
@@ -339,19 +339,19 @@
         "body": {
           "subtitle": "研发",
           "total": "全部",
-          "research": "Research: {cost}",
-          "upgrades": "Upgrades: {cost}",
-          "purchase": "Purchase: {cost}",
-          "equipment": "Equipment: {cost}",
+          "research": "研发：{cost}",
+          "upgrades": "升级：{cost}",
+          "purchase": "购买：{cost}",
+          "equipment": "装备：{cost}",
           "estimation": "# 这是一个估计值！\n\n这个列表可能包含已经研发过的战车，因为 Wargaming 提供了不正确的资料。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
         },
         "errors": {
-          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发一个 加值/收藏家 坦克。",
           "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
-          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
+          "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始坦克”， 以查看全部您已研发过的坦克。",
+          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
+          "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始坦克” 和 “目标坦克” 在同一研发线路中。",
+          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的阶级更低。"
         }
       },
       "about": {
@@ -394,7 +394,7 @@
           "wn8": "WN8",
           "winrate": "胜率",
           "damage": "伤害",
-          "unknown_tank": "未知坦克{id}"
+          "unknown_tank": "未知坦克 {id}"
         }
       },
       "debug": {
@@ -430,12 +430,12 @@
         "options": {
           "threshold": {
             "name": "阈值",
-            "description": "The number of days inactive (default: {days} days)"
+            "description": "未上线天数（ 默认：{days} 天）"
           }
         },
         "body": {
-          "subtitle": "Inactive for {days}+ days",
-          "listing": "{days} days"
+          "subtitle": "{days}+ 天未上线",
+          "listing": "{days} 天"
         }
       },
       "full_stats": {
@@ -478,7 +478,7 @@
         "body": {
           "accounts_linked": "帐号已绑定",
           "no_role_permissions": {
-            "title": "{name} failed to verify",
+            "title": "{name} 验证失败",
             "description": "我没有管理身份的权限。"
           }
         },
@@ -493,11 +493,11 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "The max number of clan results (default: {limit})"
+            "description": "公会结果的最大显示数量 (默认：{limit})"
           }
         },
         "body": {
-          "title": "Clan search for {search} in region {region}",
+          "title": "在地区 {region} 中搜索公会 {search}",
           "no_results": "没有找到该公会"
         }
       },
@@ -507,11 +507,11 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "The max number of player results (default: {limit})"
+            "description": "玩家结果的最大显示数量 (默认：{limit})"
           }
         },
         "body": {
-          "title": "Player search for {search} in region {region}",
+          "title": "在地区 {region} 中搜索玩家 {search}",
           "no_results": "未找到玩家"
         }
       },
@@ -531,13 +531,13 @@
         "options": {
           "limit": {
             "name": "限制",
-            "description": "How many neighbors to display (default: {count})"
+            "description": "显示附近有多少玩家（默认：{count}）"
           },
           "season": {
             "name": "赛季",
             "description": "赛季数 (默认：当前)",
             "choices": {
-              "current": "{season} (current)"
+              "current": "{season} (当前)"
             }
           },
           "league": {
@@ -546,12 +546,12 @@
           }
         },
         "body": {
-          "top_players": "Top {count} players",
-          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
+          "top_players": "前 {count} 玩家",
+          "no_participation": "# {player} 没有在赛季 {season} 中进行过评价战斗\n\n该玩家没有参加该赛季或没有完成校准。",
           "no_ongoing_season": "# 没有进行中的赛季\n\n目前没有赛季。",
-          "deleted_player": "删除{id}",
+          "deleted_player": "已删除玩家 {id}",
           "neighbors": "对邻居进行评分",
-          "more": "+ {count} more"
+          "more": "+ {count} 更多"
         }
       },
       "today": {
@@ -566,7 +566,7 @@
         "name": "已拥有的战车",
         "description": "显示该阶级中所有您已拥有的战车",
         "body": {
-          "title": "# {name}'s owned tier {tier} tanks\n\n"
+          "title": "# {name} 所拥有的 {tier} 阶坦克\n\n"
         }
       },
       "permissions": {
@@ -585,7 +585,7 @@
         "description": "检查机器人是否处于活动状态。",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - {time}ms"
+          "pong_with_time": "Pong 🏓 - {time} 微秒"
         },
         "subcommands": {
           "blitzkit": {
@@ -602,7 +602,7 @@
         "name": "玩家信息",
         "description": "玩家基本信息",
         "body": {
-          "title": "{name}的信息",
+          "title": "{name} 的信息",
           "nickname": "昵称",
           "battles": "战斗场次",
           "winrate": "胜率",
@@ -631,7 +631,7 @@
           }
         },
         "errors": {
-          "no_participation": "# {name}还没有玩过评级模式。",
+          "no_participation": "# {name} 未曾游玩评价战斗\n\n该玩家未参与本赛季的评价战斗。",
           "unrecorded_stats": "# 统计数据目前无法使用\n\nWargaming 可能暂停了服务器。 如果有连续的赛季，统计数据可能在24小时内提供。"
         }
       }
@@ -644,7 +644,7 @@
     },
     "settings": {
       "title": "设置",
-      "description": "调整BlitzKit设置",
+      "description": "更改 BlitzKit 设置",
       "dev_mode": "开发者模式",
       "language": "语言"
     },
@@ -661,13 +661,13 @@
         "select_dialog_title": "搜索坦克",
         "swap_dialog_title": "交换坦克",
         "clear_filters": "清除筛选",
-        "login": "Login to use this",
+        "login": "登录以使用它",
         "search_bar_hint": "搜寻战车……",
         "recent": "最近查看的",
         "select_all": "全选",
         "count_singular": "1辆战车",
-        "count_plural": "{count} tanks",
-        "sorting_by": "Sorting by {name}",
+        "count_plural": "{count} 辆坦克",
+        "sorting_by": "按 {name} 排序",
         "no_tanks_found": {
           "body": "找不到战车。",
           "search_again": "请尝试重新搜索。",
@@ -688,7 +688,7 @@
           "fire.caliber": "口径",
           "fire.standardPenetration": "标准炮弹穿透力",
           "fire.premiumPenetration": "加值炮弹穿透力",
-          "fire.tertiaryPenetration": "tertiary penetration",
+          "fire.tertiaryPenetration": "第三种炮弹穿透力",
           "fire.damage": "炮弹伤害值",
           "fire.moduleDamage": "模组伤害值",
           "fire.shellVelocity": "炮弹飞行速度",
@@ -730,12 +730,12 @@
     },
     "home": {
       "pwa": {
-        "title": "安装Blitz Kit App",
-        "new": "NEW",
+        "title": "安装 BlitzKit 应用程序",
+        "new": "新增",
         "checking": "正在检查兼容性……",
-        "instructions": "Instructions for Apple devices.",
+        "instructions": "Apple 设备的说明。",
         "install": "安装",
-        "dismiss": "忽略"
+        "dismiss": "取消"
       },
       "discord": {
         "join_short": "加入超級酷的人群！",
@@ -743,16 +743,16 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "由 {name} 制作 ❤️"
       },
       "hot_tanks": {
         "title": "受欢迎的坦克",
-        "subtitle": "Last {days} days"
+        "subtitle": "过去 {days} 天"
       },
       "other_projects": {
         "title": "其他酷炫的项目"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "请帮忙将 {name} 翻译成 {language}！",
       "seo_description": "战车世界闪击战 全方位工具"
     },
     "docs": {
@@ -764,49 +764,49 @@
     "tools": {
       "playlist": {
         "reset": "重置",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your battles",
+        "shuffle": "换一批",
+        "remove": "移除已游玩的",
+        "tracking": "BlitzKit 正在追踪您的战斗记录",
         "sort": {
           "button": "排序依据",
-          "last_played": "Last played",
-          "least_played": "Least played"
+          "last_played": "最后一次游玩",
+          "least_played": "最少游玩的"
         },
         "table": {
           "index": "#",
-          "never": "Never",
-          "tank": "战车",
-          "last_played": "Last played",
-          "battles": "Career battles",
+          "never": "从不",
+          "tank": "坦克",
+          "last_played": "最后一次游玩",
+          "battles": "生涯战斗数",
           "unrecorded": "--",
           "wins": "胜利"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "title": "坦克数量太多了！",
+          "description": "您确定要创建包含 {count} 个坦克的游玩列表吗？以50%胜率计算，这需要 {time} 小时的游玩时间！",
           "cancel": "取消",
-          "proceed": "Proceed"
+          "proceed": "继续操作"
         },
-        "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
-        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "button": "Generate",
-        "pool_size": "{count} possible tanks"
+        "generate": "创建游玩列表",
+        "name": "遊玩列表",
+        "description": "坦克游玩列表生成器",
+        "seo_description": "想不到在坦克世界闪击战玩什么? 使用BlitzKit 游玩列表来获得建议！",
+        "button": "生成",
+        "pool_size": "{count} 辆可生成的坦克"
       },
       "mixer": {
-        "name": "Mixer",
-        "button": "Mix and match",
-        "description": "Mix tank modules",
-        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "name": "组装",
+        "button": "混合搭配",
+        "description": "混合坦克模块",
+        "seo_description": "《坦克世界：闪击战》的车体, 炮塔, 主炮混合搭配",
+        "screenshot": "屏幕截图",
+        "randomize": "随机搭配"
       },
       "guess": {
         "name": "猜坦克",
         "button": "猜猜看",
-        "description": "战车剪影小游戏",
-        "seo_description": "看剪影猜战车",
+        "description": "坦克剪影小游戏",
+        "seo_description": "看剪影猜坦克",
         "search": {
           "placeholder": "输入你的猜想……",
           "skip": "跳过",
@@ -814,22 +814,22 @@
           "next": "下一个",
           "no_results": "沒有結果"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "猜对了 {correct} / {total}"
       },
       "tankopedia": {
         "search": "搜索属性……",
         "name": "战车百科",
         "button": "搜索战车",
-        "description": "闪击战战车百科全书",
-        "seo_description": "战车世界闪击战的所有坦克参数， 装甲， 等等...",
-        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
+        "description": "闪击战坦克百科全书",
+        "seo_description": "《坦克世界：闪击战》的所有坦克参数， 装甲， 等等...",
+        "tank_seo_title": "{name} - {tier} 阶 {nationality} {class} | {website} 坦克百科 | 坦克世界闪击战 (WoTB)",
+        "tank_seo_description": "{name} 装甲，统计资料，装备，规定配给等。 {dpm} 每分钟伤害， {alpha} 伤害值， {penetration}毫米 穿透， {speed}公里/小時 最高速度， {health} 生命值。",
         "visualizers": {
           "reload": {
             "skip": "跳过"
           },
           "assault": {
-            "title": "Assault shells"
+            "title": "突击弹"
           },
           "rotator": {
             "hull": "车体",
@@ -852,10 +852,10 @@
             "dead_rail": "死亡铁道"
           },
           "flexibility": {
-            "yaw": "Yaw",
-            "pitch": "Pitch",
-            "min": "Min",
-            "max": "Max"
+            "yaw": "水平角度",
+            "pitch": "俯仰角度",
+            "min": "最少俯角",
+            "max": "最大仰角"
           }
         },
         "sandbox": {
@@ -901,15 +901,15 @@
                 "track": "履带"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
+                "penetration": "{damage}生命值 击穿",
                 "blocked": "抵挡伤害",
                 "ricochet": "跳弹",
-                "splash": "{damage}hp splash"
+                "splash": "{damage}生命值 溅射"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
-                "nominal": "{thickness}mm nominal",
-                "ricochet_loss": "{loss}% penetration"
+                "thickness_and_angle": "{thickness}毫米 {angle}度°",
+                "nominal": "{thickness}毫米 装甲厚度",
+                "ricochet_loss": "{loss}% 击穿"
               }
             }
           },
@@ -929,13 +929,13 @@
           "compare": "比较",
           "swap": {
             "button": "调换",
-            "title": "调换战车"
+            "title": "调换坦克"
           },
           "vanilla": "原版",
           "opentest": "开放测试",
           "full_name": "全称",
           "nation": "国别",
-          "class": "战车车型",
+          "class": "坦克车型",
           "tier": "阶级",
           "type": "战车类型",
           "dev_id": "开发参数：ID",
@@ -947,20 +947,20 @@
         "tech_tree": {
           "title": "科技树",
           "battle": "一场比赛",
-          "battles": "{count} battles",
-          "route": "Route {index} of {count}"
+          "battles": "{count} 战斗场次",
+          "route": "路线 {index} / {count}"
         },
         "game_modes": {
           "title": "游戏模式技能"
         },
         "review": {
           "title": "回顾影片",
-          "join": "Apply to {name} YouTuber program"
+          "join": "应用到 {name} YouTuber程序"
         },
         "configuration": {
           "title": "配置设定",
           "modules": {
-            "title": "战车模块",
+            "title": "坦克模块",
             "stock": "白板",
             "upgrade": "顶级配置"
           },
@@ -975,7 +975,7 @@
           "consumables": {
             "title": "消耗品",
             "clear": "清除",
-            "info": "黄色高亮消耗品不影响战车参数。"
+            "info": "黄色高亮消耗品不影响坦克参数。"
           },
           "skills": {
             "title": "乘员技能",
@@ -991,15 +991,15 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
-            "all": "所有战车"
+            "class": "{tier}阶 {class}",
+            "tier": "所有 {tier} 阶",
+            "all": "所有坦克"
           },
           "values": {
-            "shell_index": "Shell {index}",
-            "at_distance": "At {distance}m",
+            "shell_index": "炮弹 {index}",
+            "at_distance": "在 {distance} 公尺",
             "at_distance_slider_label": "距离",
-            "dispersion_at_distance": "Dispersion at {distance}m",
+            "dispersion_at_distance": "在 {distance} 公尺的扩散度",
             "gun_flexibility": "炮管转动界限",
             "speed": "速度",
             "terrain_coefficients": "地形系数",
@@ -1015,13 +1015,13 @@
             "dpmEffective": "60秒内生效",
             "shells": "炮弹 ",
             "mostOptimalShellIndex": "最优炮弹",
-            "shellReloads": "Reloads",
+            "shellReloads": "装填时间",
             "shellReload": "装填时间",
             "intraClip": "炮弹装填",
             "caliber": "口径",
             "penetration": "穿深",
             "damage": "伤害",
-            "damageWithoutAssault": "Damage without assault shells",
+            "damageWithoutAssault": "无突击弹的伤害",
             "clipDamage": "弹匣伤害期望值",
             "moduleDamage": "模组伤害",
             "explosionRadius": "溅射半径",
@@ -1101,14 +1101,14 @@
       },
       "compare": {
         "name": "比较",
-        "button": "战车比较",
-        "description": "比较战车参数",
-        "seo_description": "比较《战车世界：闪击战》中的战车参数和装备配置",
+        "button": "坦克比较",
+        "description": "比较坦克参数",
+        "seo_description": "比较《坦克世界：闪击战》中的坦克参数和装备配置",
         "actions": {
           "add": {
             "button": "添加",
-            "title": "添加战车",
-            "description": "选择要加入比较的战车"
+            "title": "添加坦克",
+            "description": "选择要加入比较的坦克"
           },
           "clear": "清除",
           "deltas": {
@@ -1144,20 +1144,20 @@
       },
       "performance": {
         "name": "性能表现",
-        "button": "查看战车",
-        "description": "战车性能统计",
-        "seo_description": "最好的战车及其在战车世界闪击战中的表现",
+        "button": "查看坦克",
+        "description": "坦克性能统计",
+        "seo_description": "最好的坦克及其在《坦克世界：闪击战》中的表现",
         "estimation": {
-          "body": "Estimated stats based on {count} players. Updated {age} ago.",
-          "hours": "{count} hours",
-          "minutes": "{count} minutes"
+          "body": "基于 {count} 个玩家的估计数据。更新于 {age} 之前。",
+          "hours": "{count} 小时",
+          "minutes": "{count} 分钟"
         },
         "player_count": {
           "label": "玩家数量"
         },
         "table": {
           "tanks": {
-            "header": "战车",
+            "header": "坦克",
             "total": "全部"
           },
           "stats": {
@@ -1181,18 +1181,18 @@
         "name": "图库",
         "button": "浏览全部",
         "description": "Blitz玩家头像",
-        "seo_description": "所有战车世界闪击战玩家头像",
-        "last_updated": "Last updated on {time}",
+        "seo_description": "所有《坦克世界：闪击战》玩家头像",
+        "last_updated": "最后更新于 {time}",
         "search": {
           "hint": "搜索頭像……",
-          "results": "{count} avatars"
+          "results": "{count} 头像"
         }
       },
       "session": {
         "name": "场次",
         "button": "开始追踪",
         "description": "即时场次统计",
-        "seo_description": "在游玩 战车世界闪击战 时，实时追踪你的统计数据",
+        "seo_description": "在游玩《坦克世界：闪击战》时，实时追踪你的统计数据",
         "search": {
           "lookup": "查询玩家以开始使用",
           "hint": "搜索玩家……",
@@ -1200,14 +1200,14 @@
           "no_results": "找不到玩家"
         },
         "controls": {
-          "title": "Tracking {name}",
-          "subtitle": "Since {time}",
+          "title": "正在追踪 {name}",
+          "subtitle": "起始于 {time}",
           "reset": "重置",
           "change": "变更"
         },
         "no_cc": {
           "title": "你正在尝试追踪一个 CC 帐戶",
-          "body": "CC（社群贡献者）账戶没有公开的战车统计数据。 我们正在为CC账戶添加嵌入功能，敬请期待。",
+          "body": "CC（社群贡献者）账戶没有公开的坦克统计数据。 我们正在为CC账戶添加嵌入功能，敬请期待。",
           "alright": "好的"
         },
         "no_battles": {
@@ -1215,16 +1215,16 @@
           "hint": "去玩一场游戏吧"
         },
         "table": {
-          "tank": "战车",
+          "tank": "坦克",
           "total": "全部",
           "remove": "移除"
         }
       },
       "tier_list": {
         "name": "阶级列表",
-        "button": "排名战车",
-        "description": "战车世界闪击战 战车等级排名",
-        "seo_description": "基于玩家评分和统计表现，从最佳到最差排名的《战车世界：闪击战》战车等级列表",
+        "button": "排名坦克",
+        "description": "《坦克世界：闪击战》坦克等级排名",
+        "seo_description": "基于玩家评分和统计表现，从最佳到最差排名的《坦克世界：闪击战》坦克等级列表",
         "buttons": {
           "reset": "重置",
           "share": "分享"
@@ -1234,7 +1234,7 @@
         "name": "嵌入",
         "button": "立即创建",
         "description": "用于串流的嵌入",
-        "seo_description": "创建具有极高自订化的《战车世界：闪击战》串流嵌入功能",
+        "seo_description": "创建具有极高自订化的《坦克世界：闪击战》串流嵌入功能",
         "coming_soon": "更多嵌入功能即将推出。",
         "suggest": "建议与想法",
         "preview": {
@@ -1261,7 +1261,7 @@
               "cancel": "取消",
               "success": {
                 "title": "拷贝 URL",
-                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "info": "已为 {name} 生成 URL。 当 URL 粘贴后，嵌入功能将开始追踪。 您可以随时在 PC 上点击右键或手机上长按并选择「重置」来重置。",
                 "back": "返回",
                 "copy": "拷贝 URL"
               }
@@ -1285,13 +1285,13 @@
               "height": "高度",
               "showTotal": "显示总计",
               "listGap": "列表间距",
-              "listMaxTanks": "最多战车数量",
+              "listMaxTanks": "最多坦克数量",
               "cardRadius": "卡片半径",
               "cardHeaderBackgroundColor": "卡片标题背景颜色",
               "cardHeaderPadding": "卡片标题內间距",
               "cardTitle": "卡片标题",
-              "cardTitleTypeColor": "卡片标题(战车类型)颜色",
-              "cardTitleClassIcon": "卡片标题(战车车型)颜色",
+              "cardTitleTypeColor": "卡片标题(坦克类型)颜色",
+              "cardTitleClassIcon": "卡片标题(坦克车型)颜色",
               "cardBodyBackgroundColor": "卡片內容背景颜色",
               "cardBodyPadding": "卡片內容內間距",
               "columnGap": "栏间距",
@@ -1312,13 +1312,13 @@
         "name": "图表",
         "button": "瘋狂研究",
         "description": "大量图标",
-        "seo_description": "有关战车世界闪击战 战车、玩家与事件的各种图表与图形"
+        "seo_description": "有关《坦克世界：闪击战》坦克、玩家与事件的各种图表与图形"
       },
       "rating": {
         "name": "评价战斗",
         "button": "查看排行榜",
         "description": "完整评价战斗排行榜",
-        "seo_description": "《战车世界：闪击战》即时及已存档的完整评分排行榜"
+        "seo_description": "《坦克世界：闪击战》即时及已存档的完整评分排行榜"
       },
       "discord": {
         "name": "Discord机器人",
@@ -1336,7 +1336,7 @@
         "name": "玩家",
         "button": "查询玩家",
         "description": "定期玩家统计",
-        "seo_description": "战车世界闪击战 定期玩家统计"
+        "seo_description": "《坦克世界：闪击战》定期玩家统计"
       },
       "home": {
         "name": "主页",
@@ -1345,14 +1345,14 @@
         "seo_description": "开始使用 BlitzKit"
       },
       "api": {
-        "name": "API",
-        "button": "To the docs",
-        "description": "BlitzKit hosted API",
-        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
+        "name": "应用程序接口(API)",
+        "button": "前往文档",
+        "description": "BlitzKit 已托管的应用程序接口(API)",
+        "seo_description": "BlitzKit 托管的《坦克世界：闪击战》静态应用程序接口（API）"
       }
     },
     "footer": {
-      "motto": "战车世界闪击战 全方位工具",
+      "motto": "《坦克世界：闪击战》全方位工具",
       "copyright": "本网站与 Wargaming战游网 或任何服务无关",
       "about": {
         "title": "关于",

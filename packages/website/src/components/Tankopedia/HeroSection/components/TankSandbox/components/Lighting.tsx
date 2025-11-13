@@ -65,8 +65,6 @@ export function Lighting() {
         ] as const;
         const color = new Color();
 
-        if (isHalloween()) color.set(1, 0, 0);
-
         return (
           <HelpingSpotLight
             key={index}
