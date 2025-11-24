@@ -62,27 +62,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
-        run: |
-          sudo apt update
-          sudo apt install -y p7zip-full
+      # - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y p7zip-full
 
-      - uses: actions/checkout@v4
-        if: github.event.inputs.archive_url == ''
-        with:
-          submodules: recursive
-          token: ${{ secrets.GH_TOKEN }}
+      # - uses: actions/checkout@v4
+      #   if: github.event.inputs.archive_url == ''
+      #   with:
+      #     submodules: recursive
+      #     token: ${{ secrets.GH_TOKEN }}
 
-      - uses: arduino/setup-protoc@v3
-        if: github.event.inputs.archive_url == ''
-        with:
-          repo-token: ${{ secrets.GH_TOKEN }}
+      # - uses: arduino/setup-protoc@v3
+      #   if: github.event.inputs.archive_url == ''
+      #   with:
+      #     repo-token: ${{ secrets.GH_TOKEN }}
 
-      - uses: oven-sh/setup-bun@v1
-        if: github.event.inputs.archive_url == ''
+      # - uses: oven-sh/setup-bun@v1
+      #   if: github.event.inputs.archive_url == ''
 
-      - run: bun run setup
-        if: github.event.inputs.archive_url == ''
+      # - run: bun run setup
+      #   if: github.event.inputs.archive_url == ''
 
       - name: (Steam) Setup DepotDownloader
         if: github.event.inputs.archive_url == ''
