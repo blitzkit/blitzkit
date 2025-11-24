@@ -72,7 +72,7 @@ jobs:
           root-reserve-mb: 0
           temp-reserve-mb: 0
           swap-size-mb: 0
-          overprovision-lvm: "false"
+          # overprovision-lvm: "false"
 
       - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
         run: |
