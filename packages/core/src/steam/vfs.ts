@@ -1,4 +1,6 @@
+import { XMLParser } from "fast-xml-parser";
 import SteamUser, { EConnectionProtocol } from "steam-user";
+import { parse } from "yaml";
 
 interface SteamManifestFile {
   chunks: {
@@ -31,6 +33,8 @@ interface SteamManifest {
 
 export class SteamVFS {
   private steam = new SteamUser({ protocol: EConnectionProtocol.TCP });
+  private textDecoder = new TextDecoder();
+  private xmlParser = new XMLParser();
 
   private manifest: Map<string, SteamManifestFile> = new Map();
 
@@ -75,18 +79,46 @@ export class SteamVFS {
     return this;
   }
 
-  async file(path: string) {
-    if (!this.manifest.has(path)) {
-      throw new Error(`File not found: ${path}`);
-    }
+  has(path: string) {
+    const dvplPath = `${path}.dvpl`;
 
+    return (
+      (this.manifest.has(dvplPath) && dvplPath) ||
+      (this.manifest.has(path) && path)
+    );
+  }
+
+  assert(requested: string) {
+    const path = this.has(requested);
+
+    if (!path) throw new Error(`File not found: ${path}`);
+
+    return path;
+  }
+
+  async file(requested: string) {
+    const path = this.assert(requested);
     const fileManifest = this.manifest.get(path)!;
-
     const downloaded: { type: "complete"; file: Buffer } =
       // @ts-expect-error
       await this.steam.downloadFile(this.app, this.depot, fileManifest);
 
     return new Uint8Array(downloaded.file);
+  }
+
+  async text(path: string) {
+    const file = await this.file(path);
+    return this.textDecoder.decode(file);
+  }
+
+  async yaml<Type>(path: string) {
+    const file = await this.text(path);
+    return parse(file) as Type;
+  }
+
+  async xml<Type>(path: string) {
+    const file = await this.text(path);
+    return this.xmlParser.parse(file) as Type;
   }
 
   dispose() {
