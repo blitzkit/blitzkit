@@ -1,27 +1,30 @@
+import { writeFile } from "fs/promises";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 
-interface SteamManifest {
-  files: {
-    chunks: {
-      sha: string;
-      crc: number;
-      offset: string;
-      cb_original: number;
-      cb_compressed: number;
-    }[];
-    filename: string;
-    size: string;
-    flags: number;
-    sha_filename: string;
-    sha_content: string;
-    linktarget: unknown;
+interface SteamManifestFile {
+  chunks: {
+    sha: string;
+    crc: number;
+    offset: string;
+    cb_original: number;
+    cb_compressed: number;
   }[];
+  filename: string;
+  size: string;
+  flags: number;
+  sha_filename: string;
+  sha_content: string;
+  linktarget: unknown;
+}
+
+interface SteamManifest {
+  files: SteamManifestFile[];
 }
 
 export class SteamVFS {
   private steam = new SteamUser({ protocol: EConnectionProtocol.TCP });
 
-  private manifest: SteamManifest;
+  private manifest: Map<string, SteamManifestFile> = new Map();
 
   constructor(
     private username: string,
@@ -39,7 +42,7 @@ export class SteamVFS {
     await new Promise((resolve) => this.steam.once("loggedOn", resolve));
 
     const productInfo = await this.steam.getProductInfo([this.app], []);
-    const manifest = await new Promise((resolve) => {
+    const manifest: SteamManifest = await new Promise((resolve) => {
       this.steam.getManifest(
         this.app,
         this.depot,
@@ -51,6 +54,12 @@ export class SteamVFS {
         }
       );
     });
+
+    for (const file of manifest.files) {
+      this.manifest.set(file.filename, file);
+    }
+
+    writeFile("test.manifest.json", JSON.stringify(manifest, null, 2));
 
     console.log(JSON.stringify(manifest.files[0], null, 2));
   }
