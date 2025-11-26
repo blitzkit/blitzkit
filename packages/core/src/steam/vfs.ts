@@ -1,6 +1,7 @@
 import { XMLParser } from "fast-xml-parser";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 import { parse } from "yaml";
+import { readDVPL } from "../blitz";
 
 interface SteamManifestFile {
   chunks: {
@@ -91,7 +92,7 @@ export class SteamVFS {
   assert(requested: string) {
     const path = this.has(requested);
 
-    if (!path) throw new Error(`File not found: ${path}`);
+    if (!path) throw new Error(`File not found: ${requested}`);
 
     return path;
   }
@@ -120,8 +121,11 @@ export class SteamVFS {
     const downloaded: { type: "complete"; file: Buffer } =
       // @ts-expect-error
       await this.steam.downloadFile(this.app, this.depot, fileManifest);
+    let buffer = downloaded.file;
 
-    return new Uint8Array(downloaded.file);
+    if (path.endsWith(".dvpl")) buffer = readDVPL(downloaded.file);
+
+    return new Uint8Array(buffer);
   }
 
   async text(path: string) {
