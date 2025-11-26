@@ -1,4 +1,3 @@
-import { writeFile } from "fs/promises";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 
 interface SteamManifestFile {
@@ -52,12 +51,14 @@ export class SteamVFS {
 
     const productInfo = await this.steam.getProductInfo([this.app], []);
     const manifest: SteamManifest = await new Promise((resolve) => {
+      // @ts-expect-error
       this.steam.getManifest(
         this.app,
         this.depot,
         productInfo.apps[this.app].appinfo.depots[this.depot].manifests.public
           .gid,
         "public",
+        // @ts-expect-error
         (_, response) => {
           resolve(response);
         }
@@ -71,8 +72,28 @@ export class SteamVFS {
       this.manifest.set(path, file);
     }
 
-    writeFile("test.txt", paths.sort().join("\n"));
+    return this;
+  }
 
-    console.log(JSON.stringify(manifest.files[0], null, 2));
+  async file(path: string) {
+    if (!this.manifest.has(path)) {
+      throw new Error(`File not found: ${path}`);
+    }
+
+    const fileManifest = this.manifest.get(path)!;
+
+    const downloaded: { type: "complete"; file: Buffer } =
+      // @ts-expect-error
+      await this.steam.downloadFile(this.app, this.depot, fileManifest);
+
+    return new Uint8Array(downloaded.file);
+  }
+
+  dispose() {
+    this.steam.logOff();
+  }
+
+  [Symbol.dispose]() {
+    this.dispose();
   }
 }
