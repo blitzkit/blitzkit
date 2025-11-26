@@ -62,16 +62,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: "true"
-          remove-haskell: "true"
-          remove-android: "true"
-          remove-codeql: "true"
-          remove-docker-images: "true"
-
       - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
         run: |
           sudo apt update
@@ -97,6 +87,9 @@ jobs:
       - name: (Steam) Setup DepotDownloader
         if: github.event.inputs.archive_url == ''
         run: bun run setup:depotdownloader
+
+      - name: HACK REMOVE NODE_MODULES
+        run: rm -rf node_modules
 
       - name: (Steam) Download client
         if: github.event.inputs.archive_url == ''
@@ -167,16 +160,6 @@ jobs:
     needs: download_client
 
     steps:
-      - uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: "true"
-          remove-haskell: "true"
-          remove-android: "true"
-          remove-codeql: "true"
-          remove-docker-images: "true"
-
       - uses: actions/checkout@v4
         with:
           submodules: recursive
