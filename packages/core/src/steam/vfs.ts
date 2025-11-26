@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import { normalize } from "path/posix";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 import { parse } from "yaml";
 import { readDVPL } from "../blitz";
@@ -81,11 +82,12 @@ export class SteamVFS {
   }
 
   has(path: string) {
-    const dvplPath = `${path}.dvpl`;
+    const normalized = normalize(path);
+    const dvplPath = `${normalized}.dvpl`;
 
     return (
       (this.manifest.has(dvplPath) && dvplPath) ||
-      (this.manifest.has(path) && path)
+      (this.manifest.has(normalized) && normalized)
     );
   }
 

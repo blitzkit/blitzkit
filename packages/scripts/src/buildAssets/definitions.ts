@@ -577,7 +577,7 @@ export async function definitions() {
         .then((response) => response.text())
         .then((string) => parseYaml(string) as BlitzStrings);
       const preInstalled = await vfs.yaml<BlitzStrings>(
-        'Data/Strings/${blitzLocale}.yaml'
+        `Data/Strings/${blitzLocale}.yaml`
       );
 
       stringsI18n[locale] = {

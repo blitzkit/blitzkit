@@ -7,11 +7,11 @@ export async function readTexture(path: string) {
   const resolvedTexturePath = isDds
     ? ddsTexturePath
     : ddsTexturePath.replace(".dds", ".pvr");
-  const decompressedDvpl = await vfs.file(`${resolvedTexturePath}.dvpl`);
+  const file = await vfs.file(resolvedTexturePath);
 
   const raw = isDds
-    ? await new DdsReadStream(decompressedDvpl.buffer as ArrayBuffer).dds()
-    : new PvrReadStream(decompressedDvpl.buffer as ArrayBuffer).pvr();
+    ? await new DdsReadStream(file.buffer as ArrayBuffer).dds()
+    : new PvrReadStream(file.buffer as ArrayBuffer).pvr();
 
   return raw;
 }
