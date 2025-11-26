@@ -1,5 +1,4 @@
 import { writeFile } from "fs/promises";
-import { normalize } from "path";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 
 interface SteamManifestFile {
@@ -65,14 +64,14 @@ export class SteamVFS {
       );
     });
 
-    let str = "";
+    const paths: string[] = [];
     for (const file of manifest.files) {
-      const path = normalize(file.filename);
-      str += `${path}\n`;
+      const path = file.filename.replaceAll("\\", "/");
+      paths.push(path);
       this.manifest.set(path, file);
     }
 
-    writeFile("test.txt", str);
+    writeFile("test.txt", paths.sort().join("\n"));
 
     console.log(JSON.stringify(manifest.files[0], null, 2));
   }
