@@ -1,1 +1,1 @@
-export * from "./steam";
+export * from "./vfs";
