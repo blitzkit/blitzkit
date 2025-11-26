@@ -1,19 +1,17 @@
 import sharp from "sharp";
-import { readDVPLFile } from "../../src/core/blitz/readDVPLFile";
-import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 import { SquadBattleTypeStyles } from "./definitions";
 
 export async function gameModeBanners() {
   console.log("Building game mode banners...");
 
   using uploader = new AssetUploader("game mode banners");
-  const gameTypeSelectorStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
+  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStyles>(
+    `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
   );
-  const squadBattleTypeStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
+  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStyles>(
+    `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
   );
   const bannerMatches: { name: string; path: string }[] = [];
 
@@ -37,7 +35,7 @@ export async function gameModeBanners() {
     }
 
     const content = await sharp(
-      await readDVPLFile(`${DATA}${path}.packed.webp`)
+      await vfs.file(`Data${path}.packed.webp`)
     )
       .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 } })
       .toBuffer();

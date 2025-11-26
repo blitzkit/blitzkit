@@ -4,12 +4,10 @@ import { mkdir, writeFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import ProgressBar from "progress";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { readStringDVPL } from "../src/core/blitz/readStringDVPL";
-import { DATA } from "./buildAssets/constants";
-import { readYAMLDVPL } from "./core/blitz/readYAMLDVPL";
+import { vfs } from "./buildAssets/constants";
 import { writeDVPL } from "./core/blitz/writeDVPL";
 
-const versionTextFile = await readStringDVPL(`${DATA}/version.txt`);
+const versionTextFile = await vfs.text(`Data/version.txt`);
 const currentVersion = versionTextFile
   .split(" ")[0]
   .split(".")
@@ -51,7 +49,7 @@ while (true) {
       const { dir } = parsePath(path);
 
       try {
-        await mkdir(`${DATA}/${dir}`, { recursive: true });
+        await mkdir(`Data/${dir}`, { recursive: true });
       } catch (error) {
         console.warn(`Failed to make directory "${dir}"`);
       }
@@ -60,7 +58,7 @@ while (true) {
       const buffer = Buffer.from(data);
 
       await writeFile(
-        `${DATA}/${path}${isDvpl ? "" : ".dvpl"}`,
+        `Data/${path}${isDvpl ? "" : ".dvpl"}`,
         new Uint8Array(isDvpl ? buffer : writeDVPL(buffer))
       );
 
@@ -76,14 +74,14 @@ while (true) {
         }/en.yaml`
       );
       const newStrings = parseYaml(await localizationsResponse.text());
-      const oldStrings = await readYAMLDVPL<Record<string, string>>(
-        `${DATA}/Strings/en.yaml`
+      const oldStrings = await vfs.yaml<Record<string, string>>(
+        `Data/Strings/en.yaml`
       );
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
 
       await writeFile(
-        `${DATA}/Strings/en.yaml`,
+        `Data/Strings/en.yaml`,
         new Uint8Array(writeDVPL(Buffer.from(patchedContent)))
       );
     }
