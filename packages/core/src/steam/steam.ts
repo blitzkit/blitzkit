@@ -1,4 +1,5 @@
 import { writeFile } from "fs/promises";
+import { normalize } from "path";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 
 interface SteamManifestFile {
@@ -19,6 +20,15 @@ interface SteamManifestFile {
 
 interface SteamManifest {
   files: SteamManifestFile[];
+  depot_id: number;
+  gid_manifest: string;
+  creation_time: number;
+  filenames_encrypted: boolean;
+  cb_disk_original: string;
+  cb_disk_compressed: string;
+  unique_chunks: number;
+  crc_encrypted: number;
+  crc_clear: number;
 }
 
 export class SteamVFS {
@@ -55,11 +65,14 @@ export class SteamVFS {
       );
     });
 
+    let str = "";
     for (const file of manifest.files) {
-      this.manifest.set(file.filename, file);
+      const path = normalize(file.filename);
+      str += `${path}\n`;
+      this.manifest.set(path, file);
     }
 
-    writeFile("test.manifest.json", JSON.stringify(manifest, null, 2));
+    writeFile("test.txt", str);
 
     console.log(JSON.stringify(manifest.files[0], null, 2));
   }
