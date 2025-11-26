@@ -96,6 +96,24 @@ export class SteamVFS {
     return path;
   }
 
+  dir(path: string) {
+    const parentSegments = path.split("/").length;
+    const children: string[] = [];
+
+    for (const child of this.manifest.keys()) {
+      const childSegments = child.split("/");
+
+      if (
+        child.startsWith(path) &&
+        parentSegments + 1 === childSegments.length
+      ) {
+        children.push(childSegments.at(-1)!);
+      }
+    }
+
+    return children;
+  }
+
   async file(requested: string) {
     const path = this.assert(requested);
     const fileManifest = this.manifest.get(path)!;

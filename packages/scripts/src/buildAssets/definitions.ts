@@ -32,16 +32,12 @@ import {
 } from "@blitzkit/core";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
-import { readdir } from "fs/promises";
 import { deburr } from "lodash-es";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
 import { parse as parseYaml } from "yaml";
-import { readStringDVPL } from "../core/blitz/readStringDVPL";
-import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
-import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 import type { Avatar } from "./skillIcons";
 import type { TankParameters } from "./tankIcons";
 
@@ -540,9 +536,9 @@ export async function definitions() {
 
   using uploader = new AssetUploader("definitions");
   const gameDefinitions: GameDefinitions = {
-    version: (await readStringDVPL(`${DATA}/version.txt`)).split(" ")[0],
+    version: (await vfs.text('Data/version.txt')).split(" ")[0],
     nations: (
-      await readYAMLDVPL<AvailableNationsYaml>(`${DATA}/available_nations.yaml`)
+      await vfs.yaml<AvailableNationsYaml>('Data/available_nations.yaml')
     ).available_nations,
     gameModes: {},
     roles: {},
@@ -565,12 +561,10 @@ export async function definitions() {
       [TankClass.TANK_DESTROYER]: { skills: [] },
     },
   };
-  const nations = await readdir(`${DATA}/XML/item_defs/vehicles`).then(
-    (nations) => nations.filter((nation) => nation !== "common")
-  );
+  const nations = vfs.dir('Data/XML/item_defs/vehicles').filter((nation) => nation !== "common")
   const tankStringIdMap: Record<string, number> = {};
-  const optionalDevices = await readXMLDVPL<{ root: OptionalDevices }>(
-    `${DATA}/XML/item_defs/vehicles/common/optional_devices.xml`
+  const optionalDevices = await vfs.xml<{ root: OptionalDevices }>(
+    'Data/XML/item_defs/vehicles/common/optional_devices.xml'
   );
   const stringsI18n: Record<string, Record<string, string>> = {};
 
@@ -582,8 +576,8 @@ export async function definitions() {
       )
         .then((response) => response.text())
         .then((string) => parseYaml(string) as BlitzStrings);
-      const preInstalled = await readYAMLDVPL<BlitzStrings>(
-        `${DATA}/Strings/${blitzLocale}.yaml`
+      const preInstalled = await vfs.yaml<BlitzStrings>(
+        'Data/Strings/${blitzLocale}.yaml'
       );
 
       stringsI18n[locale] = {
@@ -616,15 +610,15 @@ export async function definitions() {
     return { locales: collection } satisfies I18nString;
   }
 
-  const optionalDeviceSlots = await readXMLDVPL<{
+  const optionalDeviceSlots = await vfs.xml<{
     root: OptionalDeviceSlots;
-  }>(`${DATA}/XML/item_defs/vehicles/common/optional_device_slots.xml`);
+  }>(`Data/XML/item_defs/vehicles/common/optional_device_slots.xml`);
   const consumables: ConsumablesCommon = {};
   const provisions: ProvisionsCommon = {};
 
   for (const match of (
-    await readStringDVPL(
-      `${DATA}/XML/item_defs/vehicles/common/consumables/list.xml`
+    await vfs.text(
+      `Data/XML/item_defs/vehicles/common/consumables/list.xml`
     )
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
     if (match[1] === "prototypes") continue;
@@ -632,16 +626,16 @@ export async function definitions() {
     Object.assign(
       consumables,
       (
-        await readXMLDVPL<{ root: ConsumablesCommon }>(
-          `${DATA}/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`
+        await vfs.xml<{ root: ConsumablesCommon }>(
+          `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`
         )
       ).root
     );
   }
 
   for (const match of (
-    await readStringDVPL(
-      `${DATA}/XML/item_defs/vehicles/common/provisions/list.xml`
+    await vfs.text(
+      `Data/XML/item_defs/vehicles/common/provisions/list.xml`
     )
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
     if (match[1] === "prototypes") continue;
@@ -649,34 +643,34 @@ export async function definitions() {
     Object.assign(
       provisions,
       (
-        await readXMLDVPL<{ root: ConsumablesCommon }>(
-          `${DATA}/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`
+        await vfs.xml<{ root: ConsumablesCommon }>(
+          `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`
         )
       ).root
     );
   }
 
-  const avatar = await readXMLDVPL<{ root: Avatar }>(
-    `${DATA}/XML/item_defs/tankmen/avatar.xml`
+  const avatar = await vfs.xml<{ root: Avatar }>(
+    `Data/XML/item_defs/tankmen/avatar.xml`
   );
-  const maps = await readYAMLDVPL<Maps>(`${DATA}/maps.yaml`);
+  const maps = await vfs.yaml<Maps>(`Data/maps.yaml`);
   const tankXps = new Map<number, ResearchCost>();
-  const camouflagesXml = await readXMLDVPL<{ root: CamouflagesXML }>(
-    `${DATA}/XML/item_defs/vehicles/common/camouflages.xml`
+  const camouflagesXml = await vfs.xml<{ root: CamouflagesXML }>(
+    `Data/XML/item_defs/vehicles/common/camouflages.xml`
   );
-  const camouflagesYaml = await readYAMLDVPL<CamouflagesYaml>(
-    `${DATA}/camouflages.yaml`
+  const camouflagesYaml = await vfs.yaml<CamouflagesYaml>(
+    `Data/camouflages.yaml`
   );
   const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
-  const squadBattleTypeStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
+  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStyles>(
+    `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
   );
-  const gameTypeSelectorStyles = await readYAMLDVPL<SquadBattleTypeStyles>(
-    `${DATA}/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
+  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStyles>(
+    `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
   );
   const gameModeNativeNames: Record<string, number> = {};
-  const combatRoles = await readYAMLDVPL<CombatRolesYaml>(
-    `${DATA}/XML/item_defs/vehicles/common/combat_roles.yaml`
+  const combatRoles = await vfs.yaml<CombatRolesYaml>(
+    `Data/XML/item_defs/vehicles/common/combat_roles.yaml`
   );
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
@@ -727,8 +721,8 @@ export async function definitions() {
   const idToNation: Record<number, string> = {};
 
   for (const nation of nations) {
-    const tankList = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
+    const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`
     );
 
     for (const tankKey in tankList.root) {
@@ -811,24 +805,24 @@ export async function definitions() {
   });
 
   for (const nation of nations) {
-    const tankList = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
+    const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`
     );
-    const turretList = await readXMLDVPL<{
+    const turretList = await vfs.xml<{
       root: TurretDefinitionsList;
-    }>(`${DATA}/XML/item_defs/vehicles/${nation}/components/turrets.xml`);
-    const gunList = await readXMLDVPL<{
+    }>(`Data/XML/item_defs/vehicles/${nation}/components/turrets.xml`);
+    const gunList = await vfs.xml<{
       root: GunDefinitionsList;
-    }>(`${DATA}/XML/item_defs/vehicles/${nation}/components/guns.xml`);
-    const shellList = await readXMLDVPL<{
+    }>(`Data/XML/item_defs/vehicles/${nation}/components/guns.xml`);
+    const shellList = await vfs.xml<{
       root: ShellDefinitionsList;
-    }>(`${DATA}/XML/item_defs/vehicles/${nation}/components/shells.xml`);
-    const enginesList = await readXMLDVPL<{
+    }>(`Data/XML/item_defs/vehicles/${nation}/components/shells.xml`);
+    const enginesList = await vfs.xml<{
       root: EngineDefinitionsList;
-    }>(`${DATA}/XML/item_defs/vehicles/${nation}/components/engines.xml`);
-    const chassisList = await readXMLDVPL<{
+    }>(`Data/XML/item_defs/vehicles/${nation}/components/engines.xml`);
+    const chassisList = await vfs.xml<{
       root: ChassisDefinitionsList;
-    }>(`${DATA}/XML/item_defs/vehicles/${nation}/components/chassis.xml`);
+    }>(`Data/XML/item_defs/vehicles/${nation}/components/chassis.xml`);
 
     function resolveUnlocks(unlocks?: BlitzModuleType) {
       if (!unlocks) return [];
@@ -879,11 +873,11 @@ export async function definitions() {
       const trackXps = new Map<number, ResearchCost>();
       const tank = tankList.root[tankKey];
       let tankPrice: TankPrice;
-      const tankDefinition = await readXMLDVPL<{ root: VehicleDefinitions }>(
-        `${DATA}/XML/item_defs/vehicles/${nation}/${tankKey}.xml`
+      const tankDefinition = await vfs.xml<{ root: VehicleDefinitions }>(
+        `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`
       );
-      const tankParameters = await readYAMLDVPL<TankParameters>(
-        `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
+      const tankParameters = await vfs.yaml<TankParameters>(
+        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
       );
       const turretOrigin = tankDefinition.root.hull.turretPositions.turret
         .split(" ")
