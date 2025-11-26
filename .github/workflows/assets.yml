@@ -55,117 +55,13 @@ env:
   PUBLIC_ASSET_FAST_REPO: assets
   PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
 
 jobs:
-  download_client:
-    name: Download client
-    runs-on: ubuntu-latest
-
-    steps:
-      - if: github.event.inputs.archive_url != ''
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: "true"
-          remove-haskell: "true"
-          remove-android: "true"
-          remove-codeql: "true"
-          remove-docker-images: "true"
-
-      - if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
-        run: |
-          sudo apt update
-          sudo apt install -y p7zip-full
-
-      - uses: actions/checkout@v4
-        if: github.event.inputs.archive_url == ''
-        with:
-          submodules: recursive
-          token: ${{ secrets.GH_TOKEN }}
-
-      - uses: arduino/setup-protoc@v3
-        if: github.event.inputs.archive_url == ''
-        with:
-          repo-token: ${{ secrets.GH_TOKEN }}
-
-      - uses: oven-sh/setup-bun@v1
-        if: github.event.inputs.archive_url == ''
-
-      - run: bun run setup
-        if: github.event.inputs.archive_url == ''
-
-      - name: (Steam) Setup DepotDownloader
-        if: github.event.inputs.archive_url == ''
-        run: bun run setup:depotdownloader
-
-      - name: (Steam) Download client
-        if: github.event.inputs.archive_url == ''
-        run: |
-          chmod +x ./temp/depotDownloader/DepotDownloader
-          ./temp/depotDownloader/DepotDownloader -q -os windows -app 444200 -username ${{ secrets.DEPOT_DOWNLOADER_USERNAME }} -password "${{ secrets.DEPOT_DOWNLOADER_PASSWORD }}"
-          mkdir -p temp/game
-          mv depots/444202/*/* temp/game
-          rm -rf depots
-
-      - name: (Steam) Apply patches
-        if: github.event.inputs.archive_url == ''
-        run: bun setup:patches --manual
-
-      - name: (ZIP) Download client
-        if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.zip')
-        env:
-          ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
-        run: |
-          mkdir -p temp/game
-          wget -q -O temp/archive.zip $ARCHIVE_URL
-          unzip -q temp/archive.zip -d temp/archive
-          rm temp/archive.zip
-          mv temp/archive/app/* temp/game
-
-      - name: (WGPKG) Download client
-        if: github.event.inputs.archive_url != '' && endsWith(github.event.inputs.archive_url, '.wgpkg')
-        env:
-          ARCHIVE_URL: ${{ github.event.inputs.archive_url }}
-        run: |
-          mkdir -p temp/archives
-          mkdir -p temp/game
-
-          i=1
-          urls=()
-
-          while :; do
-            part=$(printf "%03d" $i)
-            url="${ARCHIVE_URL}.${part}"
-            if wget --spider -q "$url"; then
-              urls+=("$url")
-              ((i++))
-            else
-              break
-            fi
-          done
-
-          for url in "${urls[@]}"; do
-            dest="temp/archives/$(basename "$url")"
-            wget -q -O "$dest" "$url" &
-          done
-          wait
-
-          first=$(ls temp/archives/*.001 | head -n 1)
-          7z x "$first" -otemp/game
-
-          rm -rf temp/archives
-
-      - name: Archive game
-        uses: actions/upload-artifact@v4
-        with:
-          name: game
-          path: temp/game
-
   build_assets:
     name: Build assets
     runs-on: ubuntu-latest
-    needs: download_client
 
     steps:
       - uses: actions/checkout@v4
@@ -177,12 +73,6 @@ jobs:
           repo-token: ${{ secrets.GH_TOKEN }}
       - uses: oven-sh/setup-bun@v1
       - run: bun run setup
-
-      - name: Download game
-        uses: actions/download-artifact@v4
-        with:
-          name: game
-          path: temp/game
 
       - name: AppArmor hack
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns

@@ -1,12 +1,8 @@
 import { NATION_IDS } from "@blitzkit/core";
-import { readdir } from "fs/promises";
 import sharp from "sharp";
 import type { Vector3Tuple } from "three";
-import { readDVPLFile } from "../core/blitz/readDVPLFile";
-import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
-import { readYAMLDVPL } from "../core/blitz/readYAMLDVPL";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 import type { VehicleDefinitionList } from "./definitions";
 
 export interface TankParameters {
@@ -45,13 +41,11 @@ export async function tankIcons() {
   console.log("Building tank icons...");
 
   using uploader = new AssetUploader("tank icons");
-  const nations = await readdir(`${DATA}/XML/item_defs/vehicles`).then(
-    (nations) => nations.filter((nation) => nation !== "common")
-  );
+  const nations = vfs.dir(`Data/XML/item_defs/vehicles`).filter((nation) => nation !== "common")
 
   for (const nation of nations) {
-    const tanks = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
+    const tanks = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`
     );
 
     for (const tankKey in tanks.root) {
@@ -62,19 +56,19 @@ export async function tankIcons() {
       const nationVehicleId = tank.id;
       const id = (nationVehicleId << 8) + (NATION_IDS[nation] << 4) + 1;
 
-      const parameters = await readYAMLDVPL<TankParameters>(
-        `${DATA}/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
+      const parameters = await vfs.yaml<TankParameters>(
+        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
       );
-      const smallPath = `${DATA}/${parameters.resourcesPath.smallIconPath
+      const smallPath = `Data/${parameters.resourcesPath.smallIconPath
         .replace(/~res:\//, "")
         .replace(/\..+/, "")}.packed.webp`;
-      const bigPath = `${DATA}/${parameters.resourcesPath.bigIconPath
+      const bigPath = `Data/${parameters.resourcesPath.bigIconPath
         .replace(/~res:\//, "")
         .replace(/\..+/, "")}.packed.webp`;
-      const big = await sharp(await readDVPLFile(bigPath))
+      const big = await sharp(await vfs.file(bigPath))
         .trim()
         .toBuffer();
-      const small = await sharp(await readDVPLFile(smallPath))
+      const small = await sharp(await vfs.file(smallPath))
         .trim()
         .toBuffer();
 

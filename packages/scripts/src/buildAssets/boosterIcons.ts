@@ -1,19 +1,16 @@
-import { readdir } from "fs/promises";
 import sharp from "sharp";
-import { readDVPLFile } from "../../src/core/blitz/readDVPLFile";
-import { readStringDVPL } from "../../src/core/blitz/readStringDVPL";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 
 export async function boosterIcons() {
   console.log("Building booster icons...");
 
   using uploader = new AssetUploader("booster icons");
-  const boosterFiles = (await readdir(`${DATA}/Gfx/Shared/boosters`)).filter(
+  const boosterFiles = (vfs.dir(`Data/Gfx/Shared/boosters`)).filter(
     (file) => !file.includes("@2x.txt") && !file.startsWith("texture0")
   );
   const image = sharp(
-    await readDVPLFile(`${DATA}/Gfx/Shared/boosters/texture0.packed.webp`)
+    await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`)
   );
 
   for (const file of boosterFiles) {
@@ -21,7 +18,7 @@ export async function boosterIcons() {
 
     if (name === undefined) continue;
 
-    const sizes = (await readStringDVPL(`${DATA}/Gfx/Shared/boosters/${file}`))
+    const sizes = (await vfs.text(`Data/Gfx/Shared/boosters/${file}`))
       .split("\n")[4]
       .split(" ")
       .map(Number);

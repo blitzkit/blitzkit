@@ -1,16 +1,8 @@
 import { config } from "dotenv";
 import { argv } from "process";
-
-config();
-
-const allTargets = argv.includes("--all-targets");
-const targets = argv
-  .find((argument) => argument.startsWith("--target"))
-  ?.split("=")[1]
-  .split(",");
-
 import { boosterIcons } from "./boosterIcons";
 import { camouflageIcons } from "./camouflageIcons";
+import { vfs } from "./constants";
 import { consumableProvisionIcons } from "./consumableProvisionIcons";
 import { currencies } from "./currencies";
 import { definitions } from "./definitions";
@@ -26,6 +18,14 @@ import { skillIcons } from "./skillIcons";
 import { tankArmors } from "./tankArmors";
 import { tankIcons } from "./tankIcons";
 import { tankModels } from "./tankModels";
+
+config();
+
+const allTargets = argv.includes("--all-targets");
+const targets = argv
+  .find((argument) => argument.startsWith("--target"))
+  ?.split("=")[1]
+  .split(",");
 
 if (!targets && !allTargets) throw new Error("No target(s) specified");
 
@@ -59,3 +59,6 @@ for (const method of methods) {
     }
   }
 }
+
+vfs.dispose();
+process.exit(0);

@@ -1,8 +1,6 @@
 import { toUniqueId } from "@blitzkit/core";
-import { readdir } from "fs/promises";
-import { readXMLDVPL } from "../core/blitz/readXMLDVPL";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 import { VehicleDefinitionList } from "./definitions";
 
 export async function migration() {
@@ -10,13 +8,11 @@ export async function migration() {
 
   using uploader = new AssetUploader("migration map");
   const map: Record<string, number> = {};
-  const nations = await readdir(`${DATA}/XML/item_defs/vehicles`).then(
-    (nations) => nations.filter((nation) => nation !== "common")
-  );
+  const nations = vfs.dir(`Data/XML/item_defs/vehicles`).filter((nation) => nation !== "common");
 
   for (const nation of nations) {
-    const tankList = await readXMLDVPL<{ root: VehicleDefinitionList }>(
-      `${DATA}/XML/item_defs/vehicles/${nation}/list.xml`
+    const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`
     );
 
     for (const tankKey in tankList.root) {

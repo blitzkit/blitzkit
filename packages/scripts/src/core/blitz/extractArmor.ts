@@ -2,24 +2,24 @@ import {
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
+  SteamVFS,
   VertexAttribute,
-} from '@blitzkit/core';
-import { Accessor, Document, Node, Scene } from '@gltf-transform/core';
-import { times } from 'lodash-es';
+} from "@blitzkit/core";
+import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
+import { times } from "lodash-es";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
-} from './extractModel/constants';
-import { readDVPLFile } from './readDVPLFile';
+} from "./extractModel/constants";
 
-export async function extractArmor(data: string, fileName: string) {
-  const sc2Path = `${data}/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
-  const scgPath = `${data}/3d/Tanks/CollisionMeshes/${fileName}.scg`;
+export async function extractArmor(vfs: SteamVFS, fileName: string) {
+  const sc2Path = `Data/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
+  const scgPath = `Data/3d/Tanks/CollisionMeshes/${fileName}.scg`;
   const sc2 = new Sc2ReadStream(
-    (await readDVPLFile(sc2Path)).buffer as ArrayBuffer,
+    (await vfs.file(sc2Path)).buffer as ArrayBuffer
   ).sc2();
   const scg = new ScgReadStream(
-    (await readDVPLFile(scgPath)).buffer as ArrayBuffer,
+    (await vfs.file(scgPath)).buffer as ArrayBuffer
   ).scg();
   const document = new Document();
   const scene = document.createScene();
@@ -29,21 +29,21 @@ export async function extractArmor(data: string, fileName: string) {
     hierarchies.forEach((hierarchy) => {
       const components = times(
         hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, '0')],
+        (index) => hierarchy.components[index.toString().padStart(4, "0")]
       );
 
       components.forEach((component) => {
-        switch (component['comp.typename']) {
-          case 'TransformComponent':
+        switch (component["comp.typename"]) {
+          case "TransformComponent":
             break;
 
-          case 'RenderComponent': {
-            const batch = component['rc.renderObj']['ro.batches']['0000'];
-            const polygonGroup = scg.get(batch['rb.datasource']);
+          case "RenderComponent": {
+            const batch = component["rc.renderObj"]["ro.batches"]["0000"];
+            const polygonGroup = scg.get(batch["rb.datasource"]);
 
             if (!polygonGroup) {
               console.warn(
-                `Missing polygon group ${batch['rb.datasource']} (${hierarchy.name}); skipping...`,
+                `Missing polygon group ${batch["rb.datasource"]} (${hierarchy.name}); skipping...`
               );
 
               break;
@@ -73,7 +73,7 @@ export async function extractArmor(data: string, fileName: string) {
                 VertexAttribute.TANGENT,
                 attributes
                   .get(VertexAttribute.TANGENT)!
-                  .map((tangent) => [...tangent, 1]),
+                  .map((tangent) => [...tangent, 1])
               );
             }
 
@@ -85,7 +85,7 @@ export async function extractArmor(data: string, fileName: string) {
               const vertexSize = vertexAttributeGltfVectorSizes[attribute];
               const accessor = document
                 .createAccessor(name)
-                .setType(vertexSize === 1 ? 'SCALAR' : `VEC${vertexSize}`)
+                .setType(vertexSize === 1 ? "SCALAR" : `VEC${vertexSize}`)
                 .setArray(new Float32Array(value.flat()))
                 .setBuffer(buffer);
 
@@ -94,19 +94,19 @@ export async function extractArmor(data: string, fileName: string) {
 
             hardJointIndices.forEach((hardJointIndex) => {
               const node = document.createNode(
-                `${hierarchy.name}_armor_${hardJointIndex}`,
+                `${hierarchy.name}_armor_${hardJointIndex}`
               );
-              const mesh = document.createMesh(batch['##name']);
+              const mesh = document.createMesh(batch["##name"]);
               const indicesAccessor = document
                 .createAccessor()
-                .setType('SCALAR')
+                .setType("SCALAR")
                 .setArray(
                   new Uint16Array(
                     polygonGroup.indices.filter(
                       (index) =>
-                        vertexHardJointIndices.get(index) === hardJointIndex,
-                    ),
-                  ),
+                        vertexHardJointIndices.get(index) === hardJointIndex
+                    )
+                  )
                 )
                 .setBuffer(buffer);
               const primitive = document
@@ -127,18 +127,18 @@ export async function extractArmor(data: string, fileName: string) {
 
           default:
             throw new TypeError(
-              `Unhandled component type: ${component['comp.typename']}`,
+              `Unhandled component type: ${component["comp.typename"]}`
             );
         }
       });
 
-      if (hierarchy['#hierarchy']) {
-        parseHierarchies(hierarchy['#hierarchy'], parent);
+      if (hierarchy["#hierarchy"]) {
+        parseHierarchies(hierarchy["#hierarchy"], parent);
       }
     });
   }
 
-  parseHierarchies(sc2['#hierarchy'], scene);
+  parseHierarchies(sc2["#hierarchy"], scene);
 
   return document;
 }

@@ -1,8 +1,7 @@
 import { assertSecret, BlitzGlossary } from "@blitzkit/core";
 import sharp from "sharp";
-import { readDVPLFile } from "../../src/core/blitz/readDVPLFile";
 import { AssetUploader } from "../core/github/assetUploader";
-import { DATA } from "./constants";
+import { vfs } from "./constants";
 
 const ICONS = [
   ["currency_silver_m.packed.webp", "silver"],
@@ -21,7 +20,7 @@ export async function currencies() {
 
   for (const [file, name] of ICONS) {
     const content = await sharp(
-      await readDVPLFile(`${DATA}/Gfx/Lobby/currency/${file}`)
+      await vfs.file(`Data/Gfx/Lobby/currency/${file}`)
     )
       .trim()
       .toBuffer();

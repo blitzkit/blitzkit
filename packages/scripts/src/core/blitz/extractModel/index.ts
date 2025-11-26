@@ -2,6 +2,7 @@ import {
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
+  SteamVFS,
   Textures,
   VertexAttribute,
 } from "@blitzkit/core";
@@ -10,7 +11,6 @@ import { dedup, prune } from "@gltf-transform/functions";
 import { times } from "lodash-es";
 import { dirname } from "path";
 import { readBaseColor } from "../readBaseColor";
-import { readDVPLFile } from "../readDVPLFile";
 import { readNormal } from "../readNormal";
 import { readRoughnessMetallic } from "../readRoughnessMetallic";
 import {
@@ -25,14 +25,14 @@ const omitMeshNames = {
   end: ["_POINT"],
 };
 
-export async function extractModel(data: string, path: string) {
-  const sc2Path = `${data}/3d/${path}.sc2`;
-  const scgPath = `${data}/3d/${path}.scg`;
+export async function extractModel(vfs: SteamVFS, path: string) {
+  const sc2Path = `Data/3d/${path}.sc2`;
+  const scgPath = `Data/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
-    (await readDVPLFile(sc2Path)).buffer as ArrayBuffer
+    (await vfs.file(sc2Path)).buffer as ArrayBuffer
   ).sc2();
   const scg = new ScgReadStream(
-    (await readDVPLFile(scgPath)).buffer as ArrayBuffer
+    (await vfs.file(scgPath)).buffer as ArrayBuffer
   ).scg();
   const document = new Document();
   const scene = document.createScene();
@@ -67,11 +67,11 @@ export async function extractModel(data: string, path: string) {
           .setMimeType("image/webp")
           .setImage(
             await readBaseColor(
-              `${data}/3d/${dirname(path)}/${
+              `Data/3d/${dirname(path)}/${
                 textures.baseColorMap ?? textures.albedo
               }`,
               textures.miscMap
-                ? `${data}/3d/${dirname(path)}/${textures.miscMap}`
+                ? `Data/3d/${dirname(path)}/${textures.miscMap}`
                 : undefined
             )
           )
@@ -103,7 +103,7 @@ export async function extractModel(data: string, path: string) {
             .setMimeType("image/webp")
             .setImage(
               await readRoughnessMetallic(
-                `${data}/3d/${dirname(path)}/${textures.baseRMMap}`
+                `Data/3d/${dirname(path)}/${textures.baseRMMap}`
               )
             )
         );
@@ -118,7 +118,7 @@ export async function extractModel(data: string, path: string) {
             .setMimeType("image/webp")
             .setImage(
               await readNormal(
-                `${data}/3d/${dirname(path)}/${
+                `Data/3d/${dirname(path)}/${
                   textures.baseNormalMap ?? textures.normalmap
                 }`,
                 isBase
