@@ -1,5 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { times } from "lodash-es";
+import { Quicklime } from "quicklime";
 import { useEffect, useRef } from "react";
 import { SpotLight, type Group } from "three";
 import { clamp, degToRad, lerp } from "three/src/math/MathUtils.js";
@@ -18,6 +19,8 @@ const LIGHT_HEIGHT_0 = 5;
 const LIGHT_HEIGHT_1 = 10;
 const INTENSITY_0 = 60;
 const INTENSITY_1 = 30;
+
+export const transitionEvent = new Quicklime<number>(0);
 
 export function Lighting() {
   const wrapper = useRef<Group>(null!);
@@ -49,6 +52,10 @@ export function Lighting() {
       2
     );
     const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
+
+    if (t !== transitionEvent.last) {
+      transitionEvent.dispatch(t);
+    }
 
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
