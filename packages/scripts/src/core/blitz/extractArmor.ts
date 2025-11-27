@@ -2,11 +2,11 @@ import {
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
-  SteamVFS,
   VertexAttribute,
 } from "@blitzkit/core";
 import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
 import { times } from "lodash-es";
+import { SteamVFS } from "../steam/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,

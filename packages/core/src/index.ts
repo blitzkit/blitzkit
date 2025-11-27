@@ -6,6 +6,5 @@ export * from "./patreon";
 export * from "./protobuf";
 export * from "./protos";
 export * from "./statistics";
-export * from "./steam";
 export * from "./streams";
 export * from "./types";
