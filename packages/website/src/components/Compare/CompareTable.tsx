@@ -51,19 +51,17 @@ export function CompareTable({ stats }: CompareTableProps) {
       variant="surface"
       style={{
         position: "absolute",
-        width: "100%",
+        maxWidth: "100%",
         height: "100%",
-        borderRadius: 0,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 0,
       }}
     >
       <Table.Header>
         <Table.Row>
           <StickyColumnHeaderCell width="0" style={{ height: "100%" }}>
             <Flex
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
+              style={{ width: "100%", height: "100%" }}
               align="center"
               justify="center"
             >

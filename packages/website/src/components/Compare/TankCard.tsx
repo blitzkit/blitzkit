@@ -102,7 +102,7 @@ export function TankCard({ index, tank }: TankCardProps) {
   }, []);
 
   return (
-    <StickyColumnHeaderCell>
+    <StickyColumnHeaderCell width="0">
       <Flex direction="column" align="center" justify="between" gap="2">
         <TankControl index={index} key={tank.id} slug={tank.slug} />
 
