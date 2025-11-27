@@ -22,14 +22,12 @@ const poseDistances: Record<Pose, number> = {
 const modelDefinitions = await awaitableModelDefinitions;
 
 interface ControlsProps {
-  naked?: boolean;
   autoRotate?: boolean;
   zoomable?: boolean;
   enableRotate?: boolean;
 }
 
 export function Controls({
-  naked,
   autoRotate = true,
   zoomable = true,
   enableRotate = true,
@@ -79,11 +77,7 @@ export function Controls({
     protagonistHullOrigin.y +
     protagonistTurretOrigin.y +
     protagonistGunOrigin.y;
-  const inspectModeInitialPosition = new Vector3(
-    -8,
-    naked ? gunHeight + 10 : 2,
-    -13
-  );
+  const inspectModeInitialPosition = new Vector3(-8, 2, -13);
 
   const t0 = useRef(Date.now() / 1000);
   useFrame(() => {
@@ -236,14 +230,10 @@ export function Controls({
       orbitControls.current.rotateSpeed = 0.25;
 
       camera.position.copy(inspectModeInitialPosition);
-      orbitControls.current.target.set(
-        0,
-        gunHeight * (naked ? 1 / 4 : 3 / 4),
-        0
-      );
+      orbitControls.current.target.set(0, gunHeight * 0.6, 0);
       orbitControls.current.enablePan = true;
       orbitControls.current.enableZoom = true;
-      camera.fov = naked ? 20 : 25;
+      camera.fov = 25;
 
       camera.updateProjectionMatrix();
     }

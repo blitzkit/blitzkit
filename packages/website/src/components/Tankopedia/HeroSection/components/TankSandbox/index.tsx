@@ -1,4 +1,3 @@
-import { BLITZKIT_TANK_ICON_SIZE } from "@blitzkit/core";
 import {
   forwardRef,
   Suspense,
@@ -33,11 +32,10 @@ import { TankModel } from "./components/TankModel";
 
 interface TankSandboxProps {
   thicknessRange: ThicknessRange;
-  naked?: boolean;
 }
 
 export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
-  ({ thicknessRange, naked }, ref) => {
+  ({ thicknessRange }, ref) => {
     const canvas = useRef<HTMLCanvasElement>(null);
     const hasImprovedVerticalStabilizer = useEquipment(122);
     const hasDownImprovedVerticalStabilizer = useEquipment(124);
@@ -153,7 +151,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     return (
       <SmartCanvas
         ref={canvas}
-        scene={{ fog: naked ? undefined : new Fog("black", 30, 50) }}
+        scene={{ fog: new Fog("black", 30, 50) }}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,
@@ -169,14 +167,14 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         }}
         style={{
           userSelect: "none",
-          width: naked ? BLITZKIT_TANK_ICON_SIZE.width : "100%",
-          height: naked ? BLITZKIT_TANK_ICON_SIZE.height : "100%",
-          outline: naked ? "1rem red solid" : undefined,
+          width: "100%",
+          height: "100%",
+          outline: undefined,
         }}
       >
         <Lighting />
 
-        {!naked && <SceneProps />}
+        <SceneProps />
         {(display === TankopediaDisplay.Model ||
           (display === TankopediaDisplay.DynamicArmor &&
             !hideTankModelUnderArmor)) && <TankModel />}
@@ -186,7 +184,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
 
         <Suspense>
           {/* Controls within Suspense to allow for frame-perfect start of camera auto-rotate */}
-          <Controls naked={naked} />
+          <Controls />
 
           {display === TankopediaDisplay.DynamicArmor && <Armor />}
           {display === TankopediaDisplay.StaticArmor && (
