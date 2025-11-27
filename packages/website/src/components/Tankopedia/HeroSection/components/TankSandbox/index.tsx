@@ -30,7 +30,6 @@ import { InitialAligner } from "./components/InitialAligner";
 import { Lighting } from "./components/Lighting";
 import { SceneProps } from "./components/SceneProps";
 import { TankModel } from "./components/TankModel";
-import { TransitionSkeleton } from "./components/TransitionSkeleton";
 
 interface TankSandboxProps {
   thicknessRange: ThicknessRange;
@@ -177,7 +176,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         {(display === TankopediaDisplay.Model ||
           (display === TankopediaDisplay.DynamicArmor &&
             !hideTankModelUnderArmor)) && <TankModel />}
-        <TransitionSkeleton />
         <ShotDisplay />
         <ArmorPlateDisplay />
         <AutoClear />
