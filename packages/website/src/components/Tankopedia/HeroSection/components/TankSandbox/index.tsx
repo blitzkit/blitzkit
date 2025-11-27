@@ -1,5 +1,4 @@
 import { BLITZKIT_TANK_ICON_SIZE } from "@blitzkit/core";
-import { invalidate } from "@react-three/fiber";
 import {
   forwardRef,
   Suspense,
@@ -29,7 +28,6 @@ import { SmartCanvas } from "../../../../SmartCanvas";
 import { AutoClear } from "./components/AutoClear";
 import { Controls } from "./components/Control";
 import { InitialAligner } from "./components/InitialAligner";
-import { InitialFogReveal } from "./components/InitialFogReveal";
 import { Lighting } from "./components/Lighting";
 import { SceneProps } from "./components/SceneProps";
 import { TankModel } from "./components/TankModel";
@@ -40,15 +38,8 @@ interface TankSandboxProps {
   naked?: boolean;
 }
 
-export const forNear0 = 30;
-export const fogFar0 = 50;
-export const forNear1 = 0;
-export const fogFar1 = 0;
-export const fogAnimationTime = 2.5;
-
 export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
   ({ thicknessRange, naked }, ref) => {
-    const fog = useRef(new Fog("black", forNear1, fogFar1));
     const canvas = useRef<HTMLCanvasElement>(null);
     const hasImprovedVerticalStabilizer = useEquipment(122);
     const hasDownImprovedVerticalStabilizer = useEquipment(124);
@@ -63,34 +54,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const hideTankModelUnderArmor = TankopediaPersistent.use(
       (state) => state.hideTankModelUnderArmor
     );
-
-    useEffect(() => {
-      if (rawDisplay === display) return;
-
-      const t0 = Date.now();
-      const interval = setInterval(() => {
-        const t = (Date.now() - t0) / 1000;
-        const x = t / fogAnimationTime;
-        const y = Math.sin(Math.PI * x);
-
-        const near = forNear0 + (forNear1 - forNear0) * y;
-        const far = fogFar0 + (fogFar1 - fogFar0) * y;
-
-        fog.current.near = near;
-        fog.current.far = far;
-
-        invalidate();
-
-        if (rawDisplay !== display && x >= 0.5) setDisplay(rawDisplay);
-        if (x >= 1) {
-          fog.current.near = forNear0;
-          fog.current.far = fogFar0;
-          clearInterval(interval);
-        }
-      }, 1000 / 60);
-
-      return () => clearInterval(interval);
-    }, [rawDisplay]);
 
     useImperativeHandle(ref, () => canvas.current!, []);
 
@@ -191,7 +154,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     return (
       <SmartCanvas
         ref={canvas}
-        scene={{ fog: naked ? undefined : fog.current }}
+        scene={{ fog: naked ? undefined : new Fog("black", 30, 50) }}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,
@@ -224,7 +187,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         <Suspense>
           {/* Controls within Suspense to allow for frame-perfect start of camera auto-rotate */}
           <Controls naked={naked} />
-          <InitialFogReveal />
 
           {display === TankopediaDisplay.DynamicArmor && <Armor />}
           {display === TankopediaDisplay.StaticArmor && (
