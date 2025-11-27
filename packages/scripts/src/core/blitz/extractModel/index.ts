@@ -2,7 +2,6 @@ import {
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
-  SteamVFS,
   Textures,
   VertexAttribute,
 } from "@blitzkit/core";
@@ -10,6 +9,7 @@ import { Document, Material, Node, Scene } from "@gltf-transform/core";
 import { dedup, prune } from "@gltf-transform/functions";
 import { times } from "lodash-es";
 import { dirname } from "path";
+import { SteamVFS } from "../../steam/vfs";
 import { readBaseColor } from "../readBaseColor";
 import { readNormal } from "../readNormal";
 import { readRoughnessMetallic } from "../readRoughnessMetallic";

@@ -12,6 +12,7 @@ import {
   EyeOpenIcon,
   ShadowInnerIcon,
   ShadowNoneIcon,
+  SunIcon,
 } from "@radix-ui/react-icons";
 import {
   Button,
@@ -55,7 +56,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined
   );
-  const display = Tankopedia.use((state) => state.display);
+  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
     (state) => state.advancedHighlighting
@@ -73,6 +74,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
+  const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
 
   return (
     <>
@@ -84,7 +86,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         gap="2"
         direction="column"
         top="50%"
-        right={display === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"}
+        right={
+          requestedDisplay === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"
+        }
         style={{
           position: "absolute",
           transform: "translateY(-50%)",
@@ -296,7 +300,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         >
           {disturbed && (
             <>
-              {display === TankopediaDisplay.DynamicArmor && (
+              {requestedDisplay === TankopediaDisplay.DynamicArmor && (
                 <IconButton
                   size="2"
                   highContrast
@@ -349,6 +353,20 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
 
+              <IconButton
+                size="2"
+                highContrast
+                onClick={() => {
+                  TankopediaPersistent.mutate((draft) => {
+                    draft.highGraphics = !draft.highGraphics;
+                  });
+                }}
+                color={highGraphics ? undefined : "gray"}
+                variant={highGraphics ? "solid" : "surface"}
+              >
+                <SunIcon />
+              </IconButton>
+
               <ScreenshotButton
                 color="gray"
                 size="2"
@@ -384,11 +402,11 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         <Flex gap="3" align="center" mt="2">
           <SegmentedControl.Root
             variant="classic"
-            value={`${disturbed ? display : -1}`}
+            value={`${disturbed ? requestedDisplay : -1}`}
             onValueChange={(value) => {
               Tankopedia.mutate((draft) => {
                 draft.disturbed = true;
-                draft.display = Number(value);
+                draft.requestedDisplay = Number(value);
               });
             }}
           >
@@ -430,7 +448,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             </SegmentedControl.Item>
           </SegmentedControl.Root>
 
-          {display === TankopediaDisplay.DynamicArmor && (
+          {requestedDisplay === TankopediaDisplay.DynamicArmor && (
             <Dialog.Root
               open={antagonistSelectorOpen}
               onOpenChange={setAntagonistSelectorOpen}

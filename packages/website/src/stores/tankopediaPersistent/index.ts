@@ -15,6 +15,7 @@ export interface TankopediaPersistent {
   showPrimaryArmor: boolean;
   recentlyViewed: number[];
   hideTankModelUnderArmor: boolean;
+  highGraphics: boolean;
 
   sort: {
     by: TankopediaSortBy;
@@ -33,6 +34,7 @@ export const TankopediaPersistent = new Varuna<TankopediaPersistent>(
     showExternalModules: true,
     showPrimaryArmor: true,
     recentlyViewed: [],
+    highGraphics: true,
     sort: {
       by: "meta.none",
       direction: "ascending",

@@ -24,6 +24,7 @@ import {
 } from "../../../core/blitzkit/modelTransform";
 import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
 import { Tankopedia } from "../../../stores/tankopedia";
+import { transitionEvent } from "../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
 import { ArmorType } from "./SpacedArmorScene";
 import type {
   ArmorUserData,
@@ -108,10 +109,11 @@ export function StaticArmorSceneComponent({
     () =>
       new MeshBasicMaterial({
         color,
-        opacity,
-        transparent: opacity < 1,
+        transparent: true,
         depthWrite,
         ...(props.clip ? { clippingPlanes: [props.clip] } : {}),
+        opacity: 0,
+        userData: { opacity0: opacity },
       }),
     [thickness]
   );
@@ -121,6 +123,8 @@ export function StaticArmorSceneComponent({
         color: color
           .clone()
           .multiplyScalar(props.type === ArmorType.Spaced ? 2 ** 2 : 2 ** -1),
+        opacity: 0,
+        transparent: true,
       }),
     [thickness]
   );
@@ -163,11 +167,22 @@ export function StaticArmorSceneComponent({
       surfaceMaterial.needsUpdate = true;
     }
 
+    function handleTransitionEvent(event: QuicklimeEvent<number>) {
+      surfaceMaterial.opacity = surfaceMaterial.userData.opacity0 * event.data;
+      outlineMaterial.opacity = event.data;
+
+      surfaceMaterial.transparent = surfaceMaterial.opacity < 1;
+      outlineMaterial.transparent = outlineMaterial.opacity < 1;
+    }
+
+    transitionEvent.on(handleTransitionEvent);
+
     const unsubscribes = [
       Tankopedia.on(
         (state) => state.highlightArmor?.name,
         handleHighlightArmor
       ),
+      () => transitionEvent.off(handleTransitionEvent),
     ];
 
     if (props.clip) {

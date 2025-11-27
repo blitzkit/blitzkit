@@ -1,8 +1,8 @@
+import { readDVPL } from "@blitzkit/core/src/blitz";
 import { XMLParser } from "fast-xml-parser";
 import { normalize } from "path/posix";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 import { parse } from "yaml";
-import { readDVPL } from "../blitz";
 
 interface SteamManifestFile {
   chunks: {

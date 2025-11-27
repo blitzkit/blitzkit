@@ -1,4 +1,5 @@
-import { assertSecret, SteamVFS } from "@blitzkit/core";
+import { assertSecret } from "@blitzkit/core";
+import { SteamVFS } from "../core/steam/vfs";
 
 const APP = 444200;
 const DEPOT = 444202;

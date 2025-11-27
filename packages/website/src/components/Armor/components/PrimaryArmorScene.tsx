@@ -67,7 +67,9 @@ export const PrimaryArmorScene = memo(() => {
       <group ref={turretContainer}>
         {armorNodes.map((node) => {
           const isCurrentTurret = node.name.startsWith(
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`
+            `turret_${turretModelDefinition.model_id
+              .toString()
+              .padStart(2, "0")}`
           );
           const isVisible = isCurrentTurret;
           const armorId = nameToArmorId(node.name);

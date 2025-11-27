@@ -106,7 +106,9 @@ export function TankModel() {
           const isTurret = node.name.startsWith("turret_");
           const isCurrentTurret =
             node.name ===
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`;
+            `turret_${turretModelDefinition.model_id
+              .toString()
+              .padStart(2, "0")}`;
           const isVisible = isCurrentTurret;
           const position = new Vector2();
           const delta = new Vector2();

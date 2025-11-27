@@ -4,7 +4,7 @@ import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 
-const SIZE = 2 ** 5;
+const SIZE = 2 ** 6;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
@@ -36,6 +36,7 @@ export function SceneProps() {
       receiveShadow
       visible={!screenshotReadyEvent.last!}
       ref={mesh}
+      renderOrder={-1}
     >
       <planeGeometry args={[SIZE, SIZE]} />
       <meshStandardMaterial
@@ -43,7 +44,7 @@ export function SceneProps() {
         ref={material}
         color="black"
         roughness={1}
-        metalness={1}
+        metalness={0}
       />
     </mesh>
   );

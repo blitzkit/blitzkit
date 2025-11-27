@@ -4,6 +4,7 @@ import {
   resolvePenetrationCoefficient,
 } from "@blitzkit/core";
 import { invalidate, useFrame } from "@react-three/fiber";
+import type { QuicklimeEvent } from "quicklime";
 import { useEffect } from "react";
 import {
   MeshBasicMaterial,
@@ -21,6 +22,7 @@ import { jsxTree } from "../../../../core/blitzkit/jsxTree";
 import { Duel, type EquipmentMatrix } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
+import { transitionEvent } from "../../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 import { spacedArmorRenderTarget } from "./target";
@@ -72,6 +74,8 @@ export function PrimaryArmorSceneComponent({
         resolution: { value: new Vector2() },
         spacedArmorBuffer: { value: null },
         spacedArmorDepth: { value: null },
+
+        opacity: { value: 0 },
       },
     ]),
   });
@@ -154,6 +158,10 @@ export function PrimaryArmorSceneComponent({
       if (!noInvalidate) invalidate();
     }
 
+    function handleTransitionEvent(event: QuicklimeEvent<number>) {
+      material.uniforms.opacity.value = event.data;
+    }
+
     handleShellChange();
     handleGreenPenetrationChange(TankopediaPersistent.state.greenPenetration);
     handleAdvancedHighlightingChange(
@@ -163,6 +171,8 @@ export function PrimaryArmorSceneComponent({
     handleWireframeChange(TankopediaPersistent.state.wireframe);
     handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
     handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
+
+    transitionEvent.on(handleTransitionEvent);
 
     const unsubscribes = [
       Duel.on((state) => state.antagonist.shell, handleShellChange),
@@ -184,12 +194,13 @@ export function PrimaryArmorSceneComponent({
         (state) => state.antagonist.equipmentMatrix,
         (equipment) => handleAntagonistEquipmentChange(equipment)
       ),
+      () => transitionEvent.off(handleTransitionEvent),
     ];
 
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  });
+  }, []);
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(

@@ -1,12 +1,9 @@
 precision mediump float;
 
-#define USE_FOG
-
-#include <fog_pars_fragment>
-
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 
+uniform float opacity;
 uniform float thickness;
 uniform float penetration;
 uniform float caliber;
@@ -119,5 +116,5 @@ void main() {
     gl_FragColor = vec4(baseColor, (1.0 - penetrationChance) * alpha);
   }
 
-  #include <fog_fragment>
+  gl_FragColor.a *= opacity;
 }
