@@ -55,7 +55,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined
   );
-  const display = Tankopedia.use((state) => state.display);
+  const display = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
     (state) => state.advancedHighlighting
@@ -388,7 +388,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             onValueChange={(value) => {
               Tankopedia.mutate((draft) => {
                 draft.disturbed = true;
-                draft.display = Number(value);
+                draft.requestedDisplay = Number(value);
               });
             }}
           >

@@ -59,7 +59,10 @@ export function TankModel() {
         }
 
         function onPointerDown(event: ThreeEvent<PointerEvent>) {
-          if (isTrack && Tankopedia.state.display === TankopediaDisplay.Model) {
+          if (
+            isTrack &&
+            Tankopedia.state.requestedDisplay === TankopediaDisplay.Model
+          ) {
             position.set(event.clientX, event.clientY);
             event.stopPropagation();
 
@@ -106,7 +109,9 @@ export function TankModel() {
           const isTurret = node.name.startsWith("turret_");
           const isCurrentTurret =
             node.name ===
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`;
+            `turret_${turretModelDefinition.model_id
+              .toString()
+              .padStart(2, "0")}`;
           const isVisible = isCurrentTurret;
           const position = new Vector2();
           const delta = new Vector2();

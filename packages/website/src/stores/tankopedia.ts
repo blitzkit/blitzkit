@@ -100,6 +100,7 @@ interface Tankopedia {
   );
   xpMultiplier: (typeof XP_MULTIPLIERS)[number];
   customShell?: ShellDefinition;
+  requestedDisplay: TankopediaDisplay;
   display: TankopediaDisplay;
   statSearch?: string;
 }
@@ -114,5 +115,6 @@ export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   skills: createDefaultSkills(skillDefinitions),
   model,
   xpMultiplier: 1,
+  requestedDisplay: TankopediaDisplay.Model,
   display: TankopediaDisplay.Model,
 }));

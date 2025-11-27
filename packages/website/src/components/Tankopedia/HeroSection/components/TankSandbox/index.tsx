@@ -5,7 +5,6 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
 import { Fog } from "three";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
@@ -49,8 +48,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const turretModelDefinition =
       tankModelDefinition.turrets[protagonistTurret.id];
     const gunModelDefinition = turretModelDefinition.guns[protagonistGun.id];
-    const rawDisplay = Tankopedia.use((state) => state.display);
-    const [display, setDisplay] = useState(rawDisplay);
+    const display = Tankopedia.use((state) => state.requestedDisplay);
     const hideTankModelUnderArmor = TankopediaPersistent.use(
       (state) => state.hideTankModelUnderArmor
     );
