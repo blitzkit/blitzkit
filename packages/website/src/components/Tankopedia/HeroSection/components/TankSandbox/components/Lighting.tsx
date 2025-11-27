@@ -1,14 +1,23 @@
 import { useFrame, useThree } from "@react-three/fiber";
+import { times } from "lodash-es";
 import { useEffect, useRef } from "react";
-import { HemisphereLight, SpotLight, type Group } from "three";
-import { clamp } from "three/src/math/MathUtils.js";
+import { SpotLight, type Group } from "three";
+import { clamp, degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
 const ANGLE = Math.PI / 3;
-const HEMISPHERE_INTENSITY = 4;
-const REVEAL_ANIMATION_TIME = 5;
+const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
+
+const LIGHTS_COUNT = 4;
+const THETA_OFFSET = degToRad(-150);
+const LIGHT_DISTANCE = 13;
+const LIGHT_HEIGHT_0 = 4;
+const LIGHT_HEIGHT_1 = 8;
+const INTENSITY_0 = 70;
+const INTENSITY_1 = 40;
 
 export function Lighting() {
   const wrapper = useRef<Group>(null!);
@@ -17,6 +26,7 @@ export function Lighting() {
   const display = Tankopedia.use((state) => state.display);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
+  const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {
@@ -35,9 +45,7 @@ export function Lighting() {
     const t = 0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5;
 
     for (const child of wrapper.current.children) {
-      if (child instanceof HemisphereLight) {
-        child.intensity = HEMISPHERE_INTENSITY * t;
-      } else if (child instanceof SpotLight) {
+      if (child instanceof SpotLight) {
         child.angle = ANGLE * t;
       }
     }
@@ -60,34 +68,29 @@ export function Lighting() {
 
   return (
     <group ref={wrapper}>
-      <hemisphereLight
-        position={[0, 1, 0]}
-        color="#dadaff"
-        groundColor="#856331"
-        intensity={0}
-      />
+      {times(LIGHTS_COUNT, (index) => {
+        const x = index / (LIGHTS_COUNT - 1);
+        const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
+        const position = [
+          LIGHT_DISTANCE * Math.sin(theta),
+          lerp(LIGHT_HEIGHT_0, LIGHT_HEIGHT_1, x),
+          LIGHT_DISTANCE * Math.cos(theta),
+        ] as const;
+        const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
 
-      <HelpingSpotLight
-        debug
-        position={[-6, 6, -10]}
-        intensity={4}
-        penumbra={1}
-        castShadow
-        color="#ffffff"
-        decay={0}
-        angle={0}
-      />
-
-      <HelpingSpotLight
-        debug
-        position={[6, 6, -10]}
-        intensity={1}
-        penumbra={1}
-        castShadow
-        color="#ffffff"
-        decay={0}
-        angle={0}
-      />
+        return (
+          <HelpingSpotLight
+            userData={{ index }}
+            key={index}
+            position={position}
+            intensity={intensity}
+            penumbra={1}
+            castShadow={highGraphics}
+            decay={1}
+            color="#ffffff"
+          />
+        );
+      })}
     </group>
   );
 }

@@ -12,6 +12,7 @@ import {
   EyeOpenIcon,
   ShadowInnerIcon,
   ShadowNoneIcon,
+  SunIcon,
 } from "@radix-ui/react-icons";
 import {
   Button,
@@ -73,6 +74,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
+  const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
 
   return (
     <>
@@ -348,6 +350,20 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
+
+              <IconButton
+                size="2"
+                highContrast
+                onClick={() => {
+                  TankopediaPersistent.mutate((draft) => {
+                    draft.highGraphics = !draft.highGraphics;
+                  });
+                }}
+                color={highGraphics ? undefined : "gray"}
+                variant={highGraphics ? "solid" : "surface"}
+              >
+                <SunIcon />
+              </IconButton>
 
               <ScreenshotButton
                 color="gray"
