@@ -20,7 +20,7 @@ export function Page({ skeleton, locale }: PageProps) {
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
   return (
-    <PageWrapper color="jade" maxWidth="100%">
+    <PageWrapper pb="0" px="0" color="jade" maxWidth="100%">
       <FilterControl />
       <PlayerCountControl />
 
