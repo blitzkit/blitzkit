@@ -1,5 +1,4 @@
 import { PageWrapper } from "../../../components/PageWrapper";
-import { PerformanceInfo } from "../../../components/Performance/PerformanceInfo";
 import { PlayerCountControl } from "../../../components/Performance/PlayerCountControl";
 import { TankTable } from "../../../components/Performance/Table";
 import { FilterControl } from "../../../components/TankSearch/components/FilterControl";
@@ -22,7 +21,6 @@ export function Page({ skeleton, locale }: PageProps) {
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
   return (
     <PageWrapper color="jade" maxWidth="100%">
-      <PerformanceInfo skeleton={skeleton} />
       <FilterControl />
       <PlayerCountControl />
 
