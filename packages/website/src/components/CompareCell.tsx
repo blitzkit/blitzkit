@@ -16,7 +16,7 @@ export function CompareCell({
   value,
   truth,
   style,
-  direction,
+  direction = CompareCellDirection.HIGHER_IS_BETTER,
   ...props
 }: CompareCellProps) {
   const percentage = value / truth - 1;

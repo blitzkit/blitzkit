@@ -1,17 +1,27 @@
+import { formatCompact, type BlitzkitStats } from "@blitzkit/core";
 import { Table } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { Fragment, Suspense, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
 import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
+import { useAveragesExclusionRatio } from "../../hooks/useAveragesExclusionRatio";
+import { useLocale } from "../../hooks/useLocale";
 import { Performance } from "../../stores/performance";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankPerformanceSort } from "../../stores/tankPerformanceSort";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { StickyRowHeaderCell } from "../StickyRowHeaderCell";
 import { RowLoader } from "./RowLoader";
 import { TankRow } from "./TankRow";
-import { Total } from "./Total";
 
 const PREVIEW_COUNT = 10;
 const DEFAULT_LOADED_ROWS = 25;
@@ -145,9 +155,83 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
     setLoadedRows(DEFAULT_LOADED_ROWS);
   }, [filters, sort]);
 
+  const playerCountPeriod = Performance.use((state) => state.playerCountPeriod);
+  const { strings, locale } = useLocale();
+  const ratio = useAveragesExclusionRatio();
+  const sum = useCallback(
+    (slice: (tank: BlitzkitStats) => number) => {
+      return tanksSorted.reduce(
+        (acc, tank) => acc + tank.samples[playerCountPeriod] * slice(tank.mu),
+        0
+      );
+    },
+    [tanksSorted]
+  );
+
+  const battles = sum(({ battles }) => battles);
+  const winrate = sum(({ wins }) => wins) / battles;
+  const damage = sum(({ damage_dealt }) => damage_dealt) / battles;
+  const survival = sum(({ survived_battles }) => survived_battles) / battles;
+  const xp = sum(({ xp }) => xp) / battles;
+  const kills = sum(({ frags }) => frags) / battles;
+  const spots = sum(({ spotted }) => spotted) / battles;
+  const hits = sum(({ hits }) => hits) / battles;
+  const shots = sum(({ shots }) => shots) / battles;
+  const accuracy = hits / shots;
+  const damageReceived =
+    sum(({ damage_received }) => damage_received) / battles;
+  const damageRatio = damage / damageReceived;
+  const capturePoints = sum(({ capture_points }) => capture_points) / battles;
+
+  const average = {
+    battles,
+    winrate,
+    damage,
+    survival,
+    xp,
+    kills,
+    spots,
+    hits,
+    shots,
+    accuracy,
+    damageReceived,
+    damageRatio,
+    capturePoints,
+  };
+
   return (
     <Table.Body>
-      <Total tanks={tanksSorted} />
+      <Table.Row>
+        <StickyRowHeaderCell style={{ overflow: "hidden", display: "flex" }}>
+          {strings.website.tools.performance.table.tanks.total}
+        </StickyRowHeaderCell>
+        <Table.Cell align="center">{(winrate * 100).toFixed(1)}%</Table.Cell>
+        <Table.Cell align="center">
+          {formatCompact(
+            locale,
+            ratio * averageDefinitions.samples[playerCountPeriod]
+          )}
+        </Table.Cell>
+        <Table.Cell align="center">
+          {Math.round(damage).toLocaleString(locale)}
+        </Table.Cell>
+        <Table.Cell align="center">
+          {Math.round(survival * 100).toFixed(1)}%
+        </Table.Cell>
+        <Table.Cell align="center">
+          {Math.round(xp).toLocaleString(locale)}
+        </Table.Cell>
+        <Table.Cell align="center">{kills.toFixed(2)}</Table.Cell>
+        <Table.Cell align="center">{spots.toFixed(2)}</Table.Cell>
+        <Table.Cell align="center">{(accuracy * 100).toFixed(0)}%</Table.Cell>
+        <Table.Cell align="center">{shots.toFixed(1)}</Table.Cell>
+        <Table.Cell align="center">{hits.toFixed(1)}</Table.Cell>
+        <Table.Cell align="center">{damageRatio.toFixed(2)}</Table.Cell>
+        <Table.Cell align="center">
+          {Math.round(damageReceived).toLocaleString(locale)}
+        </Table.Cell>
+        <Table.Cell align="center">{capturePoints.toFixed(2)}</Table.Cell>
+      </Table.Row>
 
       {tanksSorted.slice(0, loadedRows).map((averages) => {
         const tank = tankDefinitions.tanks[averages.id];
@@ -157,7 +241,7 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
         return (
           <Fragment key={tank.id}>
             <Suspense fallback={<RowLoader />}>
-              <TankRow tank={tank} />
+              <TankRow average={average} tank={tank} />
             </Suspense>
           </Fragment>
         );
