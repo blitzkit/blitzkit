@@ -7,21 +7,22 @@ import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
-const ANGLE = Math.PI / 3;
+const ANGLE = Math.PI * 2 ** -2;
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
 const LIGHTS_COUNT = 4;
 const THETA_OFFSET = degToRad(-150);
 const LIGHT_DISTANCE = 13;
-const LIGHT_HEIGHT_0 = 4;
-const LIGHT_HEIGHT_1 = 8;
-const INTENSITY_0 = 70;
-const INTENSITY_1 = 40;
+const LIGHT_HEIGHT_0 = 5;
+const LIGHT_HEIGHT_1 = 10;
+const INTENSITY_0 = 60;
+const INTENSITY_1 = 30;
 
 export function Lighting() {
   const wrapper = useRef<Group>(null!);
   const t0 = useRef(0);
+  const transition = useRef(false);
   const clock = useThree((state) => state.clock);
   const display = Tankopedia.use((state) => state.display);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
@@ -36,13 +37,18 @@ export function Lighting() {
     t0.current = clock.elapsedTime - REVEAL_ANIMATION_TIME;
   }, []);
 
-  useFrame(({ clock, invalidate }) => {
+  useFrame(({ invalidate }) => {
+    if (transition.current) {
+      transition.current = false;
+      t0.current = clock.elapsedTime;
+    }
+
     const x = clamp(
       (clock.elapsedTime - t0.current) / animationTime.current,
       0,
       2
     );
-    const t = 0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5;
+    const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
 
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
@@ -52,7 +58,10 @@ export function Lighting() {
 
     if (x < 2) invalidate();
 
-    if (x === 2 && display !== requestedDisplay) {
+    if (
+      x > 1 &&
+      Tankopedia.state.display !== Tankopedia.state.requestedDisplay
+    ) {
       Tankopedia.mutate((draft) => {
         draft.display = requestedDisplay;
       });
@@ -62,7 +71,7 @@ export function Lighting() {
   useEffect(() => {
     if (requestedDisplay === display) return;
 
-    t0.current = clock.elapsedTime;
+    transition.current = true;
     animationTime.current = TRANSITION_ANIMATION_TIME;
   }, [requestedDisplay]);
 

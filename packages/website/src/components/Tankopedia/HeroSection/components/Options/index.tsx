@@ -56,7 +56,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined
   );
-  const display = Tankopedia.use((state) => state.requestedDisplay);
+  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
     (state) => state.advancedHighlighting
@@ -86,7 +86,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         gap="2"
         direction="column"
         top="50%"
-        right={display === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"}
+        right={
+          requestedDisplay === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"
+        }
         style={{
           position: "absolute",
           transform: "translateY(-50%)",
@@ -298,7 +300,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         >
           {disturbed && (
             <>
-              {display === TankopediaDisplay.DynamicArmor && (
+              {requestedDisplay === TankopediaDisplay.DynamicArmor && (
                 <IconButton
                   size="2"
                   highContrast
@@ -400,7 +402,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
         <Flex gap="3" align="center" mt="2">
           <SegmentedControl.Root
             variant="classic"
-            value={`${disturbed ? display : -1}`}
+            value={`${disturbed ? requestedDisplay : -1}`}
             onValueChange={(value) => {
               Tankopedia.mutate((draft) => {
                 draft.disturbed = true;
@@ -446,7 +448,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             </SegmentedControl.Item>
           </SegmentedControl.Root>
 
-          {display === TankopediaDisplay.DynamicArmor && (
+          {requestedDisplay === TankopediaDisplay.DynamicArmor && (
             <Dialog.Root
               open={antagonistSelectorOpen}
               onOpenChange={setAntagonistSelectorOpen}

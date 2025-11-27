@@ -15,7 +15,7 @@ type ThicknessesProps = MaybeSkeletonComponentProps & {
 };
 
 export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
-  const display = Tankopedia.use((state) => state.requestedDisplay);
+  const display = Tankopedia.use((state) => state.display);
   const showExternalModules = TankopediaPersistent.use(
     (state) => state.showExternalModules
   );

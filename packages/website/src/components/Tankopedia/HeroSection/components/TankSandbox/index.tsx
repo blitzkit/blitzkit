@@ -47,7 +47,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const turretModelDefinition =
       tankModelDefinition.turrets[protagonistTurret.id];
     const gunModelDefinition = turretModelDefinition.guns[protagonistGun.id];
-    const display = Tankopedia.use((state) => state.requestedDisplay);
+    const display = Tankopedia.use((state) => state.display);
     const hideTankModelUnderArmor = TankopediaPersistent.use(
       (state) => state.hideTankModelUnderArmor
     );
@@ -147,6 +147,8 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         });
       }
     }, [display]);
+
+    console.log(TankopediaDisplay[display]);
 
     return (
       <SmartCanvas
