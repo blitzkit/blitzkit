@@ -1,5 +1,5 @@
-import type { Samples } from '@blitzkit/core';
-import { Varuna } from 'varuna';
+import type { Samples } from "@blitzkit/core";
+import { Varuna } from "varuna";
 
 export interface Performance {
   playerCountPeriod: PlayerCountPeriod;
@@ -8,5 +8,5 @@ export interface Performance {
 export type PlayerCountPeriod = keyof Samples;
 
 export const Performance = new Varuna<Performance>({
-  playerCountPeriod: 'd_30',
+  playerCountPeriod: "total",
 });
