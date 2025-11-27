@@ -14,7 +14,7 @@ export function SceneProps() {
 
   useFrame(({ camera }) => {
     if (!material.current) return;
-    material.current.opacity = clamp(0.5 * camera.position.y, 0, 0.5);
+    material.current.opacity = clamp(0.5 * camera.position.y, 0, 0.25);
   });
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export function SceneProps() {
       receiveShadow
       visible={!screenshotReadyEvent.last!}
       ref={mesh}
+      renderOrder={-1}
     >
       <planeGeometry args={[SIZE, SIZE]} />
       <meshStandardMaterial
