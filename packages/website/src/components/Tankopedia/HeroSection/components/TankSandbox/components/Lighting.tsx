@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { times } from "lodash-es";
 import { Quicklime } from "quicklime";
 import { useEffect, useRef } from "react";
-import { SpotLight, type Group } from "three";
+import { HemisphereLight, SpotLight, type Group } from "three";
 import { clamp, degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
@@ -12,13 +12,14 @@ const ANGLE = Math.PI * 2 ** -2;
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
-const LIGHTS_COUNT = 4;
-const THETA_OFFSET = degToRad(-150);
+const LIGHTS_COUNT = 5;
+const THETA_OFFSET = degToRad(-152);
 const LIGHT_DISTANCE = 13;
-const LIGHT_HEIGHT_0 = 5;
-const LIGHT_HEIGHT_1 = 10;
-const INTENSITY_0 = 60;
-const INTENSITY_1 = 30;
+const LIGHT_HEIGHT_0 = 4;
+const LIGHT_HEIGHT_1 = 2;
+const INTENSITY_0 = 3.5;
+const INTENSITY_1 = 1.5;
+const HEMISPHERE_INTENSITY = 2;
 
 export const transitionEvent = new Quicklime<number>(0);
 
@@ -60,6 +61,8 @@ export function Lighting() {
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
         child.angle = ANGLE * t;
+      } else if (child instanceof HemisphereLight) {
+        child.intensity = HEMISPHERE_INTENSITY * t;
       }
     }
 
@@ -84,6 +87,8 @@ export function Lighting() {
 
   return (
     <group ref={wrapper}>
+      <hemisphereLight intensity={0} color="#ffffff" groundColor="#afafaf" />
+
       {times(LIGHTS_COUNT, (index) => {
         const x = index / (LIGHTS_COUNT - 1);
         const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
@@ -102,7 +107,7 @@ export function Lighting() {
             intensity={intensity}
             penumbra={1}
             castShadow={highGraphics}
-            decay={1}
+            decay={0}
             color="#ffffff"
             angle={0}
           />
