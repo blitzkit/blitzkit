@@ -1,6 +1,6 @@
 import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
@@ -99,11 +99,11 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           isFullScreen
             ? "100vh"
             : disturbed
-              ? "calc(100svh - 8rem)"
-              : {
-                  initial: "28rem",
-                  md: "calc(100svh - 14rem)",
-                }
+            ? "calc(100svh - 8rem)"
+            : {
+                initial: "28rem",
+                md: "calc(100svh - 14rem)",
+              }
         }
         maxWidth={isFullScreen ? undefined : "120rem"}
         flexGrow="1"
@@ -120,30 +120,17 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           position="relative"
         >
           <Box position="absolute" width="100%" height="100%" overflow="hidden">
-            <Box
-              width="100%"
-              height="100%"
-              position="relative"
-              style={{
-                transitionDuration: "1s",
-              }}
-            >
+            <Box width="100%" height="100%" position="relative">
               <Box
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  transitionDuration: "2s",
-                  opacity: revealed ? 1 : 0,
-                  filter: disturbed
-                    ? undefined
-                    : `drop-shadow(0 1rem 1rem black)`,
-                }}
+                position="absolute"
+                width="100%"
+                height="100%"
+                top="0"
+                left="0"
               >
-                <Suspense>
-                  {!skeleton && (
-                    <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
-                  )}
-                </Suspense>
+                {!skeleton && (
+                  <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
+                )}
               </Box>
             </Box>
 

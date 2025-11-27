@@ -174,6 +174,8 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           outline: naked ? "1rem red solid" : undefined,
         }}
       >
+        <Lighting />
+
         {!naked && <SceneProps />}
         {(display === TankopediaDisplay.Model ||
           (display === TankopediaDisplay.DynamicArmor &&
@@ -190,7 +192,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           {display === TankopediaDisplay.StaticArmor && (
             <StaticArmor thicknessRange={thicknessRange} />
           )}
-          <Lighting />
         </Suspense>
 
         <InitialAligner />

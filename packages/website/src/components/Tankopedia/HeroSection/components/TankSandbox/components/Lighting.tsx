@@ -104,6 +104,7 @@ export function Lighting() {
             castShadow={highGraphics}
             decay={1}
             color="#ffffff"
+            angle={0}
           />
         );
       })}
