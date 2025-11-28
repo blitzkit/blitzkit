@@ -804,7 +804,7 @@
       },
       "guess": {
         "name": "Угадать",
-        "button": "Что же это?",
+        "button": "Что это за танк?",
         "description": "Мини-игра «Силуэт»",
         "seo_description": "Играйте угадывая силуэт танка из World of Tanks Blitz",
         "search": {
