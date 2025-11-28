@@ -17,6 +17,7 @@ import {
   TankSearch,
   type TankSearchProps,
 } from "../../../components/TankSearch";
+import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { curateMixer } from "../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,
@@ -24,7 +25,12 @@ import {
   type LocaleAcceptorProps,
 } from "../../../hooks/useLocale";
 import { Mixer } from "../../../stores/mixer";
+import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+
+const modelDefinition = await awaitableModelDefinitions.then(
+  ({ models }) => models[1]
+);
 
 export function Page({
   locale,
@@ -33,6 +39,7 @@ export function Page({
   const initial = useRef(curateMixer());
 
   Mixer.useInitialization(initial.current);
+  Tankopedia.useInitialization(modelDefinition);
 
   return (
     <PageWrapper color="gray" p="0" maxWidth="unset">
