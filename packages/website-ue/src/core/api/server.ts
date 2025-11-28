@@ -78,7 +78,12 @@ export class ServerAPI extends AbstractAPI {
 
     for (const item of group) {
       const tankCatalog = item.TankCatalog();
-      const name = strings[tankCatalog.name!.value];
+
+      if (!tankCatalog.name) continue;
+
+      const name = strings[tankCatalog.name.value];
+
+      if (!name) continue;
 
       const id = item.name;
       const slug = sluggify(name);
@@ -87,5 +92,12 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return { tanks };
+  }
+
+  async tank(id: string) {
+    const item = this.metadata.item(`TankEntity.${id}`);
+    const tankCatalog = item.TankCatalog();
+
+    return tankCatalog;
   }
 }
