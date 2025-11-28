@@ -209,6 +209,7 @@
         "typescript": "^5.9.3",
         "varuna": "workspace:*",
         "vite": "^7.1.9",
+        "yaml": "^2.8.1",
       },
     },
   },

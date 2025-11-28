@@ -1,23 +1,87 @@
 import type { MetadataAccessor } from "@blitzkit/closed";
+import { sluggify } from "@blitzkit/core";
+import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
+import { parse } from "yaml";
 import type { TanksEntry } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
+
+interface LocalizationConfig {
+  namespaces: string[];
+}
 
 export class ServerAPI extends AbstractAPI {
   constructor(private metadata: MetadataAccessor) {
     super();
+  }
 
-    console.log(Object.keys(metadata.groups).join("\n"));
+  async strings(locale: string) {
+    const clientConfig = this.metadata.item("ClientConfigsEntity.prod");
+    const localizationResources = clientConfig.LocalizationResources();
+
+    if (!localizationResources.remote_storage) {
+      throw new Error("Localization resources not found");
+    }
+
+    let remoteStorage: RemoteStorageComponent | undefined = undefined;
+
+    for (const candidateId of localizationResources.remote_storage
+      .remote_urls) {
+      const item = this.metadata.item(candidateId);
+      const candidate = item.RemoteStorage();
+
+      if (
+        remoteStorage === undefined ||
+        candidate.download_speed_weight > remoteStorage.download_speed_weight
+      ) {
+        remoteStorage = candidate;
+      }
+    }
+
+    if (remoteStorage === undefined) {
+      throw new Error("No suitable production remote storage found");
+    }
+
+    const config = await fetch(
+      `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`
+    )
+      .then((response) => response.text())
+      .then((text) => parse(text) as LocalizationConfig);
+    const strings: Record<string, string> = {};
+
+    for (const namespace of config.namespaces) {
+      Object.assign(
+        strings,
+        await fetch(
+          `${remoteStorage.url}/${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
+        )
+          .then((response) => response.text())
+          .then((text) => {
+            const strings: Record<string, string> = {};
+            const parsed = parse(text) as Record<string, string>;
+
+            for (const key in parsed) {
+              strings[key] = parsed[key].replaceAll('\\"', '"');
+            }
+
+            return strings;
+          })
+      );
+    }
+
+    return strings;
   }
 
   async tanks() {
     const group = this.metadata.group("TankEntity");
     const tanks: TanksEntry[] = [];
+    const strings = await this.strings("en");
 
     for (const item of group) {
       const tankCatalog = item.TankCatalog();
+      const name = strings[tankCatalog.name!.value];
 
-      const id = item.id;
-      const slug = tankCatalog.name?.value;
+      const id = item.name;
+      const slug = sluggify(name);
 
       tanks.push({ id, slug });
     }
