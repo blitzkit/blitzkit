@@ -12,7 +12,7 @@ import { tools } from "./src/constants/tools";
 
 const POSSIBLE_TARGETS = ["app", "web"];
 
-const target = process.env.PUBLIC_TARGET ;
+const target = process.env.PUBLIC_TARGET;
 
 if (!target || !POSSIBLE_TARGETS.includes(target)) {
   throw new Error("Invalid target");
