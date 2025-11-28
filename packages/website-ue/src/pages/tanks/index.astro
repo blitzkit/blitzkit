@@ -1,0 +1,17 @@
+---
+import { api } from "../../core/api/dynamic";
+
+const tanksList = await api.tanksList();
+---
+
+<h1>Tanks</h1>
+
+<ul>
+  {
+    tanksList.map((tank) => (
+      <li>
+        <a href={`/tanks/${tank}`}>{tank}</a>
+      </li>
+    ))
+  }
+</ul>

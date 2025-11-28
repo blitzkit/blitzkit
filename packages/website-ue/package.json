@@ -14,6 +14,7 @@
     "@astrojs/react": "^4.4.0",
     "@astrolib/seo": "^1.0.0-beta.8",
     "@blitzkit/core": "workspace:*",
+    "@blitzkit/closed": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-icons": "^1.3.2",

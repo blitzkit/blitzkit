@@ -182,6 +182,7 @@
         "@astrojs/node": "^9.4.4",
         "@astrojs/react": "^4.4.0",
         "@astrolib/seo": "^1.0.0-beta.8",
+        "@blitzkit/closed": "workspace:*",
         "@blitzkit/core": "workspace:*",
         "@blitzkit/i18n": "workspace:*",
         "@radix-ui/colors": "^3.0.0",
