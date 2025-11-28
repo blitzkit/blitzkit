@@ -11,7 +11,8 @@ const TS_PROTO_EXECUTABLE_LOCATIONS = [
 
 const roots = [
   // "../../packages/core/src/protos",
-  "../../packages/closed/protos",
+  // "../../packages/closed/protos",
+  "../../packages/website-ue/src/protos",
 ];
 
 const exec = promisify(execSync);
