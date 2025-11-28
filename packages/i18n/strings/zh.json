@@ -803,8 +803,8 @@
         "randomize": "随机搭配"
       },
       "guess": {
-        "name": "猜坦克",
-        "button": "猜猜看",
+        "name": "猜测",
+        "button": "What could it be?",
         "description": "坦克剪影小游戏",
         "seo_description": "看剪影猜坦克",
         "search": {

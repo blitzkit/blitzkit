@@ -803,8 +803,8 @@
         "randomize": "Randomize"
       },
       "guess": {
-        "name": "Guess the tank",
-        "button": "Guess away",
+        "name": "Guess",
+        "button": "What could it be?",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {

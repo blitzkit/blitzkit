@@ -1,19 +1,19 @@
 {
   "test": {
     "default": "тест",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
+    "long": "{fruit}",
     "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
   },
   "common": {
     "name": "BlitzKit",
     "units": {
-      "m": "{value}m",
-      "mm": "{value}mm",
+      "m": "{value}м",
+      "mm": "{value}мм",
       "deg": "{value}°",
-      "hp": "{value}hp",
+      "hp": "{value}од",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}град/c"
     },
     "gun_types": {
       "auto_loader": "Магазинна система заряджання",
@@ -80,7 +80,7 @@
     "nations": {
       "ussr": "СРСР",
       "germany": "Німеччина",
-      "usa": "США",
+      "usa": "ЗША",
       "china": "Китай",
       "uk": "Велика Британія",
       "france": "Франція",
@@ -186,11 +186,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
-        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "clan_not_found": "# Не вдалося знайти клан\nНе вдалося знайти \"{search}\". Спробуйте обрати клан з результату пошуку.",
+        "player_not_found": "# Не вдалося знайти користувача\nНе вдалося знайти користувача \"{search}\". Спробуйте вибрати користувача із результатів пошуку, ввівши правильне ім'я користувача, або скористайтеся командою  `/link`.",
         "player_not_linked": "# Використайте команду \"/link\" щоб почати\nЯ не знаю, хто ви, але ви можете сказати мені сьогодні!",
-        "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
-        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
+        "tank_name_not_found": "# Танк не знайдено\nНе вдалося знайти танк із назвою «{search}».",
+        "tank_id_not_found": "# Танк не знайдено\nНе вдалося знайти танк з ID «{search}». Спробуйте ввести назву танка замість номера.",
         "no_tank_stats": "# Немає статистики для танка\nЦей гравець не має статистики.\nМожливо, це не той гравець, якого ви шукаєте.",
         "get_help": "Допомогти Discord серверу",
         "uncaught_error": "# Упс! BlitzKit зіткнувся з помилкою!\nНам дуже шкода. Можете попросити допомоги на [офіційному сервері Discord](https://discord.gg/nDt7AjGJQH).",
@@ -284,19 +284,19 @@
           "name": "рівень",
           "description": "Рівень",
           "choices": {
-            "tier": "Tier {tier_1} - {tier_2}"
+            "tier": "Рівень {tier_1} - {tier_2}"
           }
         }
       },
       "periods": {
         "career": "Кар'єра",
         "today": "Сьогодні",
-        "days": "{days} days",
-        "custom": "{day_1} - {day_2} days"
+        "days": "{days} днів",
+        "custom": "{day_1} - {day_2} днів"
       },
       "filters": {
         "none": "Немає фільтрів",
-        "tier": "Tier {tier}"
+        "tier": "Рівень {tier}"
       },
       "no_data": {
         "battles_in_period": "За цей період боїв не було",
@@ -339,10 +339,10 @@
         "body": {
           "subtitle": "Дослідження",
           "total": "Загалом",
-          "research": "Research: {cost}",
+          "research": "Дослідження: {cost}",
           "upgrades": "Upgrades: {cost}",
-          "purchase": "Purchase: {cost}",
-          "equipment": "Equipment: {cost}",
+          "purchase": "Вартість: {cost}",
+          "equipment": "Спорядження: {cost}",
           "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
         },
         "errors": {
@@ -435,7 +435,7 @@
         },
         "body": {
           "subtitle": "Inactive for {days}+ days",
-          "listing": "{days} days"
+          "listing": "{days} днів"
         }
       },
       "full_stats": {
@@ -549,7 +549,7 @@
           "top_players": "Top {count} players",
           "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
           "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
-          "deleted_player": "Deleted {id}",
+          "deleted_player": "",
           "neighbors": "Rating neighbors",
           "more": "+ {count} more"
         }
@@ -643,9 +643,9 @@
       "body": "This page has moved. Redirecting..."
     },
     "settings": {
-      "title": "Settings",
-      "description": "Change BlitzKit settings",
-      "dev_mode": "Development mode",
+      "title": "Налаштування",
+      "description": "Змінити налаштування BlitzKit ",
+      "dev_mode": "Режим розробника",
       "language": "Мова"
     },
     "common": {
@@ -658,16 +658,16 @@
         "copied": "Скопійовано!"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
+        "select_dialog_title": "Знайти танк",
         "swap_dialog_title": "Swap tank",
-        "clear_filters": "Clear filters",
-        "login": "Login to use this",
+        "clear_filters": "Очистити",
+        "login": "Увійдіть, щоб скористатися",
         "search_bar_hint": "Шукайте техніку...",
         "recent": "Недавно переглянуті",
         "select_all": "Вибрати все",
         "count_singular": "1 танк",
-        "count_plural": "{count} tanks",
-        "sorting_by": "Sorting by {name}",
+        "count_plural": "Танків: {count} ",
+        "sorting_by": "Відсортувати за {name}",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
@@ -731,7 +731,7 @@
     "home": {
       "pwa": {
         "title": "Install the BlitzKit App",
-        "new": "NEW",
+        "new": "",
         "checking": "Checking compatibility...",
         "instructions": "Instructions for Apple devices.",
         "install": "Install",
@@ -763,20 +763,20 @@
     },
     "tools": {
       "playlist": {
-        "reset": "Reset",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
+        "reset": "Скинути",
+        "shuffle": "Перемішати",
+        "remove": "Видалити зіграні",
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
           "button": "Сортувати за",
-          "last_played": "Last played",
-          "least_played": "Least played"
+          "last_played": "Остання гра",
+          "least_played": "Найменше зіграно"
         },
         "table": {
           "index": "#",
-          "never": "Never",
+          "never": "Ніколи",
           "tank": "Танк",
-          "last_played": "Last played",
+          "last_played": "Остання гра",
           "battles": "Career battles",
           "unrecorded": "--",
           "wins": "Перемоги"
@@ -784,14 +784,14 @@
         "large_warning": {
           "title": "That's a lot of tanks!",
           "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
-          "cancel": "Cancel",
-          "proceed": "Proceed"
+          "cancel": "Скасувати",
+          "proceed": "Продовжити"
         },
-        "generate": "Generate playlist",
-        "name": "Playlist",
+        "generate": "Згенерувати плейлист",
+        "name": "Плейлист",
         "description": "Tank playlist generator",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "button": "Generate",
+        "button": "Створити",
         "pool_size": "{count} possible tanks"
       },
       "mixer": {
@@ -803,8 +803,8 @@
         "randomize": "Randomize"
       },
       "guess": {
-        "name": "Guess the tank",
-        "button": "Guess away",
+        "name": "Guess",
+        "button": "What could it be?",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {

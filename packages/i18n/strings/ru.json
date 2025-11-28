@@ -803,8 +803,8 @@
         "randomize": "Случайно"
       },
       "guess": {
-        "name": "Угадай танк",
-        "button": "Угадать",
+        "name": "Угадать",
+        "button": "What could it be?",
         "description": "Мини-игра «Силуэт»",
         "seo_description": "Играйте угадывая силуэт танка из World of Tanks Blitz",
         "search": {
