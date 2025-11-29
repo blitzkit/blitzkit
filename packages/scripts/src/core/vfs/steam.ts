@@ -3,6 +3,7 @@ import { XMLParser } from "fast-xml-parser";
 import { normalize } from "path/posix";
 import SteamUser, { EConnectionProtocol } from "steam-user";
 import { parse } from "yaml";
+import { AbstractVFS } from "./abstract";
 
 interface SteamManifestFile {
   chunks: {
@@ -33,7 +34,7 @@ interface SteamManifest {
   crc_clear: number;
 }
 
-export class SteamVFS {
+export class SteamVFS extends AbstractVFS {
   private steam = new SteamUser({ protocol: EConnectionProtocol.TCP });
   private textDecoder = new TextDecoder();
   private xmlParser = new XMLParser();
@@ -45,7 +46,9 @@ export class SteamVFS {
     private password: string,
     private app: number,
     private depot: number
-  ) {}
+  ) {
+    super();
+  }
 
   async init() {
     this.steam.logOn({
