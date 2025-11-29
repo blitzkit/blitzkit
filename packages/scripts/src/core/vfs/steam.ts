@@ -1,8 +1,4 @@
-import { readDVPL } from "@blitzkit/core/src/blitz";
-import { XMLParser } from "fast-xml-parser";
-import { normalize } from "path/posix";
 import SteamUser, { EConnectionProtocol } from "steam-user";
-import { parse } from "yaml";
 import { AbstractVFS } from "./abstract";
 
 interface SteamManifestFile {
@@ -36,9 +32,6 @@ interface SteamManifest {
 
 export class SteamVFS extends AbstractVFS {
   private steam = new SteamUser({ protocol: EConnectionProtocol.TCP });
-  private textDecoder = new TextDecoder();
-  private xmlParser = new XMLParser();
-
   private manifest: Map<string, SteamManifestFile> = new Map();
 
   constructor(
@@ -74,10 +67,8 @@ export class SteamVFS extends AbstractVFS {
       );
     });
 
-    const paths: string[] = [];
     for (const file of manifest.files) {
       const path = file.filename.replaceAll("\\", "/");
-      paths.push(path);
       this.manifest.set(path, file);
     }
 
@@ -85,74 +76,23 @@ export class SteamVFS extends AbstractVFS {
   }
 
   has(path: string) {
-    const normalized = normalize(path);
-    const dvplPath = `${normalized}.dvpl`;
-
-    return (
-      (this.manifest.has(dvplPath) && dvplPath) ||
-      (this.manifest.has(normalized) && normalized)
-    );
+    return this.manifest.has(path);
   }
 
-  assert(requested: string) {
-    const path = this.has(requested);
-
-    if (!path) throw new Error(`File not found: ${requested}`);
-
-    return path;
-  }
-
-  dir(path: string) {
-    const parentSegments = path.split("/").length;
-    const children: string[] = [];
-
-    for (const child of this.manifest.keys()) {
-      const childSegments = child.split("/");
-
-      if (
-        child.startsWith(path) &&
-        parentSegments + 1 === childSegments.length
-      ) {
-        children.push(childSegments.at(-1)!);
-      }
-    }
-
-    return children;
-  }
-
-  async file(requested: string) {
-    const path = this.assert(requested);
+  async raw(path: string) {
     const fileManifest = this.manifest.get(path)!;
     const downloaded: { type: "complete"; file: Buffer } =
       // @ts-expect-error
       await this.steam.downloadFile(this.app, this.depot, fileManifest);
-    let buffer = downloaded.file;
 
-    if (path.endsWith(".dvpl")) buffer = readDVPL(downloaded.file);
-
-    return new Uint8Array(buffer);
+    return new Uint8Array(downloaded.file);
   }
 
-  async text(path: string) {
-    const file = await this.file(path);
-    return this.textDecoder.decode(file);
-  }
-
-  async yaml<Type>(path: string) {
-    const file = await this.text(path);
-    return parse(file) as Type;
-  }
-
-  async xml<Type>(path: string) {
-    const file = await this.text(path);
-    return this.xmlParser.parse(file) as Type;
+  paths() {
+    return Array.from(this.manifest.keys());
   }
 
   dispose() {
     this.steam.logOff();
-  }
-
-  [Symbol.dispose]() {
-    this.dispose();
   }
 }

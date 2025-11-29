@@ -1,3 +1,86 @@
+import { readDVPL } from "@blitzkit/core";
+import { XMLParser } from "fast-xml-parser";
+import { normalize } from "path/posix";
+import { parse } from "yaml";
+
 export abstract class AbstractVFS {
-  abstract init(): Promise<AbstractVFS>;
+  textDecoder = new TextDecoder();
+  private xmlParser = new XMLParser();
+
+  abstract init(): Promise<typeof this>;
+
+  abstract dispose(): void;
+
+  abstract has(path: string): boolean;
+
+  abstract raw(path: string): Promise<Uint8Array>;
+
+  abstract paths(): string[];
+
+  resolve(path: string) {
+    const normalized = normalize(path);
+    if (this.has(normalized)) return normalized;
+
+    const dvplPath = `${path}.dvpl`;
+    if (this.has(dvplPath)) return dvplPath;
+
+    return null;
+  }
+
+  assert(path: string) {
+    const resolved = this.resolve(path);
+
+    if (!resolved) throw new Error(`File not found: ${path}`);
+
+    return resolved;
+  }
+
+  async file(file: string) {
+    const resolved = this.assert(file);
+    const raw = await this.raw(resolved);
+    let buffer = raw;
+
+    if (resolved.endsWith(".dvpl")) {
+      buffer = new Uint8Array(readDVPL(Buffer.from(raw)));
+    }
+
+    return buffer;
+  }
+
+  dir(path: string) {
+    const parentSegments = path.split("/").length;
+    const children: string[] = [];
+
+    for (const [child] of this.paths()) {
+      const childSegments = child.split("/");
+
+      if (
+        child.startsWith(path) &&
+        parentSegments + 1 === childSegments.length
+      ) {
+        children.push(childSegments.at(-1)!);
+      }
+    }
+
+    return children;
+  }
+
+  async text(path: string) {
+    const file = await this.file(path);
+    return this.textDecoder.decode(file);
+  }
+
+  async yaml<Type>(path: string) {
+    const file = await this.text(path);
+    return parse(file) as Type;
+  }
+
+  async xml<Type>(path: string) {
+    const file = await this.text(path);
+    return this.xmlParser.parse(file) as Type;
+  }
+
+  [Symbol.dispose]() {
+    this.dispose();
+  }
 }
