@@ -30,7 +30,7 @@ export abstract class AbstractVFS {
   assert(path: string) {
     const resolved = this.resolve(path);
 
-    if (!resolved) throw new Error(`File not found: ${path}`);
+    if (resolved === null) throw new Error(`File not found: ${path}`);
 
     return resolved;
   }

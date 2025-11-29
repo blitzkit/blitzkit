@@ -22,7 +22,7 @@ export class ZipVFS extends AbstractVFS {
   }
 
   has(path: string) {
-    return path in this.entries;
+    return this.entries.has(path);
   }
 
   async raw(path: string) {
