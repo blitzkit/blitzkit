@@ -16,8 +16,7 @@ const { id } = Astro.props;
 
 <h1>Tank {id}</h1>
 
-<div style="max-height: 40rem; overflow-y: scroll">
-  <code>
-    <pre>{JSON.stringify(    await api.tank(id) , null, 2)}</pre>
-  </code>
-</div>
+<code>
+  <pre>{JSON.stringify(await api.tank(id) , null, 2)}</pre>
+</code>
+
