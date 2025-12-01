@@ -1,7 +1,9 @@
 import {
+  TankAttributeChange,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
+import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import {
   CharacteristicsGroup,
@@ -29,16 +31,39 @@ function Content({ id }: { id: string }) {
       Record<TankAttributeChange_AttributeName, number>
     > = {};
 
-    for (const { attribute_name, value, modifier } of tank.base_stats!
-      .attributes) {
-      if (modifier !== TankAttributeChange_Modifier.MODIFIER_OVERRIDE) {
-        throw new Error(
-          `Unexpected modifier ${TankAttributeChange_Modifier[modifier]}`
-        );
-      }
+    function patch(changes: TankAttributeChange[]) {
+      for (const { attribute_name, value, modifier } of changes) {
+        switch (modifier) {
+          case TankAttributeChange_Modifier.MODIFIER_OVERRIDE:
+            attributes[attribute_name] = value;
+            break;
 
-      attributes[attribute_name] = value;
+          case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
+            if (!(attribute_name in attributes)) {
+              throw new Error(
+                `Missing attribute ${TankAttributeChange_AttributeName[attribute_name]} to modify`
+              );
+            }
+          }
+
+          case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
+            attributes[attribute_name]! *= value;
+            break;
+          }
+
+          default:
+            throw new Error(
+              `Unhandled modified ${TankAttributeChange_Modifier[modifier]}`
+            );
+        }
+      }
     }
+
+    patch(tank.base_stats!.attributes);
+
+    times(stage, (index) => {
+      patch(tank.upgrade_stages[index].attributes);
+    });
 
     return attributes;
   }, [stage]);
@@ -48,6 +73,20 @@ function Content({ id }: { id: string }) {
       <h1>{tank.name?.value}</h1>
 
       <h2>Characteristics</h2>
+
+      <div style={{ display: "flex" }}>
+        {times(tank.upgrade_stages.length, (index) => (
+          <button
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.stage = index;
+              });
+            }}
+          >
+            Stage {index + 1} {index === stage && "(selected)"}
+          </button>
+        ))}
+      </div>
 
       {characteristicsOrder.map((group) => (
         <>

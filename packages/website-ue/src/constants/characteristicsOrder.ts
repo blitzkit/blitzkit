@@ -248,3 +248,21 @@ export const characteristicsOrder: CharacteristicsOrder = [
     ],
   },
 ];
+
+if (import.meta.env.DEV) {
+  for (const name of Object.values(TankAttributeChange_AttributeName).filter(
+    (value) => typeof value === "number"
+  )) {
+    if (name === TankAttributeChange_AttributeName.ATTRIBUTE_NAME_UNSPECIFIED) {
+      continue;
+    }
+
+    const isImplemented = characteristicsOrder.some((group) =>
+      group.attributes.some((attribute) => attribute.name === name)
+    );
+
+    if (!isImplemented) {
+      throw new Error(`Attribute ${name} is not implemented`);
+    }
+  }
+}
