@@ -1,8 +1,4 @@
-import {
-  TankAttributeChange,
-  TankAttributeChange_AttributeName,
-  TankAttributeChange_Modifier,
-} from "@protos/blitz_static_tank_upgrade_single_stage";
+import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import {
@@ -10,6 +6,7 @@ import {
   characteristicsOrder,
 } from "../../../constants/characteristicsOrder";
 import { api } from "../../../core/api/dynamic";
+import { aggregateAttributes } from "../../../core/blitz/aggregateAttributes";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
 
@@ -26,47 +23,15 @@ function Content({ id }: { id: string }) {
 
   const stage = Tankopedia.use((state) => state.stage);
 
-  const attributes = useMemo(() => {
-    const attributes: Partial<
-      Record<TankAttributeChange_AttributeName, number>
-    > = {};
-
-    function patch(changes: TankAttributeChange[]) {
-      for (const { attribute_name, value, modifier } of changes) {
-        switch (modifier) {
-          case TankAttributeChange_Modifier.MODIFIER_OVERRIDE:
-            attributes[attribute_name] = value;
-            break;
-
-          case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
-            if (!(attribute_name in attributes)) {
-              throw new Error(
-                `Missing attribute ${TankAttributeChange_AttributeName[attribute_name]} to modify`
-              );
-            }
-          }
-
-          case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
-            attributes[attribute_name]! *= value;
-            break;
-          }
-
-          default:
-            throw new Error(
-              `Unhandled modified ${TankAttributeChange_Modifier[modifier]}`
-            );
-        }
-      }
-    }
-
-    patch(tank.base_stats!.attributes);
-
-    times(stage, (index) => {
-      patch(tank.upgrade_stages[index].attributes);
-    });
-
-    return attributes;
-  }, [stage]);
+  const attributes = useMemo(
+    () =>
+      aggregateAttributes(
+        tank.base_stats!.attributes,
+        tank.upgrade_stages.map((stage) => stage.attributes),
+        stage
+      ),
+    [stage]
+  );
 
   return (
     <>
