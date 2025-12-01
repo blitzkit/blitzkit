@@ -2,12 +2,15 @@ import { build } from "esbuild";
 import { cp, readdir, rm } from "fs/promises";
 import { argv } from "process";
 
+const dev = argv.includes("--dev");
+
 const projectDir = "../..";
 const srcRoot = `${projectDir}/packages/bot`;
 const distRoot = `${projectDir}/dist/bot`;
-const modulesRoot = "../../node_modules";
+const modulesRoot = dev
+  ? "../../packages/bot/node_modules"
+  : "../../node_modules";
 const workers = await readdir(`${srcRoot}/src/workers`);
-const dev = argv.includes("--dev");
 
 await rm(distRoot, { recursive: true, force: true });
 
