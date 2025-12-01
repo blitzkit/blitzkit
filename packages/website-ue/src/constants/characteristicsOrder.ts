@@ -1,8 +1,23 @@
 import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upgrade_single_stage";
 
-export const stats = [
+enum CharacteristicsGroup {
+  Firepower,
+  Maneuverability,
+  Survivability,
+  Miscellaneous,
+}
+
+type CharacteristicsOrder = {
+  group: CharacteristicsGroup;
+
+  attributes: {
+    name: TankAttributeChange_AttributeName;
+  }[];
+}[];
+
+export const characteristicsOrder: CharacteristicsOrder = [
   {
-    name: "firepower",
+    group: CharacteristicsGroup.Firepower,
 
     attributes: [
       {
@@ -111,7 +126,7 @@ export const stats = [
   },
 
   {
-    name: "maneuverability",
+    group: CharacteristicsGroup.Maneuverability,
 
     attributes: [
       {
@@ -160,7 +175,7 @@ export const stats = [
   },
 
   {
-    name: "survivability",
+    group: CharacteristicsGroup.Survivability,
 
     attributes: [
       {
@@ -224,7 +239,7 @@ export const stats = [
   },
 
   {
-    name: "miscellaneous",
+    group: CharacteristicsGroup.Miscellaneous,
 
     attributes: [
       {
