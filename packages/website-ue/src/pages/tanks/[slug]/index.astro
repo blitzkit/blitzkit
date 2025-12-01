@@ -15,4 +15,4 @@ export const getStaticPaths = (async () => {
 const { id } = Astro.props;
 ---
 
-<Page {id} />
+<Page {id} client:load />

@@ -1,6 +1,6 @@
 import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upgrade_single_stage";
 
-enum CharacteristicsGroup {
+export enum CharacteristicsGroup {
   Firepower,
   Maneuverability,
   Survivability,
