@@ -5,6 +5,10 @@ import { parse } from "yaml";
 import type { TanksEntry } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
+if (typeof window !== "undefined") {
+  throw new Error("ServerAPI is being evaluated in the browser");
+}
+
 interface LocalizationConfig {
   namespaces: string[];
 }
