@@ -5,9 +5,13 @@ import {
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { times } from "lodash-es";
 
+export type AggregateAttributes = Partial<
+  Record<TankAttributeChange_AttributeName, number>
+>;
+
 function patch(
   changes: TankAttributeChange[],
-  attributes: Partial<Record<TankAttributeChange_AttributeName, number>>
+  attributes: AggregateAttributes
 ) {
   for (const { attribute_name, value, modifier } of changes) {
     switch (modifier) {
@@ -41,8 +45,7 @@ export function aggregateAttributes(
   stages: TankAttributeChange[][],
   stage: number
 ) {
-  const attributes: Partial<Record<TankAttributeChange_AttributeName, number>> =
-    {};
+  const attributes: AggregateAttributes = {};
 
   patch(base, attributes);
   times(stage, (index) => patch(stages[index], attributes));

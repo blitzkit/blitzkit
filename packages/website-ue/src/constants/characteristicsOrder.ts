@@ -10,12 +10,75 @@ export enum CharacteristicsGroup {
 type CharacteristicsOrder = {
   group: CharacteristicsGroup;
 
+  characteristics: {
+    name: string;
+    value(
+      get: (name: TankAttributeChange_AttributeName) => number
+    ): number | string | null;
+  }[];
+}[];
+
+export const characteristicsOrder: CharacteristicsOrder = [
+  {
+    group: CharacteristicsGroup.Firepower,
+
+    characteristics: [
+      {
+        name: "gun_type",
+
+        value(get) {
+          const isPump = get(
+            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
+          );
+
+          if (isPump === 1) return "auto_reloader";
+
+          const clipSize = get(
+            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+          );
+
+          if (clipSize === 1) return "regular";
+
+          return "auto_loader";
+        },
+      },
+
+      {
+        name: "dpm",
+
+        value(get) {
+          return -1;
+        },
+      },
+
+      {
+        name: "clipping_potential",
+
+        value(get) {
+          const clipSize = get(
+            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+          );
+
+          if (clipSize === 1) return null;
+
+          // const damage
+
+          return -1;
+        },
+      },
+    ],
+  },
+];
+
+type _CharacteristicsOrder = {
+  group: CharacteristicsGroup;
+
   attributes: {
     name: TankAttributeChange_AttributeName;
   }[];
 }[];
 
-export const characteristicsOrder: CharacteristicsOrder = [
+export const _characteristicsOrder: _CharacteristicsOrder = [
   {
     group: CharacteristicsGroup.Firepower,
 
@@ -257,7 +320,7 @@ if (import.meta.env.DEV) {
       continue;
     }
 
-    const isImplemented = characteristicsOrder.some((group) =>
+    const isImplemented = _characteristicsOrder.some((group) =>
       group.attributes.some((attribute) => attribute.name === name)
     );
 

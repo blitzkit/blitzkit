@@ -3,7 +3,7 @@ import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import {
   CharacteristicsGroup,
-  characteristicsOrder,
+  _characteristicsOrder,
 } from "../../../constants/characteristicsOrder";
 import { api } from "../../../core/api/dynamic";
 import { aggregateAttributes } from "../../../core/blitz/aggregateAttributes";
@@ -53,7 +53,7 @@ function Content({ id }: { id: string }) {
         ))}
       </div>
 
-      {characteristicsOrder.map((group) => (
+      {_characteristicsOrder.map((group) => (
         <>
           <h2>{CharacteristicsGroup[group.group]}</h2>
 

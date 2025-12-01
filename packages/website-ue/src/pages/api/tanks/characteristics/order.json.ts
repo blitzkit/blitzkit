@@ -1,5 +1,5 @@
-import { characteristicsOrder } from "../../../../constants/characteristicsOrder";
+import { _characteristicsOrder } from "../../../../constants/characteristicsOrder";
 
 export function GET() {
-  return Response.json(characteristicsOrder);
+  return Response.json(_characteristicsOrder);
 }
