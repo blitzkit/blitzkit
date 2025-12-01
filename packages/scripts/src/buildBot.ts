@@ -5,7 +5,7 @@ import { argv } from "process";
 const projectDir = "../..";
 const srcRoot = `${projectDir}/packages/bot`;
 const distRoot = `${projectDir}/dist/bot`;
-const modulesRoot = `${projectDir}/packages/bot/node_modules`;
+const modulesRoot = "../../node_modules";
 const workers = await readdir(`${srcRoot}/src/workers`);
 const dev = argv.includes("--dev");
 
