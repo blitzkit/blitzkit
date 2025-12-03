@@ -1,5 +1,5 @@
-import { Markdown } from '../../../../../components/Markdown';
-import { PageWrapper } from '../../../../../components/PageWrapper';
+import { Markdown } from "../../../../../components/Markdown";
+import { PageWrapper } from "../../../../../components/PageWrapper";
 
 interface PageProps {
   content: string;
@@ -7,7 +7,7 @@ interface PageProps {
 
 export function Page({ content }: PageProps) {
   return (
-    <PageWrapper>
+    <PageWrapper maxWidth="50rem">
       <Markdown>{content}</Markdown>
     </PageWrapper>
   );
