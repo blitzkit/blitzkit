@@ -3,7 +3,7 @@ import { tankIcon } from "@blitzkit/core";
 import { Flex, Heading, Link, Strong, Text } from "@radix-ui/themes";
 ---
 
-<Flex justify="center">
+<Flex justify="center" px="4">
   <Link
     color="gray"
     highContrast
@@ -20,15 +20,18 @@ import { Flex, Heading, Link, Strong, Text } from "@radix-ui/themes";
         backgroundImage: "url(https://i.imgur.com/LRYmSkg.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        boxSizing: "border-box",
       }}
       align="center"
       gap="5"
     >
-      <img src={tankIcon(25169)} style={{ height: "5rem" }} />
+      <img src={tankIcon(25169)} style={{ height: "min(15vw, 5rem)" }} />
 
       <Flex direction="column">
-        <Heading>Christmas 2025</Heading>
-        <Text>Win the <Strong>GSOR the TANK</Strong> and more!</Text>
+        <Heading size={{ initial: "4", sm: "6" }}>Christmas 2025</Heading>
+        <Text size={{ initial: "2", sm: "3" }}>
+          Win the <Strong>GSOR the TANK</Strong> and more!
+        </Text>
       </Flex>
     </Flex>
   </Link>
