@@ -6,6 +6,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import type { GetStaticPaths } from "astro";
 import { AesonPlug } from "../../components/AesonPlug";
+import ArticlePlug from "../../components/ArticlePlug.astro";
 import HomeHero from "../../components/HomeHero.astro";
 import { Plugs } from "../../components/Plugs";
 import ToolCard from "../../components/ToolCard.astro";
@@ -63,6 +64,8 @@ export const getStaticPaths = (() => {
 
 <BaseLayout {locale}>
   <HomeHero />
+
+  <ArticlePlug />
 
   <!-- <Flex justify="center" py="6" px="4" justify="center">
     <Flex
