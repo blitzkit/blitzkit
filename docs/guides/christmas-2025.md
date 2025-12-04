@@ -6,7 +6,7 @@ The holiday season has arrived, and this year the celebrations spill directly in
 
 ## The Music Box
 
-The familiar Snow Globes are absent this year, replaced entirely by **Music Boxes**, which act as the new way to try your luck for seasonal rewards. They behave similarly to the Snow Globes and give you a chance to obtain various items, including a shot at the brand-new **[GSOR the TANK](https://blitzkit.app/tanks/gsor-the-tank/)**. But this time around, **they do not guarantee a tank every single time.**
+The familiar Snow Globes are absent this year, replaced entirely by **Music Boxes**, which act as the new way to try your luck for seasonal rewards. They behave similarly to the Snow Globes and give you a chance to obtain various items, including a shot at the brand-new **[GSOR the TANK](https://blitzkit.app/tanks/gsor-the-tank/)**. But this time around, **they do not guarantee a tank every single time.** But as a bonus, the Music Box also guarantees you will not receive duplicate tanks. Once you have a tank, the Music Box will try its best to give you a different one.
 
 ![](https://i.imgur.com/sxYV77L.jpeg)
 
