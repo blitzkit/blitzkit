@@ -1,5 +1,7 @@
 # Christmas Garage Guide 2025
 
+This content was pre-recorded on a test server and the version you may see may not be the same. Please see [the official WoTB portal](https://wotblitz.com/) for the most up-to-date information.
+
 The holiday season has arrived, and this year the celebrations spill directly into your garage, transforming the familiar space into a festive hub filled with activities, rewards, and seasonal flair. Instead of just offering decorations or a visual makeover, this event brings a full set of mechanics that turn everyday battles into a steady stream of progress. Whether you’re aiming for bonuses, collectibles, or new tanks, the garage is designed to make every match feel like part of a larger holiday journey.
 
 ![](https://i.imgur.com/HmbDw0x.jpeg)
