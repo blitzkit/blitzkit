@@ -66,7 +66,10 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
         >
           <img
             src="https://i.imgur.com/mvmJQgB.png"
-            style={{ height: "min(15vw, 5rem)" }}
+            style={{
+              height: "min(15vw, 5rem)",
+              filter: "drop-shadow(0.5rem 0.5rem 1rem #00000080)",
+            }}
           />
 
           <Flex direction="column">
