@@ -1,6 +1,7 @@
 import { Code, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import { useEffect, useState, type ReactNode } from "react";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
+import { InlineSkeleton } from "./InlineSkeleton";
 
 const TIME = 1764898200 * 1000;
 
@@ -10,7 +11,7 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft(TIME - Date.now());
-    });
+    }, 1000);
 
     return () => {
       clearInterval(interval);
@@ -66,7 +67,8 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
 
           <Flex direction="column">
             <Heading size={{ initial: "4", sm: "6" }}>
-              Music Box giveaway {string}
+              Music Box giveaway {!skeleton && string}{" "}
+              {skeleton && <InlineSkeleton width="10rem" />}
             </Heading>
             <Text size={{ initial: "2", sm: "3" }}>
               Join the BlitzKit Discord server event
