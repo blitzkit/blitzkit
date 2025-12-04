@@ -28,7 +28,9 @@ Golden tokens allow you to upgrade your Christmas Tree through **four distinct s
 
 ![](https://i.imgur.com/bcmQE8T.jpeg)
 
-As the tree grows, additional ornament slots open up, eight in total, which appear on the left side of your screen. These slots give you more room to customize the look of your garage and make the tree feel like something you’ve built up piece by piece over the course of the event. Each new ornament adds to the atmosphere, making the progression feel both cosmetic and rewarding. A fully decorated tree grants up to **+25% silver** per battle, turning your regular gameplay into a more profitable experience without requiring extra effort.
+As the tree grows, additional ornament slots open up, eight in total, which appear on the left side of your screen. These slots give you more room to customize the look of your garage and make the tree feel like something you’ve built up piece by piece over the course of the event. Each new ornament adds to the atmosphere, making the progression feel both cosmetic and rewarding.
+
+A fully decorated tree grants up to **+25% silver** per battle, turning your regular gameplay into a more profitable experience without requiring extra effort. Ensure all your ornaments come from the same set to unlock the full potential of the tree.
 
 ![](https://i.imgur.com/MMbyYLn.jpeg)
 
