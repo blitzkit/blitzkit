@@ -60,6 +60,7 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
             backgroundSize: "cover",
             backgroundPosition: "center",
             boxSizing: "border-box",
+            boxShadow: "0 0 var(--space-7) var(--blue-a5)",
           }}
           align="center"
           gap="5"
