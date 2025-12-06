@@ -19,7 +19,15 @@ export class ServerAPI extends AbstractAPI {
   }
 
   async strings(locale: string) {
-    const clientConfig = this.metadata.item("ClientConfigsEntity.prod");
+    const group = this.metadata.group("ClientConfigsEntity");
+
+    if (group.length !== 1) {
+      throw new RangeError(
+        `Don't know how to handle ${group.length} ClientConfigsEntities`
+      );
+    }
+
+    const clientConfig = this.metadata.item(group[0].id);
     const localizationResources = clientConfig.LocalizationResources();
 
     if (!localizationResources.remote_storage) {
