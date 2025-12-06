@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
       - uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
@@ -28,7 +28,7 @@ jobs:
         run: bun run build:bot
 
       - name: Archive build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: bot
           path: dist/bot

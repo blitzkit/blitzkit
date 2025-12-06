@@ -1,0 +1,38 @@
+---
+import { tankIcon } from "@blitzkit/core";
+import { Flex, Heading, Link, Strong, Text } from "@radix-ui/themes";
+---
+
+<Flex justify="center" px="4">
+  <Link
+    color="gray"
+    highContrast
+    style={{ display: "content" }}
+    href="/docs/guides/christmas-2025"
+    underline="none"
+  >
+    <Flex
+      mt="3"
+      px="5"
+      py="4"
+      style={{
+        borderRadius: "var(--radius-3)",
+        backgroundImage: "url(https://i.imgur.com/LRYmSkg.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        boxSizing: "border-box",
+      }}
+      align="center"
+      gap="5"
+    >
+      <img src={tankIcon(25169)} style={{ height: "min(15vw, 5rem)" }} />
+
+      <Flex direction="column">
+        <Heading size={{ initial: "4", sm: "6" }}>Christmas 2025</Heading>
+        <Text size={{ initial: "2", sm: "3" }}>
+          Win the <Strong>GSOR the TANK</Strong> and more!
+        </Text>
+      </Flex>
+    </Flex>
+  </Link>
+</Flex>
