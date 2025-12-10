@@ -19,9 +19,9 @@ export function localizationObject(
         (!strict || validNameRegex.test(translation)) && translation.length > 0;
 
       if (!isValid) {
-        console.warn(
-          `Invalid localization for ${locale} (${path}): ${translation}; skipping...`
-        );
+        // console.warn(
+        //   `Invalid localization for ${locale} (${path}): ${translation}; skipping...`
+        // );
         return localizations;
       }
 

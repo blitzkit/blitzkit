@@ -17,7 +17,7 @@ export async function getArchivedLatestSeasonNumber() {
   if (ratingInfo.detail) {
     const regionsURL = (
       (await fetch(
-        `https://api.github.com/repos/tresabhi/${assertSecret(
+        `https://api.github.com/repos/${assertSecret(
           import.meta.env.PUBLIC_ASSET_REPO
         )}/git/trees/main`
       ).then((response) => response.json())) as GitHubTrees

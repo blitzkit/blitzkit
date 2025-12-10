@@ -52,7 +52,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
     const seasonNumbers = range(
       FIRST_MINIMAL_ARCHIVED_RATING_SEASON,
       latestArchivedSeasonNumber + (onGoingSeason ? 1 : 0) + 1
-    );
+    ).slice(-25);
 
     function addOptions(option: SlashCommandSubcommandBuilder) {
       const { strings } = translator(Locale.EnglishUS);
@@ -196,7 +196,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                                 strings.common.leagues as Record<string, string>
                               )[name]
                           ),
-                        }) satisfies APIApplicationCommandOptionChoice<string>
+                        } satisfies APIApplicationCommandOptionChoice<string>)
                     )
                   )
                   .setRequired(true);
@@ -219,8 +219,8 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
         const season = seasonOption
           ? parseInt(seasonOption)
           : onGoingSeason
-            ? latestArchivedSeasonNumber + 1
-            : latestArchivedSeasonNumber;
+          ? latestArchivedSeasonNumber + 1
+          : latestArchivedSeasonNumber;
         const isCurrentSeason = season === latestArchivedSeasonNumber + 1;
         let titleName: string;
         let titleImage: string | undefined;
@@ -258,7 +258,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                       position: player.number,
                       clan: player.clan_tag,
                       nickname: player.nickname,
-                    }) satisfies SimplifiedPlayer
+                    } satisfies SimplifiedPlayer)
                 )
               )
             : await getArchivedRatingLeaderboard(region, season!).then(
@@ -295,7 +295,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                               .deleted_player,
                             { id: player.id }
                           ),
-                      }) satisfies SimplifiedPlayer
+                      } satisfies SimplifiedPlayer)
                   );
                 }
               );
@@ -349,7 +349,7 @@ export const ratingLeaderboardCommand = new Promise<CommandRegistry>(
                         score: player.score,
                         clan: player.clan_tag,
                         nickname: player.nickname,
-                      }) satisfies SimplifiedPlayer
+                      } satisfies SimplifiedPlayer)
                   )
               )
             : await getArchivedRatingLeaderboard(region, season!).then(
