@@ -51,7 +51,7 @@ export abstract class AbstractVFS {
     const parentSegments = path.split("/").length;
     const children: string[] = [];
 
-    for (const [child] of this.paths()) {
+    for (const child of this.paths()) {
       const childSegments = child.split("/");
 
       if (
