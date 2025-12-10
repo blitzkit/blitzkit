@@ -16,10 +16,11 @@ on:
           - blitzkit/assets-dev
         default: blitzkit/assets
 
-      archive_url:
+      asset_source:
         type: string
         required: false
-        description: Archive URL to download instead of Steam client
+        description: "Archive URL or Steam to download (example: steam:APP_ID/DEPOT_ID or zip:URL_TO_ZIP)"
+        default: "steam:444200/444202"
 
   schedule:
     - cron: "0 2 * * *"
@@ -78,4 +79,4 @@ jobs:
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
       - name: Build assets
-        run: bun run build:assets --all-targets --manual
+        run: bun run build:assets --all-targets --source=${{ github.event.inputs.asset_source }}
