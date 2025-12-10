@@ -49,20 +49,18 @@ export abstract class AbstractVFS {
 
   dir(path: string) {
     const parentSegments = path.split("/").length;
-    const children: string[] = [];
+    const children = new Set<string>();
 
     for (const child of this.paths()) {
-      const childSegments = child.split("/");
+      if (!child.startsWith(path) || child === path) continue;
 
-      if (
-        child.startsWith(path) &&
-        parentSegments + 1 === childSegments.length
-      ) {
-        children.push(childSegments.at(-1)!);
-      }
+      const childSegments = child.split("/");
+      const nextSegment = childSegments[parentSegments];
+
+      children.add(nextSegment);
     }
 
-    return children;
+    return Array.from(children);
   }
 
   async text(path: string) {

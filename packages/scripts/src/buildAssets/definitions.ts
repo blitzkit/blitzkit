@@ -1778,10 +1778,6 @@ export async function definitions() {
     };
   });
 
-  console.log(gameDefinitions);
-
-  console.log(GameDefinitions.encode(gameDefinitions).finish().length);
-
   await uploader.add({
     content: GameDefinitions.encode(gameDefinitions).finish(),
     path: "definitions/game.pb",
