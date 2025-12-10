@@ -79,4 +79,4 @@ jobs:
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
 
       - name: Build assets
-        run: bun run build:assets --all-targets --source=${{ github.event.inputs.asset_source }}
+        run: bun run build:assets --all-targets --source=${{ github.event.inputs.asset_source || 'steam:444200/444202' }}
