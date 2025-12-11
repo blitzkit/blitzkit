@@ -1267,7 +1267,8 @@
             "upgrade": "Upgrade"
           },
           "provisions": {
-            "clear": "Clear"
+            "clear": "Clear",
+            "clear_all": "Clear all"
           },
           "consumables": {
             "clear": "Clear"

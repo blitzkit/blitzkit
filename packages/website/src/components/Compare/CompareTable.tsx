@@ -345,7 +345,24 @@ export function CompareTable({ stats }: CompareTableProps) {
                               });
                             }}
                           />
-                          <Flex justify="end" mt="4">
+
+                          <Flex justify="end" mt="4" gap="3">
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                CompareEphemeral.mutate((draft) => {
+                                  draft.members.map((member) => {
+                                    member.provisions = [];
+                                  });
+                                });
+                              }}
+                            >
+                              {
+                                strings.website.tools.compare.table.provisions
+                                  .clear_all
+                              }
+                            </Button>
+
                             <Button
                               variant="ghost"
                               onClick={() => {
