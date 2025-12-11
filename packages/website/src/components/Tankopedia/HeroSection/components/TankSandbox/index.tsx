@@ -150,6 +150,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
 
     return (
       <SmartCanvas
+        resize={{ debounce: 0 }}
         ref={canvas}
         scene={{ fog: new Fog("black", 30, 50) }}
         gl={{
