@@ -534,11 +534,11 @@ const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
 export async function definitions() {
   console.log("Building definitions...");
 
-  using uploader = new AssetUploader("definitions");
+  const uploader = new AssetUploader("definitions");
   const gameDefinitions: GameDefinitions = {
-    version: (await vfs.text('Data/version.txt')).split(" ")[0],
+    version: (await vfs.text("Data/version.txt")).split(" ")[0],
     nations: (
-      await vfs.yaml<AvailableNationsYaml>('Data/available_nations.yaml')
+      await vfs.yaml<AvailableNationsYaml>("Data/available_nations.yaml")
     ).available_nations,
     gameModes: {},
     roles: {},
@@ -561,10 +561,12 @@ export async function definitions() {
       [TankClass.TANK_DESTROYER]: { skills: [] },
     },
   };
-  const nations = vfs.dir('Data/XML/item_defs/vehicles').filter((nation) => nation !== "common")
+  const nations = vfs
+    .dir("Data/XML/item_defs/vehicles")
+    .filter((nation) => nation !== "common");
   const tankStringIdMap: Record<string, number> = {};
   const optionalDevices = await vfs.xml<{ root: OptionalDevices }>(
-    'Data/XML/item_defs/vehicles/common/optional_devices.xml'
+    "Data/XML/item_defs/vehicles/common/optional_devices.xml"
   );
   const stringsI18n: Record<string, Record<string, string>> = {};
 
@@ -617,9 +619,7 @@ export async function definitions() {
   const provisions: ProvisionsCommon = {};
 
   for (const match of (
-    await vfs.text(
-      `Data/XML/item_defs/vehicles/common/consumables/list.xml`
-    )
+    await vfs.text(`Data/XML/item_defs/vehicles/common/consumables/list.xml`)
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
     if (match[1] === "prototypes") continue;
 
@@ -634,9 +634,7 @@ export async function definitions() {
   }
 
   for (const match of (
-    await vfs.text(
-      `Data/XML/item_defs/vehicles/common/provisions/list.xml`
-    )
+    await vfs.text(`Data/XML/item_defs/vehicles/common/provisions/list.xml`)
   ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
     if (match[1] === "prototypes") continue;
 

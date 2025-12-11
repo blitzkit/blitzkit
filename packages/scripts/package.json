@@ -31,6 +31,7 @@
     "steam-user": "^5.2.3",
     "three": "^0.180.0",
     "ts-proto": "^2.7.7",
+    "unzipit": "^1.4.3",
     "yaml": "^2.8.1"
   },
   "private": true,

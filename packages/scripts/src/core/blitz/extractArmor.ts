@@ -6,7 +6,7 @@ import {
 } from "@blitzkit/core";
 import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
 import { times } from "lodash-es";
-import { SteamVFS } from "../steam/vfs";
+import { SteamVFS } from "../vfs/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,

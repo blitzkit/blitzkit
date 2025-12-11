@@ -28,7 +28,7 @@ export async function skillIcons() {
   const avatar = await vfs.xml<{ root: Avatar }>(
     `Data/XML/item_defs/tankmen/avatar.xml`
   );
-  using uploader = new AssetUploader("skill icons");
+  const uploader = new AssetUploader("skill icons");
 
   for (const key in avatar.root.skills) {
     const skill = avatar.root.skills[key];

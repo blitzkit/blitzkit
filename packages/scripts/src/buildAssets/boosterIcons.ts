@@ -5,10 +5,12 @@ import { vfs } from "./constants";
 export async function boosterIcons() {
   console.log("Building booster icons...");
 
-  using uploader = new AssetUploader("booster icons");
-  const boosterFiles = (vfs.dir(`Data/Gfx/Shared/boosters`)).filter(
-    (file) => !file.includes("@2x.txt") && !file.startsWith("texture0")
-  );
+  const uploader = new AssetUploader("booster icons");
+  const boosterFiles = vfs
+    .dir("Data/Gfx/Shared/boosters")
+    .filter(
+      (file) => !file.includes("@2x.txt") && !file.startsWith("texture0")
+    );
   const image = sharp(
     await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`)
   );
