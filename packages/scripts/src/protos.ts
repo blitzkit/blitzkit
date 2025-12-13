@@ -11,7 +11,7 @@ const TS_PROTO_EXECUTABLE_LOCATIONS = [
 
 const roots = [
   // "../../packages/core/src/protos",
-  // "../../packages/closed/protos",
+  "../../packages/closed/protos",
   "../../packages/website-ue/src/protos",
 ];
 
@@ -67,7 +67,7 @@ for (const root of roots) {
 
       if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
         command += newLine;
-        files.pop();
+        console.log(`  ${files.pop()}`);
       } else {
         break;
       }

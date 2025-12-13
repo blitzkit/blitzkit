@@ -53,30 +53,37 @@ export class ServerAPI extends AbstractAPI {
       throw new Error("No suitable production remote storage found");
     }
 
-    const config = await fetch(
-      `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`
-    )
-      .then((response) => response.text())
-      .then((text) => parse(text) as LocalizationConfig);
     const strings: Record<string, string> = {};
+    const configPath = `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`;
 
-    for (const namespace of config.namespaces) {
-      Object.assign(
-        strings,
-        await fetch(
-          `${remoteStorage.url}/${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
-        )
-          .then((response) => response.text())
-          .then((text) => {
-            const strings: Record<string, string> = {};
-            const parsed = parse(text) as Record<string, string>;
+    try {
+      const config = await fetch(configPath)
+        .then((response) => response.text())
+        .then((text) => parse(text) as LocalizationConfig);
 
-            for (const key in parsed) {
-              strings[key] = parsed[key].replaceAll('\\"', '"');
-            }
+      for (const namespace of config.namespaces) {
+        Object.assign(
+          strings,
+          await fetch(
+            `${remoteStorage.url}/${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
+          )
+            .then((response) => response.text())
+            .then((text) => {
+              const strings: Record<string, string> = {};
+              const parsed = parse(text) as Record<string, string>;
 
-            return strings;
-          })
+              for (const key in parsed) {
+                strings[key] = parsed[key].replaceAll('\\"', '"');
+              }
+
+              return strings;
+            })
+        );
+      }
+    } catch (error) {
+      console.warn(
+        `Failed to fetch config from ${configPath}. Returning empty strings. This will throw an error in production. Error:`,
+        error
       );
     }
 
