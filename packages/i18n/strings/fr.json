@@ -612,7 +612,7 @@
         }
       },
       "rating": {
-        "name": "rating",
+        "name": "côtée",
         "description": "Rating player's statistics",
         "subcommands": {
           "today": {
