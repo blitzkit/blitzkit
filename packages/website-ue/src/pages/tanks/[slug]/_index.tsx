@@ -1,7 +1,7 @@
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
-import { aggregateAttributes } from "../../../core/blitz/aggregateAttributes";
+import { aggregateStages } from "../../../core/blitz/aggregateStages";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
 
@@ -19,12 +19,7 @@ function Content({ id }: { id: string }) {
   const stage = Tankopedia.use((state) => state.stage);
 
   const attributes = useMemo(
-    () =>
-      aggregateAttributes(
-        tank.base_stats!.attributes,
-        tank.upgrade_stages.map((stage) => stage.attributes),
-        stage
-      ),
+    () => aggregateStages(tank.base_stats!, tank.upgrade_stages, stage),
     [stage]
   );
 
