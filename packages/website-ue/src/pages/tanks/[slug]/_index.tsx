@@ -1,10 +1,5 @@
-import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
-import {
-  CharacteristicsGroup,
-  _characteristicsOrder,
-} from "../../../constants/characteristics";
 import { api } from "../../../core/api/dynamic";
 import { aggregateAttributes } from "../../../core/blitz/aggregateAttributes";
 import { useAwait } from "../../../hooks/useAwait";
@@ -35,6 +30,7 @@ function Content({ id }: { id: string }) {
 
   return (
     <>
+      <pre children={JSON.stringify(tank, null, 2)} />
       <h1>{tank.name?.value}</h1>
 
       <h2>Characteristics</h2>
@@ -53,7 +49,7 @@ function Content({ id }: { id: string }) {
         ))}
       </div>
 
-      {_characteristicsOrder.map((group) => (
+      {/* {_characteristicsOrder.map((group) => (
         <>
           <h2>{CharacteristicsGroup[group.group]}</h2>
 
@@ -67,7 +63,7 @@ function Content({ id }: { id: string }) {
               )
           )}
         </>
-      ))}
+      ))} */}
     </>
   );
 }
