@@ -4,7 +4,7 @@ import { Suspense, useMemo } from "react";
 import {
   CharacteristicsGroup,
   _characteristicsOrder,
-} from "../../../constants/characteristicsOrder";
+} from "../../../constants/characteristics";
 import { api } from "../../../core/api/dynamic";
 import { aggregateAttributes } from "../../../core/blitz/aggregateAttributes";
 import { useAwait } from "../../../hooks/useAwait";
