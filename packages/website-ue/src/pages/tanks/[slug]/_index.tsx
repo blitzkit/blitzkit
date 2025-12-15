@@ -18,7 +18,7 @@ function Content({ id }: { id: string }) {
 
   const stage = Tankopedia.use((state) => state.stage);
 
-  const attributes = useMemo(
+  const aggregatedStages = useMemo(
     () => aggregateStages(tank.base_stats!, tank.upgrade_stages, stage),
     [stage]
   );
