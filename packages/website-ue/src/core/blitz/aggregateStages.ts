@@ -11,82 +11,88 @@ function patch(change: StageParameters, base: StageParameters) {
     throw new Error("Change stage number must be 1 greater than base");
   }
 
-  for (const attribute of change.attributes) {
+  for (const changedAttribute of change.attributes) {
     let newValue: number;
 
-    switch (attribute.modifier) {
+    switch (changedAttribute.modifier) {
       case TankAttributeChange_Modifier.MODIFIER_OVERRIDE:
-        newValue = attribute.value;
+        newValue = changedAttribute.value;
         break;
 
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY:
       case TankAttributeChange_Modifier.MODIFIER_ADD:
-        if (!(attribute.attribute_name in base)) {
+        if (!(changedAttribute.attribute_name in base)) {
           throw new Error(
             `Missing attribute ${
-              TankAttributeChange_AttributeName[attribute.attribute_name]
+              TankAttributeChange_AttributeName[changedAttribute.attribute_name]
             } to modify`
           );
         }
 
-        const oldValue = base.attributes[attribute.attribute_name]!.value;
+        const oldValue =
+          base.attributes[changedAttribute.attribute_name]!.value;
 
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
-        newValue = oldValue! * attribute.value;
+        newValue = oldValue! * changedAttribute.value;
         break;
       }
 
       case TankAttributeChange_Modifier.MODIFIER_ADD: {
-        newValue = oldValue! + attribute.value;
+        newValue = oldValue! + changedAttribute.value;
         break;
       }
 
       default:
         throw new Error(
           `Unhandled modified ${
-            TankAttributeChange_Modifier[attribute.modifier]
+            TankAttributeChange_Modifier[changedAttribute.modifier]
           }`
         );
     }
 
-    base.attributes[attribute.attribute_name] = {
+    base.attributes[changedAttribute.attribute_name] = {
       modifier: TankAttributeChange_Modifier.MODIFIER_OVERRIDE,
-      attribute_name: attribute.attribute_name,
+      attribute_name: changedAttribute.attribute_name,
       value: newValue,
     };
   }
 
-  for (const changedPenetrationGroupsUpgrade of change.penetration_groups_upgrades) {
-    if (changedPenetrationGroupsUpgrade.primary_armor.length > 0) {
+  for (const changedPenetrationGroupUpgrades of change.penetration_groups_upgrades) {
+    if (changedPenetrationGroupUpgrades.primary_armor.length > 0) {
       throw new Error("Primary armor is not empty; implement this");
     }
 
-    let basePenetrationGroupsUpgrade = base.penetration_groups_upgrades.find(
-      (group) => group.tank_part === changedPenetrationGroupsUpgrade.tank_part
+    let basePenetrationGroupUpgrades = base.penetration_groups_upgrades.find(
+      (group) => group.tank_part === changedPenetrationGroupUpgrades.tank_part
     );
 
-    if (!basePenetrationGroupsUpgrade) {
-      basePenetrationGroupsUpgrade = PenetrationGroupUpgrade.create({
-        tank_part: changedPenetrationGroupsUpgrade.tank_part,
+    if (!basePenetrationGroupUpgrades) {
+      basePenetrationGroupUpgrades = PenetrationGroupUpgrade.create({
+        tank_part: changedPenetrationGroupUpgrades.tank_part,
       });
 
-      base.penetration_groups_upgrades.push(basePenetrationGroupsUpgrade);
+      base.penetration_groups_upgrades.push(basePenetrationGroupUpgrades);
     }
 
-    for (const changedGroup of changedPenetrationGroupsUpgrade.penetration_groups) {
-      const baseGroup = basePenetrationGroupsUpgrade.penetration_groups.find(
-        (baseGroup) => baseGroup.group_name === changedGroup.group_name
-      );
+    for (const changedPenetrationGroup of changedPenetrationGroupUpgrades.penetration_groups) {
+      const basePenetrationGroup =
+        basePenetrationGroupUpgrades.penetration_groups.find(
+          (baseGroup) =>
+            baseGroup.group_name === changedPenetrationGroup.group_name
+        );
 
-      if (baseGroup) {
-        if (baseGroup.common_data !== changedGroup.common_data) {
+      if (basePenetrationGroup) {
+        if (
+          basePenetrationGroup.common_data !==
+          changedPenetrationGroup.common_data
+        ) {
           throw new Error("Common data is not the same");
         }
 
-        baseGroup.armor = changedGroup.armor;
+        basePenetrationGroup.armor = changedPenetrationGroup.armor;
       } else {
-        basePenetrationGroupsUpgrade.penetration_groups.push({
-          ...changedGroup,
+        basePenetrationGroupUpgrades.penetration_groups.push({
+          ...changedPenetrationGroup,
         });
       }
     }
