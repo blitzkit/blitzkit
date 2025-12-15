@@ -1,5 +1,9 @@
+import { StandardSinglePrice } from "@protos/blitz_static_standard_single_price";
+import { PenetrationGroup } from "@protos/blitz_static_tank_penetration_group";
 import {
   PenetrationGroupUpgrade,
+  ShellUpgrade,
+  ShellUpgrageSingleChange,
   StageParameters,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
@@ -91,11 +95,49 @@ function patch(change: StageParameters, base: StageParameters) {
 
         basePenetrationGroup.armor = changedPenetrationGroup.armor;
       } else {
-        basePenetrationGroupUpgrades.penetration_groups.push({
-          ...changedPenetrationGroup,
-        });
+        basePenetrationGroupUpgrades.penetration_groups.push(
+          PenetrationGroup.create(changedPenetrationGroup)
+        );
       }
     }
+  }
+
+  if (change.modules_upgrades.length > 0) {
+    throw new Error("Modules upgrades not implemented");
+  }
+
+  for (const changedShellUpgrades of change.shells_upgrades) {
+    let baseShellUpgrades = base.shells_upgrades.find(
+      (baseShell) => baseShell.shell_id === changedShellUpgrades.shell_id
+    );
+
+    if (!baseShellUpgrades) {
+      baseShellUpgrades = ShellUpgrade.create({
+        shell_id: changedShellUpgrades.shell_id,
+      });
+    }
+
+    baseShellUpgrades.shell_type = changedShellUpgrades.shell_type;
+
+    for (const changedShellUpgrade of changedShellUpgrades.changes) {
+      const baseShellUpgrade = baseShellUpgrades.changes.find(
+        (baseShellUpgrade) =>
+          baseShellUpgrade.attribute_name === changedShellUpgrade.attribute_name
+      );
+
+      if (baseShellUpgrade) {
+        baseShellUpgrade.value = changedShellUpgrade.value;
+      } else {
+        baseShellUpgrades.changes.push(
+          ShellUpgrageSingleChange.create(changedShellUpgrade)
+        );
+      }
+    }
+
+    baseShellUpgrades.silver_price =
+      changedShellUpgrades.silver_price === undefined
+        ? undefined
+        : StandardSinglePrice.create(changedShellUpgrades.silver_price);
   }
 }
 
