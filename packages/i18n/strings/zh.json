@@ -804,7 +804,7 @@
       },
       "guess": {
         "name": "猜测",
-        "button": "What could it be?",
+        "button": "这会是什么？",
         "description": "坦克剪影小游戏",
         "seo_description": "看剪影猜坦克",
         "search": {
