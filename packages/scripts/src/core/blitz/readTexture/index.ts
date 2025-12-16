@@ -3,7 +3,7 @@ import { vfs } from "../../../buildAssets/constants";
 
 export async function readTexture(path: string) {
   const ddsTexturePath = path.replace(".tex", ".dx11.dds");
-  const isDds = vfs.has(ddsTexturePath);
+  const isDds = vfs.resolve(ddsTexturePath);
   const resolvedTexturePath = isDds
     ? ddsTexturePath
     : ddsTexturePath.replace(".dds", ".pvr");
