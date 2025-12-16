@@ -62,7 +62,7 @@ export async function consumableProvisionIcons() {
         .replace(".psd", "")
         .replace(".txt", "");
 
-      if (vfs.has(`Data/${configPath}.packed.webp`)) {
+      if (vfs.resolve(`Data/${configPath}.packed.webp`)) {
         const image = sharp(
           await vfs.file(`Data/${configPath}.packed.webp`)
         );
@@ -131,7 +131,7 @@ export async function consumableProvisionIcons() {
         .replace(".psd", "")
         .replace(".txt", "");
 
-      if (vfs.has(`Data/${configPath}.packed.webp`)) {
+      if (vfs.resolve(`Data/${configPath}.packed.webp`)) {
         const image = sharp(
           await vfs.file(`Data/${configPath}.packed.webp`)
         );
