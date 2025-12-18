@@ -2,11 +2,13 @@ import { StandardSinglePrice } from "@protos/blitz_static_standard_single_price"
 import { PenetrationGroup } from "@protos/blitz_static_tank_penetration_group";
 import {
   PenetrationGroupUpgrade,
+  PitchLimit,
   ShellUpgrade,
   ShellUpgrageSingleChange,
   StageParameters,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
+  VisualChanges,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { times } from "lodash-es";
 
@@ -138,6 +140,42 @@ function patch(change: StageParameters, base: StageParameters) {
       changedShellUpgrades.silver_price === undefined
         ? undefined
         : StandardSinglePrice.create(changedShellUpgrades.silver_price);
+  }
+
+  if (change.pump_reload_times.length > 0) {
+    throw new Error("Pump reload times not implemented");
+  }
+
+  if (change.pitch_limits_up.length > 0 && base.pitch_limits_up.length > 0) {
+    throw new Error("Pitch limits not implemented");
+  }
+
+  for (const changePitchLimitUp of change.pitch_limits_up) {
+    base.pitch_limits_up.push(PitchLimit.create(changePitchLimitUp));
+  }
+
+  if (
+    change.pitch_limits_down.length > 0 &&
+    base.pitch_limits_down.length > 0
+  ) {
+    throw new Error("Pitch limits not implemented");
+  }
+
+  for (const changePitchLimitDown of change.pitch_limits_down) {
+    base.pitch_limits_down.push(PitchLimit.create(changePitchLimitDown));
+  }
+
+  for (const changeVisualChange of change.visual_changes) {
+    const baseVisualChange = base.visual_changes.find(
+      (baseVisualChange) =>
+        baseVisualChange.tank_part === changeVisualChange.tank_part
+    );
+
+    if (baseVisualChange) {
+      baseVisualChange.name = changeVisualChange.name;
+    } else {
+      base.visual_changes.push(VisualChanges.create(changeVisualChange));
+    }
   }
 }
 
