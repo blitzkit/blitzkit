@@ -117,4 +117,10 @@ export const characteristics = {
     );
     return count === -1 || count === null ? Infinity : count;
   },
+
+  aim_time({ attribute }) {
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_AIMING_TIME
+    );
+  },
 } satisfies Record<string, Characteristic>;

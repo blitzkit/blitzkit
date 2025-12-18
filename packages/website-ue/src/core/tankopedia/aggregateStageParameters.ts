@@ -11,7 +11,6 @@ import {
   TankAttributeChange_Modifier,
   VisualChanges,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
-import { times } from "lodash-es";
 
 function patch(stage0: StageParameters, stage1: StageParameters) {
   if (stage1.stage_number !== ++stage0.stage_number) {
@@ -207,7 +206,9 @@ export function aggregateStageParameters(
 
   stage0.stage_number = 0;
 
-  times(stage, (index) => patch(stage0, stages[index]));
+  console.log(stages.length);
+
+  stages.forEach((stage) => patch(stage0, stage));
 
   return stage0;
 }

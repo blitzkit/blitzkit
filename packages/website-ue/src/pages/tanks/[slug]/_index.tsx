@@ -23,7 +23,7 @@ function Content({ id }: { id: string }) {
     () =>
       aggregateStageParameters(
         tank.base_stats!,
-        tank.upgrade_stages,
+        tank.upgrade_stages.slice(0, protagonist.stage),
         protagonist.shell
       ),
     [protagonist]
@@ -38,7 +38,7 @@ function Content({ id }: { id: string }) {
       <h1>{id}</h1>
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {times(tank.upgrade_stages.length, (index) => (
+        {times(tank.upgrade_stages.length + 1, (index) => (
           <button
             key={index}
             onClick={() => {

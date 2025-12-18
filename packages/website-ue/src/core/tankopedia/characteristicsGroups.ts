@@ -40,6 +40,7 @@ export const characteristicsGroups = [
       { name: "shell_velocity" },
       { name: "shell_range" },
       { name: "shell_capacity" },
+      { name: "aim_time" },
     ],
   },
   {
