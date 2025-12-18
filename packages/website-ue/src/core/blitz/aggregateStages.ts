@@ -118,33 +118,32 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
       (baseShell) => baseShell.shell_id === shellUpgrades1.shell_id
     );
 
-    if (!shellUpgrades0) {
-      shellUpgrades0 = ShellUpgrade.create({
-        shell_id: shellUpgrades1.shell_id,
-      });
-    }
+    if (shellUpgrades0) {
+      shellUpgrades0.shell_type = shellUpgrades1.shell_type;
 
-    shellUpgrades0.shell_type = shellUpgrades1.shell_type;
-
-    for (const changedShellUpgrade of shellUpgrades1.changes) {
-      const baseShellUpgrade = shellUpgrades0.changes.find(
-        (baseShellUpgrade) =>
-          baseShellUpgrade.attribute_name === changedShellUpgrade.attribute_name
-      );
-
-      if (baseShellUpgrade) {
-        baseShellUpgrade.value = changedShellUpgrade.value;
-      } else {
-        shellUpgrades0.changes.push(
-          ShellUpgrageSingleChange.create(changedShellUpgrade)
+      for (const changedShellUpgrade of shellUpgrades1.changes) {
+        const shellUpgrade0 = shellUpgrades0.changes.find(
+          (baseShellUpgrade) =>
+            baseShellUpgrade.attribute_name ===
+            changedShellUpgrade.attribute_name
         );
-      }
-    }
 
-    shellUpgrades0.silver_price =
-      shellUpgrades1.silver_price === undefined
-        ? undefined
-        : StandardSinglePrice.create(shellUpgrades1.silver_price);
+        if (shellUpgrade0) {
+          shellUpgrade0.value = changedShellUpgrade.value;
+        } else {
+          shellUpgrades0.changes.push(
+            ShellUpgrageSingleChange.create(changedShellUpgrade)
+          );
+        }
+      }
+
+      shellUpgrades0.silver_price =
+        shellUpgrades1.silver_price === undefined
+          ? undefined
+          : StandardSinglePrice.create(shellUpgrades1.silver_price);
+    } else {
+      stage0.shells_upgrades.push(ShellUpgrade.create(shellUpgrades1));
+    }
   }
 
   if (stage1.pump_reload_times.length > 0) {
