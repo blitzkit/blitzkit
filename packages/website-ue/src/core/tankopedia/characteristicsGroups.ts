@@ -7,10 +7,15 @@ export enum BetterDirection {
 
 type CharacteristicsOrder = {
   group: string;
-  order: {
-    name: CharacteristicName;
-    decimals?: number;
-  }[];
+  order: (
+    | {
+        name: CharacteristicName;
+        decimals?: number;
+      }
+    | {
+        toy: string;
+      }
+  )[];
 }[];
 
 export const characteristicsGroups = [
@@ -22,6 +27,19 @@ export const characteristicsGroups = [
       { name: "damage" },
       { name: "module_damage" },
       { name: "penetration" },
+      { name: "reload" },
+
+      { toy: "reload" },
+
+      { name: "caliber" },
+      { name: "normalization" },
+      { name: "ricochet" },
+
+      { toy: "ricochet" },
+
+      { name: "shell_velocity" },
+      { name: "shell_range" },
+      { name: "shell_capacity" },
     ],
   },
   {

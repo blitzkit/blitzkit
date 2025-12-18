@@ -54,22 +54,26 @@ function Content({ id }: { id: string }) {
         <>
           <h2>{group}</h2>
 
-          {order.map(({ name, decimals }) => {
-            const characteristic = characteristics[name];
+          {order.map((entry) => {
+            if ("toy" in entry) {
+            } else {
+              const characteristic = characteristics[entry.name];
 
-            if (characteristic === null) return null;
+              if (characteristic === null) return null;
 
-            let rendered: string | number = characteristic;
+              let rendered: string | number = characteristic;
 
-            if (typeof rendered === "number") {
-              if (decimals !== undefined) rendered = rendered.toFixed(decimals);
+              if (typeof rendered === "number") {
+                if (entry.decimals !== undefined)
+                  rendered = rendered.toFixed(entry.decimals);
+              }
+
+              return (
+                <p>
+                  {entry.name}: {rendered}
+                </p>
+              );
             }
-
-            return (
-              <p>
-                {name}: {rendered}
-              </p>
-            );
           })}
         </>
       ))}

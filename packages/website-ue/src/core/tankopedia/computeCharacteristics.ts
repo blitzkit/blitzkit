@@ -1,7 +1,7 @@
-import type {
+import {
   ShellUpgrageSingleChange_AttributeName,
-  StageParameters,
   TankAttributeChange_AttributeName,
+  type StageParameters,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
   characteristics,
@@ -27,8 +27,11 @@ export function computeCharacteristics(
       (attribute) => attribute.attribute_name === name
     );
 
-    if (!attribute) throw new Error(`Attribute ${name} not found`);
-    ("");
+    if (!attribute) {
+      throw new Error(
+        `Attribute ${TankAttributeChange_AttributeName[name]} (${name}) not found`
+      );
+    }
 
     return attribute.value;
   }
@@ -38,13 +41,21 @@ export function computeCharacteristics(
       (shell) => shell.shell_id === state.shell
     );
 
-    if (!shell) throw new Error(`Shell ${name} not found`);
+    if (!shell) {
+      throw new Error(
+        `Shell ${ShellUpgrageSingleChange_AttributeName[name]} (${name}) not found`
+      );
+    }
 
     const attribute = shell.changes.find(
       (change) => change.attribute_name === name
     );
 
-    if (!attribute) throw new Error(`Shell attribute ${name} not found`);
+    if (!attribute) {
+      throw new Error(
+        `Shell attribute ${ShellUpgrageSingleChange_AttributeName[name]} (${name}) not found`
+      );
+    }
 
     return attribute.value;
   }
