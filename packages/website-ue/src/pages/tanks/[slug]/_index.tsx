@@ -24,7 +24,7 @@ function Content({ id }: { id: string }) {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {times(tank.upgrade_stages.length, (index) => (
           <button
             key={index}

@@ -99,10 +99,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
         );
 
       if (penetrationGroup0) {
-        if (penetrationGroup0.common_data !== penetrationGroup1.common_data) {
-          throw new Error("Common data is not the same");
-        }
-
+        penetrationGroup0.common_data = penetrationGroup1.common_data;
         penetrationGroup0.armor = penetrationGroup1.armor;
       } else {
         penetrationGroupUpgrade0.penetration_groups.push(
