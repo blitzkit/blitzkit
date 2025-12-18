@@ -1,7 +1,8 @@
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
-import { aggregateStages } from "../../../core/blitz/aggregateStages";
+import { aggregateStageParameters } from "../../../core/tankopedia/aggregateStageParameters";
+import { characteristics } from "../../../core/tankopedia/characteristics";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
 
@@ -18,7 +19,8 @@ function Content({ id }: { id: string }) {
 
   const stage = Tankopedia.use((state) => state.stage);
   const parameters = useMemo(
-    () => aggregateStages(tank.base_stats!, tank.upgrade_stages, stage),
+    () =>
+      aggregateStageParameters(tank.base_stats!, tank.upgrade_stages, stage),
     [stage]
   );
 
@@ -39,26 +41,17 @@ function Content({ id }: { id: string }) {
         ))}
       </div>
 
-      <pre children={JSON.stringify(parameters, null, 2)} />
-      <h1>{tank.name?.value}</h1>
-
-      <h2>Characteristics</h2>
-
-      {/* {_characteristicsOrder.map((group) => (
+      {characteristicsOrder.map(({ group, order }) => (
         <>
-          <h2>{CharacteristicsGroup[group.group]}</h2>
+          <h2>{group}</h2>
 
-          {group.attributes.map(
-            (attribute) =>
-              attribute.name in attributes && (
-                <p>
-                  {TankAttributeChange_AttributeName[attribute.name]}:{" "}
-                  {attributes[attribute.name]}
-                </p>
-              )
-          )}
+          {order.map((name) => {
+            const characteristic = characteristics[name];
+
+            return <span>{}</span>;
+          })}
         </>
-      ))} */}
+      ))}
     </>
   );
 }

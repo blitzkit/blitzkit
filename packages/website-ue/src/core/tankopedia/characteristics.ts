@@ -3,31 +3,21 @@ import {
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 
-export enum CharacteristicsGroup {
-  Firepower = "firepower",
-  Maneuverability = "maneuverability",
-  Survivability = "survivability",
-  Miscellaneous = "miscellaneous",
-}
+export type CharacteristicOutput = number | string | null;
 
 interface Characteristic {
-  render: (helpers: {
-    characteristic: (name: CharacteristicName) => number;
+  value: (helpers: {
+    characteristic: (name: CharacteristicName) => CharacteristicOutput;
     attribute: (name: TankAttributeChange_AttributeName) => number;
     shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
-  }) => number | string | null;
+  }) => CharacteristicOutput;
 }
 
-type CharacteristicName = keyof typeof characteristics;
-
-type CharacteristicsOrder = {
-  group: CharacteristicsGroup;
-  characteristics: CharacteristicName[];
-}[];
+export type CharacteristicName = keyof typeof characteristics;
 
 export const characteristics = {
   gun_type: {
-    render({ attribute }) {
+    value({ attribute }) {
       const isPump = attribute(
         TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
       );
@@ -45,7 +35,7 @@ export const characteristics = {
   },
 
   damage: {
-    render({ shell }) {
+    value({ shell }) {
       return shell(
         ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE
       );
@@ -53,29 +43,10 @@ export const characteristics = {
   },
 
   dpm: {
-    render({ characteristic }) {
+    value({ characteristic }) {
       const damage = characteristic("damage");
 
       return 1;
     },
   },
 } satisfies Record<string, Characteristic>;
-
-export const characteristicsOrder: CharacteristicsOrder = [
-  {
-    group: CharacteristicsGroup.Firepower,
-    characteristics: ["gun_type", "dpm"],
-  },
-  {
-    group: CharacteristicsGroup.Maneuverability,
-    characteristics: [],
-  },
-  {
-    group: CharacteristicsGroup.Survivability,
-    characteristics: [],
-  },
-  {
-    group: CharacteristicsGroup.Miscellaneous,
-    characteristics: [],
-  },
-];

@@ -183,7 +183,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
   }
 }
 
-export function aggregateStages(
+export function aggregateStageParameters(
   base: StageParameters,
   stages: StageParameters[],
   stage: number

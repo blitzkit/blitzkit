@@ -8,7 +8,7 @@ import AstroPWA from "@vite-pwa/astro";
 import favicons from "astro-favicons";
 import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
-import { tools } from "./src/constants/tools";
+import { tools } from "./src/core/tools/tools";
 
 const POSSIBLE_TARGETS = ["app", "web"];
 
