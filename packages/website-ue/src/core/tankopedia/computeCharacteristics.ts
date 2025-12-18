@@ -8,10 +8,11 @@ import {
   type CharacteristicName,
   type CharacteristicOutput,
 } from "./characteristics";
+import type { TankState } from "./tankState";
 
-export function renderCharacteristics(
+export function computeCharacteristics(
   parameters: StageParameters,
-  shellId: number
+  state: TankState
 ) {
   const computed: Partial<Record<CharacteristicName, CharacteristicOutput>> =
     {};
@@ -34,7 +35,7 @@ export function renderCharacteristics(
 
   function shell(name: ShellUpgrageSingleChange_AttributeName) {
     const shell = parameters.shells_upgrades.find(
-      (shell) => shell.shell_id === name
+      (shell) => shell.shell_id === state.shell
     );
 
     if (!shell) throw new Error(`Shell ${name} not found`);
@@ -50,7 +51,9 @@ export function renderCharacteristics(
 
   for (const _name in characteristics) {
     const name = _name as CharacteristicName;
-    const _characteristic = characteristics[name];
-    const value = _characteristic.value({ characteristic, attribute, shell });
+    const value = characteristics[name]({ characteristic, attribute, shell });
+    computed[name] = value;
   }
+
+  return computed as Record<CharacteristicName, CharacteristicOutput>;
 }

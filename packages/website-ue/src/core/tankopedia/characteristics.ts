@@ -3,50 +3,83 @@ import {
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 
-export type CharacteristicOutput = number | string | null;
+export type CharacteristicOutput = number | null;
 
-interface Characteristic {
-  value: (helpers: {
-    characteristic: (name: CharacteristicName) => CharacteristicOutput;
-    attribute: (name: TankAttributeChange_AttributeName) => number;
-    shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
-  }) => CharacteristicOutput;
-}
+type Characteristic = (helpers: {
+  characteristic: (name: CharacteristicName) => CharacteristicOutput;
+  attribute: (name: TankAttributeChange_AttributeName) => number;
+  shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
+}) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
 
+export enum GunType {
+  Regular,
+  AutoLoader,
+  AutoReloader,
+}
+
 export const characteristics = {
-  gun_type: {
-    value({ attribute }) {
-      const isPump = attribute(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
-      );
+  gun_type({ attribute }) {
+    const isPump = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
+    );
 
-      if (isPump === 1) return "auto_reloader";
+    if (isPump === 1) return GunType.AutoReloader;
 
-      const clipSize = attribute(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
-      );
+    const clipSize = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+    );
 
-      if (clipSize === 1) return "regular";
+    if (clipSize === 1) return GunType.Regular;
 
-      return "auto_loader";
-    },
+    return GunType.AutoLoader;
   },
 
-  damage: {
-    value({ shell }) {
-      return shell(
-        ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE
-      );
-    },
+  damage({ shell }) {
+    return shell(
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE
+    );
   },
 
-  dpm: {
-    value({ characteristic }) {
-      const damage = characteristic("damage");
+  module_damage({ shell }) {
+    return shell(
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MODULE_DAMAGE
+    );
+  },
 
-      return 1;
-    },
+  penetration({ shell }) {
+    return shell(
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER
+    );
+  },
+
+  reload({ characteristic, attribute }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType !== GunType.Regular) return null;
+
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_RELOAD_TIME
+    );
+  },
+
+  dpm({ characteristic }) {
+    let dps: number;
+    const gunType = characteristic("gun_type")!;
+    const damage = characteristic("damage")!;
+
+    switch (gunType) {
+      case GunType.Regular: {
+        const reload = characteristic("reload")!;
+        dps = damage / reload;
+        break;
+      }
+
+      default:
+        throw new Error("Unknown gun type");
+    }
+
+    return 60 * dps;
   },
 } satisfies Record<string, Characteristic>;

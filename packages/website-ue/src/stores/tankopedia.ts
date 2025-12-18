@@ -1,7 +1,10 @@
 import { Varuna } from "varuna";
+import type { TankState } from "../core/tankopedia/tankState";
 
 interface Tankopedia {
-  stage: number;
+  protagonist: TankState;
 }
 
-export const Tankopedia = new Varuna<Tankopedia>({ stage: 0 });
+export const Tankopedia = new Varuna<Tankopedia>({
+  protagonist: { stage: 0, shell: 0 },
+});

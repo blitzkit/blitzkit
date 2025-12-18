@@ -2,7 +2,8 @@ import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
 import { aggregateStageParameters } from "../../../core/tankopedia/aggregateStageParameters";
-import { characteristics } from "../../../core/tankopedia/characteristics";
+import { characteristicsGroups } from "../../../core/tankopedia/characteristicsGroups";
+import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
 
@@ -17,11 +18,19 @@ export function Page({ id }: { id: string }) {
 function Content({ id }: { id: string }) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
 
-  const stage = Tankopedia.use((state) => state.stage);
+  const protagonist = Tankopedia.use((state) => state.protagonist);
   const parameters = useMemo(
     () =>
-      aggregateStageParameters(tank.base_stats!, tank.upgrade_stages, stage),
-    [stage]
+      aggregateStageParameters(
+        tank.base_stats!,
+        tank.upgrade_stages,
+        protagonist.shell
+      ),
+    [protagonist]
+  );
+  const characteristics = useMemo(
+    () => computeCharacteristics(parameters, protagonist),
+    [protagonist]
   );
 
   return (
@@ -32,23 +41,35 @@ function Content({ id }: { id: string }) {
             key={index}
             onClick={() => {
               Tankopedia.mutate((draft) => {
-                draft.stage = index;
+                draft.protagonist.stage = index;
               });
             }}
           >
-            Stage {index} {index === stage && "(selected)"}
+            Stage {index} {index === protagonist.stage && "(selected)"}
           </button>
         ))}
       </div>
 
-      {characteristicsOrder.map(({ group, order }) => (
+      {characteristicsGroups.map(({ group, order }) => (
         <>
           <h2>{group}</h2>
 
-          {order.map((name) => {
+          {order.map(({ name, decimals }) => {
             const characteristic = characteristics[name];
 
-            return <span>{}</span>;
+            if (characteristic === null) return null;
+
+            let rendered: string | number = characteristic;
+
+            if (typeof rendered === "number") {
+              if (decimals !== undefined) rendered = rendered.toFixed(decimals);
+            }
+
+            return (
+              <p>
+                {name}: {rendered}
+              </p>
+            );
           })}
         </>
       ))}

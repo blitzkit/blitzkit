@@ -1,14 +1,28 @@
 import type { CharacteristicName } from "./characteristics";
 
+export enum BetterDirection {
+  Higher,
+  Lower,
+}
+
 type CharacteristicsOrder = {
   group: string;
-  order: CharacteristicName[];
+  order: {
+    name: CharacteristicName;
+    decimals?: number;
+  }[];
 }[];
 
 export const characteristicsGroups = [
   {
     group: "firepower",
-    order: ["gun_type", "dpm"],
+    order: [
+      { name: "gun_type" },
+      { name: "dpm", decimals: 0 },
+      { name: "damage" },
+      { name: "module_damage" },
+      { name: "penetration" },
+    ],
   },
   {
     group: "maneuverability",
