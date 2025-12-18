@@ -17,32 +17,32 @@ function Content({ id }: { id: string }) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
 
   const stage = Tankopedia.use((state) => state.stage);
-
-  const aggregatedStages = useMemo(
+  const parameters = useMemo(
     () => aggregateStages(tank.base_stats!, tank.upgrade_stages, stage),
     [stage]
   );
 
   return (
     <>
-      <pre children={JSON.stringify(tank, null, 2)} />
-      <h1>{tank.name?.value}</h1>
-
-      <h2>Characteristics</h2>
-
       <div style={{ display: "flex" }}>
         {times(tank.upgrade_stages.length, (index) => (
           <button
+            key={index}
             onClick={() => {
               Tankopedia.mutate((draft) => {
                 draft.stage = index;
               });
             }}
           >
-            Stage {index + 1} {index === stage && "(selected)"}
+            Stage {index} {index === stage && "(selected)"}
           </button>
         ))}
       </div>
+
+      <pre children={JSON.stringify(parameters, null, 2)} />
+      <h1>{tank.name?.value}</h1>
+
+      <h2>Characteristics</h2>
 
       {/* {_characteristicsOrder.map((group) => (
         <>

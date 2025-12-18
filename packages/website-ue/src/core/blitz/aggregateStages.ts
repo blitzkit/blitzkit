@@ -28,23 +28,26 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY:
       case TankAttributeChange_Modifier.MODIFIER_ADD:
-        if (!(attribute1.attribute_name in stage0)) {
+        const attribute0 = stage0.attributes.find(
+          (attribute0) =>
+            attribute0.attribute_name === attribute1.attribute_name
+        );
+
+        if (!attribute0) {
           throw new Error(
             `Missing attribute ${
               TankAttributeChange_AttributeName[attribute1.attribute_name]
-            } to modify`
+            } (${attribute1.attribute_name}) to modify`
           );
         }
 
-        const oldValue = stage0.attributes[attribute1.attribute_name]!.value;
-
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
-        value1 = oldValue! * attribute1.value;
+        value1 = attribute0!.value! * attribute1.value;
         break;
       }
 
       case TankAttributeChange_Modifier.MODIFIER_ADD: {
-        value1 = oldValue! + attribute1.value;
+        value1 = attribute0!.value! + attribute1.value;
         break;
       }
 
