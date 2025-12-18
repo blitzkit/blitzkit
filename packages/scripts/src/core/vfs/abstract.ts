@@ -21,7 +21,7 @@ export abstract class AbstractVFS {
     const normalized = normalize(path);
     if (this.has(normalized)) return normalized;
 
-    const dvplPath = `${path}.dvpl`;
+    const dvplPath = `${normalized}.dvpl`;
     if (this.has(dvplPath)) return dvplPath;
 
     return null;
