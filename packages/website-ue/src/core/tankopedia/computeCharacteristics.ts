@@ -36,7 +36,7 @@ export function computeCharacteristics(
     return attribute.value;
   }
 
-  function shell(name: ShellUpgrageSingleChange_AttributeName) {
+  function shellSafe(name: ShellUpgrageSingleChange_AttributeName) {
     const shell = parameters.shells_upgrades.find(
       (shell) => shell.shell_id === state.shell
     );
@@ -51,18 +51,29 @@ export function computeCharacteristics(
       (change) => change.attribute_name === name
     );
 
-    if (!attribute) {
+    return attribute ? attribute.value : null;
+  }
+
+  function shell(name: ShellUpgrageSingleChange_AttributeName) {
+    const attribute = shellSafe(name);
+
+    if (attribute === null) {
       throw new Error(
         `Shell attribute ${ShellUpgrageSingleChange_AttributeName[name]} (${name}) not found`
       );
     }
 
-    return attribute.value;
+    return attribute;
   }
 
   for (const _name in characteristics) {
     const name = _name as CharacteristicName;
-    const value = characteristics[name]({ characteristic, attribute, shell });
+    const value = characteristics[name]({
+      characteristic,
+      attribute,
+      shell,
+      shellSafe,
+    });
     computed[name] = value;
   }
 

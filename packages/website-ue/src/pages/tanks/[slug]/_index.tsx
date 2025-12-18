@@ -35,6 +35,8 @@ function Content({ id }: { id: string }) {
 
   return (
     <>
+      <h1>{id}</h1>
+
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {times(tank.upgrade_stages.length, (index) => (
           <button
@@ -50,9 +52,27 @@ function Content({ id }: { id: string }) {
         ))}
       </div>
 
+      <br />
+
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {parameters.shells_upgrades.map((shell) => (
+          <button
+            key={shell.shell_id}
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.protagonist.shell = shell.shell_id;
+              });
+            }}
+          >
+            Shell {shell.shell_id}{" "}
+            {shell.shell_id === protagonist.shell && "(selected)"}
+          </button>
+        ))}
+      </div>
+
       {characteristicsGroups.map(({ group, order }) => (
         <>
-          <h2>{group}</h2>
+          <h2 key={group}>{group}</h2>
 
           {order.map((entry) => {
             if ("toy" in entry) {
@@ -64,12 +84,17 @@ function Content({ id }: { id: string }) {
               let rendered: string | number = characteristic;
 
               if (typeof rendered === "number") {
-                if (entry.decimals !== undefined)
-                  rendered = rendered.toFixed(entry.decimals);
+                if (rendered === Infinity) {
+                  rendered = "∞";
+                } else {
+                  if (entry.decimals !== undefined) {
+                    rendered = rendered.toFixed(entry.decimals);
+                  }
+                }
               }
 
               return (
-                <p>
+                <p key={entry.name}>
                   {entry.name}: {rendered}
                 </p>
               );

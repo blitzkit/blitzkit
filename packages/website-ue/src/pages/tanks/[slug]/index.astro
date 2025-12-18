@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import { api } from "../../../core/api/dynamic";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
@@ -15,4 +16,6 @@ export const getStaticPaths = (async () => {
 const { id } = Astro.props;
 ---
 
-<Page {id} client:load />
+<BaseLayout>
+  <Page {id} client:load />
+</BaseLayout>

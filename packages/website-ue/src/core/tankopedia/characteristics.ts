@@ -6,18 +6,10 @@ import {
 export type CharacteristicOutput = number | null;
 
 type Characteristic = (helpers: {
-  characteristic: (
-    name: CharacteristicName,
-    error?: boolean
-  ) => CharacteristicOutput;
-  attribute: (
-    name: TankAttributeChange_AttributeName,
-    error?: boolean
-  ) => number;
-  shell: (
-    name: ShellUpgrageSingleChange_AttributeName,
-    error?: boolean
-  ) => number;
+  characteristic: (name: CharacteristicName) => CharacteristicOutput;
+  attribute: (name: TankAttributeChange_AttributeName) => number;
+  shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
+  shellSafe: (name: ShellUpgrageSingleChange_AttributeName) => number | null;
 }) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
@@ -96,8 +88,8 @@ export const characteristics = {
     return shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_CALIBER);
   },
 
-  normalization({ shell }) {
-    return shell(
+  normalization({ shellSafe }) {
+    return shellSafe(
       ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_NORMALIZATION
     );
   },
@@ -112,15 +104,17 @@ export const characteristics = {
     return shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED);
   },
 
-  shell_range({ shell }) {
-    return shell(
+  shell_range({ shellSafe }) {
+    const maxDistance = shellSafe(
       ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE
     );
+    return maxDistance === null ? Infinity : maxDistance;
   },
 
-  shell_capacity({ shell }) {
-    return shell(
+  shell_capacity({ shellSafe }) {
+    const count = shellSafe(
       ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_COUNT
     );
+    return count === -1 || count === null ? Infinity : count;
   },
 } satisfies Record<string, Characteristic>;
