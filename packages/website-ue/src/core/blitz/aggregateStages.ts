@@ -6,123 +6,128 @@ import {
   ShellUpgrade,
   ShellUpgrageSingleChange,
   StageParameters,
+  TankAttributeChange,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
   VisualChanges,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { times } from "lodash-es";
 
-function patch(change: StageParameters, base: StageParameters) {
-  if (change.stage_number !== ++base.stage_number) {
+function patch(stage0: StageParameters, stage1: StageParameters) {
+  if (stage1.stage_number !== ++stage0.stage_number) {
     throw new Error("Change stage number must be 1 greater than base");
   }
 
-  for (const changedAttribute of change.attributes) {
-    let newValue: number;
+  for (const attribute1 of stage1.attributes) {
+    let value1: number;
 
-    switch (changedAttribute.modifier) {
+    switch (attribute1.modifier) {
       case TankAttributeChange_Modifier.MODIFIER_OVERRIDE:
-        newValue = changedAttribute.value;
+        value1 = attribute1.value;
         break;
 
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY:
       case TankAttributeChange_Modifier.MODIFIER_ADD:
-        if (!(changedAttribute.attribute_name in base)) {
+        if (!(attribute1.attribute_name in stage0)) {
           throw new Error(
             `Missing attribute ${
-              TankAttributeChange_AttributeName[changedAttribute.attribute_name]
+              TankAttributeChange_AttributeName[attribute1.attribute_name]
             } to modify`
           );
         }
 
-        const oldValue =
-          base.attributes[changedAttribute.attribute_name]!.value;
+        const oldValue = stage0.attributes[attribute1.attribute_name]!.value;
 
       case TankAttributeChange_Modifier.MODIFIER_MULTIPLY: {
-        newValue = oldValue! * changedAttribute.value;
+        value1 = oldValue! * attribute1.value;
         break;
       }
 
       case TankAttributeChange_Modifier.MODIFIER_ADD: {
-        newValue = oldValue! + changedAttribute.value;
+        value1 = oldValue! + attribute1.value;
         break;
       }
 
       default:
         throw new Error(
           `Unhandled modified ${
-            TankAttributeChange_Modifier[changedAttribute.modifier]
+            TankAttributeChange_Modifier[attribute1.modifier]
           }`
         );
     }
 
-    base.attributes[changedAttribute.attribute_name] = {
+    const attribute0 = TankAttributeChange.create({
       modifier: TankAttributeChange_Modifier.MODIFIER_OVERRIDE,
-      attribute_name: changedAttribute.attribute_name,
-      value: newValue,
-    };
+      attribute_name: attribute1.attribute_name,
+      value: value1,
+    });
+    const index0 = stage0.attributes.findIndex(
+      (attribute) => attribute.attribute_name === attribute1.attribute_name
+    );
+
+    if (index0 === -1) {
+      stage0.attributes.push(attribute0);
+    } else {
+      stage0.attributes[index0] = attribute0;
+    }
   }
 
-  for (const changedPenetrationGroupUpgrades of change.penetration_groups_upgrades) {
-    if (changedPenetrationGroupUpgrades.primary_armor.length > 0) {
+  for (const penetrationGroupUpgrade1 of stage1.penetration_groups_upgrades) {
+    if (penetrationGroupUpgrade1.primary_armor.length > 0) {
       throw new Error("Primary armor is not empty; implement this");
     }
 
-    let basePenetrationGroupUpgrades = base.penetration_groups_upgrades.find(
-      (group) => group.tank_part === changedPenetrationGroupUpgrades.tank_part
+    let penetrationGroupUpgrade0 = stage0.penetration_groups_upgrades.find(
+      (group) => group.tank_part === penetrationGroupUpgrade1.tank_part
     );
 
-    if (!basePenetrationGroupUpgrades) {
-      basePenetrationGroupUpgrades = PenetrationGroupUpgrade.create({
-        tank_part: changedPenetrationGroupUpgrades.tank_part,
+    if (!penetrationGroupUpgrade0) {
+      penetrationGroupUpgrade0 = PenetrationGroupUpgrade.create({
+        tank_part: penetrationGroupUpgrade1.tank_part,
       });
 
-      base.penetration_groups_upgrades.push(basePenetrationGroupUpgrades);
+      stage0.penetration_groups_upgrades.push(penetrationGroupUpgrade0);
     }
 
-    for (const changedPenetrationGroup of changedPenetrationGroupUpgrades.penetration_groups) {
-      const basePenetrationGroup =
-        basePenetrationGroupUpgrades.penetration_groups.find(
-          (baseGroup) =>
-            baseGroup.group_name === changedPenetrationGroup.group_name
+    for (const penetrationGroup1 of penetrationGroupUpgrade1.penetration_groups) {
+      const penetrationGroup0 =
+        penetrationGroupUpgrade0.penetration_groups.find(
+          (baseGroup) => baseGroup.group_name === penetrationGroup1.group_name
         );
 
-      if (basePenetrationGroup) {
-        if (
-          basePenetrationGroup.common_data !==
-          changedPenetrationGroup.common_data
-        ) {
+      if (penetrationGroup0) {
+        if (penetrationGroup0.common_data !== penetrationGroup1.common_data) {
           throw new Error("Common data is not the same");
         }
 
-        basePenetrationGroup.armor = changedPenetrationGroup.armor;
+        penetrationGroup0.armor = penetrationGroup1.armor;
       } else {
-        basePenetrationGroupUpgrades.penetration_groups.push(
-          PenetrationGroup.create(changedPenetrationGroup)
+        penetrationGroupUpgrade0.penetration_groups.push(
+          PenetrationGroup.create(penetrationGroup1)
         );
       }
     }
   }
 
-  if (change.modules_upgrades.length > 0) {
+  if (stage1.modules_upgrades.length > 0) {
     throw new Error("Modules upgrades not implemented");
   }
 
-  for (const changedShellUpgrades of change.shells_upgrades) {
-    let baseShellUpgrades = base.shells_upgrades.find(
-      (baseShell) => baseShell.shell_id === changedShellUpgrades.shell_id
+  for (const shellUpgrades1 of stage1.shells_upgrades) {
+    let shellUpgrades0 = stage0.shells_upgrades.find(
+      (baseShell) => baseShell.shell_id === shellUpgrades1.shell_id
     );
 
-    if (!baseShellUpgrades) {
-      baseShellUpgrades = ShellUpgrade.create({
-        shell_id: changedShellUpgrades.shell_id,
+    if (!shellUpgrades0) {
+      shellUpgrades0 = ShellUpgrade.create({
+        shell_id: shellUpgrades1.shell_id,
       });
     }
 
-    baseShellUpgrades.shell_type = changedShellUpgrades.shell_type;
+    shellUpgrades0.shell_type = shellUpgrades1.shell_type;
 
-    for (const changedShellUpgrade of changedShellUpgrades.changes) {
-      const baseShellUpgrade = baseShellUpgrades.changes.find(
+    for (const changedShellUpgrade of shellUpgrades1.changes) {
+      const baseShellUpgrade = shellUpgrades0.changes.find(
         (baseShellUpgrade) =>
           baseShellUpgrade.attribute_name === changedShellUpgrade.attribute_name
       );
@@ -130,51 +135,51 @@ function patch(change: StageParameters, base: StageParameters) {
       if (baseShellUpgrade) {
         baseShellUpgrade.value = changedShellUpgrade.value;
       } else {
-        baseShellUpgrades.changes.push(
+        shellUpgrades0.changes.push(
           ShellUpgrageSingleChange.create(changedShellUpgrade)
         );
       }
     }
 
-    baseShellUpgrades.silver_price =
-      changedShellUpgrades.silver_price === undefined
+    shellUpgrades0.silver_price =
+      shellUpgrades1.silver_price === undefined
         ? undefined
-        : StandardSinglePrice.create(changedShellUpgrades.silver_price);
+        : StandardSinglePrice.create(shellUpgrades1.silver_price);
   }
 
-  if (change.pump_reload_times.length > 0) {
+  if (stage1.pump_reload_times.length > 0) {
     throw new Error("Pump reload times not implemented");
   }
 
-  if (change.pitch_limits_up.length > 0 && base.pitch_limits_up.length > 0) {
+  if (stage1.pitch_limits_up.length > 0 && stage0.pitch_limits_up.length > 0) {
     throw new Error("Pitch limits not implemented");
   }
 
-  for (const changePitchLimitUp of change.pitch_limits_up) {
-    base.pitch_limits_up.push(PitchLimit.create(changePitchLimitUp));
+  for (const pitchLimitUp1 of stage1.pitch_limits_up) {
+    stage0.pitch_limits_up.push(PitchLimit.create(pitchLimitUp1));
   }
 
   if (
-    change.pitch_limits_down.length > 0 &&
-    base.pitch_limits_down.length > 0
+    stage1.pitch_limits_down.length > 0 &&
+    stage0.pitch_limits_down.length > 0
   ) {
     throw new Error("Pitch limits not implemented");
   }
 
-  for (const changePitchLimitDown of change.pitch_limits_down) {
-    base.pitch_limits_down.push(PitchLimit.create(changePitchLimitDown));
+  for (const pitchLimitDown1 of stage1.pitch_limits_down) {
+    stage0.pitch_limits_down.push(PitchLimit.create(pitchLimitDown1));
   }
 
-  for (const changeVisualChange of change.visual_changes) {
-    const baseVisualChange = base.visual_changes.find(
+  for (const visualChange1 of stage1.visual_changes) {
+    const visualChange0 = stage0.visual_changes.find(
       (baseVisualChange) =>
-        baseVisualChange.tank_part === changeVisualChange.tank_part
+        baseVisualChange.tank_part === visualChange1.tank_part
     );
 
-    if (baseVisualChange) {
-      baseVisualChange.name = changeVisualChange.name;
+    if (visualChange0) {
+      visualChange0.name = visualChange1.name;
     } else {
-      base.visual_changes.push(VisualChanges.create(changeVisualChange));
+      stage0.visual_changes.push(VisualChanges.create(visualChange1));
     }
   }
 }
@@ -184,9 +189,9 @@ export function aggregateStages(
   stages: StageParameters[],
   stage: number
 ) {
-  const attributes = StageParameters.create();
+  const stage0 = StageParameters.create();
 
-  patch(base, attributes);
+  patch(stage0, base);
 
   /**
    * Bug in Reforged: base stats are stage 1, so is the first upgrade. Manually
@@ -195,15 +200,15 @@ export function aggregateStages(
    * stage number to -1.
    */
 
-  if (attributes.stage_number === 0 && import.meta.env.DEV) {
+  if (stage0.stage_number === 0 && import.meta.env.DEV) {
     throw new Error(
       "Base stats are now stage 0. In-game bug fixed, please remove hack."
     );
   }
 
-  attributes.stage_number = 0;
+  stage0.stage_number = 0;
 
-  times(stage, (index) => patch(stages[index], attributes));
+  times(stage, (index) => patch(stage0, stages[index]));
 
-  return attributes;
+  return stage0;
 }
