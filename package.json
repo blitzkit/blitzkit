@@ -1,6 +1,6 @@
 {
   "name": "blitzkit",
-  "version": "1.29.7",
+  "version": "2.0.0-beta.2",
   "license": "BlitzKit License",
   "private": true,
   "scripts": {

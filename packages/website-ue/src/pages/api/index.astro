@@ -5,6 +5,7 @@ import {
   forEachChild,
   isFunctionDeclaration,
 } from "typescript";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const root = `/src/pages/api`;
 const globbed = import.meta.glob("/src/pages/api/**/*.ts", {
@@ -42,13 +43,15 @@ for (const fullPath in globbed) {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<h1>api</h1>
+<BaseLayout>
+  <h1>api</h1>
 
-{
-  paths.map(({ path, documentation }) => (
-    <>
-      <h2>{path}</h2>
-      <p>{documentation}</p>
-    </>
-  ))
-}
+  {
+    paths.map(({ path, documentation }) => (
+      <>
+        <h2>{path}</h2>
+        <p>{documentation}</p>
+      </>
+    ))
+  }
+</BaseLayout>

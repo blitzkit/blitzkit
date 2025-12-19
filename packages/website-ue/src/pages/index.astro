@@ -1,9 +1,12 @@
 ---
 import packageJson from "../../../../package.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<h1>blitzkit {packageJson.version}</h1>
+<BaseLayout>
+  <h1>blitzkit {packageJson.version}</h1>
 
-<p><a href="/tanks">/tanks</a></p>
+  <p><a href="/tanks">/tanks</a></p>
 
-<p><a href="/api">/api</a></p>
+  <p><a href="/api">/api</a></p>
+</BaseLayout>

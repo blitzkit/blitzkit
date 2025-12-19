@@ -1,17 +1,20 @@
 ---
 import { api } from "../../core/api/dynamic";
+import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const tanksList = await api.tanks();
 ---
 
-<h1>tanks</h1>
+<BaseLayout>
+  <h1>tanks</h1>
 
-{
-  tanksList.tanks.map(({ id, slug }) => (
-    <p>
-      <a href={`/tanks/${slug}`}>
-        {slug} ({id})
-      </a>
-    </p>
-  ))
-}
+  {
+    tanksList.tanks.map(({ id, slug }) => (
+      <p>
+        <a href={`/tanks/${slug}`}>
+          {slug} ({id})
+        </a>
+      </p>
+    ))
+  }
+</BaseLayout>
