@@ -188,12 +188,9 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 
 export function aggregateStageParameters(
   base: StageParameters,
-  stages: StageParameters[],
-  stage: number
+  stages: StageParameters[]
 ) {
-  const stage0 = StageParameters.create();
-
-  patch(stage0, base);
+  const stage0 = StageParameters.create({ ...base, stage_number: 0 });
 
   /**
    * Bug in Reforged: base stats are stage 1, so is the first upgrade. Manually
@@ -202,13 +199,11 @@ export function aggregateStageParameters(
    * stage number to -1.
    */
 
-  if (stage0.stage_number === 0 && import.meta.env.DEV) {
+  if (base.stage_number === 0 && import.meta.env.DEV) {
     throw new Error(
       "Base stats are now stage 0. In-game bug fixed, please remove hack."
     );
   }
-
-  stage0.stage_number = 0;
 
   stages.forEach((stage) => patch(stage0, stage));
 

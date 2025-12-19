@@ -23,8 +23,7 @@ function Content({ id }: { id: string }) {
     () =>
       aggregateStageParameters(
         tank.base_stats!,
-        tank.upgrade_stages.slice(0, protagonist.stage),
-        protagonist.shell
+        tank.upgrade_stages.slice(0, protagonist.stage)
       ),
     [protagonist]
   );
