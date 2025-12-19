@@ -104,6 +104,11 @@ export const characteristics = {
         break;
       }
 
+      case GunType.AutoReloader: {
+        return -Infinity;
+        break;
+      }
+
       default:
         throw new Error("Unknown gun type");
     }
