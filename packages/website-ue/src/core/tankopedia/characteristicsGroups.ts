@@ -40,11 +40,13 @@ export const characteristicsGroups: CharacteristicsOrder = [
 
       { toy: "ricochet" },
 
-      { name: "shell_velocity", decimals: 2, units: "m_s" },
+      { name: "shell_velocity", units: "m_s" },
       { name: "shell_range", units: "m" },
       { name: "shell_capacity" },
 
       { name: "aim_time", units: "s" },
+
+      { toy: "aim_time" },
 
       { name: "dispersion_still", units: "m" },
       { name: "dispersion_moving", units: "m" },
@@ -103,9 +105,5 @@ export const characteristicsGroups: CharacteristicsOrder = [
       { name: "length", units: "m" },
       { name: "volume", units: "m" },
     ],
-  },
-  {
-    group: "miscellaneous",
-    order: [],
   },
 ];

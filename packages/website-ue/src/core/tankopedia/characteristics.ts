@@ -128,19 +128,16 @@ export const characteristics = {
   },
 
   shell_velocity({ shell }) {
-    const cmS = shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED
+    return (
+      shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED) / 100
     );
-    const kmS = cmS / 100 / 1000;
-
-    return kmS;
   },
 
   shell_range({ shellSafe }) {
     const maxDistance = shellSafe(
       ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE
     );
-    return maxDistance === null ? Infinity : maxDistance;
+    return maxDistance === null ? Infinity : maxDistance / 100;
   },
 
   shell_capacity({ shellSafe }) {
@@ -249,15 +246,15 @@ export const characteristics = {
   },
 
   power_to_weight_hard() {
-    return -1;
+    return -Infinity;
   },
 
   power_to_weight_medium() {
-    return -1;
+    return -Infinity;
   },
 
   power_to_weight_soft() {
-    return -1;
+    return -Infinity;
   },
 
   turret_traverse_speed({ attribute }) {
@@ -267,15 +264,15 @@ export const characteristics = {
   },
 
   hull_traverse_speed_hard() {
-    return -1;
+    return -Infinity;
   },
 
   hull_traverse_speed_medium() {
-    return -1;
+    return -Infinity;
   },
 
   hull_traverse_speed_soft() {
-    return -1;
+    return -Infinity;
   },
 
   health({ attribute }) {
@@ -285,14 +282,18 @@ export const characteristics = {
   },
 
   fire_chance({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FIRE_START_CHANCE
+    return (
+      attribute(
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FIRE_START_CHANCE
+      ) * 100
     );
   },
 
   view_range({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CIRCULAR_VISION_RADIUS
+    return (
+      attribute(
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CIRCULAR_VISION_RADIUS
+      ) / 100
     );
   },
 
@@ -315,7 +316,7 @@ export const characteristics = {
   },
 
   camouflage_shooting_moving() {
-    return -1;
+    return -Infinity;
   },
 
   camouflage_on_fire({ attributeSafe }) {
@@ -327,14 +328,14 @@ export const characteristics = {
   },
 
   height() {
-    return -1;
+    return -Infinity;
   },
 
   length() {
-    return -1;
+    return -Infinity;
   },
 
   volume() {
-    return -1;
+    return -Infinity;
   },
 } satisfies Record<string, Characteristic>;
