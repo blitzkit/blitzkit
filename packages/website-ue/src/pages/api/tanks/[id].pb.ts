@@ -8,6 +8,9 @@ export const getStaticPaths = (async () => {
   return tanks.map(({ id }) => ({ params: { id } }));
 }) satisfies GetStaticPaths;
 
+/**
+ * Even Noah can't save these animals.
+ */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const tank = await api.tank(params.id);
   return new Response(TankCatalogComponent.encode(tank).finish());

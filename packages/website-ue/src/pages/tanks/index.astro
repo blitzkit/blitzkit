@@ -4,16 +4,14 @@ import { api } from "../../core/api/dynamic";
 const tanksList = await api.tanks();
 ---
 
-<h1>Tanks</h1>
+<h1>tanks</h1>
 
-<ul>
-  {
-    tanksList.tanks.map(({ id, slug }) => (
-      <li>
-        <a href={`/tanks/${slug}`}>
-          {slug} ({id})
-        </a>
-      </li>
-    ))
-  }
-</ul>
+{
+  tanksList.tanks.map(({ id, slug }) => (
+    <p>
+      <a href={`/tanks/${slug}`}>
+        {slug} ({id})
+      </a>
+    </p>
+  ))
+}
