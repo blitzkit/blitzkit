@@ -96,7 +96,7 @@ function Content({ id }: { id: string }) {
 
               return (
                 <p key={entry.name}>
-                  {entry.name}: {rendered}
+                  {entry.name}: {rendered} {entry.units && `${entry.units}`}
                 </p>
               );
             }

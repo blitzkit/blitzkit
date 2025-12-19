@@ -128,7 +128,12 @@ export const characteristics = {
   },
 
   shell_velocity({ shell }) {
-    return shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED);
+    const cmS = shell(
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED
+    );
+    const kmS = cmS / 100 / 1000;
+
+    return kmS;
   },
 
   shell_range({ shellSafe }) {

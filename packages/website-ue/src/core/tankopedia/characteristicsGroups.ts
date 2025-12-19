@@ -11,6 +11,7 @@ type CharacteristicsOrder = {
     | {
         name: CharacteristicName;
         decimals?: number;
+        units?: string;
       }
     | {
         toy: string;
@@ -23,37 +24,37 @@ export const characteristicsGroups: CharacteristicsOrder = [
     group: "firepower",
     order: [
       { name: "gun_type" },
-      { name: "dpm", decimals: 0 },
-      { name: "damage" },
-      { name: "module_damage" },
-      { name: "penetration" },
+      { name: "dpm", decimals: 0, units: "hp_min" },
+      { name: "damage", units: "hp" },
+      { name: "module_damage", units: "hp" },
+      { name: "penetration", units: "mm" },
       { name: "clip_size" },
-      { name: "reload" },
-      { name: "intra_clip" },
+      { name: "reload", decimals: 2, units: "s" },
+      { name: "intra_clip", decimals: 2, units: "s" },
 
       { toy: "reload" },
 
-      { name: "caliber" },
-      { name: "normalization" },
-      { name: "ricochet" },
+      { name: "caliber", units: "mm" },
+      { name: "normalization", units: "deg" },
+      { name: "ricochet", units: "deg" },
 
       { toy: "ricochet" },
 
-      { name: "shell_velocity" },
-      { name: "shell_range" },
+      { name: "shell_velocity", decimals: 2, units: "m_s" },
+      { name: "shell_range", units: "m" },
       { name: "shell_capacity" },
 
-      { name: "aim_time" },
+      { name: "aim_time", units: "s" },
 
-      { name: "dispersion_still" },
-      { name: "dispersion_moving" },
-      { name: "dispersion_hull_traversing" },
-      { name: "dispersion_turret_traversing" },
-      { name: "dispersion_shooting" },
-      { name: "dispersion_gun_damaged" },
+      { name: "dispersion_still", units: "m" },
+      { name: "dispersion_moving", units: "m" },
+      { name: "dispersion_hull_traversing", units: "m" },
+      { name: "dispersion_turret_traversing", units: "m" },
+      { name: "dispersion_shooting", units: "m" },
+      { name: "dispersion_gun_damaged", units: "m" },
 
-      { name: "gun_depression" },
-      { name: "gun_elevation" },
+      { name: "gun_depression", units: "deg" },
+      { name: "gun_elevation", units: "deg" },
 
       { toy: "flexibility" },
     ],
@@ -61,24 +62,24 @@ export const characteristicsGroups: CharacteristicsOrder = [
   {
     group: "maneuverability",
     order: [
-      { name: "speed_forward" },
-      { name: "speed_backward" },
+      { name: "speed_forward", units: "km_h" },
+      { name: "speed_backward", units: "km_h" },
 
-      { name: "engine_power" },
-      { name: "weight" },
+      { name: "engine_power", units: "bhp" },
+      { name: "weight", units: "t" },
 
       { name: "terrain_coefficient_hard" },
       { name: "terrain_coefficient_medium" },
       { name: "terrain_coefficient_soft" },
 
-      { name: "power_to_weight_hard" },
-      { name: "power_to_weight_medium" },
-      { name: "power_to_weight_soft" },
+      { name: "power_to_weight_hard", units: "bhp_t" },
+      { name: "power_to_weight_medium", units: "bhp_t" },
+      { name: "power_to_weight_soft", units: "bhp_t" },
 
-      { name: "turret_traverse_speed" },
-      { name: "hull_traverse_speed_hard" },
-      { name: "hull_traverse_speed_medium" },
-      { name: "hull_traverse_speed_soft" },
+      { name: "turret_traverse_speed", units: "deg_s" },
+      { name: "hull_traverse_speed_hard", units: "deg_s" },
+      { name: "hull_traverse_speed_medium", units: "deg_s" },
+      { name: "hull_traverse_speed_soft", units: "deg_s" },
 
       { toy: "traverse" },
     ],
@@ -86,21 +87,21 @@ export const characteristicsGroups: CharacteristicsOrder = [
   {
     group: "survivability",
     order: [
-      { name: "health" },
-      { name: "fire_chance" },
-      { name: "view_range" },
+      { name: "health", units: "hp" },
+      { name: "fire_chance", units: "%" },
+      { name: "view_range", units: "m" },
 
       { toy: "view_range" },
 
-      { name: "camouflage_still" },
-      { name: "camouflage_moving" },
-      { name: "camouflage_shooting_still" },
-      { name: "camouflage_shooting_moving" },
-      { name: "camouflage_on_fire" },
+      { name: "camouflage_still", units: "%" },
+      { name: "camouflage_moving", units: "%" },
+      { name: "camouflage_shooting_still", units: "%" },
+      { name: "camouflage_shooting_moving", units: "%" },
+      { name: "camouflage_on_fire", units: "%" },
 
-      { name: "height" },
-      { name: "length" },
-      { name: "volume" },
+      { name: "height", units: "m" },
+      { name: "length", units: "m" },
+      { name: "volume", units: "m" },
     ],
   },
   {
