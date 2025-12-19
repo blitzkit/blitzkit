@@ -24,7 +24,7 @@ export default defineConfig({
     server: { allowedHosts: [] },
     esbuild: {
       minifyIdentifiers: true,
-      minifySyntax: true,
+      minifySyntax: false,
       minifyWhitespace: true,
     },
   },
