@@ -22,16 +22,20 @@ export enum GunType {
 }
 
 export const characteristics = {
-  gun_type({ attribute }) {
+  clip_size({ attribute }) {
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+    );
+  },
+
+  gun_type({ attribute, characteristic }) {
     const isPump = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
     );
 
     if (isPump === 1) return GunType.AutoReloader;
 
-    const clipSize = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
-    );
+    const clipSize = characteristic("clip_size")!;
 
     if (clipSize === 1) return GunType.Regular;
 
@@ -59,11 +63,23 @@ export const characteristics = {
   reload({ characteristic, attribute }) {
     const gunType = characteristic("gun_type")!;
 
-    if (gunType !== GunType.Regular) return null;
+    if (gunType === GunType.AutoReloader) return null;
 
     return attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_RELOAD_TIME
     );
+  },
+
+  intra_clip({ characteristic, attribute }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType === GunType.Regular) return null;
+
+    const clipRate = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_RATE
+    );
+
+    return 60 / clipRate;
   },
 
   dpm({ characteristic }) {
@@ -74,7 +90,17 @@ export const characteristics = {
     switch (gunType) {
       case GunType.Regular: {
         const reload = characteristic("reload")!;
+
         dps = damage / reload;
+        break;
+      }
+
+      case GunType.AutoLoader: {
+        const reload = characteristic("reload")!;
+        const intraClip = characteristic("intra_clip")!;
+        const clipSize = characteristic("clip_size")!;
+
+        dps = (damage * clipSize) / (reload + (clipSize - 1) * intraClip);
         break;
       }
 

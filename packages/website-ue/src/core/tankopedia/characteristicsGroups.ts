@@ -27,7 +27,9 @@ export const characteristicsGroups: CharacteristicsOrder = [
       { name: "damage" },
       { name: "module_damage" },
       { name: "penetration" },
+      { name: "clip_size" },
       { name: "reload" },
+      { name: "intra_clip" },
 
       { toy: "reload" },
 
