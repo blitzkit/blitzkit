@@ -19,7 +19,7 @@ type CharacteristicsOrder = {
   )[];
 }[];
 
-export const characteristicsGroups: CharacteristicsOrder = [
+export const characteristicsOrder: CharacteristicsOrder = [
   {
     group: "firepower",
     order: [

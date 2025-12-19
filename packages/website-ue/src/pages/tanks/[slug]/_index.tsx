@@ -2,7 +2,7 @@ import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
 import { aggregateStageParameters } from "../../../core/tankopedia/aggregateStageParameters";
-import { characteristicsGroups } from "../../../core/tankopedia/characteristicsGroups";
+import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -70,7 +70,7 @@ function Content({ id }: { id: string }) {
         ))}
       </div>
 
-      {characteristicsGroups.map(({ group, order }) => (
+      {characteristicsOrder.map(({ group, order }) => (
         <>
           <h2 key={group}>{group}</h2>
 
