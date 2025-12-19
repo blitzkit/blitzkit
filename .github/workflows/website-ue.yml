@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+  schedule:
+    - cron: "0 4 * * *"
+
 permissions:
   contents: read
   pages: write
@@ -25,6 +28,7 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
+
       - uses: oven-sh/setup-bun@v2
       - uses: arduino/setup-protoc@v3
         with:
