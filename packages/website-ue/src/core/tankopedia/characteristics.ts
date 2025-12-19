@@ -28,10 +28,10 @@ export const characteristics = {
     );
   },
 
-  gun_type({ attribute, characteristic }) {
-    const isPump = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP
-    );
+  gun_type({ attributeSafe, characteristic }) {
+    const isPump =
+      attributeSafe(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP) ??
+      0;
 
     if (isPump === 1) return GunType.AutoReloader;
 
