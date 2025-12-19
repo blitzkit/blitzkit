@@ -23,7 +23,7 @@ export default defineConfig({
   vite: {
     server: { allowedHosts: [] },
     esbuild: {
-      minifyIdentifiers: false,
+      minifyIdentifiers: true,
       minifySyntax: false,
       minifyWhitespace: false,
     },
