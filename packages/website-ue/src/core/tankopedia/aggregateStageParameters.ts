@@ -75,36 +75,34 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
   }
 
   for (const penetrationGroupUpgrade1 of stage1.penetration_groups_upgrades) {
-    if (penetrationGroupUpgrade1.primary_armor.length > 0) {
-      throw new Error("Primary armor is not empty; implement this");
-    }
-
-    let penetrationGroupUpgrade0 = stage0.penetration_groups_upgrades.find(
+    const penetrationGroupUpgrade0 = stage0.penetration_groups_upgrades.find(
       (group) => group.tank_part === penetrationGroupUpgrade1.tank_part
     );
 
-    if (!penetrationGroupUpgrade0) {
-      penetrationGroupUpgrade0 = PenetrationGroupUpgrade.create({
-        tank_part: penetrationGroupUpgrade1.tank_part,
-      });
+    if (penetrationGroupUpgrade0) {
+      penetrationGroupUpgrade0.primary_armor = [
+        ...penetrationGroupUpgrade1.primary_armor,
+      ];
 
-      stage0.penetration_groups_upgrades.push(penetrationGroupUpgrade0);
-    }
+      for (const penetrationGroup1 of penetrationGroupUpgrade1.penetration_groups) {
+        const penetrationGroup0 =
+          penetrationGroupUpgrade0.penetration_groups.find(
+            (baseGroup) => baseGroup.group_name === penetrationGroup1.group_name
+          );
 
-    for (const penetrationGroup1 of penetrationGroupUpgrade1.penetration_groups) {
-      const penetrationGroup0 =
-        penetrationGroupUpgrade0.penetration_groups.find(
-          (baseGroup) => baseGroup.group_name === penetrationGroup1.group_name
-        );
-
-      if (penetrationGroup0) {
-        penetrationGroup0.common_data = penetrationGroup1.common_data;
-        penetrationGroup0.armor = penetrationGroup1.armor;
-      } else {
-        penetrationGroupUpgrade0.penetration_groups.push(
-          PenetrationGroup.create(penetrationGroup1)
-        );
+        if (penetrationGroup0) {
+          penetrationGroup0.common_data = penetrationGroup1.common_data;
+          penetrationGroup0.armor = penetrationGroup1.armor;
+        } else {
+          penetrationGroupUpgrade0.penetration_groups.push(
+            PenetrationGroup.create(penetrationGroup1)
+          );
+        }
       }
+    } else {
+      stage0.penetration_groups_upgrades.push(
+        PenetrationGroupUpgrade.create(penetrationGroupUpgrade1)
+      );
     }
   }
 

@@ -76,6 +76,7 @@ function Content({ id }: { id: string }) {
 
           {order.map((entry) => {
             if ("toy" in entry) {
+              return <p>toy: {entry.toy}</p>;
             } else {
               const characteristic = characteristics[entry.name];
 
