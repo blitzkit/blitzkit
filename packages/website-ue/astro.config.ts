@@ -25,7 +25,7 @@ export default defineConfig({
     esbuild: {
       minifyIdentifiers: true,
       minifySyntax: false,
-      minifyWhitespace: false,
+      minifyWhitespace: true,
     },
   },
   output: target === "web" ? "static" : "server",
