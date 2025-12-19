@@ -4,7 +4,6 @@ import { wrapper } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import strings from "@blitzkit/i18n/strings/en.json";
 import { mauve, mauveDark } from "@radix-ui/colors";
-import AstroPWA from "@vite-pwa/astro";
 import favicons from "astro-favicons";
 import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
@@ -91,21 +90,6 @@ export default defineConfig({
         appleStartup: true,
         favicons: true,
         yandex: true,
-      },
-    }),
-
-    AstroPWA({
-      manifest: false,
-      devOptions: { enabled: true },
-      workbox: {
-        globPatterns: ["**/*.{html,css,js,png,webp,svg,xml,json}"],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) =>
-              url.href.startsWith(import.meta.env.PUBLIC_ASSET_BASE),
-            handler: "NetworkFirst",
-          },
-        ],
       },
     }),
 
