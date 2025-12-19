@@ -20,7 +20,14 @@ if (!target || !POSSIBLE_TARGETS.includes(target)) {
 export default defineConfig({
   devToolbar: { enabled: false },
 
-  vite: { server: { allowedHosts: [] } },
+  vite: {
+    server: { allowedHosts: [] },
+    esbuild: {
+      minifyIdentifiers: false,
+      minifySyntax: false,
+      minifyWhitespace: false,
+    },
+  },
   output: target === "web" ? "static" : "server",
   site: "https://blitzkit.app",
   outDir: "../../dist/website",
