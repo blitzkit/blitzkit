@@ -206,8 +206,6 @@ export function aggregateStageParameters(
 
   stage0.stage_number = 0;
 
-  console.log(stages.length);
-
   stages.forEach((stage) => patch(stage0, stage));
 
   return stage0;

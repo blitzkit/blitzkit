@@ -22,18 +22,24 @@ export function computeCharacteristics(
     throw new Error(`${name} not computed yet`);
   }
 
-  function attribute(name: TankAttributeChange_AttributeName) {
+  function attributeSafe(name: TankAttributeChange_AttributeName) {
     const attribute = parameters.attributes.find(
       (attribute) => attribute.attribute_name === name
     );
 
-    if (!attribute) {
+    return attribute ? attribute.value : null;
+  }
+
+  function attribute(name: TankAttributeChange_AttributeName) {
+    const attribute = attributeSafe(name);
+
+    if (attribute === null) {
       throw new Error(
         `Attribute ${TankAttributeChange_AttributeName[name]} (${name}) not found`
       );
     }
 
-    return attribute.value;
+    return attribute;
   }
 
   function shellSafe(name: ShellUpgrageSingleChange_AttributeName) {
@@ -71,6 +77,7 @@ export function computeCharacteristics(
     const value = characteristics[name]({
       characteristic,
       attribute,
+      attributeSafe,
       shell,
       shellSafe,
     });

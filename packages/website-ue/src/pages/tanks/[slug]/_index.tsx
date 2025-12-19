@@ -81,16 +81,16 @@ function Content({ id }: { id: string }) {
 
               if (characteristic === null) return null;
 
-              let rendered: string | number = characteristic;
+              let rendered: string | number;
 
-              if (typeof rendered === "number") {
-                if (rendered === Infinity) {
-                  rendered = "∞";
+              if (Number.isFinite(characteristic)) {
+                if (entry.decimals === undefined) {
+                  rendered = characteristic;
                 } else {
-                  if (entry.decimals !== undefined) {
-                    rendered = rendered.toFixed(entry.decimals);
-                  }
+                  rendered = characteristic.toFixed(entry.decimals);
                 }
+              } else {
+                rendered = `${Math.sign(characteristic) === 1 ? "" : "-"}∞`;
               }
 
               return (
