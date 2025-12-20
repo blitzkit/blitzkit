@@ -1,0 +1,39 @@
+---
+import "@fontsource-variable/roboto-flex/wdth.css";
+---
+
+<style is:global>
+  @import "@radix-ui/colors/violet-dark.css";
+  @import "@radix-ui/colors/plum-dark.css";
+
+  .home-hero {
+    background-image: url(/assets/home-hero.webp);
+    background-size: cover;
+    background-position: top;
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(var(--gray-a11), var(--gray-1));
+      padding: var(--space-9);
+
+      h1 {
+        font-weight: 900;
+        font-size: 3rem;
+      }
+
+      @media (max-width: 40rem) {
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+</style>
+
+<div class="home-hero">
+  <div class="wrapper">
+    <h1>BlitzKit 2.0</h1>
+  </div>
+</div>
