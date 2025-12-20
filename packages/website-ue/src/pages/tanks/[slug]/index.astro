@@ -1,4 +1,5 @@
 ---
+import "@radix-ui/colors/violet-dark.css";
 import type { GetStaticPaths } from "astro";
 import { api } from "../../../core/api/dynamic";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
@@ -16,6 +17,6 @@ export const getStaticPaths = (async () => {
 const { id } = Astro.props;
 ---
 
-<BaseLayout>
+<BaseLayout accent="violet">
   <Page {id} client:load />
 </BaseLayout>

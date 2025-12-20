@@ -1,11 +1,12 @@
 ---
+import "@radix-ui/colors/violet-dark.css";
 import { api } from "../../core/api/dynamic";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const tanksList = await api.tanks();
 ---
 
-<BaseLayout>
+<BaseLayout accent="violet">
   <h1>tanks</h1>
 
   {

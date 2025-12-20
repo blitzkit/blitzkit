@@ -1,5 +1,6 @@
 ---
 import "@fontsource-variable/roboto-flex/wdth.css";
+import { TextField } from "./TextField";
 ---
 
 <style is:global>
@@ -15,6 +16,9 @@ import "@fontsource-variable/roboto-flex/wdth.css";
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      gap: var(--space-7);
+
       background: linear-gradient(var(--gray-a11), var(--gray-1));
       padding: var(--space-9);
 
@@ -35,5 +39,7 @@ import "@fontsource-variable/roboto-flex/wdth.css";
 <div class="home-hero">
   <div class="wrapper">
     <h1>BlitzKit 2.0</h1>
+
+    <TextField placeholder="Search..." className="search" type="search" />
   </div>
 </div>

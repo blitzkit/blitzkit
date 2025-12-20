@@ -1,4 +1,5 @@
 ---
+import "@radix-ui/colors/amber-dark.css";
 import {
   createProgram,
   displayPartsToString,
@@ -43,7 +44,7 @@ for (const fullPath in globbed) {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<BaseLayout>
+<BaseLayout accent="amber">
   <h1>api</h1>
 
   {

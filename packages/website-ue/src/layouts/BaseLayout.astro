@@ -1,14 +1,51 @@
 ---
 import "@fontsource-variable/inter";
+import type { Color } from "../pages/styles/colors/[accent].css";
+
+interface Props {
+  accent: Color;
+}
+
+const { accent } = Astro.props;
+
+const accentVariables = {
+  "accent-1": `var(--${accent}-1)`,
+  "accent-2": `var(--${accent}-2)`,
+  "accent-3": `var(--${accent}-3)`,
+  "accent-4": `var(--${accent}-4)`,
+  "accent-5": `var(--${accent}-5)`,
+  "accent-6": `var(--${accent}-6)`,
+  "accent-7": `var(--${accent}-7)`,
+  "accent-8": `var(--${accent}-8)`,
+  "accent-9": `var(--${accent}-9)`,
+  "accent-10": `var(--${accent}-10)`,
+  "accent-11": `var(--${accent}-11)`,
+  "accent-12": `var(--${accent}-12)`,
+};
 ---
 
 <html>
   <head>
     <meta charset="utf-8" />
 
-    <style is:global>
+    <style is:global define:vars={accentVariables}>
       @import "@radix-ui/colors/mauve-dark.css";
       @import "@radix-ui/colors/mauve-alpha.css";
+
+      :root {
+        --accent-1: var(--amber-1);
+        --accent-2: var(--amber-2);
+        --accent-3: var(--amber-3);
+        --accent-4: var(--amber-4);
+        --accent-5: var(--amber-5);
+        --accent-6: var(--amber-6);
+        --accent-7: var(--amber-7);
+        --accent-8: var(--amber-8);
+        --accent-9: var(--amber-9);
+        --accent-10: var(--amber-10);
+        --accent-11: var(--amber-11);
+        --accent-12: var(--amber-12);
+      }
 
       body {
         --gray-1: var(--mauve-1);
@@ -61,8 +98,13 @@ import "@fontsource-variable/inter";
       h3,
       h4,
       h5,
-      h6 {
+      h6,
+      p {
         margin: 0;
+      }
+
+      a {
+        color: var(--accent-11);
       }
     </style>
   </head>

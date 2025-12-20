@@ -22,6 +22,7 @@ export default defineConfig({
 
   vite: {
     server: { allowedHosts: [] },
+
     esbuild: {
       minifyIdentifiers: true,
       minifySyntax: false,
@@ -67,7 +68,7 @@ export default defineConfig({
               (strings) => strings.website.tools[stringId].name
             ),
             url: `/${tool.id}`,
-            icon: `public/assets/images/tools/${tool.id}.webp`,
+            icon: `public/assets/tools/${tool.id}.webp`,
           };
         }),
 

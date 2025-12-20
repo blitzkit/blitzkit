@@ -1,14 +1,15 @@
 ---
-import HomeHero from "../components/HomeHero.astro";
+import "@radix-ui/colors/amber-dark.css";
+import packageJson from "../../../../package.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout>
-  <HomeHero />
+<BaseLayout accent="amber">
+  <!-- <HomeHero /> -->
 
-  <!-- <h1>blitzkit {packageJson.version}</h1>
+  <h1>blitzkit {packageJson.version}</h1>
 
   <p><a href="/tanks">/tanks</a></p>
 
-  <p><a href="/api">/api</a></p> -->
+  <p><a href="/api">/api</a></p>
 </BaseLayout>
