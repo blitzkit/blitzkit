@@ -44,16 +44,11 @@ export const characteristicsOrder: CharacteristicsOrder = [
       { name: "shell_range", units: "m" },
       { name: "shell_capacity" },
 
-      { name: "aim_time", units: "s" },
+      { name: "aim_time", decimals: 1, units: "s" },
 
       { toy: "aim_time" },
 
-      { name: "dispersion_still", units: "m" },
-      { name: "dispersion_moving", units: "m" },
-      { name: "dispersion_hull_traversing", units: "m" },
-      { name: "dispersion_turret_traversing", units: "m" },
-      { name: "dispersion_shooting", units: "m" },
-      { name: "dispersion_gun_damaged", units: "m" },
+      { name: "dispersion", decimals: 3, units: "m" },
 
       { name: "gun_depression", units: "deg" },
       { name: "gun_elevation", units: "deg" },

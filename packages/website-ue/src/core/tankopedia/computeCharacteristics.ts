@@ -80,6 +80,7 @@ export function computeCharacteristics(
       attributeSafe,
       shell,
       shellSafe,
+      state,
     });
     computed[name] = value;
   }

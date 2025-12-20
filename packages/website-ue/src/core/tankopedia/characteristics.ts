@@ -2,6 +2,7 @@ import {
   ShellUpgrageSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
+import type { TankState } from "./tankState";
 
 export type CharacteristicOutput = number | null;
 
@@ -11,6 +12,7 @@ type Characteristic = (helpers: {
   attributeSafe: (name: TankAttributeChange_AttributeName) => number | null;
   shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
   shellSafe: (name: ShellUpgrageSingleChange_AttributeName) => number | null;
+  state: TankState;
 }) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
@@ -22,24 +24,30 @@ export enum GunType {
 }
 
 export const characteristics = {
-  clip_size({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
-    );
-  },
-
-  gun_type({ attributeSafe, characteristic }) {
+  gun_type({ attributeSafe, attribute }) {
     const isPump =
       attributeSafe(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP) ??
       0;
 
     if (isPump === 1) return GunType.AutoReloader;
 
-    const clipSize = characteristic("clip_size")!;
+    const clipSize = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+    );
 
     if (clipSize === 1) return GunType.Regular;
 
     return GunType.AutoLoader;
+  },
+
+  clip_size({ attribute, characteristic }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType === GunType.Regular) return null;
+
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+    );
   },
 
   damage({ shell }) {
@@ -106,7 +114,6 @@ export const characteristics = {
 
       case GunType.AutoReloader: {
         return -Infinity;
-        break;
       }
 
       default:
@@ -158,39 +165,46 @@ export const characteristics = {
     );
   },
 
-  dispersion_still({ attribute }) {
+  speed_forward({ attribute }) {
     return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FORWARD_MAX_SPEED
+    );
+  },
+
+  speed_backward({ attribute }) {
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BACKWARD_MAX_SPEED
+    );
+  },
+
+  dispersion({ attribute, characteristic, state }) {
+    const base = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_ANGLE
     );
-  },
-
-  dispersion_moving({ attribute }) {
-    return attribute(
+    const movement = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_MOVEMENT
     );
-  },
-
-  dispersion_hull_traversing({ attribute }) {
-    return attribute(
+    const vehicleRotation = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_ROTATION
     );
-  },
-
-  dispersion_turret_traversing({ attribute }) {
-    return attribute(
+    const turretRotation = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_TURRET_ROTATION
     );
-  },
-
-  dispersion_shooting({ attribute }) {
-    return attribute(
+    const afterShot = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_AFTER_SHOT
     );
-  },
-
-  dispersion_gun_damaged({ attribute }) {
-    return attribute(
+    const gunDamaged = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_WHILE_GUN_DAMAGED
+    );
+    const maxSpeed = characteristic("speed_forward") as number;
+
+    return (
+      (state.isGunDamaged ? gunDamaged : 1) *
+      (base +
+        (state.speed / maxSpeed) * movement +
+        (state.isHullTraversing ? vehicleRotation : 0) +
+        (state.isTurretTraversing ? turretRotation : 0) +
+        (state.isShooting ? afterShot : 0))
     );
   },
 
@@ -207,18 +221,6 @@ export const characteristics = {
       attributeSafe(
         TankAttributeChange_AttributeName.ATTRIBUTE_NAME_PITCH_LIMIT_UP
       ) ?? -Infinity
-    );
-  },
-
-  speed_forward({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FORWARD_MAX_SPEED
-    );
-  },
-
-  speed_backward({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BACKWARD_MAX_SPEED
     );
   },
 
