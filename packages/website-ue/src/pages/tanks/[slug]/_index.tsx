@@ -18,6 +18,8 @@ export function Page({ id }: { id: string }) {
 function Content({ id }: { id: string }) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
 
+  Tankopedia.useInitialization(tank.upgrade_stages.length);
+
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const parameters = useMemo(
     () =>
