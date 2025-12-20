@@ -6,5 +6,13 @@ interface Tankopedia {
 }
 
 export const Tankopedia = new Varuna<Tankopedia, number>((maxStage) => ({
-  protagonist: { stage: maxStage, shell: 0 },
+  protagonist: {
+    stage: maxStage,
+    shell: 0,
+    isGunDamaged: false,
+    isHullTraversing: false,
+    isShooting: false,
+    isTurretTraversing: false,
+    speed: 0,
+  },
 }));

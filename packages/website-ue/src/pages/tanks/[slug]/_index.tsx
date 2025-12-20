@@ -1,7 +1,6 @@
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
-import { aggregateStageParameters } from "../../../core/tankopedia/aggregateStageParameters";
 import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
 import { useAwait } from "../../../hooks/useAwait";
@@ -21,16 +20,8 @@ function Content({ id }: { id: string }) {
   Tankopedia.useInitialization(tank.upgrade_stages.length);
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
-  const parameters = useMemo(
-    () =>
-      aggregateStageParameters(
-        tank.base_stats!,
-        tank.upgrade_stages.slice(0, protagonist.stage)
-      ),
-    [protagonist]
-  );
-  const characteristics = useMemo(
-    () => computeCharacteristics(parameters, protagonist),
+  const { characteristics, parameters } = useMemo(
+    () => computeCharacteristics(tank, protagonist),
     [protagonist]
   );
 
@@ -77,7 +68,7 @@ function Content({ id }: { id: string }) {
 
           {order.map((entry) => {
             if ("toy" in entry) {
-              return <p>toy: {entry.toy}</p>;
+              return <p key={`toy-${entry.toy}`}>toy: {entry.toy}</p>;
             } else {
               const characteristic = characteristics[entry.name];
 
@@ -96,7 +87,7 @@ function Content({ id }: { id: string }) {
               }
 
               return (
-                <p key={entry.name}>
+                <p key={`characteristic-${entry.name}`}>
                   {entry.name}: {rendered} {entry.units && `${entry.units}`}
                 </p>
               );

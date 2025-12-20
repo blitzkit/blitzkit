@@ -1,5 +1,7 @@
+import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
+  StageParameters,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import type { TankState } from "./tankState";
@@ -13,6 +15,8 @@ type Characteristic = (helpers: {
   shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
   shellSafe: (name: ShellUpgrageSingleChange_AttributeName) => number | null;
   state: TankState;
+  tank: TankCatalogComponent;
+  parameters: StageParameters;
 }) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
@@ -208,20 +212,24 @@ export const characteristics = {
     );
   },
 
-  gun_depression({ attributeSafe }) {
-    return (
-      attributeSafe(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_PITCH_LIMIT_DOWN
-      ) ?? -Infinity
+  gun_depression({ parameters }) {
+    const pitchLimit = parameters.pitch_limits_down.find(
+      (pitchLimit) => pitchLimit.angle === 0
     );
+
+    if (!pitchLimit) throw new Error("No angle 0 depression pitch limit found");
+
+    return pitchLimit.limit;
   },
 
-  gun_elevation({ attributeSafe }) {
-    return (
-      attributeSafe(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_PITCH_LIMIT_UP
-      ) ?? -Infinity
+  gun_elevation({ parameters }) {
+    const pitchLimit = parameters.pitch_limits_up.find(
+      (pitchLimit) => pitchLimit.angle === 0
     );
+
+    if (!pitchLimit) throw new Error("No angle 0 elevation pitch limit found");
+
+    return pitchLimit.limit;
   },
 
   engine_power({ attribute }) {
