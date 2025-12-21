@@ -71,10 +71,8 @@ export function applyPitchYawLimits(
     throw new Error("Pitch limits not found");
   }
 
-  const spanUp = normalizeAngleDeg(rightLimitUp.angle - leftLimitUp.angle);
-  const spanDown = normalizeAngleDeg(
-    rightLimitDown.angle - leftLimitDown.angle
-  );
+  const spanUp = rightLimitUp.angle - leftLimitUp.angle;
+  const spanDown = rightLimitDown.angle - leftLimitDown.angle;
 
   let limitUp: number;
   let limitDown: number;
@@ -82,7 +80,7 @@ export function applyPitchYawLimits(
   if (spanUp === 0) {
     limitUp = leftLimitUp.limit;
   } else {
-    const delta = normalizeAngleDeg(givenYawDeg - leftLimitUp.angle);
+    const delta = givenYawDeg - leftLimitUp.angle;
     const t = delta / spanUp;
     limitUp = lerp(leftLimitUp.limit, rightLimitUp.limit, t);
   }
@@ -90,12 +88,12 @@ export function applyPitchYawLimits(
   if (spanDown === 0) {
     limitDown = leftLimitDown.limit;
   } else {
-    const delta = normalizeAngleDeg(givenYawDeg - leftLimitDown.angle);
+    const delta = givenYawDeg - leftLimitDown.angle;
     const t = delta / spanDown;
     limitDown = lerp(leftLimitDown.limit, rightLimitDown.limit, t);
   }
 
-  const pitchDeg = clamp(givenPitchDeg, limitUp, -limitDown);
+  const pitchDeg = clamp(givenPitchDeg, -limitDown, limitUp);
   const pitch = degToRad(pitchDeg);
 
   return { pitch, yaw };
