@@ -52,7 +52,7 @@ jobs:
           path: dist/website
 
   deploy-github-pages:
-    if: ${{ github.ref == 'refs/heads/ue' && github.repository == 'blitzkit/host-ue' }}
+    if: ${{ github.ref == 'refs/heads/ue' && github.repository == 'blitzkit/host-beta' }}
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     needs: build
