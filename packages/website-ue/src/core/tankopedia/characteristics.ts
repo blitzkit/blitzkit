@@ -4,6 +4,8 @@ import {
   StageParameters,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
+import { radToDeg } from "three/src/math/MathUtils.js";
+import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import type { TankState } from "./tankState";
 
 export type CharacteristicOutput = number | null;
@@ -213,23 +215,25 @@ export const characteristics = {
   },
 
   gun_depression({ parameters }) {
-    const pitchLimit = parameters.pitch_limits_down.find(
-      (pitchLimit) => pitchLimit.angle === 0
+    return radToDeg(
+      applyPitchYawLimits(
+        -Math.PI / 2,
+        0,
+        parameters.pitch_limits_up,
+        parameters.pitch_limits_down
+      ).pitch
     );
-
-    if (!pitchLimit) throw new Error("No angle 0 depression pitch limit found");
-
-    return pitchLimit.limit;
   },
 
   gun_elevation({ parameters }) {
-    const pitchLimit = parameters.pitch_limits_up.find(
-      (pitchLimit) => pitchLimit.angle === 0
+    return radToDeg(
+      applyPitchYawLimits(
+        Math.PI / 2,
+        0,
+        parameters.pitch_limits_up,
+        parameters.pitch_limits_down
+      ).pitch
     );
-
-    if (!pitchLimit) throw new Error("No angle 0 elevation pitch limit found");
-
-    return pitchLimit.limit;
   },
 
   engine_power({ attribute }) {

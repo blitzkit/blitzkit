@@ -50,8 +50,8 @@ export const characteristicsOrder: CharacteristicsOrder = [
 
       { name: "dispersion", decimals: 3, units: "m" },
 
-      { name: "gun_depression", units: "deg" },
-      { name: "gun_elevation", units: "deg" },
+      { name: "gun_depression", decimals: 0, units: "deg" },
+      { name: "gun_elevation", decimals: 0, units: "deg" },
 
       { toy: "flexibility" },
     ],
