@@ -1,0 +1,104 @@
+---
+import type { Color } from "../pages/styles/colors/[accent].css";
+
+interface Props {
+  accent: Color;
+}
+
+const { accent } = Astro.props;
+
+const accentVariables = {
+  "accent-1": `var(--${accent}-1)`,
+  "accent-2": `var(--${accent}-2)`,
+  "accent-3": `var(--${accent}-3)`,
+  "accent-4": `var(--${accent}-4)`,
+  "accent-5": `var(--${accent}-5)`,
+  "accent-6": `var(--${accent}-6)`,
+  "accent-7": `var(--${accent}-7)`,
+  "accent-8": `var(--${accent}-8)`,
+  "accent-9": `var(--${accent}-9)`,
+  "accent-10": `var(--${accent}-10)`,
+  "accent-11": `var(--${accent}-11)`,
+  "accent-12": `var(--${accent}-12)`,
+};
+---
+
+<style is:global define:vars={accentVariables}>
+  @import "@radix-ui/colors/mauve-dark.css";
+  @import "@radix-ui/colors/mauve-alpha.css";
+
+  :root {
+    --accent-1: var(--amber-1);
+    --accent-2: var(--amber-2);
+    --accent-3: var(--amber-3);
+    --accent-4: var(--amber-4);
+    --accent-5: var(--amber-5);
+    --accent-6: var(--amber-6);
+    --accent-7: var(--amber-7);
+    --accent-8: var(--amber-8);
+    --accent-9: var(--amber-9);
+    --accent-10: var(--amber-10);
+    --accent-11: var(--amber-11);
+    --accent-12: var(--amber-12);
+  }
+
+  body {
+    --gray-1: var(--mauve-1);
+    --gray-2: var(--mauve-2);
+    --gray-3: var(--mauve-3);
+    --gray-4: var(--mauve-4);
+    --gray-5: var(--mauve-5);
+    --gray-6: var(--mauve-6);
+    --gray-7: var(--mauve-7);
+    --gray-8: var(--mauve-8);
+    --gray-9: var(--mauve-9);
+    --gray-10: var(--mauve-10);
+    --gray-11: var(--mauve-11);
+    --gray-12: var(--mauve-12);
+
+    --gray-a1: var(--mauve-a1);
+    --gray-a2: var(--mauve-a2);
+    --gray-a3: var(--mauve-a3);
+    --gray-a4: var(--mauve-a4);
+    --gray-a5: var(--mauve-a5);
+    --gray-a6: var(--mauve-a6);
+    --gray-a7: var(--mauve-a7);
+    --gray-a8: var(--mauve-a8);
+    --gray-a9: var(--mauve-a9);
+    --gray-a10: var(--mauve-a10);
+    --gray-a11: var(--mauve-a11);
+    --gray-a12: var(--mauve-a12);
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 2.5rem;
+    --space-8: 3rem;
+    --space-9: 4rem;
+
+    background-color: var(--gray-1);
+    color: var(--gray-12);
+    font-family: "Inter Variable", sans-serif;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--accent-11);
+  }
+</style>
