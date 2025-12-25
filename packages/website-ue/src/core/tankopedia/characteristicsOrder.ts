@@ -5,14 +5,16 @@ export enum BetterDirection {
   Lower,
 }
 
+export interface CharacteristicRenderConfig {
+  name: CharacteristicName;
+  decimals?: number;
+  units?: string;
+}
+
 type CharacteristicsOrder = {
   group: string;
   order: (
-    | {
-        name: CharacteristicName;
-        decimals?: number;
-        units?: string;
-      }
+    | CharacteristicRenderConfig
     | {
         toy: string;
       }
@@ -25,11 +27,12 @@ export const characteristicsOrder: CharacteristicsOrder = [
     order: [
       { name: "gun_type" },
       { name: "dpm", decimals: 0, units: "hp_min" },
+      { name: "reload", decimals: 2, units: "s" },
+      { name: "reloads", decimals: 2, units: "s" },
       { name: "damage", units: "hp" },
       { name: "module_damage", units: "hp" },
       { name: "penetration", units: "mm" },
       { name: "clip_size" },
-      { name: "reload", decimals: 2, units: "s" },
       { name: "intra_clip", decimals: 2, units: "s" },
 
       { toy: "reload" },

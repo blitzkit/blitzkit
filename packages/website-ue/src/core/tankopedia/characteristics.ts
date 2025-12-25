@@ -84,7 +84,7 @@ export const characteristics = {
     );
   },
 
-  reloads({ characteristic, attribute, parameters }) {
+  reloads({ characteristic, parameters }) {
     const gunType = characteristic("gun_type")!;
 
     if (gunType !== GunType.AutoReloader) return null;

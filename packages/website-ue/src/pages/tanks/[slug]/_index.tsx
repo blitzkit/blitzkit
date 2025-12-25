@@ -3,6 +3,7 @@ import { Suspense, useMemo } from "react";
 import { api } from "../../../core/api/dynamic";
 import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
+import { renderCharacteristic } from "../../../core/tankopedia/renderCharacteristic";
 import { useAwait } from "../../../hooks/useAwait";
 import { Tankopedia } from "../../../stores/tankopedia";
 
@@ -66,41 +67,19 @@ function Content({ id }: { id: string }) {
         <>
           <h2 key={group}>{group}</h2>
 
-          {order.map((entry) => {
-            if ("toy" in entry) {
-              return <p key={`toy-${entry.toy}`}>toy: {entry.toy}</p>;
+          {order.map((config) => {
+            if ("toy" in config) {
+              return <p key={`toy-${config.toy}`}>toy: {config.toy}</p>;
             } else {
-              const characteristic = characteristics[entry.name];
+              const characteristic = characteristics[config.name];
 
               if (characteristic === null) return null;
 
-              let rendered: string | number;
-
-              if (Number.isFinite(characteristic)) {
-                if (entry.decimals === undefined) {
-                  if (typeof characteristic === "number") {
-                    rendered = characteristic;
-                  } else {
-                    rendered = characteristic.join(", ");
-                  }
-                } else {
-                  if (typeof characteristic === "number") {
-                    rendered = characteristic.toFixed(entry.decimals);
-                  } else {
-                    rendered = characteristic
-                      .map((c) => c.toFixed(entry.decimals))
-                      .join(", ");
-                  }
-                }
-              } else {
-                rendered = `${
-                  Math.sign(characteristic as number) === -1 ? "-" : ""
-                }∞`;
-              }
+              const rendered = renderCharacteristic(characteristic, config);
 
               return (
-                <p key={`characteristic-${entry.name}`}>
-                  {entry.name}: {rendered} {entry.units && `${entry.units}`}
+                <p key={`characteristic-${config.name}`}>
+                  {config.name}: {rendered} {config.units && `${config.units}`}
                 </p>
               );
             }
