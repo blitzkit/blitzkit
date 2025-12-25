@@ -85,11 +85,7 @@ export const characteristicsOrder: CharacteristicsOrder = [
 
       { toy: "view_range" },
 
-      { name: "camouflage_still", units: "%" },
-      { name: "camouflage_moving", units: "%" },
-      { name: "camouflage_shooting_still", units: "%" },
-      { name: "camouflage_shooting_moving", units: "%" },
-      { name: "camouflage_on_fire", units: "%" },
+      { name: "camouflage", decimals: 0, units: "%" },
 
       { name: "height", units: "m" },
       { name: "length", units: "m" },

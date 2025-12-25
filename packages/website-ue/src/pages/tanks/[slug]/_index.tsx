@@ -166,6 +166,21 @@ function Content({ id }: { id: string }) {
 
       <br />
 
+      <div>
+        <span>isCaughtOnFire</span>
+        <input
+          type="checkbox"
+          value={`${protagonist.isCaughtOnFire}`}
+          onChange={(event) => {
+            Tankopedia.mutate((draft) => {
+              draft.protagonist.isCaughtOnFire = event.target.checked;
+            });
+          }}
+        />
+      </div>
+
+      <br />
+
       {characteristicsOrder.map(({ group, order }) => (
         <>
           <h2 key={group}>{group}</h2>

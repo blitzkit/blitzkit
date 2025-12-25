@@ -1,3 +1,4 @@
+import { TankClass } from "@blitzkit/core";
 import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
@@ -344,33 +345,38 @@ export const characteristics = {
     );
   },
 
-  camouflage_still({ attribute }) {
-    return attribute(
+  class({ tank }) {
+    return tank.tank_class;
+  },
+
+  camouflage({ attribute, characteristic, attributeSafe, state }) {
+    const tankClass = characteristic("class");
+    const base = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_STILL
     );
-  },
-
-  camouflage_moving({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_MOVING
-    );
-  },
-
-  camouflage_shooting_still({ attribute }) {
-    return attribute(
+    const moving =
+      tankClass === TankClass.LIGHT
+        ? 0
+        : attribute(
+            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_MOVING
+          );
+    const shooting = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FACTOR_AT_SHOT
     );
-  },
 
-  camouflage_shooting_moving() {
-    return -Infinity;
-  },
-
-  camouflage_on_fire({ attributeSafe }) {
-    return (
+    if (
       attributeSafe(
         TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FIRE_PENALTY
-      ) ?? -Infinity
+      )
+    ) {
+      throw new Error("Fire penalty implemented! Code it in!!");
+    }
+
+    return (
+      100 *
+      base *
+      (1 + moving * state.speed) *
+      (state.isShooting ? shooting : 1)
     );
   },
 

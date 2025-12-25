@@ -13,4 +13,5 @@ export interface TankState {
   isShooting: boolean;
   isGunDamaged: boolean;
   terrainHardness: TerrainHardness;
+  isCaughtOnFire: boolean;
 }
