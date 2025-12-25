@@ -6,7 +6,7 @@ import {
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
-import type { TankState } from "./tankState";
+import { TerrainHardness, type TankState } from "./tankState";
 
 export type CharacteristicOutput = number | number[] | null;
 
@@ -282,33 +282,28 @@ export const characteristics = {
     return attribute(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_MASS);
   },
 
-  terrain_coefficient_hard({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_HARD
-    );
+  terrain_coefficient({ attribute, state }) {
+    let name: TankAttributeChange_AttributeName;
+
+    switch (state.terrainHardness) {
+      case TerrainHardness.Soft:
+        name =
+          TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_SOFT;
+        break;
+      case TerrainHardness.Medium:
+        name =
+          TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_MEDIUM;
+        break;
+      case TerrainHardness.Hard:
+        name =
+          TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_HARD;
+        break;
+    }
+
+    return attribute(name);
   },
 
-  terrain_coefficient_medium({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_MEDIUM
-    );
-  },
-
-  terrain_coefficient_soft({ attribute }) {
-    return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TERRAIN_RESISTANCE_SOFT
-    );
-  },
-
-  power_to_weight_hard() {
-    return -Infinity;
-  },
-
-  power_to_weight_medium() {
-    return -Infinity;
-  },
-
-  power_to_weight_soft() {
+  power_to_weight() {
     return -Infinity;
   },
 
@@ -318,15 +313,7 @@ export const characteristics = {
     );
   },
 
-  hull_traverse_speed_hard() {
-    return -Infinity;
-  },
-
-  hull_traverse_speed_medium() {
-    return -Infinity;
-  },
-
-  hull_traverse_speed_soft() {
+  hull_traverse_speed() {
     return -Infinity;
   },
 

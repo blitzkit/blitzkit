@@ -65,18 +65,10 @@ export const characteristicsOrder: CharacteristicsOrder = [
       { name: "engine_power", units: "bhp" },
       { name: "weight", units: "t" },
 
-      { name: "terrain_coefficient_hard" },
-      { name: "terrain_coefficient_medium" },
-      { name: "terrain_coefficient_soft" },
-
-      { name: "power_to_weight_hard", units: "bhp_t" },
-      { name: "power_to_weight_medium", units: "bhp_t" },
-      { name: "power_to_weight_soft", units: "bhp_t" },
-
+      { name: "terrain_coefficient" },
+      { name: "power_to_weight", units: "bhp_t" },
+      { name: "hull_traverse_speed", units: "deg_s" },
       { name: "turret_traverse_speed", units: "deg_s" },
-      { name: "hull_traverse_speed_hard", units: "deg_s" },
-      { name: "hull_traverse_speed_medium", units: "deg_s" },
-      { name: "hull_traverse_speed_soft", units: "deg_s" },
 
       { toy: "traverse" },
     ],

@@ -1,5 +1,5 @@
 import { Varuna } from "varuna";
-import type { TankState } from "../core/tankopedia/tankState";
+import { TerrainHardness, type TankState } from "../core/tankopedia/tankState";
 
 interface Tankopedia {
   protagonist: TankState;
@@ -14,5 +14,6 @@ export const Tankopedia = new Varuna<Tankopedia, number>((maxStage) => ({
     isShooting: false,
     isTurretTraversing: false,
     speed: 0,
+    terrainHardness: TerrainHardness.Hard,
   },
 }));
