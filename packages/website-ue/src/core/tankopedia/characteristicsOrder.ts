@@ -66,10 +66,10 @@ export const characteristicsOrder: CharacteristicsOrder = [
       { name: "speed_backward", units: "km_h" },
 
       { name: "engine_power", units: "bhp" },
-      { name: "weight", units: "t" },
+      { name: "weight", decimals: 1, units: "t" },
 
       { name: "terrain_coefficient" },
-      { name: "power_to_weight", units: "bhp_t" },
+      { name: "power_to_weight", decimals: 1, units: "bhp_t" },
       { name: "hull_traverse_speed", units: "deg_s" },
       { name: "turret_traverse_speed", units: "deg_s" },
 

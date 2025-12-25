@@ -279,7 +279,9 @@ export const characteristics = {
   },
 
   weight({ attribute }) {
-    return attribute(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_MASS);
+    return (
+      attribute(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_MASS) / 1000
+    );
   },
 
   terrain_coefficient({ attribute, state }) {
@@ -303,8 +305,11 @@ export const characteristics = {
     return attribute(name);
   },
 
-  power_to_weight() {
-    return -Infinity;
+  power_to_weight({ characteristic }) {
+    const power = characteristic("engine_power") as number;
+    const weight = characteristic("weight") as number;
+    const terrainCoefficient = characteristic("terrain_coefficient") as number;
+    return power / weight / terrainCoefficient;
   },
 
   turret_traverse_speed({ attribute }) {
