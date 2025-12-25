@@ -78,12 +78,24 @@ function Content({ id }: { id: string }) {
 
               if (Number.isFinite(characteristic)) {
                 if (entry.decimals === undefined) {
-                  rendered = characteristic;
+                  if (typeof characteristic === "number") {
+                    rendered = characteristic;
+                  } else {
+                    rendered = characteristic.join(", ");
+                  }
                 } else {
-                  rendered = characteristic.toFixed(entry.decimals);
+                  if (typeof characteristic === "number") {
+                    rendered = characteristic.toFixed(entry.decimals);
+                  } else {
+                    rendered = characteristic
+                      .map((c) => c.toFixed(entry.decimals))
+                      .join(", ");
+                  }
                 }
               } else {
-                rendered = `${Math.sign(characteristic) === 1 ? "" : "-"}∞`;
+                rendered = `${
+                  Math.sign(characteristic as number) === -1 ? "-" : ""
+                }∞`;
               }
 
               return (
