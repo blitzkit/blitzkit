@@ -147,12 +147,6 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
     stage0.pump_reload_times = [...stage1.pump_reload_times];
   }
 
-  if (stage1.pump_reload_times.length < stage0.pump_reload_times.length) {
-    throw new Error(
-      `Pump reload times go down???? (${stage0.pump_reload_times.length} -> ${stage1.pump_reload_times.length})`
-    );
-  }
-
   if (stage1.pitch_limits_up.length > 0 && stage0.pitch_limits_up.length > 0) {
     throw new Error("Pitch limits not implemented");
   }

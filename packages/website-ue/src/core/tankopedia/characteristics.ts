@@ -8,7 +8,7 @@ import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import type { TankState } from "./tankState";
 
-export type CharacteristicOutput = number | null;
+export type CharacteristicOutput = number | number[] | null;
 
 type Characteristic = (helpers: {
   characteristic: (name: CharacteristicName) => CharacteristicOutput;
@@ -84,6 +84,14 @@ export const characteristics = {
     );
   },
 
+  reloads({ characteristic, attribute, parameters }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType !== GunType.AutoReloader) return null;
+
+    return parameters.pump_reload_times;
+  },
+
   intra_clip({ characteristic, attribute }) {
     const gunType = characteristic("gun_type")!;
 
@@ -96,30 +104,58 @@ export const characteristics = {
     return 60 / clipRate;
   },
 
+  optimal_shell({ characteristic }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType !== GunType.AutoReloader) return null;
+
+    const intraClip = characteristic("intra_clip") as number;
+    const reloads = characteristic("reloads") as number[];
+    let optimal: number | undefined = undefined;
+
+    for (let index = 0; index < reloads.length; index++) {
+      const reload = reloads[index] + (index > 0 ? intraClip : 0);
+      if (optimal === undefined || reload < reloads[optimal]) optimal = index;
+    }
+
+    if (optimal === undefined) {
+      throw new Error("Unable to find optimal shell");
+    }
+
+    return optimal;
+  },
+
   dpm({ characteristic }) {
     let dps: number;
     const gunType = characteristic("gun_type")!;
-    const damage = characteristic("damage")!;
+    const damage = characteristic("damage") as number;
 
     switch (gunType) {
       case GunType.Regular: {
-        const reload = characteristic("reload")!;
+        const reload = characteristic("reload") as number;
 
         dps = damage / reload;
         break;
       }
 
       case GunType.AutoLoader: {
-        const reload = characteristic("reload")!;
-        const intraClip = characteristic("intra_clip")!;
-        const clipSize = characteristic("clip_size")!;
+        const reload = characteristic("reload") as number;
+        const intraClip = characteristic("intra_clip") as number;
+        const clipSize = characteristic("clip_size") as number;
 
         dps = (damage * clipSize) / (reload + (clipSize - 1) * intraClip);
         break;
       }
 
       case GunType.AutoReloader: {
-        return -Infinity;
+        const reloads = characteristic("reloads") as number[];
+        const optimalShell = characteristic("optimal_shell") as number;
+        const intraClip = characteristic("intra_clip") as number;
+        const reload =
+          reloads[optimalShell] + (optimalShell > 0 ? intraClip : 0);
+
+        dps = damage / reload;
+        break;
       }
 
       default:
