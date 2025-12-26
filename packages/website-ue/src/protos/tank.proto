@@ -8,4 +8,6 @@ import "blitz_static_tank_component.proto";
 message Tank {
   blitz_static_tank_component.TankCatalogComponent tank = 1;
   blitz_static_compensation_component.CompensationComponent compensation = 2;
+
+  string slug = 3;
 }

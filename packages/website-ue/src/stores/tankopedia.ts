@@ -1,19 +1,22 @@
+import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import { Varuna } from "varuna";
-import { TerrainHardness, type TankState } from "../core/tankopedia/tankState";
+import { createTankState } from "../core/tankopedia/createTankState";
+import { type TankState } from "../core/tankopedia/tankState";
 
 interface Tankopedia {
+  compare: TankopediaCompare;
   protagonist: TankState;
 }
 
-export const Tankopedia = new Varuna<Tankopedia, number>((maxStage) => ({
-  protagonist: {
-    stage: maxStage,
-    shell: 0,
-    isGunDamaged: false,
-    isHullTraversing: false,
-    isShooting: false,
-    isTurretTraversing: false,
-    speed: 0,
-    terrainHardness: TerrainHardness.Hard,
-  },
-}));
+export enum TankopediaCompare {
+  TierAndClass,
+  Tier,
+  All,
+}
+
+export const Tankopedia = new Varuna<Tankopedia, TankCatalogComponent>(
+  (tank) => ({
+    compare: TankopediaCompare.TierAndClass,
+    protagonist: createTankState(tank),
+  })
+);

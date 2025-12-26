@@ -3,7 +3,8 @@ import { sluggify } from "@blitzkit/core";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
 import { parse } from "yaml";
 import type { Tank } from "../../protos/tank";
-import type { TanksEntry } from "../../protos/tanks";
+import type { TankListEntry } from "../../protos/tank_list";
+import type { Tanks } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
 if (typeof window !== "undefined") {
@@ -91,9 +92,9 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  async tanks() {
+  async tankList() {
     const group = this.metadata.group("TankEntity");
-    const tanks: TanksEntry[] = [];
+    const list: TankListEntry[] = [];
     const strings = await this.strings("en");
 
     for (const item of group) {
@@ -108,17 +109,37 @@ export class ServerAPI extends AbstractAPI {
       const id = item.name;
       const slug = sluggify(name);
 
-      tanks.push({ id, slug });
+      list.push({ id, slug });
     }
 
-    return { tanks };
+    return { list };
+  }
+
+  async tanks() {
+    const tankList = await this.tankList();
+    const data: Tanks = { tanks: {} };
+
+    for (const { id } of tankList.list) {
+      console.log(id);
+      data.tanks[id] = await this.tank(id);
+    }
+
+    return data;
   }
 
   async tank(id: string) {
+    const tankList = await this.tankList();
+    const tankListEntry = tankList.list.find((tank) => tank.id === id);
+
+    if (!tankListEntry) {
+      throw new Error(`Tank with id ${id} not found`);
+    }
+
+    const { slug } = tankListEntry;
     const item = this.metadata.item(`TankEntity.${id}`);
     const tank = item.TankCatalog();
     const compensation = item.Compensation();
 
-    return { tank, compensation } satisfies Tank;
+    return { tank, compensation, slug } satisfies Tank;
   }
 }

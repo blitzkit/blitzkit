@@ -12,6 +12,11 @@ import {
 } from "./characteristics";
 import type { TankState } from "./tankState";
 
+export type ComputedCharacteristics = Record<
+  CharacteristicName,
+  CharacteristicOutput
+>;
+
 export function computeCharacteristics(
   id: string,
   tank: TankCatalogComponent,
@@ -23,8 +28,7 @@ export function computeCharacteristics(
     tank.upgrade_stages.slice(0, state.stage)
   );
 
-  const computed: Partial<Record<CharacteristicName, CharacteristicOutput>> =
-    {};
+  const computed: Partial<ComputedCharacteristics> = {};
 
   function characteristic(name: CharacteristicName) {
     if (name in computed) return computed[name] as CharacteristicOutput;
@@ -99,10 +103,7 @@ export function computeCharacteristics(
   }
 
   return {
-    characteristics: computed as Record<
-      CharacteristicName,
-      CharacteristicOutput
-    >,
+    characteristics: computed as ComputedCharacteristics,
     parameters,
   };
 }

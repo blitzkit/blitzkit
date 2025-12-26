@@ -1,12 +1,19 @@
+import { fetchPB } from "@blitzkit/core";
 import { Tank } from "../../protos/tank";
+import { TankList } from "../../protos/tank_list";
+import { Tanks } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
 export class ClientAPI extends AbstractAPI {
-  async tank(id: string) {
-    const response = await fetch(`/api/tanks/${id}.pb`);
-    const buffer = await response.arrayBuffer();
-    const array = new Uint8Array(buffer);
+  tanks() {
+    return fetchPB("/api/tanks.pb", Tanks);
+  }
 
-    return Tank.decode(array);
+  tankList() {
+    return fetchPB("/api/tanks/list.pb", TankList);
+  }
+
+  tank(id: string) {
+    return fetchPB(`/api/tanks/${id}.pb`, Tank);
   }
 }

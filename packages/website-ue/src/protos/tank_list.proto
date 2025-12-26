@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message TankList {
+  repeated TankListEntry list = 1;
+}
+
+message TankListEntry {
+  string id = 1;
+  string slug = 2;
+}

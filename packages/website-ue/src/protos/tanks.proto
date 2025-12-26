@@ -2,11 +2,8 @@ syntax = "proto3";
 
 package blitzkit;
 
-message Tanks {
-  repeated TanksEntry tanks = 1;
-}
+import "tank.proto";
 
-message TanksEntry {
-  string id = 1;
-  string slug = 2;
+message Tanks {
+  map<string, Tank> tanks = 1;
 }

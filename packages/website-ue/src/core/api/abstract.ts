@@ -1,8 +1,11 @@
 import type { Tank } from "../../protos/tank";
+import type { TankList } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
 
 export abstract class AbstractAPI {
   abstract tanks(): Promise<Tanks>;
+
+  abstract tankList(): Promise<TankList>;
 
   abstract strings(
     locale: string,

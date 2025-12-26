@@ -1,12 +1,13 @@
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
+import { TankopediaCharacteristic } from "../../../components/TankopediaCharacteristic";
+import { TankopediaToy } from "../../../components/TankopediaToy";
 import { api } from "../../../core/api/dynamic";
 import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
-import { renderCharacteristic } from "../../../core/tankopedia/renderCharacteristic";
 import { TerrainHardness } from "../../../core/tankopedia/tankState";
 import { useAwait } from "../../../hooks/useAwait";
-import { Tankopedia } from "../../../stores/tankopedia";
+import { Tankopedia, TankopediaCompare } from "../../../stores/tankopedia";
 
 export function Page({ id }: { id: string }) {
   return (
@@ -18,10 +19,12 @@ export function Page({ id }: { id: string }) {
 
 function Content({ id }: { id: string }) {
   const { tank, compensation } = useAwait(() => api.tank(id), `tank-${id}`);
+  const otherTanks = useAwait(() => api.tanks(), "tanks");
 
-  Tankopedia.useInitialization(tank!.upgrade_stages.length);
+  Tankopedia.useInitialization(tank!);
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
+  const compare = Tankopedia.use((state) => state.compare);
   const { characteristics, parameters } = useMemo(
     () => computeCharacteristics(id, tank!, compensation!, protagonist),
     [protagonist]
@@ -181,27 +184,41 @@ function Content({ id }: { id: string }) {
 
       <br />
 
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {Object.values(TankopediaCompare).map(
+          (c) =>
+            typeof c === "number" && (
+              <button
+                key={c}
+                onClick={() => {
+                  Tankopedia.mutate((draft) => {
+                    draft.compare = c;
+                  });
+                }}
+              >
+                {TankopediaCompare[c]} {c === compare && "(selected)"}
+              </button>
+            )
+        )}
+      </div>
+
+      <br />
+
       {characteristicsOrder.map(({ group, order }) => (
         <>
           <h2 key={group}>{group}</h2>
 
-          {order.map((config) => {
-            if ("toy" in config) {
-              return <p key={`toy-${config.toy}`}>toy: {config.toy}</p>;
-            } else {
-              const characteristic = characteristics[config.name];
-
-              if (characteristic === null) return null;
-
-              const rendered = renderCharacteristic(characteristic, config);
-
-              return (
-                <p key={`characteristic-${config.name}`}>
-                  {config.name}: {rendered} {config.units && `${config.units}`}
-                </p>
-              );
-            }
-          })}
+          {order.map((config) =>
+            "toy" in config ? (
+              <TankopediaToy key={`toy-${config.toy}`} toy={config.toy} />
+            ) : (
+              <TankopediaCharacteristic
+                key={`characteristic-${config.name}`}
+                characteristic={characteristics[config.name]}
+                config={config}
+              />
+            )
+          )}
         </>
       ))}
     </>
