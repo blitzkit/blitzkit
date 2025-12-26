@@ -51,7 +51,7 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
     paths.map(({ path, documentation }) => (
       <>
         <h2>{path}</h2>
-        <p>{documentation}</p>
+        <pre>{documentation}</pre>
       </>
     ))
   }
