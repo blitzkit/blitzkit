@@ -1,5 +1,6 @@
 import { TankClass } from "@blitzkit/core";
-import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
+import type { CompensationComponent } from "@protos/blitz_static_compensation_component";
+import { type TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
   StageParameters,
@@ -9,7 +10,7 @@ import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
 
-export type CharacteristicOutput = number | number[] | null;
+export type CharacteristicOutput = number | number[] | string | null;
 
 type Characteristic = (helpers: {
   characteristic: (name: CharacteristicName) => CharacteristicOutput;
@@ -20,6 +21,8 @@ type Characteristic = (helpers: {
   state: TankState;
   tank: TankCatalogComponent;
   parameters: StageParameters;
+  compensation: CompensationComponent;
+  id: string;
 }) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
@@ -390,5 +393,29 @@ export const characteristics = {
 
   volume() {
     return -Infinity;
+  },
+
+  nation({ tank }) {
+    return tank.nation;
+  },
+
+  name({ tank }) {
+    return tank.name!.value;
+  },
+
+  tier({ tank }) {
+    return tank.tier_catalog_id;
+  },
+
+  type({ tank }) {
+    return tank.tank_type;
+  },
+
+  id({ id }) {
+    return id;
+  },
+
+  compensation({ compensation }) {
+    return compensation.compensation?.currency_reward?.amount ?? null;
   },
 } satisfies Record<string, Characteristic>;

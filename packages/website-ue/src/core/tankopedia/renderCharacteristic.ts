@@ -7,6 +7,8 @@ export function renderCharacteristic(
 ): string | null {
   if (characteristic === null) return null;
 
+  if (config.render) return config.render(characteristic);
+
   if (typeof characteristic === "number") {
     if (Number.isFinite(characteristic)) {
       if (config.decimals === undefined) {
@@ -17,6 +19,10 @@ export function renderCharacteristic(
     }
 
     return `${characteristic < 0 ? "-" : ""}∞`;
+  }
+
+  if (typeof characteristic === "string") {
+    return characteristic;
   }
 
   return characteristic.map((c) => renderCharacteristic(c, config)).join(", ");

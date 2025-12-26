@@ -56,7 +56,7 @@ for (const root of roots) {
       "--ts_proto_opt=unrecognizedEnum=false",
       "--ts_proto_opt=snakeToCamel=false",
       `--ts_proto_out=${root}`,
-      `-I=${root}`,
+      ...roots.map((root) => `-I=${root}`),
     ].join(" ");
 
     while (true) {
@@ -66,8 +66,9 @@ for (const root of roots) {
       const newLine = ` ${root}/${file}`;
 
       if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
+        const file = files.pop();
         command += newLine;
-        console.log(`  ${files.pop()}`);
+        // console.log(`  ${file}`);
       } else {
         break;
       }

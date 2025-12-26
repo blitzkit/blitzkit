@@ -1,3 +1,4 @@
+import type { CompensationComponent } from "@protos/blitz_static_compensation_component";
 import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
@@ -12,7 +13,9 @@ import {
 import type { TankState } from "./tankState";
 
 export function computeCharacteristics(
+  id: string,
   tank: TankCatalogComponent,
+  compensation: CompensationComponent,
   state: TankState
 ) {
   const parameters = aggregateStageParameters(
@@ -89,6 +92,8 @@ export function computeCharacteristics(
       state,
       tank,
       parameters,
+      id,
+      compensation,
     });
     computed[name] = value;
   }

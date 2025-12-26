@@ -2,6 +2,7 @@ import type { MetadataAccessor } from "@blitzkit/closed";
 import { sluggify } from "@blitzkit/core";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
 import { parse } from "yaml";
+import type { Tank } from "../../protos/tank";
 import type { TanksEntry } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
@@ -115,8 +116,9 @@ export class ServerAPI extends AbstractAPI {
 
   async tank(id: string) {
     const item = this.metadata.item(`TankEntity.${id}`);
-    const tankCatalog = item.TankCatalog();
+    const tank = item.TankCatalog();
+    const compensation = item.Compensation();
 
-    return tankCatalog;
+    return { tank, compensation } satisfies Tank;
   }
 }

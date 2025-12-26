@@ -1,4 +1,4 @@
-import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
+import type { Tank } from "../../protos/tank";
 import type { Tanks } from "../../protos/tanks";
 
 export abstract class AbstractAPI {
@@ -9,5 +9,5 @@ export abstract class AbstractAPI {
     prefix?: string
   ): Promise<Record<string, string>>;
 
-  abstract tank(id: string): Promise<TankCatalogComponent>;
+  abstract tank(id: string): Promise<Tank>;
 }

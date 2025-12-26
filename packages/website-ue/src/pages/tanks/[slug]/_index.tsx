@@ -17,13 +17,13 @@ export function Page({ id }: { id: string }) {
 }
 
 function Content({ id }: { id: string }) {
-  const tank = useAwait(() => api.tank(id), `tank-${id}`);
+  const { tank, compensation } = useAwait(() => api.tank(id), `tank-${id}`);
 
-  Tankopedia.useInitialization(tank.upgrade_stages.length);
+  Tankopedia.useInitialization(tank!.upgrade_stages.length);
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const { characteristics, parameters } = useMemo(
-    () => computeCharacteristics(tank, protagonist),
+    () => computeCharacteristics(id, tank!, compensation!, protagonist),
     [protagonist]
   );
 
@@ -34,7 +34,7 @@ function Content({ id }: { id: string }) {
       <br />
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {times(tank.upgrade_stages.length + 1, (index) => (
+        {times(tank!.upgrade_stages.length + 1, (index) => (
           <button
             key={index}
             onClick={() => {

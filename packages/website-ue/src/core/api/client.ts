@@ -1,4 +1,4 @@
-import { TankCatalogComponent } from "@protos/blitz_static_tank_component";
+import { Tank } from "../../protos/tank";
 import { AbstractAPI } from "./abstract";
 
 export class ClientAPI extends AbstractAPI {
@@ -7,6 +7,6 @@ export class ClientAPI extends AbstractAPI {
     const buffer = await response.arrayBuffer();
     const array = new Uint8Array(buffer);
 
-    return TankCatalogComponent.decode(array);
+    return Tank.decode(array);
   }
 }

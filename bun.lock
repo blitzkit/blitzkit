@@ -186,6 +186,7 @@
         "@blitzkit/closed": "workspace:*",
         "@blitzkit/core": "workspace:*",
         "@blitzkit/i18n": "workspace:*",
+        "@bufbuild/protobuf": "^2.10.2",
         "@fontsource-variable/inter": "^5.2.8",
         "@radix-ui/colors": "^3.0.0",
         "@radix-ui/react-icons": "^1.3.2",

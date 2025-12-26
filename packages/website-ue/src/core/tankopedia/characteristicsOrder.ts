@@ -1,4 +1,13 @@
-import type { CharacteristicName } from "./characteristics";
+import {
+  Nation,
+  TankClass,
+  TankType,
+} from "@protos/blitz_static_tank_component";
+import {
+  GunType,
+  type CharacteristicName,
+  type CharacteristicOutput,
+} from "./characteristics";
 
 export enum BetterDirection {
   Higher,
@@ -9,6 +18,7 @@ export interface CharacteristicRenderConfig {
   name: CharacteristicName;
   decimals?: number;
   units?: string;
+  render?: (output: CharacteristicOutput) => string;
 }
 
 type CharacteristicsOrder = {
@@ -23,9 +33,41 @@ type CharacteristicsOrder = {
 
 export const characteristicsOrder: CharacteristicsOrder = [
   {
+    group: "meta",
+    order: [
+      { name: "name" },
+      { name: "tier" },
+      {
+        name: "nation",
+        render(output) {
+          return Nation[output as Nation];
+        },
+      },
+      {
+        name: "class",
+        render(output) {
+          return TankClass[output as TankClass];
+        },
+      },
+      {
+        name: "type",
+        render(output) {
+          return TankType[output as TankType];
+        },
+      },
+      { name: "compensation" },
+      { name: "id" },
+    ],
+  },
+  {
     group: "firepower",
     order: [
-      { name: "gun_type" },
+      {
+        name: "gun_type",
+        render(output) {
+          return GunType[output as GunType];
+        },
+      },
       { name: "dpm", decimals: 0, units: "hp_min" },
       { name: "reload", decimals: 2, units: "s" },
       { name: "reloads", decimals: 2, units: "s" },
