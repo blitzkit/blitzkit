@@ -1,3 +1,4 @@
+import { assertSecret } from "@blitzkit/core";
 import type { AbstractAPI } from "./abstract";
 
 let dynamicAPI: AbstractAPI;
@@ -7,7 +8,7 @@ if (typeof window === "undefined") {
   const { ServerAPI } = await import("./server");
 
   const proxyClient = await new ProxyClient(
-    import.meta.env.WOTB_SERVER
+    assertSecret(import.meta.env.WOTB_SERVER)
   ).handshake();
   const metadata = await proxyClient.metadata();
 
