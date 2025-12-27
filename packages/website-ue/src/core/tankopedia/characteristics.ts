@@ -1,12 +1,11 @@
 import { TankClass } from "@blitzkit/core";
-import type { CompensationComponent } from "@protos/blitz_static_compensation_component";
-import { type TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
   StageParameters,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { radToDeg } from "three/src/math/MathUtils.js";
+import type { Tank } from "../../protos/tank";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
 
@@ -19,9 +18,8 @@ type Characteristic = (helpers: {
   shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
   shellSafe: (name: ShellUpgrageSingleChange_AttributeName) => number | null;
   state: TankState;
-  tank: TankCatalogComponent;
+  tank: Tank;
   parameters: StageParameters;
-  compensation: CompensationComponent;
   id: string;
 }) => CharacteristicOutput;
 
@@ -349,7 +347,7 @@ export const characteristics = {
   },
 
   class({ tank }) {
-    return tank.tank_class;
+    return tank.tank!.tank_class;
   },
 
   camouflage({ attribute, characteristic, attributeSafe, state }) {
@@ -396,26 +394,30 @@ export const characteristics = {
   },
 
   nation({ tank }) {
-    return tank.nation;
+    return tank.tank!.nation;
   },
 
   name({ tank }) {
-    return tank.name!.value;
+    return tank.tank!.name!.value;
   },
 
   tier({ tank }) {
-    return tank.tier_catalog_id;
+    return tank.tank!.tier_catalog_id;
   },
 
   type({ tank }) {
-    return tank.tank_type;
+    return tank.tank!.tank_type;
   },
 
   id({ id }) {
     return id;
   },
 
-  compensation({ compensation }) {
-    return compensation.compensation?.currency_reward?.amount ?? null;
+  slug({ tank }) {
+    return tank.slug;
+  },
+
+  compensation({ tank }) {
+    return tank.compensation!.compensation?.currency_reward?.amount ?? null;
   },
 } satisfies Record<string, Characteristic>;

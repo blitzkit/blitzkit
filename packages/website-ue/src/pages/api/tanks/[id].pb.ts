@@ -4,7 +4,6 @@ import { Tank } from "../../../protos/tank";
 
 export const getStaticPaths = (async () => {
   const { list } = await api.tankList();
-
   return list.map(({ id }) => ({ params: { id } }));
 }) satisfies GetStaticPaths;
 

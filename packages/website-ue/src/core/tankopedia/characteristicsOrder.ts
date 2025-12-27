@@ -57,6 +57,7 @@ export const characteristicsOrder: CharacteristicsOrder = [
       },
       { name: "compensation" },
       { name: "id" },
+      { name: "slug" },
     ],
   },
   {

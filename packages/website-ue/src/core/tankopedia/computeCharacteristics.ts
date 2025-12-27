@@ -1,9 +1,8 @@
-import type { CompensationComponent } from "@protos/blitz_static_compensation_component";
-import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
+import type { Tank } from "../../protos/tank";
 import { aggregateStageParameters } from "./aggregateStageParameters";
 import {
   characteristics,
@@ -19,13 +18,12 @@ export type ComputedCharacteristics = Record<
 
 export function computeCharacteristics(
   id: string,
-  tank: TankCatalogComponent,
-  compensation: CompensationComponent,
+  tank: Tank,
   state: TankState
 ) {
   const parameters = aggregateStageParameters(
-    tank.base_stats!,
-    tank.upgrade_stages.slice(0, state.stage)
+    tank.tank!.base_stats!,
+    tank.tank!.upgrade_stages.slice(0, state.stage)
   );
 
   const computed: Partial<ComputedCharacteristics> = {};
@@ -97,7 +95,6 @@ export function computeCharacteristics(
       tank,
       parameters,
       id,
-      compensation,
     });
     computed[name] = value;
   }

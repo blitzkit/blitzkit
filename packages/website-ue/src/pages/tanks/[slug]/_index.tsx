@@ -27,8 +27,7 @@ function Content({ id }: { id: string }) {
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const compare = Tankopedia.use((state) => state.compare);
   const characteristics = useMemo(
-    () =>
-      computeCharacteristics(id, tank.tank!, tank.compensation!, protagonist),
+    () => computeCharacteristics(id, tank, protagonist),
     [protagonist]
   );
   // const otherCharacteristics = useMemo(
@@ -52,6 +51,12 @@ function Content({ id }: { id: string }) {
   return (
     <>
       <h1>{id}</h1>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+        {tank.tank?.feature_screens?.tags.map((tag) => (
+          <span>{tag.value}</span>
+        ))}
+      </div>
 
       <br />
 
