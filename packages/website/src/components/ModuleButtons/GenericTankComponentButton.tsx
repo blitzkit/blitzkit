@@ -34,14 +34,13 @@ export function GenericTankComponentButton({
             height: 32,
             position: 'absolute',
             opacity: props.disabled ? 0.5 : 1,
-            transform: 'translate(-50%, -50%) scale(0.75)',
+            transform: 'translate(-50%, -50%) scale(1)',
             top: '50%',
             left: '50%',
             ...iconStyles,
           }}
         />
       </div>
-
       {children}
     </TankComponentButton>
   );
