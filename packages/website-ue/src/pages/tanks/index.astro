@@ -3,14 +3,14 @@ import "@radix-ui/colors/violet-dark.css";
 import { api } from "../../core/api/dynamic";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const tanksList = await api.tanks();
+const tankList = await api.tankList();
 ---
 
 <BaseLayout accent="violet">
   <h1>tanks</h1>
 
   {
-    tanksList.tanks.map(({ id, slug }) => (
+    tankList.list.map(({ id, slug }) => (
       <p>
         <a href={`/tanks/${slug}`}>
           {slug} ({id})

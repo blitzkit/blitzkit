@@ -6,9 +6,9 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
-  const { tanks } = await api.tanks();
+  const { list } = await api.tankList();
 
-  return tanks.map((tank) => ({
+  return list.map((tank) => ({
     params: { slug: tank.slug },
     props: { id: tank.id },
   }));

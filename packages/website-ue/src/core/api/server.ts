@@ -3,7 +3,7 @@ import { sluggify } from "@blitzkit/core";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
 import { parse } from "yaml";
 import type { Tank } from "../../protos/tank";
-import type { TankListEntry } from "../../protos/tank_list";
+import type { TankList, TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
@@ -120,15 +120,13 @@ export class ServerAPI extends AbstractAPI {
     const data: Tanks = { tanks: {} };
 
     for (const { id } of tankList.list) {
-      console.log(id);
-      data.tanks[id] = await this.tank(id);
+      data.tanks[id] = await this._tank(id, tankList);
     }
 
     return data;
   }
 
-  async tank(id: string) {
-    const tankList = await this.tankList();
+  async _tank(id: string, tankList: TankList) {
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
 
     if (!tankListEntry) {
@@ -141,5 +139,10 @@ export class ServerAPI extends AbstractAPI {
     const compensation = item.Compensation();
 
     return { tank, compensation, slug } satisfies Tank;
+  }
+
+  async tank(id: string) {
+    const tankList = await this.tankList();
+    return this._tank(id, tankList);
   }
 }
