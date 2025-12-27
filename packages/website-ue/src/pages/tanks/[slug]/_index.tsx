@@ -18,17 +18,36 @@ export function Page({ id }: { id: string }) {
 }
 
 function Content({ id }: { id: string }) {
-  const { tank, compensation } = useAwait(() => api.tank(id), `tank-${id}`);
+  const tank = useAwait(() => api.tank(id), `tank-${id}`);
+  const tankList = useAwait(() => api.tankList(), "tank-list");
   const otherTanks = useAwait(() => api.tanks(), "tanks");
 
-  Tankopedia.useInitialization(tank!);
+  Tankopedia.useInitialization(tank.tank!);
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const compare = Tankopedia.use((state) => state.compare);
-  const { characteristics, parameters } = useMemo(
-    () => computeCharacteristics(id, tank!, compensation!, protagonist),
+  const characteristics = useMemo(
+    () =>
+      computeCharacteristics(id, tank.tank!, tank.compensation!, protagonist),
     [protagonist]
   );
+  // const otherCharacteristics = useMemo(
+  //   () =>
+  //     tankList.list
+  //       .filter((tank) => tank.id !== id)
+  //       .map(({ id }) => {
+  //         const state = { ...protagonist };
+  //         const tank = otherTanks.tanks[id];
+
+  //         return computeCharacteristics(
+  //           id,
+  //           tank.tank!,
+  //           tank.compensation!,
+  //           state
+  //         );
+  //       }),
+  //   [protagonist]
+  // );
 
   return (
     <>
@@ -37,7 +56,7 @@ function Content({ id }: { id: string }) {
       <br />
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {times(tank!.upgrade_stages.length + 1, (index) => (
+        {times(tank.tank!.upgrade_stages.length + 1, (index) => (
           <button
             key={index}
             onClick={() => {
@@ -54,7 +73,7 @@ function Content({ id }: { id: string }) {
       <br />
 
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {parameters.shells_upgrades.map((shell) => (
+        {characteristics.parameters.shells_upgrades.map((shell) => (
           <button
             key={shell.shell_id}
             onClick={() => {
@@ -72,11 +91,11 @@ function Content({ id }: { id: string }) {
       <br />
 
       <div>
-        <span>speed (0 - {characteristics.speed_forward})</span>
+        <span>speed (0 - {characteristics.characteristics.speed_forward})</span>
         <input
           type="range"
           min={0}
-          max={characteristics.speed_forward as number}
+          max={characteristics.characteristics.speed_forward as number}
           value={protagonist.speed}
           onChange={(event) => {
             Tankopedia.mutate((draft) => {
@@ -214,7 +233,8 @@ function Content({ id }: { id: string }) {
             ) : (
               <TankopediaCharacteristic
                 key={`characteristic-${config.name}`}
-                characteristic={characteristics[config.name]}
+                characteristic={characteristics.characteristics[config.name]}
+                others={[]}
                 config={config}
               />
             )
