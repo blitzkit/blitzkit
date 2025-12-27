@@ -182,7 +182,7 @@ export function Modules() {
         );
         
         if (gunInNewTurret) {
-          // Gun exists - get it FROM this turret (this fixes the bug!)
+          // Gun exists - get it FROM this turret
           draft.protagonist.gun = gunInNewTurret;
           draft.protagonist.shell = gunInNewTurret.shells[0];
         } else {
