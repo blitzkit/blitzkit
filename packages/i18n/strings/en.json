@@ -917,7 +917,7 @@
           "next": "Next",
           "no_results": "No results"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "{correct} / {total} correct, {streak} streak"
       },
 
       "tankopedia": {

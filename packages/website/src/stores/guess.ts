@@ -12,6 +12,7 @@ export interface Guess {
   guessState: GuessState;
   totalGuesses: number;
   correctGuesses: number;
+  streak: number;
 }
 
 export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
@@ -19,4 +20,5 @@ export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
   guessState: GuessState.NotGuessed,
   totalGuesses: 0,
   correctGuesses: 0,
+  streak: 0,
 }));

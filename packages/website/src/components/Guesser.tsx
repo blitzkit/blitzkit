@@ -43,6 +43,7 @@ export function Guesser() {
   const guessState = Guess.use((state) => state.guessState);
   const correctGuesses = Guess.use((state) => state.correctGuesses);
   const totalGuesses = Guess.use((state) => state.totalGuesses);
+  const streak = Guess.use((state) => state.streak);
   const { strings, unwrap } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(false);
@@ -150,6 +151,7 @@ export function Guesser() {
           {literals(strings.website.tools.guess.stats, {
             correct: correctGuesses,
             total: totalGuesses,
+            streak: streak,
           })}
         </Text>
       </Flex>
@@ -186,6 +188,7 @@ export function Guesser() {
                   : GuessState.Incorrect;
                 draft.totalGuesses++;
                 draft.correctGuesses += correct ? 1 : 0;
+                draft.streak = correct ? draft.streak + 1 : 0;
               });
             } else {
               const id = Number(ids[Math.floor(Math.random() * ids.length)]);
