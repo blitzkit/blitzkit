@@ -814,7 +814,13 @@
           "next": "下一个",
           "no_results": "沒有結果"
         },
-        "stats": "猜对了 {correct} / {total}"
+        "stats": "猜对了 {correct} / {total}",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "取消",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "搜索属性……",
@@ -1135,10 +1141,12 @@
             "upgrade": "顶级配置"
           },
           "provisions": {
-            "clear": "清除"
+            "clear": "清除",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "清除"
+            "clear": "清除",
+            "clear_all": "Clear all tanks"
           }
         }
       },
