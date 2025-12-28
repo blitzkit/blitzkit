@@ -277,14 +277,14 @@ export function CompareTable({ stats }: CompareTableProps) {
                       </Popover.Content>
                     </Popover.Root>
 
-                    <Flex align="center" justify="center" gap="3">
+                    <Flex justify="center" gap="3">
                       <Popover.Root>
                         <Popover.Trigger>
                           <Button
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: "100%",
+                              height: "2rem",
                               width: 12,
                               position: "relative",
                             }}
@@ -490,7 +490,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: "100%",
+                              height: "2rem",
                               width: 12,
                               position: "relative",
                             }}
