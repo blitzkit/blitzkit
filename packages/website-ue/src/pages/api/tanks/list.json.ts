@@ -1,10 +1,9 @@
 import { api } from "../../../core/api/dynamic";
-import { TankList } from "../../../protos/tank_list";
 
 /**
- * List!!
+ * List!
  */
 export async function GET() {
   const list = await api.tankList();
-  return new Response(TankList.encode(list).finish());
+  return Response.json(list);
 }
