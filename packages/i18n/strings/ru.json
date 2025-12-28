@@ -814,7 +814,13 @@
           "next": "Следующий",
           "no_results": "Ничего не найденo"
         },
-        "stats": "{correct} / {total} угадано верно"
+        "stats": "{correct} / {total} correct, {streak} streak",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "Отмена",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "Поиск характеристик...",
@@ -1135,10 +1141,12 @@
             "upgrade": "Топ"
           },
           "provisions": {
-            "clear": "Очистить"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "Очистить"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           }
         }
       },
