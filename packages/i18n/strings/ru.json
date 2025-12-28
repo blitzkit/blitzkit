@@ -814,12 +814,12 @@
           "next": "Следующий",
           "no_results": "Ничего не найденo"
         },
-        "stats": "{correct} / {total} correct, {streak} streak",
+        "stats": "{correct} / {total} правильно, серия: {streak}",
         "help": {
-          "title": "Partially reveal tank?",
-          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "title": "Частично раскрыть танк?",
+          "description": "Показывает танк не показывая название. Этот раунд будет считаться проигранным и прекратит серию!",
           "cancel": "Отмена",
-          "reveal": "Reveal"
+          "reveal": "Раскрыть"
         }
       },
       "tankopedia": {
@@ -1141,12 +1141,12 @@
             "upgrade": "Топ"
           },
           "provisions": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
+            "clear": "Убрать этот танк",
+            "clear_all": "Убрать все танки"
           },
           "consumables": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
+            "clear": "Убрать этот танк",
+            "clear_all": "Убрать все танки"
           }
         }
       },
