@@ -13,6 +13,7 @@ export interface Guess {
   totalGuesses: number;
   correctGuesses: number;
   streak: number;
+  helpingReveal: boolean;
 }
 
 export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
@@ -21,4 +22,5 @@ export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
   totalGuesses: 0,
   correctGuesses: 0,
   streak: 0,
+  helpingReveal: false,
 }));

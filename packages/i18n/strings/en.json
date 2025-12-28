@@ -917,7 +917,13 @@
           "next": "Next",
           "no_results": "No results"
         },
-        "stats": "{correct} / {total} correct, {streak} streak"
+        "stats": "{correct} / {total} correct, {streak} streak",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "Cancel",
+          "reveal": "Reveal"
+        }
       },
 
       "tankopedia": {

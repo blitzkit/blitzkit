@@ -7,14 +7,17 @@ import {
 import { literals } from "@blitzkit/i18n";
 import {
   ArrowRightIcon,
+  EyeOpenIcon,
   MagnifyingGlassIcon,
   PaperPlaneIcon,
 } from "@radix-ui/react-icons";
 import {
+  AlertDialog,
   Box,
   Button,
   Card,
   Flex,
+  IconButton,
   Spinner,
   Text,
   TextField,
@@ -43,6 +46,7 @@ export function Guesser() {
   const guessState = Guess.use((state) => state.guessState);
   const correctGuesses = Guess.use((state) => state.correctGuesses);
   const totalGuesses = Guess.use((state) => state.totalGuesses);
+  const helpingReveal = Guess.use((state) => state.helpingReveal);
   const streak = Guess.use((state) => state.streak);
   const { strings, unwrap } = useLocale();
   const input = useRef<HTMLInputElement>(null);
@@ -171,6 +175,48 @@ export function Guesser() {
           </TextField.Slot>
         </TextField.Root>
 
+        <AlertDialog.Root>
+          <AlertDialog.Trigger>
+            <IconButton
+              size="3"
+              disabled={guessState !== GuessState.NotGuessed}
+            >
+              <EyeOpenIcon />
+            </IconButton>
+          </AlertDialog.Trigger>
+
+          <AlertDialog.Content>
+            <AlertDialog.Title>
+              {strings.website.tools.guess.help.title}
+            </AlertDialog.Title>
+            <AlertDialog.Description>
+              {strings.website.tools.guess.help.description}
+            </AlertDialog.Description>
+
+            <Flex justify="end" gap="2">
+              <AlertDialog.Cancel>
+                <Button variant="outline">
+                  {strings.website.tools.guess.help.cancel}
+                </Button>
+              </AlertDialog.Cancel>
+
+              <AlertDialog.Action>
+                <Button
+                  color="tomato"
+                  onClick={() => {
+                    Guess.mutate((draft) => {
+                      draft.helpingReveal = true;
+                      draft.streak = 0;
+                    });
+                  }}
+                >
+                  {strings.website.tools.guess.help.reveal}
+                </Button>
+              </AlertDialog.Action>
+            </Flex>
+          </AlertDialog.Content>
+        </AlertDialog.Root>
+
         <Button
           size="3"
           color={
@@ -180,7 +226,8 @@ export function Guesser() {
           }
           onClick={() => {
             if (guessState === GuessState.NotGuessed) {
-              const correct = selected !== null && selected.id === tank.id;
+              const correct =
+                selected !== null && selected.id === tank.id && !helpingReveal;
 
               Guess.mutate((draft) => {
                 draft.guessState = correct
@@ -199,6 +246,7 @@ export function Guesser() {
 
                 draft.tank = tank;
                 draft.guessState = GuessState.NotGuessed;
+                draft.helpingReveal = false;
 
                 input.current.value = "";
               });
