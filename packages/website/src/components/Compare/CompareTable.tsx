@@ -553,7 +553,23 @@ export function CompareTable({ stats }: CompareTableProps) {
                             }
                           />
 
-                          <Flex justify="end" mt="4">
+                          <Flex justify="end" mt="4" gap="4">
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                CompareEphemeral.mutate((draft) => {
+                                  draft.members.map((member) => {
+                                    member.consumables = [];
+                                  });
+                                });
+                              }}
+                            >
+                              {
+                                strings.website.tools.compare.table.consumables
+                                  .clear_all
+                              }
+                            </Button>
+
                             <Button
                               variant="ghost"
                               onClick={() => {

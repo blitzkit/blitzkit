@@ -1267,11 +1267,12 @@
             "upgrade": "Upgrade"
           },
           "provisions": {
-            "clear": "Clear",
-            "clear_all": "Clear all"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "Clear"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           }
         }
       },
