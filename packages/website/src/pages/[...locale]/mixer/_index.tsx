@@ -1,4 +1,10 @@
-import { asset, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import {
+  asset,
+  GunDefinition,
+  TankDefinition,
+  TIER_ROMAN_NUMERALS,
+  TurretDefinition,
+} from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { CaretRightIcon, CaretUpIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
@@ -17,10 +23,7 @@ import { MixerScene } from "../../../components/MixerScene";
 import { ModuleButton } from "../../../components/ModuleButtons/ModuleButton";
 import { PageWrapper } from "../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../components/ScreenshotButton";
-import {
-  TankSearch,
-  type TankSearchProps,
-} from "../../../components/TankSearch";
+import { TankSearch } from "../../../components/TankSearch";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import { curateMixer } from "../../../core/blitzkit/curateMixer";
@@ -59,7 +62,11 @@ export function Page({
 type ModuleButtonProps = Omit<ButtonProps, "onSelect"> &
   MaybeSkeletonComponentProps & {
     tank: number;
-    onSelect: TankSearchProps["onSelect"];
+    onSelect: (
+      tank: TankDefinition,
+      turret?: TurretDefinition,
+      gun?: GunDefinition
+    ) => void;
     turret?: number;
     gun?: number;
   };
@@ -150,9 +157,15 @@ function ModuleChooser({
                 <Flex gap="2">
                   {tankDefinition.turrets.map((turret) => (
                     <ModuleButton
+                      variant={
+                        turret.id === turretDefinition?.id ? "solid" : undefined
+                      }
                       key={turret.id}
                       module="turret"
                       discriminator={TIER_ROMAN_NUMERALS[turret.tier]}
+                      onClick={() => {
+                        onSelect?.(tankDefinition, turret);
+                      }}
                     />
                   ))}
                 </Flex>
@@ -162,6 +175,9 @@ function ModuleChooser({
                 <Flex gap="2">
                   {turretDefinition.guns.map((gun) => (
                     <ModuleButton
+                      variant={
+                        gun.id === gunDefinition?.id ? "solid" : undefined
+                      }
                       key={gun.id}
                       module="gun"
                       discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
@@ -172,6 +188,9 @@ function ModuleChooser({
                           })}
                         </Text>
                       }
+                      onClick={() => {
+                        onSelect?.(tankDefinition, turretDefinition, gun);
+                      }}
                     />
                   ))}
                 </Flex>
@@ -257,11 +276,11 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
             skeleton={skeleton}
             tank={turretTankId}
             turret={turretTurretId}
-            onSelect={(tank) => {
+            onSelect={(tank, turret) => {
               Mixer.mutate((draft) => {
                 draft.turret = {
                   tank,
-                  turret: tank.turrets.at(-1)!,
+                  turret: turret ?? tank.turrets.at(-1)!,
                 };
               });
             }}
@@ -272,12 +291,15 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
             tank={gunTankId}
             turret={gunTurretId}
             gun={gunGunId}
-            onSelect={(tank) => {
+            onSelect={(tank, turret, gun) => {
               Mixer.mutate((draft) => {
                 draft.gun = {
                   tank,
-                  turret: tank.turrets.at(-1)!,
-                  gun: tank.turrets.at(-1)!.guns.at(-1)!,
+                  turret: turret ?? tank.turrets.at(-1)!,
+                  gun:
+                    gun ??
+                    turret?.guns.at(-1) ??
+                    tank.turrets.at(-1)!.guns.at(-1)!,
                 };
               });
             }}
