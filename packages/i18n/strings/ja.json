@@ -814,7 +814,13 @@
           "next": "Next",
           "no_results": "該当なし"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "{correct} / {total} correct, {streak} streak",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "Cancel",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -1135,10 +1141,12 @@
             "upgrade": "最終装備"
           },
           "provisions": {
-            "clear": "クリア"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "クリア"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           }
         }
       },
