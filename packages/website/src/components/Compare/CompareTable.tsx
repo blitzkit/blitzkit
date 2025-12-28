@@ -277,14 +277,14 @@ export function CompareTable({ stats }: CompareTableProps) {
                       </Popover.Content>
                     </Popover.Root>
 
-                    <Flex align="center" justify="center" gap="3">
+                    <Flex justify="center" gap="3">
                       <Popover.Root>
                         <Popover.Trigger>
                           <Button
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: "100%",
+                              height: "2rem",
                               width: 12,
                               position: "relative",
                             }}
@@ -345,7 +345,24 @@ export function CompareTable({ stats }: CompareTableProps) {
                               });
                             }}
                           />
-                          <Flex justify="end" mt="4">
+
+                          <Flex justify="end" mt="4" gap="3">
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                CompareEphemeral.mutate((draft) => {
+                                  draft.members.map((member) => {
+                                    member.provisions = [];
+                                  });
+                                });
+                              }}
+                            >
+                              {
+                                strings.website.tools.compare.table.provisions
+                                  .clear_all
+                              }
+                            </Button>
+
                             <Button
                               variant="ghost"
                               onClick={() => {
@@ -473,7 +490,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                             variant="ghost"
                             radius="large"
                             style={{
-                              height: "100%",
+                              height: "2rem",
                               width: 12,
                               position: "relative",
                             }}
@@ -536,7 +553,23 @@ export function CompareTable({ stats }: CompareTableProps) {
                             }
                           />
 
-                          <Flex justify="end" mt="4">
+                          <Flex justify="end" mt="4" gap="4">
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                CompareEphemeral.mutate((draft) => {
+                                  draft.members.map((member) => {
+                                    member.consumables = [];
+                                  });
+                                });
+                              }}
+                            >
+                              {
+                                strings.website.tools.compare.table.consumables
+                                  .clear_all
+                              }
+                            </Button>
+
                             <Button
                               variant="ghost"
                               onClick={() => {
