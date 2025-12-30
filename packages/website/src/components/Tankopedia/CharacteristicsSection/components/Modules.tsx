@@ -394,7 +394,7 @@ export function Modules() {
             </Button>
             <Button
               variant="ghost"
-              color="blue"
+              color="purple"
               onClick={() => {
                 Duel.mutate((draft) => {
                   // Random turret

@@ -1,12 +1,12 @@
-import type { HTMLAttributes } from "react";
+import type { HTMLAttributes } from 'react';
 import {
   TankComponentButton,
   type TankComponentButtonProps,
-} from "./TankComponentButton";
+} from './TankComponentButton';
 
 interface GenericTankComponentButtonProps extends TankComponentButtonProps {
   icon: string;
-  iconStyles?: HTMLAttributes<HTMLImageElement>["style"];
+  iconStyles?: HTMLAttributes<HTMLImageElement>['style'];
 }
 
 export function GenericTankComponentButton({
@@ -21,7 +21,7 @@ export function GenericTankComponentButton({
         style={{
           width: 48,
           height: 40,
-          position: "relative",
+          position: 'relative',
         }}
       >
         <img
@@ -29,14 +29,14 @@ export function GenericTankComponentButton({
           draggable={false}
           src={icon}
           style={{
-            objectFit: "contain",
+            objectFit: 'contain',
             width: 32,
             height: 32,
-            position: "absolute",
+            position: 'absolute',
             opacity: props.disabled ? 0.5 : 1,
-            transform: "translate(-50%, -50%) scale(0.75)",
-            top: "50%",
-            left: "50%",
+            transform: 'translate(-50%, -50%) scale(1)',
+            top: '50%',
+            left: '50%',
             ...iconStyles,
           }}
         />
