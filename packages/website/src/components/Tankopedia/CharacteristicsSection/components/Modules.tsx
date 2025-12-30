@@ -182,7 +182,7 @@ export function Modules() {
         );
         
         if (gunInNewTurret) {
-          // Gun exists - get it FROM this turret
+          // Gun exists - get it FROM this turret (this fixes the bug!)
           draft.protagonist.gun = gunInNewTurret;
           draft.protagonist.shell = gunInNewTurret.shells[0];
         } else {
@@ -391,42 +391,6 @@ export function Modules() {
               }}
             >
               {strings.website.tools.tankopedia.configuration.modules.upgrade}
-            </Button>
-            <Button
-              variant="ghost"
-              color="purple"
-              onClick={() => {
-                Duel.mutate((draft) => {
-                  // Random turret
-                  const randomTurret =
-                    draft.protagonist.tank.turrets[
-                      Math.floor(Math.random() * draft.protagonist.tank.turrets.length)
-                    ];
-                  draft.protagonist.turret = randomTurret;
-
-                  // Random gun from the selected turret
-                  const randomGun =
-                    randomTurret.guns[
-                      Math.floor(Math.random() * randomTurret.guns.length)
-                    ];
-                  draft.protagonist.gun = randomGun;
-                  draft.protagonist.shell = randomGun.shells[0];
-
-                  // Random engine
-                  draft.protagonist.engine =
-                    draft.protagonist.tank.engines[
-                      Math.floor(Math.random() * draft.protagonist.tank.engines.length)
-                    ];
-
-                  // Random track
-                  draft.protagonist.track =
-                    draft.protagonist.tank.tracks[
-                      Math.floor(Math.random() * draft.protagonist.tank.tracks.length)
-                    ];
-                });
-              }}
-            >
-              Randomize
             </Button>
           </>
         )}
