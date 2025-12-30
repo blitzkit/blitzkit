@@ -176,17 +176,11 @@ export function Modules() {
           (turret) => turret.id === unlock.id
         )!;
 
-        // Check if current gun exists in new turret
-        const gunInNewTurret = draft.protagonist.turret.guns.find(
-          (gun) => gun.id === draft.protagonist.gun.id
-        );
-        
-        if (gunInNewTurret) {
-          // Gun exists - get it FROM this turret (this fixes the bug!)
-          draft.protagonist.gun = gunInNewTurret;
-          draft.protagonist.shell = gunInNewTurret.shells[0];
-        } else {
-          // Gun doesn't exist - select top gun from new turret
+        if (
+          !draft.protagonist.turret.guns.some(
+            (gun) => gun.id === draft.protagonist.gun.id
+          )
+        ) {
           draft.protagonist.gun = draft.protagonist.turret.guns.at(-1)!;
           draft.protagonist.shell = draft.protagonist.gun.shells[0];
         }
