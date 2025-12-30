@@ -9,12 +9,15 @@ const CONTRAST = 2 ** 2;
 
 export function GuessRenderer() {
   const guessState = Guess.use((state) => state.guessState);
-  const isRevealed = guessState !== GuessState.NotGuessed;
+  const helpingReveal = Guess.use((state) => state.helpingReveal);
+  const isRevealed = helpingReveal || guessState !== GuessState.NotGuessed;
 
   return (
     <SmartCanvas
       style={{
-        filter: `grayscale(${isRevealed ? 0 : 1}) contrast(${isRevealed ? 1 : CONTRAST}) brightness(${isRevealed ? 1 : BRIGHTNESS})`,
+        filter: `grayscale(${isRevealed ? 0 : 1}) contrast(${
+          isRevealed ? 1 : CONTRAST
+        }) brightness(${isRevealed ? 1 : BRIGHTNESS})`,
         transitionDuration: isRevealed ? "2s" : undefined,
         transitionProperty: "filter",
       }}
