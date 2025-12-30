@@ -5,6 +5,7 @@ import { awaitableConsumableDefinitions } from "../../core/awaitables/consumable
 import type { TankFilters } from "../../stores/tankFilters";
 
 const SHELLS = times(3, (index) => index);
+
 const consumableDefinitions = await awaitableConsumableDefinitions;
 
 export async function filterTank(
