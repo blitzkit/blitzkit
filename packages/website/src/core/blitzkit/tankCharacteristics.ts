@@ -236,12 +236,11 @@ export function tankCharacteristics(
       [hasImprovedEnginePowerBoost, 0.01],
       [true, crewSkills.virtuoso / 100],
     ) * coefficient([true, progressiveStat(driverMastery)]);
-  const resistanceHardCoefficient = coefficient([hasImprovedSuspension, -0.2]);
-  const resistanceMediumCoefficient = coefficient([
-    hasImprovedSuspension,
-    -0.15,
-  ]);
-  const resistanceSoftCoefficient = coefficient([hasImprovedSuspension, -0.3]);
+
+  const resistanceHardCoefficient = coefficient([hasImprovedSuspension, -0.2]) * coefficient([true, degressiveStat(driverMastery)]);
+  const resistanceMediumCoefficient = coefficient([hasImprovedSuspension, -0.15]) * coefficient([true, degressiveStat(driverMastery)]);
+  const resistanceSoftCoefficient = coefficient([hasImprovedSuspension, -0.3]) * coefficient([true, degressiveStat(driverMastery)]);
+  
   const viewRangeCoefficient =
     coefficient([
       hasImprovedOptics,
