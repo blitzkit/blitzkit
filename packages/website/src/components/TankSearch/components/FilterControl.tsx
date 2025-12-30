@@ -19,7 +19,6 @@ import {
   type FlexProps,
 } from "@radix-ui/themes";
 import { isEqual, times, chunk } from "lodash-es";
-import React from "react";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { Var } from "../../../core/radix/var";
