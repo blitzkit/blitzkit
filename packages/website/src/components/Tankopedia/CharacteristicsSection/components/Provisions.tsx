@@ -14,15 +14,6 @@ export function Provisions() {
   const provisionsList = availableProvisions(tank, gun, provisionDefinitions);
   const { strings } = useLocale();
 
-  // FOR PROVISION LOGGING PURPOSES
-  // 
-  // console.log('ALL PROVISIONS:', Object.entries(provisionDefinitions.provisions).map(([id, p]) => ({
-  //   id: Number(id),
-  //   name: p.name,
-  //   crew: p.crew,
-  //   hasCrewBonus: !!p.crew
-  // })));
-
   return (
     <ConfigurationChildWrapper>
       <Flex gap="4" align="center">
