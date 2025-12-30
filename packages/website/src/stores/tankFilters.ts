@@ -38,7 +38,7 @@ export const TankFilters = new Varuna<TankFilters>({
   searching: false,
   gunType: [],
   shells: [null, null, null],
-  consumables: [], // Added this line
+  consumables: [],
 
   showTesting: true,
   showNonTesting: true,
