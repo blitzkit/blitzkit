@@ -18,8 +18,10 @@ import {
   type ButtonProps,
   type FlexProps,
 } from "@radix-ui/themes";
-import { isEqual, times } from "lodash-es";
+import { isEqual, times, chunk } from "lodash-es";
+import React from "react";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
+import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { Var } from "../../../core/radix/var";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
@@ -35,6 +37,7 @@ import { ScienceIcon } from "../../ScienceIcon";
 import { ScienceOffIcon } from "../../ScienceOffIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
+const consumableDefinitions = await awaitableConsumableDefinitions;
 
 const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.AP]: "ap",
@@ -42,6 +45,25 @@ const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.HE]: "he",
   [ShellType.HEAT]: "hc",
 };
+
+// Get consumables
+const regularConsumables = Object.values(
+  consumableDefinitions.consumables
+).filter(
+  (consumable) =>
+    !consumable.game_mode_exclusive && consumable.name.locales.en !== ""
+);
+
+// Split consumables into chunks of 5 for columns
+const consumableColumns = chunk(regularConsumables, 5);
+
+// Get game mode exclusive abilities
+const gameModeAbilities = Object.values(
+  consumableDefinitions.consumables
+).filter((consumable) => consumable.game_mode_exclusive);
+
+// Split abilities into chunks of 5 for columns
+const abilityColumns = chunk(gameModeAbilities, 5);
 
 const size: ButtonProps["size"] = { initial: "1", xs: "2" };
 
@@ -335,6 +357,151 @@ export function FilterControl() {
                 );
               })}
           </Flex>
+        </Flex>
+
+        {/* Consumables Filter - RIGHT AFTER NATIONS */}
+        <Flex
+          flexShrink="0"
+          overflow="hidden"
+          style={{ borderRadius: "var(--radius-4)" }}
+        >
+          <Flex direction="column">
+            {consumableColumns[0]?.map((consumable) => {
+              const selected = tankFilters.consumables?.includes(consumable.id);
+
+              return (
+                <IconButton
+                  size={size}
+                  key={consumable.id}
+                  variant={selected ? "solid" : "soft"}
+                  color={selected ? undefined : "gray"}
+                  highContrast
+                  radius="none"
+                  onClick={() => {
+                    TankFilters.mutate((draft) => {
+                      if (tankFilters.consumables.includes(consumable.id)) {
+                        draft.consumables = draft.consumables.filter(
+                          (c) => c !== consumable.id
+                        );
+                      } else {
+                        draft.consumables = [
+                          ...draft.consumables,
+                          consumable.id,
+                        ];
+                      }
+                    });
+                  }}
+                >
+                  <img
+                    style={{ width: "1em", height: "1em" }}
+                    src={asset(`icons/consumables/${consumable.id}.webp`)}
+                  />
+                </IconButton>
+              );
+            })}
+          </Flex>
+
+          {consumableColumns[1] && (
+            <>
+              <Box
+                display={{ initial: "none", md: "block" }}
+                style={{
+                  height: Var("space-1"),
+                  backgroundColor: Var("gray-a3"),
+                }}
+              />
+
+              <Flex direction="column">
+                {consumableColumns[1].map((consumable) => {
+                  const selected = tankFilters.consumables?.includes(
+                    consumable.id
+                  );
+
+                  return (
+                    <IconButton
+                      size={size}
+                      key={consumable.id}
+                      style={{ flex: 1 }}
+                      variant={selected ? "solid" : "soft"}
+                      color={selected ? undefined : "gray"}
+                      highContrast
+                      radius="none"
+                      onClick={() => {
+                        TankFilters.mutate((draft) => {
+                          if (tankFilters.consumables.includes(consumable.id)) {
+                            draft.consumables = draft.consumables.filter(
+                              (c) => c !== consumable.id
+                            );
+                          } else {
+                            draft.consumables = [
+                              ...draft.consumables,
+                              consumable.id,
+                            ];
+                          }
+                        });
+                      }}
+                    >
+                      <img
+                        style={{ width: "1em", height: "1em" }}
+                        src={asset(`icons/consumables/${consumable.id}.webp`)}
+                      />
+                    </IconButton>
+                  );
+                })}
+              </Flex>
+            </>
+          )}
+
+          {consumableColumns[2] && (
+            <>
+              <Box
+                display={{ initial: "none", md: "block" }}
+                style={{
+                  height: Var("space-1"),
+                  backgroundColor: Var("gray-a3"),
+                }}
+              />
+
+              <Flex direction="column">
+                {consumableColumns[2].map((consumable) => {
+                  const selected = tankFilters.consumables?.includes(
+                    consumable.id
+                  );
+
+                  return (
+                    <IconButton
+                      size={size}
+                      key={consumable.id}
+                      style={{ flex: 1 }}
+                      variant={selected ? "solid" : "soft"}
+                      color={selected ? undefined : "gray"}
+                      highContrast
+                      radius="none"
+                      onClick={() => {
+                        TankFilters.mutate((draft) => {
+                          if (tankFilters.consumables.includes(consumable.id)) {
+                            draft.consumables = draft.consumables.filter(
+                              (c) => c !== consumable.id
+                            );
+                          } else {
+                            draft.consumables = [
+                              ...draft.consumables,
+                              consumable.id,
+                            ];
+                          }
+                        });
+                      }}
+                    >
+                      <img
+                        style={{ width: "1em", height: "1em" }}
+                        src={asset(`icons/consumables/${consumable.id}.webp`)}
+                      />
+                    </IconButton>
+                  );
+                })}
+              </Flex>
+            </>
+          )}
         </Flex>
 
         <Flex
