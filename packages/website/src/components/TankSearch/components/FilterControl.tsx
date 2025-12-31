@@ -8,7 +8,16 @@ import {
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { Box, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import {
+  Box,
+  Button,
+  DropdownMenu,
+  Flex,
+  IconButton,
+  Inset,
+  Popover,
+  Text,
+} from "@radix-ui/themes";
 import { times } from "lodash-es";
 import type { ComponentProps, ReactNode } from "react";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
@@ -18,6 +27,7 @@ import { classIcons } from "../../ClassIcon";
 import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
 import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
 import { GunRegularIcon } from "../../GunRegularIcon";
+import { MissingShellIcon } from "../../MissingShellIcon";
 import { ResearchedIcon } from "../../ResearchedIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
@@ -60,6 +70,7 @@ export function FilterControl() {
       <TypeFilter />
       <ClassFilter />
       <GunTypeFilter />
+      <ShellFilter />
     </Flex>
   );
 }
@@ -476,5 +487,96 @@ function TypeFilter() {
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
+  );
+}
+
+function ShellFilter() {
+  return (
+    <Flex
+      overflow="hidden"
+      style={{
+        borderRadius: "var(--radius-full)",
+        boxShadow: "var(--shadow-1)",
+      }}
+    >
+      <IndividualShellFilter index={0} />
+      <IndividualShellFilter index={1} premium />
+      <IndividualShellFilter index={2} />
+    </Flex>
+  );
+}
+
+function IndividualShellFilter({
+  index,
+  premium,
+}: {
+  index: number;
+  premium?: boolean;
+}) {
+  const shells = TankFilters.use((state) => state.shells);
+
+  return (
+    <Popover.Root>
+      <Popover.Trigger>
+        <IconButton variant="soft" radius="none" color="gray" highContrast>
+          {shells[index] === null && (
+            <Text color="gray" style={{ display: "contents" }}>
+              <MissingShellIcon width="1em" height="1em" />
+            </Text>
+          )}
+          {shells[index] !== null && (
+            <img
+              style={{ width: "1em", height: "1em" }}
+              src={asset(
+                `icons/shells/${shellTypeIcons[shells[index]]}${
+                  premium ? "_premium" : ""
+                }.webp`
+              )}
+            />
+          )}
+        </IconButton>
+      </Popover.Trigger>
+
+      <Popover.Content>
+        <Inset>
+          <Flex direction="column">
+            {Object.values(ShellType).map((shellType) => {
+              if (typeof shellType === "string") return null;
+
+              const selected = shells[index] === shellType;
+
+              return (
+                <IconButton
+                  key={shellType}
+                  value={`${shellType}`}
+                  radius="none"
+                  variant={selected ? "solid" : "soft"}
+                  onClick={() => {
+                    const mutated = [...shells] as TankFilters["shells"];
+
+                    mutated[index] = selected ? null : shellType;
+
+                    TankFilters.mutate((draft) => {
+                      draft.shells = mutated;
+                    });
+                  }}
+                  highContrast={selected}
+                  color={selected ? undefined : "gray"}
+                >
+                  <img
+                    src={asset(
+                      `icons/shells/${shellTypeIcons[shellType]}${
+                        premium ? "_premium" : ""
+                      }.webp`
+                    )}
+                    style={{ width: "1em", height: "1em" }}
+                  />
+                </IconButton>
+              );
+            })}
+          </Flex>
+        </Inset>
+      </Popover.Content>
+    </Popover.Root>
   );
 }
