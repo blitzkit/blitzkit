@@ -3,6 +3,8 @@ import {
   GunDefinition,
   ShellType,
   TANK_CLASSES,
+  TANK_TYPES,
+  TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -16,6 +18,7 @@ import { classIcons } from "../../ClassIcon";
 import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
 import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
 import { GunRegularIcon } from "../../GunRegularIcon";
+import { ResearchedIcon } from "../../ResearchedIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 
@@ -35,6 +38,12 @@ const GUN_TYPE_ICONS: Record<
   auto_reloader: GunAutoreloaderIcon,
 };
 
+const TANK_TYPE_COLORS: Record<TankType, string> = {
+  [TankType.RESEARCHABLE]: "gray",
+  [TankType.PREMIUM]: "amber",
+  [TankType.COLLECTOR]: "blue",
+};
+
 const GUN_TYPES = Object.keys(
   GUN_TYPE_ICONS
 ) as (keyof typeof GUN_TYPE_ICONS)[];
@@ -49,6 +58,7 @@ export function FilterControl() {
     <Flex align="center" gap="2">
       <TiersFilter />
       <NationsFilter />
+      <TypeFilter />
       <ClassFilter />
       <GunTypeFilter />
     </Flex>
@@ -382,6 +392,94 @@ function GunTypeFilter() {
 
             TankFilters.mutate((draft) => {
               draft.gunType = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          Clear
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function TypeFilter() {
+  const { strings } = useLocale();
+  const rawTypes = TankFilters.use((state) => state.types);
+  const types = rawTypes.length === 0 ? TANK_TYPES : rawTypes;
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          Types
+          <Flex>
+            {types.map((tankType, index) => {
+              return (
+                <ResearchedIcon
+                  style={{
+                    color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                      tankType === TankType.RESEARCHABLE ? "12" : "11"
+                    })`,
+                    marginLeft: index > 0 ? "-0.25em" : undefined,
+                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                    opacity: 1,
+                    width: "1.25em",
+                    height: "1.25em",
+                  }}
+                  key={tankType}
+                />
+              );
+            })}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {TANK_TYPES.map((tankType) => {
+          const selected = rawTypes.includes(tankType);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.types = draft.types.filter((c) => c !== tankType);
+                  } else {
+                    draft.types = [...draft.types, tankType];
+                  }
+                });
+              }}
+              checked={selected}
+              key={tankType}
+            >
+              <ResearchedIcon
+                style={{
+                  color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                    tankType === TankType.RESEARCHABLE ? "12" : "11"
+                  })`,
+                  opacity: 1,
+                  width: "1em",
+                  height: "1em",
+                }}
+              />
+
+              {strings.common.tree_type[tankType]}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.types = [];
             });
           }}
         >
