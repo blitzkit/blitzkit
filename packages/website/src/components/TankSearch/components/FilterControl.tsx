@@ -110,7 +110,26 @@ export function FilterControl() {
       <ShellFilter />
       <ConsumablesFilter />
       <AbilitiesFilter />
+
+      <ClearButton />
     </Flex>
+  );
+}
+
+function ClearButton() {
+  const { strings } = useLocale();
+
+  return (
+    <Button
+      color="red"
+      variant="surface"
+      onClick={() => {
+        TankFilters.set(TankFilters.initial);
+      }}
+    >
+      <TrashIcon />
+      {strings.website.common.tank_search.clear}
+    </Button>
   );
 }
 
