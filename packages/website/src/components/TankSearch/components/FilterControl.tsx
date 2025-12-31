@@ -49,9 +49,18 @@ const consumablesArray = Object.values(consumableDefinitions.consumables)
       consumable.name.locales[locales.default]
   )
   .map((consumable) => consumable.id);
-const abilitiesArray = Object.values(consumableDefinitions.consumables)
-  .filter((consumable) => consumable.game_mode_exclusive)
-  .map((consumable) => consumable.id);
+const abilitiesArray = Array.from(
+  Object.values(consumableDefinitions.consumables)
+    .filter((c) => c.game_mode_exclusive)
+    .reduce((uniqueMap, consumable) => {
+      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
+        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
+      }
+
+      return uniqueMap;
+    }, new Map<string, number>())
+    .values()
+);
 
 const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.AP]: "ap",
@@ -81,6 +90,7 @@ const GUN_TYPES = Object.keys(
 
 const MAX_TIERS = 4;
 const MAX_CONSUMABLES = 4;
+const MAX_ABILITIES = 4;
 
 const TIERS = times(10, (i) => 10 - i);
 
@@ -98,6 +108,7 @@ export function FilterControl() {
       <GunTypeFilter />
       <ShellFilter />
       <ConsumablesFilter />
+      <AbilitiesFilter />
     </Flex>
   );
 }
@@ -805,6 +816,95 @@ function ConsumablesFilter() {
 
             TankFilters.mutate((draft) => {
               draft.consumables = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          Clear
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function AbilitiesFilter() {
+  const rawAbilities = TankFilters.use((state) => state.abilities);
+  const abilities = rawAbilities.length === 0 ? abilitiesArray : rawAbilities;
+  const { unwrap } = useLocale();
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          <Flex>
+            {abilities.slice(0, MAX_ABILITIES).map((ability, index) => (
+              <img
+                style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/consumables/${ability}.webp`)}
+              />
+            ))}
+
+            {abilities.length > MAX_ABILITIES && (
+              <Text size="1" ml="1">
+                +{abilities.length - MAX_ABILITIES}
+              </Text>
+            )}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {abilitiesArray.map((ability) => {
+          const selected = rawAbilities.includes(ability);
+          const abilityDefinition = consumableDefinitions.consumables[ability];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.abilities = draft.abilities.filter(
+                      (n) => n !== ability
+                    );
+                  } else {
+                    draft.abilities = [...draft.abilities, ability];
+                  }
+                });
+              }}
+              checked={selected}
+              key={ability}
+            >
+              <img
+                style={{
+                  width: "1em",
+                  height: "1em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/consumables/${ability}.webp`)}
+              />
+
+              {unwrap(abilityDefinition.name)}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.abilities = [];
             });
           }}
         >
