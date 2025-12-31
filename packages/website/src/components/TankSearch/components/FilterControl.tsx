@@ -7,6 +7,7 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
 import {
   LockClosedIcon,
   LockOpen2Icon,
@@ -24,6 +25,7 @@ import {
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import type { ComponentProps, ReactNode } from "react";
+import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
@@ -38,6 +40,18 @@ import { ScienceIcon } from "../../ScienceIcon";
 import { ScienceOffIcon } from "../../ScienceOffIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
+const consumableDefinitions = await awaitableConsumableDefinitions;
+
+const consumablesArray = Object.values(consumableDefinitions.consumables)
+  .filter(
+    (consumable) =>
+      !consumable.game_mode_exclusive &&
+      consumable.name.locales[locales.default]
+  )
+  .map((consumable) => consumable.id);
+const abilitiesArray = Object.values(consumableDefinitions.consumables)
+  .filter((consumable) => consumable.game_mode_exclusive)
+  .map((consumable) => consumable.id);
 
 const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.AP]: "ap",
@@ -66,6 +80,7 @@ const GUN_TYPES = Object.keys(
 ) as (keyof typeof GUN_TYPE_ICONS)[];
 
 const MAX_TIERS = 4;
+const MAX_CONSUMABLES = 4;
 
 const TIERS = times(10, (i) => 10 - i);
 
@@ -76,10 +91,13 @@ export function FilterControl() {
       <NationsFilter />
       <TypeFilter />
       <ClassFilter />
-      <GunTypeFilter />
-      <ShellFilter />
+
       <OwnershipFilter />
       <TestFilter />
+
+      <GunTypeFilter />
+      <ShellFilter />
+      <ConsumablesFilter />
     </Flex>
   );
 }
@@ -704,5 +722,96 @@ function TestFilter() {
         />
       </IconButton>
     </Flex>
+  );
+}
+
+function ConsumablesFilter() {
+  const rawConsumables = TankFilters.use((state) => state.consumables);
+  const consumables =
+    rawConsumables.length === 0 ? consumablesArray : rawConsumables;
+  const { unwrap } = useLocale();
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          <Flex>
+            {consumables.slice(0, MAX_CONSUMABLES).map((consumable, index) => (
+              <img
+                style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/consumables/${consumable}.webp`)}
+              />
+            ))}
+
+            {consumables.length > MAX_CONSUMABLES && (
+              <Text size="1" ml="1">
+                +{consumables.length - MAX_CONSUMABLES}
+              </Text>
+            )}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {consumablesArray.map((consumable) => {
+          const selected = rawConsumables.includes(consumable);
+          const consumableDefinition =
+            consumableDefinitions.consumables[consumable];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.consumables = draft.consumables.filter(
+                      (n) => n !== consumable
+                    );
+                  } else {
+                    draft.consumables = [...draft.consumables, consumable];
+                  }
+                });
+              }}
+              checked={selected}
+              key={consumable}
+            >
+              <img
+                style={{
+                  width: "1em",
+                  height: "1em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/consumables/${consumable}.webp`)}
+              />
+
+              {unwrap(consumableDefinition.name)}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.consumables = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          Clear
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }
