@@ -429,7 +429,7 @@ export const TankSearch = memo<TankSearchProps>(
     }, [tankFilters, tankopediaSort]);
 
     return (
-      <Flex direction="column" gap="4" flexGrow="1" {...props}>
+      <Flex direction="column" gap="2" flexGrow="1" {...props}>
         <SearchBar
           skeleton={skeleton}
           topResult={tanks?.[0]}

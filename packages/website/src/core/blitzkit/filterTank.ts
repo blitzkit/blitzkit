@@ -1,8 +1,12 @@
 import type { TankDefinition } from "@blitzkit/core";
+import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { times } from "lodash-es";
+import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
 import type { TankFilters } from "../../stores/tankFilters";
 
 const SHELLS = times(3, (index) => index);
+
+const consumableDefinitions = await awaitableConsumableDefinitions;
 
 export async function filterTank(
   filters: TankFilters,
@@ -40,6 +44,18 @@ export async function filterTank(
             gun.shells[index].type === filters.shells[index]
         )
       )
-    )
+    ) &&
+    (filters.consumables.length === 0 ||
+      filters.consumables.every((consumableId) =>
+        tank.turrets.some((turret) =>
+          turret.guns.some((gun) =>
+            checkConsumableProvisionInclusivity(
+              consumableDefinitions.consumables[consumableId],
+              tank,
+              gun
+            )
+          )
+        )
+      ))
   );
 }
