@@ -345,7 +345,7 @@ function ClassFilter() {
               checked={selected}
               key={tankClass}
             >
-              <Icon style={{ width: "1em", height: "1em" }} />
+              <Icon style={{ width: "1.25em", height: "1.25em" }} />
 
               {strings.common.tank_class_medium[tankClass]}
             </DropdownMenu.CheckboxItem>
@@ -423,7 +423,7 @@ function GunTypeFilter() {
               checked={selected}
               key={gunType}
             >
-              <Icon style={{ width: "1em", height: "1em" }} />
+              <Icon style={{ width: "1.25em", height: "1.25em" }} />
 
               {strings.common.gun_types[gunType]}
             </DropdownMenu.CheckboxItem>
@@ -506,8 +506,8 @@ function TypeFilter() {
                     tankType === TankType.RESEARCHABLE ? "12" : "11"
                   })`,
                   opacity: 1,
-                  width: "1em",
-                  height: "1em",
+                  width: "1.25em",
+                  height: "1.25em",
                 }}
               />
 
@@ -600,7 +600,9 @@ function IndividualShellFilter({
               <DropdownMenu.RadioItem
                 key={shellType}
                 value={`${shellType}`}
-                onClick={() => {
+                onClick={(event) => {
+                  event.preventDefault();
+
                   const mutated = [...shells] as TankFilters["shells"];
 
                   mutated[index] = selected ? null : shellType;
@@ -617,7 +619,7 @@ function IndividualShellFilter({
                       premium ? "_premium" : ""
                     }.webp`
                   )}
-                  style={{ width: "1em", height: "1em" }}
+                  style={{ width: "1.25em", height: "1.25em" }}
                 />
 
                 {
@@ -630,6 +632,26 @@ function IndividualShellFilter({
               </DropdownMenu.RadioItem>
             );
           })}
+
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Item
+            color="red"
+            onClick={(event) => {
+              event.preventDefault();
+
+              const mutated = [...shells] as TankFilters["shells"];
+
+              mutated[index] = null;
+
+              TankFilters.mutate((draft) => {
+                draft.shells = mutated;
+              });
+            }}
+          >
+            <TrashIcon />
+            {strings.website.common.tank_search.clear}
+          </DropdownMenu.Item>
         </DropdownMenu.RadioGroup>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -805,8 +827,8 @@ function ConsumablesFilter() {
             >
               <img
                 style={{
-                  width: "1em",
-                  height: "1em",
+                  width: "1.25em",
+                  height: "1.25em",
                   objectFit: "contain",
                 }}
                 src={asset(`icons/consumables/${consumable}.webp`)}
@@ -896,8 +918,8 @@ function AbilitiesFilter() {
             >
               <img
                 style={{
-                  width: "1em",
-                  height: "1em",
+                  width: "1.25em",
+                  height: "1.25em",
                   objectFit: "contain",
                 }}
                 src={asset(`icons/consumables/${ability}.webp`)}
