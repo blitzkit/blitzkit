@@ -99,9 +99,9 @@ export function FilterControl() {
   return (
     <Flex align="center" gap="2" wrap="wrap" justify="center">
       <TiersFilter />
-      <NationsFilter />
-      <TypeFilter />
       <ClassFilter />
+      <TypeFilter />
+      <NationsFilter />
 
       <OwnershipFilter />
       <TestFilter />
@@ -139,7 +139,7 @@ function TiersFilter() {
   const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex gap="1">
@@ -214,7 +214,7 @@ function NationsFilter() {
   const { strings } = useLocale();
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
@@ -317,7 +317,7 @@ function ClassFilter() {
   const classes = rawClasses.length === 0 ? TANK_CLASSES : rawClasses;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
@@ -397,7 +397,7 @@ function GunTypeFilter() {
   const { strings } = useLocale();
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
@@ -475,7 +475,7 @@ function TypeFilter() {
   const types = rawTypes.length === 0 ? TANK_TYPES : rawTypes;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex gap="1">
@@ -576,7 +576,7 @@ function IndividualShellFilter({
   const shells = TankFilters.use((state) => state.shells);
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <IconButton
           ml="-0.5px"
@@ -792,7 +792,7 @@ function ConsumablesFilter() {
     rawConsumables.length === 0 ? consumablesArray : rawConsumables;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
@@ -884,7 +884,7 @@ function AbilitiesFilter() {
   const abilities = rawAbilities.length === 0 ? abilitiesArray : rawAbilities;
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
