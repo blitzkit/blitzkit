@@ -48,14 +48,13 @@ const GUN_TYPES = Object.keys(
   GUN_TYPE_ICONS
 ) as (keyof typeof GUN_TYPE_ICONS)[];
 
-const MAX_NATIONS = 3;
-const MAX_TIERS = 2;
+const MAX_TIERS = 4;
 
 const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" gap="2">
+    <Flex align="center" gap="2" wrap="wrap">
       <TiersFilter />
       <NationsFilter />
       <TypeFilter />
@@ -73,7 +72,6 @@ function TiersFilter() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Tiers
           <Flex gap="1">
             {tiers.slice(0, MAX_TIERS).map((tier) => (
               <Text size="1" key={tier}>
@@ -143,9 +141,8 @@ function NationsFilter() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Nations
           <Flex>
-            {nations.slice(0, MAX_NATIONS).map((nation, index) => (
+            {nations.map((nation, index) => (
               <img
                 style={{
                   filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
@@ -156,12 +153,6 @@ function NationsFilter() {
                 src={asset(`flags/circle/${nation}.webp`)}
               />
             ))}
-
-            {nations.length > MAX_NATIONS && (
-              <Text size="1" ml="1">
-                +{nations.length - MAX_NATIONS}
-              </Text>
-            )}
           </Flex>
         </Button>
       </DropdownMenu.Trigger>
@@ -253,7 +244,6 @@ function ClassFilter() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Classes
           <Flex>
             {classes.map((tankClass, index) => {
               const Icon = classIcons[tankClass];
@@ -334,14 +324,14 @@ function GunTypeFilter() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Gun types
-          <Flex ml="-1">
+          <Flex>
             {gunTypes.map((gunType) => {
               const Icon = GUN_TYPE_ICONS[gunType];
 
               return (
                 <Icon
                   style={{
+                    margin: gunType === "regular" ? "0 -0.125em" : undefined,
                     opacity: 1,
                     color: "var(--gray-12)",
                     width: "1.25em",
@@ -412,8 +402,7 @@ function TypeFilter() {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Types
-          <Flex>
+          <Flex gap="1">
             {types.map((tankType, index) => {
               return (
                 <ResearchedIcon
@@ -421,7 +410,6 @@ function TypeFilter() {
                     color: `var(--${TANK_TYPE_COLORS[tankType]}-${
                       tankType === TankType.RESEARCHABLE ? "12" : "11"
                     })`,
-                    marginLeft: index > 0 ? "-0.25em" : undefined,
                     filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                     opacity: 1,
                     width: "1.25em",
