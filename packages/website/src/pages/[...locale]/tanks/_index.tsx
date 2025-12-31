@@ -12,7 +12,7 @@ export function Page({
 }: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
   return (
     <LocaleProvider locale={locale}>
-      <PageWrapper color="purple" maxWidth="80rem">
+      <PageWrapper color="purple" maxWidth="90rem">
         <TankSearch skeleton={skeleton} />
       </PageWrapper>
     </LocaleProvider>
