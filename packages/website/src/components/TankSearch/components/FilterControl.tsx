@@ -220,6 +220,7 @@ function NationsFilter() {
           <Flex>
             {nations.map((nation, index) => (
               <img
+                key={nation}
                 style={{
                   filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                   marginLeft: index > 0 ? "-0.5em" : undefined,
@@ -325,6 +326,7 @@ function ClassFilter() {
               const Icon = classIcons[tankClass];
               return (
                 <Icon
+                  key={tankClass}
                   style={{
                     color: "var(--gray-12)",
                     opacity: 1,
@@ -333,7 +335,6 @@ function ClassFilter() {
                     width: "1.25em",
                     height: "1.25em",
                   }}
-                  key={tankClass}
                 />
               );
             })}
@@ -348,6 +349,7 @@ function ClassFilter() {
 
           return (
             <DropdownMenu.CheckboxItem
+              key={tankClass}
               onClick={(event) => {
                 event.preventDefault();
 
@@ -406,6 +408,7 @@ function GunTypeFilter() {
 
               return (
                 <Icon
+                  key={gunType}
                   style={{
                     margin: gunType === "regular" ? "0 -0.125em" : undefined,
                     opacity: 1,
@@ -413,7 +416,6 @@ function GunTypeFilter() {
                     width: "1.25em",
                     height: "1.25em",
                   }}
-                  key={gunType}
                 />
               );
             })}
@@ -798,6 +800,7 @@ function ConsumablesFilter() {
           <Flex>
             {consumables.slice(0, MAX_CONSUMABLES).map((consumable, index) => (
               <img
+                key={consumable}
                 style={{
                   filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                   marginLeft: index > 0 ? "-0.5em" : undefined,
@@ -890,6 +893,7 @@ function AbilitiesFilter() {
           <Flex>
             {abilities.slice(0, MAX_ABILITIES).map((ability, index) => (
               <img
+                key={ability}
                 style={{
                   filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                   marginLeft: index > 0 ? "-0.5em" : undefined,
