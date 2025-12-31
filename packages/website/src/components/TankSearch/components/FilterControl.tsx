@@ -28,6 +28,7 @@ import { times } from "lodash-es";
 import type { ComponentProps, ReactNode } from "react";
 import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
+import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { TankFilters, type CaseType } from "../../../stores/tankFilters";
@@ -42,6 +43,7 @@ import { ScienceOffIcon } from "../../ScienceOffIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 const consumableDefinitions = await awaitableConsumableDefinitions;
+const provisionDefinitions = await awaitableProvisionDefinitions;
 
 const consumablesArray = Object.values(consumableDefinitions.consumables)
   .filter(
@@ -52,7 +54,38 @@ const consumablesArray = Object.values(consumableDefinitions.consumables)
   .map((consumable) => consumable.id);
 const abilitiesArray = Array.from(
   Object.values(consumableDefinitions.consumables)
-    .filter((c) => c.game_mode_exclusive)
+    .filter((ability) => ability.game_mode_exclusive)
+    .reduce((uniqueMap, consumable) => {
+      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
+        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
+      }
+
+      return uniqueMap;
+    }, new Map<string, number>())
+    .values()
+);
+const provisionsArray = Array.from(
+  Object.values(provisionDefinitions.provisions)
+    .filter(
+      (provision) =>
+        !provision.game_mode_exclusive &&
+        provision.name.locales[locales.default]
+    )
+    .reduce((uniqueMap, consumable) => {
+      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
+        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
+      }
+
+      return uniqueMap;
+    }, new Map<string, number>())
+    .values()
+);
+const powersArray = Array.from(
+  Object.values(provisionDefinitions.provisions)
+    .filter(
+      (provision) =>
+        provision.game_mode_exclusive && provision.name.locales[locales.default]
+    )
     .reduce((uniqueMap, consumable) => {
       if (!uniqueMap.has(consumable.name.locales[locales.default])) {
         uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
@@ -91,6 +124,7 @@ const GUN_TYPES = Object.keys(
 
 const MAX_TIERS = 4;
 const MAX_CONSUMABLES = 4;
+const MAX_PROVISIONS = 4;
 const MAX_ABILITIES = 4;
 
 const TIERS = times(10, (i) => 10 - i);
@@ -109,7 +143,9 @@ export function FilterControl() {
       <GunTypeFilter />
       <ShellFilter />
       <ConsumablesFilter />
+      <ProvisionsFilter />
       <AbilitiesFilter />
+      <PowersFilter />
 
       <ClearButton />
     </Flex>
@@ -870,6 +906,100 @@ function ConsumablesFilter() {
 
             TankFilters.mutate((draft) => {
               draft.consumables = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          {strings.website.common.tank_search.clear}
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function ProvisionsFilter() {
+  const { unwrap, strings } = useLocale();
+  const rawProvisions = TankFilters.use((state) => state.provisions);
+  const provisions =
+    rawProvisions.length === 0 ? provisionsArray : rawProvisions;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          <Flex>
+            {provisions.slice(0, MAX_PROVISIONS).map((provision, index) => (
+              <img
+                key={provision}
+                style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/provisions/${provision}.webp`)}
+              />
+            ))}
+
+            {provisions.length > MAX_CONSUMABLES && (
+              <Text size="1" ml="1">
+                {literals(strings.common.units.plus, {
+                  value: provisions.length - MAX_CONSUMABLES,
+                })}
+              </Text>
+            )}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {provisionsArray.map((provision) => {
+          const selected = rawProvisions.includes(provision);
+          const provisionDefinition =
+            provisionDefinitions.provisions[provision];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.provisions = draft.provisions.filter(
+                      (n) => n !== provision
+                    );
+                  } else {
+                    draft.provisions = [...draft.provisions, provision];
+                  }
+                });
+              }}
+              checked={selected}
+              key={provision}
+            >
+              <img
+                style={{
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/provisions/${provision}.webp`)}
+              />
+
+              {unwrap(provisionDefinition.name)}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.provisions = [];
             });
           }}
         >
