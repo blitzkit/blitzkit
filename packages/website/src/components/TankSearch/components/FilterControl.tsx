@@ -7,7 +7,11 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
-import { TrashIcon } from "@radix-ui/react-icons";
+import {
+  LockClosedIcon,
+  LockOpen2Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
 import {
   Box,
   Button,
@@ -15,11 +19,14 @@ import {
   Flex,
   IconButton,
   Text,
+  Tooltip,
+  type FlexProps,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import type { ComponentProps, ReactNode } from "react";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
+import { App } from "../../../stores/app";
 import { TankFilters, type CaseType } from "../../../stores/tankFilters";
 import { classIcons } from "../../ClassIcon";
 import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
@@ -69,6 +76,7 @@ export function FilterControl() {
       <ClassFilter />
       <GunTypeFilter />
       <ShellFilter />
+      <OwnershipFilter />
     </Flex>
   );
 }
@@ -585,5 +593,62 @@ function IndividualShellFilter({
         </DropdownMenu.RadioGroup>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
+  );
+}
+
+function OwnershipFilter() {
+  const wargaming = App.use((state) => state.logins.wargaming);
+  const { strings } = useLocale();
+
+  return wargaming ? (
+    <OwnershipFilterInternal />
+  ) : (
+    <Tooltip content={strings.website.common.tank_search.login}>
+      <OwnershipFilterInternal />
+    </Tooltip>
+  );
+}
+
+function OwnershipFilterInternal(props: FlexProps) {
+  const wargaming = App.use((state) => state.logins.wargaming);
+  const showOwned = TankFilters.use((state) => state.showOwned);
+  const showUnowned = TankFilters.use((state) => state.showUnowned);
+
+  return (
+    <Flex
+      overflow="hidden"
+      style={{ borderRadius: "var(--radius-full)" }}
+      {...props}
+    >
+      <IconButton
+        disabled={!wargaming}
+        variant={showOwned ? "solid" : "soft"}
+        radius="none"
+        color={showOwned ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showOwned = !draft.showOwned;
+          });
+        }}
+      >
+        <LockOpen2Icon />
+      </IconButton>
+
+      <IconButton
+        disabled={!wargaming}
+        variant={showUnowned ? "solid" : "soft"}
+        radius="none"
+        color={showUnowned ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showUnowned = !draft.showUnowned;
+          });
+        }}
+      >
+        <LockClosedIcon />
+      </IconButton>
+    </Flex>
   );
 }
