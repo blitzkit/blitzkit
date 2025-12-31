@@ -7,6 +7,7 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
+import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import {
   LockClosedIcon,
@@ -96,7 +97,7 @@ const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" gap="2" wrap="wrap">
+    <Flex align="center" gap="2" wrap="wrap" justify="center">
       <TiersFilter />
       <NationsFilter />
       <TypeFilter />
@@ -114,6 +115,7 @@ export function FilterControl() {
 }
 
 function TiersFilter() {
+  const { strings } = useLocale();
   const tiersRaw = TankFilters.use((state) => state.tiers);
   const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
 
@@ -129,7 +131,11 @@ function TiersFilter() {
             ))}
 
             {tiers.length > MAX_TIERS && (
-              <Text size="1">+{tiers.length - MAX_TIERS}</Text>
+              <Text size="1">
+                {literals(strings.common.units.plus, {
+                  value: tiers.length - MAX_TIERS,
+                })}
+              </Text>
             )}
           </Flex>
         </Button>
@@ -155,7 +161,9 @@ function TiersFilter() {
               checked={selected}
               key={tier}
             >
-              Tier {TIER_ROMAN_NUMERALS[tier]}
+              {literals(strings.website.common.tank_search.tier, {
+                tier: TIER_ROMAN_NUMERALS[tier],
+              })}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -173,7 +181,7 @@ function TiersFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -277,7 +285,7 @@ function NationsFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -357,7 +365,7 @@ function ClassFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -435,7 +443,7 @@ function GunTypeFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -521,7 +529,7 @@ function TypeFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -737,10 +745,10 @@ function TestFilter() {
 }
 
 function ConsumablesFilter() {
+  const { unwrap, strings } = useLocale();
   const rawConsumables = TankFilters.use((state) => state.consumables);
   const consumables =
     rawConsumables.length === 0 ? consumablesArray : rawConsumables;
-  const { unwrap } = useLocale();
 
   return (
     <DropdownMenu.Root>
@@ -762,7 +770,9 @@ function ConsumablesFilter() {
 
             {consumables.length > MAX_CONSUMABLES && (
               <Text size="1" ml="1">
-                +{consumables.length - MAX_CONSUMABLES}
+                {literals(strings.common.units.plus, {
+                  value: consumables.length - MAX_CONSUMABLES,
+                })}
               </Text>
             )}
           </Flex>
@@ -820,7 +830,7 @@ function ConsumablesFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -828,9 +838,9 @@ function ConsumablesFilter() {
 }
 
 function AbilitiesFilter() {
+  const { unwrap, strings } = useLocale();
   const rawAbilities = TankFilters.use((state) => state.abilities);
   const abilities = rawAbilities.length === 0 ? abilitiesArray : rawAbilities;
-  const { unwrap } = useLocale();
 
   return (
     <DropdownMenu.Root>
@@ -852,7 +862,9 @@ function AbilitiesFilter() {
 
             {abilities.length > MAX_ABILITIES && (
               <Text size="1" ml="1">
-                +{abilities.length - MAX_ABILITIES}
+                {literals(strings.common.units.plus, {
+                  value: abilities.length - MAX_ABILITIES,
+                })}
               </Text>
             )}
           </Flex>
@@ -909,7 +921,7 @@ function AbilitiesFilter() {
           }}
         >
           <TrashIcon />
-          Clear
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
