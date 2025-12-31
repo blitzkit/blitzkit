@@ -14,8 +14,6 @@ import {
   DropdownMenu,
   Flex,
   IconButton,
-  Inset,
-  Popover,
   Text,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
@@ -492,13 +490,7 @@ function TypeFilter() {
 
 function ShellFilter() {
   return (
-    <Flex
-      overflow="hidden"
-      style={{
-        borderRadius: "var(--radius-full)",
-        boxShadow: "var(--shadow-1)",
-      }}
-    >
+    <Flex style={{}}>
       <IndividualShellFilter index={0} />
       <IndividualShellFilter index={1} premium />
       <IndividualShellFilter index={2} />
@@ -513,12 +505,24 @@ function IndividualShellFilter({
   index: number;
   premium?: boolean;
 }) {
+  const { strings } = useLocale();
   const shells = TankFilters.use((state) => state.shells);
 
   return (
-    <Popover.Root>
-      <Popover.Trigger>
-        <IconButton variant="soft" radius="none" color="gray" highContrast>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <IconButton
+          ml="-0.5px"
+          variant="surface"
+          style={{
+            borderTopLeftRadius: index === 0 ? undefined : 0,
+            borderBottomLeftRadius: index === 0 ? undefined : 0,
+            borderTopRightRadius: index === 2 ? undefined : 0,
+            borderBottomRightRadius: index === 2 ? undefined : 0,
+          }}
+          color="gray"
+          highContrast
+        >
           {shells[index] === null && (
             <Text color="gray" style={{ display: "contents" }}>
               <MissingShellIcon width="1em" height="1em" />
@@ -535,48 +539,51 @@ function IndividualShellFilter({
             />
           )}
         </IconButton>
-      </Popover.Trigger>
+      </DropdownMenu.Trigger>
 
-      <Popover.Content>
-        <Inset>
-          <Flex direction="column">
-            {Object.values(ShellType).map((shellType) => {
-              if (typeof shellType === "string") return null;
+      <DropdownMenu.Content>
+        <DropdownMenu.RadioGroup value={`${shells[index]}`}>
+          {Object.values(ShellType).map((shellType) => {
+            if (typeof shellType === "string") return null;
 
-              const selected = shells[index] === shellType;
+            const selected = shells[index] === shellType;
 
-              return (
-                <IconButton
-                  key={shellType}
-                  value={`${shellType}`}
-                  radius="none"
-                  variant={selected ? "solid" : "soft"}
-                  onClick={() => {
-                    const mutated = [...shells] as TankFilters["shells"];
+            return (
+              <DropdownMenu.RadioItem
+                key={shellType}
+                value={`${shellType}`}
+                onClick={() => {
+                  const mutated = [...shells] as TankFilters["shells"];
 
-                    mutated[index] = selected ? null : shellType;
+                  mutated[index] = selected ? null : shellType;
 
-                    TankFilters.mutate((draft) => {
-                      draft.shells = mutated;
-                    });
-                  }}
-                  highContrast={selected}
-                  color={selected ? undefined : "gray"}
-                >
-                  <img
-                    src={asset(
-                      `icons/shells/${shellTypeIcons[shellType]}${
-                        premium ? "_premium" : ""
-                      }.webp`
-                    )}
-                    style={{ width: "1em", height: "1em" }}
-                  />
-                </IconButton>
-              );
-            })}
-          </Flex>
-        </Inset>
-      </Popover.Content>
-    </Popover.Root>
+                  TankFilters.mutate((draft) => {
+                    draft.shells = mutated;
+                  });
+                }}
+                color={selected ? undefined : "gray"}
+              >
+                <img
+                  src={asset(
+                    `icons/shells/${shellTypeIcons[shellType]}${
+                      premium ? "_premium" : ""
+                    }.webp`
+                  )}
+                  style={{ width: "1em", height: "1em" }}
+                />
+
+                {
+                  strings.common.shells[
+                    shellTypeIcons[
+                      shellType
+                    ] as keyof typeof strings.common.shells
+                  ]
+                }
+              </DropdownMenu.RadioItem>
+            );
+          })}
+        </DropdownMenu.RadioGroup>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 }

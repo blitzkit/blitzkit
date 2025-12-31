@@ -26,8 +26,8 @@
 
     "shells": {
       "ap": "AP",
-      "apcr": "APCR",
-      "heat": "HEAT",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "HE"
     },
 
