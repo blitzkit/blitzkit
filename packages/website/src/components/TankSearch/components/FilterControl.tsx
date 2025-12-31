@@ -1,10 +1,16 @@
-import { asset, ShellType, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import {
+  asset,
+  ShellType,
+  TANK_CLASSES,
+  TIER_ROMAN_NUMERALS,
+} from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Box, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
 import { TankFilters } from "../../../stores/tankFilters";
+import { classIcons } from "../../ClassIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 
@@ -17,6 +23,7 @@ const shellTypeIcons: Record<ShellType, string> = {
 
 const MAX_NATIONS = 3;
 const MAX_TIERS = 2;
+
 const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
@@ -24,6 +31,7 @@ export function FilterControl() {
     <Flex align="center" gap="2">
       <TiersFilter />
       <NationsFilter />
+      <ClassFilter />
     </Flex>
   );
 }
@@ -111,6 +119,7 @@ function NationsFilter() {
             {nations.slice(0, MAX_NATIONS).map((nation, index) => (
               <img
                 style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                   marginLeft: index > 0 ? "-0.5em" : undefined,
                   width: "1.25em",
                   height: "1.25em",
@@ -195,6 +204,87 @@ function NationsFilter() {
 
             TankFilters.mutate((draft) => {
               draft.nations = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          Clear
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function ClassFilter() {
+  const { strings } = useLocale();
+  const rawClasses = TankFilters.use((state) => state.classes);
+  const classes = rawClasses.length === 0 ? TANK_CLASSES : rawClasses;
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          Classes
+          <Flex>
+            {classes.map((tankClass, index) => {
+              const Icon = classIcons[tankClass];
+              return (
+                <Icon
+                  style={{
+                    color: "var(--gray-12)",
+                    opacity: 1,
+                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                    marginLeft: index > 0 ? "-0.5em" : undefined,
+                    width: "1.25em",
+                    height: "1.25em",
+                  }}
+                  key={tankClass}
+                />
+              );
+            })}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {TANK_CLASSES.map((tankClass) => {
+          const selected = rawClasses.includes(tankClass);
+          const Icon = classIcons[tankClass];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.classes = draft.classes.filter(
+                      (c) => c !== tankClass
+                    );
+                  } else {
+                    draft.classes = [...draft.classes, tankClass];
+                  }
+                });
+              }}
+              checked={selected}
+              key={tankClass}
+            >
+              <Icon style={{ width: "1em", height: "1em" }} />
+
+              {strings.common.tank_class_medium[tankClass]}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.classes = [];
             });
           }}
         >
