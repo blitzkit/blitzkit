@@ -1,5 +1,6 @@
 import {
   asset,
+  GunDefinition,
   ShellType,
   TANK_CLASSES,
   TIER_ROMAN_NUMERALS,
@@ -7,10 +8,14 @@ import {
 import { TrashIcon } from "@radix-ui/react-icons";
 import { Box, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { times } from "lodash-es";
+import type { ComponentProps, ReactNode } from "react";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
-import { TankFilters } from "../../../stores/tankFilters";
+import { TankFilters, type CaseType } from "../../../stores/tankFilters";
 import { classIcons } from "../../ClassIcon";
+import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
+import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
+import { GunRegularIcon } from "../../GunRegularIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 
@@ -20,6 +25,19 @@ const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.HE]: "he",
   [ShellType.HEAT]: "hc",
 };
+
+const GUN_TYPE_ICONS: Record<
+  CaseType<GunDefinition>,
+  (props: ComponentProps<"svg">) => ReactNode
+> = {
+  regular: GunRegularIcon,
+  auto_loader: GunAutoloaderIcon,
+  auto_reloader: GunAutoreloaderIcon,
+};
+
+const GUN_TYPES = Object.keys(
+  GUN_TYPE_ICONS
+) as (keyof typeof GUN_TYPE_ICONS)[];
 
 const MAX_NATIONS = 3;
 const MAX_TIERS = 2;
@@ -32,6 +50,7 @@ export function FilterControl() {
       <TiersFilter />
       <NationsFilter />
       <ClassFilter />
+      <GunTypeFilter />
     </Flex>
   );
 }
@@ -285,6 +304,84 @@ function ClassFilter() {
 
             TankFilters.mutate((draft) => {
               draft.classes = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          Clear
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function GunTypeFilter() {
+  const rawGunTypes = TankFilters.use((state) => state.gunType);
+  const gunTypes = rawGunTypes.length === 0 ? GUN_TYPES : rawGunTypes;
+  const { strings } = useLocale();
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          Gun types
+          <Flex ml="-1">
+            {gunTypes.map((gunType) => {
+              const Icon = GUN_TYPE_ICONS[gunType];
+
+              return (
+                <Icon
+                  style={{
+                    opacity: 1,
+                    color: "var(--gray-12)",
+                    width: "1.25em",
+                    height: "1.25em",
+                  }}
+                  key={gunType}
+                />
+              );
+            })}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {GUN_TYPES.map((gunType) => {
+          const selected = rawGunTypes.includes(gunType);
+          const Icon = GUN_TYPE_ICONS[gunType];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.gunType = draft.gunType.filter((c) => c !== gunType);
+                  } else {
+                    draft.gunType = [...draft.gunType, gunType];
+                  }
+                });
+              }}
+              checked={selected}
+              key={gunType}
+            >
+              <Icon style={{ width: "1em", height: "1em" }} />
+
+              {strings.common.gun_types[gunType]}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.gunType = [];
             });
           }}
         >
