@@ -34,6 +34,8 @@ import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
 import { GunRegularIcon } from "../../GunRegularIcon";
 import { MissingShellIcon } from "../../MissingShellIcon";
 import { ResearchedIcon } from "../../ResearchedIcon";
+import { ScienceIcon } from "../../ScienceIcon";
+import { ScienceOffIcon } from "../../ScienceOffIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 
@@ -77,6 +79,7 @@ export function FilterControl() {
       <GunTypeFilter />
       <ShellFilter />
       <OwnershipFilter />
+      <TestFilter />
     </Flex>
   );
 }
@@ -651,6 +654,54 @@ function OwnershipFilterInternal(props: FlexProps) {
         }}
       >
         <LockClosedIcon />
+      </IconButton>
+    </Flex>
+  );
+}
+
+function TestFilter() {
+  const showTesting = TankFilters.use((state) => state.showTesting);
+  const showNonTesting = TankFilters.use((state) => state.showNonTesting);
+
+  return (
+    <Flex>
+      <IconButton
+        style={{
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+        }}
+        variant={showNonTesting ? "solid" : "surface"}
+        color={showNonTesting ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showNonTesting = !draft.showNonTesting;
+          });
+        }}
+      >
+        <ScienceOffIcon
+          style={{ width: "1em", height: "1em", color: "currentColor" }}
+        />
+      </IconButton>
+
+      <IconButton
+        style={{
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+          marginLeft: "-1px",
+        }}
+        variant={showTesting ? "solid" : "surface"}
+        color={showTesting ? undefined : "gray"}
+        highContrast
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showTesting = !draft.showTesting;
+          });
+        }}
+      >
+        <ScienceIcon
+          style={{ width: "1em", height: "1em", color: "currentColor" }}
+        />
       </IconButton>
     </Flex>
   );
