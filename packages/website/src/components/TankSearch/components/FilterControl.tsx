@@ -1,26 +1,11 @@
-import { asset, ShellType } from "@blitzkit/core";
-import {
-  LockClosedIcon,
-  LockOpen2Icon,
-  TrashIcon,
-} from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  DropdownMenu,
-  Flex,
-  IconButton,
-  Inset,
-  Popover,
-  Text,
-  type FlexProps,
-} from "@radix-ui/themes";
-import { isEqual } from "lodash-es";
+import { asset, ShellType, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { TrashIcon } from "@radix-ui/react-icons";
+import { Box, Button, DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import { isEqual, times } from "lodash-es";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { TankFilters } from "../../../stores/tankFilters";
-import { MissingShellIcon } from "../../MissingShellIcon";
 
 const gameDefinitions = await awaitableGameDefinitions;
 
@@ -32,119 +17,8 @@ const shellTypeIcons: Record<ShellType, string> = {
 };
 
 const MAX_NATIONS = 3;
-
-function ShellFilter({ index, premium }: { index: number; premium?: boolean }) {
-  const shells = TankFilters.use((state) => state.shells);
-
-  return (
-    <Popover.Root>
-      <Popover.Trigger>
-        <IconButton variant="soft" radius="none" color="gray" highContrast>
-          {shells[index] === null && (
-            <Text color="gray" style={{ display: "contents" }}>
-              <MissingShellIcon width="1em" height="1em" />
-            </Text>
-          )}
-          {shells[index] !== null && (
-            <img
-              style={{ width: "1em", height: "1em" }}
-              src={asset(
-                `icons/shells/${shellTypeIcons[shells[index]]}${
-                  premium ? "_premium" : ""
-                }.webp`
-              )}
-            />
-          )}
-        </IconButton>
-      </Popover.Trigger>
-
-      <Popover.Content>
-        <Inset>
-          <Flex>
-            {Object.values(ShellType).map((shellType) => {
-              if (typeof shellType === "string") return null;
-
-              const selected = shells[index] === shellType;
-
-              return (
-                <IconButton
-                  key={shellType}
-                  value={`${shellType}`}
-                  radius="none"
-                  variant={selected ? "solid" : "soft"}
-                  onClick={() => {
-                    const mutated = [...shells] as TankFilters["shells"];
-
-                    mutated[index] = selected ? null : shellType;
-
-                    TankFilters.mutate((draft) => {
-                      draft.shells = mutated;
-                    });
-                  }}
-                  highContrast={selected}
-                  color={selected ? undefined : "gray"}
-                >
-                  <img
-                    src={asset(
-                      `icons/shells/${shellTypeIcons[shellType]}${
-                        premium ? "_premium" : ""
-                      }.webp`
-                    )}
-                    style={{ width: "1em", height: "1em" }}
-                  />
-                </IconButton>
-              );
-            })}
-          </Flex>
-        </Inset>
-      </Popover.Content>
-    </Popover.Root>
-  );
-}
-
-function OwnershipFilter(props: FlexProps) {
-  const tankFilters = TankFilters.use();
-  const wargaming = App.use((state) => state.logins.wargaming);
-
-  return (
-    <Flex
-      overflow="hidden"
-      style={{ borderRadius: "var(--radius-full)" }}
-      direction="column"
-      {...props}
-    >
-      <IconButton
-        disabled={!wargaming}
-        variant={tankFilters.showOwned ? "solid" : "soft"}
-        radius="none"
-        color={tankFilters.showOwned ? undefined : "gray"}
-        highContrast
-        onClick={() => {
-          TankFilters.mutate((draft) => {
-            draft.showOwned = !draft.showOwned;
-          });
-        }}
-      >
-        <LockOpen2Icon />
-      </IconButton>
-
-      <IconButton
-        disabled={!wargaming}
-        variant={tankFilters.showUnowned ? "solid" : "soft"}
-        radius="none"
-        color={tankFilters.showUnowned ? undefined : "gray"}
-        highContrast
-        onClick={() => {
-          TankFilters.mutate((draft) => {
-            draft.showUnowned = !draft.showUnowned;
-          });
-        }}
-      >
-        <LockClosedIcon />
-      </IconButton>
-    </Flex>
-  );
-}
+const MAX_TIERS = 2;
+const TIERS = times(10, (i) => i + 1);
 
 export function FilterControl() {
   const tankFilters = TankFilters.use();
@@ -152,6 +26,7 @@ export function FilterControl() {
   const clearable = !isEqual(tankFilters, TankFilters.initial);
   const wargaming = App.use((state) => state.logins.wargaming);
 
+  const tiers = tankFilters.tiers.length === 0 ? TIERS : tankFilters.tiers;
   const nations =
     tankFilters.nations.length === 0
       ? gameDefinitions.nations
@@ -159,6 +34,78 @@ export function FilterControl() {
 
   return (
     <Flex align="center" gap="2">
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Button color="gray" variant="surface">
+            Tiers
+            <Flex gap="1">
+              {tiers
+                .sort((a, b) => b - a)
+                .slice(0, MAX_TIERS)
+                .map((tier, index) => (
+                  // <img
+                  //   style={{
+                  //     marginLeft: index > 0 ? "-0.5em" : undefined,
+                  //     width: "1.25em",
+                  //     height: "1.25em",
+                  //   }}
+                  //   src={asset(`flags/circle/${nation}.webp`)}
+                  // />
+                  <Text size="1" key={tier}>
+                    {TIER_ROMAN_NUMERALS[tier]}
+                  </Text>
+                ))}
+
+              {nations.length > MAX_TIERS && (
+                <Text size="1">+{nations.length - MAX_TIERS}</Text>
+              )}
+            </Flex>
+          </Button>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Content>
+          {TIERS.map((tier) => {
+            const selected = tankFilters.tiers.includes(tier);
+
+            return (
+              <DropdownMenu.CheckboxItem
+                onClick={(event) => {
+                  event.preventDefault();
+
+                  TankFilters.mutate((draft) => {
+                    if (selected) {
+                      draft.tiers = draft.tiers.filter((t) => t !== tier);
+                    } else {
+                      draft.tiers = [...draft.tiers, tier];
+                    }
+                  });
+                }}
+                checked={selected}
+                key={tier}
+              >
+                Tier {TIER_ROMAN_NUMERALS[tier]}
+              </DropdownMenu.CheckboxItem>
+            );
+          })}
+
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Item
+            color="red"
+            onClick={(event) => {
+              event.preventDefault();
+
+              TankFilters.mutate((draft) => {
+                draft.tiers = [];
+              });
+            }}
+          >
+            <TrashIcon />
+            Clear
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button color="gray" variant="surface">
