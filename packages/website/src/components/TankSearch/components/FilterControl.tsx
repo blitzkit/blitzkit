@@ -615,15 +615,14 @@ function OwnershipFilterInternal(props: FlexProps) {
   const showUnowned = TankFilters.use((state) => state.showUnowned);
 
   return (
-    <Flex
-      overflow="hidden"
-      style={{ borderRadius: "var(--radius-full)" }}
-      {...props}
-    >
+    <Flex {...props}>
       <IconButton
+        style={{
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+        }}
         disabled={!wargaming}
-        variant={showOwned ? "solid" : "soft"}
-        radius="none"
+        variant={showOwned ? "solid" : "surface"}
         color={showOwned ? undefined : "gray"}
         highContrast
         onClick={() => {
@@ -636,9 +635,13 @@ function OwnershipFilterInternal(props: FlexProps) {
       </IconButton>
 
       <IconButton
+        style={{
+          borderTopLeftRadius: 0,
+          borderBottomLeftRadius: 0,
+          marginLeft: "-1px",
+        }}
         disabled={!wargaming}
-        variant={showUnowned ? "solid" : "soft"}
-        radius="none"
+        variant={showUnowned ? "solid" : "surface"}
         color={showUnowned ? undefined : "gray"}
         highContrast
         onClick={() => {
