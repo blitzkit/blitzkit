@@ -70,6 +70,30 @@ export async function filterTank(
             )
           )
         )
+      )) &&
+    (filters.abilities.length === 0 ||
+      filters.abilities.every((ability) =>
+        tank.turrets.some((turret) =>
+          turret.guns.some((gun) =>
+            checkConsumableProvisionInclusivity(
+              consumableDefinitions.consumables[ability],
+              tank,
+              gun
+            )
+          )
+        )
+      )) &&
+    (filters.powers.length === 0 ||
+      filters.powers.every((power) =>
+        tank.turrets.some((turret) =>
+          turret.guns.some((gun) =>
+            checkConsumableProvisionInclusivity(
+              provisionDefinitions.provisions[power],
+              tank,
+              gun
+            )
+          )
+        )
       ))
   );
 }
