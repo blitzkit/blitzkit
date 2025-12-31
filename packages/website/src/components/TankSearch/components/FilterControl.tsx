@@ -122,10 +122,7 @@ const GUN_TYPES = Object.keys(
   GUN_TYPE_ICONS
 ) as (keyof typeof GUN_TYPE_ICONS)[];
 
-const MAX_TIERS = 4;
-const MAX_CONSUMABLES = 4;
-const MAX_PROVISIONS = 4;
-const MAX_ABILITIES = 4;
+const MAX_ICONS = 4;
 
 const TIERS = times(10, (i) => 10 - i);
 
@@ -179,16 +176,16 @@ function TiersFilter() {
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex gap="1">
-            {tiers.slice(0, MAX_TIERS).map((tier) => (
+            {tiers.slice(0, MAX_ICONS).map((tier) => (
               <Text size="1" key={tier}>
                 {TIER_ROMAN_NUMERALS[tier]}
               </Text>
             ))}
 
-            {tiers.length > MAX_TIERS && (
+            {tiers.length > MAX_ICONS && (
               <Text size="1">
                 {literals(strings.common.units.plus, {
-                  value: tiers.length - MAX_TIERS,
+                  value: tiers.length - MAX_ICONS,
                 })}
               </Text>
             )}
@@ -400,7 +397,6 @@ function ClassFilter() {
                 });
               }}
               checked={selected}
-              key={tankClass}
             >
               <Icon style={{ width: "1.25em", height: "1.25em" }} />
 
@@ -834,7 +830,7 @@ function ConsumablesFilter() {
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
-            {consumables.slice(0, MAX_CONSUMABLES).map((consumable, index) => (
+            {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
               <img
                 key={consumable}
                 style={{
@@ -848,10 +844,10 @@ function ConsumablesFilter() {
               />
             ))}
 
-            {consumables.length > MAX_CONSUMABLES && (
+            {consumables.length > MAX_ICONS && (
               <Text size="1" ml="1">
                 {literals(strings.common.units.plus, {
-                  value: consumables.length - MAX_CONSUMABLES,
+                  value: consumables.length - MAX_ICONS,
                 })}
               </Text>
             )}
@@ -928,7 +924,7 @@ function ProvisionsFilter() {
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
-            {provisions.slice(0, MAX_PROVISIONS).map((provision, index) => (
+            {provisions.slice(0, MAX_ICONS).map((provision, index) => (
               <img
                 key={provision}
                 style={{
@@ -942,10 +938,10 @@ function ProvisionsFilter() {
               />
             ))}
 
-            {provisions.length > MAX_CONSUMABLES && (
+            {provisions.length > MAX_ICONS && (
               <Text size="1" ml="1">
                 {literals(strings.common.units.plus, {
-                  value: provisions.length - MAX_CONSUMABLES,
+                  value: provisions.length - MAX_ICONS,
                 })}
               </Text>
             )}
@@ -1011,6 +1007,96 @@ function ProvisionsFilter() {
   );
 }
 
+function PowersFilter() {
+  const { unwrap, strings } = useLocale();
+  const rawPowers = TankFilters.use((state) => state.powers);
+  const powers = rawPowers.length === 0 ? powersArray : rawPowers;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          <Flex>
+            {powers.slice(0, MAX_ICONS).map((power, index) => (
+              <img
+                key={power}
+                style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/provisions/${power}.webp`)}
+              />
+            ))}
+
+            {powers.length > MAX_ICONS && (
+              <Text size="1" ml="1">
+                {literals(strings.common.units.plus, {
+                  value: powers.length - MAX_ICONS,
+                })}
+              </Text>
+            )}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {powersArray.map((power) => {
+          const selected = rawPowers.includes(power);
+          const powerDefinition = provisionDefinitions.provisions[power];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.powers = draft.powers.filter((n) => n !== power);
+                  } else {
+                    draft.powers = [...draft.powers, power];
+                  }
+                });
+              }}
+              checked={selected}
+              key={power}
+            >
+              <img
+                style={{
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(`icons/provisions/${power}.webp`)}
+              />
+
+              {unwrap(powerDefinition.name)}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.powers = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          {strings.website.common.tank_search.clear}
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
 function AbilitiesFilter() {
   const { unwrap, strings } = useLocale();
   const rawAbilities = TankFilters.use((state) => state.abilities);
@@ -1021,7 +1107,7 @@ function AbilitiesFilter() {
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
-            {abilities.slice(0, MAX_ABILITIES).map((ability, index) => (
+            {abilities.slice(0, MAX_ICONS).map((ability, index) => (
               <img
                 key={ability}
                 style={{
@@ -1035,10 +1121,10 @@ function AbilitiesFilter() {
               />
             ))}
 
-            {abilities.length > MAX_ABILITIES && (
+            {abilities.length > MAX_ICONS && (
               <Text size="1" ml="1">
                 {literals(strings.common.units.plus, {
-                  value: abilities.length - MAX_ABILITIES,
+                  value: abilities.length - MAX_ICONS,
                 })}
               </Text>
             )}

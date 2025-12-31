@@ -24,6 +24,7 @@ export interface TankFilters {
   consumables: number[];
   provisions: number[];
   abilities: number[];
+  powers: number[];
 
   showTesting: boolean;
   showNonTesting: boolean;
@@ -43,6 +44,7 @@ export const TankFilters = new Varuna<TankFilters>({
   consumables: [],
   provisions: [],
   abilities: [],
+  powers: [],
 
   showTesting: true,
   showNonTesting: true,
