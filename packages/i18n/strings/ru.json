@@ -13,7 +13,8 @@
       "hp": "{value}оп",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/с"
+      "deg_s": "{value}°/с",
+      "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "Барабан",
@@ -22,8 +23,8 @@
     },
     "shells": {
       "ap": "ББ",
-      "apcr": "БП",
-      "heat": "КС",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "ОФ"
     },
     "player_count_period": {
@@ -668,6 +669,8 @@
         "count_singular": "1 танк",
         "count_plural": "Танков: {count}",
         "sorting_by": "Сортировать по {name}",
+        "clear": "Очистить",
+        "tier": " {tier} уровня",
         "no_tanks_found": {
           "body": "Танков не найдено.",
           "search_again": "Попробуйте повторить поиск.",
@@ -814,7 +817,13 @@
           "next": "Следующий",
           "no_results": "Ничего не найденo"
         },
-        "stats": "{correct} / {total} угадано верно"
+        "stats": "{correct} / {total} правильно, серия: {streak}",
+        "help": {
+          "title": "Частично раскрыть танк?",
+          "description": "Показывает танк не показывая название. Этот раунд будет считаться проигранным и прекратит серию!",
+          "cancel": "Отмена",
+          "reveal": "Раскрыть"
+        }
       },
       "tankopedia": {
         "search": "Поиск характеристик...",
@@ -1135,10 +1144,12 @@
             "upgrade": "Топ"
           },
           "provisions": {
-            "clear": "Очистить"
+            "clear": "Убрать",
+            "clear_all": "Убрать со всех"
           },
           "consumables": {
-            "clear": "Очистить"
+            "clear": "Убрать",
+            "clear_all": "Убрать со всех"
           }
         }
       },
