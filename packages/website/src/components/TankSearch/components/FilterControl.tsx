@@ -26,10 +26,11 @@ import {
   type FlexProps,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import type { ComponentProps, ReactNode } from "react";
+import { Fragment, type ComponentProps, type ReactNode } from "react";
 import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
+import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { TankFilters, type CaseType } from "../../../stores/tankFilters";
@@ -45,6 +46,59 @@ import { ScienceOffIcon } from "../../ScienceOffIcon";
 const gameDefinitions = await awaitableGameDefinitions;
 const consumableDefinitions = await awaitableConsumableDefinitions;
 const provisionDefinitions = await awaitableProvisionDefinitions;
+const tankDefinitions = await awaitableTankDefinitions;
+
+const gameModeRoleSets: Record<number, Set<number>> = {};
+
+for (const tankIdString in tankDefinitions.tanks) {
+  const gameMode = tankDefinitions.tanks[tankIdString];
+
+  for (const gameModeIdString in gameMode.roles) {
+    const role = gameMode.roles[gameModeIdString];
+    const gameModeId = Number(gameModeIdString);
+
+    if (gameModeId in gameModeRoleSets) {
+      gameModeRoleSets[gameModeId].add(role);
+    } else {
+      gameModeRoleSets[gameModeId] = new Set([role]);
+    }
+  }
+}
+
+const gameModeRoles: {
+  gameModeId: number;
+  consumables: number[];
+  provisions: number[];
+}[] = [];
+
+const allGameModeConsumables = new Set<number>();
+const allGameModeProvisions = new Set<number>();
+
+for (const gameModeIdString in gameModeRoleSets) {
+  const gameModeId = Number(gameModeIdString);
+  const roles = gameModeRoleSets[gameModeId];
+  const consumables = new Set<number>();
+  const provisions = new Set<number>();
+
+  for (const roleId of roles) {
+    const role = gameDefinitions.roles[roleId];
+
+    for (const id of role.consumables) {
+      consumables.add(id);
+      allGameModeConsumables.add(id);
+    }
+    for (const id of role.provisions) {
+      provisions.add(id);
+      allGameModeProvisions.add(id);
+    }
+  }
+
+  gameModeRoles.push({
+    gameModeId: gameModeId,
+    consumables: Array.from(consumables.values()),
+    provisions: Array.from(provisions.values()),
+  });
+}
 
 const consumablesArray = Object.values(consumableDefinitions.consumables)
   .filter(
@@ -53,18 +107,6 @@ const consumablesArray = Object.values(consumableDefinitions.consumables)
       consumable.name.locales[locales.default]
   )
   .map((consumable) => consumable.id);
-const abilitiesArray = Array.from(
-  Object.values(consumableDefinitions.consumables)
-    .filter((ability) => ability.game_mode_exclusive)
-    .reduce((uniqueMap, consumable) => {
-      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
-        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
-      }
-
-      return uniqueMap;
-    }, new Map<string, number>())
-    .values()
-);
 const provisionsArray = Array.from(
   Object.values(provisionDefinitions.provisions)
     .filter(
@@ -81,22 +123,6 @@ const provisionsArray = Array.from(
     }, new Map<string, number>())
     .values()
 );
-const powersArray = Array.from(
-  Object.values(provisionDefinitions.provisions)
-    .filter(
-      (provision) =>
-        provision.game_mode_exclusive && provision.name.locales[locales.default]
-    )
-    .reduce((uniqueMap, consumable) => {
-      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
-        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
-      }
-
-      return uniqueMap;
-    }, new Map<string, number>())
-    .values()
-);
-
 const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.AP]: "ap",
   [ShellType.APCR]: "ap_cr",
@@ -1008,7 +1034,10 @@ function ProvisionsFilter() {
 function PowersFilter() {
   const { unwrap, strings } = useLocale();
   const rawPowers = TankFilters.use((state) => state.powers);
-  const powers = rawPowers.length === 0 ? powersArray : rawPowers;
+  const powers =
+    rawPowers.length === 0
+      ? Array.from(allGameModeProvisions.values())
+      : rawPowers;
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -1041,37 +1070,54 @@ function PowersFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {powersArray.map((power) => {
-          const selected = rawPowers.includes(power);
-          const powerDefinition = provisionDefinitions.provisions[power];
+        {gameModeRoles.map(({ gameModeId, provisions }) => {
+          const gameMode = gameDefinitions.gameModes[gameModeId];
+
+          if (provisions.length === 0) return null;
 
           return (
-            <DropdownMenu.CheckboxItem
-              onClick={(event) => {
-                event.preventDefault();
+            <Fragment key={gameModeId}>
+              <DropdownMenu.Label>{unwrap(gameMode.name)}</DropdownMenu.Label>
 
-                TankFilters.mutate((draft) => {
-                  if (selected) {
-                    draft.powers = draft.powers.filter((n) => n !== power);
-                  } else {
-                    draft.powers = [...draft.powers, power];
-                  }
-                });
-              }}
-              checked={selected}
-              key={power}
-            >
-              <img
-                style={{
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={asset(`icons/provisions/${power}.webp`)}
-              />
+              {provisions.map((provision) => {
+                {
+                  const selected = rawPowers.includes(provision);
+                  const powerDefinition =
+                    provisionDefinitions.provisions[provision];
 
-              {unwrap(powerDefinition.name)}
-            </DropdownMenu.CheckboxItem>
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
+
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.powers = draft.powers.filter(
+                              (n) => n !== provision
+                            );
+                          } else {
+                            draft.powers = [...draft.powers, provision];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={provision}
+                    >
+                      <img
+                        style={{
+                          width: "1.25em",
+                          height: "1.25em",
+                          objectFit: "contain",
+                        }}
+                        src={asset(`icons/provisions/${provision}.webp`)}
+                      />
+
+                      {unwrap(powerDefinition.name)}
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+            </Fragment>
           );
         })}
 
@@ -1098,7 +1144,10 @@ function PowersFilter() {
 function AbilitiesFilter() {
   const { unwrap, strings } = useLocale();
   const rawAbilities = TankFilters.use((state) => state.abilities);
-  const abilities = rawAbilities.length === 0 ? abilitiesArray : rawAbilities;
+  const abilities =
+    rawAbilities.length === 0
+      ? Array.from(allGameModeConsumables.values())
+      : rawAbilities;
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -1131,39 +1180,54 @@ function AbilitiesFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {abilitiesArray.map((ability) => {
-          const selected = rawAbilities.includes(ability);
-          const abilityDefinition = consumableDefinitions.consumables[ability];
+        {gameModeRoles.map(({ gameModeId, consumables }) => {
+          const gameMode = gameDefinitions.gameModes[gameModeId];
+
+          if (consumables.length === 0) return null;
 
           return (
-            <DropdownMenu.CheckboxItem
-              onClick={(event) => {
-                event.preventDefault();
+            <Fragment key={gameModeId}>
+              <DropdownMenu.Label>{unwrap(gameMode.name)}</DropdownMenu.Label>
 
-                TankFilters.mutate((draft) => {
-                  if (selected) {
-                    draft.abilities = draft.abilities.filter(
-                      (n) => n !== ability
-                    );
-                  } else {
-                    draft.abilities = [...draft.abilities, ability];
-                  }
-                });
-              }}
-              checked={selected}
-              key={ability}
-            >
-              <img
-                style={{
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={asset(`icons/consumables/${ability}.webp`)}
-              />
+              {consumables.map((consumable) => {
+                {
+                  const selected = rawAbilities.includes(consumable);
+                  const abilityDefinition =
+                    consumableDefinitions.consumables[consumable];
 
-              {unwrap(abilityDefinition.name)}
-            </DropdownMenu.CheckboxItem>
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
+
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.abilities = draft.abilities.filter(
+                              (n) => n !== consumable
+                            );
+                          } else {
+                            draft.abilities = [...draft.abilities, consumable];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={consumable}
+                    >
+                      <img
+                        style={{
+                          width: "1.25em",
+                          height: "1.25em",
+                          objectFit: "contain",
+                        }}
+                        src={asset(`icons/consumables/${consumable}.webp`)}
+                      />
+
+                      {unwrap(abilityDefinition.name)}
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+            </Fragment>
           );
         })}
 
