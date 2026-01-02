@@ -13,7 +13,8 @@
       "hp": "{value}од",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}град/c"
+      "deg_s": "{value}град/c",
+      "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "Магазинна система заряджання",
@@ -22,8 +23,8 @@
     },
     "shells": {
       "ap": "ББ",
-      "apcr": "БП",
-      "heat": "КС",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "ОФ"
     },
     "player_count_period": {
@@ -668,6 +669,8 @@
         "count_singular": "1 танк",
         "count_plural": "Танків: {count} ",
         "sorting_by": "Відсортувати за {name}",
+        "clear": "Clear",
+        "tier": "Рівень {tier}",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
@@ -814,7 +817,13 @@
           "next": "Next",
           "no_results": "Немає результатів"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "{correct} / {total} correct, {streak} streak",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "Cancel",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -1135,10 +1144,12 @@
             "upgrade": "Upgrade"
           },
           "provisions": {
-            "clear": "Clear"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "Clear"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           }
         }
       },

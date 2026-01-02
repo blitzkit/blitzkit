@@ -21,6 +21,10 @@ export interface TankFilters {
   searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
+  consumables: number[];
+  provisions: number[];
+  abilities: number[];
+  powers: number[];
 
   showTesting: boolean;
   showNonTesting: boolean;
@@ -37,6 +41,10 @@ export const TankFilters = new Varuna<TankFilters>({
   searching: false,
   gunType: [],
   shells: [null, null, null],
+  consumables: [],
+  provisions: [],
+  abilities: [],
+  powers: [],
 
   showTesting: true,
   showNonTesting: true,

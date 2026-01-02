@@ -13,7 +13,8 @@
       "hp": "{value}hp",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}°/s",
+      "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "Auto loader",
@@ -22,8 +23,8 @@
     },
     "shells": {
       "ap": "AP",
-      "apcr": "APCR",
-      "heat": "HEAT",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "OB"
     },
     "player_count_period": {
@@ -668,6 +669,8 @@
         "count_singular": "1 tank",
         "count_plural": "{count} tanks",
         "sorting_by": "Sorting by {name}",
+        "clear": "Clear",
+        "tier": "Tier {tier}",
         "no_tanks_found": {
           "body": "No tanks found.",
           "search_again": "Try searching again.",
@@ -814,7 +817,13 @@
           "next": "Next",
           "no_results": "Brak wyników"
         },
-        "stats": "{correct} / {total} guessed correctly"
+        "stats": "{correct} / {total} correct, {streak} streak",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "Cancel",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "Search a stat...",
@@ -1135,10 +1144,12 @@
             "upgrade": "Upgrade"
           },
           "provisions": {
-            "clear": "Clear"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "Clear"
+            "clear": "Clear this tank",
+            "clear_all": "Clear all tanks"
           }
         }
       },

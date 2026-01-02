@@ -1,10 +1,10 @@
-import { asset } from '@blitzkit/core';
-import { Box, Flex, Heading, Text } from '@radix-ui/themes';
-import { awaitableConsumableDefinitions } from '../../core/awaitables/consumableDefinitions';
-import { awaitableGameDefinitions } from '../../core/awaitables/gameDefinitions';
-import { awaitableProvisionDefinitions } from '../../core/awaitables/provisionDefinitions';
-import { useLocale } from '../../hooks/useLocale';
-import { Duel } from '../../stores/duel';
+import { asset } from "@blitzkit/core";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
+import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { useLocale } from "../../hooks/useLocale";
+import { Duel } from "../../stores/duel";
 
 const [gameDefinitions, consumableDefinitions, provisionDefinitions] =
   await Promise.all([
@@ -39,22 +39,22 @@ export function GameModeSection() {
               overflow="hidden"
               direction="column"
               style={{
-                borderRadius: 'var(--radius-3)',
+                borderRadius: "var(--radius-3)",
                 background: `url(${asset(
-                  `icons/game_mode_banners/${id}.webp`,
+                  `icons/game_mode_banners/${id}.webp`
                 )})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
             >
               <Box
                 flexGrow="1"
                 style={{
                   background: `url(${asset(
-                    `icons/game_mode_banners/${id}.webp`,
+                    `icons/game_mode_banners/${id}.webp`
                   )})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                 }}
               />
 
@@ -64,8 +64,8 @@ export function GameModeSection() {
                 height="98px"
                 flexShrink="0"
                 style={{
-                  backdropFilter: 'blur(4rem)',
-                  WebkitBackdropFilter: 'blur(4rem)',
+                  backdropFilter: "blur(4rem)",
+                  WebkitBackdropFilter: "blur(4rem)",
                 }}
                 align="center"
                 justify="center"
@@ -83,9 +83,9 @@ export function GameModeSection() {
                         <Flex align="center" gap="1">
                           <img
                             style={{
-                              width: '1.5em',
-                              height: '1.5em',
-                              objectFit: 'contain',
+                              width: "1.5em",
+                              height: "1.5em",
+                              objectFit: "contain",
                             }}
                             src={asset(`icons/provisions/${id}.webp`)}
                             alt={unwrap(provisions.name)}
@@ -95,6 +95,7 @@ export function GameModeSection() {
                       </Text>
                     );
                   })}
+
                   {gameDefinitions.roles[value].consumables.map((id) => {
                     const consumable = consumableDefinitions.consumables[id];
 
@@ -103,9 +104,9 @@ export function GameModeSection() {
                         <Flex align="center" gap="1">
                           <img
                             style={{
-                              width: '1.5em',
-                              height: '1.5em',
-                              objectFit: 'contain',
+                              width: "1.5em",
+                              height: "1.5em",
+                              objectFit: "contain",
                             }}
                             src={asset(`icons/consumables/${id}.webp`)}
                             alt={unwrap(consumable.name)}

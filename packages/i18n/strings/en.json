@@ -15,7 +15,8 @@
       "hp": "{value}hp",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}°/s"
+      "deg_s": "{value}°/s",
+      "plus": "+{value}"
     },
 
     "gun_types": {
@@ -26,8 +27,8 @@
 
     "shells": {
       "ap": "AP",
-      "apcr": "APCR",
-      "heat": "HEAT",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "HE"
     },
 
@@ -759,11 +760,15 @@
         "count_singular": "1 tank",
         "count_plural": "{count} tanks",
         "sorting_by": "Sorting by {name}",
+        "clear": "Clear",
+        "tier": "Tier {tier}",
+
         "no_tanks_found": {
           "body": "No tanks found.",
           "search_again": "Try searching again.",
           "clear_filters": "Try clearing filters."
         },
+
         "sort": {
           "meta.none": "none",
           "survivability.health": "health",

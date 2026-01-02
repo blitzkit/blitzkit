@@ -108,10 +108,10 @@ export function CustomShellButton() {
                       {strings.common.shells.ap}
                     </Select.Item>
                     <Select.Item value={`${ShellType.APCR}`}>
-                      {strings.common.shells.apcr}
+                      {strings.common.shells.ap_cr}
                     </Select.Item>
                     <Select.Item value={`${ShellType.HEAT}`}>
-                      {strings.common.shells.heat}
+                      {strings.common.shells.hc}
                     </Select.Item>
                     <Select.Item value={`${ShellType.HE}`}>
                       {strings.common.shells.he}

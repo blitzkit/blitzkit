@@ -1,8 +1,16 @@
 import type { TankDefinition } from "@blitzkit/core";
+import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { times } from "lodash-es";
+import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
 import type { TankFilters } from "../../stores/tankFilters";
+import { awaitableGameDefinitions } from "../awaitables/gameDefinitions";
+import { awaitableProvisionDefinitions } from "../awaitables/provisionDefinitions";
 
 const SHELLS = times(3, (index) => index);
+
+const consumableDefinitions = await awaitableConsumableDefinitions;
+const provisionDefinitions = await awaitableProvisionDefinitions;
+const gameDefinitions = await awaitableGameDefinitions;
 
 export async function filterTank(
   filters: TankFilters,
@@ -40,6 +48,42 @@ export async function filterTank(
             gun.shells[index].type === filters.shells[index]
         )
       )
-    )
+    ) &&
+    (filters.consumables.length === 0 ||
+      filters.consumables.every((consumable) =>
+        tank.turrets.some((turret) =>
+          turret.guns.some((gun) =>
+            checkConsumableProvisionInclusivity(
+              consumableDefinitions.consumables[consumable],
+              tank,
+              gun
+            )
+          )
+        )
+      )) &&
+    (filters.provisions.length === 0 ||
+      filters.provisions.every((provision) =>
+        tank.turrets.some((turret) =>
+          turret.guns.some((gun) =>
+            checkConsumableProvisionInclusivity(
+              provisionDefinitions.provisions[provision],
+              tank,
+              gun
+            )
+          )
+        )
+      )) &&
+    (filters.abilities.length === 0 ||
+      Object.values(tank.roles).some((id) =>
+        gameDefinitions.roles[id as unknown as number].consumables.some(
+          (consumable) => filters.abilities.includes(consumable)
+        )
+      )) &&
+    (filters.powers.length === 0 ||
+      Object.values(tank.roles).some((id) =>
+        gameDefinitions.roles[id as unknown as number].provisions.some(
+          (consumable) => filters.powers.includes(consumable)
+        )
+      ))
   );
 }

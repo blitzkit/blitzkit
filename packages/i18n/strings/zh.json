@@ -13,7 +13,8 @@
       "hp": "{value} 生命值",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}度°/秒"
+      "deg_s": "{value}度°/秒",
+      "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "弹夹型坦克",
@@ -22,8 +23,8 @@
     },
     "shells": {
       "ap": "穿甲弹",
-      "apcr": "硬式复合穿甲弹",
-      "heat": "反战车高爆弹",
+      "ap_cr": "APCR",
+      "hc": "HEAT",
       "he": "高爆弹"
     },
     "player_count_period": {
@@ -668,6 +669,8 @@
         "count_singular": "1辆战车",
         "count_plural": "{count} 辆坦克",
         "sorting_by": "按 {name} 排序",
+        "clear": "清除",
+        "tier": "{tier} 阶",
         "no_tanks_found": {
           "body": "找不到战车。",
           "search_again": "请尝试重新搜索。",
@@ -814,7 +817,13 @@
           "next": "下一个",
           "no_results": "沒有結果"
         },
-        "stats": "猜对了 {correct} / {total}"
+        "stats": "猜对了 {correct} / {total}",
+        "help": {
+          "title": "Partially reveal tank?",
+          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "cancel": "取消",
+          "reveal": "Reveal"
+        }
       },
       "tankopedia": {
         "search": "搜索属性……",
@@ -1135,10 +1144,12 @@
             "upgrade": "顶级配置"
           },
           "provisions": {
-            "clear": "清除"
+            "clear": "清除",
+            "clear_all": "Clear all tanks"
           },
           "consumables": {
-            "clear": "清除"
+            "clear": "清除",
+            "clear_all": "Clear all tanks"
           }
         }
       },
