@@ -1,5 +1,6 @@
-import { Flex } from '@radix-ui/themes';
-import { ProvisionButton } from './ModuleButtons/ProvisionButton';
+import { Flex } from "@radix-ui/themes";
+import { awaitableProvisionDefinitions } from "../core/awaitables/provisionDefinitions";
+import { ProvisionButton } from "./ModuleButtons/ProvisionButton";
 
 interface ProvisionsManagerProps {
   provisions: number[];
@@ -8,6 +9,8 @@ interface ProvisionsManagerProps {
   onChange?: (provisions: number[]) => void;
 }
 
+const provisionDefinitions = await awaitableProvisionDefinitions;
+
 export function ProvisionsManager({
   provisions,
   selected,
@@ -15,15 +18,18 @@ export function ProvisionsManager({
   disabled,
 }: ProvisionsManagerProps) {
   return (
-    <Flex wrap="wrap" gap="2" justify={{ initial: 'center', sm: 'start' }}>
-      {provisions.map((provision) => {
-        const isSelected = selected.includes(provision);
+    <Flex wrap="wrap" gap="2" justify={{ initial: "center", sm: "start" }}>
+      {provisions.map((id) => {
+        const isSelected = selected.includes(id);
+        const provision = provisionDefinitions.provisions[id];
+
+        if (provision.game_mode_exclusive) return null;
 
         return (
           <ProvisionButton
-            key={provision}
+            key={id}
             disabled={disabled && !isSelected}
-            provision={provision}
+            provision={id}
             selected={isSelected}
             onClick={() => {
               if (!onChange) return;
@@ -31,9 +37,9 @@ export function ProvisionsManager({
               const draft = [...selected];
 
               if (isSelected) {
-                draft.splice(draft.indexOf(provision), 1);
+                draft.splice(draft.indexOf(id), 1);
               } else {
-                draft.push(provision);
+                draft.push(id);
               }
 
               onChange(draft);

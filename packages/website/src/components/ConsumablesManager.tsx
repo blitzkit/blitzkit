@@ -1,6 +1,6 @@
-import type { Consumable } from '@blitzkit/core';
-import { Flex, type FlexProps } from '@radix-ui/themes';
-import { ConsumableButton } from './ModuleButtons/ConsumableButton';
+import type { Consumable } from "@blitzkit/core";
+import { Flex, type FlexProps } from "@radix-ui/themes";
+import { ConsumableButton } from "./ModuleButtons/ConsumableButton";
 
 type ConsumablesManagerProps = FlexProps & {
   consumables: Consumable[];
@@ -27,6 +27,8 @@ export function ConsumablesManager({
   return (
     <Flex wrap="wrap" gap="2" {...props}>
       {consumables.map((consumable) => {
+        if (consumable.game_mode_exclusive) return null;
+
         const isSelected = selected.some((id) => id === consumable.id);
 
         return (

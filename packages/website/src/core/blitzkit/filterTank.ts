@@ -3,12 +3,14 @@ import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit
 import { times } from "lodash-es";
 import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
 import type { TankFilters } from "../../stores/tankFilters";
+import { awaitableGameDefinitions } from "../awaitables/gameDefinitions";
 import { awaitableProvisionDefinitions } from "../awaitables/provisionDefinitions";
 
 const SHELLS = times(3, (index) => index);
 
 const consumableDefinitions = await awaitableConsumableDefinitions;
 const provisionDefinitions = await awaitableProvisionDefinitions;
+const gameDefinitions = await awaitableGameDefinitions;
 
 export async function filterTank(
   filters: TankFilters,
@@ -72,27 +74,15 @@ export async function filterTank(
         )
       )) &&
     (filters.abilities.length === 0 ||
-      filters.abilities.every((ability) =>
-        tank.turrets.some((turret) =>
-          turret.guns.some((gun) =>
-            checkConsumableProvisionInclusivity(
-              consumableDefinitions.consumables[ability],
-              tank,
-              gun
-            )
-          )
+      Object.values(tank.roles).some((id) =>
+        gameDefinitions.roles[id as unknown as number].consumables.some(
+          (consumable) => filters.abilities.includes(consumable)
         )
       )) &&
     (filters.powers.length === 0 ||
-      filters.powers.every((power) =>
-        tank.turrets.some((turret) =>
-          turret.guns.some((gun) =>
-            checkConsumableProvisionInclusivity(
-              provisionDefinitions.provisions[power],
-              tank,
-              gun
-            )
-          )
+      Object.values(tank.roles).some((id) =>
+        gameDefinitions.roles[id as unknown as number].provisions.some(
+          (consumable) => filters.powers.includes(consumable)
         )
       ))
   );
