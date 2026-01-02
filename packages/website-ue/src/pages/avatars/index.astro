@@ -1,0 +1,38 @@
+---
+import { ProfileAvatarComponent_Category } from "@protos/blitz_static_profile_avatar_component";
+import { Grade } from "@protos/blitz_static_standard_grades_enum";
+import { api } from "../../core/api/dynamic";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const avatars = await api.avatars();
+---
+
+<BaseLayout accent="gold">
+  {
+    avatars.map((avatar) => {
+      const ui = avatar.StuffUI("UIComponent");
+      const profileAvatar = avatar.ProfileAvatar();
+
+      return (
+        <>
+          <h3>
+            {ui.display_name} {Grade[ui.grade]}{" "}
+            {ProfileAvatarComponent_Category[profileAvatar.category]}
+          </h3>
+
+          {ui.description && <p>{ui.description}</p>}
+          {ui.obtaining_methods && <p>{ui.obtaining_methods}</p>}
+          {ui.features && <p>{ui.features}</p>}
+
+          <img width="128" src={profileAvatar.avatar} />
+
+          {avatar.components.sellableComponent && (
+            <pre>{JSON.stringify(avatar.Sellable(), null, 2)}</pre>
+          )}
+
+          <br />
+        </>
+      );
+    })
+  }
+</BaseLayout>

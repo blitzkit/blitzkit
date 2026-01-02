@@ -145,4 +145,8 @@ export class ServerAPI extends AbstractAPI {
     const tankList = await this.tankList();
     return this._tank(id, tankList);
   }
+
+  async avatars() {
+    return this.metadata.group("ProfileAvatarEntity");
+  }
 }
