@@ -12,6 +12,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import {
   LockClosedIcon,
   LockOpen2Icon,
+  ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import {
@@ -128,7 +129,7 @@ const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" gap="2" wrap="wrap" justify="center">
+    <Flex align="center" gap="2" wrap="wrap">
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
@@ -144,25 +145,22 @@ export function FilterControl() {
       <AbilitiesFilter />
       <PowersFilter />
 
-      <ClearButton />
+      <ResetButton />
     </Flex>
   );
 }
 
-function ClearButton() {
-  const { strings } = useLocale();
-
+function ResetButton() {
   return (
-    <Button
+    <IconButton
       color="red"
-      variant="surface"
+      variant="solid"
       onClick={() => {
         TankFilters.set(TankFilters.initial);
       }}
     >
-      <TrashIcon />
-      {strings.website.common.tank_search.clear}
-    </Button>
+      <ResetIcon />
+    </IconButton>
   );
 }
 
