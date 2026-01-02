@@ -92,27 +92,32 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
+  _tankList: TankList | undefined;
   async tankList() {
-    const group = this.metadata.group("TankEntity");
-    const list: TankListEntry[] = [];
-    const strings = await this.strings("en");
+    if (this._tankList === undefined) {
+      const group = this.metadata.group("TankEntity");
+      const list: TankListEntry[] = [];
+      const strings = await this.strings("en");
 
-    for (const item of group) {
-      const tankCatalog = item.TankCatalog();
+      for (const item of group) {
+        const tankCatalog = item.TankCatalog();
 
-      if (!tankCatalog.name) continue;
+        if (!tankCatalog.name) continue;
 
-      const name = strings[tankCatalog.name.value];
+        const name = strings[tankCatalog.name.value];
 
-      if (!name) continue;
+        if (!name) continue;
 
-      const id = item.name;
-      const slug = sluggify(name);
+        const id = item.name;
+        const slug = sluggify(name);
 
-      list.push({ id, slug });
+        list.push({ id, slug });
+      }
+
+      this._tankList = { list };
     }
 
-    return { list };
+    return this._tankList;
   }
 
   async tanks() {
@@ -120,13 +125,14 @@ export class ServerAPI extends AbstractAPI {
     const data: Tanks = { tanks: {} };
 
     for (const { id } of tankList.list) {
-      data.tanks[id] = await this._tank(id, tankList);
+      data.tanks[id] = await this.tank(id);
     }
 
     return data;
   }
 
-  async _tank(id: string, tankList: TankList) {
+  async tank(id: string) {
+    const tankList = await this.tankList();
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
 
     if (!tankListEntry) {
@@ -139,11 +145,6 @@ export class ServerAPI extends AbstractAPI {
     const compensation = item.Compensation();
 
     return { tank, compensation, slug } satisfies Tank;
-  }
-
-  async tank(id: string) {
-    const tankList = await this.tankList();
-    return this._tank(id, tankList);
   }
 
   async avatars() {
