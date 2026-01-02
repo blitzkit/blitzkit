@@ -1557,87 +1557,85 @@ export async function definitions() {
     const includeRaw = consumable.vehicleFilter?.include.vehicle;
     const excludeRaw = consumable.vehicleFilter?.exclude?.vehicle;
 
-    if (!entry.game_mode_exclusive) {
-      if (includeRaw) {
-        entry.include = [];
+    if (includeRaw) {
+      entry.include = [];
 
-        if ("minLevel" in includeRaw) {
-          entry.include.push({
-            filter_type: {
-              $case: "tiers",
-              value: {
-                min: includeRaw.minLevel,
-                max: includeRaw.maxLevel,
-              },
+      if ("minLevel" in includeRaw) {
+        entry.include.push({
+          filter_type: {
+            $case: "tiers",
+            value: {
+              min: includeRaw.minLevel,
+              max: includeRaw.maxLevel,
             },
-          });
-        } else if ("name" in includeRaw) {
-          entry.include.push({
-            filter_type: {
-              $case: "ids",
-              value: {
-                ids: includeRaw.name.split(/ +/).map((key) => {
-                  return tankStringIdMap[key];
-                }),
-              },
+          },
+        });
+      } else if ("name" in includeRaw) {
+        entry.include.push({
+          filter_type: {
+            $case: "ids",
+            value: {
+              ids: includeRaw.name.split(/ +/).map((key) => {
+                return tankStringIdMap[key];
+              }),
             },
-          });
-        } else throw new SyntaxError("Unhandled include type");
+          },
+        });
+      } else throw new SyntaxError("Unhandled include type");
 
-        if (consumable.vehicleFilter?.include.nations) {
-          entry.include.push({
-            filter_type: {
-              $case: "nations",
-              value: {
-                nations: consumable.vehicleFilter.include.nations.split(" "),
-              },
+      if (consumable.vehicleFilter?.include.nations) {
+        entry.include.push({
+          filter_type: {
+            $case: "nations",
+            value: {
+              nations: consumable.vehicleFilter.include.nations.split(" "),
             },
-          });
-        }
+          },
+        });
       }
+    }
 
-      if (excludeRaw) {
-        entry.exclude = [];
+    if (excludeRaw) {
+      entry.exclude = [];
 
-        if ("name" in excludeRaw) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "ids",
-              value: {
-                ids: excludeRaw.name.split(/ +/).map((key) => {
-                  return tankStringIdMap[key];
-                }),
-              },
+      if ("name" in excludeRaw) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "ids",
+            value: {
+              ids: excludeRaw.name.split(/ +/).map((key) => {
+                return tankStringIdMap[key];
+              }),
             },
-          });
-        } else if ("extendedTags" in excludeRaw) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "categories",
-              value: {
-                categories: excludeRaw.extendedTags
-                  .split(" ")
-                  .map(
-                    (item) =>
-                      blitzTankFilterDefinitionCategoryToBlitzkit[
-                        item as BlitzTankFilterDefinitionCategory
-                      ]
-                  ),
-              },
+          },
+        });
+      } else if ("extendedTags" in excludeRaw) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "categories",
+            value: {
+              categories: excludeRaw.extendedTags
+                .split(" ")
+                .map(
+                  (item) =>
+                    blitzTankFilterDefinitionCategoryToBlitzkit[
+                      item as BlitzTankFilterDefinitionCategory
+                    ]
+                ),
             },
-          });
-        } else throw new SyntaxError("Unhandled exclude type");
+          },
+        });
+      } else throw new SyntaxError("Unhandled exclude type");
 
-        if (consumable.vehicleFilter?.exclude?.nations) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "nations",
-              value: {
-                nations: consumable.vehicleFilter.exclude.nations.split(" "),
-              },
+      if (consumable.vehicleFilter?.exclude?.nations) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "nations",
+            value: {
+              nations: consumable.vehicleFilter.exclude.nations.split(" "),
             },
-          });
-        }
+          },
+        });
       }
     }
   });
@@ -1657,87 +1655,85 @@ export async function definitions() {
     const includeRaw = provision.vehicleFilter?.include.vehicle;
     const excludeRaw = provision.vehicleFilter?.exclude?.vehicle;
 
-    if (!entry.game_mode_exclusive) {
-      if (includeRaw) {
-        entry.include = [];
+    if (includeRaw) {
+      entry.include = [];
 
-        if ("minLevel" in includeRaw) {
-          entry.include.push({
-            filter_type: {
-              $case: "tiers",
-              value: {
-                min: includeRaw.minLevel,
-                max: includeRaw.maxLevel,
-              },
+      if ("minLevel" in includeRaw) {
+        entry.include.push({
+          filter_type: {
+            $case: "tiers",
+            value: {
+              min: includeRaw.minLevel,
+              max: includeRaw.maxLevel,
             },
-          });
-        } else if ("name" in includeRaw) {
-          entry.include.push({
-            filter_type: {
-              $case: "ids",
-              value: {
-                ids: includeRaw.name.split(/ +/).map((key) => {
-                  return tankStringIdMap[key];
-                }),
-              },
+          },
+        });
+      } else if ("name" in includeRaw) {
+        entry.include.push({
+          filter_type: {
+            $case: "ids",
+            value: {
+              ids: includeRaw.name.split(/ +/).map((key) => {
+                return tankStringIdMap[key];
+              }),
             },
-          });
-        } else throw new SyntaxError("Unhandled include type");
+          },
+        });
+      } else throw new SyntaxError("Unhandled include type");
 
-        if (provision.vehicleFilter?.include.nations) {
-          entry.include.push({
-            filter_type: {
-              $case: "nations",
-              value: {
-                nations: provision.vehicleFilter.include.nations.split(" "),
-              },
+      if (provision.vehicleFilter?.include.nations) {
+        entry.include.push({
+          filter_type: {
+            $case: "nations",
+            value: {
+              nations: provision.vehicleFilter.include.nations.split(" "),
             },
-          });
-        }
+          },
+        });
       }
+    }
 
-      if (excludeRaw) {
-        entry.exclude = [];
+    if (excludeRaw) {
+      entry.exclude = [];
 
-        if ("name" in excludeRaw) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "ids",
-              value: {
-                ids: excludeRaw.name
-                  .split(/ +/)
-                  .map((key) => tankStringIdMap[key]),
-              },
+      if ("name" in excludeRaw) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "ids",
+            value: {
+              ids: excludeRaw.name
+                .split(/ +/)
+                .map((key) => tankStringIdMap[key]),
             },
-          });
-        } else if ("extendedTags" in excludeRaw) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "categories",
-              value: {
-                categories: excludeRaw.extendedTags
-                  .split(" ")
-                  .map(
-                    (item) =>
-                      blitzTankFilterDefinitionCategoryToBlitzkit[
-                        item as BlitzTankFilterDefinitionCategory
-                      ]
-                  ),
-              },
+          },
+        });
+      } else if ("extendedTags" in excludeRaw) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "categories",
+            value: {
+              categories: excludeRaw.extendedTags
+                .split(" ")
+                .map(
+                  (item) =>
+                    blitzTankFilterDefinitionCategoryToBlitzkit[
+                      item as BlitzTankFilterDefinitionCategory
+                    ]
+                ),
             },
-          });
-        } else throw new SyntaxError("Unhandled exclude type");
+          },
+        });
+      } else throw new SyntaxError("Unhandled exclude type");
 
-        if (provision.vehicleFilter?.exclude?.nations) {
-          entry.exclude!.push({
-            filter_type: {
-              $case: "nations",
-              value: {
-                nations: provision.vehicleFilter.exclude.nations.split(" "),
-              },
+      if (provision.vehicleFilter?.exclude?.nations) {
+        entry.exclude!.push({
+          filter_type: {
+            $case: "nations",
+            value: {
+              nations: provision.vehicleFilter.exclude.nations.split(" "),
             },
-          });
-        }
+          },
+        });
       }
     }
 
