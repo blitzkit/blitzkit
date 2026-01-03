@@ -1,8 +1,15 @@
 input {
   min-width: 0;
-  background-color: var(--gray-1);
-  border: solid 1px var(--gray-4);
+  max-width: var(--space-9);
+
+  border-radius: 9999px;
+
+  background-color: var(--gray-3);
+  border: solid 1px var(--gray-6);
   color: var(--gray-12);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--space-3);
+  margin: 0 var(--space-4);
+
+  font-weight: var(--weight-medium);
+  font-size: var(--font-size-regular);
 }
