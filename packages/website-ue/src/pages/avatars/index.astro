@@ -24,7 +24,7 @@ const avatars = await api.avatars();
           {ui.obtaining_methods && <p>{ui.obtaining_methods}</p>}
           {ui.features && <p>{ui.features}</p>}
 
-          <img width="128" src={profileAvatar.avatar} />
+          <img width="128" src={`/api/avatars/${avatar.name}.webp`} />
 
           {avatar.components.sellableComponent && (
             <pre>{JSON.stringify(avatar.Sellable(), null, 2)}</pre>

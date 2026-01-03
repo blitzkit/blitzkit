@@ -1,4 +1,4 @@
-import { api } from "../../core/api/dynamic";
+import { api } from "../../../core/api/dynamic";
 
 /**
  * Literally all the tanks in one place lmao.

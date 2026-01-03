@@ -1,6 +1,7 @@
 ---
 import "@radix-ui/colors/amber-dark.css";
 import packageJson from "../../../../package.json";
+import { tools } from "../core/tools/tools";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
@@ -9,9 +10,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <h1>blitzkit {packageJson.version}</h1>
 
-  <p><a href="/tanks">/tanks</a></p>
-
-  <p><a href="/avatars">/avatars</a></p>
-
-  <p><a href="/api">/api</a></p>
+  {
+    Object.values(tools).map((tool) => (
+      <p>
+        <a href={`/${tool.id}`}>{tool.id}</a>
+      </p>
+    ))
+  }
 </BaseLayout>

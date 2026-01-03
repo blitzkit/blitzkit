@@ -150,4 +150,8 @@ export class ServerAPI extends AbstractAPI {
   async avatars() {
     return this.metadata.group("ProfileAvatarEntity");
   }
+
+  async avatar(id: string) {
+    return this.metadata.item(`ProfileAvatarEntity.${id}`);
+  }
 }

@@ -16,4 +16,5 @@ export abstract class AbstractAPI {
   abstract tank(id: string): Promise<Tank>;
 
   abstract avatars(): Promise<CatalogItemAccessor[]>;
+  abstract avatar(id: string): Promise<CatalogItemAccessor>;
 }

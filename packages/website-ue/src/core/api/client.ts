@@ -6,7 +6,7 @@ import { AbstractAPI } from "./abstract";
 
 export class ClientAPI extends AbstractAPI {
   tanks() {
-    return fetchPB("/api/tanks.pb", Tanks);
+    return fetchPB("/api/tanks/all.pb", Tanks);
   }
 
   tankList() {
