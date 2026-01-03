@@ -17,10 +17,17 @@ export const tools: Record<string, Tool> = {
     button: "purple",
     significant: true,
   },
+
   avatars: {
     id: "avatars",
     button: "gold",
   },
+
+  backgrounds: {
+    id: "backgrounds",
+    button: "amber",
+  },
+
   api: {
     id: "api",
     disabled: true,

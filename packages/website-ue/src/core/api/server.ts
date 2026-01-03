@@ -154,4 +154,12 @@ export class ServerAPI extends AbstractAPI {
   async avatar(id: string) {
     return this.metadata.item(`ProfileAvatarEntity.${id}`);
   }
+
+  async backgrounds() {
+    return this.metadata.group("ProfileBackgroundEntity");
+  }
+
+  async background(id: string) {
+    return this.metadata.item(`ProfileBackgroundEntity.${id}`);
+  }
 }

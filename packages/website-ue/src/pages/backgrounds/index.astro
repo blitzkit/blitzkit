@@ -1,0 +1,38 @@
+---
+import { Grade } from "@protos/blitz_static_standard_grades_enum";
+import { api } from "../../core/api/dynamic";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const backgrounds = await api.backgrounds();
+---
+
+<BaseLayout accent="amber">
+  {
+    backgrounds.map((background) => {
+      const ui = background.StuffUI("UIComponent");
+      const profileBackground = background.ProfileBackground();
+
+      return (
+        <>
+          <h3>
+            {ui.display_name} {Grade[ui.grade]}{" "}
+          </h3>
+
+          <pre>{JSON.stringify(profileBackground, null, 2)}</pre>
+
+          {ui.description && <p>{ui.description}</p>}
+          {ui.obtaining_methods && <p>{ui.obtaining_methods}</p>}
+          {ui.features && <p>{ui.features}</p>}
+
+          <img width="128" src={`/api/backgrounds/${background.name}.webp`} />
+
+          {background.components.sellableComponent && (
+            <pre>{JSON.stringify(background.Sellable(), null, 2)}</pre>
+          )}
+
+          <br />
+        </>
+      );
+    })
+  }
+</BaseLayout>

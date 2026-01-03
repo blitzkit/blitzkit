@@ -17,4 +17,7 @@ export abstract class AbstractAPI {
 
   abstract avatars(): Promise<CatalogItemAccessor[]>;
   abstract avatar(id: string): Promise<CatalogItemAccessor>;
+
+  abstract backgrounds(): Promise<CatalogItemAccessor[]>;
+  abstract background(id: string): Promise<CatalogItemAccessor>;
 }
