@@ -1,5 +1,5 @@
 import { Box, Flex, Heading } from "@radix-ui/themes";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { GuessBackground } from "../../../components/GuessBackground";
 import { Guesser } from "../../../components/Guesser";
 import { GuessRenderer } from "../../../components/GuessRenderer";
@@ -62,6 +62,31 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const name = unwrap(tank.name);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
   const transitionDuration = isRevealed ? "2s" : undefined;
+  const tiers = Guess.use((state) => state.tiers);
+
+  useEffect(() => {
+    const isTankAlreadyCompliant = tiers.includes(tank.tier);
+
+    if (isTankAlreadyCompliant) return;
+
+    const filteredIds = ids.filter((id) => {
+      const tank = tankDefinitions.tanks[Number(id)];
+      return tiers.includes(tank.tier);
+    });
+
+    if (filteredIds.length === 0) return;
+
+    const id = Number(
+      filteredIds[Math.floor(Math.random() * filteredIds.length)]
+    );
+    const newTank = tankDefinitions.tanks[id];
+
+    Guess.mutate((draft) => {
+      draft.tank = newTank;
+      draft.guessState = GuessState.NotGuessed;
+      draft.helpingReveal = false;
+    });
+  }, [tiers]);
 
   return (
     <Flex flexGrow="1" position="relative" overflow="hidden">
