@@ -9,13 +9,17 @@ import {
   ArrowRightIcon,
   EyeOpenIcon,
   MagnifyingGlassIcon,
+  MixerVerticalIcon,
   PaperPlaneIcon,
+  StarFilledIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import {
   AlertDialog,
   Box,
   Button,
   Card,
+  DropdownMenu,
   Flex,
   IconButton,
   Spinner,
@@ -23,7 +27,7 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
-import { debounce } from "lodash-es";
+import { debounce, times } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
@@ -41,11 +45,7 @@ const [tankNames, tankDefinitions] = await Promise.all([
 
 const ids = Object.keys(tankDefinitions.tanks);
 
-interface GuesserProps {
-  selectedTiers: number[];
-}
-
-export function Guesser({ selectedTiers }: GuesserProps) {
+export function Guesser() {
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
   const correctGuesses = Guess.use((state) => state.correctGuesses);
@@ -57,6 +57,7 @@ export function Guesser({ selectedTiers }: GuesserProps) {
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<TankDefinition[] | null>(null);
   const [selected, setSelected] = useState<TankDefinition | null>(null);
+  const tiers = Guess.use((state) => state.tiers);
 
   const requestSearch = useCallback(() => {
     setSelected(null);
@@ -101,60 +102,60 @@ export function Guesser({ selectedTiers }: GuesserProps) {
       width="100%"
       p="4"
       maxWidth="25rem"
-      gap="4"
+      gap="3"
     >
       <Box position="relative">
+        {results !== null && (
+          <Card variant="classic">
+            <Box py="2" px="3">
+              {results.length === 0 && (
+                <Flex justify="center">
+                  <Text color="gray">
+                    {strings.website.tools.guess.search.no_results}
+                  </Text>
+                </Flex>
+              )}
 
-      {results !== null && (
-        <Card variant="classic">
-          <Box py="2" px="3">
-            {results.length === 0 && (
-              <Flex justify="center">
-                <Text color="gray">
-                  {strings.website.tools.guess.search.no_results}
-                </Text>
-              </Flex>
-            )}
+              <SearchResults.Root>
+                {results.map((result) => {
+                  const Icon = classIcons[result.class];
 
-            <SearchResults.Root>
-              {results.map((result) => {
-                const Icon = classIcons[result.class];
+                  return (
+                    <SearchResults.Item
+                      key={result.id}
+                      onClick={() => {
+                        if (!input.current) return;
 
-                return (
-                  <SearchResults.Item
-                    key={result.id}
-                    onClick={() => {
-                      if (!input.current) return;
-
-                      input.current.value = unwrap(result.name);
-                      setSelected(result);
-                      setResults(null);
-                    }}
-                    text={unwrap(result.name)}
-                    prefix={
-                      <img
-                        style={{ width: "1em", height: "1em" }}
-                        src={asset(`flags/circle/${result.nation}.webp`)}
-                      />
-                    }
-                    discriminator={
-                      <Flex
-                        align="center"
-                        gap="1"
-                        width="38px"
-                        justify="center"
-                      >
-                        <Icon width="1em" height="1em" />
-                        {TIER_ROMAN_NUMERALS[result.tier]}
-                      </Flex>
-                    }
-                  />
-                );
-              })}
-            </SearchResults.Root>
-          </Box>
-        </Card>
-      )}
+                        input.current.value = unwrap(result.name);
+                        setSelected(result);
+                        setResults(null);
+                      }}
+                      text={unwrap(result.name)}
+                      prefix={
+                        <img
+                          style={{ width: "1em", height: "1em" }}
+                          src={asset(`flags/circle/${result.nation}.webp`)}
+                        />
+                      }
+                      discriminator={
+                        <Flex
+                          align="center"
+                          gap="1"
+                          width="38px"
+                          justify="center"
+                        >
+                          <Icon width="1em" height="1em" />
+                          {TIER_ROMAN_NUMERALS[result.tier]}
+                        </Flex>
+                      }
+                    />
+                  );
+                })}
+              </SearchResults.Root>
+            </Box>
+          </Card>
+        )}
+      </Box>
 
       <Flex justify="center" style={{ userSelect: "none" }}>
         <Text>
@@ -167,11 +168,75 @@ export function Guesser({ selectedTiers }: GuesserProps) {
       </Flex>
 
       <Flex gap="3">
+        <DropdownMenu.Root modal={false}>
+          <DropdownMenu.Trigger>
+            <IconButton size="3" variant="surface" color="gray">
+              <MixerVerticalIcon />
+            </IconButton>
+          </DropdownMenu.Trigger>
+
+          <DropdownMenu.Content>
+            {times(10, (index) => {
+              const tier = 10 - index;
+              const isSelected = tiers.includes(tier);
+
+              return (
+                <DropdownMenu.CheckboxItem
+                  checked={isSelected}
+                  key={tier}
+                  onClick={(event) => {
+                    event.preventDefault();
+
+                    Guess.mutate((draft) => {
+                      if (isSelected) {
+                        draft.tiers = draft.tiers.filter((t) => t !== tier);
+                      } else {
+                        draft.tiers = [...draft.tiers, tier];
+                      }
+                    });
+                  }}
+                >
+                  {literals(strings.website.tools.guess.tier, {
+                    tier: TIER_ROMAN_NUMERALS[tier],
+                  })}
+                </DropdownMenu.CheckboxItem>
+              );
+            })}
+
+            <DropdownMenu.Separator />
+
+            <DropdownMenu.Item
+              onClick={(event) => {
+                event.preventDefault();
+
+                Guess.mutate((draft) => {
+                  draft.tiers = Guess.initial.tiers;
+                });
+              }}
+            >
+              <StarFilledIcon /> {strings.website.tools.guess.select_all}
+            </DropdownMenu.Item>
+
+            <DropdownMenu.Item
+              color="red"
+              onClick={(event) => {
+                event.preventDefault();
+
+                Guess.mutate((draft) => {
+                  draft.tiers = [];
+                });
+              }}
+            >
+              <TrashIcon /> {strings.website.tools.guess.clear}
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+
         <TextField.Root
           disabled={guessState !== GuessState.NotGuessed}
           ref={input}
           onChange={requestSearch}
-          style={{ flex: 1 }}
+          style={{ flex: 1, minWidth: "14rem" }}
           placeholder={strings.website.tools.guess.search.placeholder}
           size="3"
           variant="classic"
@@ -225,7 +290,7 @@ export function Guesser({ selectedTiers }: GuesserProps) {
 
         <Button
           size="3"
-          disabled={selectedTiers.length === 0}
+          disabled={tiers.length === 0}
           color={
             guessState === GuessState.NotGuessed && selected === null
               ? "red"
@@ -247,7 +312,7 @@ export function Guesser({ selectedTiers }: GuesserProps) {
             } else {
               const filteredIds = ids.filter((id) => {
                 const tank = tankDefinitions.tanks[Number(id)];
-                return selectedTiers.includes(tank.tier);
+                return tiers.includes(tank.tier);
               });
               const id = Number(
                 filteredIds[Math.floor(Math.random() * filteredIds.length)]
@@ -283,7 +348,6 @@ export function Guesser({ selectedTiers }: GuesserProps) {
           )}
         </Button>
       </Flex>
-      </Box>
     </Flex>
   );
 }

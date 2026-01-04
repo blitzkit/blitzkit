@@ -1,4 +1,5 @@
 import type { TankDefinition } from "@blitzkit/core";
+import { times } from "lodash-es";
 import { Varuna } from "varuna";
 
 export enum GuessState {
@@ -14,6 +15,7 @@ export interface Guess {
   correctGuesses: number;
   streak: number;
   helpingReveal: boolean;
+  tiers: number[];
 }
 
 export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
@@ -23,4 +25,5 @@ export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
   correctGuesses: 0,
   streak: 0,
   helpingReveal: false,
+  tiers: times(10, (index) => index + 1),
 }));
