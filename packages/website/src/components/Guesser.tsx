@@ -41,7 +41,11 @@ const [tankNames, tankDefinitions] = await Promise.all([
 
 const ids = Object.keys(tankDefinitions.tanks);
 
-export function Guesser() {
+interface GuesserProps {
+  selectedTiers: number[];
+}
+
+export function Guesser({ selectedTiers }: GuesserProps) {
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
   const correctGuesses = Guess.use((state) => state.correctGuesses);
@@ -99,6 +103,8 @@ export function Guesser() {
       maxWidth="25rem"
       gap="4"
     >
+      <Box position="relative">
+
       {results !== null && (
         <Card variant="classic">
           <Box py="2" px="3">
@@ -219,6 +225,7 @@ export function Guesser() {
 
         <Button
           size="3"
+          disabled={selectedTiers.length === 0}
           color={
             guessState === GuessState.NotGuessed && selected === null
               ? "red"
@@ -238,7 +245,13 @@ export function Guesser() {
                 draft.streak = correct ? draft.streak + 1 : 0;
               });
             } else {
-              const id = Number(ids[Math.floor(Math.random() * ids.length)]);
+              const filteredIds = ids.filter((id) => {
+                const tank = tankDefinitions.tanks[Number(id)];
+                return selectedTiers.includes(tank.tier);
+              });
+              const id = Number(
+                filteredIds[Math.floor(Math.random() * filteredIds.length)]
+              );
               const tank = tankDefinitions.tanks[id];
 
               Guess.mutate((draft) => {
@@ -270,6 +283,7 @@ export function Guesser() {
           )}
         </Button>
       </Flex>
+      </Box>
     </Flex>
   );
 }

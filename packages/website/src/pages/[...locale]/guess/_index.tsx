@@ -1,5 +1,8 @@
-import { Box, Flex, Heading } from "@radix-ui/themes";
-import { Suspense } from "react";
+import { Box, DropdownMenu, Flex, Heading, IconButton, Text } from "@radix-ui/themes";
+import { Suspense, useEffect, useState } from "react";
+import { MixerVerticalIcon } from "@radix-ui/react-icons";
+import { times } from "lodash-es";
+import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { GuessBackground } from "../../../components/GuessBackground";
 import { Guesser } from "../../../components/Guesser";
 import { GuessRenderer } from "../../../components/GuessRenderer";
@@ -55,17 +58,114 @@ function Container({ skeleton }: MaybeSkeletonComponentProps) {
 }
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
-  const { unwrap } = useLocale();
+  const { unwrap, strings } = useLocale();
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
   const isRevealed = guessState !== GuessState.NotGuessed;
   const name = unwrap(tank.name);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
   const transitionDuration = isRevealed ? "2s" : undefined;
+  const [selectedTiers, setSelectedTiers] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  useEffect(() => {
+    if (selectedTiers.length === 0) return;
+
+    const filteredIds = ids.filter((id) => {
+      const tank = tankDefinitions.tanks[Number(id)];
+      return selectedTiers.includes(tank.tier);
+    });
+
+    if (filteredIds.length === 0) return;
+
+    const id = Number(filteredIds[Math.floor(Math.random() * filteredIds.length)]);
+    const newTank = tankDefinitions.tanks[id];
+
+    Guess.mutate((draft) => {
+      draft.tank = newTank;
+      draft.guessState = GuessState.NotGuessed;
+      draft.helpingReveal = false;
+    });
+  }, [selectedTiers]);
 
   return (
     <Flex flexGrow="1" position="relative" overflow="hidden">
       <GuessBackground />
+
+      <DropdownMenu.Root modal={false}>
+        <DropdownMenu.Trigger>
+          <IconButton
+            size="3"
+            variant="surface"
+            color="gray"
+            style={{
+              position: "fixed",
+              top: "80px",
+              right: "16px",
+              zIndex: 1000,
+            }}
+          >
+            <MixerVerticalIcon />
+          </IconButton>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Content>
+          {times(10, (index) => {
+            const tier = 10 - index;
+            const isSelected = selectedTiers.includes(tier);
+
+            return (
+              <DropdownMenu.Item
+                key={tier}
+                color={isSelected ? "blue" : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setSelectedTiers((prev) => {
+                    if (prev.includes(tier)) {
+                      return prev.filter((t) => t !== tier);
+                    } else {
+                      return [...prev, tier];
+                    }
+                  });
+                }}
+              >
+                {TIER_ROMAN_NUMERALS[tier]}
+              </DropdownMenu.Item>
+            );
+          })}
+
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Item
+            onClick={() => setSelectedTiers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
+          >
+            Select All
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item
+            color="red"
+            onClick={() => setSelectedTiers([])}
+          >
+            Clear All
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+
+      {selectedTiers.length === 0 && (
+        <Box
+          position="absolute"
+          top="50%"
+          left="50%"
+          style={{
+            transform: "translate(-50%, -50%)",
+            zIndex: 100,
+            textAlign: "center",
+          }}
+        >
+          <Text size="8" weight="bold" style={{ color: "white", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
+            Select tier(s) to start playing
+          </Text>
+        </Box>
+      )}
 
       <Heading
         style={{
@@ -116,7 +216,7 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
         {name}
       </Heading>
 
-      <Guesser />
+      <Guesser selectedTiers={selectedTiers} />
     </Flex>
   );
 }
