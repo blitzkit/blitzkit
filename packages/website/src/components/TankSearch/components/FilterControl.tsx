@@ -155,7 +155,7 @@ const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" gap="2" wrap="wrap">
+    <Flex align="center" justify="center" gap="2" wrap="wrap">
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
