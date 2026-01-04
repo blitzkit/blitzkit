@@ -190,11 +190,12 @@ export function Guesser() {
                     Guess.mutate((draft) => {
                       if (isSelected) {
                         if (draft.tiers.length === 1) return;
-
                         draft.tiers = draft.tiers.filter((t) => t !== tier);
                       } else {
                         draft.tiers = [...draft.tiers, tier];
                       }
+
+                      draft.streak = 0;
                     });
                   }}
                 >
