@@ -1,19 +1,47 @@
 # BlitzKit Credits
 
-BlitzKit is a one man band **TrèsAbhi** but I am far from solo.
+BlitzKit is a one man band **TrèsAbhi** but I am far from solo. Helpers, in the order of contribution over time:
 
-| Role                           | People                         |
-| ------------------------------ | ------------------------------ |
-| Bot verification               | S0AP                           |
-| General testing | Prince_NA |
-| Bot advertisement platform     | S0AP                           |
-| Bot rendering pipeline         | Vovko                          |
-| Game asset decompression       | Maddox                         |
-| Game 3D model parsing          | Pyogenics                      |
-| Game file layout               | Aeson                          |
-| 3-caliber rule edge cases      | Minitelrose, ChickenMan7777    |
-| Embed UX                       | \_34, HisRoyalFatness, Synx    |
-| Tankopedia pre-release testing | [OPTML], Aeson, \_34, xkdkw |
-| Website advertisement platform | Aeson                |
-| Compare pre-release testing    | [OPTML]              |
-| Redacted                       | GonnaHetzMe                    |
+### S0AP
+
+BlitzKit Discord bot verification, testing, advertisement, and the initial encouragement to create BlitzKit.
+
+### Prince_NA
+
+BlitzKit Discord bot and website testing and general advise.
+
+### Vovko
+
+BlitzKit Discord bot and website rendering pipeline.
+
+### Maddox
+
+Game file decompression.
+
+### Pyogenics
+
+Game 3D model parsing.
+
+### Aeson
+
+Game file layout, general advise, advertisement, and Tankopedia pre-release testing.
+
+### Minitelrose, ChickenMan7777
+
+3-caliber rule edge cases.
+
+### HisRoyalFatness, Synx
+
+Embed UX.
+
+### [OPTML] clan, \_34, xkdkw, Droodles Blitz
+
+Tankopedia pre-release testing.
+
+### GonnaHetzMe
+
+Redacted by request.
+
+### Mark Greene
+
+GitHub contributor on bug fixes and feature additions.
