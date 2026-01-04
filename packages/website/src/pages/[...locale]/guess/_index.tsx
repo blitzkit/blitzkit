@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading } from "@radix-ui/themes";
 import { Suspense, useEffect } from "react";
 import { GuessBackground } from "../../../components/GuessBackground";
 import { Guesser } from "../../../components/Guesser";
@@ -65,7 +65,9 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const tiers = Guess.use((state) => state.tiers);
 
   useEffect(() => {
-    if (tiers.length === 0) return;
+    const isTankAlreadyCompliant = tiers.includes(tank.tier);
+
+    if (isTankAlreadyCompliant) return;
 
     const filteredIds = ids.filter((id) => {
       const tank = tankDefinitions.tanks[Number(id)];
@@ -89,27 +91,6 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   return (
     <Flex flexGrow="1" position="relative" overflow="hidden">
       <GuessBackground />
-
-      {tiers.length === 0 && (
-        <Box
-          position="absolute"
-          top="50%"
-          left="50%"
-          style={{
-            transform: "translate(-50%, -50%)",
-            zIndex: 100,
-            textAlign: "center",
-          }}
-        >
-          <Text
-            size="8"
-            weight="bold"
-            style={{ color: "white", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
-          >
-            Select tier(s) to start playing
-          </Text>
-        </Box>
-      )}
 
       <Heading
         style={{

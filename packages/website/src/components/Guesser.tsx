@@ -189,6 +189,8 @@ export function Guesser() {
 
                     Guess.mutate((draft) => {
                       if (isSelected) {
+                        if (draft.tiers.length === 1) return;
+
                         draft.tiers = draft.tiers.filter((t) => t !== tier);
                       } else {
                         draft.tiers = [...draft.tiers, tier];
@@ -290,7 +292,6 @@ export function Guesser() {
 
         <Button
           size="3"
-          disabled={tiers.length === 0}
           color={
             guessState === GuessState.NotGuessed && selected === null
               ? "red"
