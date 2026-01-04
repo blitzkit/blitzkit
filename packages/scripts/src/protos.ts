@@ -1,21 +1,15 @@
-import { exec as execSync } from "child_process";
+import { execFile } from "child_process";
 import { existsSync } from "fs";
-import { readdir, rm } from "fs/promises";
-import { promisify } from "util";
+import { mkdir, readdir, rm, writeFile } from "fs/promises";
 
-const MAX_COMMAND_LENGTH = 2 ** 11;
 const TS_PROTO_EXECUTABLE_LOCATIONS = [
   "./node_modules/.bin/protoc-gen-ts_proto",
   "../../node_modules/.bin/protoc-gen-ts_proto",
 ];
-
-const roots = [
-  // "../../packages/core/src/protos",
+const ROOTS = [
   "../../packages/closed/protos",
   "../../packages/website-ue/src/protos",
 ];
-
-const exec = promisify(execSync);
 
 let tsProtoExecutableLocation: string | undefined = undefined;
 
@@ -37,7 +31,63 @@ if (!tsProtoExecutableLocation) {
   );
 }
 
-for (const root of roots) {
+// for (const root of ROOTS) {
+//   const filesRaw = await readdir(`${root}`);
+//   const files: string[] = [];
+
+//   for (const file of filesRaw) {
+//     if (file.endsWith(".proto")) files.push(file);
+//     if (file.endsWith(".ts")) await rm(`${root}/${file}`);
+//   }
+
+//   while (files.length > 0) {
+//     let command = [
+//       "protoc",
+//       `--plugin=${tsProtoExecutableLocation}`,
+//       "--ts_proto_opt=esModuleInterop=true",
+//       "--ts_proto_opt=oneof=unions-value",
+//       // "--ts_proto_opt=removeEnumPrefix=true",
+//       "--ts_proto_opt=unrecognizedEnum=false",
+//       "--ts_proto_opt=snakeToCamel=false",
+//       `--ts_proto_out=${root}`,
+//       ...ROOTS.map((root) => `-I=${root}`),
+//     ].join(" ");
+
+//     while (true) {
+//       if (files.length === 0) break;
+
+//       const file = files.at(-1);
+//       const newLine = ` ${root}/${file}`;
+
+//       if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
+//         const file = files.pop();
+//         command += newLine;
+//         // console.log(`  ${file}`);
+//       } else {
+//         break;
+//       }
+//     }
+
+//     await exec(command);
+//   }
+// }
+
+await mkdir("temp", { recursive: true });
+
+for (const root of ROOTS) {
+  let args = "";
+
+  for (const include of ROOTS) {
+    args += `-I=${include}\n`;
+  }
+
+  args += `--plugin=${tsProtoExecutableLocation}\n`;
+  args += "--ts_proto_opt=esModuleInterop=true\n";
+  args += "--ts_proto_opt=oneof=unions-value\n";
+  args += "--ts_proto_opt=unrecognizedEnum=false\n";
+  args += "--ts_proto_opt=snakeToCamel=false\n";
+  args += `--ts_proto_out=${root}\n`;
+
   const filesRaw = await readdir(`${root}`);
   const files: string[] = [];
 
@@ -46,34 +96,6 @@ for (const root of roots) {
     if (file.endsWith(".ts")) await rm(`${root}/${file}`);
   }
 
-  while (files.length > 0) {
-    let command = [
-      "protoc",
-      `--plugin=${tsProtoExecutableLocation}`,
-      "--ts_proto_opt=esModuleInterop=true",
-      "--ts_proto_opt=oneof=unions-value",
-      // "--ts_proto_opt=removeEnumPrefix=true",
-      "--ts_proto_opt=unrecognizedEnum=false",
-      "--ts_proto_opt=snakeToCamel=false",
-      `--ts_proto_out=${root}`,
-      ...roots.map((root) => `-I=${root}`),
-    ].join(" ");
-
-    while (true) {
-      if (files.length === 0) break;
-
-      const file = files.at(-1);
-      const newLine = ` ${root}/${file}`;
-
-      if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
-        const file = files.pop();
-        command += newLine;
-        // console.log(`  ${file}`);
-      } else {
-        break;
-      }
-    }
-
-    await exec(command);
-  }
+  await writeFile("temp/protoc.txt", args);
+  execFile("protoc", ["@temp/protoc.txt"]);
 }
