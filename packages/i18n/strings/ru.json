@@ -23,8 +23,8 @@
     },
     "shells": {
       "ap": "ББ",
-      "ap_cr": "APCR",
-      "hc": "HEAT",
+      "ap_cr": "БП",
+      "hc": "ОФ",
       "he": "ОФ"
     },
     "player_count_period": {
