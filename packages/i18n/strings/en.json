@@ -762,6 +762,8 @@
         "sorting_by": "Sorting by {name}",
         "clear": "Clear",
         "tier": "Tier {tier}",
+        "passive": "{name} (Passive)",
+        "active": "{name} (Active)",
 
         "no_tanks_found": {
           "body": "No tanks found.",

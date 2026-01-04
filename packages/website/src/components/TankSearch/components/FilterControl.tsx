@@ -26,7 +26,7 @@ import {
   type FlexProps,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { Fragment, useState, type ComponentProps, type ReactNode } from "react";
+import { Fragment, type ComponentProps, type ReactNode } from "react";
 import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
 import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
 import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
@@ -160,13 +160,16 @@ export function FilterControl() {
       <ClassFilter />
       <TypeFilter />
       <NationsFilter />
+
       <OwnershipFilter />
       <TestFilter />
+
       <GunTypeFilter />
       <ShellFilter />
       <ConsumablesFilter />
       <ProvisionsFilter />
       <GameModeAbilitiesFilter />
+
       <ResetButton />
     </Flex>
   );
@@ -1028,165 +1031,166 @@ function ProvisionsFilter() {
 }
 
 function GameModeAbilitiesFilter() {
-  const { unwrap } = useLocale();
+  const { unwrap, strings } = useLocale();
   const rawAbilities = TankFilters.use((state) => state.abilities);
   const rawPowers = TankFilters.use((state) => state.powers);
-  const [activeTab, setActiveTab] = useState<"active" | "passive">("active");
 
-  const totalSelected = rawAbilities.length + rawPowers.length;
+  const abilities =
+    rawAbilities.length === 0 && rawPowers.length === 0
+      ? Array.from(allGameModeConsumables.values())
+      : rawAbilities;
+  const powers =
+    rawPowers.length === 0 && rawAbilities.length === 0
+      ? Array.from(allGameModeProvisions.values())
+      : rawPowers;
+
+  const icons = [
+    ...abilities.map((ability) => `icons/consumables/${ability}.webp`),
+    ...powers.map((power) => `icons/provisions/${power}.webp`),
+  ];
 
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
-          Game Mode Abilities
-          {totalSelected > 0 && (
-            <Text size="1" ml="1">
-              ({totalSelected})
-            </Text>
-          )}
+          <Flex>
+            {icons.slice(0, MAX_ICONS).map((icon, index) => (
+              <img
+                key={icon}
+                style={{
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                  objectFit: "contain",
+                }}
+                src={asset(icon)}
+              />
+            ))}
+
+            {icons.length > MAX_ICONS && (
+              <Text size="1" ml="1">
+                {literals(strings.common.units.plus, {
+                  value: icons.length - MAX_ICONS,
+                })}
+              </Text>
+            )}
+          </Flex>
         </Button>
       </DropdownMenu.Trigger>
 
-      <DropdownMenu.Content style={{ minWidth: "249px", maxWidth: "249px" }}>
-        {/* Tab buttons */}
-        <Flex gap="2" p="2" mb="2" width="100%">
-          <Button
-            size="1"
-            variant={activeTab === "active" ? "solid" : "soft"}
-            color={activeTab === "active" ? "violet" : "gray"}
-            onClick={() => setActiveTab("active")}
-            style={{ flex: 1, minWidth: 0 }}
-          >
-            Active
-          </Button>
-          <Button
-            size="1"
-            variant={activeTab === "passive" ? "solid" : "soft"}
-            color={activeTab === "passive" ? "violet" : "gray"}
-            onClick={() => setActiveTab("passive")}
-            style={{ flex: 1, minWidth: 0 }}
-          >
-            Passive
-          </Button>
-        </Flex>
+      <DropdownMenu.Content>
+        {gameModeRoles.map(({ gameModeId, consumables, provisions }) => {
+          const gameMode = gameDefinitions.gameModes[gameModeId];
+          const hasNeither =
+            consumables.length === 0 && provisions.length === 0;
 
-        <DropdownMenu.Separator />
+          if (hasNeither) return null;
 
-        {/* Active Abilities Content */}
-        {activeTab === "active" && (
-          <>
-            {gameModeRoles.map(({ gameModeId, consumables }) => {
-              const gameMode = gameDefinitions.gameModes[gameModeId];
+          const hasBoth = consumables.length > 0 && provisions.length > 0;
 
-              if (consumables.length === 0) return null;
+          return (
+            <Fragment key={gameModeId}>
+              {consumables.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.active, {
+                        name: unwrap(gameMode.name),
+                      })
+                    : unwrap(gameMode.name)}
+                </DropdownMenu.Label>
+              )}
 
-              return (
-                <Fragment key={`active-${gameModeId}`}>
-                  <DropdownMenu.Label>
-                    {unwrap(gameMode.name)}
-                  </DropdownMenu.Label>
+              {consumables.map((consumable) => {
+                {
+                  const selected = rawAbilities.includes(consumable);
+                  const abilityDefinition =
+                    consumableDefinitions.consumables[consumable];
 
-                  {consumables.map((consumable) => {
-                    const selected = rawAbilities.includes(consumable);
-                    const abilityDefinition =
-                      consumableDefinitions.consumables[consumable];
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
 
-                    return (
-                      <DropdownMenu.CheckboxItem
-                        onClick={(event) => {
-                          event.preventDefault();
-
-                          TankFilters.mutate((draft) => {
-                            if (selected) {
-                              draft.abilities = draft.abilities.filter(
-                                (n) => n !== consumable
-                              );
-                            } else {
-                              draft.abilities = [
-                                ...draft.abilities,
-                                consumable,
-                              ];
-                            }
-                          });
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.abilities = draft.abilities.filter(
+                              (n) => n !== consumable
+                            );
+                          } else {
+                            draft.abilities = [...draft.abilities, consumable];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={consumable}
+                    >
+                      <img
+                        style={{
+                          width: "1.25em",
+                          height: "1.25em",
+                          objectFit: "contain",
                         }}
-                        checked={selected}
-                        key={consumable}
-                      >
-                        <img
-                          style={{
-                            width: "1.25em",
-                            height: "1.25em",
-                            objectFit: "contain",
-                          }}
-                          src={asset(`icons/consumables/${consumable}.webp`)}
-                        />
+                        src={asset(`icons/consumables/${consumable}.webp`)}
+                      />
 
-                        {unwrap(abilityDefinition.name)}
-                      </DropdownMenu.CheckboxItem>
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-          </>
-        )}
+                      {unwrap(abilityDefinition.name)}
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
 
-        {/* Passive Abilities Content */}
-        {activeTab === "passive" && (
-          <>
-            {gameModeRoles.map(({ gameModeId, provisions }) => {
-              const gameMode = gameDefinitions.gameModes[gameModeId];
+              {provisions.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.passive, {
+                        name: unwrap(gameMode.name),
+                      })
+                    : unwrap(gameMode.name)}
+                </DropdownMenu.Label>
+              )}
 
-              if (provisions.length === 0) return null;
+              {provisions.map((provision) => {
+                {
+                  const selected = rawPowers.includes(provision);
+                  const powerDefinition =
+                    provisionDefinitions.provisions[provision];
 
-              return (
-                <Fragment key={`passive-${gameModeId}`}>
-                  <DropdownMenu.Label>
-                    {unwrap(gameMode.name)}
-                  </DropdownMenu.Label>
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
 
-                  {provisions.map((provision) => {
-                    const selected = rawPowers.includes(provision);
-                    const powerDefinition =
-                      provisionDefinitions.provisions[provision];
-
-                    return (
-                      <DropdownMenu.CheckboxItem
-                        onClick={(event) => {
-                          event.preventDefault();
-
-                          TankFilters.mutate((draft) => {
-                            if (selected) {
-                              draft.powers = draft.powers.filter(
-                                (n) => n !== provision
-                              );
-                            } else {
-                              draft.powers = [...draft.powers, provision];
-                            }
-                          });
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.powers = draft.powers.filter(
+                              (n) => n !== provision
+                            );
+                          } else {
+                            draft.powers = [...draft.powers, provision];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={provision}
+                    >
+                      <img
+                        style={{
+                          width: "1.25em",
+                          height: "1.25em",
+                          objectFit: "contain",
                         }}
-                        checked={selected}
-                        key={provision}
-                      >
-                        <img
-                          style={{
-                            width: "1.25em",
-                            height: "1.25em",
-                            objectFit: "contain",
-                          }}
-                          src={asset(`icons/provisions/${provision}.webp`)}
-                        />
+                        src={asset(`icons/provisions/${provision}.webp`)}
+                      />
 
-                        {unwrap(powerDefinition.name)}
-                      </DropdownMenu.CheckboxItem>
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-          </>
-        )}
+                      {unwrap(powerDefinition.name)}
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+            </Fragment>
+          );
+        })}
 
         <DropdownMenu.Separator />
 
@@ -1202,7 +1206,7 @@ function GameModeAbilitiesFilter() {
           }}
         >
           <TrashIcon />
-          Clear All
+          {strings.website.common.tank_search.clear}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
