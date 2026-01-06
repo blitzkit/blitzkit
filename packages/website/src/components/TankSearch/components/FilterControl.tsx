@@ -1049,6 +1049,19 @@ function GameModeAbilitiesFilter() {
     ...powers.map((power) => `icons/provisions/${power}.webp`),
   ];
 
+  // Find Uprising and Gravitizing game mode IDs by checking English names
+  let uprisingGameModeId: number | null = null;
+  let gravitizingGameModeId: number | null = null;
+
+  for (const { gameModeId } of gameModeRoles) {
+    const gameModeNameEnglish = gameDefinitions.gameModes[gameModeId].name.locales[locales.default];
+    if (gameModeNameEnglish === "Uprising") {
+      uprisingGameModeId = gameModeId;
+    } else if (gameModeNameEnglish === "Gravitizing") {
+      gravitizingGameModeId = gameModeId;
+    }
+  }
+
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
@@ -1087,7 +1100,17 @@ function GameModeAbilitiesFilter() {
 
           if (hasNeither) return null;
 
+          // Skip Gravitizing - it will be merged with Uprising
+          if (gameModeId === gravitizingGameModeId) return null;
+
           const hasBoth = consumables.length > 0 && provisions.length > 0;
+
+          // Determine display name
+          let displayName = unwrap(gameMode.name);
+          if (gameModeId === uprisingGameModeId && gravitizingGameModeId !== null) {
+            const gravitizingName = unwrap(gameDefinitions.gameModes[gravitizingGameModeId].name);
+            displayName = `${displayName}/${gravitizingName}`;
+          }
 
           return (
             <Fragment key={gameModeId}>
@@ -1095,9 +1118,9 @@ function GameModeAbilitiesFilter() {
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.active, {
-                        name: unwrap(gameMode.name),
+                        name: displayName,
                       })
-                    : unwrap(gameMode.name)}
+                    : displayName}
                 </DropdownMenu.Label>
               )}
 
@@ -1144,9 +1167,9 @@ function GameModeAbilitiesFilter() {
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.passive, {
-                        name: unwrap(gameMode.name),
+                        name: displayName,
                       })
-                    : unwrap(gameMode.name)}
+                    : displayName}
                 </DropdownMenu.Label>
               )}
 
