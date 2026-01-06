@@ -1082,6 +1082,11 @@ function GameModeAbilitiesFilter() {
       <DropdownMenu.Content>
         {gameModeRoles.map(({ gameModeId, consumables, provisions }) => {
           const gameMode = gameDefinitions.gameModes[gameModeId];
+          const gameModeName = unwrap(gameMode.name);
+
+          // Skip Gravitizing
+          if (gameModeName === "Gravitizing") return null;
+
           const hasNeither =
             consumables.length === 0 && provisions.length === 0;
 
@@ -1089,15 +1094,18 @@ function GameModeAbilitiesFilter() {
 
           const hasBoth = consumables.length > 0 && provisions.length > 0;
 
+          // Rename Uprising to Uprising/Gravitizing
+          const displayName = gameModeName === "Uprising" ? "Uprising/Gravitizing" : gameModeName;
+
           return (
             <Fragment key={gameModeId}>
               {consumables.length > 0 && (
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.active, {
-                        name: unwrap(gameMode.name),
+                        name: displayName,
                       })
-                    : unwrap(gameMode.name)}
+                    : displayName}
                 </DropdownMenu.Label>
               )}
 
@@ -1144,9 +1152,9 @@ function GameModeAbilitiesFilter() {
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.passive, {
-                        name: unwrap(gameMode.name),
+                        name: displayName,
                       })
-                    : unwrap(gameMode.name)}
+                    : displayName}
                 </DropdownMenu.Label>
               )}
 
