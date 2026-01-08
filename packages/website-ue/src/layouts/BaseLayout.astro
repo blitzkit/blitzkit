@@ -2,6 +2,8 @@
 import "@fontsource-variable/inter";
 import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
+import ColorAlias from "../components/ColorAlias.astro";
+import ColorScale from "../components/ColorScale.astro";
 import Navbar from "../components/Navbar.astro";
 import type { Color } from "../pages/styles/colors/[accent].css";
 
@@ -16,7 +18,12 @@ const { accent, noNavbar } = Astro.props;
 <html>
   <head>
     <BaseMeta />
-    <BaseStyles {accent} />
+
+    <ColorScale color="mauve" />
+    <ColorScale color={accent} />
+    <ColorAlias color="mauve" alias="gray" />
+    <ColorAlias color={accent} alias="accent" />
+    <BaseStyles />
   </head>
 
   <body class="dark">

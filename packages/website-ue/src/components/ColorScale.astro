@@ -1,0 +1,25 @@
+---
+import * as colors from "@radix-ui/colors";
+import type { Color } from "../pages/styles/colors/[accent].css";
+
+interface Props {
+  color: Color;
+}
+
+const { color } = Astro.props;
+const scale = colors[`${color}Dark`];
+
+let styles = "";
+
+styles += ":root{";
+
+for (let i = 0; i < 12; i++) {
+  const n = i + 1;
+  const value = scale[`${color}${n}` as keyof typeof scale];
+  styles += `--${color}-${n}:${value};`;
+}
+
+styles += "}";
+---
+
+<style set:html={styles}></style>

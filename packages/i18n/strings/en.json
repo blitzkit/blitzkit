@@ -1,6 +1,6 @@
 {
   "common": {
-    "blitzkit": "BlitzKit"
+    "name": "BlitzKit"
   },
 
   "units": {

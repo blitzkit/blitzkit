@@ -1,4 +1,4 @@
-input {
+.text-field {
   min-width: 0;
   max-width: var(--space-9);
 
@@ -12,4 +12,8 @@ input {
 
   font-weight: var(--weight-medium);
   font-size: var(--font-size-regular);
+
+  &[data-has-icon="true"] {
+    padding-left: var(--space-3);
+  }
 }

@@ -1,0 +1,23 @@
+---
+import type { Color } from "../pages/styles/colors/[accent].css";
+
+interface Props {
+  color: Color;
+  alias: string;
+}
+
+const { color, alias } = Astro.props;
+
+let styles = "";
+
+styles += ":root{";
+
+for (let i = 0; i < 12; i++) {
+  const n = i + 1;
+  styles += `--${alias}-${n}:var(--${color}-${n});`;
+}
+
+styles += "}";
+---
+
+<style set:html={styles}></style>

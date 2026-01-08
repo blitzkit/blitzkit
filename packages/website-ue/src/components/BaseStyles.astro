@@ -1,46 +1,9 @@
----
-import type { Color } from "../pages/styles/colors/[accent].css";
-
-interface Props {
-  accent: Color;
-}
-
-const { accent } = Astro.props;
-
-const accentVariables = {
-  "accent-1": `var(--${accent}-1)`,
-  "accent-2": `var(--${accent}-2)`,
-  "accent-3": `var(--${accent}-3)`,
-  "accent-4": `var(--${accent}-4)`,
-  "accent-5": `var(--${accent}-5)`,
-  "accent-6": `var(--${accent}-6)`,
-  "accent-7": `var(--${accent}-7)`,
-  "accent-8": `var(--${accent}-8)`,
-  "accent-9": `var(--${accent}-9)`,
-  "accent-10": `var(--${accent}-10)`,
-  "accent-11": `var(--${accent}-11)`,
-  "accent-12": `var(--${accent}-12)`,
-};
----
-
-<style is:global define:vars={accentVariables}>
+<style is:global>
   @import "@radix-ui/colors/mauve-dark.css";
   @import "@radix-ui/colors/mauve-alpha.css";
+  @import "@fontsource-variable/roboto-flex";
 
   body {
-    --gray-1: var(--mauve-1);
-    --gray-2: var(--mauve-2);
-    --gray-3: var(--mauve-3);
-    --gray-4: var(--mauve-4);
-    --gray-5: var(--mauve-5);
-    --gray-6: var(--mauve-6);
-    --gray-7: var(--mauve-7);
-    --gray-8: var(--mauve-8);
-    --gray-9: var(--mauve-9);
-    --gray-10: var(--mauve-10);
-    --gray-11: var(--mauve-11);
-    --gray-12: var(--mauve-12);
-
     --space-0: 0.0625rem;
     --space-1: 0.125rem;
     --space-2: 0.25rem;
@@ -66,24 +29,13 @@ const accentVariables = {
 
     background-color: var(--gray-1);
     color: var(--gray-12);
-    font-family: "Inter Variable", sans-serif;
+    font-family: "Roboto Flex", sans-serif;
 
     display: flex;
     flex-direction: column;
   }
 
-  body,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p {
+  body {
     margin: 0;
-  }
-
-  a {
-    color: var(--accent-11);
   }
 </style>
