@@ -671,6 +671,8 @@
         "sorting_by": "Відсортувати за {name}",
         "clear": "Clear",
         "tier": "Рівень {tier}",
+        "passive": "{name} (Passive)",
+        "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
@@ -823,7 +825,10 @@
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "Cancel",
           "reveal": "Reveal"
-        }
+        },
+        "clear": "Clear",
+        "select_all": "Вибрати все",
+        "tier": "Рівень {tier}"
       },
       "tankopedia": {
         "search": "Search a stat...",
