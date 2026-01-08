@@ -35,7 +35,7 @@ env:
 
 jobs:
   build:
-    name: Build
+    name: Build website
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
