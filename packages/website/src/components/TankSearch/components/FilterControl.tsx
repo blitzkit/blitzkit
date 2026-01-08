@@ -83,11 +83,36 @@ for (const gameModeIdString in gameModeRoleSets) {
   for (const roleId of roles) {
     const role = gameDefinitions.roles[roleId];
 
-    for (const id of role.consumables) {
+    outerLoop: for (const id of role.consumables) {
+      const name =
+        consumableDefinitions.consumables[id].name.locales[locales.default];
+
+      for (const otherConsumable of consumables.values()) {
+        const otherName =
+          consumableDefinitions.consumables[otherConsumable].name.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
       consumables.add(id);
       allGameModeConsumables.add(id);
     }
-    for (const id of role.provisions) {
+
+    outerLoop: for (const id of role.provisions) {
+      const name =
+        provisionDefinitions.provisions[id].name.locales[locales.default];
+
+      for (const otherProvision of provisions.values()) {
+        const otherName =
+          provisionDefinitions.provisions[otherProvision].name.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
       provisions.add(id);
       allGameModeProvisions.add(id);
     }
@@ -155,7 +180,7 @@ const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" gap="2" wrap="wrap">
+    <Flex align="center" justify="center" gap="2" wrap="wrap">
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
@@ -168,8 +193,7 @@ export function FilterControl() {
       <ShellFilter />
       <ConsumablesFilter />
       <ProvisionsFilter />
-      <AbilitiesFilter />
-      <PowersFilter />
+      <GameModeAbilitiesFilter />
 
       <ResetButton />
     </Flex>
@@ -1031,22 +1055,33 @@ function ProvisionsFilter() {
   );
 }
 
-function PowersFilter() {
+function GameModeAbilitiesFilter() {
   const { unwrap, strings } = useLocale();
+  const rawAbilities = TankFilters.use((state) => state.abilities);
   const rawPowers = TankFilters.use((state) => state.powers);
+
+  const abilities =
+    rawAbilities.length === 0 && rawPowers.length === 0
+      ? Array.from(allGameModeConsumables.values())
+      : rawAbilities;
   const powers =
-    rawPowers.length === 0
+    rawPowers.length === 0 && rawAbilities.length === 0
       ? Array.from(allGameModeProvisions.values())
       : rawPowers;
+
+  const icons = [
+    ...abilities.map((ability) => `icons/consumables/${ability}.webp`),
+    ...powers.map((power) => `icons/provisions/${power}.webp`),
+  ];
 
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex>
-            {powers.slice(0, MAX_ICONS).map((power, index) => (
+            {icons.slice(0, MAX_ICONS).map((icon, index) => (
               <img
-                key={power}
+                key={icon}
                 style={{
                   filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                   marginLeft: index > 0 ? "-0.5em" : undefined,
@@ -1054,14 +1089,14 @@ function PowersFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/provisions/${power}.webp`)}
+                src={asset(icon)}
               />
             ))}
 
-            {powers.length > MAX_ICONS && (
+            {icons.length > MAX_ICONS && (
               <Text size="1" ml="1">
                 {literals(strings.common.units.plus, {
-                  value: powers.length - MAX_ICONS,
+                  value: icons.length - MAX_ICONS,
                 })}
               </Text>
             )}
@@ -1070,14 +1105,75 @@ function PowersFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {gameModeRoles.map(({ gameModeId, provisions }) => {
+        {gameModeRoles.map(({ gameModeId, consumables, provisions }) => {
           const gameMode = gameDefinitions.gameModes[gameModeId];
+          const hasNeither =
+            consumables.length === 0 && provisions.length === 0;
 
-          if (provisions.length === 0) return null;
+          if (hasNeither) return null;
+
+          const hasBoth = consumables.length > 0 && provisions.length > 0;
 
           return (
             <Fragment key={gameModeId}>
-              <DropdownMenu.Label>{unwrap(gameMode.name)}</DropdownMenu.Label>
+              {consumables.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.active, {
+                        name: unwrap(gameMode.name),
+                      })
+                    : unwrap(gameMode.name)}
+                </DropdownMenu.Label>
+              )}
+
+              {consumables.map((consumable) => {
+                {
+                  const selected = rawAbilities.includes(consumable);
+                  const abilityDefinition =
+                    consumableDefinitions.consumables[consumable];
+
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
+
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.abilities = draft.abilities.filter(
+                              (n) => n !== consumable
+                            );
+                          } else {
+                            draft.abilities = [...draft.abilities, consumable];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={consumable}
+                    >
+                      <img
+                        style={{
+                          width: "1.25em",
+                          height: "1.25em",
+                          objectFit: "contain",
+                        }}
+                        src={asset(`icons/consumables/${consumable}.webp`)}
+                      />
+
+                      {unwrap(abilityDefinition.name)}
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+
+              {provisions.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.passive, {
+                        name: unwrap(gameMode.name),
+                      })
+                    : unwrap(gameMode.name)}
+                </DropdownMenu.Label>
+              )}
 
               {provisions.map((provision) => {
                 {
@@ -1129,117 +1225,8 @@ function PowersFilter() {
             event.preventDefault();
 
             TankFilters.mutate((draft) => {
-              draft.powers = [];
-            });
-          }}
-        >
-          <TrashIcon />
-          {strings.website.common.tank_search.clear}
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
-  );
-}
-
-function AbilitiesFilter() {
-  const { unwrap, strings } = useLocale();
-  const rawAbilities = TankFilters.use((state) => state.abilities);
-  const abilities =
-    rawAbilities.length === 0
-      ? Array.from(allGameModeConsumables.values())
-      : rawAbilities;
-
-  return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {abilities.slice(0, MAX_ICONS).map((ability, index) => (
-              <img
-                key={ability}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={asset(`icons/consumables/${ability}.webp`)}
-              />
-            ))}
-
-            {abilities.length > MAX_ICONS && (
-              <Text size="1" ml="1">
-                {literals(strings.common.units.plus, {
-                  value: abilities.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
-        </Button>
-      </DropdownMenu.Trigger>
-
-      <DropdownMenu.Content>
-        {gameModeRoles.map(({ gameModeId, consumables }) => {
-          const gameMode = gameDefinitions.gameModes[gameModeId];
-
-          if (consumables.length === 0) return null;
-
-          return (
-            <Fragment key={gameModeId}>
-              <DropdownMenu.Label>{unwrap(gameMode.name)}</DropdownMenu.Label>
-
-              {consumables.map((consumable) => {
-                {
-                  const selected = rawAbilities.includes(consumable);
-                  const abilityDefinition =
-                    consumableDefinitions.consumables[consumable];
-
-                  return (
-                    <DropdownMenu.CheckboxItem
-                      onClick={(event) => {
-                        event.preventDefault();
-
-                        TankFilters.mutate((draft) => {
-                          if (selected) {
-                            draft.abilities = draft.abilities.filter(
-                              (n) => n !== consumable
-                            );
-                          } else {
-                            draft.abilities = [...draft.abilities, consumable];
-                          }
-                        });
-                      }}
-                      checked={selected}
-                      key={consumable}
-                    >
-                      <img
-                        style={{
-                          width: "1.25em",
-                          height: "1.25em",
-                          objectFit: "contain",
-                        }}
-                        src={asset(`icons/consumables/${consumable}.webp`)}
-                      />
-
-                      {unwrap(abilityDefinition.name)}
-                    </DropdownMenu.CheckboxItem>
-                  );
-                }
-              })}
-            </Fragment>
-          );
-        })}
-
-        <DropdownMenu.Separator />
-
-        <DropdownMenu.Item
-          color="red"
-          onClick={(event) => {
-            event.preventDefault();
-
-            TankFilters.mutate((draft) => {
               draft.abilities = [];
+              draft.powers = [];
             });
           }}
         >
