@@ -83,11 +83,36 @@ for (const gameModeIdString in gameModeRoleSets) {
   for (const roleId of roles) {
     const role = gameDefinitions.roles[roleId];
 
-    for (const id of role.consumables) {
+    outerLoop: for (const id of role.consumables) {
+      const name =
+        consumableDefinitions.consumables[id].name.locales[locales.default];
+
+      for (const otherConsumable of consumables.values()) {
+        const otherName =
+          consumableDefinitions.consumables[otherConsumable].name.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
       consumables.add(id);
       allGameModeConsumables.add(id);
     }
-    for (const id of role.provisions) {
+
+    outerLoop: for (const id of role.provisions) {
+      const name =
+        provisionDefinitions.provisions[id].name.locales[locales.default];
+
+      for (const otherProvision of provisions.values()) {
+        const otherName =
+          provisionDefinitions.provisions[otherProvision].name.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
       provisions.add(id);
       allGameModeProvisions.add(id);
     }
