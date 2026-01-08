@@ -671,6 +671,8 @@
         "sorting_by": "按 {name} 排序",
         "clear": "清除",
         "tier": "{tier} 阶",
+        "passive": "{name} (Passive)",
+        "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "找不到战车。",
           "search_again": "请尝试重新搜索。",
@@ -823,7 +825,10 @@
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "取消",
           "reveal": "Reveal"
-        }
+        },
+        "clear": "清除",
+        "select_all": "全选",
+        "tier": "{tier} 阶"
       },
       "tankopedia": {
         "search": "搜索属性……",
