@@ -61,8 +61,8 @@ for (const root of ROOTS) {
 
   await writeFile("temp/protoc.txt", args);
   execFile("protoc", ["@temp/protoc.txt"], (error, stdout, stderr) => {
-    if (error) return console.error(`error: ${error.message}`);
-    if (stderr) return console.error(`stderr: ${stderr}`);
-    console.log(`stdout: ${stdout}`);
+    if (error) throw new Error(error.message);
+    if (stderr) console.error(stderr);
+    if (stdout) console.log(stdout);
   });
 }
