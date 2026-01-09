@@ -24,5 +24,9 @@
     "avatars": { "name": "Avatars" },
     "backgrounds": { "name": "Backgrounds" },
     "api": { "name": "API" }
+  },
+
+  "home": {
+    "search": "Search tanks, players, tools..."
   }
 }

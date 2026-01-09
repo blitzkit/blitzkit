@@ -25,11 +25,22 @@
     --weight-extra-bold: 800;
     --weight-black: 900;
 
-    --font-size-regular: 1rem;
+    --font-size-regular: var(--space-4);
+
+    --max-size: max(100vw, 100vh);
+
+    --outline-interactive: solid var(--space-1) var(--gray-5);
+    --outline-focus: var(--space-1) solid var(--accent-6);
+
+    --shadow-cavity:
+      inset var(--space-1) var(--space-1) var(--space-1) var(--gray-2),
+      inset calc(var(--space-1) * -1) calc(var(--space-1) * -1) var(--space-1)
+        var(--gray-4);
+    --shadow-focus: 0 0 var(--space-3) var(--accent-4);
 
     background-color: var(--gray-1);
     color: var(--gray-12);
-    font-family: "Roboto Flex", sans-serif;
+    font-family: "Roboto Flex";
 
     display: flex;
     flex-direction: column;

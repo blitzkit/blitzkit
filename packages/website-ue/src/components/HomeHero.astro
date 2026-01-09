@@ -1,5 +1,8 @@
 ---
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { TextField } from "./TextField";
+
+const strings = { home: { search: "test" } };
 ---
 
 <style>
@@ -40,5 +43,7 @@ import { TextField } from "./TextField";
     <div class="wrapper"></div>
   </div>
 
-  <TextField placeholder="asdasdasd" />
+  <TextField placeholder={strings.home.search}>
+    <MagnifyingGlassIcon />
+  </TextField>
 </div>

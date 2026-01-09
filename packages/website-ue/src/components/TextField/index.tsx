@@ -1,6 +1,15 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import "./index.css";
 
-export function TextField(props: ComponentProps<"input">) {
-  return <input className="text-field" {...props} />;
+export interface TextFieldProps extends ComponentProps<"input"> {
+  children?: ReactNode;
+}
+
+export function TextField({ children, ...props }: TextFieldProps) {
+  return (
+    <div className="text-field" data-has-icon={children !== undefined}>
+      {children}
+      <input {...props} />
+    </div>
+  );
 }
