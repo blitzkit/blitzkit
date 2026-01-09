@@ -15,10 +15,12 @@ export const getStaticPaths = (() => {
     { params: { locale: undefined }, props: { locale: locales.default } },
   ];
 }) satisfies GetStaticPaths;
+
+const { locale } = Astro.props;
 ---
 
 <BaseLayout accent="amber">
-  <HomeHero />
+  <HomeHero {locale} />
 
   <h1>blitzkit {packageJson.version}</h1>
 

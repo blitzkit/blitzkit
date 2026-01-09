@@ -1,6 +1,9 @@
 import type { MetadataAccessor } from "@blitzkit/closed";
-import { sluggify } from "@blitzkit/core";
+import { sluggify, type DeepPartial } from "@blitzkit/core";
+import type { Strings } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
+import { merge } from "lodash-es";
 import { parse } from "yaml";
 import type { Tank } from "../../protos/tank";
 import type { TankList, TankListEntry } from "../../protos/tank_list";
@@ -11,6 +14,8 @@ if (typeof window !== "undefined") {
   throw new Error("ServerAPI is being evaluated in the browser");
 }
 
+const globbedStrings = import.meta.glob("../../../../i18n/strings/*.json");
+
 interface LocalizationConfig {
   namespaces: string[];
 }
@@ -20,7 +25,7 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
-  async strings(locale: string) {
+  async _gameStrings(locale: string, prefix: string) {
     const group = this.metadata.group("ClientConfigsEntity");
 
     if (group.length !== 1) {
@@ -89,6 +94,26 @@ export class ServerAPI extends AbstractAPI {
       );
     }
 
+    const filtered: Record<string, string> = {};
+
+    for (const key in strings) {
+      if (key.startsWith(`${prefix}__`)) {
+        filtered[key] = strings[key];
+      }
+    }
+
+    return filtered;
+  }
+
+  async _strings(locale: string) {
+    const localized = (await globbedStrings[
+      `../../../../i18n/strings/${locale}.json`
+    ]()) as DeepPartial<Strings>;
+    const defaults = (await globbedStrings[
+      `../../../../i18n/strings/${locales.default}.json`
+    ]()) as Strings;
+    const strings = merge({}, defaults, localized);
+
     return strings;
   }
 
@@ -97,7 +122,7 @@ export class ServerAPI extends AbstractAPI {
     if (this._tankList === undefined) {
       const group = this.metadata.group("TankEntity");
       const list: TankListEntry[] = [];
-      const strings = await this.strings("en");
+      const strings = await this.gameStrings("en", "TankEntity");
 
       for (const item of group) {
         const tankCatalog = item.TankCatalog();
