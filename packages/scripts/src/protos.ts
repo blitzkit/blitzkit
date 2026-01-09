@@ -31,47 +31,6 @@ if (!tsProtoExecutableLocation) {
   );
 }
 
-// for (const root of ROOTS) {
-//   const filesRaw = await readdir(`${root}`);
-//   const files: string[] = [];
-
-//   for (const file of filesRaw) {
-//     if (file.endsWith(".proto")) files.push(file);
-//     if (file.endsWith(".ts")) await rm(`${root}/${file}`);
-//   }
-
-//   while (files.length > 0) {
-//     let command = [
-//       "protoc",
-//       `--plugin=${tsProtoExecutableLocation}`,
-//       "--ts_proto_opt=esModuleInterop=true",
-//       "--ts_proto_opt=oneof=unions-value",
-//       // "--ts_proto_opt=removeEnumPrefix=true",
-//       "--ts_proto_opt=unrecognizedEnum=false",
-//       "--ts_proto_opt=snakeToCamel=false",
-//       `--ts_proto_out=${root}`,
-//       ...ROOTS.map((root) => `-I=${root}`),
-//     ].join(" ");
-
-//     while (true) {
-//       if (files.length === 0) break;
-
-//       const file = files.at(-1);
-//       const newLine = ` ${root}/${file}`;
-
-//       if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
-//         const file = files.pop();
-//         command += newLine;
-//         // console.log(`  ${file}`);
-//       } else {
-//         break;
-//       }
-//     }
-
-//     await exec(command);
-//   }
-// }
-
 await mkdir("temp", { recursive: true });
 
 for (const root of ROOTS) {
@@ -92,10 +51,18 @@ for (const root of ROOTS) {
   const files: string[] = [];
 
   for (const file of filesRaw) {
-    if (file.endsWith(".proto")) files.push(file);
+    if (file.endsWith(".proto")) {
+      files.push(file);
+      args += `${root}/${file}\n`;
+    }
+
     if (file.endsWith(".ts")) await rm(`${root}/${file}`);
   }
 
   await writeFile("temp/protoc.txt", args);
-  execFile("protoc", ["@temp/protoc.txt"]);
+  execFile("protoc", ["@temp/protoc.txt"], (error, stdout, stderr) => {
+    if (error) return console.error(`error: ${error.message}`);
+    if (stderr) return console.error(`stderr: ${stderr}`);
+    console.log(`stdout: ${stdout}`);
+  });
 }
