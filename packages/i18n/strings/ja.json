@@ -560,7 +560,7 @@
         "description": "Today's played tanks and statistics"
       },
       "stats": {
-        "name": "stats",
+        "name": "",
         "description": "Quick statistics for a period"
       },
       "owned_tanks": {
@@ -783,7 +783,7 @@
           "tank": "車輌名",
           "last_played": "Last played",
           "battles": "Career battles",
-          "unrecorded": "--",
+          "unrecorded": "",
           "wins": "勝利"
         },
         "large_warning": {
