@@ -32,9 +32,8 @@ export abstract class AbstractAPI {
     return await this._strings(locale);
   }
   async gameStrings(locale: string, prefix: string) {
-    const supported = this.assertLocale(locale);
-    const blitz = supported.blitz ?? supported.locale;
-    return await this._gameStrings(blitz, prefix);
+    this.assertLocale(locale);
+    return await this._gameStrings(locale, prefix);
   }
 
   abstract tank(id: string): Promise<Tank>;

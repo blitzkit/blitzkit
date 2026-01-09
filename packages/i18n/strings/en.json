@@ -1,7 +1,6 @@
 {
   "common": {
-    "name": "BlitzKit",
-    "credit": "by TrèsAbhi"
+    "name": "BlitzKit"
   },
 
   "units": {
@@ -28,6 +27,7 @@
   },
 
   "home": {
-    "search": "Search tanks, players, tools..."
+    "search": "Search tanks, players, tools...",
+    "credit": "by TrèsAbhi"
   }
 }

@@ -3,6 +3,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { api } from "../core/api/dynamic";
 import { BlitzKitIcon } from "../icons/BlitzKit";
 import { Code } from "./Code";
+import { Text } from "./Text";
 import { TextField } from "./TextField";
 
 interface Props {
@@ -82,6 +83,7 @@ const strings = await api.strings(locale);
 
     .text-field {
       width: 100%;
+      max-width: 25rem;
     }
   }
 </style>
@@ -96,6 +98,10 @@ const strings = await api.strings(locale);
       <BlitzKitIcon className="icon" />
       <Code className="version">2.0</Code>
     </div>
+
+    <Text lowContrast>
+      {strings.home.credit}
+    </Text>
   </div>
 
   <TextField placeholder={strings.home.search}>

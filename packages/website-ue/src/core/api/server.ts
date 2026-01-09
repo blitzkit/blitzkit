@@ -14,7 +14,9 @@ if (typeof window !== "undefined") {
   throw new Error("ServerAPI is being evaluated in the browser");
 }
 
-const globbedStrings = import.meta.glob("../../../../i18n/strings/*.json");
+const globbedStrings = import.meta.glob("../../../../i18n/strings/*.json", {
+  import: "default",
+});
 
 interface LocalizationConfig {
   namespaces: string[];
@@ -72,7 +74,7 @@ export class ServerAPI extends AbstractAPI {
         Object.assign(
           strings,
           await fetch(
-            `${remoteStorage.url}/${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
+            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
           )
             .then((response) => response.text())
             .then((text) => {
