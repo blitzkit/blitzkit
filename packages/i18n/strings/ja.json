@@ -187,11 +187,11 @@
   "bot": {
     "common": {
       "errors": {
-        "clan_not_found": "# Could not find clan\nCouldn't find \"{search}\". Try selecting a clan from the search result.",
-        "player_not_found": "# Could not find user\nI couldn't find user \"{search}\". Try picking an user from the search result, typing in a valid username, or using the `/link` command.",
+        "clan_not_found": "",
+        "player_not_found": "# ユーザーが見つかりませんでした\nユーザー「{search}」が見つかりませんでした。検索結果からユーザーを選択するか、有効なユーザー名を入力するか、/link コマンドを使用してください。",
         "player_not_linked": "# `/link`を使用して始めましょう\nはじめまして！あなたが誰か、私に教えてください。",
         "tank_name_not_found": "# Tank not found\nCould not find tank by the name \"{search}\".",
-        "tank_id_not_found": "# Tank not found\nCould not find tank by the ID \"{search}\". Try typing the name of the tank instead of a number.",
+        "tank_id_not_found": "# 車両が見つかりません\nID「{search}」の戦車が見つかりませんでした。数字ではなく戦車の名前を入力してみてください。",
         "no_tank_stats": "# 利用可能な車輌統計がありません\nこのプレイヤーには利用可能な統計がありません。あなたが探しているプレイヤーではない可能性があります。",
         "get_help": "Discordサーバーに参加する",
         "uncaught_error": "# BlitzKitがエラーに遭遇しました！\n申し訳ありません。お気軽に[公式Discordサーバー](https://discord.gg/nDt7AjGJQH)にお問い合わせください。",
@@ -395,7 +395,7 @@
           "wn8": "WN8",
           "winrate": "勝率",
           "damage": "ダメージ",
-          "unknown_tank": "Unknown tank {id}"
+          "unknown_tank": "不明な車両{id}"
         }
       },
       "debug": {
