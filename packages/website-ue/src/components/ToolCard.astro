@@ -1,0 +1,31 @@
+---
+import { CaretRightIcon } from "@radix-ui/react-icons";
+import type { Tool } from "../core/tools/tools";
+import { Button } from "./Button";
+import { Text } from "./Text";
+
+interface Props {
+  tool: Tool;
+}
+
+const { tool } = Astro.props;
+---
+
+<style>
+  .tool-card {
+  }
+</style>
+
+<div class="tool-card">
+  <div>
+    <div>
+      <Text>{tool.id}</Text>
+      <Text>{tool.id}</Text>
+    </div>
+
+    <Button>
+      {tool.id}
+      <CaretRightIcon />
+    </Button>
+  </div>
+</div>
