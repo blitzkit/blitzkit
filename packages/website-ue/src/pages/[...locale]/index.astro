@@ -1,9 +1,20 @@
 ---
+import locales from "@blitzkit/i18n/locales.json";
 import "@radix-ui/colors/amber-dark.css";
-import packageJson from "../../../../package.json";
-import HomeHero from "../components/HomeHero.astro";
-import { tools } from "../core/tools/tools";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import type { GetStaticPaths } from "astro";
+import packageJson from "../../../../../package.json";
+import HomeHero from "../../components/HomeHero.astro";
+import { tools } from "../../core/tools/tools";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const getStaticPaths = (() => {
+  return [
+    ...locales.supported
+      .filter(({ locale }) => locale !== locales.default)
+      .map(({ locale }) => ({ params: { locale }, props: { locale } })),
+    { params: { locale: undefined }, props: { locale: locales.default } },
+  ];
+}) satisfies GetStaticPaths;
 ---
 
 <BaseLayout accent="amber">
