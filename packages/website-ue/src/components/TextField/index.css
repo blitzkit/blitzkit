@@ -30,6 +30,7 @@
 
   input {
     min-width: 0;
+    flex: 1;
 
     background: none;
     border: none;

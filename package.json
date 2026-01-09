@@ -43,6 +43,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@prisma/client": "^6.18.0",
     "prisma": "^6.18.0",
     "typescript": "^5.9.3"

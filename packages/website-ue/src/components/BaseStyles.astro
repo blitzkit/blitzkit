@@ -1,12 +1,9 @@
 ---
+import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/roboto-flex";
-import "@fontsource-variable/roboto-mono";
 ---
 
-<style is:global>
-  @import "@radix-ui/colors/mauve-dark.css";
-  @import "@radix-ui/colors/mauve-alpha.css";
-
+<style>
   body {
     --space-0: 0.0625rem;
     --space-1: 0.125rem;
@@ -19,6 +16,13 @@ import "@fontsource-variable/roboto-mono";
     --space-8: 16rem;
     --space-9: 32rem;
 
+    --max-size: max(100vw, 100vh);
+
+    --font-size-regular: var(--space-4);
+
+    --font-family-regular: "Roboto Flex Variable", sans-serif;
+    --font-family-mono: "JetBrains Mono Variable", monospace;
+
     --weight-thin: 100;
     --weight-extra-light: 200;
     --weight-light: 300;
@@ -28,10 +32,6 @@ import "@fontsource-variable/roboto-mono";
     --weight-bold: 700;
     --weight-extra-bold: 800;
     --weight-black: 900;
-
-    --font-size-regular: var(--space-4);
-
-    --max-size: max(100vw, 100vh);
 
     --outline-interactive: solid var(--space-1) var(--gray-5);
     --outline-focus: var(--space-1) solid var(--accent-6);
@@ -44,7 +44,7 @@ import "@fontsource-variable/roboto-mono";
 
     background-color: var(--gray-1);
     color: var(--gray-12);
-    font-family: "Roboto Flex";
+    font-family: var(--font-family-regular);
 
     display: flex;
     flex-direction: column;

@@ -1,4 +1,3 @@
 .code {
-  font-family: "Roboto Mono";
-  color: red;
+  font-family: var(--font-family-mono);
 }
