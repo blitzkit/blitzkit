@@ -671,6 +671,8 @@
         "sorting_by": "Sorting by {name}",
         "clear": "Limpar",
         "tier": "Tier {tier}",
+        "passive": "{name} (Passive)",
+        "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "Nenhum tanque encontrado.",
           "search_again": "Tente pesquisar novamente.",
@@ -823,7 +825,10 @@
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "Cancelar",
           "reveal": "Reveal"
-        }
+        },
+        "clear": "Limpar",
+        "select_all": "Selecionar todos",
+        "tier": "Tier {tier}"
       },
       "tankopedia": {
         "search": "Search a stat...",

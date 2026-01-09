@@ -671,6 +671,8 @@
         "sorting_by": "Sorting by {name}",
         "clear": "クリア",
         "tier": "Tier {tier}",
+        "passive": "{name} (Passive)",
+        "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "該当する車輌が存在しません。",
           "search_again": "もう一度検索してください。",
@@ -823,7 +825,10 @@
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "Cancel",
           "reveal": "Reveal"
-        }
+        },
+        "clear": "クリア",
+        "select_all": "全て選択",
+        "tier": "Tier {tier}"
       },
       "tankopedia": {
         "search": "Search a stat...",

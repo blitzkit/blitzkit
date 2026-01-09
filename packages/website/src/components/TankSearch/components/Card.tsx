@@ -41,7 +41,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case 'fire.damage':
         return shell0.armor_damage.toFixed(0);
       case 'fire.moduleDamage':
-        return shell0.armor_damage.toFixed(0);
+        return shell0.module_damage.toFixed(0);
       case 'fire.dispersionMoving':
         return tracks.dispersion_move.toFixed(3);
       case 'fire.dispersionStill':
