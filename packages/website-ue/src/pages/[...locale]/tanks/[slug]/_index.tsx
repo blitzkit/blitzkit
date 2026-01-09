@@ -1,13 +1,16 @@
 import { times } from "lodash-es";
 import { Suspense, useMemo } from "react";
-import { TankopediaCharacteristic } from "../../../components/TankopediaCharacteristic";
-import { TankopediaToy } from "../../../components/TankopediaToy";
-import { api } from "../../../core/api/dynamic";
-import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
-import { computeCharacteristics } from "../../../core/tankopedia/computeCharacteristics";
-import { TerrainHardness } from "../../../core/tankopedia/tankState";
-import { useAwait } from "../../../hooks/useAwait";
-import { Tankopedia, TankopediaCompare } from "../../../stores/tankopedia";
+import { TankopediaCharacteristic } from "../../../../components/TankopediaCharacteristic";
+import { TankopediaToy } from "../../../../components/TankopediaToy";
+import { api } from "../../../../core/api/dynamic";
+import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
+import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
+import type { TerrainHardness } from "../../../../core/tankopedia/tankState";
+import { useAwait } from "../../../../hooks/useAwait";
+import {
+  Tankopedia,
+  type TankopediaCompare,
+} from "../../../../stores/tankopedia";
 
 export function Page({ id }: { id: string }) {
   return (
