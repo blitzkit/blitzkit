@@ -28,7 +28,7 @@ const { locale } = Astro.props;
 
   <HomeHero {locale} />
 
-  <Section class="cards">
+  <Section>
     {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
   </Section>
 </BaseLayout>

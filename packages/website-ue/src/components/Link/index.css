@@ -1,0 +1,14 @@
+.link {
+  color: var(--accent-11);
+  text-decoration-color: currentColor;
+
+  &[data-underline="hover"],
+  &[data-underline="never"] {
+    text-decoration: none;
+  }
+
+  &[data-underline="hover"]:hover,
+  &[data-underline="hover"]:focus {
+    text-decoration: underline;
+  }
+}

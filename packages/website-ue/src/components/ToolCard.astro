@@ -3,6 +3,7 @@ import { CaretRightIcon } from "@radix-ui/react-icons";
 import { api } from "../core/api/dynamic";
 import { type Tool } from "../core/tools/tools";
 import { Button } from "./Button";
+import { LinkI18n } from "./LinkI18n";
 import { Text } from "./Text";
 
 interface Props {
@@ -49,8 +50,11 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
   }
 </style>
 
-<div
-  class="tool-card"
+<LinkI18n
+  {locale}
+  href={`/${tool.id}`}
+  className="tool-card"
+  underline="never"
   style={{
     backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
   }}
@@ -74,4 +78,4 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
       <CaretRightIcon />
     </Button>
   </div>
-</div>
+</LinkI18n>
