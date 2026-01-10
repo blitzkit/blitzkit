@@ -5,6 +5,7 @@ import "./index.css";
 
 export interface TextProps extends ComponentProps<"span"> {
   color?: Color;
+  weight?: "light" | "regular" | "medium" | "bold" | "black";
   lowContrast?: boolean;
   size?: "regular" | "minor";
 }
@@ -14,13 +15,16 @@ export function Text({
   lowContrast,
   className,
   size = "regular",
+  weight,
+  style,
   ...props
 }: TextProps) {
   return (
     <span
       className={classNames("text", className)}
-      style={{ color: `var(--${color}-${lowContrast ? 11 : 12})` }}
+      style={{ color: `var(--${color}-${lowContrast ? 11 : 12})`, ...style }}
       data-size={size}
+      data-weight={weight}
       {...props}
     />
   );

@@ -2,7 +2,9 @@
 import locales from "@blitzkit/i18n/locales.json";
 import "@radix-ui/colors/amber-dark.css";
 import type { GetStaticPaths } from "astro";
+import ColorScale from "../../components/ColorScale.astro";
 import HomeHero from "../../components/HomeHero.astro";
+import Section from "../../components/Section.astro";
 import ToolCard from "../../components/ToolCard.astro";
 import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -19,17 +21,14 @@ export const getStaticPaths = (() => {
 const { locale } = Astro.props;
 ---
 
-<style>
-  .cards {
-    display: flex;
-    flex-direction: column;
-  }
-</style>
-
 <BaseLayout accent="amber">
+  <ColorScale color="purple" slot="head" />
+  <ColorScale color="gold" slot="head" />
+  <ColorScale color="lime" slot="head" />
+
   <HomeHero {locale} />
 
-  <div class="cards">
+  <Section class="cards">
     {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
-  </div>
+  </Section>
 </BaseLayout>

@@ -1,2 +1,25 @@
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--max-size);
+  padding: var(--space-3) var(--space-4);
+
+  background-color: var(--accent-9);
+  border: none;
+
+  font-family: var(--font-family-regular);
+  font-size: var(--font-size-minor);
+  color: var(--gray-1);
+  font-weight: var(--weight-medium);
+
+  .svg {
+    width: 1em;
+    height: 1em;
+  }
+
+  &[data-light-text="true"] {
+    color: var(--gray-12);
+  }
 }

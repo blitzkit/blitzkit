@@ -4,7 +4,7 @@ import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
 import Navbar from "../components/Navbar.astro";
-import type { Color } from "../pages/styles/colors/[accent].css";
+import type { Color } from "../core/ui/color";
 
 interface Props {
   accent: Color;
@@ -23,6 +23,21 @@ const { accent, noNavbar } = Astro.props;
     <ColorAlias color="mauve" alias="gray" />
     <ColorAlias color={accent} alias="accent" />
     <BaseStyles />
+
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+
+        background-color: var(--gray-1);
+        color: var(--gray-12);
+        font-family: var(--font-family-regular);
+      }
+    </style>
+
+    <slot name="head" />
   </head>
 
   <body class="dark">

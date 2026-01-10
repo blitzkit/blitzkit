@@ -25,12 +25,12 @@ export const tools: Record<string, Tool> = {
 
   backgrounds: {
     id: "backgrounds",
-    button: "amber",
+    button: "gold",
   },
 
   api: {
     id: "api",
     disabled: true,
-    button: "bronze",
+    button: "lime",
   },
 };

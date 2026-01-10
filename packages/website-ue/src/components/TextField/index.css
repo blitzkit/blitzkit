@@ -1,6 +1,7 @@
 .text-field {
   display: flex;
   align-items: center;
+  box-sizing: border-box;
 
   gap: var(--space-3);
   margin: 0 var(--space-4);
