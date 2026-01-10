@@ -20,10 +20,26 @@
   },
 
   "tools": {
-    "tanks": { "name": "Tankopedia" },
-    "avatars": { "name": "Avatars" },
-    "backgrounds": { "name": "Backgrounds" },
-    "api": { "name": "API" }
+    "tanks": {
+      "name": "Tankopedia",
+      "slogan": "Blitz tank encyclopedia",
+      "action": "Find tanks"
+    },
+    "avatars": {
+      "name": "Avatars",
+      "slogan": "Blitz player avatars",
+      "action": "Browse all"
+    },
+    "backgrounds": {
+      "name": "Backgrounds",
+      "slogan": "Blitz player backgrounds",
+      "action": "View all"
+    },
+    "api": {
+      "name": "API",
+      "action": "To the docs",
+      "slogan": "BlitzKit hosted API"
+    }
   },
 
   "home": {

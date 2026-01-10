@@ -2,7 +2,6 @@
 import locales from "@blitzkit/i18n/locales.json";
 import "@radix-ui/colors/amber-dark.css";
 import type { GetStaticPaths } from "astro";
-import packageJson from "../../../../../package.json";
 import HomeHero from "../../components/HomeHero.astro";
 import ToolCard from "../../components/ToolCard.astro";
 import { tools } from "../../core/tools/tools";
@@ -20,10 +19,17 @@ export const getStaticPaths = (() => {
 const { locale } = Astro.props;
 ---
 
+<style>
+  .cards {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
 <BaseLayout accent="amber">
   <HomeHero {locale} />
 
-  <h1>blitzkit {packageJson.version}</h1>
-
-  {Object.values(tools).map((tool) => <ToolCard {tool} />)}
+  <div class="cards">
+    {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
+  </div>
 </BaseLayout>

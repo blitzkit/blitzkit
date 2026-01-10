@@ -1,30 +1,76 @@
 ---
 import { CaretRightIcon } from "@radix-ui/react-icons";
-import type { Tool } from "../core/tools/tools";
+import { api } from "../core/api/dynamic";
+import { type Tool } from "../core/tools/tools";
 import { Button } from "./Button";
 import { Text } from "./Text";
 
 interface Props {
   tool: Tool;
+  locale: string;
 }
 
-const { tool } = Astro.props;
+const { tool, locale } = Astro.props;
+const strings = await api.strings(locale);
+const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>
   .tool-card {
+    display: flex;
+    flex-direction: column;
+    height: 10rem;
+
+    border-radius: var(--space-3);
+
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+
+    .poster {
+      flex: 1;
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-4);
+
+      backdrop-filter: blur(var(--space-6));
+
+      .readable {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 </style>
 
-<div class="tool-card">
-  <div>
-    <div>
-      <Text>{tool.id}</Text>
-      <Text>{tool.id}</Text>
+<div
+  class="tool-card"
+  style={{
+    backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
+  }}
+>
+  <div
+    class="poster"
+    style={{
+      backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
+    }}
+  >
+  </div>
+
+  <div class="info">
+    <div class="readable">
+      <Text>{toolStrings.name}</Text>
+      <Text size="minor" lowContrast>{toolStrings.slogan}</Text>
     </div>
 
-    <Button>
-      {tool.id}
+    <Button color={tool.button}>
+      {toolStrings.action}
       <CaretRightIcon />
     </Button>
   </div>

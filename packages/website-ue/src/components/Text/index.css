@@ -1,3 +1,7 @@
 .text {
   font-size: var(--font-size-regular);
+
+  &[data-size="minor"] {
+    font-size: var(--font-size-minor);
+  }
 }
