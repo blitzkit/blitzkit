@@ -3,6 +3,7 @@ import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
+import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import type { Color } from "../core/ui/color";
 
@@ -42,6 +43,9 @@ const { accent, noNavbar } = Astro.props;
 
   <body class="dark">
     {!noNavbar && <Navbar />}
+
     <slot />
+
+    {(<Footer />)}
   </body>
 </html>

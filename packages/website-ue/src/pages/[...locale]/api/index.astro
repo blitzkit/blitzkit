@@ -8,6 +8,8 @@ import {
 } from "typescript";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
+export { getStaticPaths } from "../index.astro";
+
 const root = `/src/pages/api`;
 const globbed = import.meta.glob("/src/pages/api/**/*.ts", {
   eager: true,

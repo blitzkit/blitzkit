@@ -34,9 +34,14 @@ import "@fontsource-variable/roboto-flex";
     --outline-focus: var(--space-1) solid var(--accent-6);
 
     --shadow-cavity:
-      inset var(--space-1) var(--space-1) var(--space-1) var(--gray-2),
-      inset calc(var(--space-1) * -1) calc(var(--space-1) * -1) var(--space-1)
-        var(--gray-4);
-    --shadow-focus: 0 0 var(--space-3) var(--accent-4);
+      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
+        var(--space-1) var(--black-a3),
+      inset calc(var(--space-1) * sin(45deg) * -1)
+        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--white-a1);
+    --shadow-bump:
+      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
+        var(--space-1) var(--white-a3),
+      inset calc(var(--space-1) * sin(45deg) * -1)
+        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--black-a3);
   }
 </style>

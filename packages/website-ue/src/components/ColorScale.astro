@@ -3,11 +3,18 @@ import * as colors from "@radix-ui/colors";
 import type { Color } from "../core/ui/color";
 
 interface Props {
-  color: Color;
+  color: Color | AlphaOnlyColor;
+  alpha?: boolean;
 }
 
-const { color } = Astro.props;
-const scale = colors[`${color}Dark`];
+const ALPHA_ONLY_COLORS = ["black", "white"] as const;
+type AlphaOnlyColor = (typeof ALPHA_ONLY_COLORS)[number];
+
+const { color, alpha } = Astro.props;
+const name = `${color}${
+  ALPHA_ONLY_COLORS.includes(color as AlphaOnlyColor) ? "" : "Dark"
+}${alpha ? "A" : ""}`;
+const scale = colors[name as keyof typeof colors];
 
 let styles = "";
 
@@ -15,8 +22,8 @@ styles += ":root{";
 
 for (let i = 0; i < 12; i++) {
   const n = i + 1;
-  const value = scale[`${color}${n}` as keyof typeof scale];
-  styles += `--${color}-${n}:${value};`;
+  const value = scale[`${color}${alpha ? "A" : ""}${n}` as keyof typeof scale];
+  styles += `--${color}-${alpha ? "a" : ""}${n}:${value};`;
 }
 
 styles += "}";
