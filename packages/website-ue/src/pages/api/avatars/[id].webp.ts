@@ -3,7 +3,7 @@ import { api } from "../../../core/api/dynamic";
 import { imageProxy } from "../../../core/api/imageProxy";
 
 export const getStaticPaths = (async () => {
-  const avatars = await api.avatars();
+  const { avatars } = await api.avatars();
 
   return avatars.map((avatar) => ({
     params: { id: avatar.name },
@@ -15,7 +15,5 @@ export const getStaticPaths = (async () => {
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const avatar = await api.avatar(params.id);
-  const profileAvatar = avatar.ProfileAvatar();
-
-  return await imageProxy(profileAvatar.avatar);
+  return await imageProxy(avatar.profile_avatar!.avatar);
 }
