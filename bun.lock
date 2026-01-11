@@ -208,6 +208,7 @@
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-promise-suspense": "^0.3.4",
+        "sharp": "^0.34.5",
         "three": "^0.180.0",
         "three-stdlib": "^2.36.0",
         "typescript": "^5.9.3",

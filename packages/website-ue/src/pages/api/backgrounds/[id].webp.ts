@@ -1,5 +1,6 @@
 import type { APIContext, GetStaticPaths } from "astro";
 import { api } from "../../../core/api/dynamic";
+import { imageProxy } from "../../../core/api/imageProxy";
 
 export const getStaticPaths = (async () => {
   const backgrounds = await api.backgrounds();
@@ -16,12 +17,5 @@ export async function GET({ params }: APIContext<never, { id: string }>) {
   const avatar = await api.background(params.id);
   const profileBackground = avatar.ProfileBackground();
 
-  if (import.meta.env.DEV) {
-    return Response.redirect(profileBackground.background);
-  }
-
-  const response = await fetch(profileBackground.background);
-  const buffer = await response.arrayBuffer();
-
-  return new Response(buffer);
+  return await imageProxy(profileBackground.background);
 }
