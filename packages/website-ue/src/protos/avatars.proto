@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "avatar.proto";
+
+message Avatars {
+  repeated Avatar avatars = 1;
+}

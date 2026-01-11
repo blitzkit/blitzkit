@@ -5,8 +5,9 @@ import locales from "@blitzkit/i18n/locales.json";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
 import { merge } from "lodash-es";
 import { parse } from "yaml";
+import type { Avatar } from "../../protos/avatar";
 import type { Tank } from "../../protos/tank";
-import type { TankList, TankListEntry } from "../../protos/tank_list";
+import type { TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
 import { AbstractAPI } from "./abstract";
 
@@ -27,7 +28,7 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
-  async _gameStrings(locale: string, prefix: string) {
+  protected async _gameStrings(locale: string, prefix: string) {
     const group = this.metadata.group("ClientConfigsEntity");
 
     if (group.length !== 1) {
@@ -107,7 +108,7 @@ export class ServerAPI extends AbstractAPI {
     return filtered;
   }
 
-  async _strings(locale: string) {
+  protected async _strings(locale: string) {
     const localized = (await globbedStrings[
       `../../../../i18n/strings/${locale}.json`
     ]()) as DeepPartial<Strings>;
@@ -119,35 +120,30 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  _tankList: TankList | undefined;
-  async tankList() {
-    if (this._tankList === undefined) {
-      const group = this.metadata.group("TankEntity");
-      const list: TankListEntry[] = [];
-      const strings = await this.gameStrings("en", "TankEntity");
+  protected async _tankList() {
+    const group = this.metadata.group("TankEntity");
+    const list: TankListEntry[] = [];
+    const strings = await this.gameStrings("en", "TankEntity");
 
-      for (const item of group) {
-        const tankCatalog = item.TankCatalog();
+    for (const item of group) {
+      const tankCatalog = item.TankCatalog();
 
-        if (!tankCatalog.name) continue;
+      if (!tankCatalog.name) continue;
 
-        const name = strings[tankCatalog.name.value];
+      const name = strings[tankCatalog.name.value];
 
-        if (!name) continue;
+      if (!name) continue;
 
-        const id = item.name;
-        const slug = sluggify(name);
+      const id = item.name;
+      const slug = sluggify(name);
 
-        list.push({ id, slug });
-      }
-
-      this._tankList = { list };
+      list.push({ id, slug });
     }
 
-    return this._tankList;
+    return { list };
   }
 
-  async tanks() {
+  protected async _tanks() {
     const tankList = await this.tankList();
     const data: Tanks = { tanks: {} };
 
@@ -158,7 +154,7 @@ export class ServerAPI extends AbstractAPI {
     return data;
   }
 
-  async tank(id: string) {
+  protected async _tank(id: string) {
     const tankList = await this.tankList();
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
 
@@ -174,12 +170,26 @@ export class ServerAPI extends AbstractAPI {
     return { tank, compensation, slug } satisfies Tank;
   }
 
-  async avatars() {
-    return this.metadata.group("ProfileAvatarEntity");
+  async _avatars() {
+    const avatars: Avatar[] = [];
+
+    for (const item of this.metadata.group("ProfileAvatarEntity")) {
+      avatars.push(await this.avatar(item.name));
+    }
+
+    return { avatars };
   }
 
-  async avatar(id: string) {
-    return this.metadata.item(`ProfileAvatarEntity.${id}`);
+  async _avatar(id: string) {
+    const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
+    const name = avatar.name;
+    const stuff_ui = avatar.StuffUI("UIComponent");
+    const profile_avatar = avatar.ProfileAvatar();
+    const sellable = avatar.components.sellableComponent
+      ? avatar.Sellable()
+      : undefined;
+
+    return { name, stuff_ui, profile_avatar, sellable };
   }
 
   async backgrounds() {

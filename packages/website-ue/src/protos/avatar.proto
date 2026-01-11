@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "blitz_static_profile_avatar_component.proto";
+import "blitz_static_sellable_component.proto";
+import "blitz_static_stuff_ui_component.proto";
+
+message Avatar {
+  string name = 1;
+  blitz_static_stuff_ui_component.StuffUIComponent stuff_ui = 2;
+  blitz_static_profile_avatar_component.ProfileAvatarComponent profile_avatar = 3;
+  optional blitz_static_sellable_component.SellableComponent sellable = 4;
+}

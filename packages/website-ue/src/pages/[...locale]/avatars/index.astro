@@ -6,30 +6,31 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
-const avatars = await api.avatars();
+const { avatars } = await api.avatars();
 ---
 
 <BaseLayout accent="gold">
   {
     avatars.map((avatar) => {
-      const ui = avatar.StuffUI("UIComponent");
-      const profileAvatar = avatar.ProfileAvatar();
-
       return (
         <>
           <h3>
-            {ui.display_name} {Grade[ui.grade]}{" "}
-            {ProfileAvatarComponent_Category[profileAvatar.category]}
+            {avatar.stuff_ui!.display_name} {Grade[avatar.stuff_ui!.grade]}{" "}
+            {ProfileAvatarComponent_Category[avatar.profile_avatar!.category]}
           </h3>
 
-          {ui.description && <p>{ui.description}</p>}
-          {ui.obtaining_methods && <p>{ui.obtaining_methods}</p>}
-          {ui.features && <p>{ui.features}</p>}
+          {avatar.stuff_ui!.description && (
+            <p>{avatar.stuff_ui!.description}</p>
+          )}
+          {avatar.stuff_ui!.obtaining_methods && (
+            <p>{avatar.stuff_ui!.obtaining_methods}</p>
+          )}
+          {avatar.stuff_ui!.features && <p>{avatar.stuff_ui!.features}</p>}
 
           <img width="128" src={`/api/avatars/${avatar.name}.webp`} />
 
-          {avatar.components.sellableComponent && (
-            <pre>{JSON.stringify(avatar.Sellable(), null, 2)}</pre>
+          {avatar.sellable && (
+            <pre>{JSON.stringify(avatar.sellable, null, 2)}</pre>
           )}
 
           <br />
