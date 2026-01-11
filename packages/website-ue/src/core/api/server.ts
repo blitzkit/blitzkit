@@ -6,6 +6,7 @@ import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage
 import { merge } from "lodash-es";
 import { parse } from "yaml";
 import type { Avatar } from "../../protos/avatar";
+import type { Background } from "../../protos/background";
 import type { Tank } from "../../protos/tank";
 import type { TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
@@ -170,7 +171,7 @@ export class ServerAPI extends AbstractAPI {
     return { tank, compensation, slug } satisfies Tank;
   }
 
-  async _avatars() {
+  protected async _avatars() {
     const avatars: Avatar[] = [];
 
     for (const item of this.metadata.group("ProfileAvatarEntity")) {
@@ -180,7 +181,7 @@ export class ServerAPI extends AbstractAPI {
     return { avatars };
   }
 
-  async _avatar(id: string) {
+  protected async _avatar(id: string) {
     const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
     const name = avatar.name;
     const stuff_ui = avatar.StuffUI("UIComponent");
@@ -192,11 +193,25 @@ export class ServerAPI extends AbstractAPI {
     return { name, stuff_ui, profile_avatar, sellable };
   }
 
-  async backgrounds() {
-    return this.metadata.group("ProfileBackgroundEntity");
+  protected async _backgrounds() {
+    const backgrounds: Background[] = [];
+
+    for (const item of this.metadata.group("ProfileBackgroundEntity")) {
+      backgrounds.push(await this.background(item.name));
+    }
+
+    return { backgrounds };
   }
 
-  async background(id: string) {
-    return this.metadata.item(`ProfileBackgroundEntity.${id}`);
+  protected async _background(id: string) {
+    const background = this.metadata.item(`ProfileBackgroundEntity.${id}`);
+    const name = background.name;
+    const stuff_ui = background.StuffUI("UIComponent");
+    const profile_background = background.ProfileBackground();
+    const sellable = background.components.sellableComponent
+      ? background.Sellable()
+      : undefined;
+
+    return { name, stuff_ui, profile_background, sellable };
   }
 }

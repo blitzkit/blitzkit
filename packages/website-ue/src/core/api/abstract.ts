@@ -1,23 +1,14 @@
-import type { CatalogItemAccessor } from "@blitzkit/closed";
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import type { Avatar } from "../../protos/avatar";
 import type { Avatars } from "../../protos/avatars";
+import type { Background } from "../../protos/background";
+import type { Backgrounds } from "../../protos/backgrounds";
 import type { Tank } from "../../protos/tank";
 import type { TankList } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
 
 export abstract class AbstractAPI {
-  private _tanksCache: Tanks | undefined;
-  protected abstract _tanks(): Promise<Tanks>;
-  async tanks() {
-    if (this._tanksCache === undefined) {
-      this._tanksCache = await this._tanks();
-    }
-
-    return this._tanksCache;
-  }
-
   private _tankListCache: TankList | undefined;
   protected abstract _tankList(): Promise<TankList>;
   async tankList() {
@@ -26,6 +17,26 @@ export abstract class AbstractAPI {
     }
 
     return this._tankListCache;
+  }
+
+  private _tankCache: Record<string, Tank> = {};
+  protected abstract _tank(id: string): Promise<Tank>;
+  async tank(id: string) {
+    if (this._tankCache[id] === undefined) {
+      this._tankCache[id] = await this._tank(id);
+    }
+
+    return this._tankCache[id];
+  }
+
+  private _tanksCache: Tanks | undefined;
+  protected abstract _tanks(): Promise<Tanks>;
+  async tanks() {
+    if (this._tanksCache === undefined) {
+      this._tanksCache = await this._tanks();
+    }
+
+    return this._tanksCache;
   }
 
   private assertLocale(locale: string) {
@@ -77,14 +88,14 @@ export abstract class AbstractAPI {
     return this._gameStringsCache[locale][prefix];
   }
 
-  private _tankCache: Record<string, Tank> = {};
-  protected abstract _tank(id: string): Promise<Tank>;
-  async tank(id: string) {
-    if (this._tankCache[id] === undefined) {
-      this._tankCache[id] = await this._tank(id);
+  private _avatarCache: Record<string, Avatar> = {};
+  protected abstract _avatar(id: string): Promise<Avatar>;
+  async avatar(id: string) {
+    if (this._avatarCache[id] === undefined) {
+      this._avatarCache[id] = await this._avatar(id);
     }
 
-    return this._tankCache[id];
+    return this._avatarCache[id];
   }
 
   private _avatarsCache: Avatars | undefined;
@@ -97,16 +108,23 @@ export abstract class AbstractAPI {
     return this._avatarsCache;
   }
 
-  private _avatarCache: Record<string, Avatar> = {};
-  protected abstract _avatar(id: string): Promise<Avatar>;
-  async avatar(id: string) {
-    if (this._avatarCache[id] === undefined) {
-      this._avatarCache[id] = await this._avatar(id);
+  private _backgroundCache: Record<string, Background> = {};
+  protected abstract _background(id: string): Promise<Background>;
+  async background(id: string) {
+    if (this._backgroundCache[id] === undefined) {
+      this._backgroundCache[id] = await this._background(id);
     }
 
-    return this._avatarCache[id];
+    return this._backgroundCache[id];
   }
 
-  abstract backgrounds(): Promise<CatalogItemAccessor[]>;
-  abstract background(id: string): Promise<CatalogItemAccessor>;
+  private _backgroundsCache: Backgrounds | undefined;
+  protected abstract _backgrounds(): Promise<Backgrounds>;
+  async backgrounds() {
+    if (this._backgroundsCache === undefined) {
+      this._backgroundsCache = await this._backgrounds();
+    }
+
+    return this._backgroundsCache;
+  }
 }

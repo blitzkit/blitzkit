@@ -5,31 +5,35 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
-const backgrounds = await api.backgrounds();
+const { backgrounds } = await api.backgrounds();
 ---
 
 <BaseLayout accent="amber">
   {
     backgrounds.map((background) => {
-      const ui = background.StuffUI("UIComponent");
-      const profileBackground = background.ProfileBackground();
-
       return (
         <>
           <h3>
-            {ui.display_name} {Grade[ui.grade]}{" "}
+            {background.stuff_ui!.display_name}{" "}
+            {Grade[background.stuff_ui!.grade]}{" "}
           </h3>
 
-          <pre>{JSON.stringify(profileBackground, null, 2)}</pre>
+          <pre>{JSON.stringify(background.profile_background, null, 2)}</pre>
 
-          {ui.description && <p>{ui.description}</p>}
-          {ui.obtaining_methods && <p>{ui.obtaining_methods}</p>}
-          {ui.features && <p>{ui.features}</p>}
+          {background.stuff_ui!.description && (
+            <p>{background.stuff_ui!.description}</p>
+          )}
+          {background.stuff_ui!.obtaining_methods && (
+            <p>{background.stuff_ui!.obtaining_methods}</p>
+          )}
+          {background.stuff_ui!.features && (
+            <p>{background.stuff_ui!.features}</p>
+          )}
 
           <img width="128" src={`/api/backgrounds/${background.name}.webp`} />
 
-          {background.components.sellableComponent && (
-            <pre>{JSON.stringify(background.Sellable(), null, 2)}</pre>
+          {background.sellable && (
+            <pre>{JSON.stringify(background.sellable, null, 2)}</pre>
           )}
 
           <br />
