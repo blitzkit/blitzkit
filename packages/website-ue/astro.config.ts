@@ -32,7 +32,7 @@ export default defineConfig({
   outDir: "../../dist/website",
   prefetch: { defaultStrategy: "hover", prefetchAll: true },
 
-  // build: { concurrency: 4 },
+  build: { concurrency: 4 },
   adapter: target === "app" ? node({ mode: "standalone" }) : undefined,
 
   integrations: [
