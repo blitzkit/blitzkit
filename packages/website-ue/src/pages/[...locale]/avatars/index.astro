@@ -7,6 +7,14 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
+<style is:global>
+  .avatars {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--space-7), 1fr));
+    gap: var(--space-4);
+  }
+</style>
+
 <BaseLayout {locale} accent="gold">
   <Page client:only="react">
     <Page skeleton slot="fallback" />
