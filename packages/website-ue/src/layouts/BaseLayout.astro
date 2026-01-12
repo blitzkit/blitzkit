@@ -20,8 +20,12 @@ const { accent, noNavbar } = Astro.props;
     <BaseMeta />
 
     <ColorScale color="mauve" />
-    <ColorScale color={accent} />
     <ColorAlias color="mauve" alias="gray" />
+
+    <ColorScale color="black" alpha />
+    <ColorScale color="white" alpha />
+
+    <ColorScale color={accent} />
     <ColorAlias color={accent} alias="accent" />
     <BaseStyles />
 
@@ -46,6 +50,6 @@ const { accent, noNavbar } = Astro.props;
 
     <slot />
 
-    {(<Footer />)}
+    <Footer />
   </body>
 </html>

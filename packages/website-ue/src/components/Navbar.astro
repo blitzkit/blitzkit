@@ -1,0 +1,56 @@
+---
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { BlitzKitIcon } from "../icons/BlitzKit";
+---
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    margin-bottom: calc(var(--space-5) * -1);
+
+    display: flex;
+    justify-content: space-between;
+
+    z-index: 1;
+    backdrop-filter: var(--blur-glass);
+    background-color: var(--black-a11);
+
+    .side {
+      display: flex;
+
+      .action {
+        width: calc(var(--space-5) + var(--space-4));
+        height: calc(var(--space-5) + var(--space-4));
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon {
+          width: 1.25em;
+          height: 1.25em;
+        }
+      }
+    }
+  }
+</style>
+
+<div class="navbar">
+  <div class="side">
+    <div class="action">
+      <BlitzKitIcon className="icon" />
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="action">
+      <MagnifyingGlassIcon className="icon" />
+    </div>
+
+    <div class="action">
+      <HamburgerMenuIcon className="icon" />
+    </div>
+  </div>
+</div>

@@ -5,12 +5,9 @@ import { TankopediaToy } from "../../../../components/TankopediaToy";
 import { api } from "../../../../core/api/dynamic";
 import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
-import type { TerrainHardness } from "../../../../core/tankopedia/tankState";
+import { TerrainHardness } from "../../../../core/tankopedia/tankState";
 import { useAwait } from "../../../../hooks/useAwait";
-import {
-  Tankopedia,
-  type TankopediaCompare,
-} from "../../../../stores/tankopedia";
+import { Tankopedia, TankopediaCompare } from "../../../../stores/tankopedia";
 
 export function Page({ id }: { id: string }) {
   return (

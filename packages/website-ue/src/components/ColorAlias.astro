@@ -1,12 +1,13 @@
 ---
-import type { Color } from "../pages/styles/colors/[accent].css";
+import type { Color } from "../core/ui/color";
 
 interface Props {
   color: Color;
   alias: string;
+  alpha?: boolean;
 }
 
-const { color, alias } = Astro.props;
+const { color, alias, alpha } = Astro.props;
 
 let styles = "";
 
@@ -14,7 +15,7 @@ styles += ":root{";
 
 for (let i = 0; i < 12; i++) {
   const n = i + 1;
-  styles += `--${alias}-${n}:var(--${color}-${n});`;
+  styles += `--${alias}-${alpha ? "a" : ""}${n}:var(--${color}-${alpha ? "a" : ""}${n});`;
 }
 
 styles += "}";
