@@ -7,7 +7,7 @@ export interface TextProps extends ComponentProps<"span"> {
   color?: Color;
   weight?: "light" | "regular" | "medium" | "bold" | "black";
   lowContrast?: boolean;
-  size?: "regular" | "minor";
+  size?: "regular" | "minor" | "major";
 }
 
 export function Text({

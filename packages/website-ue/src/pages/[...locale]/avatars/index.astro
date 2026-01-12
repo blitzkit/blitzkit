@@ -1,41 +1,14 @@
 ---
-import { ProfileAvatarComponent_Category } from "@protos/blitz_static_profile_avatar_component";
-import { Grade } from "@protos/blitz_static_standard_grades_enum";
-import { api } from "../../../core/api/dynamic";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { avatars } = await api.avatars();
+const { locale } = Astro.props;
 ---
 
-<BaseLayout accent="gold">
-  {
-    avatars.map((avatar) => {
-      return (
-        <>
-          <h3>
-            {avatar.stuff_ui!.display_name} {Grade[avatar.stuff_ui!.grade]}{" "}
-            {ProfileAvatarComponent_Category[avatar.profile_avatar!.category]}
-          </h3>
-
-          {avatar.stuff_ui!.description && (
-            <p>{avatar.stuff_ui!.description}</p>
-          )}
-          {avatar.stuff_ui!.obtaining_methods && (
-            <p>{avatar.stuff_ui!.obtaining_methods}</p>
-          )}
-          {avatar.stuff_ui!.features && <p>{avatar.stuff_ui!.features}</p>}
-
-          <img width="128" src={`/api/avatars/${avatar.name}.webp`} />
-
-          {avatar.sellable && (
-            <pre>{JSON.stringify(avatar.sellable, null, 2)}</pre>
-          )}
-
-          <br />
-        </>
-      );
-    })
-  }
+<BaseLayout {locale} accent="gold">
+  <Page client:only="react">
+    <Page skeleton slot="fallback" />
+  </Page>
 </BaseLayout>

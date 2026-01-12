@@ -8,11 +8,12 @@ import Navbar from "../components/Navbar.astro";
 import type { Color } from "../core/ui/color";
 
 interface Props {
+  locale: string;
   accent: Color;
   noNavbar?: boolean;
 }
 
-const { accent, noNavbar } = Astro.props;
+const { accent, noNavbar, locale } = Astro.props;
 ---
 
 <html>
@@ -35,6 +36,7 @@ const { accent, noNavbar } = Astro.props;
         display: flex;
         flex-direction: column;
         gap: var(--space-5);
+        min-height: 100dvh;
 
         background-color: var(--gray-1);
         color: var(--gray-12);
@@ -50,6 +52,6 @@ const { accent, noNavbar } = Astro.props;
 
     <slot />
 
-    <Footer />
+    <Footer {locale} />
   </body>
 </html>

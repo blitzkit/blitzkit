@@ -5,6 +5,10 @@
     font-size: var(--font-size-minor);
   }
 
+  &[data-size="major"] {
+    font-size: var(--font-size-major);
+  }
+
   &[data-weight="light"] {
     font-weight: var(--weight-light);
   }
