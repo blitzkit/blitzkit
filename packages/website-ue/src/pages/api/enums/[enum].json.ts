@@ -2,8 +2,9 @@ import { TankClass, TankType } from "@blitzkit/core";
 import { Nation } from "@protos/blitz_static_tank_component";
 import type { APIContext, GetStaticPaths } from "astro";
 import { GunType } from "../../../core/tankopedia/characteristics";
+import { GET as _GET } from "./all.json";
 
-const enums = {
+export const ENUMS = {
   nation: Nation,
   "tank-class": TankClass,
   "tank-type": TankType,
@@ -11,29 +12,12 @@ const enums = {
 };
 
 export const getStaticPaths = (() => {
-  return Object.keys(enums).map((name) => ({ params: { enum: name } }));
+  return Object.keys(ENUMS).map((name) => ({ params: { enum: name } }));
 }) satisfies GetStaticPaths;
 
-/**
- * Enumerations used within BlitzKit, for nominal development reference only.
- *
- * DO NOT programmatically use this API as it is designed solely for human
- * reference.
- *
- * DO NOT blindly copy entries as naming conventions vary. Most enums come
- * directly from the game which uses a SCREAMING_SNAKE_CASE convention while
- * BlitzKit uses PascalCase.
- */
-export function GET({
+export async function GET({
   params,
-}: APIContext<never, { enum: keyof typeof enums }>) {
-  const map: Record<number, string> = {};
-
-  for (const key in enums[params.enum]) {
-    const value = enums[params.enum][key];
-    if (typeof value !== "string") continue;
-    map[key] = value;
-  }
-
-  return Response.json(map);
+}: APIContext<never, { enum: keyof typeof ENUMS }>) {
+  const enums = (await _GET().json()) as Record<string, Record<number, string>>;
+  return Response.json(enums[params.enum]);
 }
