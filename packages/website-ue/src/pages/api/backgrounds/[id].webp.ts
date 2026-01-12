@@ -1,14 +1,8 @@
-import type { APIContext, GetStaticPaths } from "astro";
+import type { APIContext } from "astro";
 import { api } from "../../../core/api/dynamic";
 import { imageProxy } from "../../../core/api/imageProxy";
 
-export const getStaticPaths = (async () => {
-  const { backgrounds } = await api.backgrounds();
-
-  return backgrounds.map((background) => ({
-    params: { id: background.name },
-  }));
-}) satisfies GetStaticPaths;
+export { getStaticPaths } from "./[id].json";
 
 /**
  * One day I will write documentation for this
