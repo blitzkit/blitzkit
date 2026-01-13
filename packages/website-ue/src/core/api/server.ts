@@ -29,7 +29,7 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
-  protected async _gameStrings(locale: string, prefix: string) {
+  protected async _gameStrings(locale: string) {
     const group = this.metadata.group("ClientConfigsEntity");
 
     if (group.length !== 1) {
@@ -98,11 +98,17 @@ export class ServerAPI extends AbstractAPI {
       );
     }
 
+    return strings;
+  }
+
+  protected async _groupedGameStrings(locale: string, group: string) {
+    const strings = await this.gameStrings(locale);
     const filtered: Record<string, string> = {};
 
     for (const key in strings) {
-      if (key.startsWith(`${prefix}__`)) {
-        filtered[key] = strings[key];
+      if (key.startsWith(`${group}__`)) {
+        const trimmed = key.substring(group.length + 2);
+        filtered[trimmed] = strings[key];
       }
     }
 
@@ -124,7 +130,7 @@ export class ServerAPI extends AbstractAPI {
   protected async _tankList() {
     const group = this.metadata.group("TankEntity");
     const list: TankListEntry[] = [];
-    const strings = await this.gameStrings("en", "TankEntity");
+    const strings = await this.groupedGameStrings("en", "TankEntity");
 
     for (const item of group) {
       const tankCatalog = item.TankCatalog();
@@ -213,5 +219,17 @@ export class ServerAPI extends AbstractAPI {
       : undefined;
 
     return { name, stuff_ui, profile_background, sellable };
+  }
+
+  protected async _gameStringGroups() {
+    const defaultGameStrings = await this.gameStrings(locales.default);
+    const groups = new Set<string>();
+
+    for (const key in defaultGameStrings) {
+      const [group] = key.split("__");
+      groups.add(group);
+    }
+
+    return Array.from(groups.values());
   }
 }

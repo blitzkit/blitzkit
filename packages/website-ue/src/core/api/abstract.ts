@@ -63,29 +63,41 @@ export abstract class AbstractAPI {
     return this._stringsCache[locale];
   }
 
-  private _gameStringsCache: Record<
-    string,
-    Record<string, Record<string, string>>
-  > = {};
+  private _gameStringsCache: Record<string, Record<string, string>> = {};
   protected abstract _gameStrings(
-    locale: string,
-    prefix: string
+    locale: string
   ): Promise<Record<string, string>>;
-  async gameStrings(locale: string, prefix: string) {
+  async gameStrings(locale: string) {
     this.assertLocale(locale);
 
     if (this._gameStringsCache[locale] === undefined) {
-      this._gameStringsCache[locale] = {};
+      this._gameStringsCache[locale] = await this._gameStrings(locale);
     }
 
-    if (this._gameStringsCache[locale][prefix] === undefined) {
-      this._gameStringsCache[locale][prefix] = await this._gameStrings(
-        locale,
-        prefix
-      );
+    return this._gameStringsCache[locale];
+  }
+
+  private _groupedGameStringsCache: Record<
+    string,
+    Record<string, Record<string, string>>
+  > = {};
+  protected abstract _groupedGameStrings(
+    locale: string,
+    group: string
+  ): Promise<Record<string, string>>;
+  async groupedGameStrings(locale: string, group: string) {
+    this.assertLocale(locale);
+
+    if (this._groupedGameStringsCache[locale] === undefined) {
+      this._groupedGameStringsCache[locale] = {};
     }
 
-    return this._gameStringsCache[locale][prefix];
+    if (this._groupedGameStringsCache[locale][group] === undefined) {
+      this._groupedGameStringsCache[locale][group] =
+        await this._groupedGameStrings(locale, group);
+    }
+
+    return this._groupedGameStringsCache[locale][group];
   }
 
   private _avatarCache: Record<string, Avatar> = {};
@@ -126,5 +138,15 @@ export abstract class AbstractAPI {
     }
 
     return this._backgroundsCache;
+  }
+
+  private _gameStringGroupsCache: string[] | undefined;
+  protected abstract _gameStringGroups(): Promise<string[]>;
+  async gameStringGroups() {
+    if (this._gameStringGroupsCache === undefined) {
+      this._gameStringGroupsCache = await this._gameStringGroups();
+    }
+
+    return this._gameStringGroupsCache;
   }
 }
