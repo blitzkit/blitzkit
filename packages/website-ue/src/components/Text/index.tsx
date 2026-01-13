@@ -8,6 +8,7 @@ export interface TextProps extends ComponentProps<"span"> {
   weight?: "light" | "regular" | "medium" | "bold" | "black";
   lowContrast?: boolean;
   size?: "regular" | "minor" | "major";
+  align?: "left" | "center" | "right";
 }
 
 export function Text({
@@ -17,6 +18,7 @@ export function Text({
   size = "regular",
   weight,
   style,
+  align,
   ...props
 }: TextProps) {
   return (
@@ -25,6 +27,7 @@ export function Text({
       style={{ color: `var(--${color}-${lowContrast ? 11 : 12})`, ...style }}
       data-size={size}
       data-weight={weight}
+      data-align={align === "left" ? undefined : align}
       {...props}
     />
   );

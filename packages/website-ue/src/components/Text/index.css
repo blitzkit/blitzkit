@@ -4,7 +4,6 @@
   &[data-size="minor"] {
     font-size: var(--font-size-minor);
   }
-
   &[data-size="major"] {
     font-size: var(--font-size-major);
   }
@@ -12,20 +11,23 @@
   &[data-weight="light"] {
     font-weight: var(--weight-light);
   }
-
   &[data-weight="regular"] {
     font-weight: var(--weight-regular);
   }
-
   &[data-weight="medium"] {
     font-weight: var(--weight-medium);
   }
-
   &[data-weight="bold"] {
     font-weight: var(--weight-bold);
   }
-
   &[data-weight="black"] {
     font-weight: var(--weight-black);
+  }
+
+  &[data-align="center"] {
+    text-align: center;
+  }
+  &[data-align="right"] {
+    text-align: right;
   }
 }

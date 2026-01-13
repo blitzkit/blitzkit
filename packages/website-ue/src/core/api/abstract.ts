@@ -83,9 +83,10 @@ export abstract class AbstractAPI {
   > = {};
   protected abstract _groupedGameStrings(
     locale: string,
-    group: string
+    group: string,
+    prefix: boolean
   ): Promise<Record<string, string>>;
-  async groupedGameStrings(locale: string, group: string) {
+  async groupedGameStrings(locale: string, group: string, prefix = true) {
     this.assertLocale(locale);
 
     if (this._groupedGameStringsCache[locale] === undefined) {
@@ -94,7 +95,7 @@ export abstract class AbstractAPI {
 
     if (this._groupedGameStringsCache[locale][group] === undefined) {
       this._groupedGameStringsCache[locale][group] =
-        await this._groupedGameStrings(locale, group);
+        await this._groupedGameStrings(locale, group, prefix);
     }
 
     return this._groupedGameStringsCache[locale][group];

@@ -20,6 +20,10 @@ export async function GET({
 }: {
   params: { locale: string; group: string };
 }) {
-  const strings = await api.groupedGameStrings(params.locale, params.group);
+  const strings = await api.groupedGameStrings(
+    params.locale,
+    params.group,
+    false
+  );
   return Response.json(strings);
 }

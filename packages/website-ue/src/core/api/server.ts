@@ -101,14 +101,17 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  protected async _groupedGameStrings(locale: string, group: string) {
+  protected async _groupedGameStrings(
+    locale: string,
+    group: string,
+    prefix: boolean
+  ) {
     const strings = await this.gameStrings(locale);
     const filtered: Record<string, string> = {};
 
     for (const key in strings) {
       if (key.startsWith(`${group}__`)) {
-        const trimmed = key.substring(group.length + 2);
-        filtered[trimmed] = strings[key];
+        filtered[prefix ? key : key.substring(group.length + 2)] = strings[key];
       }
     }
 
