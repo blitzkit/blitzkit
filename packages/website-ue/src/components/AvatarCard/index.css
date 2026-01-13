@@ -2,13 +2,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--space-4);
 
   .avatar-image {
     width: 100%;
     aspect-ratio: 7 / 8;
+    border-radius: var(--space-3);
 
     background-size: cover;
     background-position: center;
+
+    outline: var(--outline-interactive);
+    box-shadow: var(--shadow-subtle);
   }
 
   .avatar-label {

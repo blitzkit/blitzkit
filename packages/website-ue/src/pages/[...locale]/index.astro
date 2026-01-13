@@ -21,7 +21,7 @@ export const getStaticPaths = (() => {
 const { locale } = Astro.props;
 ---
 
-<BaseLayout accent="amber" noNavbar>
+<BaseLayout {locale} accent="amber" noNavbar>
   <ColorScale color="purple" slot="head" />
   <ColorScale color="gold" slot="head" />
   <ColorScale color="lime" slot="head" />

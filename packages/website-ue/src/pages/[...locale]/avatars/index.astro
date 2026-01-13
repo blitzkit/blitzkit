@@ -1,4 +1,5 @@
 ---
+import Section from "../../../components/Section.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
@@ -11,12 +12,14 @@ const { locale } = Astro.props;
   .avatars {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(var(--space-7), 1fr));
-    gap: var(--space-4);
+    gap: var(--space-5) var(--space-4);
   }
 </style>
 
 <BaseLayout {locale} accent="gold">
-  <Page client:only="react">
-    <Page skeleton slot="fallback" />
-  </Page>
+  <Section>
+    <Page client:only="react">
+      <Page skeleton slot="fallback" />
+    </Page>
+  </Section>
 </BaseLayout>
