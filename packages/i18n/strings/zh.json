@@ -23,8 +23,8 @@
     },
     "shells": {
       "ap": "穿甲弹",
-      "ap_cr": "APCR",
-      "hc": "HEAT",
+      "ap_cr": "硬式复合穿甲弹",
+      "hc": "反战车高爆弹",
       "he": "高爆弹"
     },
     "player_count_period": {
@@ -671,8 +671,8 @@
         "sorting_by": "按 {name} 排序",
         "clear": "清除",
         "tier": "{tier} 阶",
-        "passive": "{name} (Passive)",
-        "active": "{name} (Active)",
+        "passive": "{name} (被动)",
+        "active": "{name} (主动)",
         "no_tanks_found": {
           "body": "找不到战车。",
           "search_again": "请尝试重新搜索。",
@@ -821,10 +821,10 @@
         },
         "stats": "猜对了 {correct} / {total}",
         "help": {
-          "title": "Partially reveal tank?",
-          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "title": "显示坦克?",
+          "description": "显示坦克而不显示名字。这轮会被视为不正确，并打破你的连续记录！",
           "cancel": "取消",
-          "reveal": "Reveal"
+          "reveal": "显示"
         },
         "clear": "清除",
         "select_all": "全选",
@@ -1150,11 +1150,11 @@
           },
           "provisions": {
             "clear": "清除",
-            "clear_all": "Clear all tanks"
+            "clear_all": "清除所有坦克"
           },
           "consumables": {
             "clear": "清除",
-            "clear_all": "Clear all tanks"
+            "clear_all": "清除所有坦克"
           }
         }
       },
