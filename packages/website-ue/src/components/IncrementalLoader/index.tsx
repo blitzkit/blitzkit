@@ -20,7 +20,6 @@ export function IncrementalLoader<Props>({
   Component,
 }: IncrementalLoaderProps<Props>) {
   const [count, setCount] = useState(initial);
-  console.log(count);
   const sliced = data.slice(0, count);
 
   return (
