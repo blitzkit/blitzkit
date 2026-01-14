@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { AvatarCard } from "../../../components/AvatarCard";
+import { IncrementalLoader } from "../../../components/IncrementalLoader";
 import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
 import { useGameStrings } from "../../../hooks/useGameStrings";
@@ -41,9 +42,12 @@ function Content({ skeleton }: ContentProps) {
 
   return (
     <div className="avatars">
-      {ordered.slice(0, 12).map((avatar) => (
-        <AvatarCard key={avatar.name} avatar={avatar} />
-      ))}
+      <IncrementalLoader
+        initial={20}
+        skeleton={6}
+        data={ordered}
+        Component={AvatarCard}
+      />
     </div>
   );
 }
