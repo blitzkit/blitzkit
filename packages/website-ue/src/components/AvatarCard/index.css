@@ -4,15 +4,20 @@
   align-items: center;
   gap: var(--space-4);
 
-  .avatar-image {
+  .avatar-series {
+    position: relative;
     width: 100%;
     aspect-ratio: 7 / 8;
-    border-radius: var(--space-3);
 
-    background-size: cover;
-    background-position: center;
+    .avatar-entry {
+      position: absolute;
 
-    box-shadow: var(--shadow-interactive), var(--shadow-aggressive);
+      border-radius: var(--space-3);
+      box-shadow: var(--shadow-interactive), var(--shadow-aggressive);
+
+      background-size: cover;
+      background-position: center;
+    }
   }
 
   .avatar-label {

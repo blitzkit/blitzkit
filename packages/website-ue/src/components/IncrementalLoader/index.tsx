@@ -5,9 +5,10 @@ import "./index.css";
 
 export interface IncrementalLoaderProps<Props> {
   initial: number;
-  skeleton: number;
+  intermediate: number;
   rate?: number;
 
+  skeleton?: boolean;
   data: Props[];
   Component: (props: SkeletonProps<Props>) => ReactNode;
 }
@@ -17,6 +18,7 @@ export function IncrementalLoader<Props>({
   rate = 2,
   data,
   skeleton,
+  intermediate,
   Component,
 }: IncrementalLoaderProps<Props>) {
   const [count, setCount] = useState(initial);
@@ -24,15 +26,19 @@ export function IncrementalLoader<Props>({
 
   return (
     <>
-      {sliced.map((item, index) => (
-        <Component key={index} {...item} />
-      ))}
+      {!skeleton &&
+        sliced.map((item, index) => <Component key={index} {...item} />)}
 
-      {times(Math.min(skeleton, data.length - count), (index) => (
-        <Item key={index} rate={rate} setCount={setCount}>
-          <Component skeleton />
-        </Item>
-      ))}
+      {times(
+        skeleton
+          ? initial + intermediate
+          : Math.min(intermediate, data.length - count),
+        (index) => (
+          <Item key={index} rate={rate} setCount={setCount}>
+            <Component skeleton />
+          </Item>
+        )
+      )}
     </>
   );
 }

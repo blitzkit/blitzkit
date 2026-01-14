@@ -5,6 +5,7 @@ import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
 import { useGameStrings } from "../../../hooks/useGameStrings";
 import { LocaleProvider, useLocale } from "../../../hooks/useLocale";
+import type { Avatar } from "../../../protos/avatar";
 
 interface PageProps extends ContentProps {
   locale: string;
@@ -26,26 +27,40 @@ function Content({ skeleton }: ContentProps) {
   const locale = useLocale();
   const { avatars } = useAwait(() => api.avatars(), "avatars");
   const profileAvatarEntityStrings = useGameStrings("ProfileAvatarEntity");
-  const ordered = useMemo(
-    () =>
-      avatars.sort((a, b) => {
-        const nameA =
-          profileAvatarEntityStrings[a.stuff_ui!.display_name] ??
-          a.stuff_ui!.display_name;
-        const nameB =
-          profileAvatarEntityStrings[b.stuff_ui!.display_name] ??
-          b.stuff_ui!.display_name;
+  const groups = useMemo(() => {
+    const groups = new Map<string, Avatar[]>();
 
-        return nameA.localeCompare(nameB, locale);
-      }),
-    []
-  );
+    for (const avatar of avatars) {
+      const name =
+        profileAvatarEntityStrings[avatar.stuff_ui!.display_name] ??
+        avatar.stuff_ui!.display_name;
+
+      if (groups.has(name)) {
+        groups.get(name)!.push(avatar);
+      } else {
+        groups.set(name, [avatar]);
+      }
+    }
+
+    return groups;
+  }, []);
+  const ordered = useMemo(() => {
+    const array = Array.from(groups.entries());
+    return array
+      .sort((a, b) => a[0].localeCompare(b[0], locale))
+      .map(([name, avatars]) => ({
+        name,
+        avatars: avatars.sort((a, b) => {
+          return a.stuff_ui!.grade - b.stuff_ui!.grade;
+        }),
+      }));
+  }, []);
 
   return (
     <div className="avatars">
       <IncrementalLoader
         initial={40}
-        skeleton={10}
+        intermediate={10}
         data={ordered}
         Component={AvatarCard}
       />
