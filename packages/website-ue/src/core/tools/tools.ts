@@ -8,6 +8,8 @@ export interface Tool {
   significant?: boolean;
   disabled?: boolean;
   href?: string;
+
+  background_position: "top" | "center" | "bottom";
 }
 
 export const tools: Record<string, Tool> = {
@@ -16,11 +18,15 @@ export const tools: Record<string, Tool> = {
     strings: "tankopedia",
     button: "purple",
     significant: true,
+
+    background_position: "top",
   },
 
   avatars: {
     id: "avatars",
     button: "gold",
+
+    background_position: "bottom",
   },
 
   backgrounds: {

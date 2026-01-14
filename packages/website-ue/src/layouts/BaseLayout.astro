@@ -16,12 +16,14 @@ interface Props {
 const { accent, noNavbar, locale } = Astro.props;
 ---
 
-<html>
+<html lang={locale}>
   <head>
     <BaseMeta />
 
     <ColorScale color="mauve" />
+    <ColorScale color="mauve" alpha />
     <ColorAlias color="mauve" alias="gray" />
+    <ColorAlias color="mauve" alpha alias="gray" />
 
     <ColorScale color="black" alpha />
     <ColorScale color="white" alpha />
@@ -36,7 +38,6 @@ const { accent, noNavbar, locale } = Astro.props;
         display: flex;
         flex-direction: column;
         min-height: 100dvh;
-        gap: var(--space-4);
 
         background-color: var(--gray-1);
         color: var(--gray-12);
@@ -47,6 +48,7 @@ const { accent, noNavbar, locale } = Astro.props;
           flex: 1;
           flex-direction: column;
           gap: var(--space-5);
+          padding: var(--space-4) 0;
         }
       }
     </style>
@@ -56,6 +58,8 @@ const { accent, noNavbar, locale } = Astro.props;
 
   <body class="dark">
     {!noNavbar && <Navbar {locale} />}
+
+    <slot name="pre-app" />
 
     <div class="app">
       <slot />
