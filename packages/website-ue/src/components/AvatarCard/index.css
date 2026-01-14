@@ -12,8 +12,7 @@
     background-size: cover;
     background-position: center;
 
-    outline: var(--outline-interactive);
-    box-shadow: var(--shadow-subtle);
+    box-shadow: var(--shadow-interactive), var(--shadow-subtle);
   }
 
   .avatar-label {

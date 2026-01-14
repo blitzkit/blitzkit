@@ -36,7 +36,6 @@ import "@fontsource-variable/roboto-flex";
     --weight-bold: 700;
     --weight-black: 900;
 
-    --outline-interactive: solid var(--space-1) var(--gray-5);
     --outline-focus: var(--space-1) solid var(--accent-6);
 
     --shadow-cavity:
@@ -44,11 +43,27 @@ import "@fontsource-variable/roboto-flex";
         var(--space-1) var(--black-a3),
       inset calc(var(--space-1) * sin(45deg) * -1)
         calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--white-a1);
+
     --shadow-bump:
       inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
         var(--space-1) var(--white-a3),
       inset calc(var(--space-1) * sin(45deg) * -1)
         calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--black-a3);
+
+    --shadow-outline-width: 1.5px;
+    --shadow-outline-width-negative: calc(var(--shadow-outline-width) * -1);
+
+    --shadow-interactive-background: 0 0 0 var(--shadow-outline-width)
+      var(--gray-6);
+    --shadow-interactive-shine: var(--shadow-outline-width-negative)
+      var(--shadow-outline-width-negative) var(--shadow-outline-width)
+      var(--white-a1);
+    --shadow-interactive-shadow: var(--shadow-outline-width)
+      var(--shadow-outline-width) var(--shadow-outline-width) var(--black-a4);
+    --shadow-interactive:
+      var(--shadow-interactive-shine), var(--shadow-interactive-shadow),
+      var(--shadow-interactive-background);
+
     --shadow-subtle: var(--space-1) var(--space-1) var(--space-4)
       var(--black-a11);
 

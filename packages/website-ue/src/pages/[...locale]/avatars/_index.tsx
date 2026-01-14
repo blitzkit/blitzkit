@@ -24,7 +24,7 @@ function Content({ skeleton }: ContentProps) {
 
   return (
     <div className="avatars">
-      {avatars.map((avatar) => (
+      {avatars.slice(0, 12).map((avatar) => (
         <AvatarCard key={avatar.name} avatar={avatar} />
       ))}
     </div>

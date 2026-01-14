@@ -1,5 +1,4 @@
 import { useGameStrings } from "../../hooks/useGameStrings";
-import { useLocale } from "../../hooks/useLocale";
 import type { Avatar } from "../../protos/avatar";
 import { Text } from "../Text";
 import "./index.css";
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export function AvatarCard({ avatar }: Props) {
-  const { locale } = useLocale();
   const profileAvatarEntityStrings = useGameStrings("ProfileAvatarEntity");
 
   return (
