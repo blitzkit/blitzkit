@@ -48,7 +48,7 @@ const { accent, noNavbar, locale } = Astro.props;
   </head>
 
   <body class="dark">
-    {!noNavbar && <Navbar />}
+    {!noNavbar && <Navbar {locale} />}
 
     <slot />
 

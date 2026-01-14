@@ -1,36 +1,54 @@
 ---
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { BlitzKitIcon } from "../icons/BlitzKit";
+import { LinkI18n } from "./LinkI18n";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
 ---
 
 <style>
   .navbar {
     position: sticky;
     top: 0;
-    width: 100%;
-    margin-bottom: calc(var(--space-4) * -1);
+    left: 0;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     z-index: 1;
     backdrop-filter: var(--blur-glass);
-    background-color: var(--black-a11);
+    background-color: var(--black-a5);
 
-    .side {
+    .content {
+      flex: 1;
+      max-width: calc(var(--page-width) + 2 * var(--space-4));
+
       display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-      .action {
-        width: calc(var(--space-5) + var(--space-4));
-        height: calc(var(--space-5) + var(--space-4));
-
+      .side {
         display: flex;
-        align-items: center;
-        justify-content: center;
 
-        .icon {
-          width: 1.25em;
-          height: 1.25em;
+        .action {
+          padding: var(--space-4);
+
+          cursor: pointer;
+          color: var(--color-regular);
+
+          &:focus {
+            outline: var(--outline-focus);
+          }
+
+          .icon {
+            width: 1.25em;
+            height: 1.25em;
+            vertical-align: top;
+          }
         }
       }
     }
@@ -38,19 +56,21 @@ import { BlitzKitIcon } from "../icons/BlitzKit";
 </style>
 
 <div class="navbar">
-  <div class="side">
-    <div class="action">
-      <BlitzKitIcon className="icon" />
-    </div>
-  </div>
-
-  <div class="side">
-    <div class="action">
-      <MagnifyingGlassIcon className="icon" />
+  <div class="content">
+    <div class="side">
+      <LinkI18n {locale} className="action" tabIndex={0}>
+        <BlitzKitIcon className="icon" />
+      </LinkI18n>
     </div>
 
-    <div class="action">
-      <HamburgerMenuIcon className="icon" />
+    <div class="side">
+      <div class="action" tabindex="0">
+        <MagnifyingGlassIcon className="icon" />
+      </div>
+
+      <div class="action" tabindex="0">
+        <HamburgerMenuIcon className="icon" />
+      </div>
     </div>
   </div>
 </div>
