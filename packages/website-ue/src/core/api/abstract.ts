@@ -83,10 +83,9 @@ export abstract class AbstractAPI {
   > = {};
   protected abstract _groupedGameStrings(
     locale: string,
-    group: string,
-    prefix: boolean
+    group: string
   ): Promise<Record<string, string>>;
-  async groupedGameStrings(locale: string, group: string, prefix = true) {
+  async groupedGameStrings(locale: string, group: string, prefix: boolean) {
     this.assertLocale(locale);
 
     if (this._groupedGameStringsCache[locale] === undefined) {
@@ -95,10 +94,19 @@ export abstract class AbstractAPI {
 
     if (this._groupedGameStringsCache[locale][group] === undefined) {
       this._groupedGameStringsCache[locale][group] =
-        await this._groupedGameStrings(locale, group, prefix);
+        await this._groupedGameStrings(locale, group);
     }
 
-    return this._groupedGameStringsCache[locale][group];
+    if (!prefix) return this._groupedGameStringsCache[locale][group];
+
+    const strings: Record<string, string> = {};
+
+    for (const key in this._groupedGameStringsCache[locale][group]) {
+      strings[`${group}__${key}`] =
+        this._groupedGameStringsCache[locale][group][key];
+    }
+
+    return strings;
   }
 
   private _avatarCache: Record<string, Avatar> = {};

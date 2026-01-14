@@ -101,17 +101,14 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  protected async _groupedGameStrings(
-    locale: string,
-    group: string,
-    prefix: boolean
-  ) {
+  protected async _groupedGameStrings(locale: string, group: string) {
     const strings = await this.gameStrings(locale);
     const filtered: Record<string, string> = {};
 
     for (const key in strings) {
       if (key.startsWith(`${group}__`)) {
-        filtered[prefix ? key : key.substring(group.length + 2)] = strings[key];
+        const trimmed = key.substring(group.length + 2);
+        filtered[trimmed] = strings[key];
       }
     }
 
@@ -133,7 +130,7 @@ export class ServerAPI extends AbstractAPI {
   protected async _tankList() {
     const group = this.metadata.group("TankEntity");
     const list: TankListEntry[] = [];
-    const strings = await this.groupedGameStrings("en", "TankEntity");
+    const strings = await this.groupedGameStrings("en", "TankEntity", true);
 
     for (const item of group) {
       const tankCatalog = item.TankCatalog();
