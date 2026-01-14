@@ -18,8 +18,8 @@ const { locale } = Astro.props;
 
 <BaseLayout {locale} accent="gold">
   <Section>
-    <Page client:only="react">
-      <Page skeleton slot="fallback" />
+    <Page {locale} client:only="react">
+      <Page {locale} skeleton slot="fallback" />
     </Page>
   </Section>
 </BaseLayout>

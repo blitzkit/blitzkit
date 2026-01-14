@@ -1,4 +1,5 @@
 import { fetchPB } from "@blitzkit/core";
+import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "../../protos/avatars";
 import { AbstractAPI } from "./abstract";
 
@@ -28,5 +29,12 @@ export class ClientAPI extends AbstractAPI {
     }
 
     return strings;
+  }
+
+  protected async _strings(locale: string) {
+    const response = await fetch(`/api/strings/${locale}.json`);
+    const json = (await response.json()) as Strings;
+
+    return json;
   }
 }

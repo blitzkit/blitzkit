@@ -1,12 +1,25 @@
 import { AvatarCard } from "../../../components/AvatarCard";
 import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
+import { LocaleProvider } from "../../../hooks/useLocale";
 
-interface Props {
+interface PageProps extends ContentProps {
+  locale: string;
+}
+
+export function Page({ locale, ...props }: PageProps) {
+  return (
+    <LocaleProvider locale={locale}>
+      <Content {...props} />
+    </LocaleProvider>
+  );
+}
+
+interface ContentProps {
   skeleton?: boolean;
 }
 
-export function Page({ skeleton }: Props) {
+function Content({ skeleton }: ContentProps) {
   const { avatars } = useAwait(() => api.avatars(), "avatars");
 
   return (
