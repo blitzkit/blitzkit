@@ -1,7 +1,5 @@
 import locales from "@blitzkit/i18n/locales.json";
 import { createContext, useContext, type ReactNode } from "react";
-import { api } from "../core/api/dynamic";
-import { useAwait } from "./useAwait";
 
 const LocaleContext = createContext<{
   locale: string;
@@ -26,12 +24,7 @@ export function useLocale() {
     throw new Error("useLocale must be used within a LocaleProvider");
   }
 
-  const strings = useAwait(
-    () => api.strings(context.locale),
-    `strings-${context.locale}`
-  );
-
-  return { locale: context.locale, strings };
+  return context.locale;
 }
 
 export interface LocaleAcceptorProps {

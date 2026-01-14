@@ -4,7 +4,7 @@ import { IncrementalLoader } from "../../../components/IncrementalLoader";
 import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
 import { useGameStrings } from "../../../hooks/useGameStrings";
-import { LocaleProvider } from "../../../hooks/useLocale";
+import { LocaleProvider, useLocale } from "../../../hooks/useLocale";
 
 interface PageProps extends ContentProps {
   locale: string;
@@ -23,6 +23,7 @@ interface ContentProps {
 }
 
 function Content({ skeleton }: ContentProps) {
+  const locale = useLocale();
   const { avatars } = useAwait(() => api.avatars(), "avatars");
   const profileAvatarEntityStrings = useGameStrings("ProfileAvatarEntity");
   const ordered = useMemo(
@@ -35,7 +36,7 @@ function Content({ skeleton }: ContentProps) {
           profileAvatarEntityStrings[b.stuff_ui!.display_name] ??
           b.stuff_ui!.display_name;
 
-        return nameA.localeCompare(nameB);
+        return nameA.localeCompare(nameB, locale);
       }),
     []
   );
@@ -43,8 +44,8 @@ function Content({ skeleton }: ContentProps) {
   return (
     <div className="avatars">
       <IncrementalLoader
-        initial={20}
-        skeleton={6}
+        initial={40}
+        skeleton={10}
         data={ordered}
         Component={AvatarCard}
       />
