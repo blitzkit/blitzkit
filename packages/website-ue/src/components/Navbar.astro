@@ -11,7 +11,7 @@ const { locale } = Astro.props;
 ---
 
 <style>
-  .navbar {
+  #navbar {
     position: sticky;
     top: 0;
     left: 0;
@@ -21,7 +21,15 @@ const { locale } = Astro.props;
 
     z-index: 1;
     backdrop-filter: var(--blur-glass) brightness(25%);
-    box-shadow: var(--shadow-subtle);
+    background-color: var(--accent-2);
+    box-shadow: var(--shadow-none);
+
+    transition-duration: var(--duration-brief);
+
+    &[data-sticky="true"] {
+      background-color: var(--gray-a2);
+      box-shadow: var(--shadow-subtle);
+    }
 
     .content {
       flex: 1;
@@ -55,7 +63,18 @@ const { locale } = Astro.props;
   }
 </style>
 
-<div class="navbar">
+<script>
+  const navbar = document.getElementById("navbar")!;
+
+  function handleScroll() {
+    navbar.dataset.sticky = `${window.scrollY > 0}`;
+  }
+
+  handleScroll();
+  window.addEventListener("scroll", handleScroll);
+</script>
+
+<div id="navbar">
   <div class="content">
     <div class="side">
       <LinkI18n {locale} href="/" className="action" tabIndex={0}>

@@ -29,7 +29,10 @@ const { accent, noNavbar, locale } = Astro.props;
     <ColorScale color="white" alpha />
 
     <ColorScale color={accent} />
+    <ColorScale color={accent} alpha />
     <ColorAlias color={accent} alias="accent" />
+    <ColorAlias color={accent} alpha alias="accent" />
+
     <BaseStyles />
 
     <style>
