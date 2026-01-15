@@ -23,6 +23,8 @@ interface ContentProps {
   skeleton?: boolean;
 }
 
+const indexingPattern = /.+_(\d+)$/;
+
 function Content({ skeleton }: ContentProps) {
   const locale = useLocale();
   const { avatars } = useAwait(() => api.avatars(), "avatars");
@@ -51,7 +53,23 @@ function Content({ skeleton }: ContentProps) {
       .map(([name, avatars]) => ({
         name,
         avatars: avatars.sort((a, b) => {
-          return a.stuff_ui!.grade - b.stuff_ui!.grade;
+          const gradeA = a.stuff_ui!.grade;
+          const gradeB = b.stuff_ui!.grade;
+          let diff = gradeA - gradeB;
+
+          if (diff === 0) {
+            const matchesA = a.name.match(indexingPattern);
+            const matchesB = b.name.match(indexingPattern);
+
+            if (matchesA && matchesB) {
+              const indexA = Number(matchesA[1]);
+              const indexB = Number(matchesB[1]);
+
+              diff = indexA - indexB;
+            }
+          }
+
+          return diff;
         }),
       }));
   }, []);
