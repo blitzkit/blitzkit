@@ -24,6 +24,8 @@ export function IncrementalLoader<Props extends { key: string }>({
   const [count, setCount] = useState(initial);
   const sliced = data.slice(0, count);
 
+  useEffect(() => setCount(initial), [data, initial]);
+
   return (
     <>
       {!skeleton &&
