@@ -3,17 +3,17 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { SkeletonProps } from "../../types/SkeletonProps";
 import "./index.css";
 
-export interface IncrementalLoaderProps<Props> {
+export interface IncrementalLoaderProps<Props extends { key: string }> {
   initial: number;
   intermediate: number;
   rate?: number;
 
   skeleton?: boolean;
   data: Props[];
-  Component: (props: SkeletonProps<Props>) => ReactNode;
+  Component: (props: SkeletonProps<Omit<Props, "key">>) => ReactNode;
 }
 
-export function IncrementalLoader<Props>({
+export function IncrementalLoader<Props extends { key: string }>({
   initial,
   rate = 2,
   data,
@@ -27,7 +27,7 @@ export function IncrementalLoader<Props>({
   return (
     <>
       {!skeleton &&
-        sliced.map((item, index) => <Component key={index} {...item} />)}
+        sliced.map(({ key, ...props }) => <Component key={key} {...props} />)}
 
       {times(
         skeleton
