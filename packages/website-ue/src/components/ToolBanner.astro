@@ -15,8 +15,9 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>
-  .tool-hero {
+  .tool-banner {
     background-size: cover;
+    margin-bottom: calc(var(--space-5) - var(--space-4));
 
     .content {
       width: 100%;
@@ -63,7 +64,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 </style>
 
 <div
-  class="tool-hero"
+  class="tool-banner"
   style={{
     backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
     backgroundPosition: tool.banner_background_position ?? "top",

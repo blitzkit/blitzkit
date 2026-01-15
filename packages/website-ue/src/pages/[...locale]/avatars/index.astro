@@ -1,5 +1,4 @@
 ---
-import Section from "../../../components/Section.astro";
 import ToolBanner from "../../../components/ToolBanner.astro";
 import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
@@ -21,9 +20,7 @@ const { locale } = Astro.props;
 <BaseLayout {locale} accent="gold">
   <ToolBanner {locale} tool={tools.avatars} slot="pre-app" />
 
-  <Section>
-    <Page {locale} client:only="react">
-      <Page {locale} skeleton slot="fallback" />
-    </Page>
-  </Section>
+  <Page {locale} client:only="react">
+    <Page {locale} skeleton slot="fallback" />
+  </Page>
 </BaseLayout>

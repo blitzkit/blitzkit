@@ -16,6 +16,10 @@
 
   &[data-has-icon="true"] {
     padding-left: var(--space-3);
+
+    input {
+      padding-left: 0;
+    }
   }
 
   &:focus-within {
@@ -38,6 +42,7 @@
     font-size: inherit;
     font-weight: medium;
     padding: var(--space-3) 0;
+    padding-left: var(--space-4);
 
     color: var(--gray-12);
 

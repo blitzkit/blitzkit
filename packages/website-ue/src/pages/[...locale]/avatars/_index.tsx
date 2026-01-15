@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { AvatarCard } from "../../../components/AvatarCard";
+import { AvatarControls } from "../../../components/AvatarControls";
 import { IncrementalLoader } from "../../../components/IncrementalLoader";
+import { Section } from "../../../components/Section";
 import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
 import { useGameStrings } from "../../../hooks/useGameStrings";
@@ -75,13 +77,21 @@ function Content({}: ContentProps) {
   }, []);
 
   return (
-    <div className="avatars">
-      <IncrementalLoader
-        initial={40}
-        intermediate={10}
-        data={ordered}
-        Component={AvatarCard}
-      />
-    </div>
+    <>
+      <Section>
+        <AvatarControls />
+      </Section>
+
+      <Section>
+        <div className="avatars">
+          <IncrementalLoader
+            initial={40}
+            intermediate={10}
+            data={ordered}
+            Component={AvatarCard}
+          />
+        </div>
+      </Section>
+    </>
   );
 }

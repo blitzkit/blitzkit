@@ -46,5 +46,9 @@
   "home": {
     "search": "Search tanks, players, tools...",
     "credit": "by TrèsAbhi"
+  },
+
+  "avatars": {
+    "search": "Search avatars..."
   }
 }
