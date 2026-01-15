@@ -252,7 +252,7 @@ export const characteristics = {
     );
   },
 
-  gun_depression({ parameters, tank }) {
+  gun_depression({ parameters }) {
     return -radToDeg(
       applyPitchYawLimits(
         -Math.PI / 2,

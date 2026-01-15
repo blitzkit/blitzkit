@@ -3,6 +3,7 @@ import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "../../protos/avatars";
 import { AbstractAPI } from "./abstract";
 
+//@ts-expect-error
 export class ClientAPI extends AbstractAPI {
   protected _avatars() {
     return fetchPB("/api/avatars/all.pb", Avatars);

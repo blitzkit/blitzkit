@@ -1,22 +1,23 @@
 ---
 import "@radix-ui/colors/violet-dark.css";
-import type { GetStaticPaths } from "astro";
 import { api } from "../../../../core/api/dynamic";
+import { mixStaticPaths } from "../../../../core/astro/mixStaticPaths";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const { list } = await api.tankList();
 
   return list.map((tank) => ({
     params: { slug: tank.slug },
     props: { id: tank.id },
   }));
-}) satisfies GetStaticPaths;
+});
 
-const { id } = Astro.props;
+const { id, locale } = Astro.props;
 ---
 
-<BaseLayout accent="violet">
+<BaseLayout {locale} accent="violet">
   <Page {id} client:load />
 </BaseLayout>

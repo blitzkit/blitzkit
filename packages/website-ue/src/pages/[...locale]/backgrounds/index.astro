@@ -5,10 +5,11 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
+const { locale } = Astro.props;
 const { backgrounds } = await api.backgrounds();
 ---
 
-<BaseLayout accent="amber">
+<BaseLayout {locale} accent="amber">
   {
     backgrounds.map((background) => {
       return (

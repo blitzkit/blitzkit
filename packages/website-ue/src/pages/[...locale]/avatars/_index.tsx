@@ -25,7 +25,7 @@ interface ContentProps {
 
 const indexingPattern = /.+_(\d+)$/;
 
-function Content({ skeleton }: ContentProps) {
+function Content({}: ContentProps) {
   const locale = useLocale();
   const { avatars } = useAwait(() => api.avatars(), "avatars");
   const profileAvatarEntityStrings = useGameStrings("ProfileAvatarEntity");

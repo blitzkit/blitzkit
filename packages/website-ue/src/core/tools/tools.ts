@@ -9,7 +9,7 @@ export interface Tool {
   disabled?: boolean;
   href?: string;
 
-  background_position: "top" | "center" | "bottom";
+  banner_background_position: "top" | "center" | "bottom";
 }
 
 export const tools: Record<string, Tool> = {
@@ -19,24 +19,28 @@ export const tools: Record<string, Tool> = {
     button: "purple",
     significant: true,
 
-    background_position: "top",
+    banner_background_position: "top",
   },
 
   avatars: {
     id: "avatars",
     button: "gold",
 
-    background_position: "bottom",
+    banner_background_position: "bottom",
   },
 
   backgrounds: {
     id: "backgrounds",
     button: "gold",
+
+    banner_background_position: "bottom",
   },
 
   api: {
     id: "api",
     disabled: true,
     button: "lime",
+
+    banner_background_position: "bottom",
   },
 };

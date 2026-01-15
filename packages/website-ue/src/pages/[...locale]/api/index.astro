@@ -10,6 +10,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
+const { locale } = Astro.props;
 const root = `/src/pages/api`;
 const globbed = import.meta.glob("/src/pages/api/**/*", {
   eager: true,
@@ -47,7 +48,7 @@ for (const fullPath in globbed) {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<BaseLayout accent="amber">
+<BaseLayout {locale} accent="amber">
   <h1>api</h1>
 
   {

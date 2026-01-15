@@ -19,8 +19,8 @@ export function Page({ id }: { id: string }) {
 
 function Content({ id }: { id: string }) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
-  const tankList = useAwait(() => api.tankList(), "tank-list");
-  const otherTanks = useAwait(() => api.tanks(), "tanks");
+  // const tankList = useAwait(() => api.tankList(), "tank-list");
+  // const otherTanks = useAwait(() => api.tanks(), "tanks");
 
   Tankopedia.useInitialization(tank.tank!);
 
