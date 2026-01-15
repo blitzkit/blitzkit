@@ -1,5 +1,8 @@
+import { literals } from "@blitzkit/i18n";
+import { useStrings } from "../../hooks/useStrings";
 import type { Avatar } from "../../protos/avatar";
 import type { SkeletonProps } from "../../types/SkeletonProps";
+import { Badge } from "../Badge";
 import { Text } from "../Text";
 import "./index.css";
 
@@ -29,6 +32,7 @@ interface SeriesProps {
 
 function Series({ avatars }: SeriesProps) {
   const count = Math.min(avatars.length, MAX_CARDS);
+  const strings = useStrings();
 
   return (
     <div className="avatar-series">
@@ -45,6 +49,12 @@ function Series({ avatars }: SeriesProps) {
           }}
         />
       ))}
+
+      {avatars.length > 1 && (
+        <Badge color="gray" highContrast className="count">
+          {literals(strings.units.x, { value: avatars.length })}
+        </Badge>
+      )}
     </div>
   );
 }

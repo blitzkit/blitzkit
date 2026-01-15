@@ -16,7 +16,8 @@
     "t": "{value}t",
     "bhp_t": "{value}bhp/t",
     "deg_s": "{value}°/s",
-    "%": "{value}%"
+    "%": "{value}%",
+    "x": "x{value}"
   },
 
   "tools": {

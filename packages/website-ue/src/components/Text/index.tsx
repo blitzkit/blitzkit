@@ -4,7 +4,7 @@ import type { Color } from "../../core/ui/color";
 import "./index.css";
 
 export interface TextProps extends ComponentProps<"span"> {
-  color?: Color;
+  color?: Color | "accent";
   weight?: "light" | "regular" | "medium" | "bold" | "black";
   lowContrast?: boolean;
   size?: "regular" | "minor" | "major";

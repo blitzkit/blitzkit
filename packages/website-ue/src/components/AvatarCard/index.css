@@ -18,6 +18,12 @@
       background-size: cover;
       background-position: center;
     }
+
+    .count {
+      position: absolute;
+      bottom: var(--space-3);
+      right: var(--space-3);
+    }
   }
 
   .avatar-label {
