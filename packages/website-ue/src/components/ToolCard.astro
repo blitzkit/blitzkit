@@ -48,17 +48,6 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
         flex-direction: column;
       }
     }
-
-    .shadow {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-
-      border-radius: var(--space-3);
-      box-shadow: var(--shadow-bump);
-    }
   }
 </style>
 
@@ -90,6 +79,4 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
       <CaretRightIcon />
     </Button>
   </div>
-
-  <div class="shadow"></div>
 </LinkI18n>

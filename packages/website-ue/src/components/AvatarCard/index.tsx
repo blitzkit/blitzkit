@@ -38,6 +38,7 @@ function Series({ avatars }: SeriesProps) {
     <div className="avatar-series">
       {avatars.slice(-MAX_CARDS).map((avatar, index) => (
         <div
+          key={avatar.name}
           className="avatar-entry"
           style={{
             filter: `brightness(${(index + 1) / count})`,
