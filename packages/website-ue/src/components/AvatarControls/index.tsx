@@ -31,7 +31,7 @@ export function AvatarControls() {
         ref={search}
         className="search"
         placeholder={strings.avatars.search}
-        onLoad={onChange}
+        onChange={onChange}
       >
         <MagnifyingGlassIcon />
       </TextField>
