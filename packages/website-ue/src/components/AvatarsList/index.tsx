@@ -18,13 +18,13 @@ export function AvatarsList() {
   const locale = useLocale();
   const search = Avatars.use((state) => state.search);
   const { avatars } = useAwait(() => api.avatars(), "avatars");
-  const profileAvatarEntityStrings = useGameStrings("ProfileAvatarEntity");
+  const gameStrings = useGameStrings("ProfileAvatarEntity");
   const groups = useMemo(() => {
     const groups = new Map<string, Avatar[]>();
 
     for (const avatar of avatars) {
       const name =
-        profileAvatarEntityStrings[avatar.stuff_ui!.display_name] ??
+        gameStrings[avatar.stuff_ui!.display_name] ??
         avatar.stuff_ui!.display_name;
 
       if (groups.has(name)) {
@@ -75,8 +75,8 @@ export function AvatarsList() {
   return (
     <div className="avatars-list">
       <IncrementalLoader
-        initial={9 * 5}
-        intermediate={9 * 3}
+        initial={7 * 5}
+        intermediate={7 * 3}
         data={filtered}
         Component={AvatarCard}
       />

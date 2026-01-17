@@ -1,6 +1,5 @@
 .badge {
   border-radius: var(--max-size);
-  box-shadow: var(--shadow-aggressive);
 
   padding: var(--space-2) var(--space-3);
 

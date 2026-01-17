@@ -1,15 +1,15 @@
-.avatar-card {
+.card {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
 
-  .avatar-series {
+  .series {
     position: relative;
     width: 100%;
     aspect-ratio: 7 / 8;
 
-    .avatar-entry {
+    .entry {
       position: absolute;
 
       border-radius: var(--space-3);
@@ -30,10 +30,12 @@
       position: absolute;
       bottom: var(--space-3);
       right: var(--space-3);
+
+      box-shadow: var(--shadow-aggressive);
     }
   }
 
-  .avatar-label {
+  .label {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -43,5 +45,36 @@
     .skeleton {
       width: 100%;
     }
+  }
+}
+
+.details {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+
+  .preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .image {
+      aspect-ratio: 7 / 8;
+      width: 8rem;
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .grade {
+      margin-top: calc(var(--space-3) * -1);
+    }
+  }
+
+  .description {
+    display: flex;
+    flex-direction: column;
+
+    max-width: 20rem;
   }
 }

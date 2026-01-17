@@ -1,0 +1,33 @@
+.trigger {
+  display: contents;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+
+  background-color: var(--black-a9);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+
+    min-width: 25rem;
+
+    background-color: var(--gray-3);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-interactive), var(--shadow-aggressive);
+    border-radius: var(--space-3);
+  }
+}

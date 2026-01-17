@@ -49,6 +49,7 @@
   },
 
   "avatars": {
-    "search": "Search avatars..."
+    "search": "Search avatars...",
+    "no_description": "Avatar has no description."
   }
 }

@@ -1,12 +1,15 @@
 import { literals } from "@blitzkit/i18n";
+import { Grade } from "@protos/blitz_static_standard_grades_enum";
+import { useGameStrings } from "../../hooks/useGameStrings";
 import { useStrings } from "../../hooks/useStrings";
 import type { Avatar } from "../../protos/avatar";
 import type { PropsWithSkeleton } from "../../types/propsWithSkeleton";
 import { Badge } from "../Badge";
+import { Dialog } from "../Dialog";
 import { InlineSkeleton } from "../InlineSkeleton";
 import { Skeleton } from "../Skeleton";
 import { Text } from "../Text";
-import "./index.css";
+import styles from "./index.module.css";
 
 interface Props {
   name: string;
@@ -17,14 +20,67 @@ const MAX_CARDS = 3;
 const CARD_TRIM = "var(--space-3)";
 
 export function AvatarCard(props: PropsWithSkeleton<Props>) {
-  return (
-    <div className="avatar-card">
+  const gameStrings = useGameStrings("ProfileAvatarEntity");
+  const strings = useStrings();
+
+  const card = (
+    <div className={styles.card}>
       <Series skeleton={props.skeleton} {...props} />
 
-      <Text align="center" className="avatar-label">
+      <Text align="center" className={styles.label}>
         {props.skeleton ? <InlineSkeleton /> : props.name}
       </Text>
     </div>
+  );
+
+  if (props.skeleton) return card;
+
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger>{card}</Dialog.Trigger>
+      <Dialog.Content>
+        <Text size="major" weight="bold">
+          {props.name}
+        </Text>
+
+        {[...props.avatars].reverse().map((avatar) => {
+          const description = gameStrings[avatar.stuff_ui!.description];
+          const obtaining = gameStrings[avatar.stuff_ui!.obtaining_methods];
+          const hasDescription = description || obtaining;
+
+          return (
+            <div className={styles.details}>
+              <div
+                className={styles.preview}
+                data-grade={avatar.stuff_ui!.grade}
+              >
+                <div
+                  className={styles.image}
+                  style={{
+                    backgroundImage: `url(/api/avatars/${avatar.name}.webp)`,
+                  }}
+                />
+                <Badge className={styles.grade}>
+                  {Grade[avatar.stuff_ui!.grade]}
+                </Badge>
+              </div>
+
+              <div className={styles.description}>
+                <Text>
+                  {hasDescription ? (
+                    <>
+                      {description} {obtaining}
+                    </>
+                  ) : (
+                    strings.avatars.no_description
+                  )}
+                </Text>
+              </div>
+            </div>
+          );
+        })}
+      </Dialog.Content>
+    </Dialog.Root>
   );
 }
 
@@ -37,12 +93,12 @@ function Series(props: PropsWithSkeleton<SeriesProps>) {
   const strings = useStrings();
 
   return (
-    <div className="avatar-series">
+    <div className={styles.series}>
       {!props.skeleton &&
         props.avatars.slice(-MAX_CARDS).map((avatar, index) => (
           <div
             key={avatar.name}
-            className="avatar-entry"
+            className={styles.entry}
             style={{
               filter: `brightness(${(index + 1) / count})`,
               top: `calc(${index} * ${CARD_TRIM})`,
@@ -55,12 +111,12 @@ function Series(props: PropsWithSkeleton<SeriesProps>) {
         ))}
 
       {!props.skeleton && props.avatars.length > 1 && (
-        <Badge color="gray" highContrast className="count">
+        <Badge color="gray" highContrast className={styles.count}>
           {literals(strings.units.x, { value: props.avatars.length })}
         </Badge>
       )}
 
-      {props.skeleton && <Skeleton className="avatar-entry" />}
+      {props.skeleton && <Skeleton className={styles.entry} />}
     </div>
   );
 }
