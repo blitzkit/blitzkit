@@ -167,10 +167,14 @@ export function Guesser() {
         </Text>
       </Flex>
 
-      <Flex gap="3">
+      <Flex gap={{ initial: "2", sm: "3" }}>
         <DropdownMenu.Root modal={false}>
           <DropdownMenu.Trigger>
-            <IconButton size="3" variant="surface" color="gray">
+            <IconButton
+              size={{ initial: "2", sm: "3" }}
+              variant="surface"
+              color="gray"
+            >
               <MixerVerticalIcon />
             </IconButton>
           </DropdownMenu.Trigger>
@@ -239,9 +243,9 @@ export function Guesser() {
           disabled={guessState !== GuessState.NotGuessed}
           ref={input}
           onChange={requestSearch}
-          style={{ flex: 1, minWidth: "14rem" }}
+          style={{ flex: 1, maxWidth: "14rem" }}
           placeholder={strings.website.tools.guess.search.placeholder}
-          size="3"
+          size={{ initial: "2", sm: "3" }}
           variant="classic"
         >
           <TextField.Slot>
@@ -252,7 +256,7 @@ export function Guesser() {
         <AlertDialog.Root>
           <AlertDialog.Trigger>
             <IconButton
-              size="3"
+              size={{ initial: "2", sm: "3" }}
               disabled={guessState !== GuessState.NotGuessed}
             >
               <EyeOpenIcon />
@@ -292,7 +296,7 @@ export function Guesser() {
         </AlertDialog.Root>
 
         <Button
-          size="3"
+          size={{ initial: "2", sm: "3" }}
           color={
             guessState === GuessState.NotGuessed && selected === null
               ? "red"
