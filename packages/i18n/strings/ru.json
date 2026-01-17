@@ -297,7 +297,7 @@
       },
       "filters": {
         "none": "Без фильтров",
-        "tier": " {tier} уровня"
+        "tier": " {tier} уровень"
       },
       "no_data": {
         "battles_in_period": "За этот период боёв не было",
@@ -671,8 +671,8 @@
         "sorting_by": "Сортировать по {name}",
         "clear": "Очистить",
         "tier": " {tier} уровня",
-        "passive": "{name} (Passive)",
-        "active": "{name} (Active)",
+        "passive": "{name} (Пассивный)",
+        "active": "{name} (Активный)",
         "no_tanks_found": {
           "body": "Танков не найдено.",
           "search_again": "Попробуйте повторить поиск.",
