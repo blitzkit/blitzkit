@@ -8,12 +8,12 @@ export interface ButtonProps extends ComponentProps<"button"> {
   variant?: "solid";
 }
 
-const LIGHT_TEXT_COLORS = new Set<Color>([
-  "purple",
+export const LIGHT_TEXT_COLORS = new Set<Color>([
   "gold",
   "bronze",
   "teal",
   "grass",
+  "amber",
 ]);
 
 export function Button({

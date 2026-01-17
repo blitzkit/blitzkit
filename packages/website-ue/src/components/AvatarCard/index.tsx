@@ -1,5 +1,7 @@
 import { literals } from "@blitzkit/i18n";
-import { Grade } from "@protos/blitz_static_standard_grades_enum";
+import { Grade } from "@protos/auto_items";
+import { StarFilledIcon } from "@radix-ui/react-icons";
+import type { Color } from "../../core/ui/color";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useStrings } from "../../hooks/useStrings";
 import type { Avatar } from "../../protos/avatar";
@@ -20,9 +22,6 @@ const MAX_CARDS = 3;
 const CARD_TRIM = "var(--space-3)";
 
 export function AvatarCard(props: PropsWithSkeleton<Props>) {
-  const gameStrings = useGameStrings("ProfileAvatarEntity");
-  const strings = useStrings();
-
   const card = (
     <div className={styles.card}>
       <Series skeleton={props.skeleton} {...props} />
@@ -43,45 +42,65 @@ export function AvatarCard(props: PropsWithSkeleton<Props>) {
           {props.name}
         </Text>
 
-        {[...props.avatars].reverse().map((avatar) => {
-          const description = gameStrings[avatar.stuff_ui!.description];
-          const obtaining = gameStrings[avatar.stuff_ui!.obtaining_methods];
-          const hasDescription = description || obtaining;
-
-          return (
-            <div className={styles.details}>
-              <div
-                className={styles.preview}
-                data-grade={avatar.stuff_ui!.grade}
-              >
-                <div
-                  className={styles.image}
-                  style={{
-                    backgroundImage: `url(/api/avatars/${avatar.name}.webp)`,
-                  }}
-                />
-                <Badge className={styles.grade}>
-                  {Grade[avatar.stuff_ui!.grade]}
-                </Badge>
-              </div>
-
-              <div className={styles.description}>
-                <Text>
-                  {hasDescription ? (
-                    <>
-                      {description} {obtaining}
-                    </>
-                  ) : (
-                    strings.avatars.no_description
-                  )}
-                </Text>
-              </div>
-            </div>
-          );
-        })}
+        <Details avatars={props.avatars} />
       </Dialog.Content>
     </Dialog.Root>
   );
+}
+
+interface DetailsProps {
+  avatars: Avatar[];
+}
+
+const gradeColors: Record<Grade, Color> = {
+  [Grade.GRADE_GRADE_UNSPECIFIED]: "gray",
+  [Grade.GRADE_GRADE_COMMON]: "gray",
+  [Grade.GRADE_GRADE_RARE]: "blue",
+  [Grade.GRADE_GRADE_EPIC]: "purple",
+  [Grade.GRADE_GRADE_LEGENDARY]: "amber",
+};
+
+function Details({ avatars }: DetailsProps) {
+  const gameStrings = useGameStrings("ProfileAvatarEntity");
+  const strings = useStrings();
+
+  return [...avatars].reverse().map((avatar) => {
+    const description = gameStrings[avatar.stuff_ui!.description];
+    const obtaining = gameStrings[avatar.stuff_ui!.obtaining_methods];
+    const hasDescription = description || obtaining;
+
+    return (
+      <div className={styles.details}>
+        <div className={styles.preview} data-grade={avatar.stuff_ui!.grade}>
+          <div
+            className={styles.image}
+            style={{
+              backgroundImage: `url(/api/avatars/${avatar.name}.webp)`,
+            }}
+          />
+          <Badge
+            color={gradeColors[avatar.stuff_ui!.grade]}
+            className={styles.grade}
+          >
+            <StarFilledIcon />
+            {strings.grades[avatar.stuff_ui!.grade]}
+          </Badge>
+        </div>
+
+        <div className={styles.description}>
+          <Text>
+            {hasDescription ? (
+              <>
+                {description} {obtaining}
+              </>
+            ) : (
+              strings.avatars.no_description
+            )}
+          </Text>
+        </div>
+      </div>
+    );
+  });
 }
 
 interface SeriesProps {

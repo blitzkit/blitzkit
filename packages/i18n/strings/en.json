@@ -51,5 +51,13 @@
   "avatars": {
     "search": "Search avatars...",
     "no_description": "Avatar has no description."
+  },
+
+  "grades": {
+    "0": "Unspecified",
+    "1": "Common",
+    "2": "Rare",
+    "3": "Epic",
+    "4": "Legendary"
   }
 }

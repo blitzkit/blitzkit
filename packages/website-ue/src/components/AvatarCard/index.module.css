@@ -58,9 +58,31 @@
     flex-direction: column;
     align-items: center;
 
+    padding: var(--space-2);
+
+    &[data-grade="1"] .image {
+      outline: var(--space-2) solid var(--gray-9);
+    }
+
+    &[data-grade="2"] .image {
+      outline: var(--space-2) solid var(--blue-9);
+      box-shadow: 0 0 var(--space-3) var(--blue-9);
+    }
+
+    &[data-grade="3"] .image {
+      outline: var(--space-2) solid var(--purple-9);
+      box-shadow: 0 0 var(--space-4) var(--purple-9);
+    }
+
+    &[data-grade="4"] .image {
+      outline: var(--space-2) solid var(--amber-9);
+      box-shadow: 0 0 var(--space-5) var(--amber-9);
+    }
+
     .image {
       aspect-ratio: 7 / 8;
       width: 8rem;
+      border-radius: var(--space-3);
 
       background-size: cover;
       background-position: center;

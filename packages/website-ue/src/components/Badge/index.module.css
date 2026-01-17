@@ -5,4 +5,13 @@
 
   font-size: var(--font-size-minor);
   font-weight: var(--weight-medium);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  .svg {
+    width: 1em;
+    height: 1em;
+  }
 }
