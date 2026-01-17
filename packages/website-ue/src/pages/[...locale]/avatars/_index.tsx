@@ -3,7 +3,7 @@ import { AvatarsList } from "../../../components/AvatarsList";
 import { Section } from "../../../components/Section";
 import { LocaleProvider } from "../../../hooks/useLocale";
 
-interface PageProps extends ContentProps {
+interface PageProps {
   locale: string;
 }
 
@@ -15,11 +15,7 @@ export function Page({ locale, ...props }: PageProps) {
   );
 }
 
-interface ContentProps {
-  skeleton?: boolean;
-}
-
-function Content({}: ContentProps) {
+function Content() {
   return (
     <>
       <Section>

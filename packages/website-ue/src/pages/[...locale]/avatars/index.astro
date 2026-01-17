@@ -11,8 +11,5 @@ const { locale } = Astro.props;
 
 <BaseLayout {locale} accent="gold">
   <ToolBanner {locale} tool={tools.avatars} slot="pre-app" />
-
-  <Page {locale} client:only="react">
-    <Page {locale} skeleton slot="fallback" />
-  </Page>
+  <Page {locale} client:load />
 </BaseLayout>

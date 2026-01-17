@@ -9,6 +9,7 @@
 
   background-color: var(--gray-1);
   box-shadow: var(--shadow-interactive), var(--shadow-cavity);
+  cursor: text;
 
   font-size: var(--font-size-regular);
   color: var(--gray-11);
@@ -26,6 +27,17 @@
     box-shadow: var(--shadow-focus);
   }
 
+  &[data-disabled="true"] {
+    cursor: not-allowed;
+    background-color: var(--gray-3);
+
+    color: var(--gray-9);
+
+    input::placeholder {
+      color: var(--gray-9);
+    }
+  }
+
   svg {
     width: 1em;
     height: 1em;
@@ -37,6 +49,7 @@
 
     background: none;
     border: none;
+    cursor: inherit;
 
     font-size: inherit;
     font-weight: medium;
