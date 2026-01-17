@@ -16,7 +16,8 @@
     "isolatedModules": true,
     "paths": {
       "@protos/*": ["./packages/closed/protos/*"]
-    }
+    },
+    "strictNullChecks": true
   },
   "exclude": ["node_modules/**/*", "dist"]
 }
