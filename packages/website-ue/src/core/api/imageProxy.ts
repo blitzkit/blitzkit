@@ -15,7 +15,7 @@ export async function imageProxy(url: string) {
   }
 
   const buffer = await response.arrayBuffer();
-  const image = sharp(buffer);
+  const image = sharp(buffer, { animated: true });
   const webp = await image.webp().toBuffer();
   const array = new Uint8Array(webp);
 
