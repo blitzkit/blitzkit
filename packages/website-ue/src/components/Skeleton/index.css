@@ -1,0 +1,17 @@
+@keyframes skeleton-animation {
+  0% {
+    background-color: var(--black-a8);
+  }
+  50% {
+    background-color: var(--black-a5);
+  }
+  100% {
+    background-color: var(--black-a8);
+  }
+}
+
+.skeleton {
+  animation: skeleton-animation var(--duration-subtle) ease infinite;
+
+  border-radius: var(--space-2);
+}

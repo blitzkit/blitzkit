@@ -75,8 +75,8 @@ export function AvatarsList() {
   return (
     <div className="avatars-list">
       <IncrementalLoader
-        initial={40}
-        intermediate={10}
+        initial={9 * 5}
+        intermediate={9 * 3}
         data={filtered}
         Component={AvatarCard}
       />

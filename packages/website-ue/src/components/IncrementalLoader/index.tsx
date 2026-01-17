@@ -1,6 +1,6 @@
 import { times } from "lodash-es";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { SkeletonProps } from "../../types/SkeletonProps";
+import type { PropsWithSkeleton } from "../../types/propsWithSkeleton";
 import "./index.css";
 
 export interface IncrementalLoaderProps<Props extends { key: string }> {
@@ -10,7 +10,7 @@ export interface IncrementalLoaderProps<Props extends { key: string }> {
 
   skeleton?: boolean;
   data: Props[];
-  Component: (props: SkeletonProps<Omit<Props, "key">>) => ReactNode;
+  Component: (props: PropsWithSkeleton<Omit<Props, "key">>) => ReactNode;
 }
 
 export function IncrementalLoader<Props extends { key: string }>({
