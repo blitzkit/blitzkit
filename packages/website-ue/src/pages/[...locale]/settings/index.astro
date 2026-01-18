@@ -1,0 +1,15 @@
+---
+import { Heading } from "../../../components/Heading";
+import { Section } from "../../../components/Section";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout {locale} accent="amber">
+  <Section>
+    <Heading>Settings</Heading>
+  </Section>
+</BaseLayout>

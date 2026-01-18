@@ -19,26 +19,40 @@ const strings = await api.strings(locale);
 
 <style>
   #navbar {
-    position: sticky;
-    top: 0;
+    position: fixed;
+    bottom: 0;
     left: 0;
+    width: 100%;
 
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
     z-index: 1;
-    background-color: var(--gray-3);
+    background-color: var(--gray-a5);
     box-shadow: var(--shadow-none);
+    backdrop-filter: var(--blur-glass) brightness(5%);
+    border-radius: var(--space-4) var(--space-4) 0 0;
 
     transition-duration: var(--duration-brief);
 
     &[data-sticky="true"] {
-      background-color: var(--gray-a2);
-      box-shadow: var(--shadow-subtle);
+      transform: translateY(100%);
+    }
+
+    .bar {
+      width: 100%;
+      max-width: var(--space-6);
+      height: var(--space-2);
+      margin-top: var(--space-3);
+
+      background-color: var(--white-a2);
+
+      border-radius: var(--max-size);
     }
 
     .content {
-      flex: 1;
+      width: 100%;
       max-width: calc(var(--page-width) + 2 * var(--space-4));
 
       display: flex;
@@ -97,9 +111,12 @@ const strings = await api.strings(locale);
 
 <script>
   const navbar = document.getElementById("navbar")!;
+  let lastScrollY = window.scrollY;
 
   function handleScroll() {
-    navbar.dataset.sticky = `${window.scrollY > 0}`;
+    const dy = window.scrollY - lastScrollY;
+    lastScrollY = window.scrollY;
+    navbar.dataset.sticky = `${dy > 0}`;
   }
 
   handleScroll();
@@ -107,6 +124,8 @@ const strings = await api.strings(locale);
 </script>
 
 <div id="navbar">
+  <div class="bar"></div>
+
   <div class="content">
     <LinkI18n {locale} href="/" className="action" tabIndex={0} data-selected>
       <div class="selector">

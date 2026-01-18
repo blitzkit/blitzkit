@@ -4,14 +4,21 @@ import "./index.css";
 
 export interface LinkProps extends ComponentProps<"a"> {
   underline?: "always" | "hover" | "never";
+  highContrast?: boolean;
 }
 
-export function Link({ className, underline = "always", ...props }: LinkProps) {
+export function Link({
+  highContrast,
+  className,
+  underline = "always",
+  ...props
+}: LinkProps) {
   return (
     <a
       className={classNames("link", className)}
       {...props}
       data-underline={underline}
+      data-high-contrast={highContrast}
     />
   );
 }

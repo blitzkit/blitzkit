@@ -9,7 +9,7 @@ export interface HeadingProps extends Omit<TextProps, "size"> {
 export function Heading({
   className,
   weight,
-  size = "1",
+  size = "2",
   ...props
 }: HeadingProps) {
   return (

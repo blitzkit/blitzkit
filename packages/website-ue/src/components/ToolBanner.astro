@@ -1,7 +1,9 @@
 ---
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import { api } from "../core/api/dynamic";
 import type { Tool } from "../core/tools/tools";
 import { Heading } from "./Heading";
+import { LinkI18n } from "./LinkI18n";
 import { Text } from "./Text";
 
 interface Props {
@@ -17,7 +19,6 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 <style>
   .tool-banner {
     background-size: cover;
-    margin-bottom: calc(var(--space-5) - var(--space-4));
 
     .content {
       width: 100%;
@@ -25,7 +26,8 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
       position: relative;
 
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      gap: var(--space-4);
       padding: var(--space-5) var(--space-4);
       box-sizing: border-box;
 
@@ -33,6 +35,10 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 
       @media (width > 40rem) {
         padding: var(--space-6) var(--space-4);
+      }
+
+      .back {
+        z-index: 1;
       }
 
       .centered {
@@ -71,11 +77,13 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
   }}
 >
   <div class="content">
+    <LinkI18n highContrast className="back" {locale} href="/">
+      <ArrowLeftIcon />
+    </LinkI18n>
+
     <div
       class="pattern"
-      style={{
-        backgroundImage: `url(/assets/patterns/${tool.id}.svg)`,
-      }}
+      style={{ backgroundImage: `url(/assets/patterns/${tool.id}.svg)` }}
     >
     </div>
 
