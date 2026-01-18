@@ -65,5 +65,10 @@
   "navbar": {
     "home": "Home",
     "settings": "Settings"
+  },
+
+  "recent": {
+    "title": "Recent",
+    "no_recent": "Your recently viewed pages will appear here."
   }
 }

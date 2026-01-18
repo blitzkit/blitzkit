@@ -2,6 +2,7 @@
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
 import HomeHero from "../../components/HomeHero.astro";
+import { RecentItems } from "../../components/RecentItems";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export const getStaticPaths = (() => {
@@ -18,4 +19,12 @@ const { locale } = Astro.props;
 
 <BaseLayout {locale} accent="amber">
   <HomeHero {locale} />
+
+  <RecentItems {locale} client:only="react">
+    <RecentItems {locale} skeleton slot="fallback" />
+  </RecentItems>
+
+  <!-- <Section>
+    {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
+  </Section> -->
 </BaseLayout>

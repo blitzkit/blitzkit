@@ -1,0 +1,9 @@
+.recent {
+  .list {
+    min-height: var(--space-7);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

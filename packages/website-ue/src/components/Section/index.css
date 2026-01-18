@@ -11,4 +11,8 @@
     flex-direction: column;
     gap: var(--space-4);
   }
+
+  &[data-first="true"] .content {
+    padding-top: var(--space-6);
+  }
 }
