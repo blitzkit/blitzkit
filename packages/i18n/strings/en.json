@@ -50,7 +50,8 @@
 
   "avatars": {
     "search": "Search avatars...",
-    "no_description": "Avatar has no description."
+    "no_description": "Avatar has no description.",
+    "download": "Download"
   },
 
   "grades": {

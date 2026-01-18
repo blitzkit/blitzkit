@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { classNames } from "../../core/ui/classNames";
 import type { Color } from "../../core/ui/color";
-import "./index.css";
+import styles from "./index.module.css";
 
 export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
@@ -25,7 +25,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={classNames("button", className)}
+      className={classNames(styles.button, className)}
       data-color={color}
       data-variant={variant}
       data-light-text={color ? LIGHT_TEXT_COLORS.has(color) : undefined}

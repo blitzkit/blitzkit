@@ -1,14 +1,16 @@
 import { literals } from "@blitzkit/i18n";
 import { Grade } from "@protos/auto_items";
-import { StarFilledIcon } from "@radix-ui/react-icons";
+import { DownloadIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import type { Color } from "../../core/ui/color";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useStrings } from "../../hooks/useStrings";
 import type { Avatar } from "../../protos/avatar";
 import type { PropsWithSkeleton } from "../../types/propsWithSkeleton";
 import { Badge } from "../Badge";
+import { Button } from "../Button";
 import { Dialog } from "../Dialog";
 import { InlineSkeleton } from "../InlineSkeleton";
+import { Link } from "../Link";
 import { Skeleton } from "../Skeleton";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -97,6 +99,16 @@ function Details({ avatars }: DetailsProps) {
               strings.avatars.no_description
             )}
           </Text>
+
+          <Link
+            underline="never"
+            href={`/api/avatars/${avatar.name}.webp`}
+            download
+          >
+            <Button>
+              <DownloadIcon /> {strings.avatars.download}
+            </Button>
+          </Link>
         </div>
       </div>
     );
