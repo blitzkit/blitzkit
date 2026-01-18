@@ -13,19 +13,20 @@ export interface TextFieldProps extends ComponentProps<"input"> {
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  ({ children, className, disabled, ...props }, ref) => {
+  ({ children, className, placeholder, disabled, ...props }, ref) => {
     const input = useRef<HTMLInputElement>(null);
 
     useImperativeHandle(ref, () => input.current!, []);
 
     return (
       <div
+        {...props}
         className={classNames("text-field", className)}
         data-has-icon={children !== undefined}
         data-disabled={disabled}
       >
         {children}
-        <input disabled={disabled} ref={input} {...props} />
+        <input disabled={disabled} ref={input} placeholder={placeholder} />
       </div>
     );
   }

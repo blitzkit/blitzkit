@@ -31,8 +31,6 @@ const strings = await api.strings(locale);
       width: 100%;
       height: calc(100% - var(--space-5) / 2);
 
-      z-index: -1;
-
       background-image: url(/assets/home-hero.webp);
       background-size: cover;
       background-position: top;
@@ -81,9 +79,10 @@ const strings = await api.strings(locale);
       }
     }
 
-    .text-field {
+    .search {
       width: 100%;
       max-width: 25rem;
+      z-index: 0;
     }
   }
 </style>
@@ -104,7 +103,7 @@ const strings = await api.strings(locale);
     </Text>
   </div>
 
-  <TextField placeholder={strings.home.search}>
+  <TextField className="search" placeholder={strings.home.search}>
     <MagnifyingGlassIcon />
   </TextField>
 </div>

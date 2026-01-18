@@ -44,7 +44,7 @@
   },
 
   "home": {
-    "search": "Search tanks, players, tools...",
+    "search": "Search tanks, players, avatars...",
     "credit": "by TrèsAbhi"
   },
 
@@ -60,5 +60,10 @@
     "2": "Rare",
     "3": "Epic",
     "4": "Legendary"
+  },
+
+  "navbar": {
+    "home": "Home",
+    "settings": "Settings"
   }
 }

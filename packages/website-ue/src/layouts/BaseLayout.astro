@@ -3,7 +3,6 @@ import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
-import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
 import type { Color } from "../core/ui/color";
 
@@ -42,7 +41,7 @@ const { accent, noNavbar, locale } = Astro.props;
         flex-direction: column;
         min-height: 100dvh;
 
-        background-color: var(--gray-1);
+        background-color: var(--gray-3);
         color: var(--gray-12);
         font-family: var(--font-family-regular);
 
@@ -51,7 +50,8 @@ const { accent, noNavbar, locale } = Astro.props;
           flex: 1;
           flex-direction: column;
           gap: var(--space-5);
-          padding: var(--space-4) 0;
+
+          background-color: var(--gray-1);
         }
       }
     </style>
@@ -60,14 +60,12 @@ const { accent, noNavbar, locale } = Astro.props;
   </head>
 
   <body class="dark">
-    {!noNavbar && <Navbar {locale} />}
-
     <slot name="pre-app" />
 
     <div class="app">
       <slot />
     </div>
 
-    <Footer {locale} />
+    {!noNavbar && <Navbar {locale} />}
   </body>
 </html>
