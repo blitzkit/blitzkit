@@ -10,7 +10,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<BaseLayout {locale} accent="gold">
+<BaseLayout selectedTool={tools.avatars} {locale} accent="gold">
   <ColorScale color="purple" />
   <ColorScale color="blue" />
 

@@ -40,6 +40,44 @@
       "name": "API",
       "action": "To docs",
       "slogan": "BlitzKit hosted API"
+    },
+    "settings": {
+      "name": "Settings"
+    },
+    "players": {
+      "name": "Players",
+      "slogan": "Player statistics",
+      "action": "Stalk player"
+    },
+    "compare": {
+      "name": "Compare",
+      "slogan": "Compare tanks characteristics",
+      "action": "Compare now"
+    },
+    "performance": {
+      "name": "Performance",
+      "slogan": "Tank performance statistics",
+      "action": "View tanks"
+    },
+    "playlist": {
+      "name": "Playlist",
+      "slogan": "Tank playlist generator",
+      "action": "Generate"
+    },
+    "mixer": {
+      "name": "Mixer",
+      "slogan": "Tank module mixer",
+      "action": "Mix and match"
+    },
+    "session": {
+      "name": "Session",
+      "slogan": "Live player statistics",
+      "action": "Track"
+    },
+    "guesser": {
+      "name": "Guesser",
+      "slogan": "Silhouette mini-game",
+      "action": "Play"
     }
   },
 

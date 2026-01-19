@@ -1,6 +1,7 @@
 ---
 import "@radix-ui/colors/amber-dark.css";
 import { getCollection } from "astro:content";
+import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
@@ -18,7 +19,7 @@ const paths: {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<BaseLayout {locale} accent="lime">
+<BaseLayout selectedTool={tools.api} {locale} accent="lime">
   <h1>api</h1>
 
   {

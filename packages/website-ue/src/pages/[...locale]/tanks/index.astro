@@ -11,7 +11,7 @@ const { locale } = Astro.props;
 const tankList = await api.tankList();
 ---
 
-<BaseLayout {locale} accent="purple">
+<BaseLayout selectedTool={tools.tanks} {locale} accent="purple">
   <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
 
   <h1>tanks</h1>

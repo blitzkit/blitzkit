@@ -1,20 +1,24 @@
 ---
-import {
-  GearIcon,
-  HamburgerMenuIcon,
-  MagnifyingGlassIcon,
-} from "@radix-ui/react-icons";
 import { BlitzKitIcon } from "../icons/BlitzKit";
 import { LinkI18n } from "./LinkI18n";
 import { Text } from "./Text";
 import { api } from "../core/api/dynamic";
+import { tools } from "../core/tools/tools";
+import type { Tool } from "../core/tools/tools";
 
 interface Props {
   locale: string;
+  selectedTool?: Tool;
 }
 
-const { locale } = Astro.props;
+const { locale, selectedTool } = Astro.props;
 const strings = await api.strings(locale);
+const toolsArray = Object.values(tools);
+
+const toolsSorted =
+  selectedTool === undefined
+    ? toolsArray
+    : [selectedTool, ...toolsArray.filter((tool) => tool !== selectedTool)];
 ---
 
 <style>
@@ -55,8 +59,8 @@ const strings = await api.strings(locale);
       width: 100%;
       max-width: calc(var(--page-width) + 2 * var(--space-4));
 
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
 
       .action {
         flex: 1;
@@ -95,8 +99,8 @@ const strings = await api.strings(locale);
           max-width: var(--space-6);
 
           .icon {
-            width: 1.25em;
             height: 1.25em;
+            width: 100%;
             vertical-align: top;
           }
         }
@@ -127,32 +131,38 @@ const strings = await api.strings(locale);
   <div class="bar"></div>
 
   <div class="content">
-    <LinkI18n {locale} href="/" className="action" tabIndex={0} data-selected>
+    <LinkI18n
+      {locale}
+      href="/"
+      className="action"
+      tabIndex={0}
+      data-selected={selectedTool === undefined}
+    >
       <div class="selector">
         <BlitzKitIcon className="icon" />
       </div>
       <Text lowContrast className="label">{strings.navbar.home}</Text>
     </LinkI18n>
 
-    <LinkI18n {locale} href="/settings" className="action" tabIndex={0}>
-      <div class="selector">
-        <GearIcon className="icon" />
-      </div>
-      <Text lowContrast className="label">{strings.navbar.settings}</Text>
-    </LinkI18n>
+    {
+      toolsSorted.map(({ id, Icon }) => (
+        <LinkI18n
+          key={id}
+          {locale}
+          href={`/${id}`}
+          className="action"
+          tabIndex={0}
+          data-selected={selectedTool?.id === id}
+        >
+          <div class="selector">
+            <Icon className="icon" />
+          </div>
 
-    <LinkI18n {locale} href="/settings" className="action" tabIndex={0}>
-      <div class="selector">
-        <GearIcon className="icon" />
-      </div>
-      <Text lowContrast className="label">{strings.navbar.settings}</Text>
-    </LinkI18n>
-
-    <LinkI18n {locale} href="/settings" className="action" tabIndex={0}>
-      <div class="selector">
-        <GearIcon className="icon" />
-      </div>
-      <Text lowContrast className="label">{strings.navbar.settings}</Text>
-    </LinkI18n>
+          <Text lowContrast className="label">
+            {strings.tools[id as keyof typeof strings.tools].name}
+          </Text>
+        </LinkI18n>
+      ))
+    }
   </div>
 </div>
