@@ -604,7 +604,7 @@
         "description": "Informations de base sur un joueur",
         "body": {
           "title": "{name}'s information",
-          "nickname": "Nickname",
+          "nickname": "Pseudo",
           "battles": "Batailles",
           "winrate": "Taux de victoires",
           "account_id": "Account ID",
