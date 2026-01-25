@@ -5,108 +5,77 @@ import { Text } from "./Text";
 import { api } from "../core/api/dynamic";
 import { tools } from "../core/tools/tools";
 import type { Tool } from "../core/tools/tools";
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 interface Props {
   locale: string;
-  selectedTool?: Tool;
 }
 
-const { locale, selectedTool } = Astro.props;
-const strings = await api.strings(locale);
-const toolsArray = Object.values(tools);
-
-const toolsSorted =
-  selectedTool === undefined
-    ? toolsArray
-    : [selectedTool, ...toolsArray.filter((tool) => tool !== selectedTool)];
+const { locale } = Astro.props;
 ---
 
 <style>
   #navbar {
-    position: fixed;
-    bottom: 0;
+    position: sticky;
+    top: 0;
     left: 0;
     width: 100%;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
 
     z-index: 1;
-    background-color: var(--gray-a5);
+    background-color: var(--gray-a2);
     box-shadow: var(--shadow-none);
-    backdrop-filter: var(--blur-glass) brightness(5%);
-    border-radius: var(--space-4) var(--space-4) 0 0;
+    backdrop-filter: var(--blur-glass) brightness(10%);
+    box-shadow: var(--shadow-subtle);
 
     transition-duration: var(--duration-brief);
 
     &[data-sticky="true"] {
-      transform: translateY(100%);
-    }
-
-    .bar {
-      width: 100%;
-      max-width: var(--space-6);
-      height: var(--space-2);
-      margin-top: var(--space-3);
-
-      background-color: var(--white-a2);
-
-      border-radius: var(--max-size);
+      transform: translateY(-100%);
+      box-shadow: var(--shadow-none);
     }
 
     .content {
+      display: flex;
+      justify-content: space-between;
+
       width: 100%;
       max-width: calc(var(--page-width) + 2 * var(--space-4));
 
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-
-      .action {
-        flex: 1;
-
+      .group {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: var(--space-3);
         gap: var(--space-2);
 
-        cursor: pointer;
-        color: var(--color-regular);
-        text-decoration: none;
-        color: var(--gray-11);
+        .action {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: var(--space-3);
+          gap: var(--space-2);
 
-        &[data-selected="true"] {
-          color: var(--accent-12);
+          cursor: pointer;
+          color: var(--color-regular);
+          text-decoration: none;
+          color: var(--gray-11);
 
           .selector {
-            background-color: var(--accent-5);
-          }
+            padding: var(--space-2);
+            border-radius: var(--max-size);
 
-          .label {
-            color: var(--gray-12) !important;
-          }
-        }
+            display: flex;
+            justify-content: center;
 
-        .selector {
-          padding: var(--space-2);
-          border-radius: var(--max-size);
-
-          display: flex;
-          justify-content: center;
-
-          width: 100%;
-          max-width: var(--space-6);
-
-          .icon {
-            height: 1.25em;
             width: 100%;
-            vertical-align: top;
-          }
-        }
+            max-width: var(--space-6);
 
-        .label {
-          font-size: var(--font-size-minor);
+            .icon {
+              height: 1.25em;
+              width: 100%;
+              vertical-align: top;
+            }
+          }
         }
       }
     }
@@ -120,7 +89,10 @@ const toolsSorted =
   function handleScroll() {
     const dy = window.scrollY - lastScrollY;
     lastScrollY = window.scrollY;
-    navbar.dataset.sticky = `${dy > 0}`;
+
+    const hide = window.scrollY > navbar.clientHeight && dy > 0;
+
+    navbar.dataset.sticky = `${hide}`;
   }
 
   handleScroll();
@@ -128,41 +100,27 @@ const toolsSorted =
 </script>
 
 <div id="navbar">
-  <div class="bar"></div>
-
   <div class="content">
-    <LinkI18n
-      {locale}
-      href="/"
-      className="action"
-      tabIndex={0}
-      data-selected={selectedTool === undefined}
-    >
-      <div class="selector">
-        <BlitzKitIcon className="icon" />
-      </div>
-      <Text lowContrast className="label">{strings.navbar.home}</Text>
-    </LinkI18n>
+    <div class="group">
+      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+        <div class="selector">
+          <BlitzKitIcon className="icon" />
+        </div>
+      </LinkI18n>
+    </div>
 
-    {
-      toolsSorted.map(({ id, Icon }) => (
-        <LinkI18n
-          key={id}
-          {locale}
-          href={`/${id}`}
-          className="action"
-          tabIndex={0}
-          data-selected={selectedTool?.id === id}
-        >
-          <div class="selector">
-            <Icon className="icon" />
-          </div>
+    <div class="group">
+      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+        <div class="selector">
+          <MagnifyingGlassIcon className="icon" />
+        </div>
+      </LinkI18n>
 
-          <Text lowContrast className="label">
-            {strings.tools[id as keyof typeof strings.tools].name}
-          </Text>
-        </LinkI18n>
-      ))
-    }
+      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+        <div class="selector">
+          <HamburgerMenuIcon className="icon" />
+        </div>
+      </LinkI18n>
+    </div>
   </div>
 </div>

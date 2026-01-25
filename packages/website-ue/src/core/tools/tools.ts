@@ -1,11 +1,3 @@
-import {
-  ExclamationTriangleIcon,
-  GearIcon,
-  PersonIcon,
-} from "@radix-ui/react-icons";
-import type { IconProps } from "@radix-ui/react-icons/dist/types";
-import type { ComponentProps, ReactNode } from "react";
-import { TankIcon } from "../../icons/Tank";
 import type { Color } from "../ui/color";
 
 export interface Tool {
@@ -13,17 +5,12 @@ export interface Tool {
 
   accent: Color;
   banner_background_position: "top" | "center" | "bottom";
-
-  Icon:
-    | ((props: ComponentProps<"svg">) => ReactNode)
-    | ((props: IconProps) => ReactNode);
 }
 
 export const tools: Record<string, Tool> = {
   tanks: {
     id: "tanks",
 
-    Icon: TankIcon,
     accent: "purple",
     banner_background_position: "top",
   },
@@ -31,7 +18,6 @@ export const tools: Record<string, Tool> = {
   players: {
     id: "players",
 
-    Icon: PersonIcon,
     accent: "purple",
     banner_background_position: "top",
   },
@@ -39,7 +25,6 @@ export const tools: Record<string, Tool> = {
   settings: {
     id: "settings",
 
-    Icon: GearIcon,
     accent: "gray",
     banner_background_position: "top",
   },
@@ -47,7 +32,6 @@ export const tools: Record<string, Tool> = {
   avatars: {
     id: "avatars",
 
-    Icon: ExclamationTriangleIcon,
     accent: "gold",
     banner_background_position: "bottom",
   },
@@ -55,7 +39,6 @@ export const tools: Record<string, Tool> = {
   backgrounds: {
     id: "backgrounds",
 
-    Icon: ExclamationTriangleIcon,
     accent: "gold",
     banner_background_position: "bottom",
   },
@@ -63,7 +46,6 @@ export const tools: Record<string, Tool> = {
   api: {
     id: "api",
 
-    Icon: ExclamationTriangleIcon,
     accent: "lime",
     banner_background_position: "bottom",
   },
@@ -71,7 +53,6 @@ export const tools: Record<string, Tool> = {
   compare: {
     id: "compare",
 
-    Icon: ExclamationTriangleIcon,
     accent: "crimson",
     banner_background_position: "bottom",
   },
@@ -79,7 +60,6 @@ export const tools: Record<string, Tool> = {
   performance: {
     id: "performance",
 
-    Icon: ExclamationTriangleIcon,
     accent: "jade",
     banner_background_position: "bottom",
   },
@@ -87,7 +67,6 @@ export const tools: Record<string, Tool> = {
   playlist: {
     id: "playlist",
 
-    Icon: ExclamationTriangleIcon,
     accent: "tomato",
     banner_background_position: "bottom",
   },
@@ -95,7 +74,6 @@ export const tools: Record<string, Tool> = {
   mixer: {
     id: "mixer",
 
-    Icon: ExclamationTriangleIcon,
     accent: "gray",
     banner_background_position: "bottom",
   },
@@ -103,7 +81,6 @@ export const tools: Record<string, Tool> = {
   guesser: {
     id: "guesser",
 
-    Icon: ExclamationTriangleIcon,
     accent: "cyan",
     banner_background_position: "bottom",
   },
@@ -111,7 +88,6 @@ export const tools: Record<string, Tool> = {
   session: {
     id: "session",
 
-    Icon: ExclamationTriangleIcon,
     accent: "blue",
     banner_background_position: "bottom",
   },

@@ -1,5 +1,5 @@
 import { literals } from "@blitzkit/i18n";
-import { Grade } from "@protos/auto_items";
+import { Grade } from "@protos/blitz_static_standard_grades_enum";
 import { DownloadIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import type { Color } from "../../core/ui/color";
 import { useGameStrings } from "../../hooks/useGameStrings";
@@ -55,11 +55,11 @@ interface DetailsProps {
 }
 
 const gradeColors: Record<Grade, Color> = {
-  [Grade.GRADE_GRADE_UNSPECIFIED]: "gray",
-  [Grade.GRADE_GRADE_COMMON]: "gray",
-  [Grade.GRADE_GRADE_RARE]: "blue",
-  [Grade.GRADE_GRADE_EPIC]: "purple",
-  [Grade.GRADE_GRADE_LEGENDARY]: "amber",
+  [Grade.GRADE_UNSPECIFIED]: "gray",
+  [Grade.GRADE_COMMON]: "gray",
+  [Grade.GRADE_RARE]: "blue",
+  [Grade.GRADE_EPIC]: "purple",
+  [Grade.GRADE_LEGENDARY]: "amber",
 };
 
 function Details({ avatars }: DetailsProps) {

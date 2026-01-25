@@ -61,12 +61,12 @@ const { accent, noNavbar, locale, selectedTool } = Astro.props;
   </head>
 
   <body class="dark">
+    {!noNavbar && <Navbar {selectedTool} {locale} />}
+
     <slot name="pre-app" />
 
     <div class="app">
       <slot />
     </div>
-
-    {!noNavbar && <Navbar {selectedTool} {locale} />}
   </body>
 </html>
