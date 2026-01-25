@@ -1,8 +1,11 @@
 ---
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
+import ColorScale from "../../components/ColorScale.astro";
 import HomeHero from "../../components/HomeHero.astro";
-import { RecentItems } from "../../components/RecentItems";
+import { Section } from "../../components/Section";
+import ToolCard from "../../components/ToolCard.astro";
+import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export const getStaticPaths = (() => {
@@ -17,14 +20,26 @@ export const getStaticPaths = (() => {
 const { locale } = Astro.props;
 ---
 
+<style>
+  .tools {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(2, 1fr);
+  }
+</style>
+
 <BaseLayout {locale} accent="amber">
   <HomeHero {locale} />
 
-  <RecentItems {locale} client:only="react">
-    <RecentItems {locale} skeleton slot="fallback" />
-  </RecentItems>
+  {Object.values(tools).map((tool) => <ColorScale color={tool.accent} />)}
 
-  <!-- <Section>
-    {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
-  </Section> -->
+  <!-- <RecentItems {locale} client:only="react">
+    <RecentItems {locale} skeleton slot="fallback" />
+  </RecentItems> -->
+
+  <Section>
+    <div class="tools">
+      {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
+    </div>
+  </Section>
 </BaseLayout>

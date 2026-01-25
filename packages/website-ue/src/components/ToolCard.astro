@@ -29,6 +29,11 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
     background-position: center;
     overflow: hidden;
 
+    &[data-significant="true"] {
+      grid-column: 1 / -1;
+      height: 15rem;
+    }
+
     .poster {
       flex: 1;
 
@@ -59,6 +64,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
   style={{
     backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
   }}
+  data-significant={tool.significant}
 >
   <div
     class="poster"
@@ -74,7 +80,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
       <Text size="minor" lowContrast>{toolStrings.slogan}</Text>
     </div>
 
-    <Button color={tool.button}>
+    <Button color={tool.accent}>
       {toolStrings.action}
       <CaretRightIcon />
     </Button>

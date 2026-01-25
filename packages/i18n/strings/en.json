@@ -41,9 +41,6 @@
       "action": "To docs",
       "slogan": "BlitzKit hosted API"
     },
-    "settings": {
-      "name": "Settings"
-    },
     "players": {
       "name": "Players",
       "slogan": "Player statistics",

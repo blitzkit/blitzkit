@@ -3,6 +3,7 @@ import type { Color } from "../ui/color";
 export interface Tool {
   id: string;
 
+  significant?: boolean;
   accent: Color;
   banner_background_position: "top" | "center" | "bottom";
 }
@@ -11,22 +12,30 @@ export const tools: Record<string, Tool> = {
   tanks: {
     id: "tanks",
 
-    accent: "purple",
+    significant: true,
+    accent: "plum",
     banner_background_position: "top",
   },
 
   players: {
     id: "players",
 
-    accent: "purple",
+    accent: "pink",
     banner_background_position: "top",
   },
 
-  settings: {
-    id: "settings",
+  compare: {
+    id: "compare",
 
-    accent: "gray",
-    banner_background_position: "top",
+    accent: "crimson",
+    banner_background_position: "bottom",
+  },
+
+  performance: {
+    id: "performance",
+
+    accent: "jade",
+    banner_background_position: "bottom",
   },
 
   avatars: {
@@ -46,21 +55,7 @@ export const tools: Record<string, Tool> = {
   api: {
     id: "api",
 
-    accent: "lime",
-    banner_background_position: "bottom",
-  },
-
-  compare: {
-    id: "compare",
-
-    accent: "crimson",
-    banner_background_position: "bottom",
-  },
-
-  performance: {
-    id: "performance",
-
-    accent: "jade",
+    accent: "brown",
     banner_background_position: "bottom",
   },
 

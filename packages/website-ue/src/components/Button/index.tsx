@@ -14,6 +14,11 @@ export const LIGHT_TEXT_COLORS = new Set<Color>([
   "teal",
   "grass",
   "amber",
+  "plum",
+  "pink",
+  "brown",
+  "crimson",
+  "jade",
 ]);
 
 export function Button({
