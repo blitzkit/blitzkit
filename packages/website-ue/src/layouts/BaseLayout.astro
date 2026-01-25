@@ -4,17 +4,15 @@ import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
 import Navbar from "../components/Navbar.astro";
-import type { Tool } from "../core/tools/tools";
 import type { Color } from "../core/ui/color";
 
 interface Props {
   locale: string;
   accent: Color;
   noNavbar?: boolean;
-  selectedTool?: Tool;
 }
 
-const { accent, noNavbar, locale, selectedTool } = Astro.props;
+const { accent, noNavbar, locale } = Astro.props;
 ---
 
 <html lang={locale}>
@@ -43,7 +41,7 @@ const { accent, noNavbar, locale, selectedTool } = Astro.props;
         flex-direction: column;
         min-height: 100dvh;
 
-        background-color: var(--gray-3);
+        background-color: var(--gray-1);
         color: var(--gray-12);
         font-family: var(--font-family-regular);
 
@@ -61,7 +59,7 @@ const { accent, noNavbar, locale, selectedTool } = Astro.props;
   </head>
 
   <body class="dark">
-    {!noNavbar && <Navbar {selectedTool} {locale} />}
+    {!noNavbar && <Navbar {locale} />}
 
     <slot name="pre-app" />
 
