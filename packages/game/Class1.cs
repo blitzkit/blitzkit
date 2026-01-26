@@ -1,3 +1,12 @@
-﻿namespace Game;
+﻿using Microsoft.JavaScript.NodeApi;
 
-public class Class1 { }
+namespace Game;
+
+[JSExport]
+public class Class1
+{
+    public static void Test()
+    {
+        Console.WriteLine("lmao");
+    }
+}

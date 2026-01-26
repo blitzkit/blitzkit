@@ -1,0 +1,9 @@
+{
+  "name": "@blitzkit/game",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "node-api-dotnet": "^0.9.19"
+  }
+}

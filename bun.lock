@@ -84,6 +84,12 @@
         "yaml": "^2.8.1",
       },
     },
+    "packages/game": {
+      "name": "@blitzkit/game",
+      "dependencies": {
+        "node-api-dotnet": "^0.9.19",
+      },
+    },
     "packages/i18n": {
       "name": "@blitzkit/i18n",
       "dependencies": {
@@ -186,6 +192,7 @@
         "@astrolib/seo": "^1.0.0-beta.8",
         "@blitzkit/closed": "workspace:*",
         "@blitzkit/core": "workspace:*",
+        "@blitzkit/game": "workspace:*",
         "@blitzkit/i18n": "workspace:*",
         "@bufbuild/protobuf": "^2.10.2",
         "@fontsource-variable/roboto-flex": "^5.2.8",
@@ -444,6 +451,8 @@
     "@blitzkit/closed": ["@blitzkit/closed@workspace:packages/closed"],
 
     "@blitzkit/core": ["@blitzkit/core@workspace:packages/core"],
+
+    "@blitzkit/game": ["@blitzkit/game@workspace:packages/game"],
 
     "@blitzkit/i18n": ["@blitzkit/i18n@workspace:packages/i18n"],
 
@@ -2110,6 +2119,8 @@
     "netmask": ["netmask@2.0.2", "", {}, "sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg=="],
 
     "nlcst-to-string": ["nlcst-to-string@4.0.0", "", { "dependencies": { "@types/nlcst": "^2.0.0" } }, "sha512-YKLBCcUYKAg0FNlOBT6aI91qFmSiFKiluk655WzPF+DDMA02qIyy8uiRqI8QXtcFpEvll12LpL5MXqEmAZ+dcA=="],
+
+    "node-api-dotnet": ["node-api-dotnet@0.9.19", "", {}, "sha512-7y+mPsIfebm8ftc+ZdQtC/05KT5IRK4N4Kdkb+VPpW7fLJsGupIiTOCCDZ3H4tKNPVvifNzFCbv0lak/JCKh+w=="],
 
     "node-bignumber": ["node-bignumber@1.2.2", "", {}, "sha512-VoTZHmdFQpZH1+q1dz2qcHNCwTWsJg2T3PYwlAyDNFOfVhSYUKQBLFcCpCud+wJBGgCttGavZILaIggDIKqEQQ=="],
 

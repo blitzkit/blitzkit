@@ -1,4 +1,5 @@
 ---
+import { Class1 } from "@blitzkit/game";
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
 import ColorScale from "../../components/ColorScale.astro";
@@ -16,6 +17,8 @@ export const getStaticPaths = (() => {
     { params: { locale: undefined }, props: { locale: locales.default } },
   ];
 }) satisfies GetStaticPaths;
+
+Class1.test();
 
 const { locale } = Astro.props;
 ---

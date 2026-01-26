@@ -3,5 +3,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NodeApiAssemblyJSModuleType>esm</NodeApiAssemblyJSModuleType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.JavaScript.NodeApi" Version="0.9.19" />
+    <PackageReference Include="Microsoft.JavaScript.NodeApi.Generator" Version="0.9.19" />
+  </ItemGroup>
 </Project>
