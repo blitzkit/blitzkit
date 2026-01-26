@@ -1,5 +1,10 @@
 .text {
   font-size: var(--font-size-regular);
+  color: var(--gray-12);
+
+  &[data-low-contrast="true"] {
+    color: var(--white-a9);
+  }
 
   &[data-size="minor"] {
     font-size: var(--font-size-minor);

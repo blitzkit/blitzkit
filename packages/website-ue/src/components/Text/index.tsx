@@ -1,10 +1,8 @@
 import type { ComponentProps } from "react";
 import { classNames } from "../../core/ui/classNames";
-import type { Color } from "../../core/ui/color";
 import "./index.css";
 
 export interface TextProps extends ComponentProps<"span"> {
-  color?: Color | "accent";
   weight?: "light" | "regular" | "medium" | "bold" | "black";
   lowContrast?: boolean;
   size?: "regular" | "minor" | "major";
@@ -12,7 +10,6 @@ export interface TextProps extends ComponentProps<"span"> {
 }
 
 export function Text({
-  color = "gray",
   lowContrast,
   className,
   size = "regular",
@@ -24,7 +21,7 @@ export function Text({
   return (
     <span
       className={classNames("text", className)}
-      style={{ color: `var(--${color}-${lowContrast ? 11 : 12})`, ...style }}
+      data-low-contrast={lowContrast}
       data-size={size}
       data-weight={weight}
       data-align={align === "left" ? undefined : align}

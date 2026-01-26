@@ -52,13 +52,6 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
 
-  api: {
-    id: "api",
-
-    accent: "brown",
-    banner_background_position: "bottom",
-  },
-
   playlist: {
     id: "playlist",
 
@@ -84,6 +77,13 @@ export const tools: Record<string, Tool> = {
     id: "session",
 
     accent: "blue",
+    banner_background_position: "bottom",
+  },
+
+  api: {
+    id: "api",
+
+    accent: "brown",
     banner_background_position: "bottom",
   },
 };
