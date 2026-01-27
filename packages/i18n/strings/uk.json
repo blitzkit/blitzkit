@@ -79,9 +79,9 @@
       "10": "Супер винятковий"
     },
     "nations": {
-      "ussr": "СРСР",
+      "ussr": "С.Р.С.Р.",
       "germany": "Німеччина",
-      "usa": "ЗША",
+      "usa": "С.Ш.А.",
       "china": "Китай",
       "uk": "Велика Британія",
       "france": "Франція",
@@ -341,13 +341,13 @@
           "subtitle": "Дослідження",
           "total": "Загалом",
           "research": "Дослідження: {cost}",
-          "upgrades": "Upgrades: {cost}",
+          "upgrades": "Прокачування: {cost}",
           "purchase": "Вартість: {cost}",
           "equipment": "Спорядження: {cost}",
           "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
         },
         "errors": {
-          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
+          "non_tech_tree": "Ви не можете дослідити преміум/колекційний танк.",
           "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
           "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
           "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
