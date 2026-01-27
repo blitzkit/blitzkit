@@ -395,7 +395,7 @@
           "wn8": "WN8",
           "winrate": "Відсоток перемог",
           "damage": "Шкода",
-          "unknown_tank": "Unknown tank {id}"
+          "unknown_tank": "Невідомий танк {id}"
         }
       },
       "debug": {
@@ -567,7 +567,7 @@
         "name": "отримані танки",
         "description": "Показує всі ваші танки даного рівня",
         "body": {
-          "title": "# {name}'s owned tier {tier} tanks\n\n"
+          "title": "# {name} отриманих рівнів {tier} танків\n\n"
         }
       },
       "permissions": {
