@@ -83,7 +83,7 @@
       "germany": "Німеччина",
       "usa": "С.Ш.А.",
       "china": "Китай",
-      "uk": "Велика Британія",
+      "uk": "Сполучене Королівство ",
       "france": "Франція",
       "japan": "Японія",
       "european": "Європейська нація",
@@ -121,7 +121,7 @@
       "3": "ПТ-САУ"
     },
     "tree_type": {
-      "-1": "не розпізнано",
+      "-1": "не розпізнаний",
       "0": "Звичайний",
       "1": "Преміум",
       "2": "Колекційний"
@@ -347,12 +347,12 @@
           "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
         },
         "errors": {
-          "non_tech_tree": "Ви не можете дослідити преміум/колекційний танк.",
-          "tier_1": "# {tank} is a tier I\n\nTier I tanks are always unlocked for free for all players.",
-          "already_researched": "# {tank} is already researched\n\nTry providing a `starting-tank` when using the command to view the totals for a line you have already researched.",
-          "start_end_equal": "# {tank} was provided twice\n\nMake sure `starting-tank` and `target-tank` are different.",
-          "tanks_not_on_line": "# {tank_1} and {tank_2} are not on the same line\n\nMake sure `starting-tank` and `target-tank` are on the same tech-tree line.",
-          "unordered": "# {tank_1} higher tiered to {tank_2}\n\nMake sure to provide {tank_2} as the `starting-tank` instead as it is the lower tiered tank."
+          "non_tech_tree": "#{tank} відсутній в дереві дослідження\n\nВи не можете дослідити преміум/колеційний танк.",
+          "tier_1": "#{tank} І рівня \n\nТанки І рівня завжди розблоковані для всіх гравців безкоштовно",
+          "already_researched": "# {tank} вже було досліджено\n\nСпробуйте використати `початковий-танк` коли використовуєте команду для перегляду загальної гілки, яку ви вже дослідили",
+          "start_end_equal": "#{tank} було введено двічі  \n\nПереконайтесь що `початковий-танк` та  `ціль-танк` різні",
+          "tanks_not_on_line": "# {tank_1} та {tank_2}  не в одній гілці\n\nПереконайтесь що  `початковий-танк` та  `ціль-танк` знаходяться в єдиній гілці дерева дослідження",
+          "unordered": "# {tank_1} вище рівнем відносно {tank_2}\n\nОбов’язково вкажіть {tank_2} як `початковий-танк`, оскільки це танк нижчого рівня."
         }
       },
       "about": {
@@ -431,11 +431,11 @@
         "options": {
           "threshold": {
             "name": "поріг",
-            "description": "The number of days inactive (default: {days} days)"
+            "description": "Кількість днів неактивності (за замовчуванням: {days} днів)"
           }
         },
         "body": {
-          "subtitle": "Inactive for {days}+ days",
+          "subtitle": "Неактивний {days}+ днів",
           "listing": "{days} днів"
         }
       },
@@ -479,7 +479,7 @@
         "body": {
           "accounts_linked": "Прив'язані акаунти",
           "no_role_permissions": {
-            "title": "{name} failed to verify",
+            "title": "{name} не вдалося перевірити",
             "description": "У мене немає дозволу керувати ролями."
           }
         },
@@ -494,11 +494,11 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "The max number of clan results (default: {limit})"
+            "description": "Максимальна кількість результатів клану (за замовчуванням: {limit})"
           }
         },
         "body": {
-          "title": "Clan search for {search} in region {region}",
+          "title": "Пошук клану для {search} в регіоні {region}",
           "no_results": "Жодного клану не знайдено"
         }
       },
@@ -508,11 +508,11 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "The max number of player results (default: {limit})"
+            "description": "Максимальна кількість результатів гравця (за замовчуванням: {limit})"
           }
         },
         "body": {
-          "title": "Player search for {search} in region {region}",
+          "title": "Пошук гравця для {search} у регіоні {region}",
           "no_results": "Гравця не знайдено"
         }
       },
@@ -521,8 +521,8 @@
         "description": "Статистика рейтингових боїв",
         "subcommands": {
           "neighbors": {
-            "name": "neighbors",
-            "description": "Neighboring players on the leaderboard"
+            "name": "сусіди",
+            "description": "Сусідуючі гравці в лідерборді"
           },
           "league": {
             "name": "ліга",
@@ -532,32 +532,32 @@
         "options": {
           "limit": {
             "name": "ліміт",
-            "description": "How many neighbors to display (default: {count})"
+            "description": "Скільки сусідів відобразити (за замовчуванням: {count})"
           },
           "season": {
             "name": "сезон",
             "description": "Базова інформація про гравця",
             "choices": {
-              "current": "{season} (current)"
+              "current": "{season} (поточний)"
             }
           },
           "league": {
             "name": "ліга",
-            "description": "The league to display"
+            "description": "Ліга для відображення"
           }
         },
         "body": {
-          "top_players": "Top {count} players",
-          "no_participation": "# {player} didn't play rating in season {season}\n\nThis player did not participate in this season or did not get past calibration.",
-          "no_ongoing_season": "# No ongoing season\n\nThere isn't a currently running rating season.",
+          "top_players": "Топ {count} гравців",
+          "no_participation": "# {player} не грав у рейтингу в сезоні {season}\n\nЦей гравець не брав участь у цьому сезоні або не проходив калібрування",
+          "no_ongoing_season": "# Немає поточного сезону\n\nВ даний час немає сезону рейтингу.",
           "deleted_player": "",
-          "neighbors": "Rating neighbors",
-          "more": "+ {count} more"
+          "neighbors": "Сусіди по рейтингу",
+          "more": "+  {count} ще"
         }
       },
       "today": {
         "name": "сьогодні",
-        "description": "Today's played tanks and statistics"
+        "description": "Сьогодні зіграні танки та статистика"
       },
       "stats": {
         "name": "статистика",
@@ -572,38 +572,38 @@
       },
       "permissions": {
         "name": "дозволи",
-        "description": "Checks wether the bot has the required permissions to function",
+        "description": "Перевіряє чи бот має необхідні дозволи для роботи",
         "body": {
-          "title": "# Permissions\n\n{body}",
-          "view_channels": "View channels: needed to find the message the refresh button was used on",
-          "read_message_history": "Read message history: needed to find the message to refresh",
-          "attach_files": "Attach files: needed to add images to image-based commands",
-          "external_emojis": "External emojis: needed to add national flags and tank class emojis"
+          "title": "# Дозволи\n\n{body}",
+          "view_channels": "Перегляньте канали: необхідне для знаходження повідомлення, на якому використовувалася кнопка оновлення",
+          "read_message_history": "Прочитайте історію повідомлень: потрібно знайти повідомлення для оновлення",
+          "attach_files": "Закріпіть файли: потрібно для додавання зображень до команд на основі зображень",
+          "external_emojis": "Зовнішні емодзі: потрібні для додавання емодзі національних прапорів та класів техніки"
         }
       },
       "ping": {
         "name": "",
-        "description": "Check wether the bot is alive.",
+        "description": "Перевірити чи бот живий",
         "body": {
-          "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - {time}ms"
+          "pong": "Понг🏓",
+          "pong_with_time": "Понг🏓 - {time}мс"
         },
         "subcommands": {
           "blitzkit": {
-            "name": "blitzkit",
+            "name": "BlitzKit",
             "description": "Ping BlitzKit"
           },
           "wotb": {
-            "name": "wotb",
+            "name": "WoTB",
             "description": "Ping World of Tanks Blitz"
           }
         }
       },
       "player_info": {
-        "name": "player-info",
+        "name": "інформація про гравця",
         "description": "Базова інформація про гравця",
         "body": {
-          "title": "{name}'s information",
+          "title": "інформація про {name}",
           "nickname": "Нік",
           "battles": "Бої",
           "winrate": "Відсоток перемог",
@@ -614,33 +614,33 @@
       },
       "rating": {
         "name": "рейтинг",
-        "description": "Rating player's statistics",
+        "description": "Статистика рейтингових боїв гравця ",
         "subcommands": {
           "today": {
             "name": "сьогодні",
-            "description": "Today's rating statistics"
+            "description": "Сьогоднішня статистика рейтингових боїв"
           },
           "season": {
             "name": "сезон",
-            "description": "This season's rating statistics"
+            "description": "Статистика рейтингових боїв поточного сезону"
           }
         },
         "body": {
           "subtitle": {
-            "today": "Today's rating statistics",
-            "season": "This season's rating statistics"
+            "today": "Сьогоднішня статистика рейтингових боїв",
+            "season": "Статистика рейтингових боїв даного сезону"
           }
         },
         "errors": {
-          "no_participation": "# {name} hasn't played rating\n\nThis player hasn't participated in the rating gamemode this season.",
-          "unrecorded_stats": "# Statistics currently unavailable\n\nWargaming may be currently be facing server downtime. If there is an on-going season, statistics should be available withing 24 hours."
+          "no_participation": "# {name} не грав рейтингові бої\n\nЦей гравець не брав участь у рейтинговому режимі цього сезону.",
+          "unrecorded_stats": "# Статистика на цей момент недоступна\n\nWargaming наразі зіткнулась з технічними несправностями. Якщо зараз проходить сезон, статистика буде доступною в найближчі 24 години."
         }
       }
     }
   },
   "website": {
     "redirect": {
-      "title": "301: moved permanently",
+      "title": "301: переміщено назавжди",
       "body": "This page has moved. Redirecting..."
     },
     "settings": {
@@ -837,33 +837,33 @@
         "description": "Танкова енциклопедія",
         "seo_description": "Характеристики, броня та інше для всіх танків WoT Blitz",
         "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
+        "tank_seo_description": "{name} броня, характеристики, обладнання, амуніція і т.д. {dpm} шкода на хвилину, {alpha} разова шкода, {penetration}мм пробиття, {speed} км/год максимальна швидкість, {health} міцність.",
         "visualizers": {
           "reload": {
-            "skip": "Skip"
+            "skip": "Пропустити"
           },
           "assault": {
-            "title": "Assault shells"
+            "title": "Штурмові снаряди"
           },
           "rotator": {
-            "hull": "Hull",
-            "turret": "Turret",
-            "hard": "Hard",
+            "hull": "Корпус",
+            "turret": "Башта",
+            "hard": "Жорстко",
             "medium": "Середній",
-            "soft": "Soft",
-            "effective": "Effective"
+            "soft": "Ніжно",
+            "effective": "Ефективний"
           },
           "ricochet": {
-            "angle": "Angle",
+            "angle": "Кут",
             "normalization": "Нормалізація",
-            "effective_angle": "Effective angle",
+            "effective_angle": "Ефективний кут",
             "armor": "Броня",
-            "no_ricochet": "Explosive shells don't ricochet"
+            "no_ricochet": "Фугасні снаряди не рикошетять"
           },
           "view_range": {
-            "camo": "Camo",
-            "ghost_factory": "Ghost Factory",
-            "dead_rail": "Dead Rail"
+            "camo": "Камуфляж",
+            "ghost_factory": "Промзона",
+            "dead_rail": "Ешелон"
           },
           "flexibility": {
             "yaw": "Yaw",
