@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ComponentProps } from "react";
+import { clamp } from "three/src/math/MathUtils.js";
 import { classNames } from "../../core/ui/classNames";
 import styles from "./index.module.css";
 
@@ -36,13 +37,28 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
     }
 
     function syncCurtains() {
-      const el = content.current;
+      const maxScroll =
+        content.current.scrollWidth - content.current.clientWidth;
+      if (maxScroll <= 0) {
+        curtainLeft.current.style.opacity = "0";
+        curtainRight.current.style.opacity = "0";
+        return;
+      }
 
-      const showLeft = el.scrollLeft > 0;
-      const showRight = el.scrollLeft + el.clientWidth < el.scrollWidth;
+      const fadeDistance = Math.min(60, content.current.clientWidth * 0.15);
+      const leftOpacity = clamp(
+        content.current.scrollLeft / fadeDistance,
+        0,
+        1,
+      );
+      const rightOpacity = clamp(
+        (maxScroll - content.current.scrollLeft) / fadeDistance,
+        0,
+        1,
+      );
 
-      curtainLeft.current.dataset.visible = showLeft ? "true" : "false";
-      curtainRight.current.dataset.visible = showRight ? "true" : "false";
+      curtainLeft.current.style.opacity = `${leftOpacity}`;
+      curtainRight.current.style.opacity = `${rightOpacity}`;
     }
 
     let lastX = 0;

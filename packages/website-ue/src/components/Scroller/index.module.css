@@ -63,8 +63,7 @@
     top: 0;
 
     opacity: 0;
-
-    transition: opacity var(--duration-brief);
+    pointer-events: none;
 
     &[data-side="left"] {
       left: 0;
@@ -74,10 +73,6 @@
     &[data-side="right"] {
       right: 0;
       background: linear-gradient(90deg, transparent, var(--gray-1));
-    }
-
-    &[data-visible="true"] {
-      opacity: 1;
     }
   }
 }
