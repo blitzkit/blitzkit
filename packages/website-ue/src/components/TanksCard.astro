@@ -1,0 +1,40 @@
+---
+import { Heading } from "./Heading";
+import { Section } from "./Section";
+import { TankCard } from "./TankCard";
+
+const popular = [
+  "Concept 1B",
+  "Obj. 268",
+  "Grille 15",
+  "Kpz 70 Missile",
+  "Concept 1B",
+  "Concept 1B",
+  "Concept 1B",
+  "Concept 1B",
+  "Concept 1B",
+  "Concept 1B",
+];
+---
+
+<style>
+  .tanks {
+    overflow-x: scroll;
+
+    .asd {
+      display: flex;
+
+      gap: 2rem;
+    }
+  }
+</style>
+
+<Section>
+  <Heading size="2">Popular tanks</Heading>
+
+  <div class="tanks">
+    <div class="asd">
+      {popular.map((tank) => <TankCard {tank} />)}
+    </div>
+  </div>
+</Section>

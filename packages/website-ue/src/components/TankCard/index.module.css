@@ -1,0 +1,31 @@
+.tank-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+
+  .icon-wrapper {
+    position: relative;
+
+    .flag {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      background-size: cover;
+      background-position: left center;
+
+      width: 75%;
+      height: 50%;
+    }
+
+    .icon {
+      width: 7rem;
+      aspect-ratio: 4 / 3;
+      position: relative;
+
+      background-size: 150%;
+      background-position: center;
+    }
+  }
+}

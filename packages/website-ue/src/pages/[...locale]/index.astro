@@ -4,6 +4,7 @@ import type { GetStaticPaths } from "astro";
 import ColorScale from "../../components/ColorScale.astro";
 import HomeHero from "../../components/HomeHero.astro";
 import { Section } from "../../components/Section";
+import TanksCard from "../../components/TanksCard.astro";
 import ToolCard from "../../components/ToolCard.astro";
 import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -36,6 +37,8 @@ const { locale } = Astro.props;
   <!-- <RecentItems {locale} client:only="react">
     <RecentItems {locale} skeleton slot="fallback" />
   </RecentItems> -->
+
+  <TanksCard />
 
   <Section>
     <div class="tools">
