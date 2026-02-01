@@ -15,11 +15,17 @@ const api = defineCollection({
     for (const path in globbed) {
       const id = path.replace("./pages/api/", "").replace(".ts", "");
       const body = (globbed[path] as string).replaceAll("\r\n", "\n");
-      const docs = body.match(
-        /\/\*\*\n((( \*.*)\n)+) \*\/\nexport (async )?function GET\(/
-      )?[1].spl;
+      const docs = body
+        .match(
+          /\/\*\*\n((( \*.*)\n)+) \*\/\nexport (async )?function GET\(/,
+        )?.[1]
+        .split("\n")
+        .map((line) => line.replace(/ \* ?/, ""))
+        .join("\n");
 
-      paths.push({ id, body, docs: docs?.[1] ?? undefined });
+      if (!docs) continue;
+
+      paths.push({ id, body: docs });
     }
 
     return paths;
