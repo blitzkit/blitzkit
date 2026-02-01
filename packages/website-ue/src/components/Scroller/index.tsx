@@ -8,6 +8,8 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
   const bar = useRef<HTMLDivElement>(null!);
   const container = useRef<HTMLDivElement>(null!);
   const content = useRef<HTMLDivElement>(null!);
+  const curtainLeft = useRef<HTMLDivElement>(null!);
+  const curtainRight = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
     function updateBarSize() {
@@ -19,7 +21,7 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
       bar.current.style.width = `${(visible / total) * 100}%`;
     }
 
-    function syncBarToScroll() {
+    function syncBar() {
       const maxTravel = container.current.clientWidth - bar.current.clientWidth;
       const maxScroll =
         content.current.scrollWidth - content.current.clientWidth;
@@ -31,6 +33,16 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
 
       const ratio = content.current.scrollLeft / maxScroll;
       bar.current.style.left = `${ratio * maxTravel}px`;
+    }
+
+    function syncCurtains() {
+      const el = content.current;
+
+      const showLeft = el.scrollLeft > 0;
+      const showRight = el.scrollLeft + el.clientWidth < el.scrollWidth;
+
+      curtainLeft.current.dataset.visible = showLeft ? "true" : "false";
+      curtainRight.current.dataset.visible = showRight ? "true" : "false";
     }
 
     let lastX = 0;
@@ -56,7 +68,7 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
 
       content.current.scrollLeft += delta;
 
-      syncBarToScroll();
+      syncBar();
     }
 
     function handlePointerUp(event: PointerEvent) {
@@ -65,17 +77,31 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
       window.removeEventListener("pointerup", handlePointerUp);
     }
 
+    function handleScroll() {
+      syncBar();
+      syncCurtains();
+    }
+
+    function handleResize() {
+      updateBarSize();
+      syncBar();
+      syncCurtains();
+    }
+
     updateBarSize();
-    syncBarToScroll();
+    syncBar();
+    syncCurtains();
 
     bar.current.addEventListener("pointerdown", handlePointerDown);
-    content.current.addEventListener("scroll", syncBarToScroll);
-    window.addEventListener("resize", updateBarSize);
+    content.current.addEventListener("scroll", syncBar);
+    window.addEventListener("resize", handleResize);
+    content.current.addEventListener("scroll", handleScroll);
 
     return () => {
       bar.current.removeEventListener("pointerdown", handlePointerDown);
-      content.current.removeEventListener("scroll", syncBarToScroll);
-      window.removeEventListener("resize", updateBarSize);
+      content.current.removeEventListener("scroll", syncBar);
+      window.removeEventListener("resize", handleResize);
+      content.current.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -90,6 +116,9 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
           <div className={styles.bar} ref={bar} />
         </div>
       </div>
+
+      <div ref={curtainLeft} data-side="left" className={styles.curtain} />
+      <div ref={curtainRight} data-side="right" className={styles.curtain} />
     </div>
   );
 }

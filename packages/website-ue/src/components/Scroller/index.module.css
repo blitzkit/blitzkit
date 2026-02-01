@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: var(--space-3);
 
+  position: relative;
+
   .content {
     overflow: auto;
 
@@ -25,7 +27,7 @@
     border-radius: var(--max-size);
 
     .bar-container {
-      height: 10px;
+      height: var(--space-3);
 
       position: relative;
 
@@ -49,6 +51,32 @@
   &:hover,
   &:focus-within {
     .bar-wrapper {
+      opacity: 1;
+    }
+  }
+
+  .curtain {
+    width: min(25%, var(--space-7));
+    height: calc(100% - var(--space-3) - 2 * var(--space-1));
+
+    position: absolute;
+    top: 0;
+
+    opacity: 0;
+
+    transition: opacity var(--duration-brief);
+
+    &[data-side="left"] {
+      left: 0;
+      background: linear-gradient(90deg, var(--gray-1), transparent);
+    }
+
+    &[data-side="right"] {
+      right: 0;
+      background: linear-gradient(90deg, transparent, var(--gray-1));
+    }
+
+    &[data-visible="true"] {
       opacity: 1;
     }
   }
