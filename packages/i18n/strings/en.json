@@ -75,13 +75,22 @@
       "name": "Guesser",
       "slogan": "Silhouette mini-game",
       "action": "Play"
+    },
+    "changelogs": {
+      "name": "Changelogs",
+      "slogan": "BlitzKit patch notes",
+      "action": "Read up"
     }
   },
 
   "home": {
     "search": "Search tanks, players, avatars...",
     "credit": "by TrèsAbhi",
-    "tanks": "Tanks"
+    "tanks": "Tanks",
+    "players": "Players",
+    "cosmetics": "Cosmetics",
+    "games": "Games",
+    "technical": "Technical"
   },
 
   "avatars": {

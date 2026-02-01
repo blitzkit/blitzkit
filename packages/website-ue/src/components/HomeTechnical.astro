@@ -1,0 +1,31 @@
+---
+import { api } from "../core/api/dynamic";
+import { tools } from "../core/tools/tools";
+import { Heading } from "./Heading";
+import { Section } from "./Section";
+import ToolCard from "./ToolCard.astro";
+import ToolsWrapper from "./ToolsWrapper.astro";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<style>
+  .title {
+    margin-bottom: var(--space-3);
+  }
+</style>
+
+<Section>
+  <Heading size="2" className="title">{strings.home.technical}</Heading>
+
+  <ToolsWrapper>
+    <ToolCard {locale} tool={tools.api} />
+    <ToolCard {locale} tool={tools.changelogs} />
+  </ToolsWrapper>
+</Section>

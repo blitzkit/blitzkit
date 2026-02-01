@@ -84,4 +84,11 @@ export const tools: Record<string, Tool> = {
     accent: "brown",
     banner_background_position: "bottom",
   },
+
+  changelogs: {
+    id: "changelogs",
+
+    accent: "gray",
+    banner_background_position: "bottom",
+  },
 };

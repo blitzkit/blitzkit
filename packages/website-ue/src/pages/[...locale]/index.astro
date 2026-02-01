@@ -2,11 +2,12 @@
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
 import ColorScale from "../../components/ColorScale.astro";
+import HomeCosmetics from "../../components/HomeCosmetics.astro";
+import HomeGames from "../../components/HomeGames.astro";
 import HomeHero from "../../components/HomeHero.astro";
-import { Section } from "../../components/Section";
-import TanksCard from "../../components/TanksCard.astro";
-import ToolCard from "../../components/ToolCard.astro";
-import ToolsWrapper from "../../components/ToolsWrapper.astro";
+import HomePlayers from "../../components/HomePlayers.astro";
+import HomeTanks from "../../components/HomeTanks.astro";
+import HomeTechnical from "../../components/HomeTechnical.astro";
 import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -27,15 +28,9 @@ const { locale } = Astro.props;
 
   {Object.values(tools).map((tool) => <ColorScale color={tool.accent} />)}
 
-  <!-- <RecentItems {locale} client:only="react">
-    <RecentItems {locale} skeleton slot="fallback" />
-  </RecentItems> -->
-
-  <TanksCard {locale} />
-
-  <Section>
-    <ToolsWrapper>
-      {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
-    </ToolsWrapper>
-  </Section>
+  <HomeTanks {locale} />
+  <HomePlayers {locale} />
+  <HomeGames {locale} />
+  <HomeCosmetics {locale} />
+  <HomeTechnical {locale} />
 </BaseLayout>

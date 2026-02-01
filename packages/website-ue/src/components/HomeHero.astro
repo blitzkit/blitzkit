@@ -79,6 +79,10 @@ const strings = await api.strings(locale);
           letter-spacing: -0.15em;
         }
       }
+
+      .name {
+        position: relative;
+      }
     }
 
     .search {
@@ -100,7 +104,7 @@ const strings = await api.strings(locale);
       <Code className="version">2.0</Code>
     </div>
 
-    <Text lowContrast>
+    <Text className="name" lowContrast>
       {strings.home.credit}
     </Text>
   </div>

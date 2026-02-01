@@ -19,6 +19,8 @@ export const LIGHT_TEXT_COLORS = new Set<Color>([
   "brown",
   "crimson",
   "jade",
+  "blue",
+  "tomato",
 ]);
 
 export function Button({
@@ -33,7 +35,7 @@ export function Button({
       className={classNames(styles.button, className)}
       data-color={color}
       data-variant={variant}
-      data-light-text={color ? LIGHT_TEXT_COLORS.has(color) : undefined}
+      data-light-text={variant === "solid"}
       style={{
         backgroundColor: color ? `var(--${color}-9)` : undefined,
         ...style,
