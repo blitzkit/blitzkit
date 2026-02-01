@@ -1,7 +1,19 @@
 ---
+import { api } from "../core/api/dynamic";
+import { tools } from "../core/tools/tools";
 import { Heading } from "./Heading";
 import { Section } from "./Section";
 import { TankCard } from "./TankCard";
+import ToolCard from "./ToolCard.astro";
+import ToolsWrapper from "./ToolsWrapper.astro";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
 
 const popular = [
   "Concept 1B",
@@ -18,10 +30,16 @@ const popular = [
 ---
 
 <style>
-  .tanks {
-    overflow-x: scroll;
+  .title {
+    margin-bottom: var(--space-3);
+  }
 
-    .asd {
+  .tanks {
+    /* overflow-x: scroll; */
+    overflow-x: hidden;
+    z-index: 1;
+
+    .content {
       display: flex;
 
       gap: 2rem;
@@ -30,11 +48,18 @@ const popular = [
 </style>
 
 <Section>
-  <Heading size="2">Popular tanks</Heading>
+  <Heading size="2" className="title">{strings.home.tanks}</Heading>
 
   <div class="tanks">
-    <div class="asd">
+    <div class="content">
       {popular.map((tank) => <TankCard {tank} />)}
     </div>
   </div>
+
+  <ToolCard gradient {locale} tool={tools.tanks} />
+
+  <ToolsWrapper>
+    <ToolCard {locale} tool={tools.compare} />
+    <ToolCard {locale} tool={tools.performance} />
+  </ToolsWrapper>
 </Section>

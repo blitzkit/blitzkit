@@ -80,7 +80,8 @@
 
   "home": {
     "search": "Search tanks, players, avatars...",
-    "credit": "by TrèsAbhi"
+    "credit": "by TrèsAbhi",
+    "tanks": "Tanks"
   },
 
   "avatars": {
@@ -100,10 +101,5 @@
   "navbar": {
     "home": "Home",
     "settings": "Settings"
-  },
-
-  "recent": {
-    "title": "Recent",
-    "no_recent": "Your recently viewed pages will appear here."
   }
 }

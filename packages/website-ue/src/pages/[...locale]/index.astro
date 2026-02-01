@@ -6,6 +6,7 @@ import HomeHero from "../../components/HomeHero.astro";
 import { Section } from "../../components/Section";
 import TanksCard from "../../components/TanksCard.astro";
 import ToolCard from "../../components/ToolCard.astro";
+import ToolsWrapper from "../../components/ToolsWrapper.astro";
 import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -21,14 +22,6 @@ export const getStaticPaths = (() => {
 const { locale } = Astro.props;
 ---
 
-<style>
-  .tools {
-    display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(2, 1fr);
-  }
-</style>
-
 <BaseLayout {locale} accent="amber">
   <HomeHero {locale} />
 
@@ -38,11 +31,11 @@ const { locale } = Astro.props;
     <RecentItems {locale} skeleton slot="fallback" />
   </RecentItems> -->
 
-  <TanksCard />
+  <TanksCard {locale} />
 
   <Section>
-    <div class="tools">
+    <ToolsWrapper>
       {Object.values(tools).map((tool) => <ToolCard {locale} {tool} />)}
-    </div>
+    </ToolsWrapper>
   </Section>
 </BaseLayout>

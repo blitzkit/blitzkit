@@ -3,7 +3,6 @@ import type { Color } from "../ui/color";
 export interface Tool {
   id: string;
 
-  significant?: boolean;
   accent: Color;
   banner_background_position: "top" | "center" | "bottom";
 }
@@ -12,7 +11,6 @@ export const tools: Record<string, Tool> = {
   tanks: {
     id: "tanks",
 
-    significant: true,
     accent: "plum",
     banner_background_position: "top",
   },
