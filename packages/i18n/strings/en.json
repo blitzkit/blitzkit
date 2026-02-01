@@ -110,5 +110,10 @@
   "navbar": {
     "home": "Home",
     "settings": "Settings"
+  },
+
+  "companies": {
+    "discord": "Discord",
+    "github": "GitHub"
   }
 }

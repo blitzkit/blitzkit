@@ -1,6 +1,9 @@
 .link {
-  color: var(--accent-11);
   text-decoration-color: currentColor;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 
   &[data-underline="hover"],
   &[data-underline="never"] {
@@ -10,10 +13,6 @@
   &[data-underline="hover"]:hover,
   &[data-underline="hover"]:focus {
     text-decoration: underline;
-  }
-
-  &[data-high-contrast="true"] {
-    color: var(--accent-12);
   }
 
   svg {

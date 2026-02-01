@@ -1,10 +1,6 @@
 ---
 import { BlitzKitIcon } from "../icons/BlitzKit";
 import { LinkI18n } from "./LinkI18n";
-import { Text } from "./Text";
-import { api } from "../core/api/dynamic";
-import { tools } from "../core/tools/tools";
-import type { Tool } from "../core/tools/tools";
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 interface Props {
@@ -56,9 +52,7 @@ const { locale } = Astro.props;
           gap: var(--space-2);
 
           cursor: pointer;
-          color: var(--color-regular);
           text-decoration: none;
-          color: var(--gray-11);
 
           .selector {
             padding: var(--space-2);
@@ -102,7 +96,14 @@ const { locale } = Astro.props;
 <div id="navbar">
   <div class="content">
     <div class="group">
-      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
         <div class="selector">
           <BlitzKitIcon className="icon" />
         </div>
@@ -110,13 +111,27 @@ const { locale } = Astro.props;
     </div>
 
     <div class="group">
-      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
         <div class="selector">
           <MagnifyingGlassIcon className="icon" />
         </div>
       </LinkI18n>
 
-      <LinkI18n {locale} href="/" className="action" tabIndex={0}>
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
         <div class="selector">
           <HamburgerMenuIcon className="icon" />
         </div>
