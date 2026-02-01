@@ -1,15 +1,12 @@
 ---
 import "@radix-ui/colors/amber-dark.css";
 import { getCollection } from "astro:content";
-import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.props;
 const collection = await getCollection("api");
-
-console.log(collection);
 
 const paths: {
   path: string;
@@ -19,15 +16,14 @@ const paths: {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<BaseLayout selectedTool={tools.api} {locale} accent="lime">
+<BaseLayout {locale} accent="lime">
   <h1>api</h1>
 
   {
     collection.map(({ id, data }) => (
       <>
         <h2>{id}</h2>
-        <pre style="background-color: red;">{data.docs}</pre>
-        <pre>{data.body}</pre>
+        <pre>{data.docs}</pre>
       </>
     ))
   }

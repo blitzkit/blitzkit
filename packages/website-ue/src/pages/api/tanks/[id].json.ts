@@ -5,6 +5,9 @@ export { getStaticPaths } from "./[id].pb";
 
 /**
  * Even Noah can't save these animals.
+ * Even Noah can't save these animals.
+ * Even Noah can't save these animals.
+ * Even Noah can't save these animals.
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const tank = await api.tank(params.id);

@@ -10,29 +10,27 @@ const api = defineCollection({
       import: "default",
     });
 
-    const paths: { id: string; body: string }[] = [];
+    const paths: { id: string; docs: string }[] = [];
 
     for (const path in globbed) {
       const id = path.replace("./pages/api/", "").replace(".ts", "");
+
       const body = (globbed[path] as string).replaceAll("\r\n", "\n");
       const docs = body
         .match(
           /\/\*\*\n((( \*.*)\n)+) \*\/\nexport (async )?function GET\(/,
         )?.[1]
-        .split("\n")
-        .map((line) => line.replace(/ \* ?/, ""))
-        .join("\n");
+        .replaceAll(/^ \* ?/gm, "");
 
       if (!docs) continue;
 
-      paths.push({ id, body: docs });
+      paths.push({ id, docs });
     }
 
     return paths;
   },
 
   schema: z.object({
-    body: z.string(),
     docs: z.optional(z.string()),
   }),
 });
