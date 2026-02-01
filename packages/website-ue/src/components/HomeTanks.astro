@@ -2,6 +2,7 @@
 import { api } from "../core/api/dynamic";
 import { tools } from "../core/tools/tools";
 import { Heading } from "./Heading";
+import { Scroller } from "./Scroller";
 import { Section } from "./Section";
 import { TankCard } from "./TankCard";
 import ToolCard from "./ToolCard.astro";
@@ -35,8 +36,6 @@ const popular = [
   }
 
   .tanks {
-    /* overflow-x: scroll; */
-    overflow-x: hidden;
     z-index: 1;
 
     .content {
@@ -50,11 +49,11 @@ const popular = [
 <Section>
   <Heading size="2" className="title">{strings.home.tanks}</Heading>
 
-  <div class="tanks">
+  <Scroller client:load className="tanks">
     <div class="content">
       {popular.map((tank) => <TankCard {tank} />)}
     </div>
-  </div>
+  </Scroller>
 
   <ToolCard gradient {locale} tool={tools.tanks} />
 

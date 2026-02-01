@@ -1,0 +1,42 @@
+.scroller {
+  display: flex;
+  flex-direction: column;
+
+  .content {
+    overflow: auto;
+
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+
+  .bar-wrapper {
+    padding: var(--space-1);
+    background-color: blue;
+
+    .bar-container {
+      background-color: red;
+      height: 10px;
+
+      position: relative;
+
+      .bar {
+        height: 100%;
+        min-width: min(100%, var(--space-6));
+        position: absolute;
+
+        background-color: green;
+
+        cursor: grab;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+  }
+}
