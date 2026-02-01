@@ -1,6 +1,7 @@
 .scroller {
   display: flex;
   flex-direction: column;
+  gap: var(--space-3);
 
   .content {
     overflow: auto;
@@ -15,11 +16,15 @@
   }
 
   .bar-wrapper {
+    opacity: 0;
     padding: var(--space-1);
-    background-color: blue;
+    background-color: var(--gray-3);
+
+    transition: opacity var(--duration-brief);
+
+    border-radius: var(--max-size);
 
     .bar-container {
-      background-color: red;
       height: 10px;
 
       position: relative;
@@ -29,7 +34,8 @@
         min-width: min(100%, var(--space-6));
         position: absolute;
 
-        background-color: green;
+        border-radius: var(--max-size);
+        background-color: var(--gray-7);
 
         cursor: grab;
 
@@ -37,6 +43,13 @@
           cursor: grabbing;
         }
       }
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    .bar-wrapper {
+      opacity: 1;
     }
   }
 }

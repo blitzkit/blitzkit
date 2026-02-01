@@ -10,32 +10,72 @@ export function Scroller({ children, className, ...props }: ScrollerProps) {
   const content = useRef<HTMLDivElement>(null!);
 
   useEffect(() => {
-    function updateSize() {
-      bar.current.style.width = `${(content.current.clientWidth / content.current.scrollWidth) * 100}%`;
+    function updateBarSize() {
+      const visible = content.current.clientWidth;
+      const total = content.current.scrollWidth;
+
+      if (total <= 0) return;
+
+      bar.current.style.width = `${(visible / total) * 100}%`;
+    }
+
+    function syncBarToScroll() {
+      const maxTravel = container.current.clientWidth - bar.current.clientWidth;
+      const maxScroll =
+        content.current.scrollWidth - content.current.clientWidth;
+
+      if (maxScroll <= 0 || maxTravel <= 0) {
+        bar.current.style.left = "0";
+        return;
+      }
+
+      const ratio = content.current.scrollLeft / maxScroll;
+      bar.current.style.left = `${ratio * maxTravel}px`;
     }
 
     let lastX = 0;
+
     function handlePointerDown(event: PointerEvent) {
       lastX = event.clientX;
+      bar.current.setPointerCapture(event.pointerId);
 
       window.addEventListener("pointermove", handlePointerMove);
       window.addEventListener("pointerup", handlePointerUp);
     }
+
     function handlePointerMove(event: PointerEvent) {
       const dx = event.clientX - lastX;
       lastX = event.clientX;
+
+      const maxTravel = container.current.clientWidth - bar.current.clientWidth;
+      if (maxTravel <= 0) return;
+
+      const maxScroll =
+        content.current.scrollWidth - content.current.clientWidth;
+      const delta = (dx / maxTravel) * maxScroll;
+
+      content.current.scrollLeft += delta;
+
+      syncBarToScroll();
     }
-    function handlePointerUp() {
+
+    function handlePointerUp(event: PointerEvent) {
+      bar.current.releasePointerCapture(event.pointerId);
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     }
 
-    updateSize();
+    updateBarSize();
+    syncBarToScroll();
 
     bar.current.addEventListener("pointerdown", handlePointerDown);
+    content.current.addEventListener("scroll", syncBarToScroll);
+    window.addEventListener("resize", updateBarSize);
 
     return () => {
       bar.current.removeEventListener("pointerdown", handlePointerDown);
+      content.current.removeEventListener("scroll", syncBarToScroll);
+      window.removeEventListener("resize", updateBarSize);
     };
   }, []);
 
