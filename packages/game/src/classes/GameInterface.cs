@@ -33,8 +33,11 @@ public class GameInterface
       throw new Exception("Unsupported OS");
     }
 
-    OodleHelper.DownloadOodleDll($"temp/oodle.{libraryExtension}");
-    OodleHelper.Initialize($"temp/oodle.{libraryExtension}");
+    Directory.CreateDirectory("../../temp");
+    Console.WriteLine($"../..temp/oodle.{libraryExtension}");
+    var bool1 = OodleHelper.DownloadOodleDll($"../..temp/oodle.{libraryExtension}");
+    Console.WriteLine(bool1);
+    OodleHelper.Initialize($"../..temp/oodle.{libraryExtension}");
 
     files = [.. provider.Files.Keys];
 
@@ -48,6 +51,12 @@ public class GameInterface
         .Where(nation => !nation.EndsWith(".uasset") && nation != "TankStub")
         .Distinct(),
     ];
+
+    var pda = provider.LoadPackageObject(
+      "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
+    );
+
+    Console.WriteLine(pda);
   }
 
   public string[] Files => files;
