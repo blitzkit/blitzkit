@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using BlitzKit.Game.Models;
-using CUE4Parse.Compression;
+using BlitzKit.Game.Synchronous;
 using Microsoft.JavaScript.NodeApi;
 
 namespace BlitzKit.Game.JSExport;
@@ -34,11 +34,8 @@ public class GameInterface
       throw new Exception("Unsupported OS");
     }
 
-    Directory.CreateDirectory("../../temp");
-    Console.WriteLine($"../..temp/oodle.{libraryExtension}");
-    var bool1 = OodleHelper.DownloadOodleDll($"../..temp/oodle.{libraryExtension}");
-    Console.WriteLine(bool1);
-    OodleHelper.Initialize($"../..temp/oodle.{libraryExtension}");
+    SynchronousOodleHelper.DownloadOodleDll($"../..temp/oodle.{libraryExtension}");
+    SynchronousOodleHelper.Initialize($"../..temp/oodle.{libraryExtension}");
 
     files = [.. provider.Files.Keys];
 
