@@ -1,7 +1,8 @@
+using BlitzKit.Game.Synchronous;
 using CUE4Parse.MappingsProvider;
 using CUE4Parse.UE4.Versions;
 
-namespace game.src.classes;
+namespace BlitzKit.Game.Models;
 
 public class BlitzFileProvider : SynchronousFileProvider
 {

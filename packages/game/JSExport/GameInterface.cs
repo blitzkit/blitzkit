@@ -1,8 +1,9 @@
 ﻿using System.Runtime.InteropServices;
+using BlitzKit.Game.Models;
 using CUE4Parse.Compression;
 using Microsoft.JavaScript.NodeApi;
 
-namespace game.src.classes;
+namespace BlitzKit.Game.JSExport;
 
 [JSExport]
 public class GameInterface
