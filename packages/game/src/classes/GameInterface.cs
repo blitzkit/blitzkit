@@ -1,31 +1,20 @@
 ﻿using System.Runtime.InteropServices;
 using CUE4Parse.Compression;
-using CUE4Parse.FileProvider;
-using CUE4Parse.MappingsProvider;
-using CUE4Parse.UE4.Versions;
 using Microsoft.JavaScript.NodeApi;
 
 namespace game.src.classes;
 
 [JSExport]
-public class BlitzProvider
+public class GameInterface
 {
-  private readonly DefaultFileProvider provider;
+  private readonly BlitzFileProvider provider;
 
   public string[] files;
   public string[] tanksDirectoryNations;
 
-  public BlitzProvider(string directory)
+  public GameInterface(string directory)
   {
-    provider = new(
-      directory: directory,
-      searchOption: SearchOption.AllDirectories,
-      versions: new(EGame.GAME_UE5_5),
-      pathComparer: StringComparer.OrdinalIgnoreCase
-    )
-    {
-      MappingsContainer = new FileUsmapTypeMappingsProvider("../../packages/closed/blitz.usmap"),
-    };
+    provider = new(directory);
 
     provider.Initialize();
     provider.Mount();
@@ -47,21 +36,7 @@ public class BlitzProvider
     OodleHelper.DownloadOodleDll($"temp/oodle.{libraryExtension}");
     OodleHelper.Initialize($"temp/oodle.{libraryExtension}");
 
-    // Console.WriteLine(
-    //   provider.Files.Keys.Contains(
-    //     "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.uasset"
-    //   )
-    // );
-
-    // var pda = provider.LoadPackageObject(
-    //   "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
-    // );
-
-    // Console.WriteLine(pda);
-
     files = [.. provider.Files.Keys];
-
-    Console.WriteLine(string.Join("\n", files));
 
     var tanksBase = "Blitz/Content/Tanks/";
     tanksDirectoryNations =
