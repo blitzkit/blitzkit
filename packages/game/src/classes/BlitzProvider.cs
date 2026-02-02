@@ -47,13 +47,21 @@ public class BlitzProvider
     OodleHelper.DownloadOodleDll($"temp/oodle.{libraryExtension}");
     OodleHelper.Initialize($"temp/oodle.{libraryExtension}");
 
-    var pda = provider.LoadPackageObject(
-      "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
-    );
+    // Console.WriteLine(
+    //   provider.Files.Keys.Contains(
+    //     "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.uasset"
+    //   )
+    // );
 
-    Console.WriteLine(pda);
+    // var pda = provider.LoadPackageObject(
+    //   "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
+    // );
+
+    // Console.WriteLine(pda);
 
     files = [.. provider.Files.Keys];
+
+    Console.WriteLine(string.Join("\n", files));
 
     var tanksBase = "Blitz/Content/Tanks/";
     tanksDirectoryNations =
