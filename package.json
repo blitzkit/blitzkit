@@ -4,7 +4,7 @@
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
-    "build:game": "cd packages/game && dotnet build",
+    "build:game": "cd packages/game && bun run build",
     "build:assets": "cd packages/scripts && bun run build:assets",
     "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
     "build:bot": "cd packages/scripts && bun run build:bot",

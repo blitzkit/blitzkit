@@ -1,4 +1,7 @@
-﻿using CUE4Parse.FileProvider;
+﻿using System.Runtime.InteropServices;
+using CUE4Parse.Compression;
+using CUE4Parse.FileProvider;
+using CUE4Parse.MappingsProvider;
 using CUE4Parse.UE4.Versions;
 using Microsoft.JavaScript.NodeApi;
 
@@ -19,9 +22,36 @@ public class BlitzProvider
       searchOption: SearchOption.AllDirectories,
       versions: new(EGame.GAME_UE5_5),
       pathComparer: StringComparer.OrdinalIgnoreCase
-    );
+    )
+    {
+      MappingsContainer = new FileUsmapTypeMappingsProvider("../../packages/closed/blitz.usmap"),
+    };
+
     provider.Initialize();
     provider.Mount();
+
+    string libraryExtension;
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+      libraryExtension = "dll";
+    }
+    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+    {
+      libraryExtension = "so";
+    }
+    else
+    {
+      throw new Exception("Unsupported OS");
+    }
+
+    OodleHelper.DownloadOodleDll($"temp/oodle.{libraryExtension}");
+    OodleHelper.Initialize($"temp/oodle.{libraryExtension}");
+
+    var pda = provider.LoadPackageObject(
+      "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
+    );
+
+    Console.WriteLine(pda);
 
     files = [.. provider.Files.Keys];
 
@@ -42,6 +72,25 @@ public class BlitzProvider
 
   public byte[] TankBigIcon(string tankId, string pdaName)
   {
-    return [];
+    foreach (var nation in tanksDirectoryNations)
+    {
+      var path = $"Blitz/Content/Tanks/{nation}/{tankId}/{pdaName}.{pdaName}";
+
+      Console.WriteLine(path);
+
+      if (provider.TryLoadPackageObject(path, out var pda))
+      {
+        Console.WriteLine(pda);
+        Console.WriteLine(pda.GetType());
+
+        return [];
+      }
+      else
+      {
+        continue;
+      }
+    }
+
+    throw new FileNotFoundException($"Tank {tankId}/{pdaName} not found in any nation");
   }
 }

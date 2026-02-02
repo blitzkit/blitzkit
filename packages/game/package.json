@@ -3,6 +3,9 @@
   "private": true,
   "type": "module",
   "main": "src/index.ts",
+  "scripts": {
+    "build": "dotnet build"
+  },
   "dependencies": {
     "node-api-dotnet": "^0.9.19"
   }
