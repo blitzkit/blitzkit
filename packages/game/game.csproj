@@ -6,8 +6,10 @@
     <Nullable>enable</Nullable>
     <NodeApiAssemblyJSModuleType>esm</NodeApiAssemblyJSModuleType>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.9" />
     <ProjectReference Include="../cue4parse/CUE4Parse/CUE4Parse.csproj" />
     <ProjectReference Include="../cue4parse/CUE4Parse-Conversion/CUE4Parse-Conversion.csproj" />
     <PackageReference Include="Microsoft.JavaScript.NodeApi" Version="0.9.19" />
