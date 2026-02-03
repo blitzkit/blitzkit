@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices;
-using BlitzKit.Game.Models;
-using CUE4Parse.Compression;
+﻿using BlitzKit.Game.Models;
+using CUE4Parse_Conversion.Textures;
+using CUE4Parse.UE4.Assets.Exports.Texture;
+using CUE4Parse.UE4.Objects.Engine;
+using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.JavaScript.NodeApi;
 
 namespace BlitzKit.Game.JSExport;
@@ -17,40 +19,6 @@ public class GameInterface
   {
     provider = new(directory);
 
-    provider.Initialize();
-    provider.Mount();
-
-    Console.WriteLine("Mounted VFS:");
-    Console.WriteLine(provider.MountedVfs.Count);
-    foreach (var vfs in provider.MountedVfs)
-    {
-      Console.WriteLine(vfs.Path);
-    }
-
-    Console.WriteLine("Unloaded VFS:");
-    Console.WriteLine(provider.UnloadedVfs.Count);
-    foreach (var vfs in provider.UnloadedVfs)
-    {
-      Console.WriteLine(vfs.Path);
-    }
-
-    string libraryExtension;
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    {
-      libraryExtension = "dll";
-    }
-    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-    {
-      libraryExtension = "so";
-    }
-    else
-    {
-      throw new Exception("Unsupported OS");
-    }
-
-    OodleHelper.DownloadOodleDll($"../../temp/oodle.{libraryExtension}");
-    OodleHelper.Initialize($"../../temp/oodle.{libraryExtension}");
-
     files = [.. provider.Files.Keys];
 
     var tanksBase = "Blitz/Content/Tanks/";
@@ -63,12 +31,6 @@ public class GameInterface
         .Where(nation => !nation.EndsWith(".uasset") && nation != "TankStub")
         .Distinct(),
     ];
-
-    var pda = provider.LoadPackageObject(
-      "Blitz/Content/Tanks/USA/A97_M41_Bulldog/PDA_A97_M41_Bulldog.PDA_A97_M41_Bulldog"
-    );
-
-    Console.WriteLine(pda);
   }
 
   public string[] Files => files;
@@ -80,12 +42,14 @@ public class GameInterface
     {
       var path = $"Blitz/Content/Tanks/{nation}/{tankId}/{pdaName}.{pdaName}";
 
-      Console.WriteLine(path);
-
-      if (provider.TryLoadPackageObject(path, out var pda))
+      if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
       {
-        Console.WriteLine(pda);
-        Console.WriteLine(pda.GetType());
+        var bigIcon = pda.Get<FSoftObjectPath>("BigIcon").Load<UTexture2D>();
+
+        Console.WriteLine(bigIcon.Format);
+        Console.WriteLine(bigIcon.GetType());
+
+        bigIcon.Decode(ETexturePlatform.DesktopMobile);
 
         return [];
       }

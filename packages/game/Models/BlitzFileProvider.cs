@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+using CUE4Parse.Compression;
 using CUE4Parse.FileProvider;
 using CUE4Parse.MappingsProvider;
 using CUE4Parse.UE4.Versions;
@@ -15,5 +17,25 @@ public class BlitzFileProvider : DefaultFileProvider
     )
   {
     MappingsContainer = new FileUsmapTypeMappingsProvider("../../packages/closed/blitz.usmap");
+
+    Initialize();
+    Mount();
+
+    string libraryExtension;
+    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+      libraryExtension = "dll";
+    }
+    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+    {
+      libraryExtension = "so";
+    }
+    else
+    {
+      throw new Exception("Unsupported OS");
+    }
+
+    OodleHelper.DownloadOodleDll($"../../temp/oodle.{libraryExtension}");
+    OodleHelper.Initialize($"../../temp/oodle.{libraryExtension}");
   }
 }
