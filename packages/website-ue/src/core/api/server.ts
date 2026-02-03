@@ -1,8 +1,12 @@
 import type { MetadataAccessor } from "@blitzkit/closed";
-import { sluggify, type DeepPartial } from "@blitzkit/core";
+import { assertSecret, sluggify } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
+import type { DeepPartial } from "@protos/blitz_static_reward_currency";
+import { existsSync } from "fs";
+import { mkdir, readFile, writeFile } from "fs/promises";
+import { google } from "googleapis";
 import { merge } from "lodash-es";
 import { parse } from "yaml";
 import type { Avatar } from "../../protos/avatar";
@@ -10,6 +14,7 @@ import type { Background } from "../../protos/background";
 import type { Tank } from "../../protos/tank";
 import type { TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
+import type { PopularTanks } from "../../types/popularTanks";
 import { AbstractAPI } from "./abstract";
 
 if (typeof window !== "undefined") {
@@ -19,6 +24,7 @@ if (typeof window !== "undefined") {
 const globbedStrings = import.meta.glob("../../../../i18n/strings/*.json", {
   import: "default",
 });
+const tankSlugPattern = /^(\/\w+)?\/tanks\/([a-z0-9-]+)\/$/;
 
 interface LocalizationConfig {
   namespaces: string[];
@@ -34,7 +40,7 @@ export class ServerAPI extends AbstractAPI {
 
     if (group.length !== 1) {
       throw new RangeError(
-        `Don't know how to handle ${group.length} ClientConfigsEntities`
+        `Don't know how to handle ${group.length} ClientConfigsEntities`,
       );
     }
 
@@ -76,7 +82,7 @@ export class ServerAPI extends AbstractAPI {
         Object.assign(
           strings,
           await fetch(
-            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`
+            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`,
           )
             .then((response) => response.text())
             .then((text) => {
@@ -88,13 +94,13 @@ export class ServerAPI extends AbstractAPI {
               }
 
               return strings;
-            })
+            }),
         );
       }
     } catch (error) {
       console.warn(
         `Failed to fetch config from ${configPath}. Returning empty strings. This will throw an error in production. Error:`,
-        error
+        error,
       );
     }
 
@@ -174,7 +180,7 @@ export class ServerAPI extends AbstractAPI {
     const tank = item.TankCatalog();
     const compensation = item.Compensation();
 
-    return { tank, compensation, slug } satisfies Tank;
+    return { id, slug, tank, compensation } satisfies Tank;
   }
 
   protected async _avatars() {
@@ -231,5 +237,82 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return Array.from(groups.values());
+  }
+
+  protected async _popularTanks() {
+    if (!existsSync("../../temp/popular.json")) {
+      const { tanks } = await this.tanks();
+      const tanksArray = Object.values(tanks);
+
+      const auth = await google.auth.getClient({
+        keyFile: assertSecret(import.meta.env.GOOGLE_APPLICATION_CREDENTIALS),
+        scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
+      });
+      const analytics = google.analyticsdata({ version: "v1beta", auth });
+      const report = await analytics.properties.runReport({
+        property: `properties/${assertSecret(
+          import.meta.env.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID,
+        )}`,
+        requestBody: {
+          dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
+          dimensions: [{ name: "pagePath" }],
+          metrics: [{ name: "screenPageViews" }],
+          orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
+          dimensionFilter: {
+            filter: {
+              fieldName: "pagePath",
+              stringFilter: {
+                matchType: "BEGINS_WITH",
+                value: "/tanks/",
+              },
+            },
+          },
+        },
+      });
+
+      const views: Record<string, number> = {};
+
+      if (!report.data.rows) {
+        throw new Error("No rows in report");
+      }
+
+      for (const row of report.data.rows) {
+        if (
+          !row.dimensionValues ||
+          !row.dimensionValues[0].value ||
+          !row.metricValues ||
+          !row.metricValues[0].value
+        ) {
+          continue;
+        }
+
+        const matches = row.dimensionValues[0].value.match(tankSlugPattern);
+
+        if (!matches) continue;
+
+        const slug = matches[2];
+        const tank = tanksArray.find((tank) => tank.slug === slug);
+
+        if (!tank) continue;
+
+        if (tank.id in views) {
+          views[tank.id] += Number(row.metricValues[0].value);
+        } else {
+          views[tank.id] = Number(row.metricValues[0].value);
+        }
+      }
+
+      const popularTanks: PopularTanks = Object.entries(views)
+        .sort(([, a], [, b]) => b - a)
+        .map(([id, views]) => ({ id, views }));
+
+      await mkdir("../../temp", { recursive: true });
+      await writeFile("../../temp/popular.json", JSON.stringify(popularTanks));
+
+      return popularTanks;
+    }
+
+    const data = await readFile("../../temp/popular.json", "utf-8");
+    return JSON.parse(data) as PopularTanks;
   }
 }

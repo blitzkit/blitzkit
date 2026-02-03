@@ -7,6 +7,7 @@ import type { Backgrounds } from "../../protos/backgrounds";
 import type { Tank } from "../../protos/tank";
 import type { TankList } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
+import type { PopularTanks } from "../../types/popularTanks";
 
 export abstract class AbstractAPI {
   private _tankListCache: TankList | undefined;
@@ -41,7 +42,7 @@ export abstract class AbstractAPI {
 
   private assertLocale(locale: string) {
     const supported = locales.supported.find(
-      (supported) => supported.locale === locale
+      (supported) => supported.locale === locale,
     );
 
     if (supported === undefined) {
@@ -65,7 +66,7 @@ export abstract class AbstractAPI {
 
   private _gameStringsCache: Record<string, Record<string, string>> = {};
   protected abstract _gameStrings(
-    locale: string
+    locale: string,
   ): Promise<Record<string, string>>;
   async gameStrings(locale: string) {
     this.assertLocale(locale);
@@ -83,7 +84,7 @@ export abstract class AbstractAPI {
   > = {};
   protected abstract _groupedGameStrings(
     locale: string,
-    group: string
+    group: string,
   ): Promise<Record<string, string>>;
   async groupedGameStrings(locale: string, group: string, prefix: boolean) {
     this.assertLocale(locale);
@@ -157,5 +158,15 @@ export abstract class AbstractAPI {
     }
 
     return this._gameStringGroupsCache;
+  }
+
+  private _popularTanksCache: PopularTanks | undefined;
+  protected abstract _popularTanks(): Promise<PopularTanks>;
+  async popularTanks() {
+    if (this._popularTanksCache === undefined) {
+      this._popularTanksCache = await this._popularTanks();
+    }
+
+    return this._popularTanksCache;
   }
 }
