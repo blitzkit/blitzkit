@@ -15,9 +15,10 @@ public class SynchronousFileProvider(
   public new int Mount()
   {
     var countNewMounts = 0;
-
     foreach (var reader in _unloadedVfs.Keys)
     {
+      // VerifyGlobalData(reader);
+
       if (reader.IsEncrypted && CustomEncryption == null || !reader.HasDirectoryIndex)
         continue;
 
@@ -25,9 +26,14 @@ public class SynchronousFileProvider(
       {
         reader.MountTo(Files, PathComparer);
         _unloadedVfs.TryRemove(reader, out _);
-        countNewMounts++;
+        _mountedVfs[reader] = null;
+        Interlocked.Increment(ref countNewMounts);
+        // return reader;
       }
-      catch (InvalidAesKeyException) { }
+      catch (InvalidAesKeyException)
+      {
+        // Ignore this
+      }
       catch (Exception e)
       {
         Log.Warning(

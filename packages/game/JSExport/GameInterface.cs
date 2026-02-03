@@ -20,6 +20,20 @@ public class GameInterface
     provider.Initialize();
     provider.Mount();
 
+    Console.WriteLine("Mounted VFS:");
+    Console.WriteLine(provider.MountedVfs.Count);
+    foreach (var vfs in provider.MountedVfs)
+    {
+      Console.WriteLine(vfs.Path);
+    }
+
+    Console.WriteLine("Unloaded VFS:");
+    Console.WriteLine(provider.UnloadedVfs.Count);
+    foreach (var vfs in provider.UnloadedVfs)
+    {
+      Console.WriteLine(vfs.Path);
+    }
+
     string libraryExtension;
     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
