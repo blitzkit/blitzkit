@@ -44,14 +44,20 @@ public class GameInterface
 
       if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
       {
-        var bigIcon = pda.Get<FSoftObjectPath>("BigIcon").Load<UTexture2D>();
-
-        Console.WriteLine(bigIcon.Format);
-        Console.WriteLine(bigIcon.GetType());
-
-        bigIcon.Decode(ETexturePlatform.DesktopMobile);
-
-        return [];
+        try
+        {
+          return pda.Get<FSoftObjectPath>("BigIcon")
+            .Load<UTexture2D>()
+            .Decode(ETexturePlatform.DesktopMobile)!
+            .ToSkBitmap()
+            .Encode(SkiaSharp.SKEncodedImageFormat.Webp, 80)
+            .ToArray();
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e);
+          throw;
+        }
       }
       else
       {
