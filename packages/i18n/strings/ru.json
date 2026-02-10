@@ -297,7 +297,7 @@
       },
       "filters": {
         "none": "Без фильтров",
-        "tier": " {tier} уровня"
+        "tier": "{tier} уровень"
       },
       "no_data": {
         "battles_in_period": "За этот период боёв не было",
@@ -670,9 +670,9 @@
         "count_plural": "Танков: {count}",
         "sorting_by": "Сортировать по {name}",
         "clear": "Очистить",
-        "tier": " {tier} уровня",
-        "passive": "{name} (Passive)",
-        "active": "{name} (Active)",
+        "tier": "{tier} уровень",
+        "passive": "{name} (Пассивный)",
+        "active": "{name} (Активный)",
         "no_tanks_found": {
           "body": "Танков не найдено.",
           "search_again": "Попробуйте повторить поиск.",
@@ -828,7 +828,7 @@
         },
         "clear": "Очистить",
         "select_all": "Выбрать всё",
-        "tier": " {tier} уровня"
+        "tier": "{tier} уровень"
       },
       "tankopedia": {
         "search": "Поиск характеристик...",
