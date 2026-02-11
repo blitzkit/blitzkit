@@ -4,11 +4,11 @@
 
   const isAPI = window.location.pathname.startsWith("/api");
   const isI18nPath = locales.supported.some(({ locale }) =>
-    window.location.pathname.startsWith(`/${locale}/`)
+    window.location.pathname.startsWith(`/${locale}/`),
   );
   const bestLocale = getBestLocale();
   const currentPath = locales.supported.find(({ locale }) =>
-    window.location.pathname.startsWith(`/${locale}/`)
+    window.location.pathname.startsWith(`/${locale}/`),
   );
 
   if (
@@ -19,8 +19,8 @@
     window.location.pathname = isI18nPath
       ? window.location.pathname.replace(
           `/${currentPath?.locale}`,
-          bestLocale === undefined ? "" : `/${bestLocale}`
+          bestLocale === undefined ? "" : `/${bestLocale}`,
         )
-      : `${bestLocale ? `/${bestLocale}` : ""}${window.location.pathname}`;
+      : `${bestLocale}${window.location.pathname}`;
   }
 </script>

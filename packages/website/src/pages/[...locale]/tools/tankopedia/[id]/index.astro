@@ -12,7 +12,8 @@ export const getStaticPaths = (async () => {
     .map((tank) =>
       parentPaths.map((parent) => ({
         params: { ...parent.params, id: tank.id },
-      }))
+        props: parent.props,
+      })),
     )
     .flat();
 }) satisfies GetStaticPaths;
