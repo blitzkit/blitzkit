@@ -21,6 +21,6 @@
           `/${currentPath?.locale}`,
           bestLocale === undefined ? "" : `/${bestLocale}`
         )
-      : `/${bestLocale}${window.location.pathname}`;
+      : `${bestLocale ? `/${bestLocale}` : ""}${window.location.pathname}`;
   }
 </script>
