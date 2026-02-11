@@ -11,10 +11,10 @@ import { merge } from "lodash-es";
 import { parse } from "yaml";
 import type { Avatar } from "../../protos/avatar";
 import type { Background } from "../../protos/background";
+import type { PopularTanks } from "../../protos/popular_tanks";
 import type { Tank } from "../../protos/tank";
 import type { TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
-import type { PopularTanks } from "../../types/popularTanks";
 import { AbstractAPI } from "./abstract";
 
 if (typeof window !== "undefined") {
@@ -302,9 +302,17 @@ export class ServerAPI extends AbstractAPI {
         }
       }
 
-      const popularTanks: PopularTanks = Object.entries(views)
-        .sort(([, a], [, b]) => b - a)
-        .map(([id, views]) => ({ id, views }));
+      for (const id in tanks) {
+        if (!(id in views)) {
+          views[id] = 0;
+        }
+      }
+
+      const popularTanks = {
+        tanks: Object.entries(views)
+          .sort(([, a], [, b]) => b - a)
+          .map(([id, views]) => ({ id, views })),
+      } satisfies PopularTanks;
 
       await mkdir("../../temp", { recursive: true });
       await writeFile("../../temp/popular.json", JSON.stringify(popularTanks));

@@ -1,11 +1,10 @@
+import type { PopularTank } from "../../protos/popular_tanks";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
-interface TankCard {
-  tank: string;
-}
+export function TankCard({ id }: PopularTank) {
+  const tanks = useAwait(api.tanks, "tanks");
 
-export function TankCard({ tank }: TankCard) {
   return (
     <div className={styles["tank-card"]}>
       <div className={styles["icon-wrapper"]}>
@@ -19,12 +18,12 @@ export function TankCard({ tank }: TankCard) {
         <div
           className={styles.icon}
           style={{
-            backgroundImage: "url(https://i.imgur.com/HrkTwHc.png)",
+            backgroundImage: `url(/api/tanks/${id}.webp)`,
           }}
         />
       </div>
 
-      <Text className={styles.name}>{tank}</Text>
+      <Text className={styles.name}>{id}</Text>
     </div>
   );
 }

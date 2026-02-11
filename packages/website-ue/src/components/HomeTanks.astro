@@ -15,19 +15,9 @@ interface Props {
 const { locale } = Astro.props;
 
 const strings = await api.strings(locale);
+const popular = (await api.popularTanks()).tanks.slice(0, 8);
 
-const popular = [
-  "Concept 1B",
-  "Obj. 268",
-  "Grille 15",
-  "Kpz 70 Missile",
-  "Concept 1B",
-  "Concept 1B",
-  "Concept 1B",
-  "Concept 1B",
-  "Concept 1B",
-  "Concept 1B",
-];
+console.log(popular.length);
 ---
 
 <style>
@@ -51,7 +41,7 @@ const popular = [
 
   <Scroller client:load className="tanks">
     <div class="content">
-      {popular.map((tank) => <TankCard {tank} />)}
+      {popular.map((tank) => <TankCard {...tank} />)}
     </div>
   </Scroller>
 

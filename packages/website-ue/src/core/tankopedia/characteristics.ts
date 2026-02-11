@@ -1,4 +1,4 @@
-import { TankClass } from "@blitzkit/core";
+import { TankClass } from "@protos/blitz_static_tank_component";
 import {
   ShellUpgrageSingleChange_AttributeName,
   StageParameters,
@@ -40,7 +40,7 @@ export const characteristics = {
     if (isPump === 1) return GunType.AutoReloader;
 
     const clipSize = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE,
     );
 
     if (clipSize === 1) return GunType.Regular;
@@ -54,25 +54,25 @@ export const characteristics = {
     if (gunType === GunType.Regular) return null;
 
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE,
     );
   },
 
   damage({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE,
     );
   },
 
   module_damage({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MODULE_DAMAGE
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MODULE_DAMAGE,
     );
   },
 
   penetration({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER,
     );
   },
 
@@ -82,7 +82,7 @@ export const characteristics = {
     if (gunType === GunType.AutoReloader) return null;
 
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_RELOAD_TIME
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_RELOAD_TIME,
     );
   },
 
@@ -100,7 +100,7 @@ export const characteristics = {
     if (gunType === GunType.Regular) return null;
 
     const clipRate = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_RATE
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_RATE,
     );
 
     return 60 / clipRate;
@@ -173,13 +173,13 @@ export const characteristics = {
 
   normalization({ shellSafe }) {
     return shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_NORMALIZATION
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_NORMALIZATION,
     );
   },
 
   ricochet({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_RICOCHET_ANGLE
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_RICOCHET_ANGLE,
     );
   },
 
@@ -191,54 +191,54 @@ export const characteristics = {
 
   shell_range({ shellSafe }) {
     const maxDistance = shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE,
     );
     return maxDistance === null ? Infinity : maxDistance / 100;
   },
 
   shell_capacity({ shellSafe }) {
     const count = shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_COUNT
+      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_COUNT,
     );
     return count === -1 || count === null ? Infinity : count;
   },
 
   aim_time({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_AIMING_TIME
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_AIMING_TIME,
     );
   },
 
   speed_forward({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FORWARD_MAX_SPEED
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FORWARD_MAX_SPEED,
     );
   },
 
   speed_backward({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BACKWARD_MAX_SPEED
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BACKWARD_MAX_SPEED,
     );
   },
 
   dispersion({ attribute, characteristic, state }) {
     const base = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_ANGLE
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_ANGLE,
     );
     const movement = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_MOVEMENT
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_MOVEMENT,
     );
     const vehicleRotation = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_ROTATION
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_VEHICLE_ROTATION,
     );
     const turretRotation = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_TURRET_ROTATION
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_TURRET_ROTATION,
     );
     const afterShot = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_AFTER_SHOT
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_AFTER_SHOT,
     );
     const gunDamaged = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_WHILE_GUN_DAMAGED
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_DISPERSION_FACTOR_WHILE_GUN_DAMAGED,
     );
     const maxSpeed = characteristic("speed_forward") as number;
 
@@ -258,8 +258,8 @@ export const characteristics = {
         -Math.PI / 2,
         0,
         parameters.pitch_limits_up,
-        parameters.pitch_limits_down
-      ).pitch
+        parameters.pitch_limits_down,
+      ).pitch,
     );
   },
 
@@ -269,14 +269,14 @@ export const characteristics = {
         Math.PI / 2,
         0,
         parameters.pitch_limits_up,
-        parameters.pitch_limits_down
-      ).pitch
+        parameters.pitch_limits_down,
+      ).pitch,
     );
   },
 
   engine_power({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_ENGINE_POWER
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_ENGINE_POWER,
     );
   },
 
@@ -316,7 +316,7 @@ export const characteristics = {
 
   turret_traverse_speed({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TURRET_ROTATION_SPEED
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_TURRET_ROTATION_SPEED,
     );
   },
 
@@ -326,14 +326,14 @@ export const characteristics = {
 
   health({ attribute }) {
     return attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_MAX_HEALTH
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_MAX_HEALTH,
     );
   },
 
   fire_chance({ attribute }) {
     return (
       attribute(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FIRE_START_CHANCE
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_FIRE_START_CHANCE,
       ) * 100
     );
   },
@@ -341,7 +341,7 @@ export const characteristics = {
   view_range({ attribute }) {
     return (
       attribute(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CIRCULAR_VISION_RADIUS
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CIRCULAR_VISION_RADIUS,
       ) / 100
     );
   },
@@ -353,21 +353,21 @@ export const characteristics = {
   camouflage({ attribute, characteristic, attributeSafe, state }) {
     const tankClass = characteristic("class");
     const base = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_STILL
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_STILL,
     );
     const moving =
-      tankClass === TankClass.LIGHT
+      tankClass === TankClass.TANK_CLASS_LIGHT
         ? 0
         : attribute(
-            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_MOVING
+            TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_MOVING,
           );
     const shooting = attribute(
-      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FACTOR_AT_SHOT
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FACTOR_AT_SHOT,
     );
 
     if (
       attributeSafe(
-        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FIRE_PENALTY
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_FIRE_PENALTY,
       )
     ) {
       throw new Error("Fire penalty implemented! Code it in!!");

@@ -4,10 +4,10 @@ import type { Avatar } from "../../protos/avatar";
 import type { Avatars } from "../../protos/avatars";
 import type { Background } from "../../protos/background";
 import type { Backgrounds } from "../../protos/backgrounds";
+import type { PopularTanks } from "../../protos/popular_tanks";
 import type { Tank } from "../../protos/tank";
 import type { TankList } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
-import type { PopularTanks } from "../../types/popularTanks";
 
 export abstract class AbstractAPI {
   private _tankListCache: TankList | undefined;

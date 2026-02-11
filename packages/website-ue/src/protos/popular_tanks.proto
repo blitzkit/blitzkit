@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message PopularTanks {
+  repeated PopularTank tanks = 1;
+}
+
+message PopularTank {
+  string id = 1;
+  int32 views = 2;
+}
