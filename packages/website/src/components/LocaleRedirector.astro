@@ -14,12 +14,13 @@
   if (
     !isAPI && // not an api, duh!
     localStorage.getItem("preferred-locale") !== null && // no preference, so probably google's crawler
-    bestLocale !== currentPath?.locale // we need to redirect
+    ((bestLocale === locales.default && currentPath !== undefined) ||
+    (bestLocale !== currentPath))
   ) {
     window.location.pathname = isI18nPath
       ? window.location.pathname.replace(
           `/${currentPath?.locale}`,
-          bestLocale === undefined ? "" : `/${bestLocale}`,
+          bestLocale === locales.default ? "" : `/${bestLocale}`,
         )
       : `${bestLocale}${window.location.pathname}`;
   }
