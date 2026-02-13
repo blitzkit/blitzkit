@@ -39,7 +39,7 @@
     "branches": {
       "local": "dev",
       "dev": "бета",
-      "opentest": "открытый тест",
+      "opentest": "общий тест",
       "preview": "превью"
     },
     "locales": {
