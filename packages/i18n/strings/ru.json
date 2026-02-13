@@ -24,7 +24,7 @@
     "shells": {
       "ap": "ББ",
       "ap_cr": "БП",
-      "hc": "ОФ",
+      "hc": "КС",
       "he": "ОФ"
     },
     "player_count_period": {
@@ -39,7 +39,7 @@
     "branches": {
       "local": "dev",
       "dev": "бета",
-      "opentest": "открытый тест",
+      "opentest": "общий тест",
       "preview": "превью"
     },
     "locales": {
