@@ -5,28 +5,29 @@ import {
   idToRegion,
   tankIcon,
   TIER_ROMAN_NUMERALS,
-} from '@blitzkit/core';
-import { Locale } from 'discord.js';
-import { clamp } from 'lodash-es';
-import { CommandWrapper } from '../components/CommandWrapper';
-import { TitleBar } from '../components/TitleBar';
-import { iconPng } from '../core/blitzkit/iconPng';
+} from "@blitzkit/core";
+import { Locale } from "discord.js";
+import { clamp } from "lodash-es";
+import { CommandWrapper } from "../components/CommandWrapper";
+import { TitleBar } from "../components/TitleBar";
+import { iconPng } from "../core/blitzkit/iconPng";
 import {
+  averageDefinitions,
   mapDefinitions,
   tankDefinitions,
-} from '../core/blitzkit/nonBlockingPromises';
-import { RenderConfiguration } from '../core/blitzkit/renderConfiguration';
-import { blitzStarsTankAverages } from '../core/blitzstars/tankAverages';
-import { buttonLink } from '../core/discord/buttonLink';
-import { createLocalizedCommand } from '../core/discord/createLocalizedCommand';
-import { translator } from '../core/localization/translator';
-import { type CommandRegistry } from '../events/interactionCreate';
-import { theme } from '../stitches.config';
+} from "../core/blitzkit/nonBlockingPromises";
+import { RenderConfiguration } from "../core/blitzkit/renderConfiguration";
+import { buttonLink } from "../core/discord/buttonLink";
+import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
+import { localizationObject } from "../core/discord/localizationObject";
+import { translator } from "../core/localization/translator";
+import { type CommandRegistry } from "../events/interactionCreate";
+import { theme } from "../stitches.config";
 
 type WotInspectorReplaySubmission =
-  | { status: 'error'; data: unknown; error: { message: string } }
+  | { status: "error"; data: unknown; error: { message: string } }
   | {
-      status: 'ok';
+      status: "ok";
       data: {
         download_url: string;
         view_url: string;
@@ -209,9 +210,9 @@ function stat(value: string | number, flex = 2) {
     <div
       style={{
         flex,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <span style={{ fontSize: 16 }}>{value}</span>
@@ -227,15 +228,15 @@ async function playerListing(
   recordingPlayer = false,
 ) {
   const { unwrap } = translator(locale);
-  const awaitedTankAverages = await blitzStarsTankAverages;
+  const awaitedTankAverages = await averageDefinitions;
   const awaitedTankDefinitions = await tankDefinitions;
   const tank = awaitedTankDefinitions.tanks[player.vehicle_descr];
-  const blockAccent = recordingPlayer ? '_amber' : '';
+  const blockAccent = recordingPlayer ? "_amber" : "";
   const healthAccent = protagonistTeam
     ? recordingPlayer
-      ? '_amber'
-      : '_green'
-    : '_red';
+      ? "_amber"
+      : "_green"
+    : "_red";
 
   // our turret ids are always off by 1 or 2 lol so imma just grab the closest
   // TODO: 💀
@@ -245,11 +246,11 @@ async function playerListing(
   )[0];
   const totalHealth = turret.health + tank.health;
   const healthLeft = clamp(player.hitpoints_left / totalHealth, 0, 1);
-  const tankAveragesEntry = awaitedTankAverages[player.vehicle_descr];
+  const tankAveragesEntry = awaitedTankAverages.averages[player.vehicle_descr];
   const wn8 =
     tankAveragesEntry === undefined
       ? -1
-      : calculateWN8(tankAveragesEntry.all, {
+      : calculateWN8(tankAveragesEntry.mu, {
           battles: 1,
           damage_dealt: player.damage_made,
           dropped_capture_points: player.base_defend_points,
@@ -262,8 +263,8 @@ async function playerListing(
     <div
       key={player.entity_id}
       style={{
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         gap: 8,
         backgroundColor: theme.colors[`appBackground2${blockAccent}`],
         padding: 8,
@@ -271,11 +272,11 @@ async function playerListing(
     >
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           gap: 8,
           flex: 1,
-          overflow: 'hidden',
-          alignItems: 'center',
+          overflow: "hidden",
+          alignItems: "center",
         }}
       >
         <img
@@ -284,22 +285,22 @@ async function playerListing(
           style={{
             width: 32,
             height: 32,
-            objectFit: 'contain',
+            objectFit: "contain",
           }}
         />
 
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
+            display: "flex",
+            flexDirection: "column",
             // align
           }}
         >
           <div
             style={{
-              display: 'flex',
+              display: "flex",
               gap: 4,
-              alignItems: 'center',
+              alignItems: "center",
             }}
           >
             <span
@@ -324,23 +325,23 @@ async function playerListing(
             style={{
               fontSize: 16,
               color: theme.colors[`textLowContrast${blockAccent}`],
-              whiteSpace: 'nowrap',
+              whiteSpace: "nowrap",
             }}
           >
             {player.name}
-            {player.clan_tag ? ` [${player.clan_tag}]` : ''}
+            {player.clan_tag ? ` [${player.clan_tag}]` : ""}
           </span>
         </div>
       </div>
 
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           flex: 1,
         }}
       >
         {stat(player.damage_made.toLocaleString())}
-        {stat(wn8 === -1 ? '--' : Math.round(wn8).toLocaleString())}
+        {stat(wn8 === -1 ? "--" : Math.round(wn8).toLocaleString())}
         {stat(player.exp.toLocaleString())}
         {stat(player.enemies_destroyed, 1)}
       </div>
@@ -349,15 +350,15 @@ async function playerListing(
         style={{
           borderRadius: 2,
           backgroundColor: theme.colors[`componentInteractive${healthAccent}`],
-          display: 'flex',
+          display: "flex",
           width: 4,
-          height: '100%',
-          transform: 'scaleY(-1)',
+          height: "100%",
+          transform: "scaleY(-1)",
         }}
       >
         <div
           style={{
-            width: '100%',
+            width: "100%",
             height: `${healthLeft * 100}%`,
             borderRadius: 2,
             backgroundColor: theme.colors[`solidBackground${healthAccent}`],
@@ -373,8 +374,8 @@ function Header() {
     <div
       style={{
         padding: 8,
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         gap: 8,
       }}
     >
@@ -382,16 +383,16 @@ function Header() {
 
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           flex: 1,
         }}
       >
         <div
           style={{
             flex: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -406,9 +407,9 @@ function Header() {
         <div
           style={{
             flex: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -423,9 +424,9 @@ function Header() {
         <div
           style={{
             flex: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -440,9 +441,9 @@ function Header() {
         <div
           style={{
             flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -460,28 +461,42 @@ function Header() {
 }
 
 export const replayCommand = new Promise<CommandRegistry>((resolve) => {
+  const { strings } = translator(Locale.EnglishUS);
+
   resolve({
-    command: createLocalizedCommand('replay').addAttachmentOption((option) =>
-      option.setName('file').setDescription('Replay file').setRequired(true),
+    command: createLocalizedCommand("replay").addAttachmentOption((option) =>
+      option
+        .setName(strings.bot.commands.replay.options.file.name)
+        .setNameLocalizations(
+          localizationObject(
+            (strings) => strings.bot.commands.replay.options.file.name,
+            undefined,
+            true,
+          ),
+        )
+        .setDescription(strings.bot.commands.replay.options.file.description)
+        .setDescriptionLocalizations(
+          localizationObject(
+            (strings) => strings.bot.commands.replay.options.file.description,
+          ),
+        )
+        .setRequired(true),
     ),
 
     async handler(interaction) {
       const awaitedMapDefinitions = await mapDefinitions;
-      const file = interaction.options.getAttachment('file')!;
-      // const file = {
-      //   url: 'https://cdn.discordapp.com/ephemeral-attachments/1232434891652861972/1232781496016834581/20240328_1530__TresAbhi_M60_1157057448155406708.wotbreplay?ex=662ab4bc&is=6629633c&hm=c784cd10e80232350ddaf291fa987b879c4d0a8083b78298c9eee4fa0d507f6c&',
-      // };
+      const file = interaction.options.getAttachment("file")!;
       const submissionData = (await fetch(
         `https://wotinspector.com/api/replay/upload/?url=${encodeURIComponent(
           file.url,
         )}`,
       ).then((response) => response.json())) as WotInspectorReplaySubmission;
 
-      if (submissionData.status === 'error') {
+      if (submissionData.status === "error") {
         return `# Uh oh! WoT Inspector didn't like that.\n\nThere was an error processing your replay. Get help on [the official Discord server](https://discord.gg/nDt7AjGJQH).`;
       }
 
-      const replayId = submissionData.data.download_url.split('/').at(-1)!;
+      const replayId = submissionData.data.download_url.split("/").at(-1)!;
       const replayData = (await fetch(
         `https://api.wotinspector.com/v2/blitz/replays/${replayId}/`,
       ).then((response) => response.json())) as WotInspectorReplay;
@@ -493,7 +508,7 @@ export const replayCommand = new Promise<CommandRegistry>((resolve) => {
         await getClanAccountInfo(
           idToRegion(replayData.protagonist),
           replayData.protagonist,
-          ['clan'],
+          ["clan"],
         )
       )?.clan;
       const clanImage = clan ? emblemURL(clan.emblem_set_id) : undefined;
@@ -506,22 +521,22 @@ export const replayCommand = new Promise<CommandRegistry>((resolve) => {
             image={clanImage}
             description={`${
               replayData.protagonist_team === replayData.winner_team
-                ? 'Victory'
-                : 'Defeat'
+                ? "Victory"
+                : "Defeat"
             } • ${awaitedMapDefinitions.maps[replayData.map_id].name}`}
           />
 
           <div
             style={{
-              display: 'flex',
+              display: "flex",
               gap: 8,
             }}
           >
             <div
               style={{
                 flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 4,
               }}
             >
@@ -547,8 +562,8 @@ export const replayCommand = new Promise<CommandRegistry>((resolve) => {
             <div
               style={{
                 flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 4,
               }}
             >
@@ -569,8 +584,8 @@ export const replayCommand = new Promise<CommandRegistry>((resolve) => {
             </div>
           </div>
         </CommandWrapper>,
-        buttonLink(submissionData.data.view_url, 'WoT Inspector'),
-        buttonLink(submissionData.data.download_url, 'Download'),
+        buttonLink(submissionData.data.view_url, "WoT Inspector"),
+        buttonLink(submissionData.data.download_url, "Download"),
       ];
     },
   });

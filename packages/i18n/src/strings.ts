@@ -35,7 +35,7 @@ for (const locale in stringsRaw) {
   const localeStrings = stringsRaw[locale];
   STRINGS[locale] = merge(
     stringsRaw[locales.default],
-    localeStrings
+    localeStrings,
   ) as BlitzKitStrings;
 }
 

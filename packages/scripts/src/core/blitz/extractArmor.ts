@@ -6,7 +6,7 @@ import {
 } from "@blitzkit/core";
 import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
 import { times } from "lodash-es";
-import { SteamVFS } from "../vfs/vfs";
+import { SteamVFS } from "../vfs/steam";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
@@ -16,10 +16,10 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
   const sc2Path = `Data/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
   const scgPath = `Data/3d/Tanks/CollisionMeshes/${fileName}.scg`;
   const sc2 = new Sc2ReadStream(
-    (await vfs.file(sc2Path)).buffer as ArrayBuffer
+    (await vfs.file(sc2Path)).buffer as ArrayBuffer,
   ).sc2();
   const scg = new ScgReadStream(
-    (await vfs.file(scgPath)).buffer as ArrayBuffer
+    (await vfs.file(scgPath)).buffer as ArrayBuffer,
   ).scg();
   const document = new Document();
   const scene = document.createScene();
@@ -29,7 +29,7 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
     hierarchies.forEach((hierarchy) => {
       const components = times(
         hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, "0")]
+        (index) => hierarchy.components[index.toString().padStart(4, "0")],
       );
 
       components.forEach((component) => {
@@ -43,7 +43,7 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
 
             if (!polygonGroup) {
               console.warn(
-                `Missing polygon group ${batch["rb.datasource"]} (${hierarchy.name}); skipping...`
+                `Missing polygon group ${batch["rb.datasource"]} (${hierarchy.name}); skipping...`,
               );
 
               break;
@@ -73,7 +73,7 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
                 VertexAttribute.TANGENT,
                 attributes
                   .get(VertexAttribute.TANGENT)!
-                  .map((tangent) => [...tangent, 1])
+                  .map((tangent) => [...tangent, 1]),
               );
             }
 
@@ -94,7 +94,7 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
 
             hardJointIndices.forEach((hardJointIndex) => {
               const node = document.createNode(
-                `${hierarchy.name}_armor_${hardJointIndex}`
+                `${hierarchy.name}_armor_${hardJointIndex}`,
               );
               const mesh = document.createMesh(batch["##name"]);
               const indicesAccessor = document
@@ -104,9 +104,9 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
                   new Uint16Array(
                     polygonGroup.indices.filter(
                       (index) =>
-                        vertexHardJointIndices.get(index) === hardJointIndex
-                    )
-                  )
+                        vertexHardJointIndices.get(index) === hardJointIndex,
+                    ),
+                  ),
                 )
                 .setBuffer(buffer);
               const primitive = document
@@ -127,7 +127,7 @@ export async function extractArmor(vfs: SteamVFS, fileName: string) {
 
           default:
             throw new TypeError(
-              `Unhandled component type: ${component["comp.typename"]}`
+              `Unhandled component type: ${component["comp.typename"]}`,
             );
         }
       });

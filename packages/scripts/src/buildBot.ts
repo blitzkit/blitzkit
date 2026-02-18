@@ -44,9 +44,9 @@ for (const module of await readdir(`${modulesRoot}/@resvg`)) {
       .map((file) =>
         cp(
           `${modulesRoot}/@resvg/${module}/${file}`,
-          `${distRoot}/workers/${file}`
-        )
-      )
+          `${distRoot}/workers/${file}`,
+        ),
+      ),
   );
 }
 
@@ -54,7 +54,7 @@ if (!dev) {
   await cp(`${projectDir}/prisma`, `${distRoot}/prisma`, { recursive: true });
 
   for (const file of await readdir(`${modulesRoot}/prisma`).then((files) =>
-    files.filter((file) => file.endsWith(".node"))
+    files.filter((file) => file.endsWith(".node")),
   )) {
     cp(`${modulesRoot}/prisma/${file}`, `${distRoot}/prisma/${file}`);
   }

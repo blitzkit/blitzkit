@@ -1,11 +1,13 @@
 import {
+  fetchAverageDefinitions,
   fetchDiscoveredIdsDefinitions,
   fetchGameDefinitions,
   fetchMapDefinitions,
   fetchTankDefinitions,
   fetchTankNames,
-} from '@blitzkit/core';
+} from "@blitzkit/core";
 
+export const averageDefinitions = fetchAverageDefinitions();
 export const tankDefinitions = fetchTankDefinitions();
 export const gameDefinitions = fetchGameDefinitions();
 export const tankNames = fetchTankNames();

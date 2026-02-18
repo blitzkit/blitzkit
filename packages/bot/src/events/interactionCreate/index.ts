@@ -72,13 +72,13 @@ interface CommandRegistryImplicit extends CommandRegistryBase {
 interface CommandRegistryExplicit extends CommandRegistryBase {
   handlesInteraction?: false;
   handler: (
-    interaction: ChatInputCommandInteraction<CacheType>
+    interaction: ChatInputCommandInteraction<CacheType>,
   ) => InteractionReturnable;
 }
 
 export type CommandRegistry = CommandRegistryImplicit | CommandRegistryExplicit;
 
-export const COMMANDS_RAW: Promise<CommandRegistry>[] = [
+export const commandsArray: Promise<CommandRegistry>[] = [
   // auctionCommand,
   permissionsCommand,
   debugCommand,
@@ -101,34 +101,28 @@ export const COMMANDS_RAW: Promise<CommandRegistry>[] = [
   replayCommand,
 ];
 
-export const commands = Promise.allSettled(COMMANDS_RAW).then((rawCommands) => {
-  return rawCommands.reduce<Record<string, CommandRegistry>>(
-    (commands, registry, index) => {
-      if (registry.status === "rejected") {
-        console.warn(
-          `Command ${index} failed to load; skipping...`,
-          registry.reason
-        );
-        return commands;
-      }
-      return { ...commands, [registry.value.command.name]: registry.value };
-    },
-    {}
-  );
-});
+export const commands: Record<string, CommandRegistry> = {};
+const commandsFulfilled: CommandRegistry[] = [];
+
+let index = 0;
+for (const registry of await Promise.allSettled(commandsArray)) {
+  if (registry.status === "rejected") {
+    console.warn(`Command ${index} rejected`, registry.reason);
+    continue;
+  }
+
+  commandsFulfilled.push(registry.value);
+  commands[registry.value.command.name] = registry.value;
+  index++;
+}
 
 const rest = new REST().setToken(assertSecret(import.meta.env.DISCORD_TOKEN));
+const body = commandsFulfilled.map((registry) => registry.command.toJSON());
+const applicationCommandsRoute = Routes.applicationCommands(
+  assertSecret(import.meta.env.DISCORD_CLIENT_ID),
+);
 
-commands.then((awaitedCommands) => {
-  const body = Object.values(awaitedCommands).map((registry) =>
-    registry.command.toJSON()
-  );
-
-  rest.put(
-    Routes.applicationCommands(assertSecret(import.meta.env.DISCORD_CLIENT_ID)),
-    { body }
-  );
-});
+await rest.put(applicationCommandsRoute, { body });
 
 export async function interactionCreate(interaction: Interaction<CacheType>) {
   if (interaction.isAutocomplete()) {

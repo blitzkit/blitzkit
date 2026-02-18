@@ -359,7 +359,14 @@
     "commands": {
       "replay": {
         "name": "replay",
-        "description": "Display replay results"
+        "description": "Display replay results",
+
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
 
       "research": {

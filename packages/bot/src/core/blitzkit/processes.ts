@@ -1,29 +1,37 @@
-import { usersDatabase } from '../db/users';
-import { client } from '../discord/client';
+import { usersDatabase } from "../db/users";
+import { client } from "../discord/client";
 
-const EXIT_EVENTS = [
-  'beforeExit',
-  'exit',
-  'SIGINT',
-  'SIGTERM',
-  'SIGUSR1',
-  'SIGUSR2',
-];
+const EXIT_EVENTS = ["SIGINT", "SIGTERM", "SIGUSR1", "SIGUSR2"];
 
-async function cleanup() {
-  console.log('Cleaning up...');
+let cleaningUp = false;
 
-  await Promise.all([usersDatabase.$disconnect(), client.destroy()]);
+async function cleanup(signal: string) {
+  if (cleaningUp) return;
+  cleaningUp = true;
 
-  console.log('Gracefully exiting...');
+  console.log(`Cleaning up... (${signal})`);
 
-  EXIT_EVENTS.forEach((event) => process.off(event, cleanup));
+  try {
+    await Promise.all([usersDatabase.$disconnect(), client.destroy()]);
+  } catch (err) {
+    console.error("Cleanup error:", err);
+  }
+
+  console.log("Gracefully exiting...");
+
   process.exit(0);
 }
 
 export function registerProcesses() {
-  process.on('uncaughtException', console.error);
-  client.on('error', console.error);
+  process.on("uncaughtException", (err) => {
+    console.error("uncaughtException:", err);
+  });
 
-  EXIT_EVENTS.forEach((event) => process.on(event, cleanup));
+  process.on("unhandledRejection", (err) => {
+    console.error("unhandledRejection:", err);
+  });
+
+  client.on("error", console.error);
+
+  EXIT_EVENTS.forEach((event) => process.on(event, () => cleanup(event)));
 }

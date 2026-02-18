@@ -22,11 +22,11 @@ export function createLocalizedCommand(
   command: string,
   sub?:
     | CreateLocalizedCommandSubcommand[]
-    | CreateLocalizedCommandSubcommandGroup[]
+    | CreateLocalizedCommandSubcommandGroup[],
 ) {
   const commandPathItem = command.replaceAll(
     "-",
-    "_"
+    "_",
   ) as keyof BlitzKitStrings["bot"]["commands"];
   const { strings } = translator(Locale.EnglishUS);
   const slashCommand = new SlashCommandBuilder()
@@ -35,14 +35,14 @@ export function createLocalizedCommand(
       localizationObject(
         (strings) => strings.bot.commands[commandPathItem].name,
         undefined,
-        true
-      )
+        true,
+      ),
     )
     .setDescription(strings.bot.commands[commandPathItem].description)
     .setDescriptionLocalizations(
       localizationObject(
-        (strings) => strings.bot.commands[commandPathItem].description
-      )
+        (strings) => strings.bot.commands[commandPathItem].description,
+      ),
     );
 
   if (sub) {
@@ -56,7 +56,7 @@ export function createLocalizedCommand(
               }
             ).subcommands[subItem.subcommand].name,
           undefined,
-          true
+          true,
         );
         const subcommandDescriptionLocalizations = localizationObject(
           (strings) =>
@@ -64,7 +64,7 @@ export function createLocalizedCommand(
               strings.bot.commands[commandPathItem] as unknown as {
                 subcommands: Record<string, { description: string }>;
               }
-            ).subcommands[subItem.subcommand].description
+            ).subcommands[subItem.subcommand].description,
         );
 
         slashCommand.addSubcommand((option) => {
@@ -78,7 +78,7 @@ export function createLocalizedCommand(
                 strings.bot.commands[commandPathItem] as unknown as {
                   subcommands: Record<string, { description: string }>;
                 }
-              ).subcommands[subItem.subcommand].description
+              ).subcommands[subItem.subcommand].description,
             )
             .setDescriptionLocalizations(subcommandDescriptionLocalizations);
         });
@@ -91,7 +91,7 @@ export function createLocalizedCommand(
               }
             ).groups[subItem.group].name,
           undefined,
-          true
+          true,
         );
         const subcommandDescriptionLocalizations = localizationObject(
           (strings) =>
@@ -99,7 +99,7 @@ export function createLocalizedCommand(
               strings.bot.commands[commandPathItem] as unknown as {
                 groups: Record<string, { description: string }>;
               }
-            ).groups[subItem.group].description
+            ).groups[subItem.group].description,
         );
 
         slashCommand.addSubcommandGroup((option) => {
@@ -113,7 +113,7 @@ export function createLocalizedCommand(
                 strings.bot.commands[commandPathItem] as unknown as {
                   groups: Record<string, { description: string }>;
                 }
-              ).groups[subItem.group].description
+              ).groups[subItem.group].description,
             )
             .setDescriptionLocalizations(subcommandDescriptionLocalizations);
         });

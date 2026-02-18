@@ -1,9 +1,9 @@
-import { assertSecret } from '@blitzkit/core';
-import { ActivityType, ShardingManager } from 'discord.js';
+import { assertSecret } from "@blitzkit/core";
+import { ActivityType, ShardingManager } from "discord.js";
 import {
   discoveredIdsDefinitions,
   tankDefinitions,
-} from './core/blitzkit/nonBlockingPromises';
+} from "./core/blitzkit/nonBlockingPromises";
 
 let iteration = 0;
 const interval = setInterval(async () => {
@@ -11,15 +11,15 @@ const interval = setInterval(async () => {
 
   console.log(`Attempting launch on iteration ${iteration}`);
 
-  const manager = new ShardingManager('dist/bot/workers/bot.js', {
+  const manager = new ShardingManager("dist/bot/workers/bot.js", {
     token: assertSecret(import.meta.env.DISCORD_TOKEN),
   });
 
   const shards = await manager
-    .on('shardCreate', (shard) => {
+    .on("shardCreate", (shard) => {
       clearInterval(interval);
       console.log(`🟡 Launching shard ${shard.id}`);
-      shard.on('ready', () => console.log(`🟢 Launched shard ${shard.id}`));
+      shard.on("ready", () => console.log(`🟢 Launched shard ${shard.id}`));
     })
     .spawn();
 
@@ -29,7 +29,7 @@ const interval = setInterval(async () => {
     let users = 0;
 
     for (const [, shard] of shards) {
-      const guilds = (await shard.fetchClientValue('guilds.cache')) as any;
+      const guilds = (await shard.fetchClientValue("guilds.cache")) as any;
 
       servers += guilds.length;
 
@@ -66,7 +66,7 @@ const interval = setInterval(async () => {
         for (const guild of client.guilds.cache.values()) {
           try {
             const botMember = await guild.members.fetch(client.user.id);
-            await botMember.setNickname('BlitzKit');
+            await botMember.setNickname("BlitzKit");
           } catch {}
         }
       },
@@ -74,7 +74,7 @@ const interval = setInterval(async () => {
     );
   } catch (error) {
     console.warn(
-      'An error occurred when setting up presence, ignoring to keep the process alive',
+      "An error occurred when setting up presence, ignoring to keep the process alive",
       error,
     );
   }
