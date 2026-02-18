@@ -5,13 +5,13 @@ import {
   tankDefinitions,
 } from "./core/blitzkit/nonBlockingPromises";
 
+let manager: ShardingManager;
 let iteration = 0;
 const interval = setInterval(async () => {
-  iteration++;
+  console.log(`Attempting launch on iteration ${++iteration}`);
 
-  console.log(`Attempting launch on iteration ${iteration}`);
-
-  const manager = new ShardingManager("dist/bot/workers/bot.js", {
+  manager?.respawnAll();
+  manager = new ShardingManager("dist/bot/workers/bot.js", {
     token: assertSecret(import.meta.env.DISCORD_TOKEN),
   });
 
