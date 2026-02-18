@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "replay",
-        "description": "Exibir resultados de replays"
+        "description": "Exibir resultados de replays",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "pesquisa",
