@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "repetición",
-        "description": "Mostrar resultados de la repetición"
+        "description": "Mostrar resultados de la repetición",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "desarollar",
