@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "回放",
-        "description": "显示重播结果"
+        "description": "显示重播结果",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "研发",
