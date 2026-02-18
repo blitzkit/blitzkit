@@ -21,7 +21,7 @@ const interval = setInterval(async () => {
       console.log(`🟡 Launching shard ${shard.id}`);
       shard.on("ready", () => console.log(`🟢 Launched shard ${shard.id}`));
     })
-    .spawn();
+    .spawn({ timeout: 60000 });
 
   try {
     let servers = 0;
