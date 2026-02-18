@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "повтор",
-        "description": "Показать результаты повтора"
+        "description": "Показать результаты повтора",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "исследование",
