@@ -1139,8 +1139,8 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "All tanks"
           },
           "values": {
