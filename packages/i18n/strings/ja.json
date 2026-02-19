@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "replay",
-        "description": "Display replay results"
+        "description": "Display replay results",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "研究",
@@ -1005,8 +1011,8 @@
           "title": "性能値",
           "compare": {
             "label": "比較対象",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "全車輌"
           },
           "values": {
