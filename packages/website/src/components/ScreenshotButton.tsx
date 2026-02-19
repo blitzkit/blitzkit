@@ -6,7 +6,8 @@ import {
   Popover,
   type ButtonProps,
 } from "@radix-ui/themes";
-import type { RefObject } from "react";
+import { Jimp } from "jimp";
+import { useCallback, type RefObject } from "react";
 import { useLocale } from "../hooks/useLocale";
 import { screenshotReadyEvent } from "./Tankopedia/HeroSection/components/TankSandbox/components/SceneProps";
 
@@ -17,6 +18,35 @@ interface Props extends ButtonProps {
 
 export function ScreenshotButton({ canvas, name, children, ...props }: Props) {
   const { strings } = useLocale();
+
+  const screenshot = useCallback(async () => {
+    if (!canvas.current) {
+      throw new Error("Canvas not found");
+    }
+
+    screenshotReadyEvent.dispatch(true);
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      requestAnimationFrame(() => {
+        canvas.current.toBlob((blob) => {
+          screenshotReadyEvent.dispatch(false);
+
+          if (!blob) {
+            reject(new Error("Failed to capture screenshot"));
+          } else {
+            resolve(blob);
+          }
+        });
+      });
+    });
+
+    const buffer = await blob.arrayBuffer();
+    const image = await Jimp.fromBuffer(buffer);
+
+    image.autocrop();
+
+    return image;
+  }, [canvas]);
 
   return (
     <Popover.Root>
@@ -37,23 +67,13 @@ export function ScreenshotButton({ canvas, name, children, ...props }: Props) {
         <Flex direction="column" gap="2">
           <Popover.Close>
             <Button
-              onClick={() => {
-                screenshotReadyEvent.dispatch(true);
+              onClick={async () => {
+                const image = await screenshot();
+                const anchor = document.createElement("a");
 
-                requestAnimationFrame(() => {
-                  if (!canvas.current) return;
-
-                  const anchor = document.createElement("a");
-
-                  anchor.setAttribute("download", `${name}.png`);
-                  anchor.setAttribute(
-                    "href",
-                    canvas.current.toDataURL("image/png")
-                  );
-                  anchor.click();
-
-                  screenshotReadyEvent.dispatch(false);
-                });
+                anchor.setAttribute("download", `${name}.png`);
+                anchor.setAttribute("href", await image.getBase64("image/png"));
+                anchor.click();
               }}
             >
               <DownloadIcon />
@@ -63,22 +83,16 @@ export function ScreenshotButton({ canvas, name, children, ...props }: Props) {
           <Popover.Close>
             <Button
               variant="outline"
-              onClick={() => {
-                screenshotReadyEvent.dispatch(true);
-
-                requestAnimationFrame(() => {
-                  if (!canvas.current) return;
-
-                  canvas.current.toBlob((blob) => {
-                    if (!blob) return;
-
-                    navigator.clipboard.write([
-                      new ClipboardItem({ "image/png": blob }),
-                    ]);
-                  });
-
-                  screenshotReadyEvent.dispatch(false);
+              onClick={async () => {
+                const image = await screenshot();
+                const buffer = await image.getBuffer("image/png");
+                const blob = new Blob([buffer as unknown as ArrayBuffer], {
+                  type: "image/png",
                 });
+
+                navigator.clipboard.write([
+                  new ClipboardItem({ "image/png": blob }),
+                ]);
               }}
             >
               <CopyIcon />
