@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "rejouer",
-        "description": "Afficher les résultats de la relecture"
+        "description": "Afficher les résultats de la relecture",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "recherche",
@@ -1005,8 +1011,8 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare against",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "All tanks"
           },
           "values": {
