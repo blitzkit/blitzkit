@@ -129,7 +129,7 @@ const consumablesArray = Object.values(consumableDefinitions.consumables)
   .filter(
     (consumable) =>
       !consumable.game_mode_exclusive &&
-      consumable.name.locales[locales.default]
+      consumable.name.locales[locales.default],
   )
   .map((consumable) => consumable.id);
 const provisionsArray = Array.from(
@@ -137,7 +137,7 @@ const provisionsArray = Array.from(
     .filter(
       (provision) =>
         !provision.game_mode_exclusive &&
-        provision.name.locales[locales.default]
+        provision.name.locales[locales.default],
     )
     .reduce((uniqueMap, consumable) => {
       if (!uniqueMap.has(consumable.name.locales[locales.default])) {
@@ -146,7 +146,7 @@ const provisionsArray = Array.from(
 
       return uniqueMap;
     }, new Map<string, number>())
-    .values()
+    .values(),
 );
 const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.AP]: "ap",
@@ -171,7 +171,7 @@ const TANK_TYPE_COLORS: Record<TankType, string> = {
 };
 
 const GUN_TYPES = Object.keys(
-  GUN_TYPE_ICONS
+  GUN_TYPE_ICONS,
 ) as (keyof typeof GUN_TYPE_ICONS)[];
 
 const MAX_ICONS = 4;
@@ -180,7 +180,12 @@ const TIERS = times(10, (i) => 10 - i);
 
 export function FilterControl() {
   return (
-    <Flex align="center" justify="center" gap="2" wrap="wrap">
+    <Flex
+      align="center"
+      justify={{ initial: "start", md: "center" }}
+      gap="2"
+      wrap="wrap"
+    >
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
@@ -346,7 +351,7 @@ function NationsFilter() {
                 mr="-2"
                 style={{
                   backgroundImage: `url(${asset(
-                    `flags/scratched/${nation}.webp`
+                    `flags/scratched/${nation}.webp`,
                   )})`,
                   backgroundSize: "100%",
                   backgroundRepeat: "no-repeat",
@@ -437,7 +442,7 @@ function ClassFilter() {
                 TankFilters.mutate((draft) => {
                   if (selected) {
                     draft.classes = draft.classes.filter(
-                      (c) => c !== tankClass
+                      (c) => c !== tankClass,
                     );
                   } else {
                     draft.classes = [...draft.classes, tankClass];
@@ -683,7 +688,7 @@ function IndividualShellFilter({
               src={asset(
                 `icons/shells/${shellTypeIcons[shells[index]]}${
                   premium ? "_premium" : ""
-                }.webp`
+                }.webp`,
               )}
             />
           )}
@@ -718,7 +723,7 @@ function IndividualShellFilter({
                   src={asset(
                     `icons/shells/${shellTypeIcons[shellType]}${
                       premium ? "_premium" : ""
-                    }.webp`
+                    }.webp`,
                   )}
                   style={{ width: "1.25em", height: "1.25em" }}
                 />
@@ -917,7 +922,7 @@ function ConsumablesFilter() {
                 TankFilters.mutate((draft) => {
                   if (selected) {
                     draft.consumables = draft.consumables.filter(
-                      (n) => n !== consumable
+                      (n) => n !== consumable,
                     );
                   } else {
                     draft.consumables = [...draft.consumables, consumable];
@@ -1011,7 +1016,7 @@ function ProvisionsFilter() {
                 TankFilters.mutate((draft) => {
                   if (selected) {
                     draft.provisions = draft.provisions.filter(
-                      (n) => n !== provision
+                      (n) => n !== provision,
                     );
                   } else {
                     draft.provisions = [...draft.provisions, provision];
@@ -1140,7 +1145,7 @@ function GameModeAbilitiesFilter() {
                         TankFilters.mutate((draft) => {
                           if (selected) {
                             draft.abilities = draft.abilities.filter(
-                              (n) => n !== consumable
+                              (n) => n !== consumable,
                             );
                           } else {
                             draft.abilities = [...draft.abilities, consumable];
@@ -1189,7 +1194,7 @@ function GameModeAbilitiesFilter() {
                         TankFilters.mutate((draft) => {
                           if (selected) {
                             draft.powers = draft.powers.filter(
-                              (n) => n !== provision
+                              (n) => n !== provision,
                             );
                           } else {
                             draft.powers = [...draft.powers, provision];
