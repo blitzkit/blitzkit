@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "回放",
-        "description": "显示重播结果"
+        "description": "显示重播结果",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "研发",
@@ -1005,8 +1011,8 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "{tier}阶 {class}",
-            "tier": "所有 {tier} 阶",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "所有坦克"
           },
           "values": {
