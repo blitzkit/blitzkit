@@ -325,8 +325,8 @@
         "description": "Показати результати реплею",
         "options": {
           "file": {
-            "name": "file",
-            "description": "Replay file"
+            "name": "",
+            "description": "Replay filehttps://crowdin.com/editor/blitzkrieg/80/en-uk?view=side-by-side#9706"
           }
         }
       },
