@@ -5,11 +5,11 @@ export function getBestLocale() {
     localStorage.getItem("preferred-locale") ??
     navigator.language.split("-")[0];
   const isSupported = locales.supported.some(
-    ({ locale }) => locale === desiredLocale
+    ({ locale }) => locale === desiredLocale,
   );
   const isDefault = desiredLocale === locales.default;
 
-  if (!isSupported || isDefault) return undefined;
+  if (!isSupported || isDefault) return locales.default;
 
   return desiredLocale;
 }

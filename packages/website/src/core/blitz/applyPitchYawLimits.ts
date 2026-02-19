@@ -2,9 +2,9 @@ import {
   normalizeAngleRad,
   type PitchLimits,
   type YawLimits,
-} from '@blitzkit/core';
-import { clamp } from 'lodash-es';
-import { degToRad } from 'three/src/math/MathUtils.js';
+} from "@blitzkit/core";
+import { clamp } from "lodash-es";
+import { degToRad } from "three/src/math/MathUtils.js";
 
 export const DEFAULT_PITCH_TRANSITION = 15;
 
@@ -87,5 +87,5 @@ export function applyPitchYawLimits(
 
   newPitch = clamp(newPitch, lowerPitch, upperPitch);
 
-  return [newPitch, newYaw] as const;
+  return [newPitch, normalizeAngleRad(newYaw)] as const;
 }

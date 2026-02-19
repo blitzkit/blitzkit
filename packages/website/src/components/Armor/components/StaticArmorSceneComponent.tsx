@@ -1,5 +1,5 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
-import { useThree } from "@react-three/fiber";
+import { invalidate, useThree } from "@react-three/fiber";
 import { clamp } from "lodash-es";
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useMemo, type ComponentProps } from "react";
@@ -91,7 +91,7 @@ export function StaticArmorSceneComponent({
       color = new Color(
         clamp(1 - (7 / 8) * xClamped, 0, 1),
         0,
-        clamp(1 - (1 / 8) * xClamped, 0, 1)
+        clamp(1 - (1 / 8) * xClamped, 0, 1),
       );
       opacity = clamp(x + 1 / 2, 0, 1);
       break;
@@ -115,7 +115,7 @@ export function StaticArmorSceneComponent({
         opacity: 0,
         userData: { opacity0: opacity },
       }),
-    [thickness]
+    [thickness],
   );
   const outlineMaterial = useMemo(
     () =>
@@ -126,7 +126,7 @@ export function StaticArmorSceneComponent({
         opacity: 0,
         transparent: true,
       }),
-    [thickness]
+    [thickness],
   );
 
   useEffect(() => {
@@ -165,7 +165,10 @@ export function StaticArmorSceneComponent({
       }
 
       surfaceMaterial.needsUpdate = true;
+      invalidate();
     }
+
+    handleHighlightArmor();
 
     function handleTransitionEvent(event: QuicklimeEvent<number>) {
       surfaceMaterial.opacity = surfaceMaterial.userData.opacity0 * event.data;
@@ -180,7 +183,7 @@ export function StaticArmorSceneComponent({
     const unsubscribes = [
       Tankopedia.on(
         (state) => state.highlightArmor?.name,
-        handleHighlightArmor
+        handleHighlightArmor,
       ),
       () => transitionEvent.off(handleTransitionEvent),
     ];
@@ -194,14 +197,14 @@ export function StaticArmorSceneComponent({
       const { clip } = props;
       const gunOrigin = unrotateDavaVector(props.gunOrigin.clone());
       const neckOrigin = unrotateDavaVector(props.hullOrigin.clone()).add(
-        unrotateDavaVector(props.turretOrigin.clone())
+        unrotateDavaVector(props.turretOrigin.clone()),
       );
       const barrelOrigin = neckOrigin.clone().add(gunOrigin);
       const distanceToBarrel = clip.distanceToPoint(barrelOrigin);
       const point = new Vector3();
 
       function handleModelTransform(
-        event: QuicklimeEvent<ModelTransformEventData>
+        event: QuicklimeEvent<ModelTransformEventData>,
       ) {
         clip.normal
           .set(0, 0, -1)
@@ -266,7 +269,7 @@ export function StaticArmorSceneComponent({
                 const surfaceNormal = event
                   .normal!.clone()
                   .applyQuaternion(
-                    event.object.getWorldQuaternion(new Quaternion())
+                    event.object.getWorldQuaternion(new Quaternion()),
                   );
                 const angle = surfaceNormal.angleTo(cameraNormal);
                 const thicknessAngled =

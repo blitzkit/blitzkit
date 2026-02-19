@@ -1,15 +1,10 @@
 import { build } from "esbuild";
 import { cp, readdir, rm } from "fs/promises";
-import { argv } from "process";
-
-const dev = argv.includes("--dev");
 
 const projectDir = "../..";
 const srcRoot = `${projectDir}/packages/bot`;
 const distRoot = `${projectDir}/dist/bot`;
-const modulesRoot = dev
-  ? "../../packages/bot/node_modules"
-  : "../../node_modules";
+const modulesRoot = "../../node_modules";
 const workers = await readdir(`${srcRoot}/src/workers`);
 
 await rm(distRoot, { recursive: true, force: true });
@@ -30,9 +25,9 @@ build({
   },
   external: ["sharp"],
   minifyIdentifiers: false, // causes goofy ahh issues
-  minifySyntax: !dev,
-  minifyWhitespace: !dev,
-  sourcemap: !dev,
+  minifySyntax: true,
+  minifyWhitespace: true,
+  sourcemap: true,
   jsxImportSource: "react",
   jsx: "automatic",
 });
@@ -44,18 +39,16 @@ for (const module of await readdir(`${modulesRoot}/@resvg`)) {
       .map((file) =>
         cp(
           `${modulesRoot}/@resvg/${module}/${file}`,
-          `${distRoot}/workers/${file}`
-        )
-      )
+          `${distRoot}/workers/${file}`,
+        ),
+      ),
   );
 }
 
-if (!dev) {
-  await cp(`${projectDir}/prisma`, `${distRoot}/prisma`, { recursive: true });
+await cp(`${projectDir}/prisma`, `${distRoot}/prisma`, { recursive: true });
 
-  for (const file of await readdir(`${modulesRoot}/prisma`).then((files) =>
-    files.filter((file) => file.endsWith(".node"))
-  )) {
-    cp(`${modulesRoot}/prisma/${file}`, `${distRoot}/prisma/${file}`);
-  }
+for (const file of await readdir(`${modulesRoot}/prisma`).then((files) =>
+  files.filter((file) => file.endsWith(".node")),
+)) {
+  cp(`${modulesRoot}/prisma/${file}`, `${distRoot}/prisma/${file}`);
 }

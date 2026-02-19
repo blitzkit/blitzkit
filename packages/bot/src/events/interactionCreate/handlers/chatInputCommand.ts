@@ -17,12 +17,11 @@ import { translator } from "../../../core/localization/translator";
 import type { Writeable } from "../../../types/writable";
 
 export async function handleChatInputCommand(
-  interaction: ChatInputCommandInteraction<CacheType>
+  interaction: ChatInputCommandInteraction<CacheType>,
 ) {
   await interaction.deferReply();
 
-  const awaitedCommands = await commands;
-  const registry = awaitedCommands[interaction.commandName];
+  const registry = commands[interaction.commandName];
 
   try {
     const returnable = await registry.handler(interaction);
@@ -36,7 +35,7 @@ export async function handleChatInputCommand(
         if (typeof object === "string") {
           chunks.push([object]);
         } else chunks.at(-1)?.push(object!);
-      }
+      },
     );
 
     let index = 0;
@@ -59,7 +58,7 @@ export async function handleChatInputCommand(
         } else if (psa.data.type === "image") {
           if (!reply.files) reply.files = [];
           (reply.files as Writeable<typeof reply.files>).push(
-            new AttachmentBuilder(psa.data.image)
+            new AttachmentBuilder(psa.data.image),
           );
           reply.content = reply.content ?? psa.data.title;
         }
@@ -72,7 +71,7 @@ export async function handleChatInputCommand(
           (
             reply.components[0] as ActionRowBuilder<ButtonBuilder>
           ).addComponents(
-            psa.data.links.map(({ title, url }) => buttonLink(url, title))
+            psa.data.links.map(({ title, url }) => buttonLink(url, title)),
           );
         }
       }
@@ -103,7 +102,7 @@ export async function handleChatInputCommand(
         } else if (psa.data.type === "image") {
           if (!followUp.files) followUp.files = [];
           (followUp.files as Writeable<typeof followUp.files>).push(
-            new AttachmentBuilder(psa.data.image)
+            new AttachmentBuilder(psa.data.image),
           );
           followUp.content = followUp.content ?? psa.data.title;
         }
@@ -116,7 +115,7 @@ export async function handleChatInputCommand(
           (
             followUp.components[0] as ActionRowBuilder<ButtonBuilder>
           ).addComponents(
-            psa.data.links.map(({ title, url }) => buttonLink(url, title))
+            psa.data.links.map(({ title, url }) => buttonLink(url, title)),
           );
         }
 
@@ -133,7 +132,7 @@ export async function handleChatInputCommand(
         new ButtonBuilder()
           .setLabel(strings.bot.common.errors.get_help)
           .setURL("https://discord.gg/nDt7AjGJQH")
-          .setStyle(ButtonStyle.Link)
+          .setStyle(ButtonStyle.Link),
       ),
     ];
     if (error instanceof UserError) {

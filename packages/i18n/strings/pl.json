@@ -493,7 +493,7 @@
         "description": "Search clans",
         "options": {
           "limit": {
-            "name": "limit",
+            "name": "",
             "description": "The max number of clan results (default: {limit})"
           }
         },
@@ -507,7 +507,7 @@
         "description": "Search players",
         "options": {
           "limit": {
-            "name": "limit",
+            "name": "",
             "description": "The max number of player results (default: {limit})"
           }
         },
@@ -531,7 +531,7 @@
         },
         "options": {
           "limit": {
-            "name": "limit",
+            "name": "",
             "description": "How many neighbors to display (default: {count})"
           },
           "season": {
@@ -675,7 +675,7 @@
         "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "No tanks found.",
-          "search_again": "Try searching again.",
+          "search_again": "",
           "clear_filters": "Try clearing filters."
         },
         "sort": {

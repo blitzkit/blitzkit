@@ -1,6 +1,6 @@
-import { assertSecret } from '@blitzkit/core';
-import { registerProcesses } from '../core/blitzkit/processes';
-import { client } from '../core/discord/client';
+import { assertSecret } from "@blitzkit/core";
+import { registerProcesses } from "../core/blitzkit/processes";
+import { client } from "../core/discord/client";
 
 console.log(`🟡 Launching bot ${client.shard?.ids[0]}`);
 

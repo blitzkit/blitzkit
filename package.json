@@ -14,7 +14,7 @@
     "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
     "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
     "build:app": "cd packages/app && bun run build",
-    "dev:bot": "bun run build:bot --dev && bun start:bot",
+    "dev:bot": "bun run build:bot --dev && bun start:bot --dev",
     "start:bot": "bun dist/bot/main.js",
     "dev:docs": "vitepress dev docs",
     "dev:website": "cd packages/website-ue && bun run dev",
@@ -47,6 +47,7 @@
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@prisma/client": "^6.18.0",
     "prisma": "^6.18.0",
+    "sharp": "^0.34.5",
     "typescript": "^5.9.3"
   }
 }

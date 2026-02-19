@@ -1,7 +1,7 @@
 import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
 import { translator } from "../core/localization/translator";
 import {
-  COMMANDS_RAW,
+  commandsArray,
   type CommandRegistry,
 } from "../events/interactionCreate";
 
@@ -35,7 +35,7 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
 
       if (subcommand === "commands") {
         return `${strings.bot.commands.about.subcommands.commands.body}${(
-          await Promise.all(COMMANDS_RAW)
+          await Promise.all(commandsArray)
         )
           .sort((a, b) =>
             (a.command.name_localizations?.[interaction.locale] ??
@@ -43,7 +43,7 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
             (b.command.name_localizations?.[interaction.locale] ??
               b.command.name)
               ? -1
-              : 1
+              : 1,
           )
           .map(
             (registry) =>
@@ -54,7 +54,7 @@ export const aboutCommand = new Promise<CommandRegistry>(async (resolve) => {
                 registry.command.description_localizations?.[
                   interaction.locale
                 ] ?? registry.command.description
-              }`
+              }`,
           )
           .join("\n")}`;
       }

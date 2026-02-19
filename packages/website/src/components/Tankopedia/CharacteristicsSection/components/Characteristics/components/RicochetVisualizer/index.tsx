@@ -30,9 +30,11 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
     <Flex direction="column" mb="6" align="center">
       <VisualizerCard
         mb="0"
-        style={{ width: "100%" }}
+        style={{ width: "100%", touchAction: "none" }}
         ref={container}
         onPointerMove={(event) => {
+          event.preventDefault();
+
           if (!container.current || explodes) return;
 
           const rect = container.current.getBoundingClientRect();
@@ -174,7 +176,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
               ? "-"
               : literals(strings.common.units.deg, {
                   value: radToDeg(
-                    Math.min(normalization, Math.abs(angle))
+                    Math.min(normalization, Math.abs(angle)),
                   ).toFixed(0),
                 })
           }

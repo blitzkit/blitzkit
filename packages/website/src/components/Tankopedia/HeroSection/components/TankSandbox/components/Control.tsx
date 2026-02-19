@@ -55,17 +55,17 @@ export function Controls({
   const protagonistHullOrigin = new Vector3(
     protagonistTrackModelDefinition.origin.x,
     protagonistTrackModelDefinition.origin.y,
-    -protagonistTrackModelDefinition.origin.z
+    -protagonistTrackModelDefinition.origin.z,
   );
   const protagonistTurretOrigin = new Vector3(
     protagonistModelDefinition.turret_origin.x,
     protagonistModelDefinition.turret_origin.y,
-    -protagonistModelDefinition.turret_origin.z
+    -protagonistModelDefinition.turret_origin.z,
   );
   const protagonistGunOrigin = new Vector3(
     protagonistTurretModelDefinition.gun_origin.x,
     protagonistTurretModelDefinition.gun_origin.y,
-    -protagonistTurretModelDefinition.gun_origin.z
+    -protagonistTurretModelDefinition.gun_origin.z,
   );
   const antagonistGunHeight =
     protagonistTrackModelDefinition.origin.y +
@@ -106,12 +106,12 @@ export function Controls({
       const hasImprovedVerticalStabilizer = hasEquipment(
         122,
         Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix
+        Duel.state.protagonist.equipmentMatrix,
       );
       const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
         Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix
+        Duel.state.protagonist.equipmentMatrix,
       );
 
       switch (event) {
@@ -122,7 +122,7 @@ export function Controls({
             protagonistGunModelDefinition.pitch,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           camera.position
@@ -134,14 +134,14 @@ export function Controls({
               new Vector3(
                 0,
                 poseDistances[event] * Math.sin(pitch),
-                poseDistances[event] * -Math.cos(pitch)
-              )
+                poseDistances[event] * -Math.cos(pitch),
+              ),
             );
           camera.lookAt(
             protagonistHullOrigin
               .clone()
               .add(protagonistTurretOrigin)
-              .add(protagonistGunOrigin)
+              .add(protagonistGunOrigin),
           );
           orbitControls.current?.target.set(0, antagonistGunHeight, 0);
 
@@ -155,7 +155,7 @@ export function Controls({
             protagonistGunModelDefinition.pitch,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           camera.position
@@ -167,8 +167,8 @@ export function Controls({
               new Vector3(
                 0,
                 poseDistances[event] * Math.sin(pitch),
-                poseDistances[event] * -Math.cos(pitch)
-              )
+                poseDistances[event] * -Math.cos(pitch),
+              ),
             );
           orbitControls.current?.target
             .set(0, 0, 0)
@@ -179,8 +179,8 @@ export function Controls({
               new Vector3(
                 0,
                 0.5 * poseDistances[event] * Math.sin(pitch),
-                0.5 * poseDistances[event] * -Math.cos(pitch)
-              )
+                0.5 * poseDistances[event] * -Math.cos(pitch),
+              ),
             );
 
           break;
@@ -251,7 +251,7 @@ export function Controls({
   return (
     <OrbitControls
       enableRotate={enableRotate}
-      maxDistance={20}
+      maxDistance={40}
       minDistance={5}
       enableZoom={zoomable}
       zoomSpeed={zoomable ? undefined : 0}

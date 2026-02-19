@@ -47,7 +47,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const gunModelDefinition = turretModelDefinition.guns[protagonistGun.id];
     const display = Tankopedia.use((state) => state.display);
     const hideTankModelUnderArmor = TankopediaPersistent.use(
-      (state) => state.hideTankModelUnderArmor
+      (state) => state.hideTankModelUnderArmor,
     );
 
     useImperativeHandle(ref, () => canvas.current!, []);
@@ -76,7 +76,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
-              hasDownImprovedVerticalStabilizer
+              hasDownImprovedVerticalStabilizer,
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -90,7 +90,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               0,
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
-              hasImprovedVerticalStabilizer
+              hasImprovedVerticalStabilizer,
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -104,7 +104,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
               0,
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
-              hasImprovedVerticalStabilizer
+              hasImprovedVerticalStabilizer,
             );
 
             modelTransformEvent.dispatch({ pitch, yaw });
@@ -126,7 +126,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         modelTransformEvent.last!.yaw,
         gunModelDefinition.pitch,
         turretModelDefinition.yaw,
-        hasImprovedVerticalStabilizer
+        hasImprovedVerticalStabilizer,
       );
 
       modelTransformEvent.dispatch({ pitch, yaw });
@@ -145,8 +145,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         });
       }
     }, [display]);
-
-    console.log(TankopediaDisplay[display]);
 
     return (
       <SmartCanvas
@@ -196,5 +194,5 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
         <InitialAligner />
       </SmartCanvas>
     );
-  }
+  },
 );
