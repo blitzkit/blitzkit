@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
-import { Mesh, Object3D } from "three";
+import { Mesh, MeshStandardMaterial, Object3D } from "three";
 
 export function jsxTree(
   node: Object3D,
@@ -7,14 +7,14 @@ export function jsxTree(
     mesh?: (
       mesh: Mesh,
       props: ComponentProps<"mesh">,
-      key: string
+      key: string,
     ) => ReactNode;
     group?: (
       object3d: Object3D,
       props: ComponentProps<"group">,
-      key: string
+      key: string,
     ) => ReactNode;
-  }
+  },
 ): ReactNode {
   if (node instanceof Mesh) {
     const props = {
@@ -24,6 +24,10 @@ export function jsxTree(
       rotation: node.rotation,
       scale: node.scale,
     };
+
+    if (props.material instanceof MeshStandardMaterial) {
+      props.material.depthWrite = true;
+    }
 
     return mergers?.mesh ? (
       mergers.mesh(node, props, node.uuid)

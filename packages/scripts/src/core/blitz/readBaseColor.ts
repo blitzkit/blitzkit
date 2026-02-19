@@ -2,6 +2,7 @@ import sharp from "sharp";
 import { readTexture } from "./readTexture";
 
 export async function readBaseColor(path: string, occlusionPath?: string) {
+  let hasAlpha = false;
   const baseRaw = await readTexture(path);
   const occlusionRaw = occlusionPath
     ? await readTexture(occlusionPath)
@@ -30,10 +31,13 @@ export async function readBaseColor(path: string, occlusionPath?: string) {
       c = occlusion![occlusionI] / 255;
     }
 
+    const alpha = base[i * 4 + 3];
+    hasAlpha ||= alpha < 255;
+
     combined[i * 4 + 0] = Math.round(base[i * 4 + 0] * c);
     combined[i * 4 + 1] = Math.round(base[i * 4 + 1] * c);
     combined[i * 4 + 2] = Math.round(base[i * 4 + 2] * c);
-    combined[i * 4 + 3] = base[i * 4 + 3];
+    combined[i * 4 + 3] = alpha;
   }
 
   const image = await sharp(combined, {
@@ -42,5 +46,5 @@ export async function readBaseColor(path: string, occlusionPath?: string) {
     .webp()
     .toBuffer();
 
-  return image;
+  return { hasAlpha, image };
 }

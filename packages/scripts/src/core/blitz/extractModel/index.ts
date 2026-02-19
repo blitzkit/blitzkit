@@ -61,20 +61,17 @@ export async function extractModel(vfs: SteamVFS, path: string) {
     }
 
     if (textures) {
+      const { image: baseColor, hasAlpha } = await readBaseColor(
+        `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+        textures.miscMap
+          ? `Data/3d/${dirname(path)}/${textures.miscMap}`
+          : undefined,
+      );
       material.setBaseColorTexture(
         document
           .createTexture(node.materialName)
           .setMimeType("image/webp")
-          .setImage(
-            await readBaseColor(
-              `Data/3d/${dirname(path)}/${
-                textures.baseColorMap ?? textures.albedo
-              }`,
-              textures.miscMap
-                ? `Data/3d/${dirname(path)}/${textures.miscMap}`
-                : undefined,
-            ),
-          ),
+          .setImage(baseColor),
       );
 
       if (node.configCount) {
@@ -83,15 +80,7 @@ export async function extractModel(vfs: SteamVFS, path: string) {
           configIndex < node.configCount;
           configIndex++
         ) {
-          const archive = node[`configArchive_${configIndex}`];
-
-          if (
-            archive.configName !== "Default" ||
-            !archive.enabledPresets?.AlphaTest
-          ) {
-            continue;
-          }
-
+          if (!hasAlpha) continue;
           material.setAlphaMode("BLEND").setDoubleSided(true);
         }
       }
