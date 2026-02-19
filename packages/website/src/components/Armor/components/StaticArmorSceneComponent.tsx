@@ -168,6 +168,8 @@ export function StaticArmorSceneComponent({
       invalidate();
     }
 
+    handleHighlightArmor();
+
     function handleTransitionEvent(event: QuicklimeEvent<number>) {
       surfaceMaterial.opacity = surfaceMaterial.userData.opacity0 * event.data;
       outlineMaterial.opacity = event.data;
