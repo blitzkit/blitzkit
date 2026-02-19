@@ -4,7 +4,7 @@ import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 
-const SIZE = 2 ** 6;
+const SIZE = 2 ** 10;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
