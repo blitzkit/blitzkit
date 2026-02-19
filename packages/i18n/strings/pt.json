@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "replay",
-        "description": "Exibir resultados de replays"
+        "description": "Exibir resultados de replays",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "pesquisa",
@@ -1005,8 +1011,8 @@
           "title": "Características",
           "compare": {
             "label": "Comparar com",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "Todos os tanques"
           },
           "values": {
