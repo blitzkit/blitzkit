@@ -3,12 +3,12 @@ import {
   resolveDpm,
   unionBoundingBox,
   type TankDefinition,
-} from '@blitzkit/core';
-import { useMemo } from 'react';
-import { awaitableModelDefinitions } from '../../../core/awaitables/modelDefinitions';
-import { resolveReload } from '../../../core/blitzkit/resolveReload';
-import { TankSort } from '../../../stores/tankopediaSort';
-import { TankCard } from '../../TankCard';
+} from "@blitzkit/core";
+import { useMemo } from "react";
+import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
+import { resolveReload } from "../../../core/blitzkit/resolveReload";
+import { TankSort } from "../../../stores/tankopediaSort";
+import { TankCard } from "../../TankCard";
 
 interface TankSearchCardProps {
   tank: TankDefinition;
@@ -20,7 +20,7 @@ const modelDefinitions = await awaitableModelDefinitions;
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
   const by = TankSort.use((state) => state.by);
   const discriminator = useMemo(() => {
-    if (by.startsWith('meta')) return undefined;
+    if (by.startsWith("meta")) return undefined;
 
     const turret = tank.turrets.at(-1)!;
     const gun = turret.guns.at(-1)!;
@@ -34,53 +34,53 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
     const gunModelDefinition = turretModelDefinition.guns[gun.id];
 
     switch (by) {
-      case 'fire.aimTime':
+      case "fire.aimTime":
         return gun.aim_time.toFixed(2);
-      case 'fire.caliber':
+      case "fire.caliber":
         return shell0.caliber.toFixed(0);
-      case 'fire.damage':
+      case "fire.damage":
         return shell0.armor_damage.toFixed(0);
-      case 'fire.moduleDamage':
+      case "fire.moduleDamage":
         return shell0.module_damage.toFixed(0);
-      case 'fire.dispersionMoving':
+      case "fire.dispersionMoving":
         return tracks.dispersion_move.toFixed(3);
-      case 'fire.dispersionStill':
+      case "fire.dispersionStill":
         return gun.dispersion_base.toFixed(3);
-      case 'fire.dpm':
+      case "fire.dpm":
         return resolveDpm(gun, shell0).toFixed(0);
-      case 'fire.dpmPremium':
-        return shell1 ? resolveDpm(gun, shell1).toFixed(0) : '--';
-      case 'fire.reload':
+      case "fire.dpmPremium":
+        return shell1 ? resolveDpm(gun, shell1).toFixed(0) : "--";
+      case "fire.reload":
         return resolveReload(gun).toFixed(2);
-      case 'fire.standardPenetration':
-        return shell0.penetration.near.toFixed(0);
-      case 'fire.premiumPenetration':
-        return shell1 ? shell1.penetration.near.toFixed(0) : '--';
-      case 'fire.tertiaryPenetration':
-        return shell1 ? shell2.penetration.near.toFixed(0) : '--';
-      case 'fire.shellVelocity':
+      case "fire.standardPenetration":
+        return shell0?.penetration.near.toFixed(0);
+      case "fire.premiumPenetration":
+        return shell1 ? shell1?.penetration.near.toFixed(0) : "--";
+      case "fire.tertiaryPenetration":
+        return shell1 ? shell2?.penetration.near.toFixed(0) : "--";
+      case "fire.shellVelocity":
         return shell0.velocity.toFixed(0);
-      case 'fire.shellCapacity':
+      case "fire.shellCapacity":
         return gun.shell_capacity.toFixed(0);
-      case 'fire.shellRange':
+      case "fire.shellRange":
         return shell0.range.toFixed(0);
-      case 'fire.gunDepression':
+      case "fire.gunDepression":
         return (
           gunModelDefinition.pitch.max +
           (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
         ).toFixed(1);
-      case 'fire.gunElevation':
+      case "fire.gunElevation":
         return (
           -gunModelDefinition.pitch.min -
           (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
         ).toFixed(1);
-      case 'maneuverability.forwardsSpeed':
+      case "maneuverability.forwardsSpeed":
         return tank.speed_forwards.toFixed(0);
-      case 'maneuverability.backwardsSpeed':
+      case "maneuverability.backwardsSpeed":
         return tank.speed_backwards.toFixed(0);
-      case 'maneuverability.power':
+      case "maneuverability.power":
         return engine.power.toFixed(0);
-      case 'maneuverability.powerToWeight':
+      case "maneuverability.powerToWeight":
         return (
           (1000 * engine.power) /
           (tank.weight +
@@ -89,7 +89,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
             turret.weight +
             gun.weight)
         ).toFixed(1);
-      case 'maneuverability.weight':
+      case "maneuverability.weight":
         return (
           (tank.weight +
             engine.weight +
@@ -98,19 +98,19 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
             gun.weight) /
           1000
         ).toFixed(1);
-      case 'maneuverability.traverseSpeed':
+      case "maneuverability.traverseSpeed":
         return tracks.traverse_speed.toFixed(1);
-      case 'survivability.health':
+      case "survivability.health":
         return (tank.health + turret.health).toFixed(0);
-      case 'survivability.viewRange':
+      case "survivability.viewRange":
         return turret.view_range.toFixed(0);
-      case 'survivability.camouflageStill':
+      case "survivability.camouflageStill":
         return (tank.camouflage_still * 100).toFixed(0);
-      case 'survivability.camouflageMoving':
+      case "survivability.camouflageMoving":
         return (tank.camouflage_moving * 100).toFixed(0);
-      case 'survivability.camouflageShooting':
+      case "survivability.camouflageShooting":
         return (tank.camouflage_still * gun.camouflage_loss * 100).toFixed(0);
-      case 'survivability.volume': {
+      case "survivability.volume": {
         const dimensions = normalizeBoundingBox(
           unionBoundingBox(
             tankModelDefinition.bounding_box,
@@ -121,7 +121,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return (dimensions.x * dimensions.y * dimensions.z).toFixed(0);
       }
 
-      case 'survivability.length': {
+      case "survivability.length": {
         const bounds = normalizeBoundingBox(
           unionBoundingBox(
             tankModelDefinition.bounding_box,
