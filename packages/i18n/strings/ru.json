@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "повтор",
-        "description": "Показать результаты повтора"
+        "description": "Показать результаты повтора",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "исследование",
@@ -1005,8 +1011,8 @@
           "title": "Характеристики",
           "compare": {
             "label": "Сравнивать с",
-            "class": "{class} {tier} уровня",
-            "tier": "Все {tier} уровня",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "Все танки"
           },
           "values": {
