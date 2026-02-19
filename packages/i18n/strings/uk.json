@@ -23,7 +23,7 @@
     },
     "shells": {
       "ap": "ББ",
-      "ap_cr": "APCR",
+      "ap_cr": "",
       "hc": "HEAT",
       "he": "ОФ"
     },
@@ -322,7 +322,13 @@
     "commands": {
       "replay": {
         "name": "реплей",
-        "description": "Показати результати реплею"
+        "description": "Показати результати реплею",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "дослідження",
@@ -1005,8 +1011,8 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare against",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "Усі танки"
           },
           "values": {
