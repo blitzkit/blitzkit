@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
+import { Fog } from "three";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
@@ -155,6 +156,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           preserveDrawingBuffer: true,
           logarithmicDepthBuffer: true,
         }}
+        scene={{ fog: new Fog("black", 0, 720 * 2) }}
         shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {

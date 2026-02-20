@@ -1,4 +1,5 @@
-import { invalidate, useFrame, useThree } from "@react-three/fiber";
+import { I_HAT, J_HAT } from "@blitzkit/core";
+import { invalidate, useThree } from "@react-three/fiber";
 import { Quicklime } from "quicklime";
 import { useEffect } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
@@ -35,38 +36,66 @@ export function Controls({}: ControlsProps) {
     camera.position.copy(initialPosition);
     camera.lookAt(center);
 
-    canvas.addEventListener("wheel", (event) => {
+    function handleWheel(event: WheelEvent) {
       event.preventDefault();
 
       const distance0 = temp.copy(camera.position).sub(center).length();
       const x = (distance0 - minL) / (maxL - minL);
-      const scrollSpeed = (6 * x + 1) / 10;
-      const deltaDistance = event.deltaY * scrollSpeed;
+      const scrollSpeed = 2 ** 8 * x + 1;
+      const deltaDistance = (event.deltaY / window.innerHeight) * scrollSpeed;
 
       const distance = clamp(distance0 + deltaDistance, minL, maxL);
+
+      const fov = Math.atan2(height / 2 + padding, distance);
+      const dFov = fov - degToRad((camera as PerspectiveCamera).fov);
 
       camera.position
         .sub(center)
         .normalize()
         .multiplyScalar(distance)
         .add(center);
+      camera.lookAt(center);
 
+      (camera as PerspectiveCamera).fov += radToDeg(dFov);
+      camera.updateProjectionMatrix();
+
+      invalidate();
+    }
+
+    function handlePointerDown() {
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
+    }
+
+    function handlePointerMove(event: PointerEvent) {
+      event.preventDefault();
+
+      const dx = event.movementX / window.innerWidth;
+      const dy = event.movementY / window.innerHeight;
+
+      camera.position
+        .sub(center)
+        .applyAxisAngle(J_HAT, -Math.PI * dx)
+        .applyAxisAngle(I_HAT, Math.PI * dy)
+        .add(center);
       camera.lookAt(center);
 
       invalidate();
-    });
+    }
+
+    function handlePointerUp() {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    }
+
+    canvas.addEventListener("wheel", handleWheel);
+    canvas.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      canvas.removeEventListener("wheel", handleWheel);
+      canvas.removeEventListener("pointerdown", handlePointerDown);
+    };
   }, [canvas]);
-
-  useFrame(({ clock }) => {
-    const distance = temp.copy(camera.position).sub(center).length();
-    const fov = Math.atan2(height / 2 + padding, distance);
-    const dFov = fov - degToRad((camera as PerspectiveCamera).fov);
-
-    (camera as PerspectiveCamera).fov += radToDeg(dFov / 50);
-    camera.updateProjectionMatrix();
-
-    invalidate();
-  });
 
   return null;
 }
