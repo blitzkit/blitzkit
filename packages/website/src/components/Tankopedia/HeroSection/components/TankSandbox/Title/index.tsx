@@ -29,14 +29,16 @@ export function Title() {
       position="absolute"
       align="center"
       justify="center"
-      top={revealed ? (disturbed ? "3rem" : "6rem") : "50%"}
+      top={revealed ? "-4rem" : "50%"}
       left="50%"
       width="100%"
       height={revealed ? fontSize : "100%"}
       style={{
         pointerEvents: revealed ? "none" : undefined,
         transitionDuration: "1s",
-        transform: "translate(-50%, -50%)",
+        transform: revealed
+          ? "translate(-50%, -100%)"
+          : "translate(-50%, -50%)",
       }}
     >
       <Heading

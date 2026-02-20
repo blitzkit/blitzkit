@@ -27,7 +27,7 @@ import { AutoClear } from "./components/AutoClear";
 import { Controls } from "./components/Control";
 import { InitialAligner } from "./components/InitialAligner";
 import { Lighting } from "./components/Lighting";
-import { SceneProps } from "./components/SceneProps";
+import { MAX_ZOOM_DISTANCE, SceneProps } from "./components/SceneProps";
 import { TankModel } from "./components/TankModel";
 
 interface TankSandboxProps {
@@ -156,7 +156,9 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           preserveDrawingBuffer: true,
           logarithmicDepthBuffer: true,
         }}
-        scene={{ fog: new Fog("black", 0, 720 * 2) }}
+        scene={{
+          fog: new Fog("black", MAX_ZOOM_DISTANCE, MAX_ZOOM_DISTANCE * 2),
+        }}
         shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {

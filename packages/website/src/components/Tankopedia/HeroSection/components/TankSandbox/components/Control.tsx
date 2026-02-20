@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
+import { MAX_ZOOM_DISTANCE } from "./SceneProps";
 
 export interface ZoomEventData {
   distance: number;
@@ -16,7 +17,7 @@ export const zoomEvent = new Quicklime<ZoomEventData>();
 const modelDefinitions = await awaitableModelDefinitions;
 const initialPosition = new Vector3(-8, 2, -13);
 const minL = 5;
-const maxL = 720;
+const maxL = MAX_ZOOM_DISTANCE;
 
 const temp = new Vector3();
 

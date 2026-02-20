@@ -54,12 +54,12 @@ type OptionsProps = MaybeSkeletonComponentProps & {
 
 export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
-    (state) => state.customShell !== undefined
+    (state) => state.customShell !== undefined,
   );
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
-    (state) => state.advancedHighlighting
+    (state) => state.advancedHighlighting,
   );
   const fullScreenAvailable = useFullscreenAvailability(true);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
@@ -102,7 +102,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
-                  antagonistShell.type
+                  antagonistShell.type,
                 ) * antagonistShell.penetration.near
               ).toFixed(0),
             })}

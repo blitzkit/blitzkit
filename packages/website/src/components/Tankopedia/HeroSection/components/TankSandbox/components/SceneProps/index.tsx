@@ -4,7 +4,8 @@ import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 
-const SIZE = 2 ** 10;
+export const MAX_ZOOM_DISTANCE = 720;
+const SIZE = MAX_ZOOM_DISTANCE * 2;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
