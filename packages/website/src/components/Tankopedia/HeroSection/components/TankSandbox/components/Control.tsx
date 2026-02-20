@@ -7,6 +7,7 @@ import { Mesh, PerspectiveCamera, Vector3 } from "three";
 import { FontLoader, TextGeometry } from "three-stdlib";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
+import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { MAX_ZOOM_DISTANCE } from "./SceneProps";
 
 export interface ZoomEventData {
@@ -26,9 +27,30 @@ const temp = new Vector3();
 interface ControlsProps {}
 
 export function Controls({}: ControlsProps) {
-  const font = useLoader(FontLoader, "/assets/fonts/dseg7-classic-bold.json");
-  const text = useRef<Mesh>(null!);
-  const size = 0.5;
+  const dsegFont = useLoader(
+    FontLoader,
+    "/assets/fonts/dseg7-classic-bold.json",
+  );
+  const dotoFont = useLoader(FontLoader, "/assets/fonts/doto-black.json");
+  const range = useRef<Mesh>(null!);
+
+  const textSize = 0.25;
+  const textHeight = textSize * 2 ** -5;
+  const screenWidth = textSize * 7.5;
+  const screenHeight = textSize * 3;
+  const screenFloorHeight = 1;
+  const screenPadding = 2 ** -4;
+  const emptyGeometry = new TextGeometry("888", {
+    font: dsegFont,
+    size: textSize,
+    height: textHeight,
+  });
+  const descriptionText = new TextGeometry("RANGE\nMETER", {
+    font: dotoFont,
+    size: textSize / 2,
+    height: textHeight,
+  });
+  const screenThickness = 0.1;
 
   const camera = useThree((state) => state.camera);
   const canvas = useThree((state) => state.gl.domElement);
@@ -70,11 +92,17 @@ export function Controls({}: ControlsProps) {
       camera.updateProjectionMatrix();
 
       const geometry = new TextGeometry(distance.toFixed(0).padStart(3, "0"), {
-        font,
-        size,
-        height: size * 2 ** -3,
+        font: dsegFont,
+        size: textSize,
+        height: textHeight,
       });
-      text.current.geometry = geometry;
+      range.current.geometry = geometry;
+
+      if (!Tankopedia.state.disturbed) {
+        Tankopedia.mutate((draft) => {
+          draft.disturbed = true;
+        });
+      }
 
       invalidate();
     }
@@ -115,10 +143,84 @@ export function Controls({}: ControlsProps) {
   }, [canvas]);
 
   return (
-    <Center position={[-4, 1, 0]}>
-      <mesh ref={text} rotation={[0, Math.PI, 0]}>
-        <meshBasicMaterial color="#080ff80" />
+    <group position={[-4, screenFloorHeight, 0]}>
+      <mesh position={[0, 0, screenThickness / 2]}>
+        <boxGeometry args={[screenWidth, screenHeight, screenThickness]} />
+        <meshStandardMaterial roughness={0} metalness={1} color="#000000" />
       </mesh>
-    </Center>
+
+      <group position={[0, 0, screenThickness / 2 + textHeight]}>
+        <mesh castShadow>
+          <boxGeometry
+            args={[
+              screenWidth + screenPadding * 2,
+              screenHeight + screenPadding * 2,
+              screenThickness,
+            ]}
+          />
+          <meshStandardMaterial roughness={1} metalness={0} color="#202020" />
+        </mesh>
+
+        <mesh
+          castShadow
+          position={[
+            screenWidth / 3,
+            -screenFloorHeight / 2 - screenHeight / 4,
+            0,
+          ]}
+        >
+          <cylinderGeometry
+            args={[
+              screenThickness / 2,
+              screenThickness / 2,
+              screenFloorHeight - screenHeight / 2,
+              8,
+              1,
+              true,
+            ]}
+          />
+          <meshStandardMaterial roughness={1} metalness={0} color="#202020" />
+        </mesh>
+
+        <mesh
+          castShadow
+          position={[
+            -screenWidth / 3,
+            -screenFloorHeight / 2 - screenHeight / 4,
+            0,
+          ]}
+        >
+          <cylinderGeometry
+            args={[
+              screenThickness / 2,
+              screenThickness / 2,
+              screenFloorHeight - screenHeight / 2,
+              8,
+              1,
+              true,
+            ]}
+          />
+          <meshStandardMaterial roughness={1} metalness={0} color="#202020" />
+        </mesh>
+      </group>
+
+      <Center>
+        <Center>
+          <mesh geometry={emptyGeometry} rotation={[0, Math.PI, 0]}>
+            <meshBasicMaterial color="#352323" />
+          </mesh>
+
+          <mesh ref={range} rotation={[0, Math.PI, 0]}>
+            <meshBasicMaterial color="#ff003e" />
+          </mesh>
+        </Center>
+
+        <Center position={[-textSize * 3.5, 0, 0]}>
+          <mesh geometry={descriptionText} rotation={[0, Math.PI, 0]}>
+            <meshBasicMaterial color="#ff003e" />
+          </mesh>
+        </Center>
+      </Center>
+    </group>
   );
 }
