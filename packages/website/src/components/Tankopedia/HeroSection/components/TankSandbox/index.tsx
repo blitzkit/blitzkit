@@ -5,7 +5,6 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { Fog } from "three";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
@@ -27,7 +26,7 @@ import { AutoClear } from "./components/AutoClear";
 import { Controls } from "./components/Control";
 import { InitialAligner } from "./components/InitialAligner";
 import { Lighting } from "./components/Lighting";
-import { MAX_ZOOM_DISTANCE, SceneProps } from "./components/SceneProps";
+import { SceneProps } from "./components/SceneProps";
 import { TankModel } from "./components/TankModel";
 
 interface TankSandboxProps {
@@ -155,9 +154,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           localClippingEnabled: true,
           preserveDrawingBuffer: true,
           logarithmicDepthBuffer: true,
-        }}
-        scene={{
-          fog: new Fog("black", MAX_ZOOM_DISTANCE, MAX_ZOOM_DISTANCE * 2),
         }}
         shadows="soft"
         onPointerDown={handlePointerDown}

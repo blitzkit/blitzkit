@@ -17,9 +17,10 @@ const THETA_OFFSET = degToRad(-152);
 const LIGHT_DISTANCE = 13;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 2;
-const INTENSITY_0 = 3.5;
-const INTENSITY_1 = 1.5;
+const INTENSITY_0 = 3.5 * 2;
+const INTENSITY_1 = 1.5 * 2;
 const HEMISPHERE_INTENSITY = 2;
+const DECAY = 0.25;
 
 export const transitionEvent = new Quicklime<number>(0);
 
@@ -50,7 +51,7 @@ export function Lighting() {
     const x = clamp(
       (clock.elapsedTime - t0.current) / animationTime.current,
       0,
-      2
+      2,
     );
     const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
 
@@ -107,7 +108,7 @@ export function Lighting() {
             intensity={intensity}
             penumbra={1}
             castShadow={highGraphics}
-            decay={0}
+            decay={DECAY}
             color="#ffffff"
             angle={0}
           />

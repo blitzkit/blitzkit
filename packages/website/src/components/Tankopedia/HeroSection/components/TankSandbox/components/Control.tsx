@@ -28,22 +28,25 @@ export function Controls({}: ControlsProps) {
   const canvas = useThree((state) => state.gl.domElement);
 
   const height = 3;
-  const padding = 4;
+  const padding = 5;
   const center = new Vector3(0, height / 2, 0);
 
   useEffect(() => {
     if (!(camera instanceof PerspectiveCamera)) return;
 
     camera.position.copy(initialPosition);
-    camera.lookAt(center);
+    scroll(0);
 
     function handleWheel(event: WheelEvent) {
       event.preventDefault();
+      scroll(event.deltaY);
+    }
 
+    function scroll(deltaY: number) {
       const distance0 = temp.copy(camera.position).sub(center).length();
       const x = (distance0 - minL) / (maxL - minL);
       const scrollSpeed = 2 ** 8 * x + 1;
-      const deltaDistance = (event.deltaY / window.innerHeight) * scrollSpeed;
+      const deltaDistance = (deltaY / window.innerHeight) * scrollSpeed;
 
       const distance = clamp(distance0 + deltaDistance, minL, maxL);
 
