@@ -1,8 +1,10 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
-import { invalidate, useThree } from "@react-three/fiber";
+import { Center } from "@react-three/drei";
+import { invalidate, useLoader, useThree } from "@react-three/fiber";
 import { Quicklime } from "quicklime";
-import { useEffect } from "react";
-import { PerspectiveCamera, Vector3 } from "three";
+import { useEffect, useRef } from "react";
+import { Mesh, PerspectiveCamera, Vector3 } from "three";
+import { FontLoader, TextGeometry } from "three-stdlib";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
 import { MAX_ZOOM_DISTANCE } from "./SceneProps";
@@ -24,6 +26,10 @@ const temp = new Vector3();
 interface ControlsProps {}
 
 export function Controls({}: ControlsProps) {
+  const font = useLoader(FontLoader, "/assets/fonts/dseg7-classic-bold.json");
+  const text = useRef<Mesh>(null!);
+  const size = 0.5;
+
   const camera = useThree((state) => state.camera);
   const canvas = useThree((state) => state.gl.domElement);
 
@@ -63,6 +69,13 @@ export function Controls({}: ControlsProps) {
       (camera as PerspectiveCamera).fov += radToDeg(dFov);
       camera.updateProjectionMatrix();
 
+      const geometry = new TextGeometry(distance.toFixed(0).padStart(3, "0"), {
+        font,
+        size,
+        height: size * 2 ** -3,
+      });
+      text.current.geometry = geometry;
+
       invalidate();
     }
 
@@ -101,5 +114,11 @@ export function Controls({}: ControlsProps) {
     };
   }, [canvas]);
 
-  return null;
+  return (
+    <Center position={[-4, 1, 0]}>
+      <mesh ref={text} rotation={[0, Math.PI, 0]}>
+        <meshBasicMaterial color="#080ff80" />
+      </mesh>
+    </Center>
+  );
 }
