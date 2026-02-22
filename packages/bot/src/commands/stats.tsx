@@ -6,35 +6,25 @@ import { NoData } from "../components/NoData";
 import { TitleBar } from "../components/TitleBar";
 import { filtersToDescription } from "../core/blitzkit/filtersToDescription";
 import { filterStats, type StatFilters } from "../core/blitzstars/filterStats";
-import { getBlitzStarsLinkButton } from "../core/blitzstars/getBlitzStarsLinkButton";
 import { getStatsInPeriod } from "../core/blitzstars/getStatsInPeriod";
 import { addPeriodicFilterOptions } from "../core/discord/addPeriodicFilterOptions";
 import { addUsernameChoices } from "../core/discord/addUsernameChoices";
 import { autocompleteTanks } from "../core/discord/autocompleteTanks";
 import { autocompleteUsername } from "../core/discord/autocompleteUsername";
-import { buttonRefresh } from "../core/discord/buttonRefresh";
-import { commandToURL } from "../core/discord/commandToURL";
 import { createLocalizedCommand } from "../core/discord/createLocalizedCommand";
-import { getCustomPeriodParams } from "../core/discord/getCustomPeriodParams";
 import { getFiltersFromButton } from "../core/discord/getFiltersFromButton";
-import { getFiltersFromCommand } from "../core/discord/getFiltersFromCommand";
 import { resolvePeriodFromButton } from "../core/discord/resolvePeriodFromButton";
-import {
-  type ResolvedPeriod,
-  resolvePeriodFromCommand,
-} from "../core/discord/resolvePeriodFromCommand";
+import { type ResolvedPeriod } from "../core/discord/resolvePeriodFromCommand";
 import { resolvePlayerFromButton } from "../core/discord/resolvePlayerFromButton";
-import {
-  type ResolvedPlayer,
-  resolvePlayerFromCommand,
-} from "../core/discord/resolvePlayerFromCommand";
+import { type ResolvedPlayer } from "../core/discord/resolvePlayerFromCommand";
+import { translator } from "../core/localization/translator";
 import type { CommandRegistry } from "../events/interactionCreate";
 
 async function render(
   { region, id }: ResolvedPlayer,
   { start, end, name }: ResolvedPeriod,
   filters: StatFilters,
-  locale: Locale
+  locale: Locale,
 ) {
   const { nickname } = await getAccountInfo(region, id);
   const clan = (await getClanAccountInfo(region, id, ["clan"]))?.clan;
@@ -44,7 +34,7 @@ async function render(
     id,
     start,
     end,
-    locale
+    locale,
   );
   const { stats, supplementary } = await filterStats(diffedTankStats, filters);
   const filterDescriptions = await filtersToDescription(filters, locale);
@@ -73,24 +63,27 @@ export const statsCommand = new Promise<CommandRegistry>(async (resolve) => {
   resolve({
     command: await addPeriodicFilterOptions(
       createLocalizedCommand("stats"),
-      (option) => option.addStringOption(addUsernameChoices)
+      (option) => option.addStringOption(addUsernameChoices),
     ),
 
     async handler(interaction) {
-      const player = await resolvePlayerFromCommand(interaction);
-      const period = resolvePeriodFromCommand(player.region, interaction);
-      const filters = await getFiltersFromCommand(interaction);
-      const path = commandToURL(interaction, {
-        ...player,
-        ...getCustomPeriodParams(interaction),
-        ...filters,
-      });
+      const { strings } = translator(interaction.locale);
+      return strings.bot.commands.dead;
 
-      return Promise.all([
-        render(player, period, filters, interaction.locale),
-        buttonRefresh(interaction, path),
-        getBlitzStarsLinkButton(player.region, player.id),
-      ]);
+      // const player = await resolvePlayerFromCommand(interaction);
+      // const period = resolvePeriodFromCommand(player.region, interaction);
+      // const filters = await getFiltersFromCommand(interaction);
+      // const path = commandToURL(interaction, {
+      //   ...player,
+      //   ...getCustomPeriodParams(interaction),
+      //   ...filters,
+      // });
+
+      // return Promise.all([
+      //   render(player, period, filters, interaction.locale),
+      //   buttonRefresh(interaction, path),
+      //   getBlitzStarsLinkButton(player.region, player.id),
+      // ]);
     },
 
     autocomplete: (interaction) => {
