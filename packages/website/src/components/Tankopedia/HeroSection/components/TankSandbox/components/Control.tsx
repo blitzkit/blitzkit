@@ -1,4 +1,3 @@
-import { I_HAT, J_HAT } from "@blitzkit/core";
 import { invalidate, useThree } from "@react-three/fiber";
 import { Quicklime } from "quicklime";
 import { useEffect } from "react";
@@ -81,14 +80,29 @@ export function Controls({}: ControlsProps) {
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
 
+      temp.copy(camera.position).sub(center);
+
+      const r = temp.length();
       const dx = event.movementX / window.innerWidth;
       const dy = event.movementY / window.innerHeight;
 
-      camera.position
-        .sub(center)
-        .applyAxisAngle(J_HAT, -Math.PI * dx)
-        .applyAxisAngle(I_HAT, Math.PI * dy)
-        .add(center);
+      const dTheta = -dx * Math.PI;
+      const dPhi = -dy * Math.PI;
+
+      const theta = Math.atan2(temp.x, temp.z) + dTheta;
+      const phi0 = Math.acos(temp.y / r);
+      let phi = phi0 + dPhi;
+
+      if (phi < 0 || phi > Math.PI) phi = phi0;
+
+      temp
+        .set(
+          Math.sin(phi) * Math.sin(theta),
+          Math.cos(phi),
+          Math.sin(phi) * Math.cos(theta),
+        )
+        .multiplyScalar(r);
+      camera.position.copy(center).add(temp);
       camera.lookAt(center);
 
       invalidate();
