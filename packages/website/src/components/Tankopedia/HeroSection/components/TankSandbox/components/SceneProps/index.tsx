@@ -2,18 +2,15 @@ import { invalidate, useFrame } from "@react-three/fiber";
 import { clamp } from "lodash-es";
 import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
-import { BackSide, Mesh, MeshStandardMaterial } from "three";
+import { Mesh, MeshStandardMaterial } from "three";
 
 export const MAX_ZOOM_DISTANCE = 720;
-const PLANE_SIZE = MAX_ZOOM_DISTANCE;
-const CYLINDER_RADIUS = 5;
-const CYLINDER_FACES = 5;
+const PLANE_SIZE = MAX_ZOOM_DISTANCE * 2;
 
 const material = new MeshStandardMaterial({
   color: "black",
   roughness: 1,
   metalness: 0,
-  side: BackSide,
   transparent: true,
 });
 
@@ -40,50 +37,8 @@ export function SceneProps() {
   }, []);
 
   return (
-    <>
-      <group
-        position={[0, 0, CYLINDER_RADIUS]}
-        ref={wrapper}
-        visible={!screenshotReadyEvent.last!}
-      >
-        <mesh
-          position={[0, 0, -(PLANE_SIZE - CYLINDER_RADIUS) / 2]}
-          rotation={[Math.PI / 2, 0, 0]}
-          receiveShadow
-          material={material}
-        >
-          <planeGeometry args={[PLANE_SIZE, PLANE_SIZE - CYLINDER_RADIUS]} />
-        </mesh>
-
-        <mesh
-          position={[0, PLANE_SIZE / 2 + CYLINDER_RADIUS / 2, CYLINDER_RADIUS]}
-          rotation={[Math.PI, Math.PI, 0]}
-          receiveShadow
-          material={material}
-        >
-          <planeGeometry args={[PLANE_SIZE, PLANE_SIZE - CYLINDER_RADIUS]} />
-        </mesh>
-
-        <mesh
-          position={[0, CYLINDER_RADIUS, 0]}
-          rotation={[0, 0, -Math.PI / 2]}
-          receiveShadow
-          material={material}
-        >
-          <cylinderGeometry
-            args={[
-              CYLINDER_RADIUS,
-              CYLINDER_RADIUS,
-              PLANE_SIZE,
-              CYLINDER_FACES,
-              1,
-              true,
-              0,
-              Math.PI / 2,
-            ]}
-          />
-        </mesh>
-      </group>
-    </>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow material={material}>
+      <planeGeometry args={[PLANE_SIZE, PLANE_SIZE]} />
+    </mesh>
   );
 }

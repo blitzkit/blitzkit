@@ -24,7 +24,7 @@ Game 3D model parsing.
 
 ### Aeson
 
-Game file layout, general advise, advertisement, and Tankopedia pre-release testing.
+General game engine architecture and asset advice, marketing coordination, pre-release Tankopedia validation and QA testing, UI/UX consulting and optimization.
 
 ### Minitelrose, ChickenMan7777
 
