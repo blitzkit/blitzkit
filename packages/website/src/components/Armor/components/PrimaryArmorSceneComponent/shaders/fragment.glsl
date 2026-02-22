@@ -1,5 +1,8 @@
 precision mediump float;
 
+#include <common>
+#include <logdepthbuf_pars_fragment>
+
 varying vec3 vNormal;
 varying vec3 vViewPosition;
 
@@ -117,4 +120,6 @@ void main() {
   }
 
   gl_FragColor.a *= opacity;
+
+  #include <logdepthbuf_fragment>
 }

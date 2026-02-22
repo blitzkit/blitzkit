@@ -1,3 +1,6 @@
+#include <common>
+#include <logdepthbuf_pars_fragment>
+
 precision mediump float;
 
 varying vec3 vNormal;
@@ -15,12 +18,13 @@ void main() {
   bool threeCalibersRule = caliber > thickness * 3.0;
   if (!threeCalibersRule && angle >= ricochet) {
     gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-    return;
+  } else {
+    bool twoCalibersRule = caliber > thickness * 2.0 && thickness > 0.0;
+    float finalNormalization = twoCalibersRule ? ((1.4 * normalization * caliber) / (2.0 * thickness)) : normalization;
+    float finalThickness = thickness / cos(max(0.0, angle - finalNormalization));
+
+    gl_FragColor = vec4(finalThickness / penetration, 0.0, 0.0, 1.0);
   }
 
-  bool twoCalibersRule = caliber > thickness * 2.0 && thickness > 0.0;
-  float finalNormalization = twoCalibersRule ? ((1.4 * normalization * caliber) / (2.0 * thickness)) : normalization;
-  float finalThickness = thickness / cos(max(0.0, angle - finalNormalization));
-
-  gl_FragColor = vec4(finalThickness / penetration, 0.0, 0.0, 1.0);
+  #include <logdepthbuf_fragment>
 }

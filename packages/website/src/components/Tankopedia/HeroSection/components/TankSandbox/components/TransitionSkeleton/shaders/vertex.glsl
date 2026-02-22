@@ -3,6 +3,8 @@ precision mediump float;
 #define USE_FOG
 
 #include <fog_pars_vertex>
+#include <common>
+#include <logdepthbuf_pars_vertex>
 
 varying vec3 vNormal;
 varying vec3 vViewPosition;

@@ -83,7 +83,7 @@ export function SpacedArmorSceneComponent({
       point: Vector3,
       intersections: Intersection[],
       allowRicochet: boolean,
-      remainingPenetrationInput?: number
+      remainingPenetrationInput?: number,
     ) => {
       const { customShell } = Tankopedia.state;
       const shell = customShell ?? Duel.state.antagonist.shell;
@@ -103,12 +103,12 @@ export function SpacedArmorSceneComponent({
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        Duel.state.antagonist.equipmentMatrix
+        Duel.state.antagonist.equipmentMatrix,
       );
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix
+        Duel.state.protagonist.equipmentMatrix,
       );
       const penetration =
         shell.penetration.near *
@@ -117,7 +117,7 @@ export function SpacedArmorSceneComponent({
       const filteredIntersections = intersections.filter(
         (intersection) =>
           "type" in intersection.object.userData &&
-          !discardClippingPlane(intersection.object, intersection.point)
+          !discardClippingPlane(intersection.object, intersection.point),
       ) as unknown as Intersection<Object3D & { userData: ArmorUserData }>[];
       const encounteredExternalModuleVariants: ExternalModuleVariant[] = [];
       const noDuplicateIntersections: typeof filteredIntersections = [];
@@ -126,12 +126,12 @@ export function SpacedArmorSceneComponent({
         if (intersection.object.userData.type === ArmorType.External) {
           if (
             !encounteredExternalModuleVariants.includes(
-              intersection.object.userData.variant
+              intersection.object.userData.variant,
             )
           ) {
             noDuplicateIntersections.push(intersection);
             encounteredExternalModuleVariants.push(
-              intersection.object.userData.variant
+              intersection.object.userData.variant,
             );
           }
         } else {
@@ -159,7 +159,7 @@ export function SpacedArmorSceneComponent({
         const surfaceNormal = intersection
           .normal!.clone()
           .applyQuaternion(
-            intersection.object.getWorldQuaternion(new Quaternion())
+            intersection.object.getWorldQuaternion(new Quaternion()),
           );
 
         if (shell.type === ShellType.HEAT && index > 0) {
@@ -200,7 +200,7 @@ export function SpacedArmorSceneComponent({
         } else {
           const thickness = layer.thickness * thicknessCoefficient;
           const ricochet = degToRad(
-            isExplosive(shell.type) ? 90 : shell.ricochet!
+            isExplosive(shell.type) ? 90 : shell.ricochet!,
           );
           const angle = surfaceNormal.angleTo(cameraNormal);
 
@@ -279,10 +279,10 @@ export function SpacedArmorSceneComponent({
 
               return acc + layer.thicknessAngled;
             },
-            0
+            0,
           );
           const distanceFromSpacedArmor = firstLayer.point.distanceTo(
-            lastLayer.point
+            lastLayer.point,
           );
           const finalDamage = Math.max(
             0,
@@ -291,7 +291,7 @@ export function SpacedArmorSceneComponent({
               (1 - distanceFromSpacedArmor / shell.explosion_radius!) -
               1.1 *
                 (lastLayer.thicknessAngled +
-                  Math.min(penetration, totalSpacedArmorThickness))
+                  Math.min(penetration, totalSpacedArmorThickness)),
           );
 
           /**
@@ -328,20 +328,20 @@ export function SpacedArmorSceneComponent({
               .sub(
                 lastLayer.surfaceNormal
                   .clone()
-                  .multiplyScalar(2 * shellNormal.dot(lastLayer.surfaceNormal))
+                  .multiplyScalar(2 * shellNormal.dot(lastLayer.surfaceNormal)),
               );
 
             caster.set(lastLayer.point, ricochetNormal);
 
             const ricochetIntersections = caster.intersectObjects(
               props.scene.children,
-              true
+              true,
             );
             const outShot = shoot(
               lastLayer.point,
               ricochetIntersections,
               false,
-              remainingPenetration
+              remainingPenetration,
             );
 
             shot.in.status = "ricochet";
@@ -363,7 +363,7 @@ export function SpacedArmorSceneComponent({
 
       return shot;
     },
-    [camera]
+    [camera],
   );
 
   return (

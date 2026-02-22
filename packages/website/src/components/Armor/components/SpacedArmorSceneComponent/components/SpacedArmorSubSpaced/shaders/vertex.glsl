@@ -1,3 +1,6 @@
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
 precision mediump float;
 
 varying vec3 vNormal;
@@ -10,4 +13,6 @@ void main() {
   vNormal = normalMatrix * normal;
 
   gl_Position = projectionMatrix * vViewPosition4;
+
+  #include <logdepthbuf_vertex>
 }
