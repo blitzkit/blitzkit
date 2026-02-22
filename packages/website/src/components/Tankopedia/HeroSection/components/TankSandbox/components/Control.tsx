@@ -1,7 +1,8 @@
+import { I_HAT, J_HAT } from "@blitzkit/core";
 import { invalidate, useThree } from "@react-three/fiber";
 import { Quicklime } from "quicklime";
 import { useEffect } from "react";
-import { PerspectiveCamera, Vector3 } from "three";
+import { PerspectiveCamera, Quaternion, Vector3 } from "three";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
@@ -19,7 +20,8 @@ const initialPosition = new Vector3(-8, 2, -13);
 const minL = 5;
 const maxL = MAX_ZOOM_DISTANCE;
 
-const temp = new Vector3();
+const tempVector = new Vector3();
+const tempQuaternion = new Quaternion();
 
 interface ControlsProps {}
 
@@ -43,7 +45,7 @@ export function Controls({}: ControlsProps) {
     }
 
     function scroll(deltaY: number) {
-      const distance0 = temp.copy(camera.position).sub(center).length();
+      const distance0 = tempVector.copy(camera.position).sub(center).length();
       const x = (distance0 - minL) / (maxL - minL);
       const scrollSpeed = 2 ** 8 * x + 1;
       const deltaDistance = (deltaY / window.innerHeight) * scrollSpeed;
@@ -58,7 +60,6 @@ export function Controls({}: ControlsProps) {
         .normalize()
         .multiplyScalar(distance)
         .add(center);
-      camera.lookAt(center);
 
       (camera as PerspectiveCamera).fov += radToDeg(dFov);
       camera.updateProjectionMatrix();
@@ -80,30 +81,32 @@ export function Controls({}: ControlsProps) {
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
 
-      temp.copy(camera.position).sub(center);
+      tempVector.copy(camera.position).sub(center);
 
-      const r = temp.length();
+      const r = tempVector.length();
       const dx = event.movementX / window.innerWidth;
       const dy = event.movementY / window.innerHeight;
 
       const dTheta = -dx * Math.PI;
       const dPhi = -dy * Math.PI;
 
-      const theta = Math.atan2(temp.x, temp.z) + dTheta;
-      const phi0 = Math.acos(temp.y / r);
+      const theta = Math.atan2(tempVector.x, tempVector.z) + dTheta;
+      const phi0 = Math.acos(tempVector.y / r);
       let phi = phi0 + dPhi;
 
       if (phi < 0 || phi > Math.PI) phi = phi0;
 
-      temp
+      tempVector
         .set(
           Math.sin(phi) * Math.sin(theta),
           Math.cos(phi),
           Math.sin(phi) * Math.cos(theta),
         )
         .multiplyScalar(r);
-      camera.position.copy(center).add(temp);
-      camera.lookAt(center);
+      camera.position.copy(center).add(tempVector);
+
+      tempQuaternion.setFromAxisAngle(I_HAT, phi - Math.PI / 2);
+      camera.quaternion.setFromAxisAngle(J_HAT, theta).multiply(tempQuaternion);
 
       invalidate();
     }
