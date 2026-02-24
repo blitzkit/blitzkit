@@ -134,12 +134,12 @@ export function TankModel() {
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
               Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix
+              Duel.state.protagonist.equipmentMatrix,
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
               Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix
+              Duel.state.protagonist.equipmentMatrix,
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -153,7 +153,7 @@ export function TankModel() {
               gunModelDefinition.pitch,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
-              hasDownImprovedVerticalStabilizer
+              hasDownImprovedVerticalStabilizer,
             );
             modelTransformEvent.dispatch({ pitch, yaw });
           }
@@ -217,12 +217,12 @@ export function TankModel() {
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -234,7 +234,7 @@ export function TankModel() {
                 gunModelDefinition.pitch,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
-                hasDownImprovedVerticalStabilizer
+                hasDownImprovedVerticalStabilizer,
               );
               modelTransformEvent.dispatch({ pitch, yaw });
             }

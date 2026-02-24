@@ -27,6 +27,7 @@ export function jsxTree(
 
     if (props.material instanceof MeshStandardMaterial) {
       props.material.depthWrite = true;
+      props.material.alphaTest = -1;
     }
 
     return mergers?.mesh ? (

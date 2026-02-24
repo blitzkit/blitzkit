@@ -1,13 +1,13 @@
-import { mauveDark } from '@radix-ui/colors';
-import { LineBasicMaterial, MeshBasicMaterial } from 'three';
-import { awaitableModelDefinitions } from '../../../../../../../../core/awaitables/modelDefinitions';
-import { jsxTree } from '../../../../../../../../core/blitzkit/jsxTree';
-import { useModel } from '../../../../../../../../hooks/useModel';
-import { Duel } from '../../../../../../../../stores/duel';
+import { mauveDark } from "@radix-ui/colors";
+import { LineBasicMaterial, MeshBasicMaterial } from "three";
+import { awaitableModelDefinitions } from "../../../../../../../../core/awaitables/modelDefinitions";
+import { jsxTree } from "../../../../../../../../core/blitzkit/jsxTree";
+import { useModel } from "../../../../../../../../hooks/useModel";
+import { Duel } from "../../../../../../../../stores/duel";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
-const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
+const surfaceMaterial: Record<Props["only"], MeshBasicMaterial> = {
   gun: new MeshBasicMaterial({
     color: mauveDark.mauve8,
     toneMapped: false,
@@ -23,7 +23,7 @@ const surfaceMaterial: Record<Props['only'], MeshBasicMaterial> = {
     opacity: 0.5,
   }),
 };
-const outlineMaterial: Record<Props['only'], LineBasicMaterial> = {
+const outlineMaterial: Record<Props["only"], LineBasicMaterial> = {
   gun: new LineBasicMaterial({
     color: mauveDark.mauve11,
     toneMapped: false,
@@ -41,7 +41,7 @@ const outlineMaterial: Record<Props['only'], LineBasicMaterial> = {
 };
 
 interface Props {
-  only: 'gun' | 'turret' | 'body';
+  only: "gun" | "turret" | "body";
 }
 
 export function ModelChunk({ only }: Props) {
@@ -64,25 +64,25 @@ export function ModelChunk({ only }: Props) {
       {nodes.map((node) => {
         const isCurrentMantlet =
           node.name ===
-          `gun_${gunModel.model_id.toString().padStart(2, '0')}_mask`;
+          `gun_${gunModel.model_id.toString().padStart(2, "0")}_mask`;
         const isCurrentGun =
-          node.name === `gun_${gunModel.model_id.toString().padStart(2, '0')}`;
+          node.name === `gun_${gunModel.model_id.toString().padStart(2, "0")}`;
         const isGun = isCurrentGun || isCurrentMantlet;
 
         const isCurrentTurret =
           node.name ===
-          `turret_${turretModel.model_id.toString().padStart(2, '0')}`;
+          `turret_${turretModel.model_id.toString().padStart(2, "0")}`;
         const isTurret = isCurrentTurret;
 
-        const isHull = node.name === 'hull';
-        const isWheel = node.name.startsWith('chassis_wheel_');
-        const isTrack = node.name.startsWith('chassis_track_');
+        const isHull = node.name === "hull";
+        const isWheel = node.name.startsWith("chassis_wheel_");
+        const isTrack = node.name.startsWith("chassis_track_");
         const isBody = isHull || isWheel || isTrack;
 
         if (
-          (only === 'gun' && !isGun) ||
-          (only === 'turret' && !isTurret) ||
-          (only === 'body' && !isBody)
+          (only === "gun" && !isGun) ||
+          (only === "turret" && !isTurret) ||
+          (only === "body" && !isBody)
         ) {
           return null;
         }
