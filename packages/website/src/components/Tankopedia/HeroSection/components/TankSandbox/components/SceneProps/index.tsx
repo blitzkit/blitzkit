@@ -4,6 +4,7 @@ import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 
+export const MIN_ZOOM_DISTANCE = 5;
 export const MAX_ZOOM_DISTANCE = 720;
 const PLANE_SIZE = MAX_ZOOM_DISTANCE * 2;
 

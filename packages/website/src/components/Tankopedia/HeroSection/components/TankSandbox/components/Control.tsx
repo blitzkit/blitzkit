@@ -1,14 +1,16 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
 import { invalidate, useThree } from "@react-three/fiber";
-import { Quicklime } from "quicklime";
+import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect } from "react";
 import { PerspectiveCamera, Quaternion, Vector3 } from "three";
-import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { clamp, radToDeg } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { MAX_ZOOM_DISTANCE } from "./SceneProps";
+import { MAX_ZOOM_DISTANCE, MIN_ZOOM_DISTANCE } from "./SceneProps";
 
 export interface ZoomEventData {
+  height: number;
+  padding: number;
   distance: number;
   fov: number;
 }
@@ -17,11 +19,21 @@ export const zoomEvent = new Quicklime<ZoomEventData>();
 
 const modelDefinitions = await awaitableModelDefinitions;
 const initialPosition = new Vector3(-8, 2, -13);
-const minL = 5;
-const maxL = MAX_ZOOM_DISTANCE;
 
 const tempVector = new Vector3();
 const tempQuaternion = new Quaternion();
+
+export function distanceToFov(
+  height: number,
+  padding: number,
+  distance: number,
+) {
+  return Math.atan2(height / 2 + padding, distance);
+}
+
+export function fovToDistance(height: number, padding: number, fov: number) {
+  return (height / 2 + padding) / Math.tan(fov);
+}
 
 interface ControlsProps {}
 
@@ -39,29 +51,15 @@ export function Controls({}: ControlsProps) {
     camera.position.copy(initialPosition);
     scroll(0);
 
-    function handleWheel(event: WheelEvent) {
-      event.preventDefault();
-      scroll(event.deltaY);
-    }
-
-    function scroll(deltaY: number) {
-      const distance0 = tempVector.copy(camera.position).sub(center).length();
-      const x = (distance0 - minL) / (maxL - minL);
-      const scrollSpeed = 2 ** 8 * x + 1;
-      const deltaDistance = (deltaY / window.innerHeight) * scrollSpeed;
-
-      const distance = clamp(distance0 + deltaDistance, minL, maxL);
-
-      const fov = Math.atan2(height / 2 + padding, distance);
-      const dFov = fov - degToRad((camera as PerspectiveCamera).fov);
-
+    function handleZoom(event: QuicklimeEvent<ZoomEventData>) {
+      console.log(event.data.distance);
       camera.position
         .sub(center)
         .normalize()
-        .multiplyScalar(distance)
+        .multiplyScalar(event.data.distance)
         .add(center);
 
-      (camera as PerspectiveCamera).fov += radToDeg(dFov);
+      (camera as PerspectiveCamera).fov = radToDeg(event.data.fov);
       camera.updateProjectionMatrix();
 
       if (!Tankopedia.state.disturbed) {
@@ -71,6 +69,29 @@ export function Controls({}: ControlsProps) {
       }
 
       invalidate();
+    }
+
+    function handleWheel(event: WheelEvent) {
+      event.preventDefault();
+      scroll(event.deltaY);
+    }
+
+    function scroll(deltaY: number) {
+      const distance0 = tempVector.copy(camera.position).sub(center).length();
+      const x =
+        (distance0 - MIN_ZOOM_DISTANCE) /
+        (MAX_ZOOM_DISTANCE - MIN_ZOOM_DISTANCE);
+      const scrollSpeed = 2 ** 8 * x + 1;
+      const deltaDistance = (deltaY / window.innerHeight) * scrollSpeed;
+
+      const distance = clamp(
+        distance0 + deltaDistance,
+        MIN_ZOOM_DISTANCE,
+        MAX_ZOOM_DISTANCE,
+      );
+      const fov = distanceToFov(height, padding, distance);
+
+      zoomEvent.dispatch({ distance, fov, height, padding });
     }
 
     function handlePointerDown() {
@@ -118,10 +139,12 @@ export function Controls({}: ControlsProps) {
 
     canvas.addEventListener("wheel", handleWheel);
     canvas.addEventListener("pointerdown", handlePointerDown);
+    zoomEvent.on(handleZoom);
 
     return () => {
       canvas.removeEventListener("wheel", handleWheel);
       canvas.removeEventListener("pointerdown", handlePointerDown);
+      zoomEvent.off(handleZoom);
     };
   }, [canvas]);
 

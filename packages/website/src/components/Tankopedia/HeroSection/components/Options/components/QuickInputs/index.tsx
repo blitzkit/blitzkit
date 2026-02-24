@@ -11,6 +11,7 @@ import {
 import { useEquipment } from "../../../../../../../hooks/useEquipment";
 import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
 import { Duel } from "../../../../../../../stores/duel";
+import { ZoomControls } from "./components/ZoomControls";
 import "./index.css";
 
 export function QuickInputs() {
@@ -28,7 +29,7 @@ export function QuickInputs() {
 
   useEffect(() => {
     function handleTransformEvent(
-      event: QuicklimeEvent<ModelTransformEventData>
+      event: QuicklimeEvent<ModelTransformEventData>,
     ) {
       if (!pitchInput.current || !yawInput.current) return;
 
@@ -48,6 +49,8 @@ export function QuickInputs() {
       modelTransformEvent.off(handleTransformEvent);
     };
   }, []);
+
+  return <ZoomControls />;
 
   return (
     <Flex
@@ -75,7 +78,7 @@ export function QuickInputs() {
 
           if (isNaN(value)) {
             yawInput.current!.value = radToDeg(
-              modelTransformEvent.last!.yaw
+              modelTransformEvent.last!.yaw,
             ).toFixed(1);
             return;
           }
@@ -86,12 +89,12 @@ export function QuickInputs() {
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
           yawInput.current!.value = radToDeg(
-            modelTransformEvent.last!.yaw
+            modelTransformEvent.last!.yaw,
           ).toFixed(1);
         }}
         onKeyDown={(event) => {
@@ -128,7 +131,7 @@ export function QuickInputs() {
             gunModelDefinition.pitch,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
           modelTransformEvent.dispatch({ pitch, yaw });
           pitchInput.current!.value = (
