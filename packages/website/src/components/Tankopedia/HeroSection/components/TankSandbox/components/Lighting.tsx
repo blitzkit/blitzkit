@@ -17,10 +17,10 @@ const THETA_OFFSET = degToRad(-152);
 const LIGHT_DISTANCE = 13;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 2;
-const INTENSITY_0 = 3.5 * 2;
-const INTENSITY_1 = 1.5 * 2;
+const INTENSITY_0 = 3.5 * 8;
+const INTENSITY_1 = 1.5 * 8;
 const HEMISPHERE_INTENSITY = 2;
-const DECAY = 0.25;
+const DECAY = 1;
 
 export const transitionEvent = new Quicklime<number>(0);
 

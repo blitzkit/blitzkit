@@ -6,7 +6,6 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import type { GetStaticPaths } from "astro";
 import { AesonPlug } from "../../components/AesonPlug";
-import { Giveaway } from "../../components/Giveaway";
 import HomeHero from "../../components/HomeHero.astro";
 import { Plugs } from "../../components/Plugs";
 import ToolCard from "../../components/ToolCard.astro";
@@ -29,7 +28,7 @@ for (const id in tools) {
   const compatibleRow = rows.find(
     (row) =>
       row.length < MAX_TOOLS_PER_ROW &&
-      !("significant" in row[0] && row[0].significant)
+      !("significant" in row[0] && row[0].significant),
   );
 
   if (compatibleRow) {

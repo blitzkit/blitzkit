@@ -16,19 +16,27 @@ import {
   MIN_ZOOM_DISTANCE,
 } from "../../../../TankSandbox/components/SceneProps";
 
+const GAMMA = 4;
+
 export function ZoomControls() {
   const [distance, setDistance] = useState(zoomEvent.last!.distance);
+  const x =
+    ((distance - MIN_ZOOM_DISTANCE) /
+      (MAX_ZOOM_DISTANCE - MIN_ZOOM_DISTANCE)) **
+    (1 / GAMMA);
   const [fov, setFov] = useState(zoomEvent.last!.fov);
   const { strings } = useLocale();
 
-  const handleDistanceChange = useCallback(([value]: number[]) => {
+  const handleDistanceChange = useCallback(([x]: number[]) => {
+    const distance =
+      x ** GAMMA * (MAX_ZOOM_DISTANCE - MIN_ZOOM_DISTANCE) + MIN_ZOOM_DISTANCE;
     const newFov = distanceToFov(
       zoomEvent.last!.height,
       zoomEvent.last!.padding,
-      value,
+      distance,
     );
 
-    zoomEvent.dispatch({ ...zoomEvent.last!, distance: value, fov: newFov });
+    zoomEvent.dispatch({ ...zoomEvent.last!, distance, fov: newFov });
   }, []);
   const handleFovChange = useCallback(([value]: number[]) => {
     const newDistance = fovToDistance(
@@ -92,9 +100,9 @@ export function ZoomControls() {
           color="gray"
           size="1"
           orientation="vertical"
-          value={[distance]}
-          min={MIN_ZOOM_DISTANCE}
-          max={MAX_ZOOM_DISTANCE}
+          value={[x]}
+          min={0}
+          max={1}
           onValueChange={handleDistanceChange}
           step={Number.EPSILON}
         />

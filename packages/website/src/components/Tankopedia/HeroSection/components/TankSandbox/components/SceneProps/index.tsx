@@ -11,7 +11,7 @@ const PLANE_SIZE = MAX_ZOOM_DISTANCE * 2;
 const material = new MeshStandardMaterial({
   color: "black",
   roughness: 1,
-  metalness: 0,
+  metalness: 1,
   transparent: true,
 });
 
