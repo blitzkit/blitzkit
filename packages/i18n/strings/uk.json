@@ -320,7 +320,7 @@
       }
     },
     "commands": {
-      "dead": "# Stat Commands Are Dead\n\nThe BlitzKit Discord bot used to use BlitzStars to fetch periodic statistics. BlitzStars has enabled aggressive Cloudflare protections; hence, disabling BlitzKit from using BlitzStar's API. This has impacted the following commands:\n\n- `/stats`\n- `/today`\n- `/breakdown`\n- `/evolution`\n- `/full-stats`\n\nPlease use [Aftermath](<https://amth.one/invite>) as an alternative which is completely independent of BlitzStars. BlitzKit-hosted stat commands will return in the near future.",
+      "dead": ".",
       "replay": {
         "name": "реплей",
         "description": "Показати результати реплею",
@@ -678,7 +678,7 @@
         "sorting_by": "Відсортувати за {name}",
         "clear": "Clear",
         "tier": "Рівень {tier}",
-        "passive": "{name} (Passive)",
+        "passive": "",
         "active": "{name} (Active)",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
