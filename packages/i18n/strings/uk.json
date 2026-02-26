@@ -667,7 +667,7 @@
       },
       "tank_search": {
         "select_dialog_title": "Знайти танк",
-        "swap_dialog_title": "Swap tank",
+        "swap_dialog_title": "Резервуар підміни",
         "clear_filters": "Очистити",
         "login": "Увійдіть, щоб скористатися",
         "search_bar_hint": "Шукайте техніку...",
@@ -744,9 +744,9 @@
       "pwa": {
         "title": "Install the BlitzKit App",
         "new": "",
-        "checking": "Checking compatibility...",
+        "checking": "",
         "instructions": "Instructions for Apple devices.",
-        "install": "Installhttps://crowdin. com/editor/blitzkrieg/80/en-uk? view=side-by-side#9694",
+        "install": "Install",
         "dismiss": "Dismiss"
       },
       "discord": {
@@ -830,7 +830,7 @@
         "help": {
           "title": "Partially reveal tank?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
-          "cancel": "Cancel",
+          "cancel": "",
           "reveal": "Reveal"
         },
         "clear": "Clear",
@@ -1281,7 +1281,7 @@
               "button": "Generate URL",
               "title": "Generate URL",
               "subtitle": "Search an account to track",
-              "cancel": "Cancel",
+              "cancel": "",
               "success": {
                 "title": "Copy URL",
                 "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
