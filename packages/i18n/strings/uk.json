@@ -742,11 +742,11 @@
     },
     "home": {
       "pwa": {
-        "title": "Install the BlitzKit App",
+        "title": "",
         "new": "",
         "checking": "",
-        "instructions": "Instructions for Apple devices.",
-        "install": "Install",
+        "instructions": ".",
+        "install": "",
         "dismiss": "Dismiss"
       },
       "discord": {
