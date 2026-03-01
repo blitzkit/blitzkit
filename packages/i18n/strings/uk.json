@@ -679,7 +679,7 @@
         "clear": "Clear",
         "tier": "Рівень {tier}",
         "passive": "",
-        "active": "{name} (Active)",
+        "active": "{name}{name}",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
