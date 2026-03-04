@@ -320,9 +320,16 @@
       }
     },
     "commands": {
+      "dead": "# Stat Commands Are Dead\n\nThe BlitzKit Discord bot used to use BlitzStars to fetch periodic statistics. BlitzStars has enabled aggressive Cloudflare protections; hence, disabling BlitzKit from using BlitzStar's API. This has impacted the following commands:\n\n- `/stats`\n- `/today`\n- `/breakdown`\n- `/evolution`\n- `/full-stats`\n\nPlease use [Aftermath](<https://amth.one/invite>) as an alternative which is completely independent of BlitzStars. BlitzKit-hosted stat commands will return in the near future.",
       "replay": {
         "name": "replay",
-        "description": "Exibir resultados de replays"
+        "description": "Exibir resultados de replays",
+        "options": {
+          "file": {
+            "name": "file",
+            "description": "Replay file"
+          }
+        }
       },
       "research": {
         "name": "pesquisa",
@@ -1005,8 +1012,8 @@
           "title": "Características",
           "compare": {
             "label": "Comparar com",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "Todos os tanques"
           },
           "values": {
