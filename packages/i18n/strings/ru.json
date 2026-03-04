@@ -326,8 +326,8 @@
         "description": "Показать результаты повтора",
         "options": {
           "file": {
-            "name": "file",
-            "description": "Replay file"
+            "name": "Файл",
+            "description": "Запись повтора"
           }
         }
       },
@@ -1012,8 +1012,8 @@
           "title": "Характеристики",
           "compare": {
             "label": "Сравнивать с",
-            "class": "{tier} {class}",
-            "tier": "All tier {tier}",
+            "class": "Уровень Тип",
+            "tier": "Все уровни",
             "all": "Все танки"
           },
           "values": {
