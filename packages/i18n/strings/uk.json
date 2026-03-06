@@ -1,7 +1,7 @@
 {
   "test": {
     "default": "тест",
-    "long": "{fruit}",
+    "long": "{color}{fruit}",
     "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
   },
   "common": {
@@ -23,7 +23,7 @@
     },
     "shells": {
       "ap": "ББ",
-      "ap_cr": "APCR",
+      "ap_cr": "",
       "hc": "HEAT",
       "he": "ОФ"
     },
@@ -320,9 +320,16 @@
       }
     },
     "commands": {
+      "dead": ".",
       "replay": {
         "name": "реплей",
-        "description": "Показати результати реплею"
+        "description": "Показати результати реплею",
+        "options": {
+          "file": {
+            "name": "",
+            "description": "Replay filehttps://crowdin.com/editor/blitzkrieg/80/en-uk?view=side-by-side#9706"
+          }
+        }
       },
       "research": {
         "name": "дослідження",
@@ -660,7 +667,7 @@
       },
       "tank_search": {
         "select_dialog_title": "Знайти танк",
-        "swap_dialog_title": "Swap tank",
+        "swap_dialog_title": "Резервуар підміни",
         "clear_filters": "Очистити",
         "login": "Увійдіть, щоб скористатися",
         "search_bar_hint": "Шукайте техніку...",
@@ -671,8 +678,8 @@
         "sorting_by": "Відсортувати за {name}",
         "clear": "Clear",
         "tier": "Рівень {tier}",
-        "passive": "{name} (Passive)",
-        "active": "{name} (Active)",
+        "passive": "",
+        "active": "{name}{name}",
         "no_tanks_found": {
           "body": "Нічого не знайдено.",
           "search_again": "Спробуйте шукати заново.",
@@ -735,11 +742,11 @@
     },
     "home": {
       "pwa": {
-        "title": "Install the BlitzKit App",
+        "title": "",
         "new": "",
-        "checking": "Checking compatibility...",
-        "instructions": "Instructions for Apple devices.",
-        "install": "Install",
+        "checking": "",
+        "instructions": ".",
+        "install": "",
         "dismiss": "Dismiss"
       },
       "discord": {
@@ -823,7 +830,7 @@
         "help": {
           "title": "Partially reveal tank?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
-          "cancel": "Cancel",
+          "cancel": "",
           "reveal": "Reveal"
         },
         "clear": "Clear",
@@ -1005,8 +1012,8 @@
           "title": "Characteristics",
           "compare": {
             "label": "Compare against",
-            "class": "Tier {tier} {class}",
-            "tier": "All of tier {tier}",
+            "class": "{tier} {class}",
+            "tier": "All tier {tier}",
             "all": "Усі танки"
           },
           "values": {
@@ -1274,7 +1281,7 @@
               "button": "Generate URL",
               "title": "Generate URL",
               "subtitle": "Search an account to track",
-              "cancel": "Cancel",
+              "cancel": "",
               "success": {
                 "title": "Copy URL",
                 "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
