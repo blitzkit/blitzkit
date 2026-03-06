@@ -98,7 +98,6 @@ export function ZoomControls() {
       <Flex gap="3" flexGrow="1">
         <Slider
           color="gray"
-          size="1"
           orientation="vertical"
           value={[x]}
           min={0}
@@ -108,7 +107,6 @@ export function ZoomControls() {
         />
         <Slider
           color="gray"
-          size="1"
           orientation="vertical"
           value={[fov]}
           min={distanceToFov(
