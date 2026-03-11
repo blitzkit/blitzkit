@@ -1,4 +1,5 @@
 import {
+  bufferToBigInt,
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
@@ -9,7 +10,7 @@ import { Document, Material, Node, Scene } from "@gltf-transform/core";
 import { dedup, prune } from "@gltf-transform/functions";
 import { times } from "lodash-es";
 import { dirname } from "path";
-import { SteamVFS } from "../../vfs/steam";
+import { AbstractVFS } from "../../vfs/abstract";
 import { readBaseColor } from "../readBaseColor";
 import { readNormal } from "../readNormal";
 import { readRoughnessMetallic } from "../readRoughnessMetallic";
@@ -25,7 +26,7 @@ const omitMeshNames = {
   end: ["_POINT"],
 };
 
-export async function extractModel(vfs: SteamVFS, path: string) {
+export async function extractModel(vfs: AbstractVFS, path: string) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
@@ -40,7 +41,7 @@ export async function extractModel(vfs: SteamVFS, path: string) {
   const materials = new Map<bigint, Material | bigint | undefined>();
 
   for (const node of sc2["#dataNodes"]) {
-    const id = new DataView(node["#id"]).getBigUint64(0, true);
+    const id = bufferToBigInt(node["#id"]);
 
     if (node.parentMaterialKey !== undefined) {
       /**
@@ -80,8 +81,20 @@ export async function extractModel(vfs: SteamVFS, path: string) {
           configIndex < node.configCount;
           configIndex++
         ) {
-          if (!hasAlpha) continue;
-          material.setAlphaMode("BLEND").setDoubleSided(true);
+          const archive = node[`configArchive_${configIndex}`];
+
+          if (
+            archive.configName !== "Default" ||
+            !archive.enabledPresets?.AlphaTest
+          ) {
+            continue;
+          }
+
+          const view = new DataView(archive.properties.alphatestThreshold);
+          const _ = view.getUint8(0); // only god knows what these flags are
+          const alphaCutoff = view.getFloat32(1, true);
+
+          material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
       }
 
@@ -116,7 +129,7 @@ export async function extractModel(vfs: SteamVFS, path: string) {
         );
       }
 
-      materials.set(new DataView(node["#id"]).getBigUint64(0, true), material);
+      materials.set(id, material);
     }
   }
 
