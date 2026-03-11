@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <NodeApiAssemblyJSModuleType>esm</NodeApiAssemblyJSModuleType>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../cue4parse/CUE4Parse/CUE4Parse.csproj" />

@@ -3,8 +3,6 @@ import { Text } from "../Text";
 import styles from "./index.module.css";
 
 export function TankCard({ id }: PopularTank) {
-  const tanks = useAwait(api.tanks, "tanks");
-
   return (
     <div className={styles["tank-card"]}>
       <div className={styles["icon-wrapper"]}>
