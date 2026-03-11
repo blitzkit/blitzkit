@@ -12,12 +12,14 @@ export async function tankModels() {
 
   using uploader = new AssetUploader("tank models");
   const nodeIO = new NodeIO().registerExtensions(ALL_EXTENSIONS);
-  const nations = vfs.dir(`Data/XML/item_defs/vehicles`).filter((nation) => nation !== "common")
+  const nations = vfs
+    .dir(`Data/XML/item_defs/vehicles`)
+    .filter((nation) => nation !== "common");
 
   for (const nationIndex in nations) {
     const nation = nations[nationIndex];
     const tanks = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
     const entries = Object.entries(tanks.root);
 
@@ -26,11 +28,11 @@ export async function tankModels() {
 
       const id = toUniqueId(nation, tank.id);
       const parameters = await vfs.yaml<TankParameters>(
-        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
+        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
       );
       const model = await extractModel(
         vfs,
-        parameters.resourcesPath.blitzModelPath.replace(/\.sc2$/, "")
+        parameters.resourcesPath.blitzModelPath.replace(/\.sc2$/, ""),
       );
       const content = Buffer.from(await nodeIO.writeBinary(model));
 

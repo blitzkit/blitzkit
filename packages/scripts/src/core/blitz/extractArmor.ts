@@ -6,13 +6,13 @@ import {
 } from "@blitzkit/core";
 import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
 import { times } from "lodash-es";
-import { SteamVFS } from "../vfs/steam";
+import { AbstractVFS } from "../vfs/abstract";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
 } from "./extractModel/constants";
 
-export async function extractArmor(vfs: SteamVFS, fileName: string) {
+export async function extractArmor(vfs: AbstractVFS, fileName: string) {
   const sc2Path = `Data/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
   const scgPath = `Data/3d/Tanks/CollisionMeshes/${fileName}.scg`;
   const sc2 = new Sc2ReadStream(
