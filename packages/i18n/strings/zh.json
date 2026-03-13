@@ -86,8 +86,8 @@
       "uk": "英国",
       "france": "法国",
       "japan": "日本",
-      "european": "欧洲国家",
-      "other": "混合型国家"
+      "european": "欧盟 (E系)",
+      "other": "X系"
     },
     "nations_adjectives": {
       "ussr": "苏联",
@@ -97,34 +97,34 @@
       "uk": "英国",
       "france": "法国",
       "japan": "日本",
-      "european": "欧洲国家",
-      "other": "混合型国家"
+      "european": "欧盟 (E系)",
+      "other": "X系"
     },
     "tank_class_short": {
       "-1": "未识别",
       "0": "轻型坦克",
       "1": "中型坦克",
       "2": "重型战车",
-      "3": "驱逐战车"
+      "3": "坦克歼击车"
     },
     "tank_class_short_plural_lowercase": {
-      "0": "轻型战车",
-      "1": "中型战车",
-      "2": "重型战车",
-      "3": "驱逐战车"
+      "0": "轻型坦克",
+      "1": "中型坦克",
+      "2": "重型坦克",
+      "3": "坦克歼击车"
     },
     "tank_class_medium": {
       "-1": "未识别",
-      "0": "轻型战车",
-      "1": "中型战车",
-      "2": "重型战车",
-      "3": "驱逐战车"
+      "0": "轻型坦克",
+      "1": "中型坦克",
+      "2": "重型坦克",
+      "3": "坦克歼击车"
     },
     "tree_type": {
       "-1": "未识别",
       "0": "科技树",
-      "1": "加值战车",
-      "2": "收藏家战车"
+      "1": "金币车",
+      "2": "收藏车"
     },
     "regions": {
       "normal": {
@@ -140,8 +140,8 @@
     },
     "leagues": {
       "diamond": "钻石",
-      "platinum": "白金",
-      "gold": "黃金",
+      "platinum": "铂金",
+      "gold": "黄金",
       "silver": "白银",
       "bronze": "青铜"
     },
@@ -210,7 +210,7 @@
           "good": "好",
           "very_good": "非常好",
           "great": "很好",
-          "unicum": "極品",
+          "unicum": "极品",
           "super_unicum": "超强势玩家"
         }
       },
@@ -256,7 +256,7 @@
           "description": "公会名称或标签"
         },
         "tank": {
-          "name": "战车",
+          "name": "坦克",
           "description": "要获取战绩的坦克"
         },
         "username": {
@@ -269,8 +269,8 @@
             "description": "国别"
           },
           "class": {
-            "name": "战车车型",
-            "description": "战车车型"
+            "name": "坦克车型",
+            "description": "坦克车型"
           },
           "type": {
             "name": "战车类型",
@@ -320,7 +320,7 @@
       }
     },
     "commands": {
-      "dead": "# Stat Commands Are Dead\n\nThe BlitzKit Discord bot used to use BlitzStars to fetch periodic statistics. BlitzStars has enabled aggressive Cloudflare protections; hence, disabling BlitzKit from using BlitzStar's API. This has impacted the following commands:\n\n- `/stats`\n- `/today`\n- `/breakdown`\n- `/evolution`\n- `/full-stats`\n\nPlease use [Aftermath](<https://amth.one/invite>) as an alternative which is completely independent of BlitzStars. BlitzKit-hosted stat commands will return in the near future.",
+      "dead": "# 统计指令现已停用\nBlitzKit Discord 机器人此前依赖 BlitzStars 获取周期性的统计数据。由于 BlitzStars 已启用严格的 Cloudflare 防护，导致 BlitzKit 无法继续使用其 API。这已导致以下指令失效：\n/统计\n/今日\n/损坏\n/演变\n/完整统计\n请使用 [Aftermath](<https://amth.one/invite>) \n作为完全独立于 BlitzStars 的替代方案。由 BlitzKit 托管的统计指令将在近期内恢复。",
       "replay": {
         "name": "回放",
         "description": "显示重播结果",
@@ -427,8 +427,8 @@
             "description": "玩家数据统计"
           },
           "tank": {
-            "name": "战车",
-            "description": "战车数据统计"
+            "name": "坦克",
+            "description": "坦克数据统计"
           }
         }
       },
@@ -564,15 +564,15 @@
       },
       "today": {
         "name": "今日",
-        "description": "今天玩过的战车和统计资料"
+        "description": "今天玩过的坦克和统计数据"
       },
       "stats": {
         "name": "统计资料",
         "description": "一段时间内的快速统计"
       },
       "owned_tanks": {
-        "name": "已拥有的战车",
-        "description": "显示该阶级中所有您已拥有的战车",
+        "name": "已拥有的坦克",
+        "description": "在一个等级中显示所有已拥有的坦克",
         "body": {
           "title": "# {name} 所拥有的 {tier} 阶坦克\n\n"
         }
@@ -585,7 +585,7 @@
           "view_channels": "查看频道：需要找到重新整理按钮使用的讯息",
           "read_message_history": "读取消息历史: 需要找到消息以刷新",
           "attach_files": "附加文件：需要将图像添加到基于图像的命令",
-          "external_emojis": "外部表情符号：需要添加国家旗帜和战车类别"
+          "external_emojis": "外部表情：需要添加国家旗帜和坦克等级表情"
         }
       },
       "ping": {
@@ -602,7 +602,7 @@
           },
           "wotb": {
             "name": "战车世界闪击战",
-            "description": "测试战车世界闪击战的ping值（延迟值）"
+            "description": "测试坦克世界闪击战的ping值（延迟值）"
           }
         }
       },
@@ -673,7 +673,7 @@
         "search_bar_hint": "搜寻战车……",
         "recent": "最近查看的",
         "select_all": "全选",
-        "count_singular": "1辆战车",
+        "count_singular": "1 辆坦克",
         "count_plural": "{count} 辆坦克",
         "sorting_by": "按 {name} 排序",
         "clear": "清除",
@@ -681,7 +681,7 @@
         "passive": "{name} (被动)",
         "active": "{name} (主动)",
         "no_tanks_found": {
-          "body": "找不到战车。",
+          "body": "未找到坦克。",
           "search_again": "请尝试重新搜索。",
           "clear_filters": "请尝试清除筛选。"
         },
@@ -695,11 +695,11 @@
           "survivability.volume": "体积",
           "survivability.length": "长度",
           "fire.dpm": "标准炮弹 每分钟伤害血量",
-          "fire.dpmPremium": "加值炮弹 每分钟伤害血量",
+          "fire.dpmPremium": "金币炮弹 每分钟伤害值",
           "fire.reload": "装填时间",
           "fire.caliber": "口径",
           "fire.standardPenetration": "标准炮弹穿透力",
-          "fire.premiumPenetration": "加值炮弹穿透力",
+          "fire.premiumPenetration": "金币炮弹穿透力",
           "fire.tertiaryPenetration": "第三种炮弹穿透力",
           "fire.damage": "炮弹伤害值",
           "fire.moduleDamage": "模组伤害值",
@@ -750,8 +750,8 @@
         "dismiss": "取消"
       },
       "discord": {
-        "join_short": "加入超級酷的人群！",
-        "join_long": "加入我們的Discord社群，和超酷的人一起聊天！",
+        "join_short": "加入超级酷的人群！",
+        "join_long": "加入我们的Discord社群，和超酷的人一起聊天！",
         "action": "Discord"
       },
       "hero": {
@@ -765,7 +765,7 @@
         "title": "其他酷炫的项目"
       },
       "help_translate": "请帮忙将 {name} 翻译成 {language}！",
-      "seo_description": "战车世界闪击战 全方位工具"
+      "seo_description": "坦克世界闪击战 全方位工具"
     },
     "docs": {
       "patches": {
@@ -800,7 +800,7 @@
           "proceed": "继续操作"
         },
         "generate": "创建游玩列表",
-        "name": "遊玩列表",
+        "name": "游玩列表",
         "description": "坦克游玩列表生成器",
         "seo_description": "想不到在坦克世界闪击战玩什么? 使用BlitzKit 游玩列表来获得建议！",
         "button": "生成",
@@ -961,7 +961,7 @@
           "type": "战车类型",
           "dev_id": "开发参数：ID",
           "purchase": "购买价格",
-          "restoration": "恢复战车价格",
+          "restoration": "恢复坦克价格",
           "sale": "出售价格",
           "research": "研发所需经验"
         },
@@ -1056,10 +1056,10 @@
             "dispersionGunDamaged": "主炮损坏时",
             "gunDepression": "俯角",
             "gunElevation": "仰角",
-            "gunFrontalDepression": "车辆前部俯角",
-            "gunFrontalElevation": "车辆前部仰角",
-            "gunRearDepression": "车辆後部俯角",
-            "gunRearElevation": "车辆後部仰角",
+            "gunFrontalDepression": "车体前部俯角",
+            "gunFrontalElevation": "车体前部仰角",
+            "gunRearDepression": "车体后部俯角",
+            "gunRearElevation": "车体后部仰角",
             "azimuthLeft": "左射界",
             "azimuthRight": "右射界",
             "speedForwards": "最高前进速度",
@@ -1259,7 +1259,7 @@
         "description": "用于串流的嵌入",
         "seo_description": "创建具有极高自订化的《坦克世界：闪击战》串流嵌入功能",
         "coming_soon": "更多嵌入功能即将推出。",
-        "suggest": "建议与想法",
+        "suggest": "建议与想法。",
         "preview": {
           "title": "示例预览",
           "upload": "上传测试背景"
