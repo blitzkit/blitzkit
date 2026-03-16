@@ -1,9 +1,10 @@
 import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "../../protos/avatars";
+import { PopularTanks } from "../../protos/popular_tanks";
+import { Tank } from "../../protos/tank";
 import { AbstractAPI } from "./abstract";
 
-//@ts-expect-error
 export class ClientAPI extends AbstractAPI {
   protected _avatars() {
     return fetchPB("/api/avatars/all.pb", Avatars);
@@ -23,5 +24,13 @@ export class ClientAPI extends AbstractAPI {
     const response = await fetch(`/api/strings/${locale}.json`);
     const json = (await response.json()) as Strings;
     return json;
+  }
+
+  protected _popularTanks() {
+    return fetchPB("/api/tanks/popular.pb", PopularTanks);
+  }
+
+  protected _tank(id: string) {
+    return fetchPB(`/api/tanks/${id}.pb`, Tank);
   }
 }

@@ -1,0 +1,9 @@
+.tanks {
+  z-index: 1;
+
+  .content {
+    display: flex;
+
+    gap: 2rem;
+  }
+}

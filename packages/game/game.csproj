@@ -2,6 +2,7 @@
   <PropertyGroup>
     <RootNamespace>BlitzKit.Game</RootNamespace>
     <TargetFramework>net9.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <NodeApiAssemblyJSModuleType>esm</NodeApiAssemblyJSModuleType>

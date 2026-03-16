@@ -2,9 +2,8 @@
 import { api } from "../core/api/dynamic";
 import { tools } from "../core/tools/tools";
 import { Heading } from "./Heading";
-import { Scroller } from "./Scroller";
+import { HomeTanksPopular } from "./HomeTanksPopular";
 import { Section } from "./Section";
-import { TankCard } from "./TankCard";
 import ToolCard from "./ToolCard.astro";
 import ToolsWrapper from "./ToolsWrapper.astro";
 
@@ -13,37 +12,19 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-
 const strings = await api.strings(locale);
-const popular = (await api.popularTanks()).tanks.slice(0, 8);
-
-console.log(popular.length);
 ---
 
 <style>
   .title {
     margin-bottom: var(--space-3);
   }
-
-  .tanks {
-    z-index: 1;
-
-    .content {
-      display: flex;
-
-      gap: 2rem;
-    }
-  }
 </style>
 
 <Section>
   <Heading size="2" className="title">{strings.home.tanks}</Heading>
 
-  <Scroller client:load className="tanks">
-    <div class="content">
-      {popular.map((tank) => <TankCard {...tank} />)}
-    </div>
-  </Scroller>
+  <HomeTanksPopular {locale} client:load />
 
   <ToolCard gradient {locale} tool={tools.tanks} />
 
