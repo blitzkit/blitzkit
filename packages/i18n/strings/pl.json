@@ -1,7 +1,7 @@
 {
   "test": {
-    "default": "",
-    "long": ".",
+    "default": "test",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "Szybki brązowy lis przeskoczył nad leniwym psem."
   },
   "common": {
@@ -10,7 +10,7 @@
       "m": "{value}m",
       "mm": "{value}mm",
       "deg": "{value}°",
-      "hp": "Wytrzymałość",
+      "hp": "{value}hp",
       "x": "x{value}",
       "percentage": "{value}%",
       "deg_s": "{value}°/s",
@@ -19,7 +19,7 @@
     "gun_types": {
       "auto_loader": "Samo ładowacz",
       "auto_reloader": "Automatyczne przeładowanie",
-      "regular": ""
+      "regular": "Regular"
     },
     "shells": {
       "ap": "AP",
