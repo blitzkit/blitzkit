@@ -115,5 +115,11 @@
   "companies": {
     "discord": "Discord",
     "github": "GitHub"
+  },
+
+  "api": {
+    "json": "JSON methods",
+    "pb": "Protocol Buffer methods",
+    "media": "Media methods"
   }
 }

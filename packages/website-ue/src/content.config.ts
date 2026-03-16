@@ -10,7 +10,7 @@ const api = defineCollection({
       import: "default",
     });
 
-    const paths: { id: string; docs: string }[] = [];
+    const paths: { id: string; docs?: string }[] = [];
 
     for (const path in globbed) {
       const id = path.replace("./pages/api/", "").replace(".ts", "");
@@ -21,8 +21,6 @@ const api = defineCollection({
           /\/\*\*\n((( \*.*)\n)+) \*\/\nexport (async )?function GET\(/,
         )?.[1]
         .replaceAll(/^ \* ?/gm, "");
-
-      if (!docs) continue;
 
       paths.push({ id, docs });
     }

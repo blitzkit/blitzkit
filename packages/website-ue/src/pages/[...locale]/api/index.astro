@@ -1,12 +1,19 @@
 ---
 import "@radix-ui/colors/amber-dark.css";
 import { getCollection } from "astro:content";
+import ApiGroup from "../../../components/ApiGroup.astro";
+import { Heading } from "../../../components/Heading";
+import { Section } from "../../../components/Section";
+import ToolBanner from "../../../components/ToolBanner.astro";
+import { api } from "../../../core/api/dynamic";
+import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.props;
 const collection = await getCollection("api");
+const strings = await api.strings(locale);
 
 const paths: {
   path: string;
@@ -16,15 +23,25 @@ const paths: {
 paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
-<BaseLayout {locale} accent="lime">
-  <h1>api</h1>
+<BaseLayout {locale} accent="brown">
+  <ToolBanner {locale} tool={tools.api} slot="pre-app" />
 
-  {
-    collection.map(({ id, data }) => (
-      <>
-        <h2>{id}</h2>
-        <pre>{data.docs}</pre>
-      </>
-    ))
-  }
+  <Section>
+    <Heading>{strings.api.json}</Heading>
+    <ApiGroup apis={collection.filter((api) => api.id.endsWith(".json"))} />
+  </Section>
+
+  <Section>
+    <Heading>{strings.api.pb}</Heading>
+    <ApiGroup apis={collection.filter((api) => api.id.endsWith(".pb"))} />
+  </Section>
+
+  <Section>
+    <Heading>{strings.api.media}</Heading>
+    <ApiGroup
+      apis={collection.filter(
+        (api) => !api.id.endsWith(".json") && !api.id.endsWith(".pb"),
+      )}
+    />
+  </Section>
 </BaseLayout>
