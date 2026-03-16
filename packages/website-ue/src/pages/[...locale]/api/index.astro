@@ -28,17 +28,24 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
 
   <Section>
     <Heading>{strings.api.json}</Heading>
-    <ApiGroup apis={collection.filter((api) => api.id.endsWith(".json"))} />
+    <ApiGroup
+      {locale}
+      apis={collection.filter((api) => api.id.endsWith(".json"))}
+    />
   </Section>
 
   <Section>
     <Heading>{strings.api.pb}</Heading>
-    <ApiGroup apis={collection.filter((api) => api.id.endsWith(".pb"))} />
+    <ApiGroup
+      {locale}
+      apis={collection.filter((api) => api.id.endsWith(".pb"))}
+    />
   </Section>
 
   <Section>
     <Heading>{strings.api.media}</Heading>
     <ApiGroup
+      {locale}
       apis={collection.filter(
         (api) => !api.id.endsWith(".json") && !api.id.endsWith(".pb"),
       )}

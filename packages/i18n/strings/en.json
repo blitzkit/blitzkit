@@ -120,6 +120,7 @@
   "api": {
     "json": "JSON methods",
     "pb": "Protocol Buffer methods",
-    "media": "Media methods"
+    "media": "Media methods",
+    "no_docs": "This method has no documentation."
   }
 }
