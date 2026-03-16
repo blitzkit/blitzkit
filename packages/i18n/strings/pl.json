@@ -210,7 +210,7 @@
           "good": "Dobrze",
           "very_good": "Bardzo dobrze",
           "great": "Świetne",
-          "unicum": "Unikalny ",
+          "unicum": "Unikalny",
           "super_unicum": "Bardzo unikalny"
         }
       },
@@ -236,7 +236,7 @@
           "description": "Kariera"
         },
         "custom": {
-          "name": "Niestandardowy",
+          "name": "custom",
           "description": "Zakres niestandardowy",
           "options": {
             "start": {
