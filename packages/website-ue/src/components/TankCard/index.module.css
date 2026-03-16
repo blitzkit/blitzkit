@@ -23,12 +23,18 @@
     }
 
     .icon {
-      width: 13rem;
-      height: 8rem;
+      width: 11rem;
+      height: 7rem;
       position: relative;
 
       background-size: 140%;
       background-position: 40% center;
+
+      .cover {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(transparent 75%, var(--gray-1));
+      }
     }
   }
 
