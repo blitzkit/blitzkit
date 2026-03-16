@@ -1,7 +1,7 @@
 {
   "test": {
-    "default": "",
-    "long": ".",
+    "default": "test",
+    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
     "fox": "Szybki brązowy lis przeskoczył nad leniwym psem."
   },
   "common": {
@@ -17,9 +17,9 @@
       "plus": "+{value}"
     },
     "gun_types": {
-      "auto_loader": "Auto loader",
+      "auto_loader": "Samo ładowacz",
       "auto_reloader": "Automatyczne przeładowanie",
-      "regular": ""
+      "regular": "Regular"
     },
     "shells": {
       "ap": "AP",
@@ -28,18 +28,18 @@
       "he": "OB"
     },
     "player_count_period": {
-      "total": "Total",
-      "d_120": "Past 120 days",
-      "d_90": "Past 90 days",
-      "d_60": "Past 60 days",
-      "d_30": "Past month",
+      "total": "Łącznie",
+      "d_120": "Powyżej 120 dni",
+      "d_90": "Powyżej 90 dni",
+      "d_60": "Powyżej 60 dni",
+      "d_30": "W ciągu miesiąca",
       "d_7": "W minionym tygodniu",
-      "d_1": "Yesterday"
+      "d_1": "Wczoraj"
     },
     "branches": {
       "local": "dev",
       "dev": "beta",
-      "opentest": "opentest",
+      "opentest": "otwarty test",
       "preview": "podgląd"
     },
     "locales": {
@@ -80,45 +80,45 @@
     },
     "nations": {
       "ussr": "ZSRR",
-      "germany": "Germany",
-      "usa": "U.S.A.",
+      "germany": "Niemcy",
+      "usa": "Stany Zjednoczone.",
       "china": "Chiny",
       "uk": "Wielka Brytania",
-      "france": "France",
-      "japan": "Japan",
+      "france": "Francja",
+      "japan": "Japonia",
       "european": "Nacja Europejska",
       "other": "Nacja Hybrydowa"
     },
     "nations_adjectives": {
       "ussr": "ZSRR",
-      "germany": "German",
+      "germany": "Niemcy",
       "usa": "Amerykański",
       "china": "Chiński",
       "uk": "Wielkiej Brytanii",
       "france": "Francuski",
       "japan": "Japoński",
-      "european": "European",
-      "other": "Hybrid"
+      "european": "Europa",
+      "other": "Hybryda"
     },
     "tank_class_short": {
       "-1": "unrecognized",
-      "0": "Light",
-      "1": "Medium",
-      "2": "Heavy",
+      "0": "Lekki",
+      "1": "Średni",
+      "2": "Ciężki",
       "3": "TD"
     },
     "tank_class_short_plural_lowercase": {
-      "0": "lights",
-      "1": "mediums",
-      "2": "heavies",
+      "0": "lekkie",
+      "1": "średnie",
+      "2": "ciężkie",
       "3": "TDs"
     },
     "tank_class_medium": {
       "-1": "unrecognized",
       "0": "Lekki",
-      "1": "Medium",
-      "2": "Heavy",
-      "3": "Tank destroyer"
+      "1": "Średni",
+      "2": "Ciężki",
+      "3": "Niszczyciel czołgów"
     },
     "tree_type": {
       "-1": "unrecognized",
@@ -210,7 +210,7 @@
           "good": "Dobrze",
           "very_good": "Bardzo dobrze",
           "great": "Świetne",
-          "unicum": "Unikalny ",
+          "unicum": "Unikalny",
           "super_unicum": "Bardzo unikalny"
         }
       },
@@ -236,7 +236,7 @@
           "description": "Kariera"
         },
         "custom": {
-          "name": "Niestandardowy",
+          "name": "custom",
           "description": "Zakres niestandardowy",
           "options": {
             "start": {
@@ -856,7 +856,7 @@
             "hull": "Hull",
             "turret": "Turret",
             "hard": "Hard",
-            "medium": "Medium",
+            "medium": "Średni",
             "soft": "Soft",
             "effective": "Effective"
           },
@@ -1066,19 +1066,19 @@
             "speedBackwards": "Backwards",
             "hardTerrainCoefficient": "Hard",
             "hardTerrainCoefficientRaw": "Hard",
-            "mediumTerrainCoefficient": "Medium",
-            "mediumTerrainCoefficientRaw": "Medium",
+            "mediumTerrainCoefficient": "Średni",
+            "mediumTerrainCoefficientRaw": "Średni",
             "softTerrainCoefficient": "Soft",
             "softTerrainCoefficientRaw": "Soft",
             "enginePower": "Engine power",
             "powerToWeightRatioHardTerrain": "Hard",
-            "powerToWeightRatioMediumTerrain": "Medium",
+            "powerToWeightRatioMediumTerrain": "Średni",
             "powerToWeightRatioSoftTerrain": "Soft",
             "weight": "Weight",
             "turretTraverseSpeed": "Turret traverse speed",
             "gunTraverseSpeed": "Gun traverse speed",
             "hullTraverseHardTerrain": "Hard",
-            "hullTraverseMediumTerrain": "Medium",
+            "hullTraverseMediumTerrain": "Średni",
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
@@ -1181,7 +1181,7 @@
         "table": {
           "tanks": {
             "header": "Tank",
-            "total": "Total"
+            "total": "Łącznie"
           },
           "stats": {
             "winrate": "Śr. wygranych",
@@ -1239,7 +1239,7 @@
         },
         "table": {
           "tank": "Tank",
-          "total": "Total",
+          "total": "Łącznie",
           "remove": "Remove"
         }
       },
