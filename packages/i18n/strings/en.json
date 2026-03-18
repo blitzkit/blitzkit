@@ -121,6 +121,7 @@
     "json": "JSON methods",
     "pb": "Protocol Buffer methods",
     "media": "Media methods",
-    "no_docs": "This method has no documentation."
+    "no_docs": "This method has no documentation.",
+    "test": "Test"
   }
 }

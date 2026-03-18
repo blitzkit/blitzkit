@@ -28,5 +28,5 @@ export function useLocale() {
 }
 
 export interface LocaleAcceptorProps {
-  locale: string | undefined;
+  locale: string;
 }

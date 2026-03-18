@@ -1,9 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { api } from "../core/api/dynamic";
-import { Code } from "./Code";
-import { Heading } from "./Heading";
-import { MarkdownCustom } from "./MarkdownCustom";
+import ApiEntry from "./ApiEntry.astro";
 
 interface Props {
   locale: string;
@@ -11,34 +8,10 @@ interface Props {
 }
 
 const { apis, locale } = Astro.props;
-const strings = await api.strings(locale);
 ---
-
-<style>
-  .container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-
-    .docs {
-      margin-left: var(--space-5);
-    }
-  }
-</style>
 
 {
   apis
     .sort((a, b) => a.id.localeCompare(b.id))
-    .map((api) => (
-      <div class="container">
-        <Heading size="3">
-          <Code>{api.id}</Code>
-        </Heading>
-
-        <MarkdownCustom
-          className="docs"
-          body={api.data.docs ?? strings.api.no_docs}
-        />
-      </div>
-    ))
+    .map((api) => <ApiEntry {locale} {api} />)
 }

@@ -5,7 +5,7 @@ import styles from "./index.module.css";
 
 export interface SectionProps extends ComponentProps<"div"> {
   first?: boolean;
-  gap: Space;
+  gap?: Space;
 }
 
 export function Section({
