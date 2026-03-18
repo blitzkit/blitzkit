@@ -21,7 +21,7 @@ const strings = await api.strings(locale);
   }
 </style>
 
-<Section>
+<Section gap="4">
   <Heading size="2" className="title">{strings.home.tanks}</Heading>
 
   <HomeTanksPopular {locale} client:load />

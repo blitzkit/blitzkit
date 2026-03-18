@@ -10,14 +10,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 /**
- * This is a very long.
- * And boring.
- *
- * But important.
- * Developer comment.
- *
- * Meant to test.
- * The **formatting**!
+ * Returns data on an avatar based on its id. @see avatars/list.json for a list of all avatar ids.
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const avatar = await api.avatar(params.id);
