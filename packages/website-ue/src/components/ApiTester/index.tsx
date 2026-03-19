@@ -1,3 +1,4 @@
+import { sluggify } from "@blitzkit/core";
 import { PlayIcon } from "@radix-ui/react-icons";
 import { Fragment, useState } from "react";
 import {
@@ -40,7 +41,7 @@ function Content({ path }: Props) {
   );
 
   return (
-    <div className={styles.tester}>
+    <div className={styles.tester} id={sluggify(path)}>
       <Text weight="medium">
         <Code className={styles.title}>
           {path.split(slugPattern).map((text, index) => {

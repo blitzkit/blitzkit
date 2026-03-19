@@ -1,13 +1,20 @@
 ---
+import { sluggify } from "@blitzkit/core";
+import { literalsArray } from "@blitzkit/i18n";
+import { api } from "../core/api/dynamic";
 import { Link } from "./Link";
 import { Text } from "./Text";
 
 interface Props {
   value: string;
+  locale: string;
 }
 
 const bodyPattern = /^([a-z0-9-\/\.]+) (.+)$/;
-const { value } = Astro.props;
+
+const { value, locale } = Astro.props;
+const strings = await api.strings(locale);
+
 const match = value.match(bodyPattern);
 
 if (match === null) {
@@ -18,4 +25,11 @@ const path = match[1];
 const message = match[2];
 ---
 
-<Text><Text color="tomato">See</Text> <Link>{path}</Link> {message}</Text>
+<Text>
+  {
+    literalsArray(strings.api.macros.see, {
+      path: <Link href={`#${sluggify(path)}`}>{path}</Link>,
+      message,
+    })
+  }
+</Text>

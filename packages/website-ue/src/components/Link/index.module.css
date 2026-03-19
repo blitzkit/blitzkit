@@ -1,7 +1,7 @@
 .link {
   text-decoration-color: currentColor;
 
-  display: flex;
+  display: inline;
   align-items: center;
   gap: var(--space-3);
 

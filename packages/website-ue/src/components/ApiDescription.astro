@@ -4,12 +4,13 @@ import { MarkdownCustom } from "./MarkdownCustom";
 
 interface Props {
   body: string;
+  locale: string;
 }
 
 const macroPattern = /@(\w+) (.+)/;
 const macros: Record<string, string> = {};
 
-const { body: bodyOriginal } = Astro.props;
+const { body: bodyOriginal, locale } = Astro.props;
 let body = "";
 
 for (const line of bodyOriginal.split("\n")) {
@@ -53,6 +54,6 @@ for (const line of bodyOriginal.split("\n")) {
   <div class="gutter"></div>
   <div class="content">
     <MarkdownCustom {body} />
-    {"see" in macros && <ApiMacroSee value={macros.see} />}
+    {"see" in macros && <ApiMacroSee {locale} value={macros.see} />}
   </div>
 </div>

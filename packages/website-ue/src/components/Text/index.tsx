@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { classNames } from "../../core/ui/classNames";
-import "./index.css";
+import styles from "./index.module.css";
 
 export interface TextProps extends ComponentProps<"span"> {
   weight?: "light" | "regular" | "medium" | "bold" | "black";
@@ -20,7 +20,7 @@ export function Text({
 }: TextProps) {
   return (
     <span
-      className={classNames("text", className)}
+      className={classNames(styles.text, className)}
       data-low-contrast={lowContrast}
       data-size={size}
       data-weight={weight}

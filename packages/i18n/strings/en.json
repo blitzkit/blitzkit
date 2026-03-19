@@ -122,6 +122,10 @@
     "pb": "Protocol Buffer methods",
     "media": "Media methods",
     "no_docs": "This method has no documentation.",
-    "test": "Test"
+    "test": "Test",
+
+    "macros": {
+      "see": "See {path} {message}"
+    }
   }
 }

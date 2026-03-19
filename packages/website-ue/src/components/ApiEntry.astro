@@ -23,5 +23,5 @@ const body = apiData.data.docs ?? strings.api.no_docs;
 
 <div class="container">
   <ApiTester client:idle {locale} path={apiData.id} />
-  <ApiDescription {body} />
+  <ApiDescription {locale} {body} />
 </div>
