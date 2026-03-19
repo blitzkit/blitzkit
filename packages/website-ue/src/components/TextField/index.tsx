@@ -14,6 +14,7 @@ export interface TextFieldProps extends ComponentProps<"input"> {
   children?: ReactNode;
   align?: "left" | "center" | "right";
   autoWidth?: boolean;
+  variant?: "bubble" | "form";
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
@@ -27,6 +28,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       disabled,
       value,
       onChange,
+      variant = "bubble",
       ...props
     },
     ref,
@@ -52,6 +54,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         className={classNames("text-field", className)}
         data-has-icon={children !== undefined}
         data-disabled={disabled}
+        data-variant={variant}
       >
         {children}
         <input

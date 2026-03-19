@@ -51,6 +51,7 @@ function Content({ path }: Props) {
               <Fragment key={index}>
                 {index > 0 && (
                   <TextField
+                    variant="form"
                     className={styles.slug}
                     placeholder={`[${slug}]`}
                     align="center"
