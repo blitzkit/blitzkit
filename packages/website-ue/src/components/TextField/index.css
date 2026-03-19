@@ -11,7 +11,7 @@
   box-shadow: var(--shadow-interactive), var(--shadow-cavity);
   cursor: text;
 
-  font-size: var(--font-size-regular);
+  font: inherit;
   color: var(--gray-11);
 
   &[data-has-icon="true"] {
@@ -51,8 +51,7 @@
     border: none;
     cursor: inherit;
 
-    font-size: inherit;
-    font-weight: medium;
+    font: inherit;
     padding: var(--space-3) var(--space-4);
 
     color: var(--gray-12);
@@ -70,10 +69,6 @@
     }
     &[data-align="right"] {
       text-align: right;
-    }
-
-    &[data-monospace="true"] {
-      font-family: var(--font-family-mono);
     }
   }
 }

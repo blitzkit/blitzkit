@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { PlayIcon } from "@radix-ui/react-icons";
+import { Fragment, useState } from "react";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
@@ -6,8 +7,8 @@ import {
 import { useStrings } from "../../hooks/useStrings";
 import { Button } from "../Button";
 import { Code } from "../Code";
-import { Heading } from "../Heading";
 import { Link } from "../Link";
+import { Text } from "../Text";
 import { TextField } from "../TextField";
 import styles from "./index.module.css";
 
@@ -40,18 +41,17 @@ function Content({ path }: Props) {
 
   return (
     <div className={styles.tester}>
-      <Heading size="3">
+      <Text weight="medium">
         <Code className={styles.title}>
           {path.split(slugPattern).map((text, index) => {
             const slug = slugs[index - 1];
 
             return (
-              <>
+              <Fragment key={index}>
                 {index > 0 && (
                   <TextField
                     className={styles.slug}
-                    placeholder={`${slug}`}
-                    monospace
+                    placeholder={`[${slug}]`}
                     align="center"
                     autoWidth
                     onChange={(event) => {
@@ -63,14 +63,16 @@ function Content({ path }: Props) {
                   />
                 )}
                 <span key={index}>{text}</span>
-              </>
+              </Fragment>
             );
           })}
         </Code>
-      </Heading>
+      </Text>
 
       <Link underline="never" href={href} target="_blank">
-        <Button>{strings.api.test}</Button>
+        <Button>
+          {strings.api.test} <PlayIcon />
+        </Button>
       </Link>
     </div>
   );

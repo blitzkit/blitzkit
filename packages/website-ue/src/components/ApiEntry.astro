@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { api } from "../core/api/dynamic";
+import ApiDescription from "./ApiDescription.astro";
 import { ApiTester } from "./ApiTester";
-import { MarkdownCustom } from "./MarkdownCustom";
 
 interface Props {
   locale: string;
@@ -11,19 +11,17 @@ interface Props {
 
 const { locale, api: apiData } = Astro.props;
 const strings = await api.strings(locale);
-const hasSlugs = apiData.id.includes("[");
+const body = apiData.data.docs ?? strings.api.no_docs;
 ---
 
 <style>
   .container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 </style>
 
 <div class="container">
   <ApiTester client:idle {locale} path={apiData.id} />
-
-  <MarkdownCustom body={apiData.data.docs ?? strings.api.no_docs} />
+  <ApiDescription {body} />
 </div>

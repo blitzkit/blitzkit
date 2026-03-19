@@ -1,0 +1,58 @@
+---
+import ApiMacroSee from "./ApiMacroSee.astro";
+import { MarkdownCustom } from "./MarkdownCustom";
+
+interface Props {
+  body: string;
+}
+
+const macroPattern = /@(\w+) (.+)/;
+const macros: Record<string, string> = {};
+
+const { body: bodyOriginal } = Astro.props;
+let body = "";
+
+for (const line of bodyOriginal.split("\n")) {
+  const match = line.match(macroPattern);
+
+  if (match === null) {
+    body += `${line}\n`;
+    continue;
+  }
+
+  const macro = match[1];
+  const value = match[2];
+
+  macros[macro] = value;
+}
+---
+
+<style>
+  .api-description {
+    display: flex;
+
+    .gutter {
+      width: var(--space-2);
+      background: linear-gradient(transparent, var(--gray-6) var(--space-4));
+
+      margin: 0 var(--space-4);
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+
+      padding-top: var(--space-4);
+      padding-bottom: var(--space-3);
+    }
+  }
+</style>
+
+<div class="api-description">
+  <div class="gutter"></div>
+  <div class="content">
+    <MarkdownCustom {body} />
+    {"see" in macros && <ApiMacroSee value={macros.see} />}
+  </div>
+</div>

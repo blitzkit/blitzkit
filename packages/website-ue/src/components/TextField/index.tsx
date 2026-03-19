@@ -13,7 +13,6 @@ import "./index.css";
 export interface TextFieldProps extends ComponentProps<"input"> {
   children?: ReactNode;
   align?: "left" | "center" | "right";
-  monospace?: boolean;
   autoWidth?: boolean;
 }
 
@@ -22,7 +21,6 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     {
       children,
       className,
-      monospace,
       autoWidth,
       placeholder,
       align,
@@ -58,7 +56,6 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         {children}
         <input
           data-align={align === "left" ? undefined : align}
-          data-monospace={monospace}
           disabled={disabled}
           ref={input}
           onChange={handleChange}
