@@ -1,0 +1,122 @@
+---
+import { existsSync } from "fs";
+import { readFile } from "fs/promises";
+import HighlightedCode from "./HighlightedCode.astro";
+import { Link } from "./Link";
+
+interface Props {
+  value: string;
+}
+
+const { value } = Astro.props;
+
+const roots = ["src/protos", "../closed/protos"];
+
+const lang = "proto";
+const importPattern = /import "(.+)";/gm;
+const messagePattern = /message .+ {\s*\n(.+\s*\n)+}/gm;
+
+const explored = new Set<string>();
+let messages: string[] = [];
+
+await pullMessages(`${roots[0]}/${value}.proto`);
+
+async function pullMessages(path: string) {
+  if (explored.has(path)) return;
+
+  explored.add(path);
+
+  const file = await readFile(path);
+  const content = file.toString();
+  const imports = content.matchAll(importPattern);
+
+  for (const _import of imports) {
+    for (const root of roots) {
+      const path = `${root}/${_import[1]}`;
+
+      if (existsSync(path)) {
+        await pullMessages(path);
+        break;
+      }
+    }
+  }
+
+  const matchedMessages = content.matchAll(messagePattern);
+
+  for (const message of matchedMessages) {
+    messages = [message[0], ...messages];
+  }
+}
+
+const content = messages.join("\n\n");
+
+const indexPattern = /^( +).+\.(.+ = \d+;)$/m;
+
+let stripped = "";
+
+for (const line of content.split("\n")) {
+  const matches = line.match(indexPattern);
+
+  if (matches === null) {
+    stripped += `${line}\n`;
+    continue;
+  }
+
+  stripped += `${matches[1]}${matches[2]}\n`;
+}
+
+stripped = stripped.replaceAll("    ", "  ");
+---
+
+<style>
+  .types {
+    overflow: hidden;
+
+    position: relative;
+
+    &:not([data-expanded="true"]) {
+      max-height: 16rem;
+    }
+
+    &[data-expanded="true"] {
+      .overlay {
+        display: none;
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background: linear-gradient(transparent, var(--gray-1));
+
+      display: flex;
+      align-items: end;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  const viewers = document.querySelectorAll(".view-full");
+
+  for (const viewer of viewers) {
+    viewer.addEventListener("click", () => {
+      viewer.parentElement!.parentElement!.dataset.expanded = "true";
+    });
+  }
+</script>
+
+<div class="types">
+  <HighlightedCode {lang} content={stripped} />
+
+  <div class="overlay">
+    <Link underline="always" href="#" className="view-full">
+      View full types
+    </Link>
+  </div>
+</div>

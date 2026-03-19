@@ -1,3 +1,4 @@
 .code {
+  font: inherit;
   font-family: var(--font-family-mono);
 }

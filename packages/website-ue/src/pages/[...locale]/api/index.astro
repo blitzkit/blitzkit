@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import ApiGroup from "../../../components/ApiGroup.astro";
 import { Heading } from "../../../components/Heading";
 import { Section } from "../../../components/Section";
+import SyntaxStyles from "../../../components/SyntaxStyles.astro";
 import ToolBanner from "../../../components/ToolBanner.astro";
 import { api } from "../../../core/api/dynamic";
 import { tools } from "../../../core/tools/tools";
@@ -25,6 +26,7 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
 
 <BaseLayout {locale} accent="brown">
   <ToolBanner {locale} tool={tools.api} slot="pre-app" />
+  <SyntaxStyles slot="head" />
 
   <Section>
     <Heading>{strings.api.json}</Heading>

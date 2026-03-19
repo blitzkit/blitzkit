@@ -1,5 +1,6 @@
 ---
 import ApiMacroSee from "./ApiMacroSee.astro";
+import ApiMacroType from "./ApiMacroType.astro";
 import { MarkdownCustom } from "./MarkdownCustom";
 
 interface Props {
@@ -54,6 +55,8 @@ for (const line of bodyOriginal.split("\n")) {
   <div class="gutter"></div>
   <div class="content">
     <MarkdownCustom {body} />
+
     {"see" in macros && <ApiMacroSee {locale} value={macros.see} />}
+    {"type" in macros && <ApiMacroType {locale} value={macros.type} />}
   </div>
 </div>
