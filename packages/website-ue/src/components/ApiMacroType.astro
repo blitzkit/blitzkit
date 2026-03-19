@@ -1,14 +1,18 @@
 ---
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
-import HighlightedCode from "./HighlightedCode.astro";
 import { Link } from "./Link";
+import { api } from "../core/api/dynamic";
+import HighlightedCodeBlock from "./HighlightedCodeBlock.astro";
+import { Text } from "./Text";
 
 interface Props {
   value: string;
+  locale: string;
 }
 
-const { value } = Astro.props;
+const { value, locale } = Astro.props;
+const strings = await api.strings(locale);
 
 const roots = ["src/protos", "../closed/protos"];
 
@@ -111,12 +115,16 @@ stripped = stripped.replaceAll("    ", "  ");
   }
 </script>
 
+<Text>
+  {strings.api.macros.types}
+</Text>
+
 <div class="types">
-  <HighlightedCode {lang} content={stripped} />
+  <HighlightedCodeBlock {lang} content={stripped} />
 
   <div class="overlay">
     <Link underline="always" href="#" className="view-full">
-      View full types
+      {strings.api.view_full}
     </Link>
   </div>
 </div>

@@ -13,16 +13,5 @@ export function HighlightedCodeContent({ tree }: Props) {
       ? tree
       : toJsxRuntime(tree, { Fragment, jsx, jsxs });
 
-  return (
-    <Code
-      style={{
-        overflow: "auto",
-        padding: "var(--space-3)",
-        display: "block",
-        whiteSpace: "pre",
-        lineHeight: "1.5em",
-      }}
-      children={node}
-    />
-  );
+  return <Code variant="solid" children={node} />;
 }

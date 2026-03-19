@@ -1,4 +1,16 @@
 .code {
   font: inherit;
   font-family: var(--font-family-mono);
+
+  white-space: pre;
+
+  display: inline-block;
+
+  &[data-variant="solid"] {
+    background-color: var(--gray-3);
+
+    border-radius: var(--space-3);
+
+    padding: var(--space-4);
+  }
 }
