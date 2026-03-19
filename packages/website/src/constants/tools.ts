@@ -55,11 +55,6 @@ export const tools: Record<string, Tool> = {
     id: "session",
     button: "blue",
   },
-  discord: {
-    id: "discord",
-    href: "https://discord.com/application-directory/1097673957865443370",
-    button: "indigo",
-  },
   tier_list: {
     id: "tier-list",
     strings: "tier_list",
