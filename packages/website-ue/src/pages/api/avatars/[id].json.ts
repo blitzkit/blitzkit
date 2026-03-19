@@ -10,9 +10,12 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 /**
- * Returns data on an avatar based on its `id`.
+ * Returns data on an avatar based on its `id`. Do not use the `.webp` URLs
+ * from the returned data as they point to Wargaming's servers which may update
+ * over time, out of sync with BlitzKit.
  *
  * @see avatars/list.json for all avatar ids.
+ * @see avatars/[id].webp for avatar images.
  * @type avatar
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {

@@ -9,7 +9,12 @@ interface Props {
 }
 
 const macroPattern = /@(\w+) (.+)/;
-const macros: Record<string, string> = {};
+const macros: Record<string, string[]> = {};
+
+const macroComponents = {
+  see: ApiMacroSee,
+  type: ApiMacroType,
+};
 
 const { body: bodyOriginal, locale } = Astro.props;
 let body = "";
@@ -25,7 +30,11 @@ for (const line of bodyOriginal.split("\n")) {
   const macro = match[1];
   const value = match[2];
 
-  macros[macro] = value;
+  if (macro in macros) {
+    macros[macro].push(value);
+  } else {
+    macros[macro] = [value];
+  }
 }
 ---
 
@@ -56,7 +65,17 @@ for (const line of bodyOriginal.split("\n")) {
   <div class="content">
     <MarkdownCustom {body} />
 
-    {"see" in macros && <ApiMacroSee {locale} value={macros.see} />}
-    {"type" in macros && <ApiMacroType {locale} value={macros.type} />}
+    <!-- {"see" in macros && <ApiMacroSee {locale} value={macros.see} />}
+    {"type" in macros && <ApiMacroType {locale} value={macros.type} />} -->
+
+    {
+      Object.entries(macroComponents).map(([macro, Component]) => {
+        if (!(macro in macros)) return null;
+
+        return macros[macro].map((value) => {
+          return <Component {locale} value={value} />;
+        });
+      })
+    }
   </div>
 </div>

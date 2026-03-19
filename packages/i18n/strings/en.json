@@ -123,11 +123,6 @@
     "media": "Media methods",
     "no_docs": "This method has no documentation.",
     "test": "Test",
-    "view_full": "View full types",
-
-    "macros": {
-      "see": "See {path} {message}",
-      "types": "Types:"
-    }
+    "view_full": "View full types"
   }
 }

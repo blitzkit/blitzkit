@@ -5,6 +5,8 @@ import { Link } from "./Link";
 import { api } from "../core/api/dynamic";
 import HighlightedCodeBlock from "./HighlightedCodeBlock.astro";
 import { Text } from "./Text";
+import { ArrowBottomRightIcon } from "@radix-ui/react-icons";
+import { Code } from "./Code";
 
 interface Props {
   value: string;
@@ -73,6 +75,14 @@ stripped = stripped.replaceAll("    ", "  ");
 ---
 
 <style>
+  .macro {
+    color: var(--gray-11);
+
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
   .types {
     overflow: hidden;
 
@@ -115,9 +125,13 @@ stripped = stripped.replaceAll("    ", "  ");
   }
 </script>
 
-<Text>
-  {strings.api.macros.types}
-</Text>
+<div class="macro">
+  <Text lowContrast weight="medium" color="tomato">
+    <Code>@types</Code>
+  </Text>
+
+  <ArrowBottomRightIcon />
+</div>
 
 <div class="types">
   <HighlightedCodeBlock {lang} content={stripped} />

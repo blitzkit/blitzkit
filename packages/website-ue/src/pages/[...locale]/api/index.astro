@@ -2,6 +2,7 @@
 import "@radix-ui/colors/amber-dark.css";
 import { getCollection } from "astro:content";
 import ApiGroup from "../../../components/ApiGroup.astro";
+import ColorScale from "../../../components/ColorScale.astro";
 import { Heading } from "../../../components/Heading";
 import { Section } from "../../../components/Section";
 import SyntaxStyles from "../../../components/SyntaxStyles.astro";
@@ -25,8 +26,10 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
 ---
 
 <BaseLayout {locale} accent="brown">
-  <ToolBanner {locale} tool={tools.api} slot="pre-app" />
   <SyntaxStyles slot="head" />
+  <ColorScale color="tomato" slot="head" />
+
+  <ToolBanner {locale} tool={tools.api} slot="pre-app" />
 
   <Section>
     <Heading>{strings.api.json}</Heading>
