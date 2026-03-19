@@ -32,7 +32,7 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
   <ToolBanner {locale} tool={tools.api} slot="pre-app" />
 
   <Section>
-    <Heading>{strings.api.json}</Heading>
+    <Heading size="2">{strings.api.json}</Heading>
     <ApiGroup
       {locale}
       apis={collection.filter((api) => api.id.endsWith(".json"))}
@@ -40,7 +40,7 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
   </Section>
 
   <Section>
-    <Heading>{strings.api.pb}</Heading>
+    <Heading size="2">{strings.api.pb}</Heading>
     <ApiGroup
       {locale}
       apis={collection.filter((api) => api.id.endsWith(".pb"))}
@@ -48,7 +48,7 @@ paths.sort((a, b) => a.path.localeCompare(b.path));
   </Section>
 
   <Section>
-    <Heading>{strings.api.media}</Heading>
+    <Heading size="2">{strings.api.media}</Heading>
     <ApiGroup
       {locale}
       apis={collection.filter(
