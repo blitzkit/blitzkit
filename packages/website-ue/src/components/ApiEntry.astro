@@ -2,8 +2,6 @@
 import type { CollectionEntry } from "astro:content";
 import { api } from "../core/api/dynamic";
 import { ApiTester } from "./ApiTester";
-import { Code } from "./Code";
-import { Heading } from "./Heading";
 import { MarkdownCustom } from "./MarkdownCustom";
 
 interface Props {
@@ -25,10 +23,6 @@ const hasSlugs = apiData.id.includes("[");
 </style>
 
 <div class="container">
-  <Heading size="3">
-    <Code>{apiData.id}</Code>
-  </Heading>
-
   <ApiTester client:idle {locale} path={apiData.id} />
 
   <MarkdownCustom body={apiData.data.docs ?? strings.api.no_docs} />

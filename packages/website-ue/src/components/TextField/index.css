@@ -53,8 +53,7 @@
 
     font-size: inherit;
     font-weight: medium;
-    padding: var(--space-3) 0;
-    padding-left: var(--space-4);
+    padding: var(--space-3) var(--space-4);
 
     color: var(--gray-12);
 
@@ -64,6 +63,17 @@
 
     &:focus {
       outline: none;
+    }
+
+    &[data-align="center"] {
+      text-align: center;
+    }
+    &[data-align="right"] {
+      text-align: right;
+    }
+
+    &[data-monospace="true"] {
+      font-family: var(--font-family-mono);
     }
   }
 }

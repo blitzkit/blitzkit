@@ -5,6 +5,8 @@ import {
 } from "../../hooks/useLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { Button } from "../Button";
+import { Code } from "../Code";
+import { Heading } from "../Heading";
 import { Link } from "../Link";
 import { TextField } from "../TextField";
 import styles from "./index.module.css";
@@ -38,19 +40,36 @@ function Content({ path }: Props) {
 
   return (
     <div className={styles.tester}>
-      {slugs.map((slug) => (
-        <div className={styles.slug}>
-          {slug}:{" "}
-          <TextField
-            value={values[slug]}
-            onChange={(event) => {
-              setValues((state) => ({ ...state, [slug]: event.target.value }));
-            }}
-          />
-        </div>
-      ))}
+      <Heading size="3">
+        <Code className={styles.title}>
+          {path.split(slugPattern).map((text, index) => {
+            const slug = slugs[index - 1];
 
-      <Link href={href} target="_blank">
+            return (
+              <>
+                {index > 0 && (
+                  <TextField
+                    className={styles.slug}
+                    placeholder={`${slug}`}
+                    monospace
+                    align="center"
+                    autoWidth
+                    onChange={(event) => {
+                      setValues((state) => ({
+                        ...state,
+                        [slug]: event.target.value,
+                      }));
+                    }}
+                  />
+                )}
+                <span key={index}>{text}</span>
+              </>
+            );
+          })}
+        </Code>
+      </Heading>
+
+      <Link underline="never" href={href} target="_blank">
         <Button>{strings.api.test}</Button>
       </Link>
     </div>
