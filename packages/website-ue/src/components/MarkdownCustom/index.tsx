@@ -1,6 +1,7 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, FunctionComponent } from "react";
 import Markdown from "react-markdown";
 import { classNames } from "../../core/ui/classNames";
+import { Code } from "../Code";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
@@ -13,7 +14,8 @@ export function MarkdownCustom({ body, className, ...props }: MarkdownCustom) {
     <div className={classNames(className, styles.markdown)} {...props}>
       <Markdown
         components={{
-          p: Text,
+          p: Text as FunctionComponent<ComponentProps<"p">>,
+          code: Code,
         }}
       >
         {body}
