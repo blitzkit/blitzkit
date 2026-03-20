@@ -44,7 +44,12 @@ for (const line of bodyOriginal.split("\n")) {
 
     .gutter {
       width: var(--space-2);
-      background: linear-gradient(transparent, var(--gray-6) var(--space-4));
+      background: linear-gradient(
+        transparent,
+        var(--gray-6) var(--space-4),
+        var(--gray-6) calc(100% - var(--space-4)),
+        transparent
+      );
 
       margin: 0 var(--space-4);
     }

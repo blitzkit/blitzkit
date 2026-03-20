@@ -10,8 +10,4 @@ interface Props {
 const { apis, locale } = Astro.props;
 ---
 
-{
-  apis
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .map((api) => <ApiEntry {locale} {api} />)
-}
+{apis.map((api) => <ApiEntry {locale} {api} />)}
