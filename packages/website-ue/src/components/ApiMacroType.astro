@@ -1,6 +1,5 @@
 ---
 import { resolve } from "path";
-import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { Link } from "./Link";
 import { api } from "../core/api/dynamic";
@@ -10,7 +9,6 @@ import { ArrowBottomRightIcon } from "@radix-ui/react-icons";
 import { Code } from "./Code";
 import {
   createProgram,
-  createSourceFile,
   forEachChild,
   isEnumDeclaration,
   isInterfaceDeclaration,
@@ -18,8 +16,6 @@ import {
   isPropertySignature,
   isTypeAliasDeclaration,
   isTypeReferenceNode,
-  ScriptTarget,
-  TypeFormatFlags,
   type InterfaceDeclaration,
   type Node,
   type TypeNode,
@@ -39,31 +35,29 @@ const lang = "ts";
 
 const name = "Avatar";
 const path = resolve(`${roots[0]}/${value}.ts`);
-const buffer = await readFile(path);
 
 const program = createProgram([path], {});
 const source = program.getSourceFile(path);
 
-if (!source) {
+if (source === undefined) {
   throw new Error(`Could not find ${path}`);
 }
 
 const checker = program.getTypeChecker();
-
 const collected = new Map<string, string>();
-
 let declaration: InterfaceDeclaration | undefined;
 
 forEachChild(source, (node) => {
-  if (!isInterfaceDeclaration(node) || node.name.text !== name) return;
-  declaration = node;
+  if (isInterfaceDeclaration(node) && node.name.text === name) {
+    declaration = node;
+  }
 });
 
 if (declaration === undefined) {
   throw new Error(`Could not find ${name} in ${path}`);
 }
 
-function printNode(node: Node) {
+function collectNodes(node: Node) {
   if (isInterfaceDeclaration(node)) {
     const symbol = checker.getSymbolAtLocation(node.name);
 
@@ -74,36 +68,16 @@ function printNode(node: Node) {
 
       node.members.forEach((member) => {
         if (isPropertySignature(member) && member.type) {
-          collectTypeDependencies(member.type);
-        }
-
-        if (isMethodSignature(member)) {
-          member.parameters.forEach((param) => {
-            if (param.type) {
-              collectTypeDependencies(param.type);
-            }
-          });
-
-          if (member.type) {
-            collectTypeDependencies(member.type);
-          }
+          collectTypes(member.type);
         }
       });
     }
   }
 
-  forEachChild(node, printNode);
+  forEachChild(node, collectNodes);
 }
 
-function isRelevantTypeDecl(node: Node) {
-  return (
-    isInterfaceDeclaration(node) ||
-    isTypeAliasDeclaration(node) ||
-    isEnumDeclaration(node)
-  );
-}
-
-function collectTypeDependencies(node: TypeNode) {
+function collectTypes(node: TypeNode) {
   const type = checker.getTypeAtLocation(node);
   const symbol = type.getSymbol();
 
@@ -115,29 +89,35 @@ function collectTypeDependencies(node: TypeNode) {
     const declarations = symbol.getDeclarations();
 
     if (declarations) {
-      declarations.forEach((decl) => {
-        if (!isRelevantTypeDecl(decl)) return;
+      declarations.forEach((declaration) => {
+        if (
+          !isInterfaceDeclaration(declaration) &&
+          !isTypeAliasDeclaration(declaration) &&
+          !isEnumDeclaration(declaration)
+        ) {
+          return;
+        }
 
-        const name = (decl as any).name?.text;
-        if (!name || collected.has(name)) return;
+        const name = declaration.name.text;
 
-        collected.set(name, decl.getText());
+        if (collected.has(name)) return;
 
-        forEachChild(decl, collectTypeDependenciesFromNode);
+        collected.set(name, declaration.getText());
+        forEachChild(declaration, collectTypesFromNode);
       });
     }
   }
 }
 
-function collectTypeDependenciesFromNode(node: Node) {
+function collectTypesFromNode(node: Node) {
   if (isTypeReferenceNode(node)) {
-    collectTypeDependencies(node);
+    collectTypes(node);
   }
 
-  forEachChild(node, collectTypeDependenciesFromNode);
+  forEachChild(node, collectTypesFromNode);
 }
 
-printNode(declaration);
+collectNodes(declaration);
 
 let content = "";
 
