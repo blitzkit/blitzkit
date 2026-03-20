@@ -65,9 +65,6 @@ for (const line of bodyOriginal.split("\n")) {
   <div class="content">
     <MarkdownCustom {body} />
 
-    <!-- {"see" in macros && <ApiMacroSee {locale} value={macros.see} />}
-    {"type" in macros && <ApiMacroType {locale} value={macros.type} />} -->
-
     {
       Object.entries(macroComponents).map(([macro, Component]) => {
         if (!(macro in macros)) return null;

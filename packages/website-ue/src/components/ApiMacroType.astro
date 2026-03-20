@@ -1,4 +1,5 @@
 ---
+import { resolve } from "path";
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { Link } from "./Link";
@@ -7,6 +8,22 @@ import HighlightedCodeBlock from "./HighlightedCodeBlock.astro";
 import { Text } from "./Text";
 import { ArrowBottomRightIcon } from "@radix-ui/react-icons";
 import { Code } from "./Code";
+import {
+  createProgram,
+  createSourceFile,
+  forEachChild,
+  isEnumDeclaration,
+  isInterfaceDeclaration,
+  isMethodSignature,
+  isPropertySignature,
+  isTypeAliasDeclaration,
+  isTypeReferenceNode,
+  ScriptTarget,
+  TypeFormatFlags,
+  type InterfaceDeclaration,
+  type Node,
+  type TypeNode,
+} from "typescript";
 
 interface Props {
   value: string;
@@ -18,60 +35,118 @@ const strings = await api.strings(locale);
 
 const roots = ["src/protos", "../closed/protos"];
 
-const lang = "proto";
-const importPattern = /import "(.+)";/gm;
-const messagePattern = /message .+ {\s*\n(.+\s*\n)+}/gm;
+const lang = "ts";
 
-const explored = new Set<string>();
-let messages: string[] = [];
+const name = "Avatar";
+const path = resolve(`${roots[0]}/${value}.ts`);
+const buffer = await readFile(path);
 
-await pullMessages(`${roots[0]}/${value}.proto`);
+const program = createProgram([path], {});
+const source = program.getSourceFile(path);
 
-async function pullMessages(path: string) {
-  if (explored.has(path)) return;
+if (!source) {
+  throw new Error(`Could not find ${path}`);
+}
 
-  explored.add(path);
+const checker = program.getTypeChecker();
 
-  const file = await readFile(path);
-  const content = file.toString();
-  const imports = content.matchAll(importPattern);
+const collected = new Map<string, string>();
 
-  for (const _import of imports) {
-    for (const root of roots) {
-      const path = `${root}/${_import[1]}`;
+let declaration: InterfaceDeclaration | undefined;
 
-      if (existsSync(path)) {
-        await pullMessages(path);
-        break;
-      }
+forEachChild(source, (node) => {
+  if (!isInterfaceDeclaration(node) || node.name.text !== name) return;
+  declaration = node;
+});
+
+if (declaration === undefined) {
+  throw new Error(`Could not find ${name} in ${path}`);
+}
+
+function printNode(node: Node) {
+  if (isInterfaceDeclaration(node)) {
+    const symbol = checker.getSymbolAtLocation(node.name);
+
+    if (symbol) {
+      const text = node.getText();
+
+      collected.set(node.name.text, text);
+
+      node.members.forEach((member) => {
+        if (isPropertySignature(member) && member.type) {
+          collectTypeDependencies(member.type);
+        }
+
+        if (isMethodSignature(member)) {
+          member.parameters.forEach((param) => {
+            if (param.type) {
+              collectTypeDependencies(param.type);
+            }
+          });
+
+          if (member.type) {
+            collectTypeDependencies(member.type);
+          }
+        }
+      });
     }
   }
 
-  const matchedMessages = content.matchAll(messagePattern);
+  forEachChild(node, printNode);
+}
 
-  for (const message of matchedMessages) {
-    messages = [message[0], ...messages];
+function isRelevantTypeDecl(node: Node) {
+  return (
+    isInterfaceDeclaration(node) ||
+    isTypeAliasDeclaration(node) ||
+    isEnumDeclaration(node)
+  );
+}
+
+function collectTypeDependencies(node: TypeNode) {
+  const type = checker.getTypeAtLocation(node);
+  const symbol = type.getSymbol();
+
+  if (!symbol) return;
+
+  const name = symbol.getName();
+
+  if (!collected.has(name)) {
+    const declarations = symbol.getDeclarations();
+
+    if (declarations) {
+      declarations.forEach((decl) => {
+        if (!isRelevantTypeDecl(decl)) return;
+
+        const name = (decl as any).name?.text;
+        if (!name || collected.has(name)) return;
+
+        collected.set(name, decl.getText());
+
+        forEachChild(decl, collectTypeDependenciesFromNode);
+      });
+    }
   }
 }
 
-const content = messages.join("\n\n");
-
-const indexPattern = /^( +).+\.(.+ = \d+;)$/m;
-
-let stripped = "";
-
-for (const line of content.split("\n")) {
-  const matches = line.match(indexPattern);
-
-  if (matches === null) {
-    stripped += `${line}\n`;
-    continue;
+function collectTypeDependenciesFromNode(node: Node) {
+  if (isTypeReferenceNode(node)) {
+    collectTypeDependencies(node);
   }
 
-  stripped += `${matches[1]}${matches[2]}\n`;
+  forEachChild(node, collectTypeDependenciesFromNode);
 }
 
-stripped = stripped.replaceAll("    ", "  ");
+printNode(declaration);
+
+let content = "";
+
+for (const [, definition] of collected) {
+  content += `${definition}\n\n`;
+}
+
+content = content.replaceAll(/^export\s*/gm, "");
+content = content.trim();
 ---
 
 <style>
@@ -136,7 +211,7 @@ stripped = stripped.replaceAll("    ", "  ");
 </div>
 
 <div class="types">
-  <HighlightedCodeBlock {lang} content={stripped} />
+  <HighlightedCodeBlock {lang} content={content} />
 
   <div class="overlay">
     <Link underline="always" href="#" className="view-full">
