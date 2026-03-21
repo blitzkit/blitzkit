@@ -87,24 +87,29 @@ function collectTypes(node: TypeNode) {
   if (!collected.has(name)) {
     const declarations = symbol.getDeclarations();
 
-    if (declarations) {
-      declarations.forEach((declaration) => {
-        if (
-          !isInterfaceDeclaration(declaration) &&
-          !isTypeAliasDeclaration(declaration) &&
-          !isEnumDeclaration(declaration)
-        ) {
-          return;
-        }
+    if (!declarations) return;
 
-        const name = declaration.name.text;
+    declarations.forEach((declaration) => {
+      const source = declaration.getSourceFile();
+      const isInSource = roots.some((root) => source.fileName.startsWith(root));
 
-        if (collected.has(name)) return;
+      if (!isInSource) return;
 
-        collected.set(name, declaration.getText());
-        forEachChild(declaration, collectTypesFromNode);
-      });
-    }
+      if (
+        !isInterfaceDeclaration(declaration) &&
+        !isTypeAliasDeclaration(declaration) &&
+        !isEnumDeclaration(declaration)
+      ) {
+        return;
+      }
+
+      const name = declaration.name.text;
+
+      if (collected.has(name)) return;
+
+      collected.set(name, declaration.getText());
+      forEachChild(declaration, collectTypesFromNode);
+    });
   }
 }
 
