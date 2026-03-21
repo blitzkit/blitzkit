@@ -195,7 +195,7 @@ export class ServerAPI extends AbstractAPI {
 
   protected async _avatarList() {
     const avatars = await this.avatars();
-    const list = Object.keys(avatars.avatars);
+    const list = avatars.avatars.map((avatar) => avatar.name);
 
     return { list };
   }

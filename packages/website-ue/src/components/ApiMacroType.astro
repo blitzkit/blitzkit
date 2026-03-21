@@ -1,22 +1,12 @@
 ---
-import { resolve } from "path";
-import { readFile } from "fs/promises";
-import { Link } from "./Link";
-import { api } from "../core/api/dynamic";
-import HighlightedCodeBlock from "./HighlightedCodeBlock.astro";
-import { Text } from "./Text";
 import { ArrowBottomRightIcon } from "@radix-ui/react-icons";
-import { Code } from "./Code";
+import { resolve } from "path";
 import {
   createProgram,
   forEachChild,
   isArrayTypeNode,
-  isEnumDeclaration,
-  isExpressionWithTypeArguments,
   isInterfaceDeclaration,
-  isMethodSignature,
   isPropertySignature,
-  isTypeAliasDeclaration,
   isTypeNode,
   isTypeReferenceNode,
   type InterfaceDeclaration,
@@ -24,11 +14,18 @@ import {
   type Symbol,
   type TypeNode,
 } from "typescript";
+import { api } from "../core/api/dynamic";
+import { Code } from "./Code";
+import HighlightedCodeBlock from "./HighlightedCodeBlock.astro";
+import { Link } from "./Link";
+import { Text } from "./Text";
 
 interface Props {
   value: string;
   locale: string;
 }
+
+const DEFAULT_EXPANDED = 8;
 
 const { value, locale } = Astro.props;
 const strings = await api.strings(locale);
@@ -192,7 +189,10 @@ content = content.trim();
   <ArrowBottomRightIcon />
 </div>
 
-<div class="types">
+<div
+  class="types"
+  data-expanded={content.split("\n").length <= DEFAULT_EXPANDED}
+>
   <HighlightedCodeBlock {lang} content={content} />
 
   <div class="overlay">
