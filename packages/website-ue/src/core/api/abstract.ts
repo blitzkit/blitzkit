@@ -165,8 +165,8 @@ export abstract class AbstractAPI {
   }
 }
 
-export function Cache(
-  discriminator: (...args: unknown[]) => string = () => "",
+export function Cache<Arguments extends unknown[]>(
+  discriminator: (...args: Arguments) => string = () => "",
 ) {
   const cache = new WeakMap<object, Map<string, unknown>>();
 
@@ -177,7 +177,7 @@ export function Cache(
   ) {
     const original = descriptor.value;
 
-    descriptor.value = async function (...args: unknown[]) {
+    descriptor.value = async function (...args: Arguments) {
       const key = discriminator(...args);
       const thisCache = cache.get(this) ?? new Map<string, unknown>();
 

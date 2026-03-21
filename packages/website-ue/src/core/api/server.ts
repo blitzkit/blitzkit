@@ -168,7 +168,7 @@ export class ServerAPI extends AbstractAPI {
     return data;
   }
 
-  @Cache((id) => id)
+  @Cache<[string]>((id) => id)
   async tank(id: string) {
     const tankList = await this.tankList();
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
