@@ -17,7 +17,8 @@
     "paths": {
       "@protos/*": ["./packages/closed/protos/*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "experimentalDecorators": true
   },
   "exclude": ["node_modules/**/*", "dist"]
 }

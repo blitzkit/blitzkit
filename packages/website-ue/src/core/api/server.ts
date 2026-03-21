@@ -15,7 +15,7 @@ import type { PopularTanks } from "../../protos/popular_tanks";
 import type { Tank } from "../../protos/tank";
 import type { TankListEntry } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
-import { AbstractAPI } from "./abstract";
+import { AbstractAPI, Cache } from "./abstract";
 
 if (typeof window !== "undefined") {
   throw new Error("ServerAPI is being evaluated in the browser");
@@ -133,7 +133,8 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  protected async _tankList() {
+  @Cache()
+  async tankList() {
     const group = this.metadata.group("TankEntity");
     const list: TankListEntry[] = [];
     const strings = await this.groupedGameStrings("en", "TankEntity", true);
@@ -167,7 +168,8 @@ export class ServerAPI extends AbstractAPI {
     return data;
   }
 
-  protected async _tank(id: string) {
+  @Cache((id) => id)
+  async tank(id: string) {
     const tankList = await this.tankList();
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
 

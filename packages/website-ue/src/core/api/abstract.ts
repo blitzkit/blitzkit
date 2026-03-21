@@ -11,25 +11,8 @@ import type { TankList } from "../../protos/tank_list";
 import type { Tanks } from "../../protos/tanks";
 
 export abstract class AbstractAPI {
-  private _tankListCache: TankList | undefined;
-  protected abstract _tankList(): Promise<TankList>;
-  async tankList() {
-    if (this._tankListCache === undefined) {
-      this._tankListCache = await this._tankList();
-    }
-
-    return this._tankListCache;
-  }
-
-  private _tankCache: Record<string, Tank> = {};
-  protected abstract _tank(id: string): Promise<Tank>;
-  async tank(id: string) {
-    if (this._tankCache[id] === undefined) {
-      this._tankCache[id] = await this._tank(id);
-    }
-
-    return this._tankCache[id];
-  }
+  abstract tankList(): Promise<TankList>;
+  abstract tank(id: string): Promise<Tank>;
 
   private _tanksCache: Tanks | undefined;
   protected abstract _tanks(): Promise<Tanks>;
@@ -180,4 +163,32 @@ export abstract class AbstractAPI {
 
     return this._popularTanksCache;
   }
+}
+
+export function Cache(
+  discriminator: (...args: unknown[]) => string = () => "",
+) {
+  const cache = new WeakMap<object, Map<string, unknown>>();
+
+  return function (
+    _target: unknown,
+    _propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    const original = descriptor.value;
+
+    descriptor.value = async function (...args: unknown[]) {
+      const key = discriminator(...args);
+      const thisCache = cache.get(this) ?? new Map<string, unknown>();
+
+      if (!cache.has(this)) cache.set(this, thisCache);
+      if (thisCache.has(key)) return thisCache.get(key);
+
+      const result = await original.apply(this, args);
+
+      thisCache.set(key, result);
+
+      return result;
+    };
+  };
 }
