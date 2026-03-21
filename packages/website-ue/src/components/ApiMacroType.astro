@@ -10,14 +10,18 @@ import { Code } from "./Code";
 import {
   createProgram,
   forEachChild,
+  isArrayTypeNode,
   isEnumDeclaration,
+  isExpressionWithTypeArguments,
   isInterfaceDeclaration,
   isMethodSignature,
   isPropertySignature,
   isTypeAliasDeclaration,
+  isTypeNode,
   isTypeReferenceNode,
   type InterfaceDeclaration,
   type Node,
+  type Symbol,
   type TypeNode,
 } from "typescript";
 
@@ -44,6 +48,7 @@ if (source === undefined) {
 
 const checker = program.getTypeChecker();
 const collected = new Map<string, string>();
+const visited = new Set<Symbol>();
 let declaration: InterfaceDeclaration | undefined;
 
 forEachChild(source, (node) => {
@@ -77,48 +82,41 @@ function collectNodes(node: Node) {
 }
 
 function collectTypes(node: TypeNode) {
+  if (isArrayTypeNode(node)) {
+    collectTypes(node.elementType);
+    return;
+  }
+
+  if (isTypeReferenceNode(node)) {
+    node.typeArguments?.forEach(collectTypes);
+  }
+
   const type = checker.getTypeAtLocation(node);
   const symbol = type.getSymbol();
 
-  if (!symbol) return;
+  if (!symbol || visited.has(symbol)) return;
 
-  const name = symbol.getName();
+  visited.add(symbol);
 
-  if (!collected.has(name)) {
-    const declarations = symbol.getDeclarations();
+  const declarations = symbol.getDeclarations();
 
-    if (!declarations) return;
+  if (!declarations) return;
 
-    declarations.forEach((declaration) => {
-      const source = declaration.getSourceFile();
-      const isInSource = roots.some((root) => source.fileName.startsWith(root));
+  for (const declaration of declarations) {
+    if (isInterfaceDeclaration(declaration)) {
+      collected.set(declaration.name.text, declaration.getText());
 
-      if (!isInSource) return;
-
-      if (
-        !isInterfaceDeclaration(declaration) &&
-        !isTypeAliasDeclaration(declaration) &&
-        !isEnumDeclaration(declaration)
-      ) {
-        return;
-      }
-
-      const name = declaration.name.text;
-
-      if (collected.has(name)) return;
-
-      collected.set(name, declaration.getText());
-      forEachChild(declaration, collectTypesFromNode);
-    });
+      declaration.members.forEach((member) => {
+        if (isPropertySignature(member) && member.type) {
+          collectTypes(member.type);
+        }
+      });
+    } else {
+      forEachChild(declaration, (child) => {
+        if (isTypeNode(child)) collectTypes(child);
+      });
+    }
   }
-}
-
-function collectTypesFromNode(node: Node) {
-  if (isTypeReferenceNode(node)) {
-    collectTypes(node);
-  }
-
-  forEachChild(node, collectTypesFromNode);
 }
 
 collectNodes(declaration);
