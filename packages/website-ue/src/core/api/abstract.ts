@@ -1,6 +1,7 @@
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import type { Avatar } from "../../protos/avatar";
+import type { AvatarList } from "../../protos/avatar_list";
 import type { Avatars } from "../../protos/avatars";
 import type { Background } from "../../protos/background";
 import type { Backgrounds } from "../../protos/backgrounds";
@@ -128,6 +129,16 @@ export abstract class AbstractAPI {
     }
 
     return this._avatarsCache;
+  }
+
+  private _avatarListCache: AvatarList | undefined;
+  protected abstract _avatarList(): Promise<AvatarList>;
+  async avatarList() {
+    if (this._avatarListCache === undefined) {
+      this._avatarListCache = await this._avatarList();
+    }
+
+    return this._avatarListCache;
   }
 
   private _backgroundCache: Record<string, Background> = {};

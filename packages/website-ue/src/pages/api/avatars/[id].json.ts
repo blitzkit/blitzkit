@@ -16,7 +16,7 @@ export const getStaticPaths = (async () => {
  *
  * @see avatars/list.json for all avatar ids.
  * @see avatars/[id].webp for avatar images.
- * @type avatar
+ * @type avatar.Avatar
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const avatar = await api.avatar(params.id);

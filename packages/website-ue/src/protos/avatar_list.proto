@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message AvatarList {
+  repeated string list = 1;
+}

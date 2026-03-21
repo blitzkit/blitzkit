@@ -29,12 +29,11 @@ interface Props {
 const { value, locale } = Astro.props;
 const strings = await api.strings(locale);
 
+const lang = "ts";
 const roots = ["src/protos", "../closed/protos"];
 
-const lang = "ts";
-
-const name = "Avatar";
-const path = resolve(`${roots[0]}/${value}.ts`);
+const [route, name] = value.split(".");
+const path = resolve(`${roots[0]}/${route}.ts`);
 
 const program = createProgram([path], {});
 const source = program.getSourceFile(path);

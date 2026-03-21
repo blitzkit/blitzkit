@@ -193,6 +193,13 @@ export class ServerAPI extends AbstractAPI {
     return { avatars };
   }
 
+  protected async _avatarList() {
+    const avatars = await this.avatars();
+    const list = Object.keys(avatars.avatars);
+
+    return { list };
+  }
+
   protected async _avatar(id: string) {
     const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
     const name = avatar.name;
