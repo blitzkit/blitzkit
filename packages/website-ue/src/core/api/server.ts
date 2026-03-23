@@ -35,104 +35,6 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
-  protected async _gameStrings(locale: string) {
-    const group = this.metadata.group("ClientConfigsEntity");
-
-    if (group.length !== 1) {
-      throw new RangeError(
-        `Don't know how to handle ${group.length} ClientConfigsEntities`,
-      );
-    }
-
-    const clientConfig = this.metadata.item(group[0].id);
-    const localizationResources = clientConfig.LocalizationResources();
-
-    if (!localizationResources.remote_storage) {
-      throw new Error("Localization resources not found");
-    }
-
-    let remoteStorage: RemoteStorageComponent | undefined = undefined;
-
-    for (const candidateId of localizationResources.remote_storage
-      .remote_urls) {
-      const item = this.metadata.item(candidateId);
-      const candidate = item.RemoteStorage();
-
-      if (
-        remoteStorage === undefined ||
-        candidate.download_speed_weight > remoteStorage.download_speed_weight
-      ) {
-        remoteStorage = candidate;
-      }
-    }
-
-    if (remoteStorage === undefined) {
-      throw new Error("No suitable production remote storage found");
-    }
-
-    const strings: Record<string, string> = {};
-    const configPath = `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`;
-
-    try {
-      const config = await fetch(configPath)
-        .then((response) => response.text())
-        .then((text) => parse(text) as LocalizationConfig);
-
-      for (const namespace of config.namespaces) {
-        Object.assign(
-          strings,
-          await fetch(
-            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`,
-          )
-            .then((response) => response.text())
-            .then((text) => {
-              const strings: Record<string, string> = {};
-              const parsed = parse(text) as Record<string, string>;
-
-              for (const key in parsed) {
-                strings[key] = parsed[key].replaceAll('\\"', '"');
-              }
-
-              return strings;
-            }),
-        );
-      }
-    } catch (error) {
-      console.warn(
-        `Failed to fetch config from ${configPath}. Returning empty strings. This will throw an error in production. Error:`,
-        error,
-      );
-    }
-
-    return strings;
-  }
-
-  protected async _groupedGameStrings(locale: string, group: string) {
-    const strings = await this.gameStrings(locale);
-    const filtered: Record<string, string> = {};
-
-    for (const key in strings) {
-      if (key.startsWith(`${group}__`)) {
-        const trimmed = key.substring(group.length + 2);
-        filtered[trimmed] = strings[key];
-      }
-    }
-
-    return filtered;
-  }
-
-  protected async _strings(locale: string) {
-    const localized = (await globbedStrings[
-      `../../../../i18n/strings/${locale}.json`
-    ]()) as DeepPartial<Strings>;
-    const defaults = (await globbedStrings[
-      `../../../../i18n/strings/${locales.default}.json`
-    ]()) as Strings;
-    const strings = merge({}, defaults, localized);
-
-    return strings;
-  }
-
   @Cache()
   async tankList() {
     const group = this.metadata.group("TankEntity");
@@ -157,18 +59,7 @@ export class ServerAPI extends AbstractAPI {
     return { list };
   }
 
-  protected async _tanks() {
-    const tankList = await this.tankList();
-    const data: Tanks = { tanks: {} };
-
-    for (const { id } of tankList.list) {
-      data.tanks[id] = await this.tank(id);
-    }
-
-    return data;
-  }
-
-  @Cache<[string]>((id) => id)
+  @Cache()
   async tank(id: string) {
     const tankList = await this.tankList();
     const tankListEntry = tankList.list.find((tank) => tank.id === id);
@@ -185,70 +76,20 @@ export class ServerAPI extends AbstractAPI {
     return { id, slug, tank, compensation } satisfies Tank;
   }
 
-  protected async _avatars() {
-    const avatars: Avatar[] = [];
+  @Cache()
+  async tanks() {
+    const tankList = await this.tankList();
+    const data: Tanks = { tanks: {} };
 
-    for (const item of this.metadata.group("ProfileAvatarEntity")) {
-      avatars.push(await this.avatar(item.name));
+    for (const { id } of tankList.list) {
+      data.tanks[id] = await this.tank(id);
     }
 
-    return { avatars };
+    return data;
   }
 
-  protected async _avatarList() {
-    const avatars = await this.avatars();
-    const list = avatars.avatars.map((avatar) => avatar.name);
-
-    return { list };
-  }
-
-  protected async _avatar(id: string) {
-    const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
-    const name = avatar.name;
-    const stuff_ui = avatar.StuffUI("UIComponent");
-    const profile_avatar = avatar.ProfileAvatar();
-    const sellable = avatar.components.sellableComponent
-      ? avatar.Sellable()
-      : undefined;
-
-    return { name, stuff_ui, profile_avatar, sellable };
-  }
-
-  protected async _backgrounds() {
-    const backgrounds: Background[] = [];
-
-    for (const item of this.metadata.group("ProfileBackgroundEntity")) {
-      backgrounds.push(await this.background(item.name));
-    }
-
-    return { backgrounds };
-  }
-
-  protected async _background(id: string) {
-    const background = this.metadata.item(`ProfileBackgroundEntity.${id}`);
-    const name = background.name;
-    const stuff_ui = background.StuffUI("UIComponent");
-    const profile_background = background.ProfileBackground();
-    const sellable = background.components.sellableComponent
-      ? background.Sellable()
-      : undefined;
-
-    return { name, stuff_ui, profile_background, sellable };
-  }
-
-  protected async _gameStringGroups() {
-    const defaultGameStrings = await this.gameStrings(locales.default);
-    const groups = new Set<string>();
-
-    for (const key in defaultGameStrings) {
-      const [group] = key.split("__");
-      groups.add(group);
-    }
-
-    return Array.from(groups.values());
-  }
-
-  protected async _popularTanks() {
+  @Cache()
+  async popularTanks() {
     if (!existsSync("../../temp/popular.json")) {
       const { tanks } = await this.tanks();
       const tanksArray = Object.values(tanks);
@@ -331,5 +172,175 @@ export class ServerAPI extends AbstractAPI {
 
     const data = await readFile("../../temp/popular.json", "utf-8");
     return JSON.parse(data) as PopularTanks;
+  }
+
+  @Cache()
+  async strings(locale: string) {
+    const localized = (await globbedStrings[
+      `../../../../i18n/strings/${locale}.json`
+    ]()) as DeepPartial<Strings>;
+    const defaults = (await globbedStrings[
+      `../../../../i18n/strings/${locales.default}.json`
+    ]()) as Strings;
+    const strings = merge({}, defaults, localized);
+
+    return strings;
+  }
+
+  @Cache()
+  async gameStrings(locale: string) {
+    const group = this.metadata.group("ClientConfigsEntity");
+
+    if (group.length !== 1) {
+      throw new RangeError(
+        `Don't know how to handle ${group.length} ClientConfigsEntities`,
+      );
+    }
+
+    const clientConfig = this.metadata.item(group[0].id);
+    const localizationResources = clientConfig.LocalizationResources();
+
+    if (!localizationResources.remote_storage) {
+      throw new Error("Localization resources not found");
+    }
+
+    let remoteStorage: RemoteStorageComponent | undefined = undefined;
+
+    for (const candidateId of localizationResources.remote_storage
+      .remote_urls) {
+      const item = this.metadata.item(candidateId);
+      const candidate = item.RemoteStorage();
+
+      if (
+        remoteStorage === undefined ||
+        candidate.download_speed_weight > remoteStorage.download_speed_weight
+      ) {
+        remoteStorage = candidate;
+      }
+    }
+
+    if (remoteStorage === undefined) {
+      throw new Error("No suitable production remote storage found");
+    }
+
+    const strings: Record<string, string> = {};
+    const configPath = `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`;
+
+    try {
+      const config = await fetch(configPath)
+        .then((response) => response.text())
+        .then((text) => parse(text) as LocalizationConfig);
+
+      for (const namespace of config.namespaces) {
+        Object.assign(
+          strings,
+          await fetch(
+            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`,
+          )
+            .then((response) => response.text())
+            .then((text) => {
+              const strings: Record<string, string> = {};
+              const parsed = parse(text) as Record<string, string>;
+
+              for (const key in parsed) {
+                strings[key] = parsed[key].replaceAll('\\"', '"');
+              }
+
+              return strings;
+            }),
+        );
+      }
+    } catch (error) {
+      console.warn(
+        `Failed to fetch config from ${configPath}. Returning empty strings. This will throw an error in production. Error:`,
+        error,
+      );
+    }
+
+    return strings;
+  }
+
+  @Cache()
+  protected async _groupedGameStrings(locale: string, group: string) {
+    const strings = await this.gameStrings(locale);
+    const filtered: Record<string, string> = {};
+
+    for (const key in strings) {
+      if (key.startsWith(`${group}__`)) {
+        const trimmed = key.substring(group.length + 2);
+        filtered[trimmed] = strings[key];
+      }
+    }
+
+    return filtered;
+  }
+
+  @Cache()
+  async gameStringGroups() {
+    const defaultGameStrings = await this.gameStrings(locales.default);
+    const groups = new Set<string>();
+
+    for (const key in defaultGameStrings) {
+      const [group] = key.split("__");
+      groups.add(group);
+    }
+
+    return Array.from(groups.values());
+  }
+
+  @Cache()
+  async avatar(id: string) {
+    const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
+    const name = avatar.name;
+    const stuff_ui = avatar.StuffUI("UIComponent");
+    const profile_avatar = avatar.ProfileAvatar();
+    const sellable = avatar.components.sellableComponent
+      ? avatar.Sellable()
+      : undefined;
+
+    return { name, stuff_ui, profile_avatar, sellable };
+  }
+
+  @Cache()
+  async avatars() {
+    const avatars: Avatar[] = [];
+
+    for (const item of this.metadata.group("ProfileAvatarEntity")) {
+      avatars.push(await this.avatar(item.name));
+    }
+
+    return { avatars };
+  }
+
+  @Cache()
+  async avatarList() {
+    const avatars = await this.avatars();
+    const list = avatars.avatars.map((avatar) => avatar.name);
+
+    return { list };
+  }
+
+  @Cache()
+  async background(id: string) {
+    const background = this.metadata.item(`ProfileBackgroundEntity.${id}`);
+    const name = background.name;
+    const stuff_ui = background.StuffUI("UIComponent");
+    const profile_background = background.ProfileBackground();
+    const sellable = background.components.sellableComponent
+      ? background.Sellable()
+      : undefined;
+
+    return { name, stuff_ui, profile_background, sellable };
+  }
+
+  @Cache()
+  async backgrounds() {
+    const backgrounds: Background[] = [];
+
+    for (const item of this.metadata.group("ProfileBackgroundEntity")) {
+      backgrounds.push(await this.background(item.name));
+    }
+
+    return { backgrounds };
   }
 }
