@@ -170,6 +170,7 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
             break;
 
           case "TransformComponent": {
+            component["tc.localTranslation"] = [0, 0, 0]; // Game when is loading model resets position to [0, 0, 0], so any set value is ignored.
             node.setTranslation(component["tc.localTranslation"]);
             node.setRotation(component["tc.localRotation"]);
             node.setScale(component["tc.localScale"]);

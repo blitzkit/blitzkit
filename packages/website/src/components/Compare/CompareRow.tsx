@@ -14,7 +14,7 @@ import { StickyRowHeaderCell } from "../StickyRowHeaderCell";
 
 type CompareRowProps = {
   display?: (
-    member: Awaited<TankCharacteristics>
+    member: Awaited<TankCharacteristics>,
   ) => number | string | undefined;
   deltaType?: CompareCellDirection;
   decimals?: number;
@@ -46,7 +46,7 @@ export function CompareRow({
   const values = stats.map((stat) =>
     typeof props.value === "function"
       ? props.value(stat)!
-      : (stat[props.value] as number)
+      : (stat[props.value] as number),
   );
   const id = useRef(Math.random());
   const name =
@@ -56,10 +56,10 @@ export function CompareRow({
 
   return (
     <Table.Row>
-      <StickyRowHeaderCell>
+      <StickyRowHeaderCell left="-1.25rem">
         <Flex
           align="center"
-          style={{ whiteSpace: "nowrap" }}
+          maxWidth={{ initial: "6rem", sm: "unset" }}
           gap={indent ? { initial: "4", sm: "6" } : { initial: "1", sm: "2" }}
         >
           <IconButton
@@ -111,8 +111,8 @@ export function CompareRow({
         const resolvedDisplayValue = display
           ? display(stats[index])
           : decimals === undefined
-          ? value
-          : value?.toFixed(decimals);
+            ? value
+            : value?.toFixed(decimals);
 
         return (
           <CompareCell
@@ -145,8 +145,8 @@ export function CompareRow({
                           deltaNominalDisplay
                             ? deltaNominalDisplay(delta)
                             : decimals === undefined
-                            ? delta
-                            : delta.toFixed(decimals)
+                              ? delta
+                              : delta.toFixed(decimals)
                         }`}
                         )
                       </Text>
@@ -156,7 +156,7 @@ export function CompareRow({
                       <Text color="gray">
                         (
                         {`${deltaPercentage > 0 ? "+" : ""}${Math.round(
-                          deltaPercentage * 100
+                          deltaPercentage * 100,
                         )}%`}
                         )
                       </Text>
