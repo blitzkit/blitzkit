@@ -105,13 +105,13 @@ export function CompareTable({ stats }: CompareTableProps) {
                                     crewSkills[skill] === 0
                                       ? Var("gray-11")
                                       : permanentSkills.includes(skill)
-                                      ? Var("crimson-11")
-                                      : Var("amber-11"),
+                                        ? Var("crimson-11")
+                                        : Var("amber-11"),
                                 }}
                               />
                             ))}
                           </Flex>
-                        )
+                        ),
                       )}
                     </Flex>
                   </Button>
@@ -173,19 +173,19 @@ export function CompareTable({ stats }: CompareTableProps) {
                 consumables,
                 camouflage,
               },
-              index
+              index,
             ) => {
               const equipmentPreset =
                 equipmentDefinitions.presets[tank.equipment_preset];
               const provisionsList = availableProvisions(
                 tank,
                 gun,
-                provisionDefinitions
+                provisionDefinitions,
               );
               const consumablesList = Object.values(
-                consumableDefinitions.consumables
+                consumableDefinitions.consumables,
               ).filter((consumable) =>
-                checkConsumableProvisionInclusivity(consumable, tank, gun)
+                checkConsumableProvisionInclusivity(consumable, tank, gun),
               );
 
               return (
@@ -294,11 +294,11 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 <img
                                   alt={unwrap(
                                     provisionDefinitions.provisions[provision]
-                                      .name
+                                      .name,
                                   )}
                                   key={provision}
                                   src={asset(
-                                    `/icons/provisions/${provision}.webp`
+                                    `/icons/provisions/${provision}.webp`,
                                   )}
                                   style={{
                                     left: "50%",
@@ -335,7 +335,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                         <Popover.Content>
                           <ProvisionsManager
                             provisions={provisionsList.map(
-                              (provision) => provision.id
+                              (provision) => provision.id,
                             )}
                             selected={provisions}
                             disabled={tank.max_provisions === provisions.length}
@@ -452,7 +452,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 CompareEphemeral.mutate((draft) => {
                                   draft.members[index].equipmentMatrix = times(
                                     3,
-                                    () => times(3, () => 0)
+                                    () => times(3, () => 0),
                                   ) as EquipmentMatrix;
                                   draft.sorting = undefined;
                                 });
@@ -501,11 +501,11 @@ export function CompareTable({ stats }: CompareTableProps) {
                                   alt={unwrap(
                                     consumableDefinitions.consumables[
                                       consumable
-                                    ].name
+                                    ].name,
                                   )}
                                   key={consumable}
                                   src={asset(
-                                    `/icons/consumables/${consumable}.webp`
+                                    `/icons/consumables/${consumable}.webp`,
                                   )}
                                   style={{
                                     left: "50%",
@@ -610,7 +610,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                   </Flex>
                 </Table.Cell>
               );
-            }
+            },
           )}
         </Table.Row>
       </Table.Body>

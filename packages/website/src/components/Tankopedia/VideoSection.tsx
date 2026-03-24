@@ -1,12 +1,12 @@
-import { youtubers } from '@blitzkit/core';
-import { Box, Flex, Heading, Link, Skeleton, Text } from '@radix-ui/themes';
-import { awaitableReviews } from '../../core/awaitables/reviews';
-import { Var } from '../../core/radix/var';
-import { useLocale } from '../../hooks/useLocale';
-import { Duel } from '../../stores/duel';
-import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
-import { PageWrapper } from '../PageWrapper';
-import { VerifiedIcon } from '../VerifiedIcon';
+import { youtubers } from "@blitzkit/core";
+import { Box, Flex, Heading, Link, Skeleton, Text } from "@radix-ui/themes";
+import { awaitableReviews } from "../../core/awaitables/reviews";
+import { Var } from "../../core/radix/var";
+import { useLocale } from "../../hooks/useLocale";
+import { Duel } from "../../stores/duel";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { PageWrapper } from "../PageWrapper";
+import { VerifiedIcon } from "../VerifiedIcon";
 
 const reviews = await awaitableReviews;
 
@@ -47,22 +47,22 @@ export function VideoSection({ skeleton }: MaybeSkeletonComponentProps) {
                 <Flex
                   direction="column"
                   style={{
-                    borderRadius: 'var(--radius-3)',
-                    overflow: 'hidden',
+                    borderRadius: "var(--radius-3)",
+                    overflow: "hidden",
                     background: skeleton
-                      ? Var('color-panel-solid')
+                      ? Var("color-panel-solid")
                       : `url(${image})`,
-                    backgroundPosition: '0 18px',
-                    backgroundSize: 'cover',
+                    backgroundPosition: "0 18px",
+                    backgroundSize: "cover",
                   }}
                 >
                   <Box
                     style={{
-                      background: skeleton ? 'transparent' : `url(${image})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
+                      background: skeleton ? "transparent" : `url(${image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
                       height: 128,
-                      aspectRatio: '16 / 9',
+                      aspectRatio: "16 / 9",
                     }}
                   />
                   <Flex
@@ -70,8 +70,8 @@ export function VideoSection({ skeleton }: MaybeSkeletonComponentProps) {
                     width="100%"
                     justify="center"
                     style={{
-                      backdropFilter: 'blur(4rem)',
-                      WebkitBackdropFilter: 'blur(4rem)',
+                      backdropFilter: "blur(4rem)",
+                      WebkitBackdropFilter: "blur(4rem)",
                     }}
                     align="center"
                     gap="1"
