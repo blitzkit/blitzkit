@@ -24,6 +24,7 @@ export function MetaSection() {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const ClassIcon = classIcons[protagonist.class];
   const { locale, strings } = useLocale();
+  const devName = (protagonist as { dev_name?: string }).dev_name;
 
   return (
     <Flex justify="center" mt="-9">
@@ -102,17 +103,27 @@ export function MetaSection() {
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_id}
                     >
-                      <CopyableCode copy={`${protagonist.id}`}>
+                      <CopyableCode
+                        copy={`${protagonist.id}`}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
                         {protagonist.id}
                       </CopyableCode>
                     </Listing>
                   )}
-                  {developerMode && (
+                  {developerMode && devName && (
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_name}
                     >
-                      <CopyableCode copy={protagonist.dev_name}>
-                        {protagonist.dev_name ?? '-'}
+                      <CopyableCode
+                        copy={devName}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
+                        {devName}
                       </CopyableCode>
                     </Listing>
                   )}

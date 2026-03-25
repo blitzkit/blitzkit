@@ -61,7 +61,12 @@ export function ArmorPlateDisplay() {
               <>
                 <Text mt="2" color="gray" size="2">
                   <b>DEV:</b>{" "}
-                  <CopyableCode copy={highlightArmor.name}>
+                  <CopyableCode
+                    copy={highlightArmor.name}
+                    variant="soft"
+                    highContrast
+                    color="gray"
+                  >
                     {highlightArmor.name}
                   </CopyableCode>
                 </Text>

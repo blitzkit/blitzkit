@@ -1,29 +1,37 @@
-import { Code, Tooltip } from "@radix-ui/themes";
-import { useState, type ReactNode } from "react";
+import { Code, Tooltip, type CodeProps } from "@radix-ui/themes";
+import { useState } from "react";
 import { useLocale } from "../hooks/useLocale";
 
-interface CopyableCodeProps {
+export interface CopyableCodeProps extends CodeProps {
   copy?: string;
-  children: ReactNode;
 }
 
-export function CopyableCode({ copy, children }: CopyableCodeProps) {
+export function CopyableCode({
+  copy,
+  onClick,
+  onPointerLeave,
+  style,
+  children,
+  ...props
+}: CopyableCodeProps) {
   const [copied, setCopied] = useState(false);
   const { strings } = useLocale();
 
   return (
     <Tooltip open={copied} content={strings.website.common.copy_button.copied}>
       <Code
-        variant="soft"
-        highContrast
-        color="gray"
-        style={{ cursor: copy ? "copy" : "default" }}
-        onClick={() => {
+        {...props}
+        style={{ ...(copy ? { cursor: "copy" } : {}), ...style }}
+        onClick={(event) => {
+          onClick?.(event);
           if (!copy) return;
           navigator.clipboard.writeText(copy);
           setCopied(true);
         }}
-        onPointerLeave={() => setCopied(false)}
+        onPointerLeave={(event) => {
+          onPointerLeave?.(event);
+          setCopied(false);
+        }}
       >
         {children}
       </Code>
