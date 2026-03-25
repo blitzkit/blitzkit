@@ -1,21 +1,19 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import {
   Card,
-  Code,
   Flex,
   IconButton,
   Text,
   TextField,
-  Tooltip,
 } from "@radix-ui/themes";
 import { Html } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { resolveArmorIndex } from "../../../core/blitzkit/resolveArmorIndex";
-import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
+import { CopyableCode } from "../../CopyableCode";
 import { layerTypeNames } from "./ShotDisplayCard";
 import { ArmorType } from "./SpacedArmorScene";
 
@@ -23,8 +21,6 @@ export function ArmorPlateDisplay() {
   const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const input = useRef<HTMLInputElement>(null);
-  const { strings } = useLocale();
-  const [copied, setCopied] = useState(false);
 
   if (highlightArmor === undefined) return null;
 
@@ -65,24 +61,9 @@ export function ArmorPlateDisplay() {
               <>
                 <Text mt="2" color="gray" size="2">
                   <b>DEV:</b>{" "}
-                  <Tooltip
-                    open={copied}
-                    content={strings.website.common.copy_button.copied}
-                  >
-                    <Code
-                      variant="soft"
-                      highContrast
-                      color="gray"
-                      style={{ cursor: "copy" }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(highlightArmor.name);
-                        setCopied(true);
-                      }}
-                      onPointerLeave={() => setCopied(false)}
-                    >
-                      {highlightArmor.name}
-                    </Code>
-                  </Tooltip>
+                  <CopyableCode copy={highlightArmor.name}>
+                    {highlightArmor.name}
+                  </CopyableCode>
                 </Text>
               </>
             )}
