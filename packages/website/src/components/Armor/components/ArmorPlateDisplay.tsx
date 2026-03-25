@@ -6,11 +6,13 @@ import {
   IconButton,
   Text,
   TextField,
+  Tooltip,
 } from "@radix-ui/themes";
 import { Html } from "@react-three/drei";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { resolveArmorIndex } from "../../../core/blitzkit/resolveArmorIndex";
+import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -21,6 +23,8 @@ export function ArmorPlateDisplay() {
   const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const input = useRef<HTMLInputElement>(null);
+  const { strings } = useLocale();
+  const [copied, setCopied] = useState(false);
 
   if (highlightArmor === undefined) return null;
 
@@ -60,7 +64,25 @@ export function ArmorPlateDisplay() {
             {developerMode && (
               <>
                 <Text mt="2" color="gray" size="2">
-                  <b>DEV:</b> <Code>{highlightArmor.name}</Code>
+                  <b>DEV:</b>{" "}
+                  <Tooltip
+                    open={copied}
+                    content={strings.website.common.copy_button.copied}
+                  >
+                    <Code
+                      variant="soft"
+                      highContrast
+                      color="gray"
+                      style={{ cursor: "copy" }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(highlightArmor.name);
+                        setCopied(true);
+                      }}
+                      onPointerLeave={() => setCopied(false)}
+                    >
+                      {highlightArmor.name}
+                    </Code>
+                  </Tooltip>
                 </Text>
               </>
             )}

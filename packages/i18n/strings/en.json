@@ -1083,6 +1083,7 @@
           "tier": "Tier",
           "type": "Type",
           "dev_id": "DEV: ID",
+          "dev_name": "DEV: NAME",
           "purchase": "Purchase price",
           "restoration": "Restoration price",
           "sale": "Sale price",

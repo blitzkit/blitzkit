@@ -39,6 +39,7 @@ message TankDefinition {
   required float camouflage_onFire = 29;
   required string equipment_preset = 30;
   required uint32 weight = 31;
+  optional string dev_name = 32;
 }
 
 message ResearchCost {

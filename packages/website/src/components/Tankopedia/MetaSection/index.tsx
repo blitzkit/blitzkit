@@ -4,7 +4,8 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from '@blitzkit/core';
-import { Box, Code, Flex } from '@radix-ui/themes';
+import { Box, Code, Flex, Tooltip } from '@radix-ui/themes';
+import { useState } from 'react';
 import { Var } from '../../../core/radix/var';
 import { useLocale } from '../../../hooks/useLocale';
 import { App } from '../../../stores/app';
@@ -23,6 +24,7 @@ export function MetaSection() {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const ClassIcon = classIcons[protagonist.class];
   const { locale, strings } = useLocale();
+  const [copied, setCopied] = useState<null | 'id' | 'name'>(null);
 
   return (
     <Flex justify="center" mt="-9">
@@ -101,7 +103,53 @@ export function MetaSection() {
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_id}
                     >
-                      <Code>{protagonist.id}</Code>
+                      <Tooltip
+                        open={copied === 'id'}
+                        content={strings.website.common.copy_button.copied}
+                      >
+                        <Code
+                          variant="soft"
+                          highContrast
+                          color="gray"
+                          style={{ cursor: 'copy' }}
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${protagonist.id}`);
+                            setCopied('id');
+                          }}
+                          onPointerLeave={() => {
+                            if (copied === 'id') setCopied(null);
+                          }}
+                        >
+                          {protagonist.id}
+                        </Code>
+                      </Tooltip>
+                    </Listing>
+                  )}
+                  {developerMode && (
+                    <Listing
+                      label={strings.website.tools.tankopedia.meta.dev_name}
+                    >
+                      <Tooltip
+                        open={copied === 'name'}
+                        content={strings.website.common.copy_button.copied}
+                      >
+                        <Code
+                          variant="soft"
+                          highContrast
+                          color="gray"
+                          style={{ cursor: 'copy' }}
+                          onClick={() => {
+                            if (!protagonist.dev_name) return;
+                            navigator.clipboard.writeText(protagonist.dev_name);
+                            setCopied('name');
+                          }}
+                          onPointerLeave={() => {
+                            if (copied === 'name') setCopied(null);
+                          }}
+                        >
+                          {protagonist.dev_name ?? '-'}
+                        </Code>
+                      </Tooltip>
                     </Listing>
                   )}
                   {protagonist.type === TankType.PREMIUM && (
