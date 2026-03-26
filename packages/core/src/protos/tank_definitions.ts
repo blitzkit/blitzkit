@@ -316,6 +316,7 @@ export interface TankDefinition {
   camouflage_onFire: number;
   equipment_preset: string;
   weight: number;
+  dev_name: string;
 }
 
 export interface TankDefinition_RolesEntry {
@@ -693,6 +694,7 @@ function createBaseTankDefinition(): TankDefinition {
     camouflage_onFire: 0,
     equipment_preset: "",
     weight: 0,
+    dev_name: "",
   };
 }
 
@@ -802,6 +804,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     }
     if (message.weight !== 0) {
       writer.uint32(248).uint32(message.weight);
+    }
+    if (message.dev_name !== "") {
+      writer.uint32(258).string(message.dev_name);
     }
     return writer;
   },
@@ -1094,6 +1099,14 @@ export const TankDefinition: MessageFns<TankDefinition> = {
           message.weight = reader.uint32();
           continue;
         }
+        case 32: {
+          if (tag !== 258) {
+            break;
+          }
+
+          message.dev_name = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1181,6 +1194,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
         ? globalThis.String(object.equipment_preset)
         : "",
       weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
+      dev_name: isSet(object.dev_name) ? globalThis.String(object.dev_name) : "",
     };
   },
 
@@ -1282,6 +1296,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.weight !== 0) {
       obj.weight = Math.round(message.weight);
     }
+    if (message.dev_name !== "") {
+      obj.dev_name = message.dev_name;
+    }
     return obj;
   },
 
@@ -1343,6 +1360,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.camouflage_onFire = object.camouflage_onFire ?? 0;
     message.equipment_preset = object.equipment_preset ?? "";
     message.weight = object.weight ?? 0;
+    message.dev_name = object.dev_name ?? "";
     return message;
   },
 };

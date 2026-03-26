@@ -4,12 +4,13 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from '@blitzkit/core';
-import { Box, Code, Flex } from '@radix-ui/themes';
+import { Box, Flex } from '@radix-ui/themes';
 import { Var } from '../../../core/radix/var';
 import { useLocale } from '../../../hooks/useLocale';
 import { App } from '../../../stores/app';
 import { Duel } from '../../../stores/duel';
 import { classIcons } from '../../ClassIcon';
+import { CopyableCode } from '../../CopyableCode';
 import { Listing } from './components/Listing';
 
 const NATIONAL_BANNER_POSITION_OVERRIDES: Record<string, string> = {
@@ -101,7 +102,28 @@ export function MetaSection() {
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_id}
                     >
-                      <Code>{protagonist.id}</Code>
+                      <CopyableCode
+                        copy={`${protagonist.id}`}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
+                        {protagonist.id}
+                      </CopyableCode>
+                    </Listing>
+                  )}
+                  {developerMode && (
+                    <Listing
+                      label={strings.website.tools.tankopedia.meta.dev_name}
+                    >
+                      <CopyableCode
+                        copy={devName}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
+                        {protagonist.dev_name}
+                      </CopyableCode>
                     </Listing>
                   )}
                   {protagonist.type === TankType.PREMIUM && (
