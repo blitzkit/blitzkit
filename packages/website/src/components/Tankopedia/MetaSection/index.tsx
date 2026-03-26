@@ -24,7 +24,6 @@ export function MetaSection() {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const ClassIcon = classIcons[protagonist.class];
   const { locale, strings } = useLocale();
-  const devName = protagonist.dev_name;
 
   return (
     <Flex justify="center" mt="-9">
@@ -113,7 +112,7 @@ export function MetaSection() {
                       </CopyableCode>
                     </Listing>
                   )}
-                  {developerMode && devName && (
+                  {developerMode && (
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_name}
                     >
@@ -123,7 +122,7 @@ export function MetaSection() {
                         highContrast
                         color="gray"
                       >
-                        {devName}
+                        {protagonist.dev_name}
                       </CopyableCode>
                     </Listing>
                   )}
