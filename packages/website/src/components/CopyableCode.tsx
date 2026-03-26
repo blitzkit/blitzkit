@@ -21,7 +21,7 @@ export function CopyableCode({
     <Tooltip open={copied} content={strings.website.common.copy_button.copied}>
       <Code
         {...props}
-        style={{ ...(copy ? { cursor: "copy" } : {}), ...style }}
+        style={{ ...style, cursor: "pointer" }}
         onClick={(event) => {
           onClick?.(event);
           if (!copy) return;

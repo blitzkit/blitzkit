@@ -24,7 +24,7 @@ export function MetaSection() {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const ClassIcon = classIcons[protagonist.class];
   const { locale, strings } = useLocale();
-  const devName = (protagonist as { dev_name?: string }).dev_name;
+  const devName = protagonist.dev_name;
 
   return (
     <Flex justify="center" mt="-9">
