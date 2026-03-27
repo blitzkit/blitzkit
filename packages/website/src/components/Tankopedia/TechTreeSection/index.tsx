@@ -26,7 +26,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
     function extend(line: Line): Line[] {
       const root = tankDefinitions.tanks[line.at(-1)!];
 
-      if (root.ancestors === undefined || root.tier === 1) {
+      if (root.ancestors === undefined || root.ancestors.length === 0 || root.tier === 1) {
         return [line];
       } else {
         if (root.ancestors.length === 1 || root.tier === 2) {
