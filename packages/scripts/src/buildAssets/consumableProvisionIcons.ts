@@ -18,9 +18,9 @@ export async function consumableProvisionIcons() {
 
   using uploader = new AssetUploader("consumable and provision icons");
   const styles = [
+    "UI/Styles/Lobby/Inventory/InventoryNormalStyles.yaml",
     "UI/Styles/Lobby/Inventory/Event/InventoryBigStyles.yaml",
     "UI/Styles/Lobby/Inventory/Event/InventoryNormalStyles.yaml",
-    "UI/Styles/Lobby/Inventory/InventoryNormalStyles.yaml",
     "UI/Screens3/Lobby/Inventory/Equipment/EquipmentItemImage.style.yaml",
     "UI/Screens/Battle/Styles/BattleEquipmentStyles.yaml",
   ];
