@@ -1109,6 +1109,10 @@
         "configuration": {
           "title": "Configuration",
 
+          "equalizer": {
+            "title": "Equalizer",
+            "equalize": "Equalize"
+          },
           "modules": {
             "title": "Modules",
             "stock": "Stock",
