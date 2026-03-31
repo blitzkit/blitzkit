@@ -34,12 +34,12 @@ export async function filterStats(
       (filters.tier === undefined || entry.tier === filters.tier) &&
       (filters.class === undefined || entry.class === filters.class) &&
       (filters.type === undefined ||
-        (filters.type === TankType.COLLECTOR &&
-          entry.type === TankType.COLLECTOR) ||
-        (filters.type === TankType.PREMIUM &&
-          entry.type === TankType.PREMIUM) ||
-        (filters.type === TankType.RESEARCHABLE &&
-          entry.type === TankType.RESEARCHABLE)) &&
+        (filters.type === TankType.TANK_TYPE_COLLECTOR &&
+          entry.type === TankType.TANK_TYPE_COLLECTOR) ||
+        (filters.type === TankType.TANK_TYPE_PREMIUM &&
+          entry.type === TankType.TANK_TYPE_PREMIUM) ||
+        (filters.type === TankType.TANK_TYPE_RESEARCHABLE &&
+          entry.type === TankType.TANK_TYPE_RESEARCHABLE)) &&
       (filters.tank === undefined || entry.id === filters.tank)
     );
   });

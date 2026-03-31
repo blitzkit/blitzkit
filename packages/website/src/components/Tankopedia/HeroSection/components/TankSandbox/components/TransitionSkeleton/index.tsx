@@ -37,9 +37,9 @@ export function TransitionSkeleton() {
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const wrapper = useRef<Group>(null);
-  const hullOrigin = correctZYTuple(trackModelDefinition.origin);
-  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
-  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
+  const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
+  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
+  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -77,7 +77,7 @@ export function TransitionSkeleton() {
       <group ref={turretContainer}>
         {armorNodes.map((node) => {
           const isCurrentTurret = node.name.startsWith(
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`
+            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`,
           );
           const isVisible = isCurrentTurret;
           if (!isVisible) {
@@ -102,7 +102,7 @@ export function TransitionSkeleton() {
         <group ref={gunContainer}>
           {armorNodes.map((node) => {
             const isCurrentGun = node.name.startsWith(
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`
+              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`,
             );
             const isVisible = isCurrentGun;
 

@@ -24,7 +24,7 @@ export function Crew({ stats }: StatsAcceptorProps) {
         provisionDefinitions.provisions[provision].crew
           ? total + provisionDefinitions.provisions[provision].crew! / 100
           : total,
-      0
+      0,
     ) + (hasImprovedVentilation ? 0.08 : 0);
   const commanderMastery = 1 + provisionCrewBonus;
 
@@ -71,7 +71,7 @@ export function Crew({ stats }: StatsAcceptorProps) {
               decimals={0}
               noRanking
               value={() =>
-                (member.type === CrewType.COMMANDER
+                (member.type === CrewType.CREW_TYPE_COMMANDER
                   ? commanderMastery
                   : commanderMastery * 1.1) * 100
               }
@@ -93,7 +93,7 @@ export function Crew({ stats }: StatsAcceptorProps) {
                             ? strings.website.tools.tankopedia.crew[
                                 CREW_MEMBER_NAMES[sub]
                               ]
-                            : sub
+                            : sub,
                         )
                         .join(", ")}
                     </Flex>

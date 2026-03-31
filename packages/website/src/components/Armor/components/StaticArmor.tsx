@@ -43,9 +43,9 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const hullOrigin = correctZYTuple(trackModelDefinition.origin);
-  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
-  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
+  const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
+  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
+  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
   const canvas = useThree((state) => state.gl.domElement);
 
   const maskOrigin =
@@ -53,16 +53,16 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
       ? undefined
       : gunModelDefinition.mask + hullOrigin.y + turretOrigin.y + gunOrigin.y;
   const showPrimaryArmor = TankopediaPersistent.use(
-    (state) => state.showPrimaryArmor
+    (state) => state.showPrimaryArmor,
   );
   const showSpacedArmor = TankopediaPersistent.use(
-    (state) => state.showSpacedArmor
+    (state) => state.showSpacedArmor,
   );
   const showExternalModules = TankopediaPersistent.use(
-    (state) => state.showExternalModules
+    (state) => state.showExternalModules,
   );
   const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73)
+    state.protagonist.consumables.includes(73),
   );
 
   useTankTransform(track, turret, turretContainer, gunContainer);
@@ -75,8 +75,8 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
           const isVisible = isHull;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
-            tankModelDefinition.armor,
-            armorId
+            tankModelDefinition.armor!,
+            armorId,
           );
 
           if (
@@ -127,13 +127,13 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
       <group ref={turretContainer}>
         {armorNodes.map((node) => {
           const isCurrentTurret = node.name.startsWith(
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`
+            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`,
           );
           const isVisible = isCurrentTurret;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
-            turretModelDefinition.armor,
-            armorId
+            turretModelDefinition.armor!,
+            armorId,
           );
 
           if (
@@ -168,12 +168,12 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
               Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix
+              Duel.state.protagonist.equipmentMatrix,
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
               Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix
+              Duel.state.protagonist.equipmentMatrix,
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -184,10 +184,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               modelTransformEvent.last!.pitch,
               modelTransformEvent.last!.yaw +
                 delta.x * (Math.PI / boundingRect.width),
-              gunModelDefinition.pitch,
+              gunModelDefinition.pitch!,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
-              hasDownImprovedVerticalStabilizer
+              hasDownImprovedVerticalStabilizer,
             );
             modelTransformEvent.dispatch({ pitch, yaw });
           }
@@ -216,13 +216,13 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
         <group ref={gunContainer}>
           {armorNodes.map((node) => {
             const isCurrentGun = node.name.startsWith(
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`
+              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`,
             );
             const isVisible = isCurrentGun;
             const armorId = nameToArmorId(node.name);
             const { spaced, thickness } = resolveArmor(
-              gunModelDefinition.armor,
-              armorId
+              gunModelDefinition.armor!,
+              armorId,
             );
 
             if (
@@ -256,12 +256,12 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -272,10 +272,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                   delta.y * (Math.PI / boundingRect.height),
                 modelTransformEvent.last!.yaw +
                   delta.x * (Math.PI / boundingRect.width),
-                gunModelDefinition.pitch,
+                gunModelDefinition.pitch!,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
-                hasDownImprovedVerticalStabilizer
+                hasDownImprovedVerticalStabilizer,
               );
               modelTransformEvent.dispatch({ pitch, yaw });
             }
@@ -332,12 +332,12 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
                 Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix
+                Duel.state.protagonist.equipmentMatrix,
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -348,10 +348,10 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                   delta.y * (Math.PI / boundingRect.height),
                 modelTransformEvent.last!.yaw +
                   delta.x * (Math.PI / boundingRect.width),
-                gunModelDefinition.pitch,
+                gunModelDefinition.pitch!,
                 turretModelDefinition.yaw,
                 hasImprovedVerticalStabilizer,
-                hasDownImprovedVerticalStabilizer
+                hasDownImprovedVerticalStabilizer,
               );
               modelTransformEvent.dispatch({ pitch, yaw });
             }

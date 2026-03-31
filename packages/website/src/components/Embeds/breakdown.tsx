@@ -55,7 +55,7 @@ export const fakeCompositeStats = compositeStats(
     wins: 30,
     xp: 1230 * 50,
   },
-  averageDefinitions.averages[7297].mu
+  averageDefinitions.averages[7297].mu!,
 );
 
 export function BreakdownPreview() {
@@ -88,9 +88,9 @@ export function BreakdownRenderer() {
   const diff = useMemo(
     () =>
       deltaTankStats(tankStatsA, tankStatsB).sort(
-        (a, b) => b.last_battle_time - a.last_battle_time
+        (a, b) => b.last_battle_time - a.last_battle_time,
       ),
-    [tankStatsB]
+    [tankStatsB],
   );
   const compositeStats = diff
     .map((diff) => {
@@ -100,14 +100,14 @@ export function BreakdownRenderer() {
 
       const compositeStats = calculateCompositeStats(
         { battle_life_time: diff.battle_life_time, ...diff.all },
-        average.mu
+        average.mu!,
       );
 
       return { id: diff.tank_id, compositeStats };
     })
     .filter((stats) => stats !== null);
   const sum = sumCompositeStats(
-    compositeStats.map(({ compositeStats }) => compositeStats)
+    compositeStats.map(({ compositeStats }) => compositeStats),
   );
 
   useEffect(() => {

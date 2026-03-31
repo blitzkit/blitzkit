@@ -81,16 +81,16 @@ const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
   BlitzTankFilterDefinitionCategory,
   ConsumableTankCategoryFilterCategory
 > = {
-  clip: ConsumableTankCategoryFilterCategory.CLIP,
+  clip: ConsumableTankCategoryFilterCategory.CONSUMABLE_TANK_CATEGORY_FILTER_CATEGORY_CLIP,
 };
 function vector3TupleToBlitzkit(tuple: Vector3Tuple) {
   return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
 }
 const blitzTankClassToBlitzkit: Record<BlitzTankClass, TankClass> = {
-  lightTank: TankClass.LIGHT,
-  "AT-SPG": TankClass.TANK_DESTROYER,
-  heavyTank: TankClass.HEAVY,
-  mediumTank: TankClass.MEDIUM,
+  lightTank: TankClass.TANK_CLASS_LIGHT,
+  "AT-SPG": TankClass.TANK_CLASS_TANK_DESTROYER,
+  heavyTank: TankClass.TANK_CLASS_HEAVY,
+  mediumTank: TankClass.TANK_CLASS_MEDIUM,
 };
 export interface BlitzStrings {
   [key: string]: string;
@@ -149,18 +149,18 @@ type BlitzModuleType = {
 type UnlocksListing = BlitzModuleType | undefined;
 type BlitzCrewType = "commander" | "radioman" | "gunner" | "driver" | "loader";
 const blitzCrewTypeToBlitzkit: Record<BlitzCrewType, CrewType> = {
-  commander: CrewType.COMMANDER,
-  driver: CrewType.DRIVER,
-  gunner: CrewType.GUNNER,
-  loader: CrewType.LOADER,
-  radioman: CrewType.RADIOMAN,
+  commander: CrewType.CREW_TYPE_COMMANDER,
+  driver: CrewType.CREW_TYPE_DRIVER,
+  gunner: CrewType.CREW_TYPE_GUNNER,
+  loader: CrewType.CREW_TYPE_LOADER,
+  radioman: CrewType.CREW_TYPE_RADIOMAN,
 };
 const blitzkitCrewTypeToBlitz: Record<CrewType, BlitzCrewType> = {
-  [CrewType.COMMANDER]: "commander",
-  [CrewType.DRIVER]: "driver",
-  [CrewType.GUNNER]: "gunner",
-  [CrewType.LOADER]: "loader",
-  [CrewType.RADIOMAN]: "radioman",
+  [CrewType.CREW_TYPE_COMMANDER]: "commander",
+  [CrewType.CREW_TYPE_DRIVER]: "driver",
+  [CrewType.CREW_TYPE_GUNNER]: "gunner",
+  [CrewType.CREW_TYPE_LOADER]: "loader",
+  [CrewType.CREW_TYPE_RADIOMAN]: "radioman",
 };
 interface VehicleDefinitions {
   invisibility: {
@@ -298,7 +298,7 @@ interface VehicleDefinitions {
           type: "default";
           enabled: false;
           factorsModifiers: "";
-        }
+        },
       ];
     };
   };
@@ -517,18 +517,18 @@ type CombatRolesYaml = Record<
 >;
 
 const blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
-  ARMOR_PIERCING: ShellType.AP,
-  ARMOR_PIERCING_CR: ShellType.APCR,
-  HIGH_EXPLOSIVE: ShellType.HE,
-  HOLLOW_CHARGE: ShellType.HEAT,
+  ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
+  ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
+  HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
+  HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
 };
 export const botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
 const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
-  chassis: ModuleType.TRACKS,
-  engine: ModuleType.ENGINE,
-  gun: ModuleType.GUN,
-  turret: ModuleType.TURRET,
-  vehicle: ModuleType.VEHICLE,
+  chassis: ModuleType.MODULE_TYPE_TRACKS,
+  engine: ModuleType.MODULE_TYPE_ENGINE,
+  gun: ModuleType.MODULE_TYPE_GUN,
+  turret: ModuleType.MODULE_TYPE_TURRET,
+  vehicle: ModuleType.MODULE_TYPE_VEHICLE,
 };
 
 export async function definitions() {
@@ -555,10 +555,10 @@ export async function definitions() {
   const provisionDefinitions: ProvisionDefinitions = { provisions: {} };
   const skillDefinitions: SkillDefinitions = {
     classes: {
-      [TankClass.LIGHT]: { skills: [] },
-      [TankClass.MEDIUM]: { skills: [] },
-      [TankClass.HEAVY]: { skills: [] },
-      [TankClass.TANK_DESTROYER]: { skills: [] },
+      [TankClass.TANK_CLASS_LIGHT]: { skills: [] },
+      [TankClass.TANK_CLASS_MEDIUM]: { skills: [] },
+      [TankClass.TANK_CLASS_HEAVY]: { skills: [] },
+      [TankClass.TANK_CLASS_TANK_DESTROYER]: { skills: [] },
     },
   };
   const nations = vfs
@@ -566,7 +566,7 @@ export async function definitions() {
     .filter((nation) => nation !== "common");
   const tankStringIdMap: Record<string, number> = {};
   const optionalDevices = await vfs.xml<{ root: OptionalDevices }>(
-    "Data/XML/item_defs/vehicles/common/optional_devices.xml"
+    "Data/XML/item_defs/vehicles/common/optional_devices.xml",
   );
   const stringsI18n: Record<string, Record<string, string>> = {};
 
@@ -574,12 +574,12 @@ export async function definitions() {
     locales.supported.map(async ({ locale }) => {
       const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
       const cache = await fetch(
-        `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`
+        `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
       )
         .then((response) => response.text())
         .then((string) => parseYaml(string) as BlitzStrings);
       const preInstalled = await vfs.yaml<BlitzStrings>(
-        `Data/Strings/${blitzLocale}.yaml`
+        `Data/Strings/${blitzLocale}.yaml`,
       );
 
       stringsI18n[locale] = {
@@ -588,7 +588,7 @@ export async function definitions() {
       };
 
       console.log(`Loaded strings for ${locale}`);
-    })
+    }),
   );
 
   function getString(name: string) {
@@ -627,9 +627,9 @@ export async function definitions() {
       consumables,
       (
         await vfs.xml<{ root: ConsumablesCommon }>(
-          `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`
+          `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`,
         )
-      ).root
+      ).root,
     );
   }
 
@@ -642,39 +642,39 @@ export async function definitions() {
       provisions,
       (
         await vfs.xml<{ root: ConsumablesCommon }>(
-          `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`
+          `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`,
         )
-      ).root
+      ).root,
     );
   }
 
   const avatar = await vfs.xml<{ root: Avatar }>(
-    `Data/XML/item_defs/tankmen/avatar.xml`
+    `Data/XML/item_defs/tankmen/avatar.xml`,
   );
   const maps = await vfs.yaml<Maps>(`Data/maps.yaml`);
   const tankXps = new Map<number, ResearchCost>();
   const camouflagesXml = await vfs.xml<{ root: CamouflagesXML }>(
-    `Data/XML/item_defs/vehicles/common/camouflages.xml`
+    `Data/XML/item_defs/vehicles/common/camouflages.xml`,
   );
   const camouflagesYaml = await vfs.yaml<CamouflagesYaml>(
-    `Data/camouflages.yaml`
+    `Data/camouflages.yaml`,
   );
   const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
   const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStyles>(
-    `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
+    `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
   );
   const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStyles>(
-    `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
+    `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
   );
   const gameModeNativeNames: Record<string, number> = {};
   const combatRoles = await vfs.yaml<CombatRolesYaml>(
-    `Data/XML/item_defs/vehicles/common/combat_roles.yaml`
+    `Data/XML/item_defs/vehicles/common/combat_roles.yaml`,
   );
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
 
   for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g
+    /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
   )) {
     const id = Number(match[1]);
     const name = getString(match[2]);
@@ -686,7 +686,7 @@ export async function definitions() {
   }
 
   for (const match of gameTypeSelectorStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g
+    /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g,
   )) {
     Object.entries(gameModeNativeNames).forEach(([key, value]) => {
       if (key.toLowerCase() === match[2].toLowerCase()) {
@@ -720,7 +720,7 @@ export async function definitions() {
 
   for (const nation of nations) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
 
     for (const tankKey in tankList.root) {
@@ -761,7 +761,7 @@ export async function definitions() {
     console.warn(
       `Multiple tanks share slug ${slug}: ${requesters
         .map(({ key }) => key)
-        .join(", ")}`
+        .join(", ")}`,
     );
 
     if (requesters.length !== 2) {
@@ -791,7 +791,7 @@ export async function definitions() {
 
       if (canonical === undefined) {
         throw new Error(
-          "Two tutorial bots share the same slug? The world is truly broken."
+          "Two tutorial bots share the same slug? The world is truly broken.",
         );
       }
 
@@ -804,7 +804,7 @@ export async function definitions() {
 
   for (const nation of nations) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
     const turretList = await vfs.xml<{
       root: TurretDefinitionsList;
@@ -857,7 +857,7 @@ export async function definitions() {
                     : Number(item.cost.split(":")[1]),
               },
             } satisfies Unlock;
-          })
+          }),
         )
         .flat();
     }
@@ -872,10 +872,10 @@ export async function definitions() {
       const tank = tankList.root[tankKey];
       let tankPrice: TankPrice;
       const tankDefinition = await vfs.xml<{ root: VehicleDefinitions }>(
-        `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`
+        `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
       );
       const tankParameters = await vfs.yaml<TankParameters>(
-        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`
+        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
       );
       const turretOrigin = tankDefinition.root.hull.turretPositions.turret
         .split(" ")
@@ -890,23 +890,23 @@ export async function definitions() {
 
       if (slug === undefined) {
         throw new Error(
-          `Could not find slug for ${nation}/${tankKey} (${tankId})`
+          `Could not find slug for ${nation}/${tankKey} (${tankId})`,
         );
       }
 
       if (tank.sellPrice) {
         tankPrice = {
-          type: TankPriceType.GOLD,
+          type: TankPriceType.TANK_PRICE_TYPE_GOLD,
           value: tank.sellPrice["#text"] * 2,
         };
       } else if (typeof tank.price === "number") {
         tankPrice = {
-          type: TankPriceType.CREDITS,
+          type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
           value: tank.price,
         };
       } else {
         tankPrice = {
-          type: TankPriceType.CREDITS,
+          type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
           value: tank.price["#text"] * 400,
         };
       }
@@ -938,7 +938,7 @@ export async function definitions() {
       Object.entries(tankDefinition.root.crew).forEach(([crewKey, value]) => {
         let entry: Crew;
         const index = crew.findIndex(
-          ({ type }) => blitzkitCrewTypeToBlitz[type] === crewKey
+          ({ type }) => blitzkitCrewTypeToBlitz[type] === crewKey,
         );
         if (index === -1) {
           if (crewKey === "#text") return;
@@ -992,6 +992,7 @@ export async function definitions() {
         ancestors: [],
         successors: [],
         id: tankId,
+        dev_name: tankKey,
         roles: {},
         camouflages: camouflages,
         fixed_camouflage: fixedCamouflage,
@@ -1011,10 +1012,10 @@ export async function definitions() {
         slug,
         nation,
         type: tankTags.includes("collectible")
-          ? TankType.COLLECTOR
+          ? TankType.TANK_TYPE_COLLECTOR
           : (typeof tank.price === "number" ? false : "gold" in tank.price)
-          ? TankType.PREMIUM
-          : TankType.RESEARCHABLE,
+            ? TankType.TANK_TYPE_PREMIUM
+            : TankType.TANK_TYPE_RESEARCHABLE,
         tier: tank.level,
         class: blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
         testing: tankTags.includes("testTank"),
@@ -1022,7 +1023,7 @@ export async function definitions() {
         price: tankPrice,
         camouflage_still: tankDefinition.root.invisibility.still,
         camouflage_moving: tankDefinition.root.invisibility.moving,
-        camouflage_onFire: tankDefinition.root.invisibility.firePenalty,
+        camouflage_on_fire: tankDefinition.root.invisibility.firePenalty,
         turrets: [],
         engines: [],
         tracks: [],
@@ -1031,12 +1032,12 @@ export async function definitions() {
       if (tank.combatRole) {
         Object.entries(tank.combatRole).forEach(([gameMode, role]) => {
           const id = Object.entries(gameModeNativeNames).find(
-            ([key]) => key.toLowerCase() === gameMode.toLowerCase()
+            ([key]) => key.toLowerCase() === gameMode.toLowerCase(),
           )?.[1];
 
           if (id === undefined) {
             throw new Error(
-              `Unknown game mode in tank ${tankKey}: ${gameMode}`
+              `Unknown game mode in tank ${tankKey}: ${gameMode}`,
             );
           }
 
@@ -1118,7 +1119,7 @@ export async function definitions() {
         (turretKey, turretIndex) => {
           const turret = tankDefinition.root.turrets0[turretKey];
           const turretModel = Number(
-            parsePath(turret.models.undamaged).name.split("_")[1]
+            parsePath(turret.models.undamaged).name.split("_")[1],
           );
           const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
           const turretYaw = (
@@ -1186,12 +1187,12 @@ export async function definitions() {
               min: vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.min
+                ].bbox.min,
               ),
               max: vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.max
+                ].bbox.max,
               ),
             },
           };
@@ -1209,7 +1210,7 @@ export async function definitions() {
               .split(" ")
               .map(Number) as [number, number];
             const gunModel = Number(
-              parsePath(gun.models.undamaged).name.split("_")[1]
+              parsePath(gun.models.undamaged).name.split("_")[1],
             );
             const gunName = getString(gunListEntry.userString);
             const gunType =
@@ -1332,24 +1333,24 @@ export async function definitions() {
                       },
                     }
                   : gunType === "autoReloader"
-                  ? {
-                      $case: "auto_reloader",
-                      value: {
-                        intra_clip: 60 / gun.clip!.rate,
-                        shell_count: gunClipCount,
-                        shell_reloads: gun
-                          .pumpGunReloadTimes!.split(" ")
-                          .map(Number),
+                    ? {
+                        $case: "auto_reloader",
+                        value: {
+                          intra_clip: 60 / gun.clip!.rate,
+                          shell_count: gunClipCount,
+                          shell_reloads: gun
+                            .pumpGunReloadTimes!.split(" ")
+                            .map(Number),
+                        },
+                      }
+                    : {
+                        $case: "auto_loader",
+                        value: {
+                          intra_clip: 60 / gun.clip!.rate,
+                          clip_reload: gun.reloadTime,
+                          shell_count: gunClipCount,
+                        },
                       },
-                    }
-                  : {
-                      $case: "auto_loader",
-                      value: {
-                        intra_clip: 60 / gun.clip!.rate,
-                        clip_reload: gun.reloadTime,
-                        shell_count: gunClipCount,
-                      },
-                    },
             } satisfies GunDefinition);
 
             modelDefinitions.models[tankId].turrets[turretId].guns[gunId] = {
@@ -1360,8 +1361,8 @@ export async function definitions() {
                 gun.armor.gun === undefined
                   ? 0
                   : typeof gun.armor.gun === "number"
-                  ? gun.armor.gun
-                  : gun.armor.gun["#text"],
+                    ? gun.armor.gun
+                    : gun.armor.gun["#text"],
               pitch: {
                 min: gunPitch[0],
                 max: gunPitch[1],
@@ -1408,7 +1409,7 @@ export async function definitions() {
                 type: blitzShellKindToBlitzkit[shell.kind],
                 explosion_radius:
                   shell.kind === "HIGH_EXPLOSIVE"
-                    ? shell.explosionRadius ?? 0
+                    ? (shell.explosionRadius ?? 0)
                     : undefined,
                 icon: shell.icon,
                 penetration: {
@@ -1419,7 +1420,7 @@ export async function definitions() {
               });
             });
           });
-        }
+        },
       );
 
       totalUnlocks.forEach((unlocks) => {
@@ -1447,7 +1448,7 @@ export async function definitions() {
               case "gun": {
                 gunXps.set(
                   toUniqueId(nation, gunList.root.ids[vehicle["#text"]]),
-                  parseResearchCost(vehicle.cost)
+                  parseResearchCost(vehicle.cost),
                 );
                 break;
               }
@@ -1455,7 +1456,7 @@ export async function definitions() {
               case "turret": {
                 turretXps.set(
                   toUniqueId(nation, turretList.root.ids[vehicle["#text"]]),
-                  parseResearchCost(vehicle.cost)
+                  parseResearchCost(vehicle.cost),
                 );
                 break;
               }
@@ -1463,7 +1464,7 @@ export async function definitions() {
               case "engine": {
                 engineXps.set(
                   toUniqueId(nation, enginesList.root.ids[vehicle["#text"]]),
-                  parseResearchCost(vehicle.cost)
+                  parseResearchCost(vehicle.cost),
                 );
                 break;
               }
@@ -1471,7 +1472,7 @@ export async function definitions() {
               case "chassis": {
                 trackXps.set(
                   toUniqueId(nation, chassisList.root.ids[vehicle["#text"]]),
-                  parseResearchCost(vehicle.cost)
+                  parseResearchCost(vehicle.cost),
                 );
                 break;
               }
@@ -1518,7 +1519,7 @@ export async function definitions() {
         name: getString(optionalDeviceEntry.userString),
         description: getString(optionalDeviceEntry.description),
       };
-    }
+    },
   );
 
   Object.entries(optionalDeviceSlots.root.presets).forEach(
@@ -1537,7 +1538,7 @@ export async function definitions() {
           })
           .flat(),
       };
-    }
+    },
   );
 
   Object.entries(consumables).forEach(([key, consumable]) => {
@@ -1620,7 +1621,7 @@ export async function definitions() {
                   (item) =>
                     blitzTankFilterDefinitionCategoryToBlitzkit[
                       item as BlitzTankFilterDefinitionCategory
-                    ]
+                    ],
                 ),
             },
           },
@@ -1718,7 +1719,7 @@ export async function definitions() {
                   (item) =>
                     blitzTankFilterDefinitionCategoryToBlitzkit[
                       item as BlitzTankFilterDefinitionCategory
-                    ]
+                    ],
                 ),
             },
           },
@@ -1749,11 +1750,11 @@ export async function definitions() {
     value.default_abilities.forEach((ability) => {
       if (ability in consumableNativeNames) {
         gameDefinitions.roles[value.id].consumables.push(
-          consumableNativeNames[ability]
+          consumableNativeNames[ability],
         );
       } else if (ability in provisionNativeNames) {
         gameDefinitions.roles[value.id].provisions.push(
-          provisionNativeNames[ability]
+          provisionNativeNames[ability],
         );
       } else throw new Error(`Unknown ability ${ability}`);
     });

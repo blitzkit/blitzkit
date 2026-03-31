@@ -1,4 +1,4 @@
-import { ShellType } from '../protos';
+import { ShellType } from "../protos";
 
 export function resolvePenetrationCoefficient(
   calibratedShells: boolean,
@@ -6,11 +6,11 @@ export function resolvePenetrationCoefficient(
 ) {
   if (!calibratedShells) return 1;
 
-  return type === ShellType.AP
+  return type === ShellType.SHELL_TYPE_AP
     ? 1.08
-    : type === ShellType.APCR
+    : type === ShellType.SHELL_TYPE_APCR
       ? 1.05
-      : type === ShellType.HEAT
+      : type === ShellType.SHELL_TYPE_HEAT
         ? 1.13
         : 1.08;
 }

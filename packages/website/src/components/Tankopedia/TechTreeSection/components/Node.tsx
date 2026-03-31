@@ -36,7 +36,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         ? 0
         : (tank.research_cost.research_cost_type!.value as number) /
           xpMultiplier),
-    0
+    0,
   );
   const averages = averageDefinitions.averages[tank.id]?.mu;
   const averageXp = averages ? averages.xp / averages.battles : undefined;
@@ -78,7 +78,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
           }}
         >
           <img
-            alt={unwrap(tank.name)}
+            alt={unwrap(tank.name!)}
             src={asset(`icons/tanks/big/${id}.webp`)}
             width={64}
             height={64}
@@ -92,7 +92,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
               <Text color="gray" size="1">
                 {TIER_ROMAN_NUMERALS[tank.tier]}
               </Text>
-              <Text wrap="nowrap">{unwrap(tank.name)}</Text>
+              <Text wrap="nowrap">{unwrap(tank.name!)}</Text>
             </Flex>
             <Flex gap="2" align="center">
               <Text color="gray" size="1" wrap="nowrap">
@@ -122,7 +122,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                       objectPosition: "center",
                     }}
                   />
-                  {formatCompact(locale, tank.price.value)}
+                  {formatCompact(locale, tank.price!.value)}
                 </Flex>
               </Text>
             </Flex>
@@ -135,7 +135,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                     ? strings.website.tools.tankopedia.tech_tree.battle
                     : literals(
                         strings.website.tools.tankopedia.tech_tree.battles,
-                        { count: games }
+                        { count: games },
                       ))}
               </Text>
             )}

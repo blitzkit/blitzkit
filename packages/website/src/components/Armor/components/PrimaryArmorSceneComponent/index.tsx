@@ -88,10 +88,10 @@ export function PrimaryArmorSceneComponent({
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!
+        isExplosive(shell.type) ? 90 : shell.ricochet!,
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0
+        shell.normalization ?? 0,
       );
       material.uniforms.isExplosive.value = isExplosive(shell.type);
       material.uniforms.canSplash.value = canSplash(shell.type);
@@ -100,11 +100,11 @@ export function PrimaryArmorSceneComponent({
 
       handleProtagonistEquipmentChange(
         Duel.state.protagonist.equipmentMatrix,
-        true
+        true,
       );
       handleAntagonistEquipmentChange(
         Duel.state.antagonist.equipmentMatrix,
-        true
+        true,
       );
 
       invalidate();
@@ -124,12 +124,12 @@ export function PrimaryArmorSceneComponent({
     }
     function handleProtagonistEquipmentChange(
       equipment: EquipmentMatrix,
-      noInvalidate = false
+      noInvalidate = false,
     ) {
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
       material.uniforms.thickness.value = hasEnhancedArmor
         ? thickness * 1.03
@@ -139,16 +139,16 @@ export function PrimaryArmorSceneComponent({
     }
     function handleAntagonistEquipmentChange(
       equipment: EquipmentMatrix,
-      noInvalidate = false
+      noInvalidate = false,
     ) {
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
-      const penetration = shell.penetration.near;
+      const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
 
       material.uniforms.penetration.value =
@@ -165,7 +165,7 @@ export function PrimaryArmorSceneComponent({
     handleShellChange();
     handleGreenPenetrationChange(TankopediaPersistent.state.greenPenetration);
     handleAdvancedHighlightingChange(
-      TankopediaPersistent.state.advancedHighlighting
+      TankopediaPersistent.state.advancedHighlighting,
     );
     handleOpaqueChange(TankopediaPersistent.state.opaque);
     handleWireframeChange(TankopediaPersistent.state.wireframe);
@@ -179,20 +179,20 @@ export function PrimaryArmorSceneComponent({
       Tankopedia.on((state) => state.customShell, handleShellChange),
       TankopediaPersistent.on(
         (state) => state.greenPenetration,
-        handleGreenPenetrationChange
+        handleGreenPenetrationChange,
       ),
       TankopediaPersistent.on(
         (state) => state.advancedHighlighting,
-        handleAdvancedHighlightingChange
+        handleAdvancedHighlightingChange,
       ),
       TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        (equipment) => handleProtagonistEquipmentChange(equipment)
+        (equipment) => handleProtagonistEquipmentChange(equipment),
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        (equipment) => handleAntagonistEquipmentChange(equipment)
+        (equipment) => handleAntagonistEquipmentChange(equipment),
       ),
       () => transitionEvent.off(handleTransitionEvent),
     ];
@@ -204,7 +204,7 @@ export function PrimaryArmorSceneComponent({
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(
-      gl.getPixelRatio()
+      gl.getPixelRatio(),
     );
     material.uniforms.spacedArmorBuffer.value = spacedArmorRenderTarget.texture;
     material.uniforms.spacedArmorDepth.value =

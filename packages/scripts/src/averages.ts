@@ -1,5 +1,6 @@
 import {
   AverageDefinitions,
+  AverageDefinitionsAllStats,
   AverageDefinitionsEntry,
   type AverageDefinitionsManifest,
   type IndividualTankStats,
@@ -30,9 +31,6 @@ type OptionalSecondLevel<T> = {
       };
 };
 
-type AverageDefinitionsEntrySubPartial =
-  OptionalSecondLevel<AverageDefinitionsEntry>;
-
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
@@ -47,15 +45,15 @@ const preDiscoveredIds = await fetchPreDiscoveredIds();
 const playerIds: Record<Region, number[][]> = {
   asia: chunk(
     preDiscoveredIds.filter((id) => idToRegion(id) === "asia"),
-    PLAYER_IDS_PER_CALL
+    PLAYER_IDS_PER_CALL,
   ),
   com: chunk(
     preDiscoveredIds.filter((id) => idToRegion(id) === "com"),
-    PLAYER_IDS_PER_CALL
+    PLAYER_IDS_PER_CALL,
   ),
   eu: chunk(
     preDiscoveredIds.filter((id) => idToRegion(id) === "eu"),
-    PLAYER_IDS_PER_CALL
+    PLAYER_IDS_PER_CALL,
   ),
 };
 let regionIndex = 0;
@@ -71,7 +69,7 @@ times(THREADS, async () => {
     const regionIds = playerIds[region];
     const [ids] = regionIds.splice(
       Math.floor(Math.random() * regionIds.length),
-      1
+      1,
     );
     const accountInfo = await getAccountInfo(region, ids, undefined, {
       fields: "last_battle_time,statistics.all.battles",
@@ -104,8 +102,8 @@ times(THREADS, async () => {
       filteredIds.map((id) =>
         getTankStats(region, id, {
           fields: "last_battle_time,battle_life_time,all,tank_id",
-        })
-      )
+        }),
+      ),
     );
 
     players.forEach((tanks) => {
@@ -114,7 +112,7 @@ times(THREADS, async () => {
 
         if (!tankIds.includes(tank.tank_id)) {
           console.log(
-            `Found new tank: ${tank.tank_id} (${tankIds.length + 1})`
+            `Found new tank: ${tank.tank_id} (${tankIds.length + 1})`,
           );
           tankIds.push(tank.tank_id);
           tanksSorted[tank.tank_id] = [];
@@ -140,7 +138,7 @@ async function postWork() {
   console.log(
     `Generating statistics based on ${samples.d_120.toLocaleString()} players (${samples.total.toLocaleString()} checked in total) and ${
       tankIds.length
-    } tanks...`
+    } tanks...`,
   );
 
   using uploader = new AssetUploader("averages");
@@ -152,7 +150,12 @@ async function postWork() {
     //   (tank) => Date.now() - tank.last_battle_time * 1000 <= MAX_ACTIVITY_TIME,
     // );
     const tanks = tanksSortedEntry;
-    const entry: AverageDefinitionsEntrySubPartial = {
+    const entry: {
+      mu: Partial<Record<keyof AverageDefinitionsAllStats, number>>;
+      sigma: Partial<Record<keyof AverageDefinitionsAllStats, number>>;
+      r: Partial<Record<keyof AverageDefinitionsAllStats, number>>;
+      samples: Samples;
+    } = {
       mu: {},
       sigma: {},
       r: {},
@@ -162,13 +165,13 @@ async function postWork() {
     tanks.forEach((tank) => {
       const timeSinceLastActivity = Date.now() - tank.last_battle_time * 1000;
 
-      entry.samples.total++;
-      if (timeSinceLastActivity <= 120 * DAY) entry.samples.d_120++;
-      if (timeSinceLastActivity <= 90 * DAY) entry.samples.d_90++;
-      if (timeSinceLastActivity <= 60 * DAY) entry.samples.d_60++;
-      if (timeSinceLastActivity <= 30 * DAY) entry.samples.d_30++;
-      if (timeSinceLastActivity <= 7 * DAY) entry.samples.d_7++;
-      if (timeSinceLastActivity <= 1 * DAY) entry.samples.d_1++;
+      entry.samples!.total++;
+      if (timeSinceLastActivity <= 120 * DAY) entry.samples!.d_120++;
+      if (timeSinceLastActivity <= 90 * DAY) entry.samples!.d_90++;
+      if (timeSinceLastActivity <= 60 * DAY) entry.samples!.d_60++;
+      if (timeSinceLastActivity <= 30 * DAY) entry.samples!.d_30++;
+      if (timeSinceLastActivity <= 7 * DAY) entry.samples!.d_7++;
+      if (timeSinceLastActivity <= 1 * DAY) entry.samples!.d_1++;
     });
 
     const dataWY = tanks.map((tank) => ({
@@ -191,7 +194,7 @@ async function postWork() {
       function sum(slicer: (data: DataPoint) => number) {
         return data.reduce(
           (accumulator, data) => accumulator + slicer(data),
-          0
+          0,
         );
       }
 

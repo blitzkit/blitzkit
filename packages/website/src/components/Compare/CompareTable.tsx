@@ -294,7 +294,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 <img
                                   alt={unwrap(
                                     provisionDefinitions.provisions[provision]
-                                      .name,
+                                      .name!,
                                   )}
                                   key={provision}
                                   src={asset(
@@ -501,7 +501,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                   alt={unwrap(
                                     consumableDefinitions.consumables[
                                       consumable
-                                    ].name,
+                                    ].name!,
                                   )}
                                   key={consumable}
                                   src={asset(

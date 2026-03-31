@@ -41,7 +41,7 @@ export function GameModeSection() {
               style={{
                 borderRadius: "var(--radius-3)",
                 background: `url(${asset(
-                  `icons/game_mode_banners/${id}.webp`
+                  `icons/game_mode_banners/${id}.webp`,
                 )})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -51,7 +51,7 @@ export function GameModeSection() {
                 flexGrow="1"
                 style={{
                   background: `url(${asset(
-                    `icons/game_mode_banners/${id}.webp`
+                    `icons/game_mode_banners/${id}.webp`,
                   )})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
@@ -71,7 +71,7 @@ export function GameModeSection() {
                 justify="center"
               >
                 <Text size="4" weight="bold">
-                  {unwrap(gameMode.name)}
+                  {unwrap(gameMode.name!)}
                 </Text>
 
                 <Flex direction="column">
@@ -88,9 +88,9 @@ export function GameModeSection() {
                               objectFit: "contain",
                             }}
                             src={asset(`icons/provisions/${id}.webp`)}
-                            alt={unwrap(provisions.name)}
+                            alt={unwrap(provisions.name!)}
                           />
-                          {unwrap(provisions.name)}
+                          {unwrap(provisions.name!)}
                         </Flex>
                       </Text>
                     );
@@ -109,9 +109,9 @@ export function GameModeSection() {
                               objectFit: "contain",
                             }}
                             src={asset(`icons/consumables/${id}.webp`)}
-                            alt={unwrap(consumable.name)}
+                            alt={unwrap(consumable.name!)}
                           />
-                          {unwrap(consumable.name)}
+                          {unwrap(consumable.name!)}
                         </Flex>
                       </Text>
                     );

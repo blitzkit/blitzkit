@@ -38,7 +38,7 @@ export function Firepower({
             const selected = thisShell.id === shell.id;
 
             return (
-              <Tooltip content={unwrap(thisShell.name)} key={thisShell.id}>
+              <Tooltip content={unwrap(thisShell.name!)} key={thisShell.id}>
                 <IconButton
                   color={selected ? undefined : "gray"}
                   variant={selected ? "solid" : "soft"}
@@ -59,7 +59,7 @@ export function Firepower({
                   }}
                 >
                   <img
-                    alt={unwrap(thisShell.name)}
+                    alt={unwrap(thisShell.name!)}
                     width={16}
                     height={16}
                     src={asset(`icons/shells/${thisShell.icon}.webp`)}
@@ -119,7 +119,7 @@ export function Firepower({
               name={literals(
                 strings.website.tools.tankopedia.characteristics.values
                   .shell_index,
-                { index: index + 1 }
+                { index: index + 1 },
               )}
               decimals={2}
               deltaType="lowerIsBetter"
@@ -191,7 +191,7 @@ export function Firepower({
         name={literals(
           strings.website.tools.tankopedia.characteristics.values
             .dispersion_at_distance,
-          { distance: 100 }
+          { distance: 100 },
         )}
       />
       <InfoWithDelta
@@ -249,7 +249,7 @@ export function Firepower({
       />
       <InfoWithDelta value="gunDepression" stats={stats} decimals={1} indent />
       <InfoWithDelta stats={stats} decimals={1} indent value="gunElevation" />
-      {gunModelDefinition.pitch.front && (
+      {gunModelDefinition.pitch!.front && (
         <>
           <InfoWithDelta
             stats={stats}
@@ -265,7 +265,7 @@ export function Firepower({
           />
         </>
       )}
-      {gunModelDefinition.pitch.back && (
+      {gunModelDefinition.pitch!.back && (
         <>
           <InfoWithDelta
             stats={stats}

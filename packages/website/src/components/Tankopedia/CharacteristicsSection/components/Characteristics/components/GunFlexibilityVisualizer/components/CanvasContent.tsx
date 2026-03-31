@@ -1,13 +1,13 @@
-import type { QuicklimeEvent } from 'quicklime';
-import { useEffect, useRef } from 'react';
-import type { Group } from 'three';
-import { awaitableModelDefinitions } from '../../../../../../../../core/awaitables/modelDefinitions';
+import type { QuicklimeEvent } from "quicklime";
+import { useEffect, useRef } from "react";
+import type { Group } from "three";
+import { awaitableModelDefinitions } from "../../../../../../../../core/awaitables/modelDefinitions";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
-} from '../../../../../../../../core/blitzkit/modelTransform';
-import { Duel } from '../../../../../../../../stores/duel';
-import { ModelChunk } from './ModelChunk';
+} from "../../../../../../../../core/blitzkit/modelTransform";
+import { Duel } from "../../../../../../../../stores/duel";
+import { ModelChunk } from "./ModelChunk";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
@@ -39,8 +39,8 @@ export function CanvasContent() {
   }, []);
   return (
     <>
-      <group ref={hullWrapper} position={[0, 0, turretModel.gun_origin.z]}>
-        <group position={[0, 0, -turretModel.gun_origin.z]}>
+      <group ref={hullWrapper} position={[0, 0, turretModel.gun_origin!.z]}>
+        <group position={[0, 0, -turretModel.gun_origin!.z]}>
           <ModelChunk only="body" />
         </group>
       </group>

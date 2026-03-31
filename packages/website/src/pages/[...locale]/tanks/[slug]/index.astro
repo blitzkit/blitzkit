@@ -50,7 +50,7 @@ const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
 const unwrap = unwrapper(locale);
 const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
-  name: unwrap(tank.name),
+  name: unwrap(tank.name!),
   tier: TIER_ROMAN_NUMERALS[tank.tier],
   nationality:
     strings.common.nations_adjectives[
@@ -92,7 +92,7 @@ const characteristics = tankCharacteristics(
 const description = literals(
   strings.website.tools.tankopedia.tank_seo_description,
   {
-    name: unwrap(tank.name),
+    name: unwrap(tank.name!),
     dpm: Math.round(characteristics.dpm).toLocaleString(locale),
     alpha: Math.round(characteristics.damage).toLocaleString(locale),
     penetration: Math.round(characteristics.penetration).toLocaleString(locale),

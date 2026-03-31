@@ -43,7 +43,7 @@ for (const tank of tanksSanitized) {
   }
 
   try {
-    const q = `World of Tanks Blitz ${tank.name.locales[locales.default]}`;
+    const q = `World of Tanks Blitz ${tank.name!.locales[locales.default]}`;
 
     const results = await youtube.search.list({
       part: ["snippet"],
@@ -74,7 +74,7 @@ for (const tank of tanksSanitized) {
     };
 
     console.log(
-      `${++done} done; found ${items.length} for ${tank.name.locales.en}`,
+      `${++done} done; found ${items.length} for ${tank.name!.locales.en}`,
     );
 
     await new Promise((resolve) => setTimeout(resolve, 1000 / 5));

@@ -68,29 +68,29 @@ export function CustomShellButton() {
                     const modified = { ...customShell, type };
 
                     switch (type) {
-                      case ShellType.AP: {
+                      case ShellType.SHELL_TYPE_AP: {
                         modified.normalization = 5;
                         modified.ricochet = 70;
                         modified.explosion_radius = undefined;
                         break;
                       }
-                      case ShellType.APCR: {
+                      case ShellType.SHELL_TYPE_APCR: {
                         modified.normalization = 2;
                         modified.ricochet = 70;
                         modified.explosion_radius = undefined;
                         break;
                       }
-                      case ShellType.HEAT: {
+                      case ShellType.SHELL_TYPE_HEAT: {
                         modified.normalization = undefined;
                         modified.ricochet = undefined;
                         modified.explosion_radius = undefined;
                       }
-                      case ShellType.HE: {
+                      case ShellType.SHELL_TYPE_HE: {
                         modified.normalization = undefined;
                         modified.ricochet = undefined;
                         modified.explosion_radius =
                           gun.shells.find(
-                            (shell) => shell.type === ShellType.HE
+                            (shell) => shell.type === ShellType.SHELL_TYPE_HE,
                           )?.explosion_radius ?? 1;
                         break;
                       }
@@ -104,16 +104,16 @@ export function CustomShellButton() {
                   <Select.Trigger variant="classic" />
 
                   <Select.Content>
-                    <Select.Item value={`${ShellType.AP}`}>
+                    <Select.Item value={`${ShellType.SHELL_TYPE_AP}`}>
                       {strings.common.shells.ap}
                     </Select.Item>
-                    <Select.Item value={`${ShellType.APCR}`}>
+                    <Select.Item value={`${ShellType.SHELL_TYPE_APCR}`}>
                       {strings.common.shells.ap_cr}
                     </Select.Item>
-                    <Select.Item value={`${ShellType.HEAT}`}>
+                    <Select.Item value={`${ShellType.SHELL_TYPE_HEAT}`}>
                       {strings.common.shells.hc}
                     </Select.Item>
-                    <Select.Item value={`${ShellType.HE}`}>
+                    <Select.Item value={`${ShellType.SHELL_TYPE_HE}`}>
                       {strings.common.shells.he}
                     </Select.Item>
                   </Select.Content>
@@ -166,11 +166,11 @@ export function CustomShellButton() {
                 <TextField.Root
                   variant="classic"
                   style={{ maxWidth: "6rem" }}
-                  defaultValue={customShell.penetration.near}
+                  defaultValue={customShell.penetration!.near}
                   type="number"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     Tankopedia.mutate((draft) => {
-                      draft.customShell!.penetration.near =
+                      draft.customShell!.penetration!.near =
                         event.target.valueAsNumber;
                     });
                   }}
@@ -182,7 +182,7 @@ export function CustomShellButton() {
                       (event.target as HTMLInputElement).blur();
                     } else if (event.key === "Escape") {
                       (event.target as HTMLInputElement).valueAsNumber =
-                        customShell.penetration.near;
+                        customShell.penetration!.near;
                       (event.target as HTMLInputElement).blur();
                     }
                   }}
@@ -193,8 +193,8 @@ export function CustomShellButton() {
                 </TextField.Root>
               </Flex>
 
-              {(customShell.type === ShellType.AP ||
-                customShell.type === ShellType.APCR) && (
+              {(customShell.type === ShellType.SHELL_TYPE_AP ||
+                customShell.type === ShellType.SHELL_TYPE_APCR) && (
                 <>
                   <Flex align="center" justify="between" gap="4" py="1">
                     <Text>
@@ -264,7 +264,7 @@ export function CustomShellButton() {
                 </>
               )}
 
-              {customShell.type === ShellType.HE && (
+              {customShell.type === ShellType.SHELL_TYPE_HE && (
                 <Flex align="center" justify="between" gap="4">
                   <Text>Explosion radius</Text>
                   <TextField.Root

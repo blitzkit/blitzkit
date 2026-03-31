@@ -20,7 +20,7 @@ export function QuickLink({ topResult }: QuickLinkProps) {
     <TextField.Slot>
       <LinkI18n locale={locale} href={`/tanks/${topResult.slug}`}>
         <Button variant="ghost">
-          {unwrap(topResult.name)} <CaretRightIcon />
+          {unwrap(topResult.name!)} <CaretRightIcon />
         </Button>
       </LinkI18n>
     </TextField.Slot>

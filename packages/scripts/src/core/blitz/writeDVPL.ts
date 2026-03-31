@@ -1,5 +1,5 @@
-import { crc32 } from 'crc';
-import { compressBlock } from 'lz4js';
+import { crc32 } from "crc";
+import { compressBlock } from "lz4js";
 
 /**
  * Thanks Maddoxkkm! Modernized heavily.
@@ -14,7 +14,7 @@ export function writeDVPL(buffer: Buffer) {
     destination,
     0,
     source.length,
-    0,
+    [0],
   );
   let output = Buffer.from(destination);
 
@@ -58,7 +58,7 @@ function toDVPLFooter(
   result.writeUInt32LE(compressedSize, 4);
   result.writeUInt32LE(crc32, 8);
   result.writeUInt32LE(type, 12);
-  result.write('DVPL', 16, 4, 'utf8');
+  result.write("DVPL", 16, 4, "utf8");
 
   return result;
 }

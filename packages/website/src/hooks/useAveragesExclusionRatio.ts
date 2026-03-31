@@ -1,5 +1,5 @@
-import { awaitableAverageDefinitions } from '../core/awaitables/averageDefinitions';
-import { awaitableDiscoveredIdsDefinitions } from '../core/awaitables/discoveredIdsDefinitions';
+import { awaitableAverageDefinitions } from "../core/awaitables/averageDefinitions";
+import { awaitableDiscoveredIdsDefinitions } from "../core/awaitables/discoveredIdsDefinitions";
 
 const [discoveredIdsDefinitions, averageDefinitions] = await Promise.all([
   awaitableDiscoveredIdsDefinitions,
@@ -7,5 +7,5 @@ const [discoveredIdsDefinitions, averageDefinitions] = await Promise.all([
 ]);
 
 export function useAveragesExclusionRatio() {
-  return discoveredIdsDefinitions.count / averageDefinitions.samples.total;
+  return discoveredIdsDefinitions.count / averageDefinitions.samples!.total;
 }

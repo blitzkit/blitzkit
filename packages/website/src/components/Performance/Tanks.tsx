@@ -49,10 +49,10 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
   const filteredTanks = usePromise(
     () =>
       filterTanks(filters, tankList).then((tanks) =>
-        tanks.filter(({ id }) => id in averageDefinitions.averages)
+        tanks.filter(({ id }) => id in averageDefinitions.averages),
       ),
     // react-promise-suspense has awful type annotations
-    [filters] as any
+    [filters] as any,
   );
   const tanksMapped = useMemo(
     () =>
@@ -60,7 +60,7 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
         id,
         ...averageDefinitions.averages[id],
       })),
-    [filters]
+    [filters],
   );
   const tanksSorted = useMemo(() => {
     const { playerCountPeriod } = Performance.state;
@@ -69,83 +69,85 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
       case "accuracy":
         return tanksMapped.sort(
           (a, b) =>
-            sort.direction * (a.mu.hits / a.mu.shots - b.mu.hits / b.mu.shots)
+            sort.direction *
+            (a.mu!.hits / a.mu!.shots - b.mu!.hits / b.mu!.shots),
         );
       case "capture_points":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.capture_points / a.mu.battles -
-              b.mu.capture_points / b.mu.battles)
+            (a.mu!.capture_points / a.mu!.battles -
+              b.mu!.capture_points / b.mu!.battles),
         );
       case "damage":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.damage_dealt / a.mu.battles -
-              b.mu.damage_dealt / b.mu.battles)
+            (a.mu!.damage_dealt / a.mu!.battles -
+              b.mu!.damage_dealt / b.mu!.battles),
         );
       case "damage_ratio":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.damage_dealt / a.mu.damage_received -
-              b.mu.damage_dealt / b.mu.damage_received)
+            (a.mu!.damage_dealt / a.mu!.damage_received -
+              b.mu!.damage_dealt / b.mu!.damage_received),
         );
       case "damage_taken":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.damage_received / a.mu.battles -
-              b.mu.damage_received / b.mu.battles)
+            (a.mu!.damage_received / a.mu!.battles -
+              b.mu!.damage_received / b.mu!.battles),
         );
       case "hits":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.hits / a.mu.battles - b.mu.hits / b.mu.battles)
+            (a.mu!.hits / a.mu!.battles - b.mu!.hits / b.mu!.battles),
         );
       case "kills":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.frags / a.mu.battles - b.mu.frags / b.mu.battles)
+            (a.mu!.frags / a.mu!.battles - b.mu!.frags / b.mu!.battles),
         );
       case "shots":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.shots / a.mu.battles - b.mu.shots / b.mu.battles)
+            (a.mu!.shots / a.mu!.battles - b.mu!.shots / b.mu!.battles),
         );
       case "players":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.samples[playerCountPeriod] - b.samples[playerCountPeriod])
+            (a.samples![playerCountPeriod] - b.samples![playerCountPeriod]),
         );
       case "spots":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.spotted / a.mu.battles - b.mu.spotted / b.mu.battles)
+            (a.mu!.spotted / a.mu!.battles - b.mu!.spotted / b.mu!.battles),
         );
       case "survival":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.survived_battles / a.mu.battles -
-              b.mu.survived_battles / b.mu.battles)
+            (a.mu!.survived_battles / a.mu!.battles -
+              b.mu!.survived_battles / b.mu!.battles),
         );
       case "winrate":
         return tanksMapped.sort(
           (a, b) =>
             sort.direction *
-            (a.mu.wins / a.mu.battles - b.mu.wins / b.mu.battles)
+            (a.mu!.wins / a.mu!.battles - b.mu!.wins / b.mu!.battles),
         );
       case "xp":
         return tanksMapped.sort(
           (a, b) =>
-            sort.direction * (a.mu.xp / a.mu.battles - b.mu.xp / b.mu.battles)
+            sort.direction *
+            (a.mu!.xp / a.mu!.battles - b.mu!.xp / b.mu!.battles),
         );
     }
   }, [filters, sort]);
@@ -161,11 +163,11 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
   const sum = useCallback(
     (slice: (tank: BlitzkitStats) => number) => {
       return tanksSorted.reduce(
-        (acc, tank) => acc + tank.samples[playerCountPeriod] * slice(tank.mu),
-        0
+        (acc, tank) => acc + tank.samples![playerCountPeriod] * slice(tank.mu!),
+        0,
       );
     },
-    [tanksSorted]
+    [tanksSorted],
   );
 
   const battles = sum(({ battles }) => battles);
@@ -209,7 +211,7 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
         <Table.Cell align="center">
           {formatCompact(
             locale,
-            ratio * averageDefinitions.samples[playerCountPeriod]
+            ratio * averageDefinitions.samples![playerCountPeriod],
           )}
         </Table.Cell>
         <Table.Cell align="center">
@@ -255,12 +257,12 @@ export function Tanks({ skeleton }: MaybeSkeletonComponentProps) {
               key={index}
               onIntersection={() => {
                 setLoadedRows((state) =>
-                  Math.min(state + 2, tanksSorted.length)
+                  Math.min(state + 2, tanksSorted.length),
                 );
               }}
             />
           );
-        }
+        },
       )}
     </Table.Body>
   );

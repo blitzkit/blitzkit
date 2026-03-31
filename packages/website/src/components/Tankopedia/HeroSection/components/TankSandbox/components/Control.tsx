@@ -53,24 +53,24 @@ export function Controls({
   const protagonistGunModelDefinition =
     protagonistTurretModelDefinition.guns[protagonistGun.id];
   const protagonistHullOrigin = new Vector3(
-    protagonistTrackModelDefinition.origin.x,
-    protagonistTrackModelDefinition.origin.y,
-    -protagonistTrackModelDefinition.origin.z,
+    protagonistTrackModelDefinition.origin!.x,
+    protagonistTrackModelDefinition.origin!.y,
+    -protagonistTrackModelDefinition.origin!.z,
   );
   const protagonistTurretOrigin = new Vector3(
-    protagonistModelDefinition.turret_origin.x,
-    protagonistModelDefinition.turret_origin.y,
-    -protagonistModelDefinition.turret_origin.z,
+    protagonistModelDefinition.turret_origin!.x,
+    protagonistModelDefinition.turret_origin!.y,
+    -protagonistModelDefinition.turret_origin!.z,
   );
   const protagonistGunOrigin = new Vector3(
-    protagonistTurretModelDefinition.gun_origin.x,
-    protagonistTurretModelDefinition.gun_origin.y,
-    -protagonistTurretModelDefinition.gun_origin.z,
+    protagonistTurretModelDefinition.gun_origin!.x,
+    protagonistTurretModelDefinition.gun_origin!.y,
+    -protagonistTurretModelDefinition.gun_origin!.z,
   );
   const antagonistGunHeight =
-    protagonistTrackModelDefinition.origin.y +
-    antagonistModelDefinition.turret_origin.y +
-    antagonistTurretModelDefinition.gun_origin.y;
+    protagonistTrackModelDefinition.origin!.y +
+    antagonistModelDefinition.turret_origin!.y +
+    antagonistTurretModelDefinition.gun_origin!.y;
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const doAutoRotate = autoRotate && !disturbed;
   const gunHeight =
@@ -119,7 +119,7 @@ export function Controls({
           const [pitch] = applyPitchYawLimits(
             -Infinity,
             0,
-            protagonistGunModelDefinition.pitch,
+            protagonistGunModelDefinition.pitch!,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
@@ -152,7 +152,7 @@ export function Controls({
           const [pitch] = applyPitchYawLimits(
             0,
             0,
-            protagonistGunModelDefinition.pitch,
+            protagonistGunModelDefinition.pitch!,
             protagonistTurretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,

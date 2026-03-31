@@ -53,20 +53,20 @@ export function SpacedArmorSubSpaced({
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
 
-      material.uniforms.penetration.value = shell.penetration.near;
+      material.uniforms.penetration.value = shell.penetration!.near;
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!
+        isExplosive(shell.type) ? 90 : shell.ricochet!,
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0
+        shell.normalization ?? 0,
       );
     }
     function handleProtagonistEquipmentChange(equipment: EquipmentMatrix) {
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
       material.uniforms.thickness.value = hasEnhancedArmor
         ? thickness * 1.03
@@ -76,11 +76,11 @@ export function SpacedArmorSubSpaced({
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
-      const penetration = shell.penetration.near;
+      const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
 
       material.uniforms.penetration.value =
@@ -97,11 +97,11 @@ export function SpacedArmorSubSpaced({
       Tankopedia.on((state) => state.customShell, handleShellChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        handleProtagonistEquipmentChange
+        handleProtagonistEquipmentChange,
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        handleAntagonistEquipmentChange
+        handleAntagonistEquipmentChange,
       ),
     ];
 

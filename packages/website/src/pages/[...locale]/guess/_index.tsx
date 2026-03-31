@@ -59,7 +59,7 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
   const isRevealed = guessState !== GuessState.NotGuessed;
-  const name = unwrap(tank.name);
+  const name = unwrap(tank.name!);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
   const transitionDuration = isRevealed ? "2s" : undefined;
   const tiers = Guess.use((state) => state.tiers);
@@ -77,7 +77,7 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
     if (filteredIds.length === 0) return;
 
     const id = Number(
-      filteredIds[Math.floor(Math.random() * filteredIds.length)]
+      filteredIds[Math.floor(Math.random() * filteredIds.length)],
     );
     const newTank = tankDefinitions.tanks[id];
 

@@ -115,15 +115,24 @@ function createBaseModelDefinitions(): ModelDefinitions {
 }
 
 export const ModelDefinitions: MessageFns<ModelDefinitions> = {
-  encode(message: ModelDefinitions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    globalThis.Object.entries(message.models).forEach(([key, value]: [string, ModelDefinition]) => {
-      ModelDefinitions_ModelsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
-    });
+  encode(
+    message: ModelDefinitions,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    globalThis.Object.entries(message.models).forEach(
+      ([key, value]: [string, ModelDefinition]) => {
+        ModelDefinitions_ModelsEntry.encode(
+          { key: key as any, value },
+          writer.uint32(10).fork(),
+        ).join();
+      },
+    );
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ModelDefinitions {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseModelDefinitions();
     while (reader.pos < end) {
@@ -134,7 +143,10 @@ export const ModelDefinitions: MessageFns<ModelDefinitions> = {
             break;
           }
 
-          const entry1 = ModelDefinitions_ModelsEntry.decode(reader, reader.uint32());
+          const entry1 = ModelDefinitions_ModelsEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry1.value !== undefined) {
             message.models[entry1.key] = entry1.value;
           }
@@ -153,12 +165,15 @@ export const ModelDefinitions: MessageFns<ModelDefinitions> = {
     return {
       models: isObject(object.models)
         ? (globalThis.Object.entries(object.models) as [string, any][]).reduce(
-          (acc: { [key: number]: ModelDefinition }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = ModelDefinition.fromJSON(value);
-            return acc;
-          },
-          {},
-        )
+            (
+              acc: { [key: number]: ModelDefinition },
+              [key, value]: [string, any],
+            ) => {
+              acc[globalThis.Number(key)] = ModelDefinition.fromJSON(value);
+              return acc;
+            },
+            {},
+          )
         : {},
     };
   },
@@ -166,7 +181,10 @@ export const ModelDefinitions: MessageFns<ModelDefinitions> = {
   toJSON(message: ModelDefinitions): unknown {
     const obj: any = {};
     if (message.models) {
-      const entries = globalThis.Object.entries(message.models) as [string, ModelDefinition][];
+      const entries = globalThis.Object.entries(message.models) as [
+        string,
+        ModelDefinition,
+      ][];
       if (entries.length > 0) {
         obj.models = {};
         entries.forEach(([k, v]) => {
@@ -177,13 +195,25 @@ export const ModelDefinitions: MessageFns<ModelDefinitions> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ModelDefinitions>, I>>(base?: I): ModelDefinitions {
+  create<I extends Exact<DeepPartial<ModelDefinitions>, I>>(
+    base?: I,
+  ): ModelDefinitions {
     return ModelDefinitions.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ModelDefinitions>, I>>(object: I): ModelDefinitions {
+  fromPartial<I extends Exact<DeepPartial<ModelDefinitions>, I>>(
+    object: I,
+  ): ModelDefinitions {
     const message = createBaseModelDefinitions();
-    message.models = (globalThis.Object.entries(object.models ?? {}) as [string, ModelDefinition][]).reduce(
-      (acc: { [key: number]: ModelDefinition }, [key, value]: [string, ModelDefinition]) => {
+    message.models = (
+      globalThis.Object.entries(object.models ?? {}) as [
+        string,
+        ModelDefinition,
+      ][]
+    ).reduce(
+      (
+        acc: { [key: number]: ModelDefinition },
+        [key, value]: [string, ModelDefinition],
+      ) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = ModelDefinition.fromPartial(value);
         }
@@ -199,79 +229,94 @@ function createBaseModelDefinitions_ModelsEntry(): ModelDefinitions_ModelsEntry 
   return { key: 0, value: undefined };
 }
 
-export const ModelDefinitions_ModelsEntry: MessageFns<ModelDefinitions_ModelsEntry> = {
-  encode(message: ModelDefinitions_ModelsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== 0) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      ModelDefinition.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ModelDefinitions_ModelsEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseModelDefinitions_ModelsEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = ModelDefinition.decode(reader, reader.uint32());
-          continue;
-        }
+export const ModelDefinitions_ModelsEntry: MessageFns<ModelDefinitions_ModelsEntry> =
+  {
+    encode(
+      message: ModelDefinitions_ModelsEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        ModelDefinition.encode(message.value, writer.uint32(18).fork()).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): ModelDefinitions_ModelsEntry {
-    return {
-      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
-      value: isSet(object.value) ? ModelDefinition.fromJSON(object.value) : undefined,
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): ModelDefinitions_ModelsEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseModelDefinitions_ModelsEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: ModelDefinitions_ModelsEntry): unknown {
-    const obj: any = {};
-    if (message.key !== 0) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = ModelDefinition.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<ModelDefinitions_ModelsEntry>, I>>(base?: I): ModelDefinitions_ModelsEntry {
-    return ModelDefinitions_ModelsEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ModelDefinitions_ModelsEntry>, I>>(object: I): ModelDefinitions_ModelsEntry {
-    const message = createBaseModelDefinitions_ModelsEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? ModelDefinition.fromPartial(object.value)
-      : undefined;
-    return message;
-  },
-};
+            message.value = ModelDefinition.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): ModelDefinitions_ModelsEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value)
+          ? ModelDefinition.fromJSON(object.value)
+          : undefined,
+      };
+    },
+
+    toJSON(message: ModelDefinitions_ModelsEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = ModelDefinition.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<ModelDefinitions_ModelsEntry>, I>>(
+      base?: I,
+    ): ModelDefinitions_ModelsEntry {
+      return ModelDefinitions_ModelsEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<ModelDefinitions_ModelsEntry>, I>>(
+      object: I,
+    ): ModelDefinitions_ModelsEntry {
+      const message = createBaseModelDefinitions_ModelsEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? ModelDefinition.fromPartial(object.value)
+          : undefined;
+      return message;
+    },
+  };
 
 function createBaseModelDefinition(): ModelDefinition {
   return {
@@ -285,7 +330,10 @@ function createBaseModelDefinition(): ModelDefinition {
 }
 
 export const ModelDefinition: MessageFns<ModelDefinition> = {
-  encode(message: ModelDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: ModelDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.armor !== undefined) {
       Armor.encode(message.armor, writer.uint32(10).fork()).join();
     }
@@ -293,22 +341,39 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
       Vector3.encode(message.turret_origin, writer.uint32(18).fork()).join();
     }
     if (message.initial_turret_rotation !== undefined) {
-      InitialTurretRotation.encode(message.initial_turret_rotation, writer.uint32(26).fork()).join();
+      InitialTurretRotation.encode(
+        message.initial_turret_rotation,
+        writer.uint32(26).fork(),
+      ).join();
     }
-    globalThis.Object.entries(message.turrets).forEach(([key, value]: [string, TurretModelDefinition]) => {
-      ModelDefinition_TurretsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
-    });
-    globalThis.Object.entries(message.tracks).forEach(([key, value]: [string, TrackModelDefinition]) => {
-      ModelDefinition_TracksEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
-    });
+    globalThis.Object.entries(message.turrets).forEach(
+      ([key, value]: [string, TurretModelDefinition]) => {
+        ModelDefinition_TurretsEntry.encode(
+          { key: key as any, value },
+          writer.uint32(34).fork(),
+        ).join();
+      },
+    );
+    globalThis.Object.entries(message.tracks).forEach(
+      ([key, value]: [string, TrackModelDefinition]) => {
+        ModelDefinition_TracksEntry.encode(
+          { key: key as any, value },
+          writer.uint32(42).fork(),
+        ).join();
+      },
+    );
     if (message.bounding_box !== undefined) {
-      BoundingBox.encode(message.bounding_box, writer.uint32(50).fork()).join();
+      BoundingBox.encode(
+        message.bounding_box!,
+        writer.uint32(50).fork(),
+      ).join();
     }
     return writer;
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): ModelDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseModelDefinition();
     while (reader.pos < end) {
@@ -335,7 +400,10 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
             break;
           }
 
-          message.initial_turret_rotation = InitialTurretRotation.decode(reader, reader.uint32());
+          message.initial_turret_rotation = InitialTurretRotation.decode(
+            reader,
+            reader.uint32(),
+          );
           continue;
         }
         case 4: {
@@ -343,7 +411,10 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
             break;
           }
 
-          const entry4 = ModelDefinition_TurretsEntry.decode(reader, reader.uint32());
+          const entry4 = ModelDefinition_TurretsEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry4.value !== undefined) {
             message.turrets[entry4.key] = entry4.value;
           }
@@ -354,7 +425,10 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
             break;
           }
 
-          const entry5 = ModelDefinition_TracksEntry.decode(reader, reader.uint32());
+          const entry5 = ModelDefinition_TracksEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry5.value !== undefined) {
             message.tracks[entry5.key] = entry5.value;
           }
@@ -383,36 +457,44 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
       turret_origin: isSet(object.turretOrigin)
         ? Vector3.fromJSON(object.turretOrigin)
         : isSet(object.turret_origin)
-        ? Vector3.fromJSON(object.turret_origin)
-        : undefined,
+          ? Vector3.fromJSON(object.turret_origin)
+          : undefined,
       initial_turret_rotation: isSet(object.initialTurretRotation)
         ? InitialTurretRotation.fromJSON(object.initialTurretRotation)
         : isSet(object.initial_turret_rotation)
-        ? InitialTurretRotation.fromJSON(object.initial_turret_rotation)
-        : undefined,
+          ? InitialTurretRotation.fromJSON(object.initial_turret_rotation)
+          : undefined,
       turrets: isObject(object.turrets)
         ? (globalThis.Object.entries(object.turrets) as [string, any][]).reduce(
-          (acc: { [key: number]: TurretModelDefinition }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = TurretModelDefinition.fromJSON(value);
-            return acc;
-          },
-          {},
-        )
+            (
+              acc: { [key: number]: TurretModelDefinition },
+              [key, value]: [string, any],
+            ) => {
+              acc[globalThis.Number(key)] =
+                TurretModelDefinition.fromJSON(value);
+              return acc;
+            },
+            {},
+          )
         : {},
       tracks: isObject(object.tracks)
         ? (globalThis.Object.entries(object.tracks) as [string, any][]).reduce(
-          (acc: { [key: number]: TrackModelDefinition }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = TrackModelDefinition.fromJSON(value);
-            return acc;
-          },
-          {},
-        )
+            (
+              acc: { [key: number]: TrackModelDefinition },
+              [key, value]: [string, any],
+            ) => {
+              acc[globalThis.Number(key)] =
+                TrackModelDefinition.fromJSON(value);
+              return acc;
+            },
+            {},
+          )
         : {},
       bounding_box: isSet(object.boundingBox)
         ? BoundingBox.fromJSON(object.boundingBox)
         : isSet(object.bounding_box)
-        ? BoundingBox.fromJSON(object.bounding_box)
-        : undefined,
+          ? BoundingBox.fromJSON(object.bounding_box)
+          : undefined,
     };
   },
 
@@ -425,10 +507,15 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
       obj.turretOrigin = Vector3.toJSON(message.turret_origin);
     }
     if (message.initial_turret_rotation !== undefined) {
-      obj.initialTurretRotation = InitialTurretRotation.toJSON(message.initial_turret_rotation);
+      obj.initialTurretRotation = InitialTurretRotation.toJSON(
+        message.initial_turret_rotation,
+      );
     }
     if (message.turrets) {
-      const entries = globalThis.Object.entries(message.turrets) as [string, TurretModelDefinition][];
+      const entries = globalThis.Object.entries(message.turrets) as [
+        string,
+        TurretModelDefinition,
+      ][];
       if (entries.length > 0) {
         obj.turrets = {};
         entries.forEach(([k, v]) => {
@@ -437,7 +524,10 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
       }
     }
     if (message.tracks) {
-      const entries = globalThis.Object.entries(message.tracks) as [string, TrackModelDefinition][];
+      const entries = globalThis.Object.entries(message.tracks) as [
+        string,
+        TrackModelDefinition,
+      ][];
       if (entries.length > 0) {
         obj.tracks = {};
         entries.forEach(([k, v]) => {
@@ -451,30 +541,56 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ModelDefinition>, I>>(base?: I): ModelDefinition {
+  create<I extends Exact<DeepPartial<ModelDefinition>, I>>(
+    base?: I,
+  ): ModelDefinition {
     return ModelDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ModelDefinition>, I>>(object: I): ModelDefinition {
+  fromPartial<I extends Exact<DeepPartial<ModelDefinition>, I>>(
+    object: I,
+  ): ModelDefinition {
     const message = createBaseModelDefinition();
-    message.armor = (object.armor !== undefined && object.armor !== null) ? Armor.fromPartial(object.armor) : undefined;
-    message.turret_origin = (object.turret_origin !== undefined && object.turret_origin !== null)
-      ? Vector3.fromPartial(object.turret_origin)
-      : undefined;
+    message.armor =
+      object.armor !== undefined && object.armor !== null
+        ? Armor.fromPartial(object.armor)
+        : undefined;
+    message.turret_origin =
+      object.turret_origin !== undefined && object.turret_origin !== null
+        ? Vector3.fromPartial(object.turret_origin)
+        : undefined;
     message.initial_turret_rotation =
-      (object.initial_turret_rotation !== undefined && object.initial_turret_rotation !== null)
+      object.initial_turret_rotation !== undefined &&
+      object.initial_turret_rotation !== null
         ? InitialTurretRotation.fromPartial(object.initial_turret_rotation)
         : undefined;
-    message.turrets = (globalThis.Object.entries(object.turrets ?? {}) as [string, TurretModelDefinition][]).reduce(
-      (acc: { [key: number]: TurretModelDefinition }, [key, value]: [string, TurretModelDefinition]) => {
+    message.turrets = (
+      globalThis.Object.entries(object.turrets ?? {}) as [
+        string,
+        TurretModelDefinition,
+      ][]
+    ).reduce(
+      (
+        acc: { [key: number]: TurretModelDefinition },
+        [key, value]: [string, TurretModelDefinition],
+      ) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = TurretModelDefinition.fromPartial(value);
+          acc[globalThis.Number(key)] =
+            TurretModelDefinition.fromPartial(value);
         }
         return acc;
       },
       {},
     );
-    message.tracks = (globalThis.Object.entries(object.tracks ?? {}) as [string, TrackModelDefinition][]).reduce(
-      (acc: { [key: number]: TrackModelDefinition }, [key, value]: [string, TrackModelDefinition]) => {
+    message.tracks = (
+      globalThis.Object.entries(object.tracks ?? {}) as [
+        string,
+        TrackModelDefinition,
+      ][]
+    ).reduce(
+      (
+        acc: { [key: number]: TrackModelDefinition },
+        [key, value]: [string, TrackModelDefinition],
+      ) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = TrackModelDefinition.fromPartial(value);
         }
@@ -482,9 +598,10 @@ export const ModelDefinition: MessageFns<ModelDefinition> = {
       },
       {},
     );
-    message.bounding_box = (object.bounding_box !== undefined && object.bounding_box !== null)
-      ? BoundingBox.fromPartial(object.bounding_box)
-      : undefined;
+    message.bounding_box =
+      object.bounding_box !== undefined && object.bounding_box !== null
+        ? BoundingBox.fromPartial(object.bounding_box)
+        : undefined;
     return message;
   },
 };
@@ -493,167 +610,217 @@ function createBaseModelDefinition_TurretsEntry(): ModelDefinition_TurretsEntry 
   return { key: 0, value: undefined };
 }
 
-export const ModelDefinition_TurretsEntry: MessageFns<ModelDefinition_TurretsEntry> = {
-  encode(message: ModelDefinition_TurretsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== 0) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      TurretModelDefinition.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ModelDefinition_TurretsEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseModelDefinition_TurretsEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = TurretModelDefinition.decode(reader, reader.uint32());
-          continue;
-        }
+export const ModelDefinition_TurretsEntry: MessageFns<ModelDefinition_TurretsEntry> =
+  {
+    encode(
+      message: ModelDefinition_TurretsEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        TurretModelDefinition.encode(
+          message.value,
+          writer.uint32(18).fork(),
+        ).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): ModelDefinition_TurretsEntry {
-    return {
-      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
-      value: isSet(object.value) ? TurretModelDefinition.fromJSON(object.value) : undefined,
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): ModelDefinition_TurretsEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseModelDefinition_TurretsEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: ModelDefinition_TurretsEntry): unknown {
-    const obj: any = {};
-    if (message.key !== 0) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = TurretModelDefinition.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<ModelDefinition_TurretsEntry>, I>>(base?: I): ModelDefinition_TurretsEntry {
-    return ModelDefinition_TurretsEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ModelDefinition_TurretsEntry>, I>>(object: I): ModelDefinition_TurretsEntry {
-    const message = createBaseModelDefinition_TurretsEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? TurretModelDefinition.fromPartial(object.value)
-      : undefined;
-    return message;
-  },
-};
+            message.value = TurretModelDefinition.decode(
+              reader,
+              reader.uint32(),
+            );
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): ModelDefinition_TurretsEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value)
+          ? TurretModelDefinition.fromJSON(object.value)
+          : undefined,
+      };
+    },
+
+    toJSON(message: ModelDefinition_TurretsEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = TurretModelDefinition.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<ModelDefinition_TurretsEntry>, I>>(
+      base?: I,
+    ): ModelDefinition_TurretsEntry {
+      return ModelDefinition_TurretsEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<ModelDefinition_TurretsEntry>, I>>(
+      object: I,
+    ): ModelDefinition_TurretsEntry {
+      const message = createBaseModelDefinition_TurretsEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? TurretModelDefinition.fromPartial(object.value)
+          : undefined;
+      return message;
+    },
+  };
 
 function createBaseModelDefinition_TracksEntry(): ModelDefinition_TracksEntry {
   return { key: 0, value: undefined };
 }
 
-export const ModelDefinition_TracksEntry: MessageFns<ModelDefinition_TracksEntry> = {
-  encode(message: ModelDefinition_TracksEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== 0) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      TrackModelDefinition.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): ModelDefinition_TracksEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseModelDefinition_TracksEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = TrackModelDefinition.decode(reader, reader.uint32());
-          continue;
-        }
+export const ModelDefinition_TracksEntry: MessageFns<ModelDefinition_TracksEntry> =
+  {
+    encode(
+      message: ModelDefinition_TracksEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        TrackModelDefinition.encode(
+          message.value,
+          writer.uint32(18).fork(),
+        ).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): ModelDefinition_TracksEntry {
-    return {
-      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
-      value: isSet(object.value) ? TrackModelDefinition.fromJSON(object.value) : undefined,
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): ModelDefinition_TracksEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseModelDefinition_TracksEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: ModelDefinition_TracksEntry): unknown {
-    const obj: any = {};
-    if (message.key !== 0) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = TrackModelDefinition.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<ModelDefinition_TracksEntry>, I>>(base?: I): ModelDefinition_TracksEntry {
-    return ModelDefinition_TracksEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ModelDefinition_TracksEntry>, I>>(object: I): ModelDefinition_TracksEntry {
-    const message = createBaseModelDefinition_TracksEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? TrackModelDefinition.fromPartial(object.value)
-      : undefined;
-    return message;
-  },
-};
+            message.value = TrackModelDefinition.decode(
+              reader,
+              reader.uint32(),
+            );
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): ModelDefinition_TracksEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value)
+          ? TrackModelDefinition.fromJSON(object.value)
+          : undefined,
+      };
+    },
+
+    toJSON(message: ModelDefinition_TracksEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = TrackModelDefinition.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<ModelDefinition_TracksEntry>, I>>(
+      base?: I,
+    ): ModelDefinition_TracksEntry {
+      return ModelDefinition_TracksEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<ModelDefinition_TracksEntry>, I>>(
+      object: I,
+    ): ModelDefinition_TracksEntry {
+      const message = createBaseModelDefinition_TracksEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? TrackModelDefinition.fromPartial(object.value)
+          : undefined;
+      return message;
+    },
+  };
 
 function createBaseArmor(): Armor {
   return { thickness: {}, spaced: [] };
 }
 
 export const Armor: MessageFns<Armor> = {
-  encode(message: Armor, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    globalThis.Object.entries(message.thickness).forEach(([key, value]: [string, number]) => {
-      Armor_ThicknessEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
-    });
+  encode(
+    message: Armor,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    globalThis.Object.entries(message.thickness).forEach(
+      ([key, value]: [string, number]) => {
+        Armor_ThicknessEntry.encode(
+          { key: key as any, value },
+          writer.uint32(10).fork(),
+        ).join();
+      },
+    );
     for (const v of message.spaced) {
       writer.uint32(16).uint32(v!);
     }
@@ -661,7 +828,8 @@ export const Armor: MessageFns<Armor> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Armor {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArmor();
     while (reader.pos < end) {
@@ -708,22 +876,29 @@ export const Armor: MessageFns<Armor> = {
   fromJSON(object: any): Armor {
     return {
       thickness: isObject(object.thickness)
-        ? (globalThis.Object.entries(object.thickness) as [string, any][]).reduce(
-          (acc: { [key: number]: number }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = globalThis.Number(value);
-            return acc;
-          },
-          {},
-        )
+        ? (
+            globalThis.Object.entries(object.thickness) as [string, any][]
+          ).reduce(
+            (acc: { [key: number]: number }, [key, value]: [string, any]) => {
+              acc[globalThis.Number(key)] = globalThis.Number(value);
+              return acc;
+            },
+            {},
+          )
         : {},
-      spaced: globalThis.Array.isArray(object?.spaced) ? object.spaced.map((e: any) => globalThis.Number(e)) : [],
+      spaced: globalThis.Array.isArray(object?.spaced)
+        ? object.spaced.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
   toJSON(message: Armor): unknown {
     const obj: any = {};
     if (message.thickness) {
-      const entries = globalThis.Object.entries(message.thickness) as [string, number][];
+      const entries = globalThis.Object.entries(message.thickness) as [
+        string,
+        number,
+      ][];
       if (entries.length > 0) {
         obj.thickness = {};
         entries.forEach(([k, v]) => {
@@ -742,7 +917,9 @@ export const Armor: MessageFns<Armor> = {
   },
   fromPartial<I extends Exact<DeepPartial<Armor>, I>>(object: I): Armor {
     const message = createBaseArmor();
-    message.thickness = (globalThis.Object.entries(object.thickness ?? {}) as [string, number][]).reduce(
+    message.thickness = (
+      globalThis.Object.entries(object.thickness ?? {}) as [string, number][]
+    ).reduce(
       (acc: { [key: number]: number }, [key, value]: [string, number]) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = globalThis.Number(value);
@@ -761,7 +938,10 @@ function createBaseArmor_ThicknessEntry(): Armor_ThicknessEntry {
 }
 
 export const Armor_ThicknessEntry: MessageFns<Armor_ThicknessEntry> = {
-  encode(message: Armor_ThicknessEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: Armor_ThicknessEntry,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).uint32(message.key);
     }
@@ -771,8 +951,12 @@ export const Armor_ThicknessEntry: MessageFns<Armor_ThicknessEntry> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): Armor_ThicknessEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): Armor_ThicknessEntry {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArmor_ThicknessEntry();
     while (reader.pos < end) {
@@ -821,10 +1005,14 @@ export const Armor_ThicknessEntry: MessageFns<Armor_ThicknessEntry> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Armor_ThicknessEntry>, I>>(base?: I): Armor_ThicknessEntry {
+  create<I extends Exact<DeepPartial<Armor_ThicknessEntry>, I>>(
+    base?: I,
+  ): Armor_ThicknessEntry {
     return Armor_ThicknessEntry.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Armor_ThicknessEntry>, I>>(object: I): Armor_ThicknessEntry {
+  fromPartial<I extends Exact<DeepPartial<Armor_ThicknessEntry>, I>>(
+    object: I,
+  ): Armor_ThicknessEntry {
     const message = createBaseArmor_ThicknessEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
@@ -837,7 +1025,10 @@ function createBaseVector3(): Vector3 {
 }
 
 export const Vector3: MessageFns<Vector3> = {
-  encode(message: Vector3, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: Vector3,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.x !== 0) {
       writer.uint32(13).float(message.x);
     }
@@ -851,7 +1042,8 @@ export const Vector3: MessageFns<Vector3> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): Vector3 {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVector3();
     while (reader.pos < end) {
@@ -929,7 +1121,10 @@ function createBaseInitialTurretRotation(): InitialTurretRotation {
 }
 
 export const InitialTurretRotation: MessageFns<InitialTurretRotation> = {
-  encode(message: InitialTurretRotation, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: InitialTurretRotation,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.yaw !== 0) {
       writer.uint32(13).float(message.yaw);
     }
@@ -942,8 +1137,12 @@ export const InitialTurretRotation: MessageFns<InitialTurretRotation> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): InitialTurretRotation {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): InitialTurretRotation {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInitialTurretRotation();
     while (reader.pos < end) {
@@ -1004,10 +1203,14 @@ export const InitialTurretRotation: MessageFns<InitialTurretRotation> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<InitialTurretRotation>, I>>(base?: I): InitialTurretRotation {
+  create<I extends Exact<DeepPartial<InitialTurretRotation>, I>>(
+    base?: I,
+  ): InitialTurretRotation {
     return InitialTurretRotation.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<InitialTurretRotation>, I>>(object: I): InitialTurretRotation {
+  fromPartial<I extends Exact<DeepPartial<InitialTurretRotation>, I>>(
+    object: I,
+  ): InitialTurretRotation {
     const message = createBaseInitialTurretRotation();
     message.yaw = object.yaw ?? 0;
     message.pitch = object.pitch ?? 0;
@@ -1017,13 +1220,26 @@ export const InitialTurretRotation: MessageFns<InitialTurretRotation> = {
 };
 
 function createBaseTurretModelDefinition(): TurretModelDefinition {
-  return { bounding_box: undefined, armor: undefined, model_id: 0, gun_origin: undefined, guns: {}, yaw: undefined };
+  return {
+    bounding_box: undefined,
+    armor: undefined,
+    model_id: 0,
+    gun_origin: undefined,
+    guns: {},
+    yaw: undefined,
+  };
 }
 
 export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
-  encode(message: TurretModelDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TurretModelDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.bounding_box !== undefined) {
-      BoundingBox.encode(message.bounding_box, writer.uint32(10).fork()).join();
+      BoundingBox.encode(
+        message.bounding_box!,
+        writer.uint32(10).fork(),
+      ).join();
     }
     if (message.armor !== undefined) {
       Armor.encode(message.armor, writer.uint32(18).fork()).join();
@@ -1034,17 +1250,26 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
     if (message.gun_origin !== undefined) {
       Vector3.encode(message.gun_origin, writer.uint32(34).fork()).join();
     }
-    globalThis.Object.entries(message.guns).forEach(([key, value]: [string, GunModelDefinition]) => {
-      TurretModelDefinition_GunsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
-    });
+    globalThis.Object.entries(message.guns).forEach(
+      ([key, value]: [string, GunModelDefinition]) => {
+        TurretModelDefinition_GunsEntry.encode(
+          { key: key as any, value },
+          writer.uint32(42).fork(),
+        ).join();
+      },
+    );
     if (message.yaw !== undefined) {
       YawLimits.encode(message.yaw, writer.uint32(50).fork()).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): TurretModelDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): TurretModelDefinition {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTurretModelDefinition();
     while (reader.pos < end) {
@@ -1087,7 +1312,10 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
             break;
           }
 
-          const entry5 = TurretModelDefinition_GunsEntry.decode(reader, reader.uint32());
+          const entry5 = TurretModelDefinition_GunsEntry.decode(
+            reader,
+            reader.uint32(),
+          );
           if (entry5.value !== undefined) {
             message.guns[entry5.key] = entry5.value;
           }
@@ -1115,27 +1343,30 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
       bounding_box: isSet(object.boundingBox)
         ? BoundingBox.fromJSON(object.boundingBox)
         : isSet(object.bounding_box)
-        ? BoundingBox.fromJSON(object.bounding_box)
-        : undefined,
+          ? BoundingBox.fromJSON(object.bounding_box)
+          : undefined,
       armor: isSet(object.armor) ? Armor.fromJSON(object.armor) : undefined,
       model_id: isSet(object.modelId)
         ? globalThis.Number(object.modelId)
         : isSet(object.model_id)
-        ? globalThis.Number(object.model_id)
-        : 0,
+          ? globalThis.Number(object.model_id)
+          : 0,
       gun_origin: isSet(object.gunOrigin)
         ? Vector3.fromJSON(object.gunOrigin)
         : isSet(object.gun_origin)
-        ? Vector3.fromJSON(object.gun_origin)
-        : undefined,
+          ? Vector3.fromJSON(object.gun_origin)
+          : undefined,
       guns: isObject(object.guns)
         ? (globalThis.Object.entries(object.guns) as [string, any][]).reduce(
-          (acc: { [key: number]: GunModelDefinition }, [key, value]: [string, any]) => {
-            acc[globalThis.Number(key)] = GunModelDefinition.fromJSON(value);
-            return acc;
-          },
-          {},
-        )
+            (
+              acc: { [key: number]: GunModelDefinition },
+              [key, value]: [string, any],
+            ) => {
+              acc[globalThis.Number(key)] = GunModelDefinition.fromJSON(value);
+              return acc;
+            },
+            {},
+          )
         : {},
       yaw: isSet(object.yaw) ? YawLimits.fromJSON(object.yaw) : undefined,
     };
@@ -1156,7 +1387,10 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
       obj.gunOrigin = Vector3.toJSON(message.gun_origin);
     }
     if (message.guns) {
-      const entries = globalThis.Object.entries(message.guns) as [string, GunModelDefinition][];
+      const entries = globalThis.Object.entries(message.guns) as [
+        string,
+        GunModelDefinition,
+      ][];
       if (entries.length > 0) {
         obj.guns = {};
         entries.forEach(([k, v]) => {
@@ -1170,21 +1404,38 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TurretModelDefinition>, I>>(base?: I): TurretModelDefinition {
+  create<I extends Exact<DeepPartial<TurretModelDefinition>, I>>(
+    base?: I,
+  ): TurretModelDefinition {
     return TurretModelDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TurretModelDefinition>, I>>(object: I): TurretModelDefinition {
+  fromPartial<I extends Exact<DeepPartial<TurretModelDefinition>, I>>(
+    object: I,
+  ): TurretModelDefinition {
     const message = createBaseTurretModelDefinition();
-    message.bounding_box = (object.bounding_box !== undefined && object.bounding_box !== null)
-      ? BoundingBox.fromPartial(object.bounding_box)
-      : undefined;
-    message.armor = (object.armor !== undefined && object.armor !== null) ? Armor.fromPartial(object.armor) : undefined;
+    message.bounding_box =
+      object.bounding_box !== undefined && object.bounding_box !== null
+        ? BoundingBox.fromPartial(object.bounding_box)
+        : undefined;
+    message.armor =
+      object.armor !== undefined && object.armor !== null
+        ? Armor.fromPartial(object.armor)
+        : undefined;
     message.model_id = object.model_id ?? 0;
-    message.gun_origin = (object.gun_origin !== undefined && object.gun_origin !== null)
-      ? Vector3.fromPartial(object.gun_origin)
-      : undefined;
-    message.guns = (globalThis.Object.entries(object.guns ?? {}) as [string, GunModelDefinition][]).reduce(
-      (acc: { [key: number]: GunModelDefinition }, [key, value]: [string, GunModelDefinition]) => {
+    message.gun_origin =
+      object.gun_origin !== undefined && object.gun_origin !== null
+        ? Vector3.fromPartial(object.gun_origin)
+        : undefined;
+    message.guns = (
+      globalThis.Object.entries(object.guns ?? {}) as [
+        string,
+        GunModelDefinition,
+      ][]
+    ).reduce(
+      (
+        acc: { [key: number]: GunModelDefinition },
+        [key, value]: [string, GunModelDefinition],
+      ) => {
         if (value !== undefined) {
           acc[globalThis.Number(key)] = GunModelDefinition.fromPartial(value);
         }
@@ -1192,7 +1443,10 @@ export const TurretModelDefinition: MessageFns<TurretModelDefinition> = {
       },
       {},
     );
-    message.yaw = (object.yaw !== undefined && object.yaw !== null) ? YawLimits.fromPartial(object.yaw) : undefined;
+    message.yaw =
+      object.yaw !== undefined && object.yaw !== null
+        ? YawLimits.fromPartial(object.yaw)
+        : undefined;
     return message;
   },
 };
@@ -1201,88 +1455,107 @@ function createBaseTurretModelDefinition_GunsEntry(): TurretModelDefinition_Guns
   return { key: 0, value: undefined };
 }
 
-export const TurretModelDefinition_GunsEntry: MessageFns<TurretModelDefinition_GunsEntry> = {
-  encode(message: TurretModelDefinition_GunsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== 0) {
-      writer.uint32(8).uint32(message.key);
-    }
-    if (message.value !== undefined) {
-      GunModelDefinition.encode(message.value, writer.uint32(18).fork()).join();
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): TurretModelDefinition_GunsEntry {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTurretModelDefinition_GunsEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.key = reader.uint32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.value = GunModelDefinition.decode(reader, reader.uint32());
-          continue;
-        }
+export const TurretModelDefinition_GunsEntry: MessageFns<TurretModelDefinition_GunsEntry> =
+  {
+    encode(
+      message: TurretModelDefinition_GunsEntry,
+      writer: BinaryWriter = new BinaryWriter(),
+    ): BinaryWriter {
+      if (message.key !== 0) {
+        writer.uint32(8).uint32(message.key);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      if (message.value !== undefined) {
+        GunModelDefinition.encode(
+          message.value,
+          writer.uint32(18).fork(),
+        ).join();
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return writer;
+    },
 
-  fromJSON(object: any): TurretModelDefinition_GunsEntry {
-    return {
-      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
-      value: isSet(object.value) ? GunModelDefinition.fromJSON(object.value) : undefined,
-    };
-  },
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number,
+    ): TurretModelDefinition_GunsEntry {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseTurretModelDefinition_GunsEntry();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
 
-  toJSON(message: TurretModelDefinition_GunsEntry): unknown {
-    const obj: any = {};
-    if (message.key !== 0) {
-      obj.key = Math.round(message.key);
-    }
-    if (message.value !== undefined) {
-      obj.value = GunModelDefinition.toJSON(message.value);
-    }
-    return obj;
-  },
+            message.key = reader.uint32();
+            continue;
+          }
+          case 2: {
+            if (tag !== 18) {
+              break;
+            }
 
-  create<I extends Exact<DeepPartial<TurretModelDefinition_GunsEntry>, I>>(base?: I): TurretModelDefinition_GunsEntry {
-    return TurretModelDefinition_GunsEntry.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TurretModelDefinition_GunsEntry>, I>>(
-    object: I,
-  ): TurretModelDefinition_GunsEntry {
-    const message = createBaseTurretModelDefinition_GunsEntry();
-    message.key = object.key ?? 0;
-    message.value = (object.value !== undefined && object.value !== null)
-      ? GunModelDefinition.fromPartial(object.value)
-      : undefined;
-    return message;
-  },
-};
+            message.value = GunModelDefinition.decode(reader, reader.uint32());
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    },
+
+    fromJSON(object: any): TurretModelDefinition_GunsEntry {
+      return {
+        key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+        value: isSet(object.value)
+          ? GunModelDefinition.fromJSON(object.value)
+          : undefined,
+      };
+    },
+
+    toJSON(message: TurretModelDefinition_GunsEntry): unknown {
+      const obj: any = {};
+      if (message.key !== 0) {
+        obj.key = Math.round(message.key);
+      }
+      if (message.value !== undefined) {
+        obj.value = GunModelDefinition.toJSON(message.value);
+      }
+      return obj;
+    },
+
+    create<I extends Exact<DeepPartial<TurretModelDefinition_GunsEntry>, I>>(
+      base?: I,
+    ): TurretModelDefinition_GunsEntry {
+      return TurretModelDefinition_GunsEntry.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<
+      I extends Exact<DeepPartial<TurretModelDefinition_GunsEntry>, I>,
+    >(object: I): TurretModelDefinition_GunsEntry {
+      const message = createBaseTurretModelDefinition_GunsEntry();
+      message.key = object.key ?? 0;
+      message.value =
+        object.value !== undefined && object.value !== null
+          ? GunModelDefinition.fromPartial(object.value)
+          : undefined;
+      return message;
+    },
+  };
 
 function createBaseYawLimits(): YawLimits {
   return { min: 0, max: 0 };
 }
 
 export const YawLimits: MessageFns<YawLimits> = {
-  encode(message: YawLimits, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: YawLimits,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.min !== 0) {
       writer.uint32(13).float(message.min);
     }
@@ -1293,7 +1566,8 @@ export const YawLimits: MessageFns<YawLimits> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): YawLimits {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseYawLimits();
     while (reader.pos < end) {
@@ -1345,7 +1619,9 @@ export const YawLimits: MessageFns<YawLimits> = {
   create<I extends Exact<DeepPartial<YawLimits>, I>>(base?: I): YawLimits {
     return YawLimits.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<YawLimits>, I>>(object: I): YawLimits {
+  fromPartial<I extends Exact<DeepPartial<YawLimits>, I>>(
+    object: I,
+  ): YawLimits {
     const message = createBaseYawLimits();
     message.min = object.min ?? 0;
     message.max = object.max ?? 0;
@@ -1358,7 +1634,10 @@ function createBaseBoundingBox(): BoundingBox {
 }
 
 export const BoundingBox: MessageFns<BoundingBox> = {
-  encode(message: BoundingBox, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: BoundingBox,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.min !== undefined) {
       Vector3.encode(message.min, writer.uint32(10).fork()).join();
     }
@@ -1369,7 +1648,8 @@ export const BoundingBox: MessageFns<BoundingBox> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): BoundingBox {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoundingBox();
     while (reader.pos < end) {
@@ -1421,10 +1701,18 @@ export const BoundingBox: MessageFns<BoundingBox> = {
   create<I extends Exact<DeepPartial<BoundingBox>, I>>(base?: I): BoundingBox {
     return BoundingBox.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<BoundingBox>, I>>(object: I): BoundingBox {
+  fromPartial<I extends Exact<DeepPartial<BoundingBox>, I>>(
+    object: I,
+  ): BoundingBox {
     const message = createBaseBoundingBox();
-    message.min = (object.min !== undefined && object.min !== null) ? Vector3.fromPartial(object.min) : undefined;
-    message.max = (object.max !== undefined && object.max !== null) ? Vector3.fromPartial(object.max) : undefined;
+    message.min =
+      object.min !== undefined && object.min !== null
+        ? Vector3.fromPartial(object.min)
+        : undefined;
+    message.max =
+      object.max !== undefined && object.max !== null
+        ? Vector3.fromPartial(object.max)
+        : undefined;
     return message;
   },
 };
@@ -1434,7 +1722,10 @@ function createBaseTrackModelDefinition(): TrackModelDefinition {
 }
 
 export const TrackModelDefinition: MessageFns<TrackModelDefinition> = {
-  encode(message: TrackModelDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TrackModelDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.thickness !== 0) {
       writer.uint32(13).float(message.thickness);
     }
@@ -1444,8 +1735,12 @@ export const TrackModelDefinition: MessageFns<TrackModelDefinition> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): TrackModelDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): TrackModelDefinition {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTrackModelDefinition();
     while (reader.pos < end) {
@@ -1478,8 +1773,12 @@ export const TrackModelDefinition: MessageFns<TrackModelDefinition> = {
 
   fromJSON(object: any): TrackModelDefinition {
     return {
-      thickness: isSet(object.thickness) ? globalThis.Number(object.thickness) : 0,
-      origin: isSet(object.origin) ? Vector3.fromJSON(object.origin) : undefined,
+      thickness: isSet(object.thickness)
+        ? globalThis.Number(object.thickness)
+        : 0,
+      origin: isSet(object.origin)
+        ? Vector3.fromJSON(object.origin)
+        : undefined,
     };
   },
 
@@ -1494,25 +1793,39 @@ export const TrackModelDefinition: MessageFns<TrackModelDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TrackModelDefinition>, I>>(base?: I): TrackModelDefinition {
+  create<I extends Exact<DeepPartial<TrackModelDefinition>, I>>(
+    base?: I,
+  ): TrackModelDefinition {
     return TrackModelDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TrackModelDefinition>, I>>(object: I): TrackModelDefinition {
+  fromPartial<I extends Exact<DeepPartial<TrackModelDefinition>, I>>(
+    object: I,
+  ): TrackModelDefinition {
     const message = createBaseTrackModelDefinition();
     message.thickness = object.thickness ?? 0;
-    message.origin = (object.origin !== undefined && object.origin !== null)
-      ? Vector3.fromPartial(object.origin)
-      : undefined;
+    message.origin =
+      object.origin !== undefined && object.origin !== null
+        ? Vector3.fromPartial(object.origin)
+        : undefined;
     return message;
   },
 };
 
 function createBaseGunModelDefinition(): GunModelDefinition {
-  return { armor: undefined, thickness: 0, model_id: 0, pitch: undefined, mask: 0 };
+  return {
+    armor: undefined,
+    thickness: 0,
+    model_id: 0,
+    pitch: undefined,
+    mask: 0,
+  };
 }
 
 export const GunModelDefinition: MessageFns<GunModelDefinition> = {
-  encode(message: GunModelDefinition, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GunModelDefinition,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.armor !== undefined) {
       Armor.encode(message.armor, writer.uint32(10).fork()).join();
     }
@@ -1531,8 +1844,12 @@ export const GunModelDefinition: MessageFns<GunModelDefinition> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GunModelDefinition {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): GunModelDefinition {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGunModelDefinition();
     while (reader.pos < end) {
@@ -1590,13 +1907,17 @@ export const GunModelDefinition: MessageFns<GunModelDefinition> = {
   fromJSON(object: any): GunModelDefinition {
     return {
       armor: isSet(object.armor) ? Armor.fromJSON(object.armor) : undefined,
-      thickness: isSet(object.thickness) ? globalThis.Number(object.thickness) : 0,
+      thickness: isSet(object.thickness)
+        ? globalThis.Number(object.thickness)
+        : 0,
       model_id: isSet(object.modelId)
         ? globalThis.Number(object.modelId)
         : isSet(object.model_id)
-        ? globalThis.Number(object.model_id)
-        : 0,
-      pitch: isSet(object.pitch) ? PitchLimits.fromJSON(object.pitch) : undefined,
+          ? globalThis.Number(object.model_id)
+          : 0,
+      pitch: isSet(object.pitch)
+        ? PitchLimits.fromJSON(object.pitch)
+        : undefined,
       mask: isSet(object.mask) ? globalThis.Number(object.mask) : 0,
     };
   },
@@ -1621,17 +1942,25 @@ export const GunModelDefinition: MessageFns<GunModelDefinition> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GunModelDefinition>, I>>(base?: I): GunModelDefinition {
+  create<I extends Exact<DeepPartial<GunModelDefinition>, I>>(
+    base?: I,
+  ): GunModelDefinition {
     return GunModelDefinition.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GunModelDefinition>, I>>(object: I): GunModelDefinition {
+  fromPartial<I extends Exact<DeepPartial<GunModelDefinition>, I>>(
+    object: I,
+  ): GunModelDefinition {
     const message = createBaseGunModelDefinition();
-    message.armor = (object.armor !== undefined && object.armor !== null) ? Armor.fromPartial(object.armor) : undefined;
+    message.armor =
+      object.armor !== undefined && object.armor !== null
+        ? Armor.fromPartial(object.armor)
+        : undefined;
     message.thickness = object.thickness ?? 0;
     message.model_id = object.model_id ?? 0;
-    message.pitch = (object.pitch !== undefined && object.pitch !== null)
-      ? PitchLimits.fromPartial(object.pitch)
-      : undefined;
+    message.pitch =
+      object.pitch !== undefined && object.pitch !== null
+        ? PitchLimits.fromPartial(object.pitch)
+        : undefined;
     message.mask = object.mask ?? 0;
     return message;
   },
@@ -1642,7 +1971,10 @@ function createBasePitchLimits(): PitchLimits {
 }
 
 export const PitchLimits: MessageFns<PitchLimits> = {
-  encode(message: PitchLimits, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: PitchLimits,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.min !== 0) {
       writer.uint32(13).float(message.min);
     }
@@ -1662,7 +1994,8 @@ export const PitchLimits: MessageFns<PitchLimits> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): PitchLimits {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePitchLimits();
     while (reader.pos < end) {
@@ -1721,9 +2054,15 @@ export const PitchLimits: MessageFns<PitchLimits> = {
     return {
       min: isSet(object.min) ? globalThis.Number(object.min) : 0,
       max: isSet(object.max) ? globalThis.Number(object.max) : 0,
-      front: isSet(object.front) ? PitchLimitsExtrema.fromJSON(object.front) : undefined,
-      back: isSet(object.back) ? PitchLimitsExtrema.fromJSON(object.back) : undefined,
-      transition: isSet(object.transition) ? globalThis.Number(object.transition) : 0,
+      front: isSet(object.front)
+        ? PitchLimitsExtrema.fromJSON(object.front)
+        : undefined,
+      back: isSet(object.back)
+        ? PitchLimitsExtrema.fromJSON(object.back)
+        : undefined,
+      transition: isSet(object.transition)
+        ? globalThis.Number(object.transition)
+        : 0,
     };
   },
 
@@ -1750,16 +2089,20 @@ export const PitchLimits: MessageFns<PitchLimits> = {
   create<I extends Exact<DeepPartial<PitchLimits>, I>>(base?: I): PitchLimits {
     return PitchLimits.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PitchLimits>, I>>(object: I): PitchLimits {
+  fromPartial<I extends Exact<DeepPartial<PitchLimits>, I>>(
+    object: I,
+  ): PitchLimits {
     const message = createBasePitchLimits();
     message.min = object.min ?? 0;
     message.max = object.max ?? 0;
-    message.front = (object.front !== undefined && object.front !== null)
-      ? PitchLimitsExtrema.fromPartial(object.front)
-      : undefined;
-    message.back = (object.back !== undefined && object.back !== null)
-      ? PitchLimitsExtrema.fromPartial(object.back)
-      : undefined;
+    message.front =
+      object.front !== undefined && object.front !== null
+        ? PitchLimitsExtrema.fromPartial(object.front)
+        : undefined;
+    message.back =
+      object.back !== undefined && object.back !== null
+        ? PitchLimitsExtrema.fromPartial(object.back)
+        : undefined;
     message.transition = object.transition ?? 0;
     return message;
   },
@@ -1770,7 +2113,10 @@ function createBasePitchLimitsExtrema(): PitchLimitsExtrema {
 }
 
 export const PitchLimitsExtrema: MessageFns<PitchLimitsExtrema> = {
-  encode(message: PitchLimitsExtrema, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: PitchLimitsExtrema,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.min !== 0) {
       writer.uint32(13).float(message.min);
     }
@@ -1783,8 +2129,12 @@ export const PitchLimitsExtrema: MessageFns<PitchLimitsExtrema> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): PitchLimitsExtrema {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): PitchLimitsExtrema {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePitchLimitsExtrema();
     while (reader.pos < end) {
@@ -1845,10 +2195,14 @@ export const PitchLimitsExtrema: MessageFns<PitchLimitsExtrema> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PitchLimitsExtrema>, I>>(base?: I): PitchLimitsExtrema {
+  create<I extends Exact<DeepPartial<PitchLimitsExtrema>, I>>(
+    base?: I,
+  ): PitchLimitsExtrema {
     return PitchLimitsExtrema.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PitchLimitsExtrema>, I>>(object: I): PitchLimitsExtrema {
+  fromPartial<I extends Exact<DeepPartial<PitchLimitsExtrema>, I>>(
+    object: I,
+  ): PitchLimitsExtrema {
     const message = createBasePitchLimitsExtrema();
     message.min = object.min ?? 0;
     message.max = object.max ?? 0;
@@ -1857,18 +2211,33 @@ export const PitchLimitsExtrema: MessageFns<PitchLimitsExtrema> = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string; value: unknown } ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends { $case: string; value: unknown }
+        ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
+        : T extends {}
+          ? { [K in keyof T]?: DeepPartial<T[K]> }
+          : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

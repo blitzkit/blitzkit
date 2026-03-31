@@ -1,11 +1,11 @@
-import { asset } from '@blitzkit/core';
-import { ClockIcon, ReloadIcon } from '@radix-ui/react-icons';
-import { Flex, Text } from '@radix-ui/themes';
-import { awaitableConsumableDefinitions } from '../../core/awaitables/consumableDefinitions';
-import { useDelta } from '../../hooks/useDelta';
-import { useLocale } from '../../hooks/useLocale';
-import { GenericTankComponentButton } from './GenericTankComponentButton';
-import type { TankComponentButtonProps } from './TankComponentButton';
+import { asset } from "@blitzkit/core";
+import { ClockIcon, ReloadIcon } from "@radix-ui/react-icons";
+import { Flex, Text } from "@radix-ui/themes";
+import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
+import { useDelta } from "../../hooks/useDelta";
+import { useLocale } from "../../hooks/useLocale";
+import { GenericTankComponentButton } from "./GenericTankComponentButton";
+import type { TankComponentButtonProps } from "./TankComponentButton";
 
 interface ConsumableButtonProps extends TankComponentButtonProps {
   consumable: number;
@@ -27,8 +27,8 @@ export function ConsumableButton({
 
   return (
     <GenericTankComponentButton
-      style={{ width: '6rem' }}
-      tooltip={unwrap(consumableDefinitions.consumables[consumable].name)}
+      style={{ width: "6rem" }}
+      tooltip={unwrap(consumableDefinitions.consumables[consumable].name!)}
       icon={asset(`icons/consumables/${consumable}.webp`)}
       {...props}
     >
@@ -39,9 +39,9 @@ export function ConsumableButton({
               size="1"
               color={
                 durationDelta > 0
-                  ? 'green'
+                  ? "green"
                   : durationDelta < 0
-                    ? 'tomato'
+                    ? "tomato"
                     : undefined
               }
             >
@@ -56,9 +56,9 @@ export function ConsumableButton({
               size="1"
               color={
                 cooldownDelta < 0
-                  ? 'green'
+                  ? "green"
                   : cooldownDelta > 0
-                    ? 'tomato'
+                    ? "tomato"
                     : undefined
               }
             >

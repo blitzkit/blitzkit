@@ -1,11 +1,5 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
-import {
-  Card,
-  Flex,
-  IconButton,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Card, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
 import { Html } from "@react-three/drei";
 import { useRef } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
@@ -107,12 +101,12 @@ export function ArmorPlateDisplay() {
                         const track = tank.tracks[protagonist.track.id];
 
                         if (highlightArmor.name.startsWith("hull_")) {
-                          tank.armor.thickness[index] = thickness;
+                          tank.armor!.thickness[index] = thickness;
                         } else if (highlightArmor.name.startsWith("turret_")) {
-                          turret.armor.thickness[index] = thickness;
+                          turret.armor!.thickness[index] = thickness;
                         } else if (highlightArmor.name.startsWith("gun_")) {
                           if (highlightArmor.name.includes("_armor_")) {
-                            gun.armor.thickness[index] = thickness;
+                            gun.armor!.thickness[index] = thickness;
                           } else {
                             gun.thickness = thickness;
                           }
@@ -162,15 +156,15 @@ export function ArmorPlateDisplay() {
                         initialTank.tracks[protagonist.track.id];
 
                       if (highlightArmor.name.startsWith("hull_")) {
-                        tank.armor.thickness[index] =
-                          initialTank.armor.thickness[index];
+                        tank.armor!.thickness[index] =
+                          initialTank.armor!.thickness[index];
                       } else if (highlightArmor.name.startsWith("turret_")) {
-                        turret.armor.thickness[index] =
-                          initialTurret.armor.thickness[index];
+                        turret.armor!.thickness[index] =
+                          initialTurret.armor!.thickness[index];
                       } else if (highlightArmor.name.startsWith("gun_")) {
                         if (highlightArmor.name.includes("_armor_")) {
-                          gun.armor.thickness[index] =
-                            initialGun.armor.thickness[index];
+                          gun.armor!.thickness[index] =
+                            initialGun.armor!.thickness[index];
                         } else {
                           gun.thickness = initialGun.thickness;
                         }

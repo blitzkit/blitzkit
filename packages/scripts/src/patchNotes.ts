@@ -53,7 +53,7 @@ if (newTanks.length > 0) {
   notes += "## New Tanks\n\n";
 
   for (const tank of newTanks) {
-    notes += `### [${tank.name.locales.en}](${domain}/tanks/${tank.slug})\n`;
+    notes += `### [${tank.name!.locales.en}](${domain}/tanks/${tank.slug})\n`;
     notes += `![](${tankIcon(tank.id)})\n\n`;
   }
 
@@ -96,49 +96,49 @@ if (changedTanks.length > 0) {
     const previewTankModel = previewModelDefinitions.models[preview.id];
 
     const currentConsumables = Object.values(
-      currentConsumableDefinitions.consumables
+      currentConsumableDefinitions.consumables,
     ).filter((consumable) =>
-      checkConsumableProvisionInclusivity(consumable, current, currentGun)
+      checkConsumableProvisionInclusivity(consumable, current, currentGun),
     );
     const previewConsumables = Object.values(
-      previewConsumableDefinitions.consumables
+      previewConsumableDefinitions.consumables,
     ).filter((consumable) =>
-      checkConsumableProvisionInclusivity(consumable, preview, previewGun)
+      checkConsumableProvisionInclusivity(consumable, preview, previewGun),
     );
     const addedConsumables = previewConsumables.filter(
       (previewConsumable) =>
         !currentConsumables.some(
-          (currentConsumable) => currentConsumable.id === previewConsumable.id
-        )
+          (currentConsumable) => currentConsumable.id === previewConsumable.id,
+        ),
     );
     const removedConsumables = currentConsumables.filter(
       (currentConsumable) =>
         !previewConsumables.some(
-          (previewConsumable) => previewConsumable.id === currentConsumable.id
-        )
+          (previewConsumable) => previewConsumable.id === currentConsumable.id,
+        ),
     );
 
     const currentProvisions = availableProvisions(
       current,
       currentGun,
-      currentProvisionDefinitions
+      currentProvisionDefinitions,
     );
     const previewProvisions = availableProvisions(
       preview,
       previewGun,
-      previewProvisionDefinitions
+      previewProvisionDefinitions,
     );
     const addedProvisions = previewProvisions.filter(
       (previewProvision) =>
         !currentProvisions.some(
-          (currentProvision) => currentProvision.id === previewProvision.id
-        )
+          (currentProvision) => currentProvision.id === previewProvision.id,
+        ),
     );
     const removedProvisions = currentProvisions.filter(
       (currentProvision) =>
         !previewProvisions.some(
-          (previewProvision) => previewProvision.id === currentProvision.id
-        )
+          (previewProvision) => previewProvision.id === currentProvision.id,
+        ),
     );
 
     const currentEquipment = currentEquipmentDefinitions.presets[
@@ -155,16 +155,16 @@ if (changedTanks.length > 0) {
       .filter(
         (previewEquipment) =>
           !currentEquipment.some(
-            (currentEquipment) => currentEquipment === previewEquipment
-          )
+            (currentEquipment) => currentEquipment === previewEquipment,
+          ),
       )
       .map((id) => previewEquipmentDefinitions.equipments[id]);
     const removedEquipment = currentEquipment
       .filter(
         (currentEquipment) =>
           !previewEquipment.some(
-            (previewEquipment) => previewEquipment === currentEquipment
-          )
+            (previewEquipment) => previewEquipment === currentEquipment,
+          ),
       )
       .map((id) => currentEquipmentDefinitions.equipments[id]);
 
@@ -184,7 +184,7 @@ if (changedTanks.length > 0) {
         provisions: createDefaultProvisions(
           current,
           currentGun,
-          currentProvisionDefinitions
+          currentProvisionDefinitions,
         ),
         equipmentMatrix: genericDefaultEquipmentMatrix,
         stockEngine: current.engines[0],
@@ -198,7 +198,7 @@ if (changedTanks.length > 0) {
         equipmentDefinitions: currentEquipmentDefinitions,
         provisionDefinitions: currentProvisionDefinitions,
         tankModelDefinition: currentTankModel,
-      }
+      },
     );
     const previewCharacteristics = tankCharacteristics(
       {
@@ -216,7 +216,7 @@ if (changedTanks.length > 0) {
         provisions: createDefaultProvisions(
           preview,
           previewGun,
-          previewProvisionDefinitions
+          previewProvisionDefinitions,
         ),
         equipmentMatrix: genericDefaultEquipmentMatrix,
         stockEngine: preview.engines[0],
@@ -230,7 +230,7 @@ if (changedTanks.length > 0) {
         equipmentDefinitions: previewEquipmentDefinitions,
         provisionDefinitions: previewProvisionDefinitions,
         tankModelDefinition: previewTankModel,
-      }
+      },
     );
     const changedCharacteristics: string[] = [];
 
@@ -244,17 +244,17 @@ if (changedTanks.length > 0) {
       }
     }
 
-    notes += `### [${preview.name.locales.en}](${domain}/tanks/${preview.slug})\n`;
+    notes += `### [${preview.name!.locales.en}](${domain}/tanks/${preview.slug})\n`;
     notes += `![](${tankIcon(preview.id)})\n\n`;
 
     if (addedConsumables.length + removedConsumables.length > 0) {
       notes += `Consumables: `;
       notes += [
         ...addedConsumables.map(
-          (consumable) => `🟢 ${consumable.name.locales.en}`
+          (consumable) => `🟢 ${consumable.name!.locales.en}`,
         ),
         ...removedConsumables.map(
-          (consumable) => `🔴 ${consumable.name.locales.en}`
+          (consumable) => `🔴 ${consumable.name!.locales.en}`,
         ),
       ].join(", ");
       notes += `\n`;
@@ -264,10 +264,10 @@ if (changedTanks.length > 0) {
       notes += `Provisions: `;
       notes += [
         ...addedProvisions.map(
-          (provision) => `🟢 ${provision.name.locales.en}`
+          (provision) => `🟢 ${provision.name!.locales.en}`,
         ),
         ...removedProvisions.map(
-          (provision) => `🔴 ${provision.name.locales.en}`
+          (provision) => `🔴 ${provision.name!.locales.en}`,
         ),
       ].join(", ");
       notes += `\n`;
@@ -276,9 +276,11 @@ if (changedTanks.length > 0) {
     if (addedEquipment.length + removedEquipment.length > 0) {
       notes += `-Equipment: `;
       notes += [
-        ...addedEquipment.map((equipment) => `🟢 ${equipment.name.locales.en}`),
+        ...addedEquipment.map(
+          (equipment) => `🟢 ${equipment.name!.locales.en}`,
+        ),
         ...removedEquipment.map(
-          (equipment) => `🔴 ${equipment.name.locales.en}`
+          (equipment) => `🔴 ${equipment.name!.locales.en}`,
         ),
       ].join(", ");
       notes += `\n`;

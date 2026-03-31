@@ -54,12 +54,12 @@ type OptionsProps = MaybeSkeletonComponentProps & {
 
 export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
-    (state) => state.customShell !== undefined
+    (state) => state.customShell !== undefined,
   );
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
-    (state) => state.advancedHighlighting
+    (state) => state.advancedHighlighting,
   );
   const fullScreenAvailable = useFullscreenAvailability(true);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
@@ -102,8 +102,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
-                  antagonistShell.type
-                ) * antagonistShell.penetration.near
+                  antagonistShell.type,
+                ) * antagonistShell.penetration!.near
               ).toFixed(0),
             })}
           </Text>
@@ -203,7 +203,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               }}
             >
               <img
-                alt={unwrap(thisShell.name)}
+                alt={unwrap(thisShell.name!)}
                 src={asset(`icons/shells/${thisShell.icon}.webp`)}
                 style={{
                   width: "50%",
@@ -456,7 +456,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               <Dialog.Trigger>
                 <Button variant="solid" highContrast>
                   <Crosshair1Icon />
-                  {unwrap(antagonistTank.name)}
+                  {unwrap(antagonistTank.name!)}
                   <SmallTankIcon id={antagonistTank.id} size={16} />
                 </Button>
               </Dialog.Trigger>

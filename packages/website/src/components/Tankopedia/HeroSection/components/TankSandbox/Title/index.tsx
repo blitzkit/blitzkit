@@ -9,7 +9,7 @@ export function Title() {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const name = unwrap(protagonist.name);
+  const name = unwrap(protagonist.name!);
   const fontSize = revealed
     ? disturbed
       ? "1.5rem"

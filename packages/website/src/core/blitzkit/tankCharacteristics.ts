@@ -143,22 +143,28 @@ export function tankCharacteristics(
   const commanderMastery = 1 + provisionCrewBonus;
   const loaderMastery =
     commanderMastery *
-    (tank.crew.some(({ type }) => type === CrewType.LOADER) ? 1.1 : 1.05);
+    (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_LOADER)
+      ? 1.1
+      : 1.05);
   const gunnerMastery =
     commanderMastery *
-    (tank.crew.some(({ type }) => type === CrewType.GUNNER) ? 1.1 : 1.05);
+    (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_GUNNER)
+      ? 1.1
+      : 1.05);
   const driverMastery =
     commanderMastery *
-    (tank.crew.some(({ type }) => type === CrewType.DRIVER) ? 1.1 : 1.05);
+    (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_DRIVER)
+      ? 1.1
+      : 1.05);
   const intraClipCoefficient = coefficient([hasShellReloadBoost, -0.3]);
   const burstShells = gun.burst?.count ?? 1;
   const burstInterShell = gun.burst?.interval;
   const armorDamageCoefficient =
     coefficient([hasTungsten, 0.15]) *
     coefficient(
-      [applyReactiveArmor && shell.type !== ShellType.HE, -0.27],
+      [applyReactiveArmor && shell.type !== ShellType.SHELL_TYPE_HE, -0.27],
       [applyDynamicArmor, -0.1],
-      [applySpallLiner && shell.type === ShellType.HE, -0.2],
+      [applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE, -0.2],
     );
   const assaultDamageCoefficient =
     gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
@@ -215,7 +221,8 @@ export function tankCharacteristics(
   const enginePowerCoefficient = coefficient(
     [
       hasEngineAccelerator,
-      tank.class === TankClass.HEAVY || tank.class === TankClass.TANK_DESTROYER
+      tank.class === TankClass.TANK_CLASS_HEAVY ||
+      tank.class === TankClass.TANK_CLASS_TANK_DESTROYER
         ? 0.05
         : 0.04,
     ],
@@ -250,11 +257,11 @@ export function tankCharacteristics(
   const viewRangeCoefficient =
     coefficient([
       hasImprovedOptics,
-      tank.class === TankClass.HEAVY
+      tank.class === TankClass.TANK_CLASS_HEAVY
         ? 0.06
-        : tank.class === TankClass.MEDIUM
+        : tank.class === TankClass.TANK_CLASS_MEDIUM
           ? 0.08
-          : tank.class === TankClass.LIGHT
+          : tank.class === TankClass.TANK_CLASS_LIGHT
             ? 0.11
             : 0.04,
     ]) * coefficient([true, progressiveStat(commanderMastery)]);
@@ -275,20 +282,20 @@ export function tankCharacteristics(
       true,
       coefficient([
         camouflage,
-        tank.class === TankClass.TANK_DESTROYER
+        tank.class === TankClass.TANK_CLASS_TANK_DESTROYER
           ? 0.04
-          : tank.class === TankClass.HEAVY
+          : tank.class === TankClass.TANK_CLASS_HEAVY
             ? 0.03
             : 0.02,
       ]),
     ],
     [
       hasCamouflageNet,
-      tank.class === TankClass.HEAVY
+      tank.class === TankClass.TANK_CLASS_HEAVY
         ? 0.02
-        : tank.class === TankClass.MEDIUM
+        : tank.class === TankClass.TANK_CLASS_MEDIUM
           ? 0.04
-          : tank.class === TankClass.LIGHT
+          : tank.class === TankClass.TANK_CLASS_LIGHT
             ? 0.07
             : 0.1,
     ],
@@ -299,9 +306,9 @@ export function tankCharacteristics(
       coefficient(
         [
           camouflage,
-          tank.class === TankClass.TANK_DESTROYER
+          tank.class === TankClass.TANK_CLASS_TANK_DESTROYER
             ? 0.04
-            : tank.class === TankClass.HEAVY
+            : tank.class === TankClass.TANK_CLASS_HEAVY
               ? 0.03
               : 0.02,
         ],
@@ -310,11 +317,11 @@ export function tankCharacteristics(
     ],
     [
       hasCamouflageNet,
-      tank.class === TankClass.HEAVY
+      tank.class === TankClass.TANK_CLASS_HEAVY
         ? 0.04
-        : tank.class === TankClass.MEDIUM
+        : tank.class === TankClass.TANK_CLASS_MEDIUM
           ? 0.08
-          : tank.class === TankClass.LIGHT
+          : tank.class === TankClass.TANK_CLASS_LIGHT
             ? 0.14
             : 0.2,
     ],
@@ -322,8 +329,8 @@ export function tankCharacteristics(
 
   const size = normalizeBoundingBox(
     unionBoundingBox(
-      tankModelDefinition.bounding_box,
-      turretModelDefinition.bounding_box,
+      tankModelDefinition.bounding_box!,
+      turretModelDefinition.bounding_box!,
     ),
   );
   const weightKg =
@@ -408,7 +415,7 @@ export function tankCharacteristics(
           ? gun.gun_type!.value.reload
           : gun.gun_type!.value.clip_reload) * reloadCoefficient;
   const caliber = shell.caliber;
-  const penetration = shell.penetration.near * penetrationCoefficient;
+  const penetration = shell.penetration!.near * penetrationCoefficient;
   const clipDamage =
     gun.gun_type!.$case === "regular"
       ? undefined
@@ -428,21 +435,21 @@ export function tankCharacteristics(
   const dispersionGunDamaged =
     gun.dispersion_damaged * dispersionDamagedCoefficient;
   const gunDepression =
-    gunModelDefinition.pitch.max +
+    gunModelDefinition.pitch!.max +
     gunDefaultPitch +
     (hasImprovedVerticalStabilizer ? 3 : 0) +
     (hasDownImprovedVerticalStabilizer ? 3 : 0);
   const gunElevation =
-    -gunModelDefinition.pitch.min -
+    -gunModelDefinition.pitch!.min -
     gunDefaultPitch +
     (hasImprovedVerticalStabilizer ? 4 : 0);
-  const gunFrontalDepression = gunModelDefinition.pitch.front?.max;
-  const gunFrontalElevation = gunModelDefinition.pitch.front
-    ? -gunModelDefinition.pitch.front.min
+  const gunFrontalDepression = gunModelDefinition.pitch!.front?.max;
+  const gunFrontalElevation = gunModelDefinition.pitch!.front
+    ? -gunModelDefinition.pitch!.front.min
     : undefined;
-  const gunRearDepression = gunModelDefinition.pitch.back?.max;
-  const gunRearElevation = gunModelDefinition.pitch.back
-    ? -gunModelDefinition.pitch.back.min
+  const gunRearDepression = gunModelDefinition.pitch!.back?.max;
+  const gunRearElevation = gunModelDefinition.pitch!.back
+    ? -gunModelDefinition.pitch!.back.min
     : undefined;
   const azimuthLeft = turretModelDefinition.yaw
     ? -turretModelDefinition.yaw.min
@@ -496,18 +503,20 @@ export function tankCharacteristics(
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
   const camouflageMoving =
-    tank.class === TankClass.LIGHT
+    tank.class === TankClass.TANK_CLASS_LIGHT
       ? tank.camouflage_still * camouflageCoefficientStill
       : tank.camouflage_moving * camouflageCoefficientMoving;
   const camouflageShootingStill =
     tank.camouflage_still * gun.camouflage_loss * camouflageCoefficientStill;
   const camouflageShootingMoving =
-    (tank.class === TankClass.LIGHT
+    (tank.class === TankClass.TANK_CLASS_LIGHT
       ? tank.camouflage_still * camouflageCoefficientStill
       : tank.camouflage_moving * camouflageCoefficientMoving) *
     gun.camouflage_loss;
   const camouflageCaughtOnFire =
-    tank.camouflage_onFire * tank.camouflage_still * camouflageCoefficientStill;
+    tank.camouflage_on_fire *
+    tank.camouflage_still *
+    camouflageCoefficientStill;
   const width = size.z;
   const height = size.x;
   const length = size.y;
@@ -518,7 +527,7 @@ export function tankCharacteristics(
   const shellRange = shell.range;
   const shellCapacity = gun.shell_capacity;
   const gunType = gun.gun_type!.$case;
-  const penetrationAt250m = shell.penetration.far;
+  const penetrationAt250m = shell.penetration!.far;
 
   return {
     crewCount,

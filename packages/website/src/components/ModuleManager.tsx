@@ -6,11 +6,11 @@ import {
   type TankDefinition,
   type TrackDefinition,
   type TurretDefinition,
-} from '@blitzkit/core';
-import { DropdownMenu, Flex } from '@radix-ui/themes';
-import { useState } from 'react';
-import { useLocale } from '../hooks/useLocale';
-import { ModuleButton } from './ModuleButtons/ModuleButton';
+} from "@blitzkit/core";
+import { DropdownMenu, Flex } from "@radix-ui/themes";
+import { useState } from "react";
+import { useLocale } from "../hooks/useLocale";
+import { ModuleButton } from "./ModuleButtons/ModuleButton";
 
 interface ModuleManagerProps {
   tank: TankDefinition;
@@ -72,8 +72,8 @@ export function ModuleManager({
                     variant="ghost"
                     module="turret"
                     discriminator={TIER_ROMAN_NUMERALS[turret.tier]}
-                  />{' '}
-                  {unwrap(turret.name)}
+                  />{" "}
+                  {unwrap(turret.name!)}
                 </DropdownMenu.RadioItem>
               );
             })}
@@ -112,8 +112,8 @@ export function ModuleManager({
                     variant="ghost"
                     module="gun"
                     discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
-                  />{' '}
-                  {unwrap(gun.name)}
+                  />{" "}
+                  {unwrap(gun.name!)}
                 </DropdownMenu.RadioItem>
               );
             })}
@@ -151,8 +151,8 @@ export function ModuleManager({
                     variant="ghost"
                     module="engine"
                     discriminator={TIER_ROMAN_NUMERALS[engine.tier]}
-                  />{' '}
-                  {unwrap(engine.name)}
+                  />{" "}
+                  {unwrap(engine.name!)}
                 </DropdownMenu.RadioItem>
               );
             })}
@@ -190,8 +190,8 @@ export function ModuleManager({
                     variant="ghost"
                     module="chassis"
                     discriminator={TIER_ROMAN_NUMERALS[track.tier]}
-                  />{' '}
-                  {unwrap(track.name)}
+                  />{" "}
+                  {unwrap(track.name!)}
                 </DropdownMenu.RadioItem>
               );
             })}

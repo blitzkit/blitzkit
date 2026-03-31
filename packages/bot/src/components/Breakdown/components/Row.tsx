@@ -3,14 +3,14 @@ import {
   TankClass,
   TankType,
   TREE_TYPE_ICONS,
-} from '@blitzkit/core';
-import { createColors } from 'bepaint';
+} from "@blitzkit/core";
+import { createColors } from "bepaint";
 import {
   type AccentColor,
   type GrayColor,
   PALETTES,
-} from '../../../core/radix/radixColors';
-import { RowStat } from './RowStat';
+} from "../../../core/radix/radixColors";
+import { RowStat } from "./RowStat";
 
 export interface RowStatItem {
   title: string;
@@ -21,7 +21,7 @@ export interface RowStatItem {
 }
 
 interface RowProps {
-  displayType?: 'tank' | 'summary';
+  displayType?: "tank" | "summary";
   naked?: boolean;
   title: string;
   minimized?: boolean;
@@ -32,7 +32,7 @@ interface RowProps {
 }
 
 export function Row({
-  color = 'slate',
+  color = "slate",
   stats,
   title,
   minimized,
@@ -49,20 +49,20 @@ export function Row({
       className="session-tracker-row"
       style={{
         maxWidth: naked ? 600 : Infinity,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         borderRadius: 4,
         backgroundColor: naked
           ? `${theme.appBackground2}c0`
           : theme.appBackground2,
-        overflow: 'hidden',
+        overflow: "hidden",
       }}
     >
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           padding: 8,
           gap: 4,
           backgroundColor: naked
@@ -70,10 +70,14 @@ export function Row({
             : theme.componentInteractive,
         }}
       >
-        {displayType === 'tank' && tankClass !== undefined && (
+        {displayType === "tank" && tankClass !== undefined && (
           <img
             alt={TankClass[tankClass]}
-            src={TREE_TYPE_ICONS[type ?? TankType.RESEARCHABLE][tankClass]}
+            src={
+              TREE_TYPE_ICONS[type ?? TankType.TANK_TYPE_RESEARCHABLE][
+                tankClass
+              ]
+            }
             style={{ width: 16, height: 16 }}
           />
         )}
@@ -81,10 +85,10 @@ export function Row({
         <span
           style={{
             color:
-              displayType === 'tank'
-                ? type === TankType.COLLECTOR
+              displayType === "tank"
+                ? type === TankType.TANK_TYPE_COLLECTOR
                   ? theme.textLowContrast_blue
-                  : type === TankType.PREMIUM
+                  : type === TankType.TANK_TYPE_PREMIUM
                     ? theme.textLowContrast_amber
                     : theme.textHighContrast
                 : theme.textLowContrast,
@@ -98,7 +102,7 @@ export function Row({
 
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           paddingTop: 8,
           paddingBottom: 8,
         }}
@@ -109,8 +113,8 @@ export function Row({
               <RowStat
                 minimized={minimized}
                 key={index}
-                name={`${row.title} • ${row.career ?? '--'}`}
-                value={row.current ?? '--'}
+                name={`${row.title} • ${row.career ?? "--"}`}
+                value={row.current ?? "--"}
                 delta={row.delta}
                 percentile={row.percentile}
               />

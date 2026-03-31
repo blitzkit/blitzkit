@@ -15,7 +15,7 @@ interface BodyProps {
 export function Body({ stats }: BodyProps) {
   const members = CompareEphemeral.use((state) => state.members);
   const hasNonRegularGun = members.some(
-    ({ gun }) => gun.gun_type!.$case !== "regular"
+    ({ gun }) => gun.gun_type!.$case !== "regular",
   );
   const { unwrap, strings } = useLocale();
 
@@ -55,7 +55,7 @@ export function Body({ stats }: BodyProps) {
                       }}
                     >
                       <img
-                        alt={unwrap(thisShell.name)}
+                        alt={unwrap(thisShell.name!)}
                         width={16}
                         height={16}
                         src={asset(`icons/shells/${thisShell.icon}.webp`)}

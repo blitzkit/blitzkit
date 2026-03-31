@@ -38,7 +38,7 @@ export function QuickInputs() {
     }
 
     function handleTransformEvent(
-      event: QuicklimeEvent<ModelTransformEventData>
+      event: QuicklimeEvent<ModelTransformEventData>,
     ) {
       syncInputValues(event.data);
     }
@@ -77,7 +77,7 @@ export function QuickInputs() {
 
           if (isNaN(value)) {
             yawInput.current!.value = radToDeg(
-              modelTransformEvent.last!.yaw
+              modelTransformEvent.last!.yaw,
             ).toFixed(1);
             return;
           }
@@ -85,15 +85,15 @@ export function QuickInputs() {
           const [pitch, yaw] = applyPitchYawLimits(
             modelTransformEvent.last!.pitch,
             degToRad(value),
-            gunModelDefinition.pitch,
+            gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
           yawInput.current!.value = radToDeg(
-            modelTransformEvent.last!.yaw
+            modelTransformEvent.last!.yaw,
           ).toFixed(1);
         }}
         onKeyDown={(event) => {
@@ -129,10 +129,10 @@ export function QuickInputs() {
           const [pitch, yaw] = applyPitchYawLimits(
             degToRad(value + initialGunPitch),
             modelTransformEvent.last!.yaw,
-            gunModelDefinition.pitch,
+            gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
           modelTransformEvent.dispatch({ pitch, yaw });
           pitchInput.current!.value = (

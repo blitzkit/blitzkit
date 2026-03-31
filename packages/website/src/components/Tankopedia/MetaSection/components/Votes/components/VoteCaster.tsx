@@ -36,7 +36,7 @@ export function VoteCaster() {
         </Dialog.Trigger>
 
         <Dialog.Content maxWidth="23rem">
-          <Dialog.Title>Voting for {unwrap(tank.name)}</Dialog.Title>
+          <Dialog.Title>Voting for {unwrap(tank.name!)}</Dialog.Title>
 
           <Flex direction="column" mt="4">
             <Flex align="center" justify="between">
@@ -118,10 +118,10 @@ export function VoteCaster() {
                     survivability === null
                       ? ""
                       : `survivability=${survivability}&`
-                  }player=${wargaming.id}&token=${wargaming.token}`
+                  }player=${wargaming.id}&token=${wargaming.token}`,
                 )
                   .then(
-                    (response) => response.json() as Promise<BlitzkitResponse>
+                    (response) => response.json() as Promise<BlitzkitResponse>,
                   )
                   .then((json) => {
                     setShowDialogue(false);

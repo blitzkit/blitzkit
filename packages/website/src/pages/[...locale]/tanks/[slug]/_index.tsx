@@ -43,7 +43,7 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
         <HeroSection skeleton={skeleton} />
         <MetaSection />
         <CalloutsSection />
-        {tank.type === TankType.RESEARCHABLE && !tank.deprecated && (
+        {tank.type === TankType.TANK_TYPE_RESEARCHABLE && !tank.deprecated && (
           <TechTreeSection skeleton={skeleton} />
         )}
         <CharacteristicsSection skeleton={skeleton} />

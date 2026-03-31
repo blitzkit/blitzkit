@@ -15,7 +15,7 @@ export function ShellSwitcher() {
         const selected = thisShell.id === shell.id;
 
         return (
-          <Tooltip content={unwrap(thisShell.name)} key={thisShell.id}>
+          <Tooltip content={unwrap(thisShell.name!)} key={thisShell.id}>
             <IconButton
               size="3"
               color={selected ? undefined : "gray"}
@@ -36,7 +36,7 @@ export function ShellSwitcher() {
               }}
             >
               <img
-                alt={unwrap(thisShell.name)}
+                alt={unwrap(thisShell.name!)}
                 style={{ width: "1.125rem", height: "1.125rem" }}
                 src={asset(`icons/shells/${thisShell.icon}.webp`)}
               />

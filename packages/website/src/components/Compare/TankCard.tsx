@@ -119,7 +119,7 @@ export function TankCard({ index, tank }: TankCardProps) {
           }}
         >
           <img
-            alt={unwrap(tank.name)}
+            alt={unwrap(tank.name!)}
             src={tankIcon(tank.id)}
             width={64}
             height={64}
@@ -137,7 +137,7 @@ export function TankCard({ index, tank }: TankCardProps) {
               textOverflow: "ellipsis",
             }}
           >
-            {unwrap(tank.name)}
+            {unwrap(tank.name!)}
           </Text>
         </Flex>
       </Flex>

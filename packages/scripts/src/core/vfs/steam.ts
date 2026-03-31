@@ -38,7 +38,7 @@ export class SteamVFS extends AbstractVFS {
     private username: string,
     private password: string,
     private app: number,
-    private depot: number
+    private depot: number,
   ) {
     super();
   }
@@ -57,13 +57,14 @@ export class SteamVFS extends AbstractVFS {
       this.steam.getManifest(
         this.app,
         this.depot,
+        // @ts-expect-error
         productInfo.apps[this.app].appinfo.depots[this.depot].manifests.public
           .gid,
         "public",
         // @ts-expect-error
         (_, response) => {
           resolve(response);
-        }
+        },
       );
     });
 

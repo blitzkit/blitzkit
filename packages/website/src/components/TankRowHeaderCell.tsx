@@ -19,13 +19,13 @@ export function TankRowHeaderCell({ tank }: TankRowHeaderCellProps) {
       <LinkI18n
         locale={locale}
         color={
-          tank.type === TankType.COLLECTOR
+          tank.type === TankType.TANK_TYPE_COLLECTOR
             ? "blue"
-            : tank.type === TankType.PREMIUM
+            : tank.type === TankType.TANK_TYPE_PREMIUM
               ? "amber"
               : "gray"
         }
-        highContrast={tank.type === TankType.RESEARCHABLE}
+        highContrast={tank.type === TankType.TANK_TYPE_RESEARCHABLE}
         underline="hover"
         wrap="nowrap"
         href={`/tanks/${tank.slug}`}
@@ -55,7 +55,7 @@ export function TankRowHeaderCell({ tank }: TankRowHeaderCellProps) {
             <ExperimentIcon style={{ width: "1em", height: "1em" }} />
           )}
 
-          {unwrap(tank.name)}
+          {unwrap(tank.name!)}
         </Flex>
       </LinkI18n>
     </StickyRowHeaderCell>

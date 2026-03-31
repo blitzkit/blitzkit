@@ -43,7 +43,7 @@ export const ownedTanksCommand = new Promise<CommandRegistry>((resolve) => {
           tankStats.map(async (tankData) => ({
             tankDefinitions: (await tankDefinitions).tanks[tankData.tank_id]!,
             id: tankData.tank_id,
-          }))
+          })),
         )
       ).filter((tank) => tank.tankDefinitions?.tier === tier);
       const groupedTanks: Record<string, TankDefinition[]> = {};
@@ -69,16 +69,16 @@ export const ownedTanksCommand = new Promise<CommandRegistry>((resolve) => {
         .filter((tank) => tank.tier === tier)
         .sort(
           (a, b) =>
-            TANK_CLASSES.indexOf(a.class) - TANK_CLASSES.indexOf(b.class)
+            TANK_CLASSES.indexOf(a.class) - TANK_CLASSES.indexOf(b.class),
         )
         .sort(
           (a, b) =>
             awaitedGameDefinitions.nations.indexOf(a.nation) -
-            awaitedGameDefinitions.nations.indexOf(b.nation)
+            awaitedGameDefinitions.nations.indexOf(b.nation),
         )
         .map(
           (tank) =>
-            `[${flags[tank.nation]} ${markdownEscape(unwrap(tank.name))}](<https://blitzkit.app/tanks/${tank.slug}>)`
+            `[${flags[tank.nation]} ${markdownEscape(unwrap(tank.name!))}](<https://blitzkit.app/tanks/${tank.slug}>)`,
         );
       const lines = [title, ...tankList];
 

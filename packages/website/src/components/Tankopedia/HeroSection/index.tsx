@@ -22,13 +22,13 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const thicknessRange = useMemo(() => {
     const entries = Object.values(tankDefinitions.tanks);
     const filtered = entries.filter(
-      (thisTank) => thisTank.tier === protagonist.tier
+      (thisTank) => thisTank.tier === protagonist.tier,
     );
     const value =
       (filtered.reduce((accumulator, thisTank) => {
         return (
           accumulator +
-          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration.near
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near
         );
       }, 0) /
         filtered.length) *
@@ -99,11 +99,11 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           isFullScreen
             ? "100vh"
             : disturbed
-            ? "calc(100svh - 8rem)"
-            : {
-                initial: "28rem",
-                md: "calc(100svh - 14rem)",
-              }
+              ? "calc(100svh - 8rem)"
+              : {
+                  initial: "28rem",
+                  md: "calc(100svh - 14rem)",
+                }
         }
         maxWidth={isFullScreen ? undefined : "120rem"}
         flexGrow="1"
