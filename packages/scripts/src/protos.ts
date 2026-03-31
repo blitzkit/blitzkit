@@ -10,7 +10,7 @@ const TS_PROTO_EXECUTABLE_LOCATIONS = [
 ];
 
 const roots = [
-  // "../../packages/core/src/protos",
+  "../../packages/core/src/protos",
   "../../packages/closed/protos",
 ];
 
@@ -31,8 +31,8 @@ for (const location of TS_PROTO_EXECUTABLE_LOCATIONS) {
 if (!tsProtoExecutableLocation) {
   throw new Error(
     `Could not find ts-proto executable. Checked locations: ${TS_PROTO_EXECUTABLE_LOCATIONS.join(
-      ", "
-    )}`
+      ", ",
+    )}`,
   );
 }
 

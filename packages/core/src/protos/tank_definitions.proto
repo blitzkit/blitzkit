@@ -2,49 +2,49 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message TankDefinitions {
   map<uint32, TankDefinition> tanks = 1;
 }
 
 message TankDefinition {
-  required uint32 id = 1;
-  required string slug = 2;
-  map<uint32, uint32> roles = 3;
-  required bool fixed_camouflage = 5;
-  repeated int32 camouflages = 6;
-  repeated int32 ancestors = 7;
-  repeated int32 successors = 8;
-  repeated Crew crew = 9;
-  required uint32 health = 10;
-  required string nation = 11;
-  required I18nString name = 12;
-  required TankType type = 13;
-  required uint32 max_consumables = 14;
-  required uint32 max_provisions = 15;
-  required uint32 tier = 16;
-  required TankClass class = 17;
-  required bool testing = 18;
-  required bool deprecated = 19;
-  repeated TurretDefinition turrets = 20;
-  repeated EngineDefinition engines = 21;
-  repeated TrackDefinition tracks = 22;
-  required TankPrice price = 23;
-  optional ResearchCost research_cost = 24;
-  required float speed_forwards = 25;
-  required float speed_backwards = 26;
-  required float camouflage_still = 27;
-  required float camouflage_moving = 28;
-  required float camouflage_onFire = 29;
-  required string equipment_preset = 30;
-  required uint32 weight = 31;
-  optional string dev_name = 32;
+  required uint32           id                 = 1;
+  required string           slug               = 2;
+  map<uint32, uint32>       roles              = 3;
+  required bool             fixed_camouflage   = 5;
+  repeated int32            camouflages        = 6;
+  repeated int32            ancestors          = 7;
+  repeated int32            successors         = 8;
+  repeated Crew             crew               = 9;
+  required uint32           health             = 10;
+  required string           nation             = 11;
+  required I18nString       name               = 12;
+  required TankType         type               = 13;
+  required uint32           max_consumables    = 14;
+  required uint32           max_provisions     = 15;
+  required uint32           tier               = 16;
+  required TankClass        class              = 17;
+  required bool             testing            = 18;
+  required bool             deprecated         = 19;
+  repeated TurretDefinition turrets            = 20;
+  repeated EngineDefinition engines            = 21;
+  repeated TrackDefinition  tracks             = 22;
+  required TankPrice        price              = 23;
+  optional ResearchCost     research_cost      = 24;
+  required float            speed_forwards     = 25;
+  required float            speed_backwards    = 26;
+  required float            camouflage_still   = 27;
+  required float            camouflage_moving  = 28;
+  required float            camouflage_on_fire = 29;
+  required string           equipment_preset   = 30;
+  required uint32           weight             = 31;
+  required string           dev_name           = 32;
 }
 
 message ResearchCost {
   oneof research_cost_type {
-    uint32 xp = 1;
+    uint32                     xp              = 1;
     ResearchCostSeasonalTokens seasonal_tokens = 2;
   }
 }
@@ -56,77 +56,77 @@ message ResearchCostSeasonalTokens {
 
 enum TankPriceType {
   TANK_PRICE_TYPE_CREDITS = 0;
-  TANK_PRICE_TYPE_GOLD = 1;
+  TANK_PRICE_TYPE_GOLD    = 1;
 }
 
 message TankPrice {
-  required TankPriceType type = 1;
-  required uint32 value = 2;
+  required TankPriceType type  = 1;
+  required uint32        value = 2;
 }
 
 message TrackDefinition {
-  required uint32 id = 1;
-  required uint32 tier = 2;
-  required I18nString name = 3;
-  required uint32 weight = 4;
-  required float traverse_speed = 5;
-  optional ResearchCost research_cost = 6;
-  required float dispersion_move = 7;
-  required float dispersion_traverse = 8;
-  required float resistance_hard = 9;
-  required float resistance_medium = 10;
-  required float resistance_soft = 11;
-  repeated Unlock unlocks = 12;
+  required uint32       id                  = 1;
+  required uint32       tier                = 2;
+  required I18nString   name                = 3;
+  required uint32       weight              = 4;
+  required float        traverse_speed      = 5;
+  optional ResearchCost research_cost       = 6;
+  required float        dispersion_move     = 7;
+  required float        dispersion_traverse = 8;
+  required float        resistance_hard     = 9;
+  required float        resistance_medium   = 10;
+  required float        resistance_soft     = 11;
+  repeated Unlock       unlocks             = 12;
 }
 
 message EngineDefinition {
-  required uint32 id = 1;
-  required I18nString name = 2;
+  required uint32       id            = 1;
+  required I18nString   name          = 2;
   optional ResearchCost research_cost = 3;
-  required uint32 tier = 4;
-  required float fire_chance = 5;
-  required uint32 power = 6;
-  required uint32 weight = 7;
-  repeated Unlock unlocks = 8;
+  required uint32       tier          = 4;
+  required float        fire_chance   = 5;
+  required uint32       power         = 6;
+  required uint32       weight        = 7;
+  repeated Unlock       unlocks       = 8;
 }
 
 message TurretDefinition {
-  required uint32 id = 1;
-  required uint32 health = 2;
-  required uint32 view_range = 3;
-  required float traverse_speed = 4;
-  optional ResearchCost research_cost = 5;
-  required I18nString name = 6;
-  required uint32 tier = 7;
-  required uint32 weight = 8;
-  repeated GunDefinition guns = 9;
-  repeated Unlock unlocks = 10;
+  required uint32        id             = 1;
+  required uint32        health         = 2;
+  required uint32        view_range     = 3;
+  required float         traverse_speed = 4;
+  optional ResearchCost  research_cost  = 5;
+  required I18nString    name           = 6;
+  required uint32        tier           = 7;
+  required uint32        weight         = 8;
+  repeated GunDefinition guns           = 9;
+  repeated Unlock        unlocks        = 10;
 }
 
 message GunDefinition {
   oneof gun_type {
-    GunDefinitionRegular regular = 1;
-    GunDefinitionAutoLoader auto_loader = 2;
+    GunDefinitionRegular      regular       = 1;
+    GunDefinitionAutoLoader   auto_loader   = 2;
     GunDefinitionAutoReloader auto_reloader = 3;
   }
 
-  required uint32 id = 4;
-  required float rotation_speed = 5;
-  optional ResearchCost research_cost = 6;
-  required uint32 weight = 7;
-  required I18nString name = 8;
-  required uint32 tier = 9;
-  repeated ShellDefinition shells = 10;
-  required float camouflage_loss = 11;
-  required float aim_time = 12;
-  required float dispersion_base = 13;
-  required float dispersion_traverse = 14;
-  required float dispersion_shot = 15;
-  required float dispersion_damaged = 16;
-  repeated Unlock unlocks = 17;
-  required uint32 shell_capacity = 18;
-  optional AssaultRanges assault_ranges = 19;
-  optional Burst burst = 20;
+  required uint32          id                  = 4;
+  required float           rotation_speed      = 5;
+  optional ResearchCost    research_cost       = 6;
+  required uint32          weight              = 7;
+  required I18nString      name                = 8;
+  required uint32          tier                = 9;
+  repeated ShellDefinition shells              = 10;
+  required float           camouflage_loss     = 11;
+  required float           aim_time            = 12;
+  required float           dispersion_base     = 13;
+  required float           dispersion_traverse = 14;
+  required float           dispersion_shot     = 15;
+  required float           dispersion_damaged  = 16;
+  repeated Unlock          unlocks             = 17;
+  required uint32          shell_capacity      = 18;
+  optional AssaultRanges   assault_ranges      = 19;
+  optional Burst           burst               = 20;
 }
 
 message GunDefinitionRegular {
@@ -135,101 +135,101 @@ message GunDefinitionRegular {
 
 message GunDefinitionAutoLoader {
   required float clip_reload = 1;
-  required float intra_clip = 2;
+  required float intra_clip  = 2;
   required float shell_count = 3;
 }
 
 message Burst {
-  required uint32 count = 1;
-  required float interval = 2;
+  required uint32 count    = 1;
+  required float  interval = 2;
 }
 
 message GunDefinitionAutoReloader {
   repeated float shell_reloads = 1;
-  required float intra_clip = 2;
-  required float shell_count = 3;
+  required float intra_clip    = 2;
+  required float shell_count   = 3;
 }
 
 message AssaultRanges {
   repeated AssaultRange ranges = 1;
-  repeated ShellType types = 2;
+  repeated ShellType    types  = 2;
 }
 
 message AssaultRange {
   required float distance = 1;
-  required float factor = 2;
+  required float factor   = 2;
 }
 
 message ShellDefinition {
-  required uint32 id = 1;
-  required I18nString name = 2;
-  required uint32 velocity = 3;
-  required uint32 armor_damage = 4;
-  required uint32 module_damage = 5;
-  required float caliber = 6;
-  required string icon = 7;
-  required ShellPenetration penetration = 8;
-  required ShellType type = 9;
-  optional float normalization = 10;
-  optional float ricochet = 11;
-  optional float explosion_radius = 12;
-  required uint32 range = 13;
+  required uint32           id               = 1;
+  required I18nString       name             = 2;
+  required uint32           velocity         = 3;
+  required uint32           armor_damage     = 4;
+  required uint32           module_damage    = 5;
+  required float            caliber          = 6;
+  required string           icon             = 7;
+  required ShellPenetration penetration      = 8;
+  required ShellType        type             = 9;
+  optional float            normalization    = 10;
+  optional float            ricochet         = 11;
+  optional float            explosion_radius = 12;
+  required uint32           range            = 13;
 }
 
 enum ShellType {
-  SHELL_TYPE_AP = 0;
+  SHELL_TYPE_AP   = 0;
   SHELL_TYPE_APCR = 1;
   SHELL_TYPE_HEAT = 2;
-  SHELL_TYPE_HE = 3;
+  SHELL_TYPE_HE   = 3;
 }
 
 message ShellPenetration {
   required float near = 1;
-  required float far = 2;
+  required float far  = 2;
 }
 
 message Unlock {
-  required int32 id = 1;
+  required int32      id   = 1;
   required ModuleType type = 2;
   required UnlockCost cost = 3;
 }
 
 message UnlockCost {
-  required string type = 1;
-  required int32 value = 2;
+  required string type  = 1;
+  required int32  value = 2;
 }
 
 enum ModuleType {
   MODULE_TYPE_VEHICLE = 0;
-  MODULE_TYPE_ENGINE = 1;
-  MODULE_TYPE_TRACKS = 2;
-  MODULE_TYPE_TURRET = 3;
-  MODULE_TYPE_GUN = 4;
+  MODULE_TYPE_ENGINE  = 1;
+  MODULE_TYPE_TRACKS  = 2;
+  MODULE_TYPE_TURRET  = 3;
+  MODULE_TYPE_GUN     = 4;
 }
 
 enum TankClass {
-  TANK_CLASS_LIGHT = 0;
-  TANK_CLASS_MEDIUM = 1;
-  TANK_CLASS_HEAVY = 2;
+  TANK_CLASS_LIGHT          = 0;
+  TANK_CLASS_MEDIUM         = 1;
+  TANK_CLASS_HEAVY          = 2;
   TANK_CLASS_TANK_DESTROYER = 3;
 }
 
 enum TankType {
   TANK_TYPE_RESEARCHABLE = 0;
-  TANK_TYPE_PREMIUM = 1;
-  TANK_TYPE_COLLECTOR = 2;
+  TANK_TYPE_PREMIUM      = 1;
+  TANK_TYPE_COLLECTOR    = 2;
 }
 
 message Crew {
-  required CrewType type = 1;
-  required uint32 count = 2;
+  required CrewType type       = 1;
+  required uint32   count      = 2;
   repeated CrewType substitute = 3;
 }
 
 enum CrewType {
   CREW_TYPE_COMMANDER = 0;
-  CREW_TYPE_RADIOMAN = 1;
-  CREW_TYPE_GUNNER = 2;
-  CREW_TYPE_DRIVER = 3;
-  CREW_TYPE_LOADER = 4;
+  CREW_TYPE_RADIOMAN  = 1;
+  CREW_TYPE_GUNNER    = 2;
+  CREW_TYPE_DRIVER    = 3;
+  CREW_TYPE_LOADER    = 4;
 }

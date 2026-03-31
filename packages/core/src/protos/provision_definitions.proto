@@ -2,18 +2,18 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/consumable_definitions.proto";
-import "packages/core/src/protos/i18n.proto";
+import "consumable_definitions.proto";
+import "i18n.proto";
 
 message ProvisionDefinitions {
   map<uint32, Provision> provisions = 1;
 }
 
 message Provision {
-  required uint32 id = 1;
-  required I18nString name = 2;
-  optional float crew = 3;
-  required bool game_mode_exclusive = 5;
-  repeated ConsumableTankFilter include = 6;
-  repeated ConsumableTankFilter exclude = 7;
+  required uint32               id                  = 1;
+  required I18nString           name                = 2;
+  optional float                crew                = 3;
+  required bool                 game_mode_exclusive = 5;
+  repeated ConsumableTankFilter include             = 6;
+  repeated ConsumableTankFilter exclude             = 7;
 }

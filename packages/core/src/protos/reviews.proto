@@ -8,10 +8,10 @@ message Reviews {
 
 message Review {
   required float last_updated = 1;
-  repeated Video videos = 2;
+  repeated Video videos       = 2;
 }
 
 message Video {
-  required string id = 1;
+  required string id     = 1;
   required string author = 2;
 }

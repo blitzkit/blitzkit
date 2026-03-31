@@ -2,13 +2,13 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message GameDefinitions {
-  required string version = 1;
-  repeated string nations = 2;
-  map<uint32, GameMode> gameModes = 3;
-  map<uint32, GameModeRole> roles = 4;
+  required string           version   = 1;
+  repeated string           nations   = 2;
+  map<uint32, GameMode>     gameModes = 3;
+  map<uint32, GameModeRole> roles     = 4;
 }
 
 message GameMode {
@@ -16,6 +16,6 @@ message GameMode {
 }
 
 message GameModeRole {
-  repeated uint32 provisions = 1;
+  repeated uint32 provisions  = 1;
   repeated uint32 consumables = 2;
 }

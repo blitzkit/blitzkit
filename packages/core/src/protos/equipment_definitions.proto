@@ -2,15 +2,15 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message EquipmentDefinitions {
-  map<string, EquipmentPreset> presets = 1;
-  map<uint32, Equipment> equipments = 2;
+  map<string, EquipmentPreset> presets    = 1;
+  map<uint32, Equipment>       equipments = 2;
 }
 
 message Equipment {
-  required I18nString name = 1;
+  required I18nString name        = 1;
   required I18nString description = 2;
 }
 
@@ -19,6 +19,6 @@ message EquipmentPreset {
 }
 
 message EquipmentSlot {
-  required uint32 left = 1;
+  required uint32 left  = 1;
   required uint32 right = 2;
 }

@@ -7,17 +7,17 @@ message ModelDefinitions {
 }
 
 message ModelDefinition {
-  required Armor armor = 1;
-  required Vector3 turret_origin = 2;
-  optional InitialTurretRotation initial_turret_rotation = 3;
-  map<uint32, TurretModelDefinition> turrets = 4;
-  map<uint32, TrackModelDefinition> tracks = 5;
-  required BoundingBox bounding_box = 6;
+  required Armor                     armor                   = 1;
+  required Vector3                   turret_origin           = 2;
+  optional InitialTurretRotation     initial_turret_rotation = 3;
+  map<uint32, TurretModelDefinition> turrets                 = 4;
+  map<uint32, TrackModelDefinition>  tracks                  = 5;
+  required BoundingBox               bounding_box            = 6;
 }
 
 message Armor {
   map<uint32, float> thickness = 1;
-  repeated uint32 spaced = 2;
+  repeated uint32    spaced    = 2;
 }
 
 message Vector3 {
@@ -27,18 +27,18 @@ message Vector3 {
 }
 
 message InitialTurretRotation {
-  required float yaw = 1;
+  required float yaw   = 1;
   required float pitch = 2;
-  required float roll = 3;
+  required float roll  = 3;
 }
 
 message TurretModelDefinition {
-  required BoundingBox bounding_box = 1;
-  required Armor armor = 2;
-  required uint32 model_id = 3;
-  required Vector3 gun_origin = 4;
-  map<uint32, GunModelDefinition> guns = 5;
-  optional YawLimits yaw = 6;
+  required BoundingBox            bounding_box = 1;
+  required Armor                  armor        = 2;
+  required uint32                 model_id     = 3;
+  required Vector3                gun_origin   = 4;
+  map<uint32, GunModelDefinition> guns         = 5;
+  optional YawLimits              yaw          = 6;
 }
 
 message YawLimits {
@@ -52,28 +52,28 @@ message BoundingBox {
 }
 
 message TrackModelDefinition {
-  required float thickness = 1;
-  required Vector3 origin = 2;
+  required float   thickness = 1;
+  required Vector3 origin    = 2;
 }
 
 message GunModelDefinition {
-  required Armor armor = 1;
-  required float thickness = 2;
-  required uint32 model_id = 3;
-  required PitchLimits pitch = 4;
-  optional float mask = 5;
+  required Armor       armor     = 1;
+  required float       thickness = 2;
+  required uint32      model_id  = 3;
+  required PitchLimits pitch     = 4;
+  optional float       mask      = 5;
 }
 
 message PitchLimits {
-  required float min = 1;
-  required float max = 2;
-  optional PitchLimitsExtrema front = 3;
-  optional PitchLimitsExtrema back = 4;
-  optional float transition = 5;
+  required float              min        = 1;
+  required float              max        = 2;
+  optional PitchLimitsExtrema front      = 3;
+  optional PitchLimitsExtrema back       = 4;
+  optional float              transition = 5;
 }
 
 message PitchLimitsExtrema {
-  required float min = 1;
-  required float max = 2;
+  required float min   = 1;
+  required float max   = 2;
   required float range = 3;
 }

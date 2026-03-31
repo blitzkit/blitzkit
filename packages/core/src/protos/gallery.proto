@@ -2,14 +2,14 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message Gallery {
   repeated Avatar avatars = 1;
 }
 
 message Avatar {
-  required string id = 1;
-  required I18nString name = 2;
-  required string extension = 3;
+  required string     id        = 1;
+  required I18nString name      = 2;
+  required string     extension = 3;
 }

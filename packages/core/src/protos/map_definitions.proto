@@ -2,13 +2,13 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message MapDefinitions {
   map<int32, MapDefinition> maps = 1;
 }
 
 message MapDefinition {
-  required uint32 id = 1;
+  required uint32     id   = 1;
   required I18nString name = 2;
 }
