@@ -36,6 +36,7 @@ export interface DuelMember {
   camouflage: boolean;
   cooldownBooster: number;
   assaultDistance: number;
+  equalize: boolean;
 }
 
 export interface DuelStore {

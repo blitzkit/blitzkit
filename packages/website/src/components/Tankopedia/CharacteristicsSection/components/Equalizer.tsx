@@ -1,10 +1,12 @@
 import { asset } from "@blitzkit/core";
 import { Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
+import { Duel } from "../../../../stores/duel";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 export function Equalizer() {
   const { strings } = useLocale();
+  const equalize = Duel.use((state) => state.protagonist.equalize);
 
   return (
     <ConfigurationChildWrapper>
@@ -13,6 +15,11 @@ export function Equalizer() {
       </Heading>
 
       <Box
+        onClick={() => {
+          Duel.mutate((draft) => {
+            draft.protagonist.equalize = !draft.protagonist.equalize;
+          });
+        }}
         width="100%"
         style={{
           cursor: "pointer",
@@ -24,6 +31,7 @@ export function Equalizer() {
         }}
       >
         <Flex
+          align="center"
           width="100%"
           justify="between"
           p="4"
@@ -35,7 +43,7 @@ export function Equalizer() {
           <Text>
             {strings.website.tools.tankopedia.configuration.equalizer.equalize}
           </Text>
-          <Switch />
+          <Switch checked={equalize} />
         </Flex>
       </Box>
     </ConfigurationChildWrapper>

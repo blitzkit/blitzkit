@@ -2,9 +2,9 @@ import {
   createDefaultProvisions,
   type ProvisionDefinitions,
   type TankDefinition,
-} from '@blitzkit/core';
-import type { DuelMember } from '../../stores/duel';
-import { genericDefaultEquipmentMatrix } from '../../stores/duel/constants';
+} from "@blitzkit/core";
+import type { DuelMember } from "../../stores/duel";
+import { genericDefaultEquipmentMatrix } from "../../stores/duel/constants";
 
 export function tankToDuelMember(
   tank: TankDefinition,
@@ -26,5 +26,6 @@ export function tankToDuelMember(
     track: tank.tracks.at(-1)!,
     turret,
     assaultDistance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
+    equalize: false,
   } satisfies DuelMember;
 }
