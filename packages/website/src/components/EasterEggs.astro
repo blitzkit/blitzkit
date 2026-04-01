@@ -25,3 +25,77 @@
     setInterval(halloweenFrame, 1000 / 30);
   }
 </script>
+
+<script>
+  const elements = new Set<HTMLElement>();
+
+  function handle(event: PointerEvent) {
+    for (const element of elements) {
+      const rect = element.getBoundingClientRect();
+
+      const x0 = (rect.left + rect.right) / 2;
+      const y0 = (rect.top + rect.bottom) / 2;
+
+      const S = (window.innerWidth + window.innerHeight) / 2;
+      const s = S * 2 ** -6;
+
+      const dx = event.clientX - x0;
+      const dy = event.clientY - y0;
+      const d = Math.sqrt(dx ** 2 + dy ** 2);
+
+      const nx = dx / d;
+      const ny = dy / d;
+
+      const l = Math.tanh(d);
+      const x = -s * nx * l;
+      const y = -s * ny * l;
+
+      element.style.transform = `translate(${x}px, ${y}px)`;
+    }
+  }
+
+  window.addEventListener("pointermove", handle);
+  window.addEventListener("pointerdown", handle);
+
+  setInterval(() => {
+    const discovered = new Set<HTMLElement>(
+      document.querySelectorAll("span, a, h1, h2, h3, h4, h5, h6"),
+    );
+    const difference = discovered.difference(elements);
+
+    for (const element of difference) {
+      const styles = element.computedStyleMap();
+      const position = styles.get("position")?.toString();
+      const isMovable = position === undefined || position === "static";
+
+      if (!isMovable) continue;
+
+      elements.add(element);
+      element.style.position = "relative";
+
+      if (
+        element instanceof HTMLSpanElement ||
+        element instanceof HTMLAnchorElement
+      ) {
+        element.addEventListener("mouseover", () => {
+          if (element.children.length !== 0) return;
+
+          element.dataset.original = element.textContent ?? "";
+          element.textContent = "PLEASE don't click me";
+        });
+
+        element.addEventListener("mouseout", () => {
+          if (element.children.length !== 0) return;
+
+          element.textContent = element.dataset.original!;
+        });
+      }
+    }
+  }, 1000);
+</script>
+
+<style>
+  html {
+    filter: saturate(80%) hue-rotate(20deg) brightness(90%);
+  }
+</style>
