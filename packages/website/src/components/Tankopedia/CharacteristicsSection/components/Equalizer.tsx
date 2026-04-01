@@ -65,7 +65,7 @@ export function Equalizer() {
         <Popover.Trigger>
           <Text style={{ cursor: "pointer" }} size="2" color="gray">
             <Flex align="center" gap="2">
-              Brought to your by{" "}
+              Brought to you by{" "}
               <img
                 src="/assets/images/third-party/wotb-news.png"
                 style={{
