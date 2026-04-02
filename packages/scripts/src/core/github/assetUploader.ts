@@ -43,7 +43,7 @@ export class AssetUploader {
 
   constructor(public message: string) {
     [this.owner, this.repo] = assertSecret(
-      import.meta.env.PUBLIC_ASSET_REPO
+      import.meta.env.PUBLIC_ASSET_REPO,
     ).split("/");
     this.branch = assertSecret(import.meta.env.PUBLIC_ASSET_BRANCH);
   }
@@ -52,7 +52,7 @@ export class AssetUploader {
     const blobPath = `${this.owner}/${this.repo}/${this.branch}/${change.path}`;
     const response = await fetch(
       `https://raw.githubusercontent.com/${blobPath}`,
-      { headers: { "Accept-Encoding": "identity" } }
+      { headers: { "Accept-Encoding": "identity" } },
     );
     let diff: { change: number; status: DiffStatus };
 
@@ -71,7 +71,7 @@ export class AssetUploader {
     } else if (response.status === 200) {
       if (
         this.heuristicFormats.some((format) =>
-          change.path.endsWith(`.${format}`)
+          change.path.endsWith(`.${format}`),
         )
       ) {
         /**
@@ -94,7 +94,7 @@ export class AssetUploader {
       }
     } else {
       throw new Error(
-        `Unexpected status code ${response.status} for ${change.path}`
+        `Unexpected status code ${response.status} for ${change.path}`,
       );
     }
 
@@ -104,7 +104,7 @@ export class AssetUploader {
       console.log(
         `${diff.status === DiffStatus.New ? "🟢" : "🟡"} (${
           diff.change > 0 ? "+" : ""
-        }${diff.change.toLocaleString()}B) ${change.path}`
+        }${diff.change.toLocaleString()}B) ${change.path}`,
       );
 
       // flush BEFORE going over limit
@@ -160,8 +160,8 @@ export class AssetUploader {
           await new Promise((resolve) =>
             setTimeout(
               resolve,
-              Math.max(0, this.time_between_blobs + (start - end))
-            )
+              Math.max(0, this.time_between_blobs + (start - end)),
+            ),
           );
 
           blobs.push({ sha, path: change.path, mode: "100644", type: "blob" });
@@ -170,11 +170,11 @@ export class AssetUploader {
           break;
         } catch {
           console.warn(
-            `  failed ${change.path}; retrying in ${this.time_per_blob}ms...`
+            `  failed ${change.path}; retrying in ${this.time_per_blob}ms...`,
           );
 
           await new Promise((resolve) =>
-            setTimeout(resolve, this.time_per_blob)
+            setTimeout(resolve, this.time_per_blob),
           );
         }
       }
@@ -209,7 +209,7 @@ export class AssetUploader {
   [Symbol.dispose]() {
     if (this.changes.length > 0) {
       throw new Error(
-        `${this.changes.length} uncommitted changes. Did you forget to flush?`
+        `${this.changes.length} uncommitted changes. Did you forget to flush?`,
       );
     }
   }

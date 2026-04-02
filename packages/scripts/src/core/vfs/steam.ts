@@ -76,7 +76,7 @@ export class SteamVFS extends AbstractVFS {
     return this;
   }
 
-  has(path: string) {
+  async has(path: string) {
     return this.manifest.has(path);
   }
 
@@ -89,8 +89,20 @@ export class SteamVFS extends AbstractVFS {
     return new Uint8Array(downloaded.file);
   }
 
-  paths() {
-    return Array.from(this.manifest.keys());
+  async dir(path: string) {
+    const parentSegments = path.split("/").length;
+    const children = new Set<string>();
+
+    for (const child of this.manifest.keys()) {
+      if (!child.startsWith(path) || child === path) continue;
+
+      const childSegments = child.split("/");
+      const nextSegment = childSegments[parentSegments];
+
+      children.add(nextSegment);
+    }
+
+    return Array.from(children);
   }
 
   dispose() {

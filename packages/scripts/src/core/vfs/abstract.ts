@@ -11,24 +11,22 @@ export abstract class AbstractVFS {
 
   abstract dispose(): void;
 
-  abstract has(path: string): boolean;
+  abstract has(path: string): Promise<boolean>;
 
   abstract raw(path: string): Promise<Uint8Array>;
 
-  abstract paths(): string[];
-
-  resolve(path: string) {
+  async resolve(path: string) {
     const normalized = normalize(path);
-    if (this.has(normalized)) return normalized;
+    if (await this.has(normalized)) return normalized;
 
     const dvplPath = `${normalized}.dvpl`;
-    if (this.has(dvplPath)) return dvplPath;
+    if (await this.has(dvplPath)) return dvplPath;
 
     return null;
   }
 
-  assert(path: string) {
-    const resolved = this.resolve(path);
+  async assert(path: string) {
+    const resolved = await this.resolve(path);
 
     if (resolved === null) throw new Error(`File not found: ${path}`);
 
@@ -36,7 +34,7 @@ export abstract class AbstractVFS {
   }
 
   async file(file: string) {
-    const resolved = this.assert(file);
+    const resolved = await this.assert(file);
     const raw = await this.raw(resolved);
     let buffer = raw;
 
@@ -47,21 +45,7 @@ export abstract class AbstractVFS {
     return buffer;
   }
 
-  dir(path: string) {
-    const parentSegments = path.split("/").length;
-    const children = new Set<string>();
-
-    for (const child of this.paths()) {
-      if (!child.startsWith(path) || child === path) continue;
-
-      const childSegments = child.split("/");
-      const nextSegment = childSegments[parentSegments];
-
-      children.add(nextSegment);
-    }
-
-    return Array.from(children);
-  }
+  abstract dir(path: string): Promise<string[]>;
 
   async text(path: string) {
     const file = await this.file(path);
