@@ -135,7 +135,7 @@ export interface ChassisDefinitionsList {
 }
 type VehicleDefinitionArmor = Record<
   string,
-  number | { vehicleDamageFactor: 0; "#text": number }
+  number | { vehicleDamageFactor: 0; "#text": number } | number[]
 >;
 interface UnlocksInner {
   cost: number | string;
@@ -531,6 +531,22 @@ const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
   vehicle: ModuleType.MODULE_TYPE_VEHICLE,
 };
 
+function assignArmor(
+  raw: VehicleDefinitionArmor[string],
+  id: number,
+  armor: Armor,
+) {
+  if (typeof raw === "number") {
+    armor.thickness[id] = raw;
+  } else if (Array.isArray(raw)) {
+    armor.thickness[id] = raw.at(-1)!;
+  } else {
+    if (!armor.spaced) armor.spaced = [];
+    armor.thickness[id] = raw["#text"];
+    armor.spaced.push(id);
+  }
+}
+
 export async function definitions() {
   console.log("Building definitions...");
 
@@ -923,13 +939,7 @@ export async function definitions() {
           const armorId = parseInt(armorIdString);
           const armorRaw = tankDefinition.root.hull.armor[name];
 
-          if (typeof armorRaw === "number") {
-            hullArmor.thickness[armorId] = armorRaw;
-          } else {
-            if (!hullArmor.spaced) hullArmor.spaced = [];
-            hullArmor.thickness[armorId] = armorRaw["#text"];
-            hullArmor.spaced.push(armorId);
-          }
+          assignArmor(armorRaw, armorId, hullArmor);
         });
       const crew: Crew[] = [];
       const fixedCamouflage = tankTags.includes("eventCamouflage_user");
@@ -1151,13 +1161,7 @@ export async function definitions() {
               const armorId = parseInt(armorIdString);
               const armorRaw = turret.armor[name];
 
-              if (typeof armorRaw === "number") {
-                turretArmor.thickness[armorId] = armorRaw;
-              } else {
-                if (!turretArmor.spaced) turretArmor.spaced = [];
-                turretArmor.thickness[armorId] = armorRaw["#text"];
-                turretArmor.spaced.push(armorId);
-              }
+              assignArmor(armorRaw, armorId, turretArmor);
             });
 
           turret.userString;
@@ -1288,13 +1292,8 @@ export async function definitions() {
                 }
                 const armorId = parseInt(armorIdString);
                 const armorRaw = gun.armor[name];
-                if (typeof armorRaw === "number") {
-                  gunArmor.thickness[armorId] = armorRaw;
-                } else {
-                  if (!gunArmor.spaced) gunArmor.spaced = [];
-                  gunArmor.thickness[armorId] = armorRaw["#text"];
-                  gunArmor.spaced.push(armorId);
-                }
+
+                assignArmor(armorRaw, armorId, gunArmor);
               });
 
             tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
