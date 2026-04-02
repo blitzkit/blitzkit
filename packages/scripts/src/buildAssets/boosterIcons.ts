@@ -6,13 +6,15 @@ export async function boosterIcons() {
   console.log("Building booster icons...");
 
   const uploader = new AssetUploader("booster icons");
-  const boosterFiles = vfs
+  const boosterFiles = await vfs
     .dir("Data/Gfx/Shared/boosters")
-    .filter(
-      (file) => !file.includes("@2x.txt") && !file.startsWith("texture0")
+    .then((files) =>
+      files.filter(
+        (file) => !file.includes("@2x.txt") && !file.startsWith("texture0"),
+      ),
     );
   const image = sharp(
-    await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`)
+    await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`),
   );
 
   for (const file of boosterFiles) {

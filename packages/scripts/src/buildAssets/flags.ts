@@ -6,20 +6,32 @@ export async function flags() {
   console.log("Building flags...");
 
   using uploader = new AssetUploader("flags");
-  const circleFiles = vfs.dir(`Data/Gfx/Lobby/flags`).filter(
-      (flag) =>
-        flag.startsWith("flag_profile-stat_") &&
-        !flag.endsWith("@2x.packed.webp")
+  const circleFiles = await vfs
+    .dir(`Data/Gfx/Lobby/flags`)
+    .then((files) =>
+      files.filter(
+        (flag) =>
+          flag.startsWith("flag_profile-stat_") &&
+          !flag.endsWith("@2x.packed.webp"),
+      ),
     );
-  const scratchedFiles = vfs.dir(`Data/Gfx/Lobby/flags`).filter(
+  const scratchedFiles = await vfs
+    .dir(`Data/Gfx/Lobby/flags`)
+    .then((files) =>
+      files.filter(
         (flag) =>
           flag.startsWith("flag_tutor-tank_") &&
-          !flag.endsWith("@2x.packed.webp")
-      )
-  const fadedFiles = vfs.dir(`Data/Gfx/Lobby/flags`).filter(
-      (flag) =>
-        flag.startsWith("flag_filter_") && flag.endsWith("@2x.packed.webp")
-    )
+          !flag.endsWith("@2x.packed.webp"),
+      ),
+    );
+  const fadedFiles = await vfs
+    .dir(`Data/Gfx/Lobby/flags`)
+    .then((files) =>
+      files.filter(
+        (flag) =>
+          flag.startsWith("flag_filter_") && flag.endsWith("@2x.packed.webp"),
+      ),
+    );
 
   for (const flag of circleFiles) {
     const image = sharp(await vfs.file(`Data/Gfx/Lobby/flags/${flag}`));
@@ -43,9 +55,7 @@ export async function flags() {
   }
 
   for (const flag of fadedFiles) {
-    const content = await sharp(
-      await vfs.file(`Data/Gfx/Lobby/flags/${flag}`)
-    )
+    const content = await sharp(await vfs.file(`Data/Gfx/Lobby/flags/${flag}`))
       .trim({
         threshold: 100,
         background: { r: 0, g: 0, b: 0, alpha: 0 },

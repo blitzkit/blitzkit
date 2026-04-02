@@ -26,7 +26,7 @@ export async function skillIcons() {
   console.log("Building skill icons...");
 
   const avatar = await vfs.xml<{ root: Avatar }>(
-    `Data/XML/item_defs/tankmen/avatar.xml`
+    `Data/XML/item_defs/tankmen/avatar.xml`,
   );
   const uploader = new AssetUploader("skill icons");
 

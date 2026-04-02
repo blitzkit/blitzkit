@@ -20,7 +20,7 @@ export async function currencies() {
 
   for (const [file, name] of ICONS) {
     const content = await sharp(
-      await vfs.file(`Data/Gfx/Lobby/currency/${file}`)
+      await vfs.file(`Data/Gfx/Lobby/currency/${file}`),
     )
       .trim()
       .toBuffer();
@@ -36,14 +36,14 @@ export async function currencies() {
     .then((glossary) =>
       Object.values(glossary)
         .entries()
-        .filter(([key]) => /^prx_season_\d+$/.test(`${key}`))
+        .filter(([key]) => /^prx_season_\d+$/.test(`${key}`)),
     );
 
   for (const [key, item] of glossary) {
     if (item.image_url === null) throw new Error(`No image_url for ${key}`);
 
     const imageRaw = await fetch(item.image_url).then((response) =>
-      response.arrayBuffer()
+      response.arrayBuffer(),
     );
     const content = await sharp(imageRaw)
       .trim({

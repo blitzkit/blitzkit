@@ -561,9 +561,9 @@ export async function definitions() {
       [TankClass.TANK_CLASS_TANK_DESTROYER]: { skills: [] },
     },
   };
-  const nations = vfs
+  const nations = await vfs
     .dir("Data/XML/item_defs/vehicles")
-    .filter((nation) => nation !== "common");
+    .then((files) => files.filter((nation) => nation !== "common"));
   const tankStringIdMap: Record<string, number> = {};
   const optionalDevices = await vfs.xml<{ root: OptionalDevices }>(
     "Data/XML/item_defs/vehicles/common/optional_devices.xml",

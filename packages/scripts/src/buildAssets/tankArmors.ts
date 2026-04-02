@@ -10,11 +10,13 @@ export async function tankArmors() {
 
   using uploader = new AssetUploader("tank armors");
   const nodeIO = new NodeIO();
-  const nations = vfs.dir(`Data/XML/item_defs/vehicles`).filter((nation) => nation !== "common");
+  const nations = await vfs
+    .dir(`Data/XML/item_defs/vehicles`)
+    .then((files) => files.filter((nation) => nation !== "common"));
 
   for (const nation of nations) {
     const tanks = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
 
     for (const tankKey in tanks.root) {
