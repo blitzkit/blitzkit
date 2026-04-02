@@ -1,5 +1,12 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { Card, Flex, IconButton, Text, TextField } from "@radix-ui/themes";
+import {
+  Card,
+  Code,
+  Flex,
+  IconButton,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
 import { Html } from "@react-three/drei";
 import { useRef } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
@@ -7,7 +14,6 @@ import { resolveArmorIndex } from "../../../core/blitzkit/resolveArmorIndex";
 import { App } from "../../../stores/app";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
-import { CopyableCode } from "../../CopyableCode";
 import { layerTypeNames } from "./ShotDisplayCard";
 import { ArmorType } from "./SpacedArmorScene";
 
@@ -54,15 +60,7 @@ export function ArmorPlateDisplay() {
             {developerMode && (
               <>
                 <Text mt="2" color="gray" size="2">
-                  <b>DEV:</b>{" "}
-                  <CopyableCode
-                    copy={highlightArmor.name}
-                    variant="soft"
-                    highContrast
-                    color="gray"
-                  >
-                    {highlightArmor.name}
-                  </CopyableCode>
+                  <b>DEV:</b> <Code>{highlightArmor.name}</Code>
                 </Text>
               </>
             )}
