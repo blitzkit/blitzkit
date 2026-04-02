@@ -2,6 +2,11 @@ import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { useEffect, useMemo, useRef } from "react";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import {
+  equalizerPenetrationFactor,
+  hasEqualizerData,
+  isEqualizerActive,
+} from "../../../core/blitzkit/equalizer";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -19,23 +24,37 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const canvas = useRef<HTMLCanvasElement>(null!);
   const isFullScreen = useFullScreen();
   const protagonist = Duel.use((state) => state.protagonist.tank);
+  const equalize = Duel.use((state) =>
+    isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
+  );
   const thicknessRange = useMemo(() => {
     const entries = Object.values(tankDefinitions.tanks);
     const filtered = entries.filter(
-      (thisTank) => thisTank.tier === protagonist.tier,
+      (thisTank) =>
+        thisTank.tier === protagonist.tier &&
+        (!equalize || hasEqualizerData(thisTank)),
     );
+    const fallbackPenetration =
+      protagonist.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+      equalizerPenetrationFactor(protagonist, equalize);
+
+    if (filtered.length === 0) {
+      return { value: fallbackPenetration * (3 / 4) } satisfies ThicknessRange;
+    }
+
     const value =
       (filtered.reduce((accumulator, thisTank) => {
         return (
           accumulator +
-          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+            equalizerPenetrationFactor(thisTank, equalize)
         );
       }, 0) /
         filtered.length) *
       (3 / 4);
 
     return { value } satisfies ThicknessRange;
-  }, [protagonist]);
+  }, [equalize, protagonist]);
 
   useEffect(() => {
     if (disturbed) {

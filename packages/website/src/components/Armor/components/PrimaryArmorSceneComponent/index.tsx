@@ -17,6 +17,11 @@ import {
   Vector2,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import {
+  equalizerDamageFactor,
+  equalizerPenetrationFactor,
+  isEqualizerActive,
+} from "../../../../core/blitzkit/equalizer";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
 import { Duel, type EquipmentMatrix } from "../../../../stores/duel";
@@ -81,10 +86,18 @@ export function PrimaryArmorSceneComponent({
   });
 
   useEffect(() => {
+    function resolveEqualize() {
+      return isEqualizerActive(
+        Duel.state.protagonist.tank,
+        Duel.state.protagonist.equalize,
+      );
+    }
+
     function handleShellChange() {
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
+      const equalize = resolveEqualize();
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
@@ -95,7 +108,9 @@ export function PrimaryArmorSceneComponent({
       );
       material.uniforms.isExplosive.value = isExplosive(shell.type);
       material.uniforms.canSplash.value = canSplash(shell.type);
-      material.uniforms.damage.value = shell.armor_damage;
+      material.uniforms.damage.value =
+        shell.armor_damage *
+        equalizerDamageFactor(Duel.state.antagonist.tank, equalize);
       material.uniforms.explosionRadius.value = shell.explosion_radius;
 
       handleProtagonistEquipmentChange(
@@ -131,9 +146,9 @@ export function PrimaryArmorSceneComponent({
         Duel.state.protagonist.tank.equipment_preset,
         equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1);
 
       if (!noInvalidate) invalidate();
     }
@@ -150,10 +165,15 @@ export function PrimaryArmorSceneComponent({
         Duel.state.antagonist.tank.equipment_preset,
         equipment,
       );
+      const equalize = resolveEqualize();
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        equalizerPenetrationFactor(Duel.state.antagonist.tank, equalize);
+      material.uniforms.damage.value =
+        shell.armor_damage *
+        equalizerDamageFactor(Duel.state.antagonist.tank, equalize);
 
       if (!noInvalidate) invalidate();
     }
@@ -177,6 +197,8 @@ export function PrimaryArmorSceneComponent({
     const unsubscribes = [
       Duel.on((state) => state.antagonist.shell, handleShellChange),
       Tankopedia.on((state) => state.customShell, handleShellChange),
+      Duel.on((state) => state.protagonist.equalize, handleShellChange),
+      Duel.on((state) => state.antagonist.tank, handleShellChange),
       TankopediaPersistent.on(
         (state) => state.greenPenetration,
         handleGreenPenetrationChange,

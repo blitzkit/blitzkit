@@ -40,6 +40,7 @@ message TankDefinition {
   required string           equipment_preset   = 30;
   required uint32           weight             = 31;
   required string           dev_name           = 32;
+  optional TankEqualizer    equalizer          = 33;
 }
 
 message ResearchCost {
@@ -232,4 +233,12 @@ enum CrewType {
   CREW_TYPE_GUNNER    = 2;
   CREW_TYPE_DRIVER    = 3;
   CREW_TYPE_LOADER    = 4;
+}
+
+message TankEqualizer {
+  required float max_health_factor    = 1;
+  required float piercing_power_factor = 2;
+  required float module_health_factor = 3;
+  required float damage_factor        = 4;
+  required float armor_factor         = 5;
 }

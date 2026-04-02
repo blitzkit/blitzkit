@@ -16,6 +16,11 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import {
+  equalizerDamageFactor,
+  equalizerPenetrationFactor,
+  isEqualizerActive,
+} from "../../../../core/blitzkit/equalizer";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
 import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
@@ -112,10 +117,18 @@ export function SpacedArmorSceneComponent({
         Duel.state.protagonist.tank.equipment_preset,
         Duel.state.protagonist.equipmentMatrix,
       );
+      const equalize = isEqualizerActive(
+        Duel.state.protagonist.tank,
+        Duel.state.protagonist.equalize,
+      );
       const penetration =
         shell.penetration!.near *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        equalizerPenetrationFactor(Duel.state.antagonist.tank, equalize);
       const thicknessCoefficient = hasEnhancedArmor ? 1.03 : 1;
+      const damage =
+        shell.armor_damage *
+        equalizerDamageFactor(Duel.state.antagonist.tank, equalize);
       const filteredIntersections = intersections.filter(
         (intersection) =>
           "type" in intersection.object.userData &&
@@ -293,7 +306,7 @@ export function SpacedArmorSceneComponent({
           const finalDamage = Math.max(
             0,
             0.5 *
-              shell.armor_damage *
+              damage *
               (1 - distanceFromSpacedArmor / shell.explosion_radius!) -
               1.1 *
                 (lastLayer.thicknessAngled +
@@ -316,7 +329,7 @@ export function SpacedArmorSceneComponent({
             shot.damage = finalDamage;
           } else {
             shot.in.status = "penetration";
-            shot.damage = shell.armor_damage;
+            shot.damage = damage;
           }
         } else {
           if (lastLayer.status === "blocked") {
@@ -324,7 +337,7 @@ export function SpacedArmorSceneComponent({
             shot.damage = 0;
           } else if (lastLayer.status === "penetration") {
             shot.in.status = "penetration";
-            shot.damage = shell.armor_damage;
+            shot.damage = damage;
           } else {
             const caster = new Raycaster();
             // https://math.stackexchange.com/a/13263/1222875

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { awaitableEquipmentDefinitions } from "../../../../../core/awaitables/equipmentDefinitions";
 import { awaitableProvisionDefinitions } from "../../../../../core/awaitables/provisionDefinitions";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
+import { isEqualizerActive } from "../../../../../core/blitzkit/equalizer";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
 import { useEquipment } from "../../../../../hooks/useEquipment";
@@ -30,6 +31,9 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   );
   const equipmentMatrix = Duel.use(
     (state) => state.protagonist.equipmentMatrix,
+  );
+  const equalize = Duel.use((state) =>
+    isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
   );
   const { tank, turret, gun, engine, track, shell } = Duel.use(
     (state) => state.protagonist,
@@ -62,6 +66,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
       applyDynamicArmor: false,
       applySpallLiner: false,
       assaultDistance,
+      equalize,
     },
     {
       tankModelDefinition,

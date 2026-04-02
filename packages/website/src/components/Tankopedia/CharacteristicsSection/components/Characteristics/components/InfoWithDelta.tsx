@@ -11,6 +11,10 @@ import {
   tankCharacteristics,
   type TankCharacteristics,
 } from "../../../../../../core/blitzkit/tankCharacteristics";
+import {
+  hasEqualizerData,
+  isEqualizerActive,
+} from "../../../../../../core/blitzkit/equalizer";
 import { tankToDuelMember } from "../../../../../../core/blitzkit/tankToDuelMember";
 import { useDelta } from "../../../../../../hooks/useDelta";
 import { useLocale } from "../../../../../../hooks/useLocale";
@@ -58,11 +62,14 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
         : (stats[props.value] as number);
     const delta = useDelta(uhWhatDoICallThisVariable);
     const protagonistTank = Duel.use((state) => state.protagonist.tank);
+    const equalize = Duel.use((state) =>
+      isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
+    );
     const shellIndex = Duel.use((state) =>
-      state.protagonist.gun.shells.indexOf(state.protagonist.shell)
+      state.protagonist.gun.shells.indexOf(state.protagonist.shell),
     );
     const equipmentMatrix = Duel.use(
-      (state) => state.protagonist.equipmentMatrix
+      (state) => state.protagonist.equipmentMatrix,
     );
     const others = useMemo(() => {
       const defaultSkills = createDefaultSkills(skillDefinitions);
@@ -70,12 +77,13 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
       return Object.values(tankDefinitions.tanks)
         .filter(
           (tank) =>
-            (relativeAgainst === TankopediaRelativeAgainst.Class &&
+            ((relativeAgainst === TankopediaRelativeAgainst.Class &&
               tank.tier === protagonistTank.tier &&
               tank.class === protagonistTank.class) ||
-            (relativeAgainst === TankopediaRelativeAgainst.Tier &&
-              tank.tier === protagonistTank.tier) ||
-            relativeAgainst === TankopediaRelativeAgainst.All
+              (relativeAgainst === TankopediaRelativeAgainst.Tier &&
+                tank.tier === protagonistTank.tier) ||
+              relativeAgainst === TankopediaRelativeAgainst.All) &&
+            (!equalize || hasEqualizerData(tank)),
         )
         .map((tank) => {
           const member = tankToDuelMember(tank, provisionDefinitions);
@@ -105,12 +113,13 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               track: member.track,
               turret: member.turret,
               assaultDistance: member.assaultDistance,
+              equalize,
             },
             {
               equipmentDefinitions,
               provisionDefinitions,
               tankModelDefinition: modelDefinitions.models[tank.id],
-            }
+            },
           );
         })
         .filter((tank) => {
@@ -123,7 +132,15 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
 
           return othersValue !== undefined;
         }) as TankCharacteristics[];
-    }, [relativeAgainst, shellIndex, equipmentMatrix]);
+    }, [
+      equalize,
+      equipmentMatrix,
+      protagonistTank.class,
+      protagonistTank.tier,
+      props.value,
+      relativeAgainst,
+      shellIndex,
+    ]);
     const betterTanks = others.filter((tank) => {
       const othersValue =
         typeof props.value === "function"
@@ -135,7 +152,10 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
         ? othersValue < uhWhatDoICallThisVariable
         : othersValue > uhWhatDoICallThisVariable;
     });
-    const goodness = (others.length - betterTanks.length) / others.length;
+    const goodness =
+      others.length === 0
+        ? 1
+        : (others.length - betterTanks.length) / others.length;
     let color: ComponentProps<typeof Progress>["color"];
 
     if (goodness <= 0.25) color = "red";
@@ -161,7 +181,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
           {uhWhatDoICallThisVariable}
         </Info>
 
-        {!noRanking && (
+        {!noRanking && others.length > 0 && (
           <Flex pl={indent ? "2" : "0"} align="center" gap="2">
             <Progress
               variant="soft"
@@ -183,5 +203,5 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
 
   (a, b) =>
     (typeof a.value === "function" ? a.value(a.stats) : a.stats[a.value]) ===
-    (typeof b.value === "function" ? b.value(b.stats) : b.stats[b.value])
+    (typeof b.value === "function" ? b.value(b.stats) : b.stats[b.value]),
 );

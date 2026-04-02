@@ -22,6 +22,11 @@ import {
 } from "@blitzkit/core";
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import {
+  equalizerDamageFactor,
+  equalizerHealthFactor,
+  equalizerPenetrationFactor,
+} from "./equalizer";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
 export type TankCharacteristicsKey = keyof TankCharacteristics;
@@ -47,6 +52,7 @@ export function tankCharacteristics(
     applyDynamicArmor,
     applySpallLiner,
     assaultDistance,
+    equalize = false,
   }: {
     tank: TankDefinition;
     turret: TurretDefinition;
@@ -67,6 +73,7 @@ export function tankCharacteristics(
     applyDynamicArmor: boolean;
     applySpallLiner: boolean;
     assaultDistance: number;
+    equalize?: boolean;
   },
   {
     tankModelDefinition,
@@ -120,6 +127,12 @@ export function tankCharacteristics(
   const hasImprovedEnginePowerBoost = consumable(27);
   const hasReticleCalibration = consumable(28);
   const hasReducedEnginePowerBoost = consumable(80);
+  const equalizerHealthCoefficient = equalizerHealthFactor(tank, equalize);
+  const equalizerPenetrationCoefficient = equalizerPenetrationFactor(
+    tank,
+    equalize,
+  );
+  const equalizerDamageCoefficient = equalizerDamageFactor(tank, equalize);
 
   const hasStandardFuel = provision(18);
   const hasImprovedFuel = provision(19);
@@ -181,7 +194,7 @@ export function tankCharacteristics(
     hasCalibratedShells,
     resolvePenetrationCoefficient(true, shell.type) - 1,
   ]);
-  const healthCoefficient = coefficient(
+  const healthBonusCoefficient = coefficient(
     [hasSandbagArmor, 0.03],
     [hasEnhancedSandbagArmor, 0.06],
     [hasImprovedAssembly, 0.04],
@@ -343,7 +356,8 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
-  const damageCoefficientWithoutAssault = armorDamageCoefficient;
+  const damageCoefficientWithoutAssault =
+    armorDamageCoefficient * equalizerDamageCoefficient;
   const damageCoefficient =
     damageCoefficientWithoutAssault * assaultDamageCoefficient;
   const dpm = resolveDpm(
@@ -379,24 +393,24 @@ export function tankCharacteristics(
     gun.gun_type!.$case === "auto_reloader"
       ? gun.gun_type!.value.shell_reloads[0] >
         gun.gun_type!.value.shell_reloads[1] + gun.gun_type!.value.intra_clip
-        ? ((armorDamageCoefficient * shell.armor_damage) /
+        ? ((damageCoefficientWithoutAssault * shell.armor_damage) /
             (gun.gun_type!.value.shell_reloads.at(-1)! * reloadCoefficient +
               gun.gun_type!.value.intra_clip * intraClipCoefficient)) *
             (60 -
               (gun.gun_type!.value.shell_reloads.slice(0, -1).length - 1) *
                 gun.gun_type!.value.intra_clip *
                 intraClipCoefficient) +
-          armorDamageCoefficient *
+          damageCoefficientWithoutAssault *
             shell.armor_damage *
             gun.gun_type!.value.shell_reloads.slice(0, -1).length
-        : ((armorDamageCoefficient * shell.armor_damage) /
+        : ((damageCoefficientWithoutAssault * shell.armor_damage) /
             (gun.gun_type!.value.shell_reloads[0] * reloadCoefficient +
               gun.gun_type!.value.intra_clip * intraClipCoefficient)) *
             (60 -
               (gun.gun_type!.value.shell_reloads.slice(1).length - 1) *
                 gun.gun_type!.value.intra_clip *
                 intraClipCoefficient) +
-          armorDamageCoefficient *
+          damageCoefficientWithoutAssault *
             shell.armor_damage *
             gun.gun_type!.value.shell_reloads.slice(1).length
       : undefined;
@@ -415,7 +429,10 @@ export function tankCharacteristics(
           ? gun.gun_type!.value.reload
           : gun.gun_type!.value.clip_reload) * reloadCoefficient;
   const caliber = shell.caliber;
-  const penetration = shell.penetration!.near * penetrationCoefficient;
+  const penetration =
+    shell.penetration!.near *
+    penetrationCoefficient *
+    equalizerPenetrationCoefficient;
   const clipDamage =
     gun.gun_type!.$case === "regular"
       ? undefined
@@ -498,7 +515,15 @@ export function tankCharacteristics(
     hullTraverseCoefficient *
     (track.resistance_hard / softTerrainCoefficientRaw) *
     (stockWeight / weightKg);
-  const health = (tank.health + turret.health) * healthCoefficient;
+  // Sorry, here I have to straight up guess how it's calculated
+  // We saw, that MS-1 has 1820hp in Equalizer and this is the ... only way?
+  // To actually get to 1820hp, that makes sense?
+  const baseHealth = tank.health + turret.health;
+  const equalizedBaseHealth = baseHealth * equalizerHealthCoefficient;
+  const quantizedEqualizedBaseHealth = equalize
+    ? Math.floor(equalizedBaseHealth / 50) * 50
+    : equalizedBaseHealth;
+  const health = quantizedEqualizedBaseHealth * healthBonusCoefficient;
   const fireChance = engine.fire_chance * fireChanceCoefficient;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
@@ -527,7 +552,8 @@ export function tankCharacteristics(
   const shellRange = shell.range;
   const shellCapacity = gun.shell_capacity;
   const gunType = gun.gun_type!.$case;
-  const penetrationAt250m = shell.penetration!.far;
+  const penetrationAt250m =
+    shell.penetration!.far * equalizerPenetrationCoefficient;
 
   return {
     crewCount,

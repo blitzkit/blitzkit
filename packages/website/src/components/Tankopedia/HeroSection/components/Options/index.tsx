@@ -27,6 +27,10 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { Suspense, useState, type RefObject } from "react";
+import {
+  equalizerPenetrationFactor,
+  isEqualizerActive,
+} from "../../../../../core/blitzkit/equalizer";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
 import { useEquipment } from "../../../../../hooks/useEquipment";
 import { useFullScreen } from "../../../../../hooks/useFullScreen";
@@ -75,6 +79,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
+  const equalize = Duel.use((state) =>
+    isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
+  );
 
   return (
     <>
@@ -103,7 +110,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
                   antagonistShell.type,
-                ) * antagonistShell.penetration!.near
+                ) *
+                antagonistShell.penetration!.near *
+                equalizerPenetrationFactor(antagonistTank, equalize)
               ).toFixed(0),
             })}
           </Text>

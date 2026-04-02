@@ -11,11 +11,15 @@ import {
 } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
+import { hasEqualizerData } from "../../../../core/blitzkit/equalizer";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 export function Equalizer() {
   const { strings } = useLocale();
+  const tank = Duel.use((state) => state.protagonist.tank);
   const equalize = Duel.use((state) => state.protagonist.equalize);
+
+  if (!hasEqualizerData(tank)) return null;
 
   return (
     <ConfigurationChildWrapper>

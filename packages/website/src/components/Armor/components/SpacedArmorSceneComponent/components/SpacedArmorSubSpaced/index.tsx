@@ -7,6 +7,10 @@ import {
   type Object3D,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
+import {
+  equalizerPenetrationFactor,
+  isEqualizerActive,
+} from "../../../../../../core/blitzkit/equalizer";
 import type { ArmorUserData } from "../..";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
@@ -52,8 +56,14 @@ export function SpacedArmorSubSpaced({
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
+      const equalize = isEqualizerActive(
+        Duel.state.protagonist.tank,
+        Duel.state.protagonist.equalize,
+      );
 
-      material.uniforms.penetration.value = shell.penetration!.near;
+      material.uniforms.penetration.value =
+        shell.penetration!.near *
+        equalizerPenetrationFactor(Duel.state.antagonist.tank, equalize);
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
         isExplosive(shell.type) ? 90 : shell.ricochet!,
@@ -68,9 +78,8 @@ export function SpacedArmorSubSpaced({
         Duel.state.protagonist.tank.equipment_preset,
         equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1);
     }
     function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
       const tankopediaEphemeral = Tankopedia.state;
@@ -82,10 +91,15 @@ export function SpacedArmorSubSpaced({
         Duel.state.antagonist.tank.equipment_preset,
         equipment,
       );
+      const equalize = isEqualizerActive(
+        Duel.state.protagonist.tank,
+        Duel.state.protagonist.equalize,
+      );
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        equalizerPenetrationFactor(Duel.state.antagonist.tank, equalize);
     }
 
     handleShellChange();
@@ -95,6 +109,8 @@ export function SpacedArmorSubSpaced({
     const unsubscribes = [
       Duel.on((state) => state.antagonist.shell, handleShellChange),
       Tankopedia.on((state) => state.customShell, handleShellChange),
+      Duel.on((state) => state.protagonist.equalize, handleShellChange),
+      Duel.on((state) => state.antagonist.tank, handleShellChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
         handleProtagonistEquipmentChange,

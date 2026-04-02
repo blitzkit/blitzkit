@@ -3,6 +3,10 @@ import { memo, useRef } from "react";
 import { Group, Plane, Vector2, Vector3 } from "three";
 import { applyPitchYawLimits } from "../../../core/blitz/applyPitchYawLimits";
 import { correctZYTuple } from "../../../core/blitz/correctZYTuple";
+import {
+  equalizerArmorFactor,
+  isEqualizerActive,
+} from "../../../core/blitzkit/equalizer";
 import { hasEquipment } from "../../../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../../../core/blitzkit/modelTransform";
 import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
@@ -32,6 +36,9 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tank = Duel.use((state) => state.protagonist.tank);
+  const equalize = Duel.use((state) =>
+    isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
+  );
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -64,6 +71,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const isDynamicArmorActive = Duel.use((state) =>
     state.protagonist.consumables.includes(73),
   );
+  const armorFactor = equalizerArmorFactor(tank, equalize);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -77,6 +85,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
           const { spaced, thickness } = resolveArmor(
             tankModelDefinition.armor!,
             armorId,
+            armorFactor,
           );
 
           if (
@@ -116,7 +125,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             thicknessRange={thicknessRange}
             key={node.uuid}
             type={ArmorType.External}
-            thickness={trackModelDefinition.thickness}
+            thickness={trackModelDefinition.thickness * armorFactor}
             variant="track"
             node={node}
             onPointerDown={(event) => event.stopPropagation()}
@@ -134,6 +143,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
           const { spaced, thickness } = resolveArmor(
             turretModelDefinition.armor!,
             armorId,
+            armorFactor,
           );
 
           if (
@@ -223,6 +233,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             const { spaced, thickness } = resolveArmor(
               gunModelDefinition.armor!,
               armorId,
+              armorFactor,
             );
 
             if (
@@ -368,7 +379,7 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
                 thicknessRange={thicknessRange}
                 key={node.uuid}
                 type={ArmorType.External}
-                thickness={gunModelDefinition.thickness}
+                thickness={gunModelDefinition.thickness * armorFactor}
                 variant="gun"
                 node={node}
                 clip={

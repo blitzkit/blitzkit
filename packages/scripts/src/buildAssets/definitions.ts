@@ -498,6 +498,14 @@ interface AvailableNationsYaml {
   available_nations: string[];
 }
 
+interface TierEqualizerEntry {
+  max_health_factor: number;
+  piercing_power_factor: number;
+  module_health_factor: number;
+  damage_factor: number;
+  armor_factor: number;
+}
+
 export interface SquadBattleTypeStyles {
   Prototypes: {
     components: {
@@ -545,6 +553,86 @@ function assignArmor(
     armor.thickness[id] = raw["#text"];
     armor.spaced.push(id);
   }
+}
+
+function parseTierEqualizerCSV(raw: string) {
+  const lines = raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  // I expect this, if not. It's not my fault.
+  const expectedHeader =
+    "name;maxHealthFactor;piercingPowerFactor;moduleHealthFactor;damageFactor;armorFactor";
+  const map = new Map<string, TierEqualizerEntry>();
+
+  if (lines.length === 0) {
+    console.warn("tier_equializer.csv is empty");
+    return map;
+  }
+
+  if (lines[0] !== expectedHeader) {
+    console.warn(
+      `Unexpected tier_equializer.csv header: ${lines[0]} (expected ${expectedHeader})`,
+    );
+  }
+
+  lines.slice(1).forEach((line, lineIndex) => {
+    const [
+      name,
+      maxHealthFactorRaw,
+      piercingPowerFactorRaw,
+      moduleHealthFactorRaw,
+      damageFactorRaw,
+      armorFactorRaw,
+      ...rest
+    ] = line.split(";");
+    const lineNumber = lineIndex + 2;
+
+    if (
+      !name ||
+      maxHealthFactorRaw === undefined ||
+      piercingPowerFactorRaw === undefined ||
+      moduleHealthFactorRaw === undefined ||
+      damageFactorRaw === undefined ||
+      armorFactorRaw === undefined ||
+      rest.length > 0
+    ) {
+      console.warn(
+        `Invalid tier_equializer row at line ${lineNumber}; skipping...`,
+      );
+      return;
+    }
+
+    const entry: TierEqualizerEntry = {
+      max_health_factor: Number(maxHealthFactorRaw),
+      piercing_power_factor: Number(piercingPowerFactorRaw),
+      module_health_factor: Number(moduleHealthFactorRaw),
+      damage_factor: Number(damageFactorRaw),
+      armor_factor: Number(armorFactorRaw),
+    };
+
+    if (
+      !Number.isFinite(entry.max_health_factor) ||
+      !Number.isFinite(entry.piercing_power_factor) ||
+      !Number.isFinite(entry.module_health_factor) ||
+      !Number.isFinite(entry.damage_factor) ||
+      !Number.isFinite(entry.armor_factor)
+    ) {
+      console.warn(
+        `Invalid tier_equializer row numbers at line ${lineNumber}; skipping...`,
+      );
+      return;
+    }
+
+    if (map.has(name)) {
+      console.warn(`Duplicate tier_equializer entry ${name}; skipping...`);
+      return;
+    }
+
+    map.set(name, entry);
+  });
+
+  return map;
 }
 
 export async function definitions() {
@@ -685,6 +773,9 @@ export async function definitions() {
   const gameModeNativeNames: Record<string, number> = {};
   const combatRoles = await vfs.yaml<CombatRolesYaml>(
     `Data/XML/item_defs/vehicles/common/combat_roles.yaml`,
+  );
+  const tierEqualizer = parseTierEqualizerCSV(
+    await vfs.text(`Data/XML/item_defs/vehicles/common/tier_equializer.csv`),
   );
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
@@ -997,6 +1088,7 @@ export async function definitions() {
           });
         })
         .map(([, camo]) => camo.id);
+      const equalizer = tierEqualizer.get(`${nation}:${tankKey}`);
 
       tankDefinitions.tanks[tankId] = {
         ancestors: [],
@@ -1034,6 +1126,7 @@ export async function definitions() {
         camouflage_still: tankDefinition.root.invisibility.still,
         camouflage_moving: tankDefinition.root.invisibility.moving,
         camouflage_on_fire: tankDefinition.root.invisibility.firePenalty,
+        equalizer,
         turrets: [],
         engines: [],
         tracks: [],

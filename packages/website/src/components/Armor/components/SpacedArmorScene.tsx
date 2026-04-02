@@ -1,6 +1,10 @@
 import { memo, useRef } from "react";
 import { Group, Plane, Scene, Vector3 } from "three";
 import { correctZYTuple } from "../../../core/blitz/correctZYTuple";
+import {
+  equalizerArmorFactor,
+  isEqualizerActive,
+} from "../../../core/blitzkit/equalizer";
 import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../../../core/blitzkit/resolveThickness";
 import { useArmor } from "../../../hooks/useArmor";
@@ -26,6 +30,9 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tank = Duel.use((state) => state.protagonist.tank);
+  const equalize = Duel.use((state) =>
+    isEqualizerActive(state.protagonist.tank, state.protagonist.equalize),
+  );
   const track = Duel.use((state) => state.protagonist.track);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -47,6 +54,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const isDynamicArmorActive = Duel.use((state) =>
     state.protagonist.consumables.includes(73),
   );
+  const armorFactor = equalizerArmorFactor(tank, equalize);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -60,6 +68,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
           const { spaced, thickness } = resolveArmor(
             tankModelDefinition.armor!,
             armorId,
+            armorFactor,
           );
 
           if (
@@ -94,7 +103,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
             scene={scene}
             key={`${node.uuid}-track`}
             type={ArmorType.External}
-            thickness={trackModelDefinition.thickness}
+            thickness={trackModelDefinition.thickness * armorFactor}
             variant="track"
             node={node}
           />
@@ -111,6 +120,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
           const { spaced, thickness } = resolveArmor(
             turretModelDefinition.armor!,
             armorId,
+            armorFactor,
           );
 
           if (
@@ -146,6 +156,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
             const { spaced, thickness } = resolveArmor(
               gunModelDefinition.armor!,
               armorId,
+              armorFactor,
             );
 
             if (
@@ -186,7 +197,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
                 scene={scene}
                 key={`${node.uuid}-gun-external`}
                 type={ArmorType.External}
-                thickness={gunModelDefinition.thickness}
+                thickness={gunModelDefinition.thickness * armorFactor}
                 variant="gun"
                 node={node}
                 clip={
