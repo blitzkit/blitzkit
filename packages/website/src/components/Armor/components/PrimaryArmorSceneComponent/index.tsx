@@ -5,7 +5,7 @@ import {
 } from "@blitzkit/core";
 import { invalidate, useFrame } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   MeshBasicMaterial,
   NormalBlending,
@@ -48,42 +48,46 @@ export function PrimaryArmorSceneComponent({
   node,
   thickness,
 }: PrimaryArmorSceneComponentProps) {
-  const material = new ShaderMaterial({
-    fragmentShader,
-    vertexShader,
+  const material = useMemo(
+    () =>
+      new ShaderMaterial({
+        fragmentShader,
+        vertexShader,
 
-    fog: true,
-    transparent: true,
+        fog: true,
+        transparent: true,
 
-    blending: isHalloween ? SubtractiveBlending : NormalBlending,
+        blending: isHalloween ? SubtractiveBlending : NormalBlending,
 
-    uniforms: UniformsUtils.merge([
-      UniformsLib.common,
-      UniformsLib.fog,
+        uniforms: UniformsUtils.merge([
+          UniformsLib.common,
+          UniformsLib.fog,
 
-      {
-        thickness: { value: null },
-        penetration: { value: null },
-        caliber: { value: null },
-        ricochet: { value: null },
-        normalization: { value: null },
-        isExplosive: { value: null },
-        canSplash: { value: null },
-        damage: { value: null },
-        explosionRadius: { value: null },
-        greenPenetration: { value: null },
-        advancedHighlighting: { value: null },
-        opaque: { value: null },
+          {
+            thickness: { value: null },
+            penetration: { value: null },
+            caliber: { value: null },
+            ricochet: { value: null },
+            normalization: { value: null },
+            isExplosive: { value: null },
+            canSplash: { value: null },
+            damage: { value: null },
+            explosionRadius: { value: null },
+            greenPenetration: { value: null },
+            advancedHighlighting: { value: null },
+            opaque: { value: null },
 
-        inverseProjectionMatrix: { value: null },
-        resolution: { value: new Vector2() },
-        spacedArmorBuffer: { value: null },
-        spacedArmorDepth: { value: null },
+            inverseProjectionMatrix: { value: null },
+            resolution: { value: new Vector2() },
+            spacedArmorBuffer: { value: null },
+            spacedArmorDepth: { value: null },
 
-        opacity: { value: 0 },
-      },
-    ]),
-  });
+            opacity: { value: 0 },
+          },
+        ]),
+      }),
+    [],
+  );
 
   useEffect(() => {
     function resolveEqualize() {
@@ -222,7 +226,7 @@ export function PrimaryArmorSceneComponent({
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, []);
+  }, [thickness]);
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(
