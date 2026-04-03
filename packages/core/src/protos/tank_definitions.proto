@@ -40,7 +40,7 @@ message TankDefinition {
   required string           equipment_preset   = 30;
   required uint32           weight             = 31;
   required string           dev_name           = 32;
-  required Equalizer        equalizer          = 33;
+  optional Equalizer        equalizer          = 33;
 }
 
 message Equalizer {

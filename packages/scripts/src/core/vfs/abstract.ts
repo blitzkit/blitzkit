@@ -1,7 +1,8 @@
 import { readDVPL } from "@blitzkit/core";
+import { Options, parse as parseCSV } from "csv-parse/sync";
 import { XMLParser } from "fast-xml-parser";
 import { normalize } from "path/posix";
-import { parse } from "yaml";
+import { parse as parseYaml } from "yaml";
 
 export abstract class AbstractVFS {
   textDecoder = new TextDecoder();
@@ -54,12 +55,22 @@ export abstract class AbstractVFS {
 
   async yaml<Type>(path: string) {
     const file = await this.text(path);
-    return parse(file) as Type;
+    return parseYaml(file) as Type;
   }
 
   async xml<Type>(path: string) {
     const file = await this.text(path);
     return this.xmlParser.parse(file) as Type;
+  }
+
+  async _csv(text: string, options: Options = {}) {
+    const parsed = parseCSV(text, options);
+    return parsed;
+  }
+
+  async csv(path: string, options: Options = {}) {
+    const text = await this.text(path);
+    return await this._csv(text, options);
   }
 
   [Symbol.dispose]() {

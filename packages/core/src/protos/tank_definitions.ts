@@ -291,7 +291,7 @@ export interface TankDefinition {
   equipment_preset: string;
   weight: number;
   dev_name: string;
-  equalizer: Equalizer | undefined;
+  equalizer?: Equalizer | undefined;
 }
 
 export interface TankDefinition_RolesEntry {

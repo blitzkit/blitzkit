@@ -8,6 +8,7 @@ import {
   ConsumableTankCategoryFilterCategory,
   Crew,
   CrewType,
+  Equalizer,
   EquipmentDefinitions,
   EquipmentSlot,
   GameDefinitions,
@@ -32,6 +33,7 @@ import {
 } from "@blitzkit/core";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import { readFile } from "fs/promises";
 import { deburr } from "lodash-es";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
@@ -688,6 +690,24 @@ export async function definitions() {
   );
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
+  let equalizerDefinitions: string[][];
+
+  if (
+    await vfs.resolve("Data/XML/item_defs/vehicles/common/tier_equializer.csv")
+  ) {
+    equalizerDefinitions = await vfs.csv(
+      `Data/XML/item_defs/vehicles/common/tier_equializer.csv`,
+      { delimiter: ";" },
+    );
+  } else {
+    const stubEqualizerDefinitions = await readFile("stub/equalizer.csv").then(
+      (buffer) => buffer.toString(),
+    );
+
+    equalizerDefinitions = await vfs._csv(stubEqualizerDefinitions, {
+      delimiter: ";",
+    });
+  }
 
   for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
     /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
@@ -998,6 +1018,18 @@ export async function definitions() {
         })
         .map(([, camo]) => camo.id);
 
+      let equalizerEntry = equalizerDefinitions.find(
+        (line) => line[0] === `${nation}:${tankKey}`,
+      );
+
+      let equalizer: Equalizer | undefined;
+
+      if (equalizerEntry) {
+        const [health, penetration, module_health, damage, armor] =
+          equalizerEntry?.slice(1).map(Number);
+        equalizer = { health, penetration, module_health, damage, armor };
+      }
+
       tankDefinitions.tanks[tankId] = {
         ancestors: [],
         successors: [],
@@ -1037,6 +1069,7 @@ export async function definitions() {
         turrets: [],
         engines: [],
         tracks: [],
+        equalizer,
       };
 
       if (tank.combatRole) {
