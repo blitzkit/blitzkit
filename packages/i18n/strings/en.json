@@ -1291,7 +1291,8 @@
           },
           "skills": {
             "clear": "Clear",
-            "maximize": "Maximize"
+            "maximize": "Maximize",
+            "equalize": "Equalize"
           },
           "modules": {
             "stock": "Stock",

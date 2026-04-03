@@ -85,7 +85,7 @@ function Content() {
           },
         ),
       ),
-    [members, crewSkills],
+    [members, crewSkills, equalize],
   );
 
   useEffect(() => {

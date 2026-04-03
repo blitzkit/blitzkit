@@ -1,7 +1,15 @@
 import { asset, availableProvisions, permanentSkills } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
-import { Button, Flex, IconButton, Popover, Table } from "@radix-ui/themes";
+import {
+  Button,
+  Flex,
+  IconButton,
+  Popover,
+  Switch,
+  Table,
+  Text,
+} from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
 import { awaitableEquipmentDefinitions } from "../../core/awaitables/equipmentDefinitions";
@@ -44,6 +52,7 @@ export function CompareTable({ stats }: CompareTableProps) {
   const crewSkills = CompareEphemeral.use((state) => state.crewSkills);
   const members = CompareEphemeral.use((state) => state.members);
   const { unwrap, strings } = useLocale();
+  const equalize = CompareEphemeral.use((state) => state.equalize);
 
   return (
     <StickyTableRoot
@@ -80,10 +89,12 @@ export function CompareTable({ stats }: CompareTableProps) {
         <Table.Row>
           <Table.Cell style={{ height: "100%" }}>
             <Flex
+              gap="2"
               style={{
                 width: "100%",
                 height: "100%",
               }}
+              direction="column"
               align="center"
               justify="center"
             >
@@ -155,6 +166,21 @@ export function CompareTable({ stats }: CompareTableProps) {
                   </Flex>
                 </Popover.Content>
               </Popover.Root>
+
+              <Flex align="center" gap="1">
+                <Text>
+                  {strings.website.tools.compare.table.skills.equalize}
+                </Text>
+                <Switch
+                  size="1"
+                  checked={equalize}
+                  onCheckedChange={(checked) => {
+                    CompareEphemeral.mutate((draft) => {
+                      draft.equalize = checked;
+                    });
+                  }}
+                />
+              </Flex>
             </Flex>
           </Table.Cell>
 
