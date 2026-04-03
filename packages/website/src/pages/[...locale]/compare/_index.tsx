@@ -45,6 +45,7 @@ export function Page({ locale }: LocaleAcceptorProps) {
 
 function Content() {
   const members = CompareEphemeral.use((state) => state.members);
+  const equalize = CompareEphemeral.use((state) => state.equalize);
   const [addTankDialogOpen, setAddTankDialogOpen] = useState(false);
   const crewSkills = CompareEphemeral.use((state) => state.crewSkills);
   const { strings } = useLocale();
@@ -61,26 +62,30 @@ function Content() {
             stockTurret: thisMember.tank.turrets[0],
             applyReactiveArmor: members.some(
               (member) =>
-                member.key !== thisMember.key && member.consumables.includes(33)
+                member.key !== thisMember.key &&
+                member.consumables.includes(33),
             ),
             applyDynamicArmor: members.some(
               (member) =>
-                member.key !== thisMember.key && member.consumables.includes(73)
+                member.key !== thisMember.key &&
+                member.consumables.includes(73),
             ),
             applySpallLiner: members.some(
               (member) =>
-                member.key !== thisMember.key && member.provisions.includes(101)
+                member.key !== thisMember.key &&
+                member.provisions.includes(101),
             ),
             assaultDistance: thisMember.assaultDistance,
+            equalize,
           },
           {
             equipmentDefinitions: equipmentDefinitions,
             provisionDefinitions: provisionDefinitions,
             tankModelDefinition: modelDefinitions.models[thisMember.tank.id],
-          }
-        )
+          },
+        ),
       ),
-    [members, crewSkills]
+    [members, crewSkills],
   );
 
   useEffect(() => {
@@ -112,7 +117,7 @@ function Content() {
     window.history.replaceState(
       {},
       "",
-      `${window.location.pathname}?${search.toString()}`
+      `${window.location.pathname}?${search.toString()}`,
     );
   }, [members]);
 

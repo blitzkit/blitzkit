@@ -31,6 +31,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   const equipmentMatrix = Duel.use(
     (state) => state.protagonist.equipmentMatrix,
   );
+  const equalize = Duel.use((state) => state.equalize);
   const { tank, turret, gun, engine, track, shell } = Duel.use(
     (state) => state.protagonist,
   );
@@ -62,6 +63,7 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
       applyDynamicArmor: false,
       applySpallLiner: false,
       assaultDistance,
+      equalize,
     },
     {
       tankModelDefinition,

@@ -168,6 +168,7 @@ if (changedTanks.length > 0) {
       )
       .map((id) => currentEquipmentDefinitions.equipments[id]);
 
+    const equalize = false;
     const currentCharacteristics = tankCharacteristics(
       {
         tank: current,
@@ -193,6 +194,7 @@ if (changedTanks.length > 0) {
         stockTurret: current.turrets[0],
         track: currentTracks,
         turret: currentTurret,
+        equalize,
       },
       {
         equipmentDefinitions: currentEquipmentDefinitions,
@@ -225,6 +227,7 @@ if (changedTanks.length > 0) {
         stockTurret: preview.turrets[0],
         track: previewTracks,
         turret: previewTurret,
+        equalize,
       },
       {
         equipmentDefinitions: previewEquipmentDefinitions,

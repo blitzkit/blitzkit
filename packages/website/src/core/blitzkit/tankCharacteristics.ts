@@ -47,6 +47,7 @@ export function tankCharacteristics(
     applyDynamicArmor,
     applySpallLiner,
     assaultDistance,
+    equalize,
   }: {
     tank: TankDefinition;
     turret: TurretDefinition;
@@ -67,6 +68,7 @@ export function tankCharacteristics(
     applyDynamicArmor: boolean;
     applySpallLiner: boolean;
     assaultDistance: number;
+    equalize: boolean;
   },
   {
     tankModelDefinition,
@@ -81,6 +83,13 @@ export function tankCharacteristics(
   const preset = equipmentDefinitions.presets[tank.equipment_preset];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
+  const equalizer = (equalize ? tank.equalizer : undefined) ?? {
+    armor: 1,
+    damage: 1,
+    health: 1,
+    module_health: 1,
+    penetration: 1,
+  };
 
   function equipment(id: number) {
     return preset.slots.some((slot, index) => {
@@ -177,15 +186,17 @@ export function tankCharacteristics(
     (coefficient([hasGunRammer, -0.05]) *
       coefficient([true, degressiveStat(loaderMastery)])) /
     coefficient([hasAdrenaline && gun.gun_type!.$case === "regular", 0.17]);
-  const penetrationCoefficient = coefficient([
-    hasCalibratedShells,
-    resolvePenetrationCoefficient(true, shell.type) - 1,
-  ]);
-  const healthCoefficient = coefficient(
-    [hasSandbagArmor, 0.03],
-    [hasEnhancedSandbagArmor, 0.06],
-    [hasImprovedAssembly, 0.04],
-  );
+  const penetrationCoefficient =
+    coefficient([
+      hasCalibratedShells,
+      resolvePenetrationCoefficient(true, shell.type) - 1,
+    ]) * equalizer.penetration;
+  const healthCoefficient =
+    coefficient(
+      [hasSandbagArmor, 0.03],
+      [hasEnhancedSandbagArmor, 0.06],
+      [hasImprovedAssembly, 0.04],
+    ) * equalizer.health;
   const shellVelocityCoefficient = coefficient(
     [hasSupercharger, 0.35],
     [hasImprovedGunPowder, 0.3],
@@ -345,7 +356,9 @@ export function tankCharacteristics(
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
   const damageCoefficientWithoutAssault = armorDamageCoefficient;
   const damageCoefficient =
-    damageCoefficientWithoutAssault * assaultDamageCoefficient;
+    damageCoefficientWithoutAssault *
+    assaultDamageCoefficient *
+    equalizer.damage;
   const dpm = resolveDpm(
     gun,
     shell,
@@ -654,13 +667,3 @@ export const characteristicsOrder: {
     items: ["crewCount"],
   },
 ];
-
-// export const characteristicsStyling: Record<
-//   TankCharacteristicsKey,
-//   {
-//     name: string;
-//     indent?: boolean;
-//     condition?: TankCharacteristicsCondition[];
-//   }
-// > = {
-// };

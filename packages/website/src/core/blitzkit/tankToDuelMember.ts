@@ -26,6 +26,5 @@ export function tankToDuelMember(
     track: tank.tracks.at(-1)!,
     turret,
     assaultDistance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
-    equalize: false,
   } satisfies DuelMember;
 }

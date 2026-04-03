@@ -7,6 +7,7 @@ export interface CompareMember extends DuelMember {
 
 export interface CompareEphemeral {
   crewSkills: Record<string, number>;
+  equalize: boolean;
   members: CompareMember[];
   sorting?: {
     direction: "ascending" | "descending";
@@ -19,5 +20,6 @@ export const CompareEphemeral = new Varuna<
   Record<string, number>
 >((crewSkills) => ({
   crewSkills,
+  equalize: false,
   members: [],
 }));

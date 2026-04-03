@@ -16,7 +16,7 @@ import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 export function Equalizer() {
   const { strings } = useLocale();
-  const equalize = Duel.use((state) => state.protagonist.equalize);
+  const equalize = Duel.use((state) => state.equalize);
 
   return (
     <ConfigurationChildWrapper>
@@ -33,7 +33,7 @@ export function Equalizer() {
         mt="2"
         onClick={() => {
           Duel.mutate((draft) => {
-            draft.protagonist.equalize = !draft.protagonist.equalize;
+            draft.equalize = !draft.equalize;
           });
         }}
         width="100%"
