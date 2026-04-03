@@ -12,6 +12,7 @@ import {
 } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
+import { Tankopedia } from "../../../../stores/tankopedia";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
 export function Equalizer() {
@@ -34,6 +35,9 @@ export function Equalizer() {
         onClick={() => {
           Duel.mutate((draft) => {
             draft.equalize = !draft.equalize;
+          });
+          Tankopedia.mutate((draft) => {
+            draft.shot = undefined;
           });
         }}
         width="100%"

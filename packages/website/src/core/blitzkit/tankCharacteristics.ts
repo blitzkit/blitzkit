@@ -22,6 +22,7 @@ import {
 } from "@blitzkit/core";
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
 export type TankCharacteristicsKey = keyof TankCharacteristics;
@@ -83,13 +84,7 @@ export function tankCharacteristics(
   const preset = equipmentDefinitions.presets[tank.equipment_preset];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const equalizer = (equalize ? tank.equalizer : undefined) ?? {
-    armor: 1,
-    damage: 1,
-    health: 1,
-    module_health: 1,
-    penetration: 1,
-  };
+  const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
 
   function equipment(id: number) {
     return preset.slots.some((slot, index) => {
