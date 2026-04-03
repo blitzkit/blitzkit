@@ -85,7 +85,12 @@ export function SpacedArmorSubExternal({
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        resolvePenetrationCoefficient(
+          hasCalibratedShells,
+          Duel.state.equalize,
+          shell.type,
+          Duel.state.antagonist.tank.equalizer,
+        ) *
         equalize;
     }
 

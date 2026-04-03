@@ -102,6 +102,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
+                  false,
                   antagonistShell.type,
                 ) * antagonistShell.penetration!.near
               ).toFixed(0),

@@ -18,6 +18,7 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
+import { defaultEqualizer } from "../../../../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
 import { Duel } from "../../../../stores/duel";
 import {
@@ -88,9 +89,12 @@ export function SpacedArmorSceneComponent({
       const { customShell } = Tankopedia.state;
       const shell = customShell ?? Duel.state.antagonist.shell;
       const { equalize } = Duel.state;
-      const equalizer =
-        (equalize ? Duel.state.antagonist.tank.equalizer?.damage : undefined) ??
-        1;
+      const protagonistEqualizer =
+        (equalize ? Duel.state.protagonist.tank.equalizer : undefined) ??
+        defaultEqualizer;
+      const antagonistEqualizer =
+        (equalize ? Duel.state.antagonist.tank.equalizer : undefined) ??
+        defaultEqualizer;
       const cameraNormal = camera.position.clone().sub(point).normalize();
       const shot: Shot = {
         splashRadius:
@@ -118,8 +122,14 @@ export function SpacedArmorSceneComponent({
       );
       const penetration =
         shell.penetration!.near *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
-      const thicknessCoefficient = hasEnhancedArmor ? 1.03 : 1;
+        resolvePenetrationCoefficient(
+          hasCalibratedShells,
+          equalize,
+          shell.type,
+          antagonistEqualizer,
+        );
+      const thicknessCoefficient =
+        (hasEnhancedArmor ? 1.03 : 1) * protagonistEqualizer.armor;
       const filteredIntersections = intersections.filter(
         (intersection) =>
           "type" in intersection.object.userData &&
@@ -371,7 +381,7 @@ export function SpacedArmorSceneComponent({
         }
       }
 
-      shot.damage *= equalizer;
+      shot.damage *= antagonistEqualizer.damage;
 
       return shot;
     },
