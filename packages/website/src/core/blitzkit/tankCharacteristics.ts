@@ -348,11 +348,10 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
-  const damageCoefficientWithoutAssault = armorDamageCoefficient;
+  const damageCoefficientWithoutAssault =
+    armorDamageCoefficient * equalizer.damage;
   const damageCoefficient =
-    damageCoefficientWithoutAssault *
-    assaultDamageCoefficient *
-    equalizer.damage;
+    damageCoefficientWithoutAssault * assaultDamageCoefficient;
   const dpm = resolveDpm(
     gun,
     shell,
@@ -534,7 +533,7 @@ export function tankCharacteristics(
   const shellRange = shell.range;
   const shellCapacity = gun.shell_capacity;
   const gunType = gun.gun_type!.$case;
-  const penetrationAt250m = shell.penetration!.far;
+  const penetrationAt250m = shell.penetration!.far * penetrationCoefficient;
 
   return {
     crewCount,
