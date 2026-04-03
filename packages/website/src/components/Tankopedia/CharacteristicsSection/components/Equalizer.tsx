@@ -1,6 +1,7 @@
 import { asset } from "@blitzkit/core";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import {
+  Badge,
   Box,
   Flex,
   Heading,
@@ -20,7 +21,12 @@ export function Equalizer() {
   return (
     <ConfigurationChildWrapper>
       <Heading size="4">
-        {strings.website.tools.tankopedia.configuration.equalizer.title}
+        <Flex gap="2" align="center">
+          {strings.website.tools.tankopedia.configuration.equalizer.title}{" "}
+          <Badge variant="outline">
+            {strings.website.tools.tankopedia.configuration.equalizer.beta}
+          </Badge>
+        </Flex>
       </Heading>
 
       <Box

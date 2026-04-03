@@ -1111,7 +1111,8 @@
 
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize"
+            "equalize": "Equalize",
+            "beta": "Beta"
           },
           "modules": {
             "title": "Modules",
