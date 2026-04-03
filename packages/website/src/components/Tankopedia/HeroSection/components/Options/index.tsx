@@ -38,6 +38,7 @@ import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent
 import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
+import { EqualIcon } from "../../../../EqualIcon";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";
 import { SmallTankIcon } from "../../../../SmallTankIcon";
@@ -216,7 +217,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               />
             </IconButton>
           ))}
-
           <CustomShellButton />
         </Flex>
 
@@ -285,6 +285,22 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             <DynamicArmorSwitcher />
           </Suspense>
         )}
+
+        <IconButton
+          variant="soft"
+          size={{ initial: "2", sm: "3" }}
+          color={equalize ? undefined : "gray"}
+          onClick={() => {
+            Duel.mutate((draft) => {
+              draft.equalize = !draft.equalize;
+            });
+            Tankopedia.mutate((draft) => {
+              draft.shot = undefined;
+            });
+          }}
+        >
+          <EqualIcon />
+        </IconButton>
       </Flex>
 
       <Flex
