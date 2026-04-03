@@ -291,11 +291,20 @@ export interface TankDefinition {
   equipment_preset: string;
   weight: number;
   dev_name: string;
+  equalizer: Equalizer | undefined;
 }
 
 export interface TankDefinition_RolesEntry {
   key: number;
   value: number;
+}
+
+export interface Equalizer {
+  health: number;
+  penetration: number;
+  module_health: number;
+  damage: number;
+  armor: number;
 }
 
 export interface ResearchCost {
@@ -644,6 +653,7 @@ function createBaseTankDefinition(): TankDefinition {
     equipment_preset: "",
     weight: 0,
     dev_name: "",
+    equalizer: undefined,
   };
 }
 
@@ -741,6 +751,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     }
     if (message.dev_name !== "") {
       writer.uint32(258).string(message.dev_name);
+    }
+    if (message.equalizer !== undefined) {
+      Equalizer.encode(message.equalizer, writer.uint32(266).fork()).join();
     }
     return writer;
   },
@@ -1033,6 +1046,14 @@ export const TankDefinition: MessageFns<TankDefinition> = {
           message.dev_name = reader.string();
           continue;
         }
+        case 33: {
+          if (tag !== 266) {
+            break;
+          }
+
+          message.equalizer = Equalizer.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1141,6 +1162,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
         : isSet(object.dev_name)
         ? globalThis.String(object.dev_name)
         : "",
+      equalizer: isSet(object.equalizer) ? Equalizer.fromJSON(object.equalizer) : undefined,
     };
   },
 
@@ -1245,6 +1267,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.dev_name !== "") {
       obj.devName = message.dev_name;
     }
+    if (message.equalizer !== undefined) {
+      obj.equalizer = Equalizer.toJSON(message.equalizer);
+    }
     return obj;
   },
 
@@ -1298,6 +1323,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.equipment_preset = object.equipment_preset ?? "";
     message.weight = object.weight ?? 0;
     message.dev_name = object.dev_name ?? "";
+    message.equalizer = (object.equalizer !== undefined && object.equalizer !== null)
+      ? Equalizer.fromPartial(object.equalizer)
+      : undefined;
     return message;
   },
 };
@@ -1374,6 +1402,134 @@ export const TankDefinition_RolesEntry: MessageFns<TankDefinition_RolesEntry> = 
     const message = createBaseTankDefinition_RolesEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
+    return message;
+  },
+};
+
+function createBaseEqualizer(): Equalizer {
+  return { health: 0, penetration: 0, module_health: 0, damage: 0, armor: 0 };
+}
+
+export const Equalizer: MessageFns<Equalizer> = {
+  encode(message: Equalizer, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.health !== 0) {
+      writer.uint32(13).float(message.health);
+    }
+    if (message.penetration !== 0) {
+      writer.uint32(21).float(message.penetration);
+    }
+    if (message.module_health !== 0) {
+      writer.uint32(29).float(message.module_health);
+    }
+    if (message.damage !== 0) {
+      writer.uint32(37).float(message.damage);
+    }
+    if (message.armor !== 0) {
+      writer.uint32(45).float(message.armor);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Equalizer {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEqualizer();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 13) {
+            break;
+          }
+
+          message.health = reader.float();
+          continue;
+        }
+        case 2: {
+          if (tag !== 21) {
+            break;
+          }
+
+          message.penetration = reader.float();
+          continue;
+        }
+        case 3: {
+          if (tag !== 29) {
+            break;
+          }
+
+          message.module_health = reader.float();
+          continue;
+        }
+        case 4: {
+          if (tag !== 37) {
+            break;
+          }
+
+          message.damage = reader.float();
+          continue;
+        }
+        case 5: {
+          if (tag !== 45) {
+            break;
+          }
+
+          message.armor = reader.float();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Equalizer {
+    return {
+      health: isSet(object.health) ? globalThis.Number(object.health) : 0,
+      penetration: isSet(object.penetration) ? globalThis.Number(object.penetration) : 0,
+      module_health: isSet(object.moduleHealth)
+        ? globalThis.Number(object.moduleHealth)
+        : isSet(object.module_health)
+        ? globalThis.Number(object.module_health)
+        : 0,
+      damage: isSet(object.damage) ? globalThis.Number(object.damage) : 0,
+      armor: isSet(object.armor) ? globalThis.Number(object.armor) : 0,
+    };
+  },
+
+  toJSON(message: Equalizer): unknown {
+    const obj: any = {};
+    if (message.health !== 0) {
+      obj.health = message.health;
+    }
+    if (message.penetration !== 0) {
+      obj.penetration = message.penetration;
+    }
+    if (message.module_health !== 0) {
+      obj.moduleHealth = message.module_health;
+    }
+    if (message.damage !== 0) {
+      obj.damage = message.damage;
+    }
+    if (message.armor !== 0) {
+      obj.armor = message.armor;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Equalizer>, I>>(base?: I): Equalizer {
+    return Equalizer.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Equalizer>, I>>(object: I): Equalizer {
+    const message = createBaseEqualizer();
+    message.health = object.health ?? 0;
+    message.penetration = object.penetration ?? 0;
+    message.module_health = object.module_health ?? 0;
+    message.damage = object.damage ?? 0;
+    message.armor = object.armor ?? 0;
     return message;
   },
 };

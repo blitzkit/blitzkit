@@ -40,6 +40,15 @@ message TankDefinition {
   required string           equipment_preset   = 30;
   required uint32           weight             = 31;
   required string           dev_name           = 32;
+  required Equalizer        equalizer          = 33;
+}
+
+message Equalizer {
+  required float health        = 1;
+  required float penetration   = 2;
+  required float module_health = 3;
+  required float damage        = 4;
+  required float armor         = 5;
 }
 
 message ResearchCost {
