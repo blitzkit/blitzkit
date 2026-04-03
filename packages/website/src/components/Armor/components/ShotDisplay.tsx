@@ -52,7 +52,7 @@ export function ShotDisplay() {
   useEffect(() => {
     if (shot?.splashRadius !== undefined) {
       const outlineGeometry = new BufferGeometry().setFromPoints(
-        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50)
+        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50),
       );
       const outlineMaterial = new LineDashedMaterial({
         color: "orange",
@@ -61,7 +61,7 @@ export function ShotDisplay() {
       });
       const outline = new Line(
         outlineGeometry,
-        outlineMaterial
+        outlineMaterial,
       ).computeLineDistances();
 
       splashRadiusWrapper.current?.add(outline);
@@ -134,11 +134,11 @@ export function ShotDisplay() {
   const outLength =
     shot.out && shot.out.layers.length > 0
       ? (shot.in.layers.at(-1) as ShotLayerNonExternal).point.distanceTo(
-          (shot.out.layers.at(-1) as ShotLayerNonExternal).point
+          (shot.out.layers.at(-1) as ShotLayerNonExternal).point,
         )
       : SHOT_DISPLAY_LENGTH_INFINITY;
   const inLast = shot.in.layers.findLast(
-    (layer) => layer.type !== null
+    (layer) => layer.type !== null,
   ) as ShotLayerNonExternal;
   const outTitleColor = shot.out
     ? shotStatusColors[shot.out.status]
@@ -154,7 +154,7 @@ export function ShotDisplay() {
           position={inLast.point}
           ref={splashRadiusWrapper}
           rotation={new Euler().setFromQuaternion(
-            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal)
+            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal),
           )}
         >
           <mesh>
@@ -225,7 +225,7 @@ export function ShotDisplay() {
       <group
         position={inLast.point}
         rotation={new Euler().setFromQuaternion(
-          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal)
+          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal),
         )}
       >
         <mesh position={[0, inLength / 2, 0]} renderOrder={2}>
@@ -253,8 +253,8 @@ export function ShotDisplay() {
           rotation={new Euler().setFromQuaternion(
             new Quaternion().setFromUnitVectors(
               J_HAT,
-              shot.out.surfaceNormal.clone()
-            )
+              shot.out.surfaceNormal.clone(),
+            ),
           )}
         >
           <mesh position={[0, outLength / 2, 0]} renderOrder={2}>

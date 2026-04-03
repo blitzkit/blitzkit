@@ -19,7 +19,7 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
-import { Duel, type EquipmentMatrix } from "../../../../stores/duel";
+import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
 import { transitionEvent } from "../../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
@@ -98,14 +98,8 @@ export function PrimaryArmorSceneComponent({
       material.uniforms.damage.value = shell.armor_damage;
       material.uniforms.explosionRadius.value = shell.explosion_radius;
 
-      handleProtagonistEquipmentChange(
-        Duel.state.protagonist.equipmentMatrix,
-        true,
-      );
-      handleAntagonistEquipmentChange(
-        Duel.state.antagonist.equipmentMatrix,
-        true,
-      );
+      handleProtagonistEquipmentChange(true);
+      handleAntagonistEquipmentChange(true);
 
       invalidate();
     }
@@ -122,25 +116,25 @@ export function PrimaryArmorSceneComponent({
     function handleWireframeChange(wireframe: boolean) {
       material.wireframe = wireframe;
     }
-    function handleProtagonistEquipmentChange(
-      equipment: EquipmentMatrix,
-      noInvalidate = false,
-    ) {
+    function handleProtagonistEquipmentChange(noInvalidate = false) {
+      const equipment = Duel.state.protagonist.equipmentMatrix;
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
         equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+      const equalizer =
+        (Duel.state.equalize
+          ? Duel.state.protagonist.tank.equalizer?.armor
+          : undefined) ?? 1;
+
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
 
       if (!noInvalidate) invalidate();
     }
-    function handleAntagonistEquipmentChange(
-      equipment: EquipmentMatrix,
-      noInvalidate = false,
-    ) {
+    function handleAntagonistEquipmentChange(noInvalidate = false) {
+      const equipment = Duel.state.antagonist.equipmentMatrix;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
@@ -150,10 +144,15 @@ export function PrimaryArmorSceneComponent({
         Duel.state.antagonist.tank.equipment_preset,
         equipment,
       );
+      const equalize =
+        (Duel.state.equalize
+          ? Duel.state.antagonist.tank.equalizer?.penetration
+          : undefined) ?? 1;
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        equalize;
 
       if (!noInvalidate) invalidate();
     }
@@ -169,8 +168,8 @@ export function PrimaryArmorSceneComponent({
     );
     handleOpaqueChange(TankopediaPersistent.state.opaque);
     handleWireframeChange(TankopediaPersistent.state.wireframe);
-    handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
-    handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
+    handleProtagonistEquipmentChange();
+    handleAntagonistEquipmentChange();
 
     transitionEvent.on(handleTransitionEvent);
 
@@ -188,11 +187,18 @@ export function PrimaryArmorSceneComponent({
       TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        (equipment) => handleProtagonistEquipmentChange(equipment),
+        () => handleProtagonistEquipmentChange(),
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        (equipment) => handleAntagonistEquipmentChange(equipment),
+        () => handleAntagonistEquipmentChange(),
+      ),
+      Duel.on(
+        (state) => state.equalize,
+        () => {
+          handleProtagonistEquipmentChange();
+          handleAntagonistEquipmentChange();
+        },
       ),
       () => transitionEvent.off(handleTransitionEvent),
     ];

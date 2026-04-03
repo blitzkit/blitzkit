@@ -10,7 +10,7 @@ import { degToRad } from "three/src/math/MathUtils.js";
 import type { ArmorUserData } from "../..";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
-import { Duel, type EquipmentMatrix } from "../../../../../../stores/duel";
+import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { ArmorType } from "../../../SpacedArmorScene";
 import fragmentShader from "./shaders/fragment.glsl?raw";
@@ -62,17 +62,23 @@ export function SpacedArmorSubSpaced({
         shell.normalization ?? 0,
       );
     }
-    function handleProtagonistEquipmentChange(equipment: EquipmentMatrix) {
+    function handleProtagonistEquipmentChange() {
+      const equipment = Duel.state.protagonist.equipmentMatrix;
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
         equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+      const equalizer =
+        (Duel.state.equalize
+          ? Duel.state.protagonist.tank.equalizer?.armor
+          : undefined) ?? 1;
+
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
     }
-    function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
+    function handleAntagonistEquipmentChange() {
+      const equipment = Duel.state.antagonist.equipmentMatrix;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
@@ -82,15 +88,20 @@ export function SpacedArmorSubSpaced({
         Duel.state.antagonist.tank.equipment_preset,
         equipment,
       );
+      const equalize =
+        (Duel.state.equalize
+          ? Duel.state.antagonist.tank.equalizer?.penetration
+          : undefined) ?? 1;
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(hasCalibratedShells, shell.type) *
+        equalize;
     }
 
     handleShellChange();
-    handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
-    handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
+    handleProtagonistEquipmentChange();
+    handleAntagonistEquipmentChange();
 
     const unsubscribes = [
       Duel.on((state) => state.antagonist.shell, handleShellChange),
@@ -102,6 +113,13 @@ export function SpacedArmorSubSpaced({
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
         handleAntagonistEquipmentChange,
+      ),
+      Duel.on(
+        (state) => state.equalize,
+        () => {
+          handleProtagonistEquipmentChange();
+          handleAntagonistEquipmentChange();
+        },
       ),
     ];
 
