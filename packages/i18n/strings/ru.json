@@ -982,9 +982,9 @@
         "configuration": {
           "title": "Конфигурация",
           "equalizer": {
-            "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "title": "Уравнение",
+            "equalize": "Уравнять",
+            "beta": "Бета"
           },
           "modules": {
             "title": "Модули",
@@ -1156,7 +1156,7 @@
           "skills": {
             "clear": "Очистить",
             "maximize": "Максимум",
-            "equalize": "Equalize"
+            "equalize": "Уравнять"
           },
           "modules": {
             "stock": "Сток",
