@@ -960,6 +960,7 @@
           "tier": "阶级",
           "type": "战车类型",
           "dev_id": "开发参数：ID",
+          "dev_name": "DEV: NAME",
           "purchase": "购买价格",
           "restoration": "恢复坦克价格",
           "sale": "出售价格",
@@ -980,6 +981,11 @@
         },
         "configuration": {
           "title": "配置设定",
+          "equalizer": {
+            "title": "Equalizer",
+            "equalize": "Equalize",
+            "beta": "Beta"
+          },
           "modules": {
             "title": "坦克模块",
             "stock": "白板",
@@ -1149,7 +1155,8 @@
           },
           "skills": {
             "clear": "清除",
-            "maximize": "最大化"
+            "maximize": "最大化",
+            "equalize": "Equalize"
           },
           "modules": {
             "stock": "白板",
