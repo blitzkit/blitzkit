@@ -176,15 +176,17 @@ export function tankCharacteristics(
           ({ distance }) => distance >= assaultDistance,
         )?.factor ?? 0)
       : 1;
-  const moduleDamageCoefficient = coefficient([hasTungsten, 0.15]);
+  const moduleDamageCoefficient =
+    coefficient([hasTungsten, 0.15]) * equalizer.damage;
   const reloadCoefficient =
     (coefficient([hasGunRammer, -0.05]) *
       coefficient([true, degressiveStat(loaderMastery)])) /
     coefficient([hasAdrenaline && gun.gun_type!.$case === "regular", 0.17]);
-  const penetrationCoefficient = coefficient([
-    hasCalibratedShells,
-    resolvePenetrationCoefficient(true, equalize, shell.type, equalizer) - 1,
-  ]);
+  const penetrationCoefficient =
+    coefficient([
+      hasCalibratedShells,
+      resolvePenetrationCoefficient(true, equalize, shell.type, equalizer) - 1,
+    ]) * equalizer.penetration;
   const healthCoefficient =
     coefficient(
       [hasSandbagArmor, 0.03],
