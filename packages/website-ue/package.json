@@ -18,6 +18,7 @@
     "@blitzkit/game": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@bufbuild/protobuf": "^2.10.2",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "@radix-ui/colors": "^3.0.0",

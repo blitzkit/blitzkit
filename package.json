@@ -1,53 +1,25 @@
 {
   "name": "blitzkit",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
     "build:game": "cd packages/game && bun run build",
-    "build:assets": "cd packages/scripts && bun run build:assets",
-    "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
-    "build:bot": "cd packages/scripts && bun run build:bot",
     "build:website": "cd packages/website-ue && bun run build",
-    "build:prisma": "prisma generate",
     "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
     "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
-    "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
-    "build:app": "cd packages/app && bun run build",
-    "dev:bot": "bun run build:bot --dev && bun start:bot --dev",
-    "start:bot": "bun dist/bot/main.js",
-    "dev:docs": "vitepress dev docs",
-    "dev:website": "cd packages/website-ue && bun run dev",
-    "dev:app": "cd packages/app && bun run dev",
+    "build:protos": "cd packages/scripts && bun run build:protos",
     "dev": "bun run dev:website",
-    "dev:api": "bun --filter=@blitzkit/api run dev",
-    "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
-    "setup:patches": "bun --filter=@blitzkit/scripts run setup:patches",
-    "start:website": "bun --filter=@blitzkit/website-ue run start",
-    "host:docs": "vitepress preview docs",
+    "dev:website": "cd packages/website-ue && bun run dev",
     "lint": "tsc",
     "lint:website": "cd packages/website-ue && bun run lint",
-    "format": "prettier --write \"**/*.@(json|js|jsx|css|md|ts|tsx|html|xml|yml|gltf)\"",
-    "update": "yarn upgrade --latest",
-    "tunnel": "cloudflared tunnel --url http://localhost:3000",
-    "discoverids": "scripts/discoverIds.ts",
-    "build:protos": "cd packages/scripts && bun run build:protos",
-    "preview:website": "cd packages/website-ue && bun run preview",
-    "build:reviews": "cd packages/scripts && bun build:reviews",
-    "build:ids": "cd packages/scripts && bun build:ids",
-    "prunestrings": "cd packages/scripts && bun prunestrings",
-    "setup": "bun install && bun run build:prisma && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccesssor",
-    "patchnotes": "cd packages/scripts && bun run patchnotes"
+    "setup": "bun install && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccesssor"
   },
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
-    "@fontsource-variable/jetbrains-mono": "^5.2.8",
-    "@prisma/client": "^6.18.0",
-    "prisma": "^6.18.0",
-    "sharp": "^0.34.5",
     "typescript": "^5.9.3"
   }
 }

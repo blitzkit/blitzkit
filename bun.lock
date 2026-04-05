@@ -5,10 +5,6 @@
     "": {
       "name": "blitzkit",
       "dependencies": {
-        "@fontsource-variable/jetbrains-mono": "^5.2.8",
-        "@prisma/client": "^6.18.0",
-        "prisma": "^6.18.0",
-        "sharp": "^0.34.5",
         "typescript": "^5.9.3",
       },
     },
@@ -199,6 +195,7 @@
         "@blitzkit/game": "workspace:*",
         "@blitzkit/i18n": "workspace:*",
         "@bufbuild/protobuf": "^2.10.2",
+        "@fontsource-variable/jetbrains-mono": "^5.2.8",
         "@fontsource-variable/roboto-flex": "^5.2.8",
         "@fontsource-variable/roboto-mono": "^5.2.8",
         "@radix-ui/colors": "^3.0.0",
