@@ -27,6 +27,8 @@ import { defaultEqualizer } from "./tankToDuelMember";
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
 export type TankCharacteristicsKey = keyof TankCharacteristics;
 
+const EQUALIZER_HEALTH_EPSILON = 50;
+
 export function tankCharacteristics(
   {
     tank,
@@ -506,7 +508,13 @@ export function tankCharacteristics(
     hullTraverseCoefficient *
     (track.resistance_hard / softTerrainCoefficientRaw) *
     (stockWeight / weightKg);
-  const health = (tank.health + turret.health) * healthCoefficient;
+  let health = (tank.health + turret.health) * healthCoefficient;
+
+  if (equalize) {
+    health =
+      EQUALIZER_HEALTH_EPSILON * Math.round(health / EQUALIZER_HEALTH_EPSILON);
+  }
+
   const fireChance = engine.fire_chance * fireChanceCoefficient;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
