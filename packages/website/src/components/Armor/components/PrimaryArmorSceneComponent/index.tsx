@@ -144,10 +144,6 @@ export function PrimaryArmorSceneComponent({
         Duel.state.antagonist.tank.equipment_preset,
         equipment,
       );
-      const equalize =
-        (Duel.state.equalize
-          ? Duel.state.antagonist.tank.equalizer?.penetration
-          : undefined) ?? 1;
 
       material.uniforms.penetration.value =
         penetration *
@@ -156,8 +152,7 @@ export function PrimaryArmorSceneComponent({
           Duel.state.equalize,
           shell.type,
           Duel.state.antagonist.tank.equalizer,
-        ) *
-        equalize;
+        );
 
       if (!noInvalidate) invalidate();
     }
