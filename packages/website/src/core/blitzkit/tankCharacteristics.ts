@@ -27,6 +27,8 @@ import { defaultEqualizer } from "./tankToDuelMember";
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
 export type TankCharacteristicsKey = keyof TankCharacteristics;
 
+const EQUALIZER_HEALTH_EPSILON = 50;
+
 export function tankCharacteristics(
   {
     tank,
@@ -187,12 +189,12 @@ export function tankCharacteristics(
       hasCalibratedShells,
       resolvePenetrationCoefficient(true, equalize, shell.type, equalizer) - 1,
     ]) * equalizer.penetration;
-  const equalizerHealthCoefficient = equalizer.health;
-  const healthBonusCoefficient = coefficient(
-    [hasSandbagArmor, 0.03],
-    [hasEnhancedSandbagArmor, 0.06],
-    [hasImprovedAssembly, 0.04],
-  );
+  const healthCoefficient =
+    coefficient(
+      [hasSandbagArmor, 0.03],
+      [hasEnhancedSandbagArmor, 0.06],
+      [hasImprovedAssembly, 0.04],
+    ) * equalizer.health;
   const shellVelocityCoefficient = coefficient(
     [hasSupercharger, 0.35],
     [hasImprovedGunPowder, 0.3],
@@ -506,13 +508,13 @@ export function tankCharacteristics(
     hullTraverseCoefficient *
     (track.resistance_hard / softTerrainCoefficientRaw) *
     (stockWeight / weightKg);
-  const epsilon = 50;
-  const baseHealth = tank.health + turret.health;
-  const equalizedBaseHealth = baseHealth * equalizerHealthCoefficient;
-  const quantizedEqualizedBaseHealth = equalize
-    ? Math.round(equalizedBaseHealth / epsilon) * epsilon
-    : equalizedBaseHealth;
-  const health = quantizedEqualizedBaseHealth * healthBonusCoefficient;
+  let health = (tank.health + turret.health) * healthCoefficient;
+
+  if (equalize) {
+    health =
+      EQUALIZER_HEALTH_EPSILON * Math.round(health / EQUALIZER_HEALTH_EPSILON);
+  }
+
   const fireChance = engine.fire_chance * fireChanceCoefficient;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
