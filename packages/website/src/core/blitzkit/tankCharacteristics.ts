@@ -187,12 +187,12 @@ export function tankCharacteristics(
       hasCalibratedShells,
       resolvePenetrationCoefficient(true, equalize, shell.type, equalizer) - 1,
     ]) * equalizer.penetration;
-  const healthCoefficient =
-    coefficient(
-      [hasSandbagArmor, 0.03],
-      [hasEnhancedSandbagArmor, 0.06],
-      [hasImprovedAssembly, 0.04],
-    ) * equalizer.health;
+  const equalizerHealthCoefficient = equalizer.health;
+  const healthBonusCoefficient = coefficient(
+    [hasSandbagArmor, 0.03],
+    [hasEnhancedSandbagArmor, 0.06],
+    [hasImprovedAssembly, 0.04],
+  );
   const shellVelocityCoefficient = coefficient(
     [hasSupercharger, 0.35],
     [hasImprovedGunPowder, 0.3],
@@ -506,7 +506,13 @@ export function tankCharacteristics(
     hullTraverseCoefficient *
     (track.resistance_hard / softTerrainCoefficientRaw) *
     (stockWeight / weightKg);
-  const health = (tank.health + turret.health) * healthCoefficient;
+  const epsilon = 50;
+  const baseHealth = tank.health + turret.health;
+  const equalizedBaseHealth = baseHealth * equalizerHealthCoefficient;
+  const quantizedEqualizedBaseHealth = equalize
+    ? Math.round(equalizedBaseHealth / epsilon) * epsilon
+    : equalizedBaseHealth;
+  const health = quantizedEqualizedBaseHealth * healthBonusCoefficient;
   const fireChance = engine.fire_chance * fireChanceCoefficient;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
