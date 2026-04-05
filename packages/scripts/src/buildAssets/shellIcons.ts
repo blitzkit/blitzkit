@@ -8,19 +8,17 @@ export async function shellIcons() {
   using uploader = new AssetUploader("shell icons");
   const image = sharp(
     await vfs.file(
-      `Data/Gfx/Shared/tank-supply/ammunition/big/texture0.packed.webp`
-    )
+      `Data/Gfx/Shared/tank-supply/ammunition/big/texture0.packed.webp`,
+    ),
   );
-  const files = vfs.dir(
-    `Data/Gfx/Shared/tank-supply/ammunition/big`
-  ).filter((file) => file.endsWith("_l.txt"))
+  const files = await vfs
+    .dir(`Data/Gfx/Shared/tank-supply/ammunition/big`)
+    .then((files) => files.filter((file) => file.endsWith("_l.txt")));
 
   for (const file of files) {
     const name = file.match(/(.+)_l\.txt/)![1];
     const sizes = (
-      await vfs.text(
-        `Data/Gfx/Shared/tank-supply/ammunition/big/${file}`
-      )
+      await vfs.text(`Data/Gfx/Shared/tank-supply/ammunition/big/${file}`)
     )
       .split("\n")[4]
       .split(" ")

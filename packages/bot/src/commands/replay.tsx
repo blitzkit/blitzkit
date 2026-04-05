@@ -280,7 +280,7 @@ async function playerListing(
         }}
       >
         <img
-          alt={unwrap(tank.name)}
+          alt={unwrap(tank.name!)}
           src={await iconPng(tankIcon(tank.id))}
           style={{
             width: 32,
@@ -317,7 +317,7 @@ async function playerListing(
                 fontSize: 16,
               }}
             >
-              {unwrap(tank.name)}
+              {unwrap(tank.name!)}
             </span>
           </div>
 

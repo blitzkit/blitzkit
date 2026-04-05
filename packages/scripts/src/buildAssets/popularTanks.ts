@@ -17,7 +17,7 @@ export async function popularTanks() {
   const analytics = google.analyticsdata({ version: "v1beta", auth });
   const report = await analytics.properties.runReport({
     property: `properties/${assertSecret(
-      import.meta.env.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID
+      import.meta.env.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID,
     )}`,
     requestBody: {
       dateRanges: [{ startDate: "7daysAgo", endDate: "today" }],
@@ -47,13 +47,13 @@ export async function popularTanks() {
         row.dimensionValues[0].value &&
         row.dimensionValues[0].value !== "/tanks/" &&
         row.metricValues &&
-        row.metricValues[0].value
+        row.metricValues[0].value,
     )
     .map((row) => ({
       id: Number(
         row.dimensionValues![0].value!.match(
-          /\/tools\/tankopedia\/(\d+)\/?/
-        )?.[1]
+          /\/tools\/tankopedia\/(\d+)\/?/,
+        )?.[1],
       ),
       views: Number(row.metricValues![0].value!),
     }))

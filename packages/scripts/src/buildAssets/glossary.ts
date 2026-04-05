@@ -15,7 +15,7 @@ export async function glossary() {
       const glossary = await fetchGlossary(supported.blitz ?? supported.locale);
 
       console.log(
-        `Found ${Object.keys(glossary).length} things for ${supported.locale}`
+        `Found ${Object.keys(glossary).length} things for ${supported.locale}`,
       );
 
       for (const key in glossary) {
@@ -30,7 +30,7 @@ export async function glossary() {
         }
 
         if (key in avatars) {
-          avatars[key].avatar.name.locales[supported.locale] =
+          avatars[key].avatar.name!.locales[supported.locale] =
             glossaryEntry.title;
         } else {
           const extension = extname(glossaryEntry.image_url);
@@ -45,7 +45,7 @@ export async function glossary() {
           };
         }
       }
-    })
+    }),
   );
 
   const gallery: Gallery = { avatars: [] };
@@ -53,12 +53,12 @@ export async function glossary() {
 
   const bar = new ProgressBar(
     `Fetching avatars of ${totalCount} things :bar`,
-    totalCount
+    totalCount,
   );
 
   await Promise.all(
     Object.entries(avatars).map(async ([key, { url, avatar }]) => {
-      if (!(locales.default in avatars[key].avatar.name.locales)) {
+      if (!(locales.default in avatars[key].avatar.name!.locales)) {
         console.warn(`Avatar ${key} has no ${locales.default} name`);
         bar.tick();
 
@@ -77,7 +77,7 @@ export async function glossary() {
       });
 
       bar.tick();
-    })
+    }),
   );
 
   await uploader.add({

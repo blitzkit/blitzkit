@@ -21,23 +21,23 @@ export function useTankTransform(
   track: TrackDefinition,
   turret: TurretDefinition,
   turretContainer: RefObject<Group>,
-  gunContainer: RefObject<Group>
+  gunContainer: RefObject<Group>,
 ) {
   const tankModelDefinition = useTankModelDefinition();
 
   useEffect(() => {
     const trackModelDefinition = tankModelDefinition.tracks[track.id];
     const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-    const hullOrigin = correctZYTuple(trackModelDefinition.origin);
-    const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin);
-    const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin);
+    const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
+    const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
+    const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
     const turretPosition = new Vector3();
     const turretRotation = new Euler();
     const gunPosition = new Vector3();
     const gunRotation = new Euler();
 
     function handleModelTransform(
-      event: QuicklimeEvent<ModelTransformEventData>
+      event: QuicklimeEvent<ModelTransformEventData>,
     ) {
       handleModelTransformInner(event.data);
     }
@@ -70,13 +70,13 @@ export function useTankTransform(
 
       if (tankModelDefinition.initial_turret_rotation) {
         const initialPitch = -degToRad(
-          tankModelDefinition.initial_turret_rotation.pitch
+          tankModelDefinition.initial_turret_rotation.pitch,
         );
         const initialYaw = -degToRad(
-          tankModelDefinition.initial_turret_rotation.yaw
+          tankModelDefinition.initial_turret_rotation.yaw,
         );
         const initialRoll = -degToRad(
-          tankModelDefinition.initial_turret_rotation.roll
+          tankModelDefinition.initial_turret_rotation.roll,
         );
 
         turretPosition

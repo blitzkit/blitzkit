@@ -8,11 +8,13 @@ export async function migration() {
 
   using uploader = new AssetUploader("migration map");
   const map: Record<string, number> = {};
-  const nations = vfs.dir(`Data/XML/item_defs/vehicles`).filter((nation) => nation !== "common");
+  const nations = await vfs
+    .dir(`Data/XML/item_defs/vehicles`)
+    .then((files) => files.filter((nation) => nation !== "common"));
 
   for (const nation of nations) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
 
     for (const tankKey in tankList.root) {

@@ -18,26 +18,20 @@ export async function consumableProvisionIcons() {
 
   using uploader = new AssetUploader("consumable and provision icons");
   const styles = [
+    "UI/Styles/Lobby/Inventory/InventoryNormalStyles.yaml",
     "UI/Styles/Lobby/Inventory/Event/InventoryBigStyles.yaml",
     "UI/Styles/Lobby/Inventory/Event/InventoryNormalStyles.yaml",
-    "UI/Styles/Lobby/Inventory/InventoryNormalStyles.yaml",
     "UI/Screens3/Lobby/Inventory/Equipment/EquipmentItemImage.style.yaml",
     "UI/Screens/Battle/Styles/BattleEquipmentStyles.yaml",
   ];
   const styleSheets = await Promise.all(
     styles.map(async (path) =>
-      Object.values(
-        (
-          await vfs.yaml<Mappings>(`Data/${path}`)
-        ).StyleSheets
-      )
-    )
+      Object.values((await vfs.yaml<Mappings>(`Data/${path}`)).StyleSheets),
+    ),
   ).then((array) => array.flat());
 
   for (const match of (
-    await vfs.text(
-      `Data/XML/item_defs/vehicles/common/consumables/list.xml`
-    )
+    await vfs.text(`Data/XML/item_defs/vehicles/common/consumables/list.xml`)
   ).matchAll(listItemsPattern)) {
     const consumablesCommon = await vfs.xml<{
       root: ConsumablesCommon;
@@ -46,13 +40,13 @@ export async function consumableProvisionIcons() {
     for (const consumable of Object.values(consumablesCommon.root)) {
       const styleSheet = styleSheets.find((styleSheet) =>
         styleSheet.selectors.some((selector) =>
-          selector.includes(`${consumable.icon} `)
-        )
+          selector.includes(`${consumable.icon} `),
+        ),
       );
 
       if (!styleSheet) {
         console.warn(
-          `No style sheet found for consumable ${consumable.icon}; skipping...`
+          `No style sheet found for consumable ${consumable.icon}; skipping...`,
         );
         continue;
       }
@@ -62,10 +56,8 @@ export async function consumableProvisionIcons() {
         .replace(".psd", "")
         .replace(".txt", "");
 
-      if (vfs.resolve(`Data/${configPath}.packed.webp`)) {
-        const image = sharp(
-          await vfs.file(`Data/${configPath}.packed.webp`)
-        );
+      if (await vfs.resolve(`Data/${configPath}.packed.webp`)) {
+        const image = sharp(await vfs.file(`Data/${configPath}.packed.webp`));
         const content = await image.trim({ threshold: 100 }).toBuffer();
 
         await uploader.add({
@@ -78,8 +70,8 @@ export async function consumableProvisionIcons() {
             `${`Data/${configPath}`
               .split("/")
               .slice(0, -1)
-              .join("/")}/texture0.packed.webp`
-          )
+              .join("/")}/texture0.packed.webp`,
+          ),
         );
         const sizes = (await vfs.text(`Data/${configPath}.txt`))
           .split("\n")[4]
@@ -104,9 +96,7 @@ export async function consumableProvisionIcons() {
   }
 
   for (const match of (
-    await vfs.text(
-      `Data/XML/item_defs/vehicles/common/provisions/list.xml`
-    )
+    await vfs.text(`Data/XML/item_defs/vehicles/common/provisions/list.xml`)
   ).matchAll(listItemsPattern)) {
     const provisionsCommon = await vfs.xml<{
       root: ProvisionsCommon;
@@ -115,13 +105,13 @@ export async function consumableProvisionIcons() {
     for (const provision of Object.values(provisionsCommon.root)) {
       const styleSheet = styleSheets.find((styleSheet) =>
         styleSheet.selectors.some((selector) =>
-          selector.includes(`${provision.icon} `)
-        )
+          selector.includes(`${provision.icon} `),
+        ),
       );
 
       if (!styleSheet) {
         console.warn(
-          `No style sheet found for provision ${provision.icon}; skipping...`
+          `No style sheet found for provision ${provision.icon}; skipping...`,
         );
         continue;
       }
@@ -131,10 +121,8 @@ export async function consumableProvisionIcons() {
         .replace(".psd", "")
         .replace(".txt", "");
 
-      if (vfs.resolve(`Data/${configPath}.packed.webp`)) {
-        const image = sharp(
-          await vfs.file(`Data/${configPath}.packed.webp`)
-        );
+      if (await vfs.resolve(`Data/${configPath}.packed.webp`)) {
+        const image = sharp(await vfs.file(`Data/${configPath}.packed.webp`));
         const content = await image.trim({ threshold: 100 }).toBuffer();
 
         await uploader.add({
@@ -147,8 +135,8 @@ export async function consumableProvisionIcons() {
             `${`Data/${configPath}`
               .split("/")
               .slice(0, -1)
-              .join("/")}/texture0.packed.webp`
-          )
+              .join("/")}/texture0.packed.webp`,
+          ),
         );
         const sizes = (await vfs.text(`Data/${configPath}.txt`))
           .split("\n")[4]

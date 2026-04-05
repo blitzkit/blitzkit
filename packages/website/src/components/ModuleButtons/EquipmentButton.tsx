@@ -1,8 +1,8 @@
-import { asset } from '@blitzkit/core';
-import { awaitableEquipmentDefinitions } from '../../core/awaitables/equipmentDefinitions';
-import { useLocale } from '../../hooks/useLocale';
-import { GenericTankComponentButton } from './GenericTankComponentButton';
-import type { TankComponentButtonProps } from './TankComponentButton';
+import { asset } from "@blitzkit/core";
+import { awaitableEquipmentDefinitions } from "../../core/awaitables/equipmentDefinitions";
+import { useLocale } from "../../hooks/useLocale";
+import { GenericTankComponentButton } from "./GenericTankComponentButton";
+import type { TankComponentButtonProps } from "./TankComponentButton";
 
 interface EquipmentButtonProps extends TankComponentButtonProps {
   equipment: number;
@@ -15,7 +15,7 @@ export function EquipmentButton({ equipment, ...props }: EquipmentButtonProps) {
 
   return (
     <GenericTankComponentButton
-      tooltip={unwrap(equipmentDefinitions.equipments[equipment].name)}
+      tooltip={unwrap(equipmentDefinitions.equipments[equipment].name!)}
       icon={asset(`icons/equipment/${equipment}.webp`)}
       {...props}
     />

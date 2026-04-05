@@ -6,21 +6,21 @@ import { translator } from "../localization/translator";
 
 export async function filtersToDescription(
   { nation, tier, type, class: tankClass, tank }: StatFilters,
-  locale: Locale
+  locale: Locale,
 ) {
   const { strings, bkLocale } = translator(locale);
   const awaitedTankDefinitions = await fetchTankDefinitions();
   const info: string[] = [];
 
   // TODO: somehow localize tank names?
-  if (tank) return awaitedTankDefinitions.tanks[tank].name.locales[bkLocale];
+  if (tank) return awaitedTankDefinitions.tanks[tank].name!.locales[bkLocale];
   if (nation)
     info.push((strings.common.nations as Record<string, string>)[nation]);
   if (tier) {
     info.push(
       literals(strings.bot.common.filters.tier, {
         tier: TIER_ROMAN_NUMERALS[tier],
-      })
+      }),
     );
   }
   if (tankClass) info.push(strings.common.tank_class_short[tankClass]);

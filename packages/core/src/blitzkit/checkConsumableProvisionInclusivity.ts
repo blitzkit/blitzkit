@@ -9,7 +9,7 @@ import {
 export function checkConsumableProvisionInclusivity(
   consumableProvision: Consumable | Provision,
   tank: TankDefinition,
-  gun: GunDefinition
+  gun: GunDefinition,
 ) {
   const included = consumableProvision.include?.every((rule) => {
     switch (rule.filter_type!.$case) {
@@ -46,7 +46,7 @@ export function checkConsumableProvisionInclusivity(
       case "categories":
         return rule.filter_type!.value.categories.some((category) => {
           switch (category) {
-            case ConsumableTankCategoryFilterCategory.CLIP:
+            case ConsumableTankCategoryFilterCategory.CONSUMABLE_TANK_CATEGORY_FILTER_CATEGORY_CLIP:
               return gun.gun_type!.$case !== "regular";
           }
         });

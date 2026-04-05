@@ -15,7 +15,7 @@ export async function fetchTankNames() {
     tankDefinitionsArray.map(async (tank) => {
       const searchableNameDeburr: I18nString = { locales: {} };
 
-      Object.entries(tank.name).forEach(([key, value]) => {
+      Object.entries(tank.name!).forEach(([key, value]) => {
         searchableNameDeburr.locales[key] = deburr(value);
       });
 
@@ -28,8 +28,8 @@ export async function fetchTankNames() {
           ?.map((id) =>
             locales.supported.map(
               ({ locale }) =>
-                camouflageDefinitions.camouflages[id]?.name.locales[locale]
-            )
+                camouflageDefinitions.camouflages[id]?.name!.locales[locale],
+            ),
           )
           .flat()
           .filter(Boolean)
@@ -37,7 +37,7 @@ export async function fetchTankNames() {
           .join(" "),
         treeType: tank.type,
       };
-    })
+    }),
   );
 }
 

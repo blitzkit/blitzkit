@@ -26,14 +26,18 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
     function extend(line: Line): Line[] {
       const root = tankDefinitions.tanks[line.at(-1)!];
 
-      if (root.ancestors === undefined || root.tier === 1) {
+      if (
+        root.ancestors === undefined ||
+        root.ancestors.length === 0 ||
+        root.tier === 1
+      ) {
         return [line];
       } else {
         if (root.ancestors.length === 1 || root.tier === 2) {
           line.push(
             root.ancestors.find(
-              (ancestor) => !tankDefinitions.tanks[ancestor].deprecated
-            ) ?? root.ancestors[0]
+              (ancestor) => !tankDefinitions.tanks[ancestor].deprecated,
+            ) ?? root.ancestors[0],
           );
           return extend(line);
         } else {
@@ -52,7 +56,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
   const [lineIndex, setLineIndex] = useState(0);
   const line = useMemo(
     () => (lines.length === 0 ? [master.id] : [...lines[lineIndex]].reverse()),
-    [master, lineIndex]
+    [master, lineIndex],
   );
   const totalXp = line.reduce(
     (xp, id) =>
@@ -62,11 +66,11 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
         ? 0
         : (tankDefinitions.tanks[id].research_cost.research_cost_type!
             .value as number)),
-    0
+    0,
   );
   const totalCredits = line.reduce(
-    (credits, id) => credits + tankDefinitions.tanks[id].price.value,
-    0
+    (credits, id) => credits + tankDefinitions.tanks[id].price!.value,
+    0,
   );
 
   useEffect(() => {
@@ -75,7 +79,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
   });
 
   if (
-    master.type !== TankType.RESEARCHABLE ||
+    master.type !== TankType.TANK_TYPE_RESEARCHABLE ||
     master.ancestors === undefined ||
     master.ancestors.length === 0
   ) {

@@ -2,15 +2,15 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message CamouflageDefinitions {
   map<uint32, Camouflage> camouflages = 1;
 }
 
 message Camouflage {
-  required uint32 id = 1;
-  required I18nString name = 2;
-  optional I18nString tank_name = 3;
+  required uint32     id             = 1;
+  required I18nString name           = 2;
+  optional I18nString tank_name      = 3;
   optional I18nString tank_name_full = 4;
 }

@@ -22,7 +22,10 @@ import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../../../core/blitzkit/modelTransform";
+import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
+import { useEquipment } from "../../../hooks/useEquipment";
+import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import { transitionEvent } from "../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
 import { ArmorType } from "./SpacedArmorScene";
@@ -64,46 +67,68 @@ const externalModuleColor = new Color(192 / 255, 192 / 255, 192 / 255);
 
 export function StaticArmorSceneComponent({
   name,
-  thickness,
+  thickness: thicknessRaw,
   thicknessRange,
   node,
   onPointerDown,
   ...props
 }: StaticArmorSceneComponentProps) {
   const camera = useThree((state) => state.camera);
+  const hasEnhancedArmor = useEquipment(110);
+  const tank = Duel.use((state) => state.protagonist.tank);
+  const equalize = Duel.use((state) => state.equalize);
+  const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
+  const thicknessCoefficient = (hasEnhancedArmor ? 1.03 : 1) * equalizer.armor;
+  const thickness = thicknessRaw * thicknessCoefficient;
   const x = thickness / thicknessRange.value;
   const xClamped = clamp(x, 0, 1);
-  let color: Color;
-  let opacity: number;
-  let depthWrite = true;
-
-  switch (props.type) {
-    case ArmorType.Primary:
-      if (x > 1) {
-        color = new Color(clamp(2 - x, 0.5, 1), 0, 0);
-      } else {
-        color = new Color(-((1 - x) ** 2) + 1, -(x ** 2) + 1, 0);
+  const color = useMemo(() => {
+    switch (props.type) {
+      case ArmorType.Primary: {
+        if (x > 1) {
+          return new Color(clamp(2 - x, 0.5, 1), 0, 0);
+        } else {
+          return new Color(-((1 - x) ** 2) + 1, -(x ** 2) + 1, 0);
+        }
       }
-      opacity = 1;
-      break;
 
-    case ArmorType.Spaced:
-      color = new Color(
-        clamp(1 - (7 / 8) * xClamped, 0, 1),
-        0,
-        clamp(1 - (1 / 8) * xClamped, 0, 1),
-      );
-      opacity = clamp(x + 1 / 2, 0, 1);
-      break;
+      case ArmorType.Spaced: {
+        return new Color(
+          clamp(1 - (7 / 8) * xClamped, 0, 1),
+          0,
+          clamp(1 - (1 / 8) * xClamped, 0, 1),
+        );
+      }
 
-    case ArmorType.External:
-      color = externalModuleColor;
-      opacity = 1 / 8;
-      depthWrite = false;
-      break;
-  }
+      case ArmorType.External: {
+        return externalModuleColor;
+      }
+    }
+  }, [props.type, xClamped]);
+  const opacity = useMemo(() => {
+    switch (props.type) {
+      case ArmorType.Primary:
+        return 1;
 
-  opacity = clamp(opacity, 0, 1);
+      case ArmorType.Spaced:
+        return clamp(x + 1 / 2, 0, 1);
+
+      case ArmorType.External:
+        return 1 / 8;
+    }
+  }, [props.type, x]);
+  const depthWrite = useMemo(() => {
+    switch (props.type) {
+      case ArmorType.Primary:
+        return true;
+
+      case ArmorType.Spaced:
+        return true;
+
+      case ArmorType.External:
+        return false;
+    }
+  }, [props.type]);
 
   const surfaceMaterial = useMemo(
     () =>
@@ -115,7 +140,7 @@ export function StaticArmorSceneComponent({
         opacity: 0,
         userData: { opacity0: opacity },
       }),
-    [thickness],
+    [hasEnhancedArmor, equalize],
   );
   const outlineMaterial = useMemo(
     () =>
@@ -126,7 +151,7 @@ export function StaticArmorSceneComponent({
         opacity: 0,
         transparent: true,
       }),
-    [thickness],
+    [hasEnhancedArmor, equalize],
   );
 
   useEffect(() => {
@@ -229,7 +254,7 @@ export function StaticArmorSceneComponent({
     return () => {
       unsubscribes.forEach((unsubscribe) => unsubscribe());
     };
-  }, [thickness]);
+  }, [hasEnhancedArmor, equalize]);
 
   return (
     <>

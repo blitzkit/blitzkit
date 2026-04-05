@@ -7,6 +7,6 @@ message PopularTanks {
 }
 
 message PopularTank {
-  required uint32 id = 1;
+  required uint32 id    = 1;
   required uint32 views = 2; // views in the last 7 days
 }

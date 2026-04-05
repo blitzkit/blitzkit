@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { degToRad } from 'three/src/math/MathUtils.js';
-import { awaitableModelDefinitions } from '../../../../../../core/awaitables/modelDefinitions';
-import { applyPitchYawLimits } from '../../../../../../core/blitz/applyPitchYawLimits';
-import { modelTransformEvent } from '../../../../../../core/blitzkit/modelTransform';
-import { Duel } from '../../../../../../stores/duel';
+import { useEffect } from "react";
+import { degToRad } from "three/src/math/MathUtils.js";
+import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
+import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
+import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
+import { Duel } from "../../../../../../stores/duel";
 
 const modelDefinitions = await awaitableModelDefinitions;
 
@@ -20,7 +20,7 @@ export function InitialAligner() {
     const [pitch, yaw] = applyPitchYawLimits(
       degToRad(8),
       degToRad(25),
-      gunModel.pitch,
+      gunModel.pitch!,
       turretModel.yaw,
     );
 

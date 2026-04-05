@@ -4,44 +4,44 @@ package blitzkit;
 
 message AverageDefinitions {
   map<uint32, AverageDefinitionsEntry> averages = 1;
-  required Samples samples = 2;
-  required uint64 time = 3;
+  required Samples                     samples  = 2;
+  required uint64                      time     = 3;
 }
 
 message AverageDefinitionsEntry {
-  required AverageDefinitionsAllStats mu = 1;
-  required AverageDefinitionsAllStats sigma = 2;
-  required AverageDefinitionsAllStats r = 3;
-  required Samples samples = 4;
+  required AverageDefinitionsAllStats mu      = 1;
+  required AverageDefinitionsAllStats sigma   = 2;
+  required AverageDefinitionsAllStats r       = 3;
+  required Samples                    samples = 4;
 }
 
 message AverageDefinitionsAllStats {
-  required float battles = 1;
-  required float capture_points = 2;
-  required float damage_dealt = 3;
-  required float damage_received = 4;
+  required float battles                = 1;
+  required float capture_points         = 2;
+  required float damage_dealt           = 3;
+  required float damage_received        = 4;
   required float dropped_capture_points = 5;
-  required float frags = 6;
-  required float frags8p = 7;
-  required float hits = 8;
-  required float losses = 9;
-  required float max_frags = 10;
-  required float max_xp = 11;
-  required float shots = 12;
-  required float spotted = 13;
-  required float survived_battles = 14;
-  required float win_and_survived = 15;
-  required float wins = 16;
-  required float xp = 17;
-  required float battle_life_time = 18;
+  required float frags                  = 6;
+  required float frags8p                = 7;
+  required float hits                   = 8;
+  required float losses                 = 9;
+  required float max_frags              = 10;
+  required float max_xp                 = 11;
+  required float shots                  = 12;
+  required float spotted                = 13;
+  required float survived_battles       = 14;
+  required float win_and_survived       = 15;
+  required float wins                   = 16;
+  required float xp                     = 17;
+  required float battle_life_time       = 18;
 }
 
 message Samples {
-  required uint32 d_1 = 1;
-  required uint32 d_7 = 2;
-  required uint32 d_30 = 3;
-  required uint32 d_60 = 4;
-  required uint32 d_90 = 5;
+  required uint32 d_1   = 1;
+  required uint32 d_7   = 2;
+  required uint32 d_30  = 3;
+  required uint32 d_60  = 4;
+  required uint32 d_90  = 5;
   required uint32 d_120 = 6;
   required uint32 total = 7;
 }

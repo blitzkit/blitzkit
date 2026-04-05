@@ -5,7 +5,10 @@ import { AbstractVFS } from "./abstract";
 export class ZipVFS extends AbstractVFS {
   entries = new Map<string, ZipEntry>();
 
-  constructor(private url: string, private root = "app/") {
+  constructor(
+    private url: string,
+    private root = "app/",
+  ) {
     super();
   }
 
@@ -21,7 +24,7 @@ export class ZipVFS extends AbstractVFS {
     return this;
   }
 
-  has(path: string) {
+  async has(path: string) {
     return this.entries.has(path);
   }
 
@@ -30,8 +33,20 @@ export class ZipVFS extends AbstractVFS {
     return new Uint8Array(arrayBuffer);
   }
 
-  paths() {
-    return Array.from(this.entries.keys());
+  async dir(path: string) {
+    const parentSegments = path.split("/").length;
+    const children = new Set<string>();
+
+    for (const child of this.entries.keys()) {
+      if (!child.startsWith(path) || child === path) continue;
+
+      const childSegments = child.split("/");
+      const nextSegment = childSegments[parentSegments];
+
+      children.add(nextSegment);
+    }
+
+    return Array.from(children);
   }
 
   dispose() {}

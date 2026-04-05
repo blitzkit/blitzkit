@@ -53,11 +53,11 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "fire.reload":
         return resolveReload(gun).toFixed(2);
       case "fire.standardPenetration":
-        return shell0?.penetration.near.toFixed(0);
+        return shell0?.penetration!.near.toFixed(0);
       case "fire.premiumPenetration":
-        return shell1 ? shell1?.penetration.near.toFixed(0) : "--";
+        return shell1 ? shell1?.penetration!.near.toFixed(0) : "--";
       case "fire.tertiaryPenetration":
-        return shell1 ? shell2?.penetration.near.toFixed(0) : "--";
+        return shell1 ? shell2?.penetration!.near.toFixed(0) : "--";
       case "fire.shellVelocity":
         return shell0.velocity.toFixed(0);
       case "fire.shellCapacity":
@@ -66,12 +66,12 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return shell0.range.toFixed(0);
       case "fire.gunDepression":
         return (
-          gunModelDefinition.pitch.max +
+          gunModelDefinition.pitch!.max +
           (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
         ).toFixed(1);
       case "fire.gunElevation":
         return (
-          -gunModelDefinition.pitch.min -
+          -gunModelDefinition.pitch!.min -
           (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
         ).toFixed(1);
       case "maneuverability.forwardsSpeed":
@@ -113,8 +113,8 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "survivability.volume": {
         const dimensions = normalizeBoundingBox(
           unionBoundingBox(
-            tankModelDefinition.bounding_box,
-            turretModelDefinition.bounding_box,
+            tankModelDefinition.bounding_box!,
+            turretModelDefinition.bounding_box!,
           ),
         );
 
@@ -124,8 +124,8 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "survivability.length": {
         const bounds = normalizeBoundingBox(
           unionBoundingBox(
-            tankModelDefinition.bounding_box,
-            turretModelDefinition.bounding_box,
+            tankModelDefinition.bounding_box!,
+            turretModelDefinition.bounding_box!,
           ),
         );
 

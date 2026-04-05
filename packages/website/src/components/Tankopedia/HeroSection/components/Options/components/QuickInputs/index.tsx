@@ -27,27 +27,29 @@ export function QuickInputs() {
   const hasDownImprovedVerticalStabilizer = useEquipment(124);
 
   useEffect(() => {
-    function handleTransformEvent(
-      event: QuicklimeEvent<ModelTransformEventData>
-    ) {
+    function syncInputValues(data: ModelTransformEventData) {
       if (!pitchInput.current || !yawInput.current) return;
 
       pitchInput.current.value = (
-        radToDeg(event.data.pitch) +
+        radToDeg(data.pitch) +
         (tankModelDefinition.initial_turret_rotation?.pitch ?? 0)
       ).toFixed(1);
+      yawInput.current.value = radToDeg(data.yaw).toFixed(1);
+    }
 
-      if (event.data.yaw === undefined) return;
-
-      yawInput.current.value = radToDeg(event.data.yaw).toFixed(1);
+    function handleTransformEvent(
+      event: QuicklimeEvent<ModelTransformEventData>,
+    ) {
+      syncInputValues(event.data);
     }
 
     modelTransformEvent.on(handleTransformEvent);
+    syncInputValues(modelTransformEvent.last!);
 
     return () => {
       modelTransformEvent.off(handleTransformEvent);
     };
-  }, []);
+  }, [initialGunPitch]);
 
   return (
     <Flex
@@ -69,13 +71,13 @@ export function QuickInputs() {
         size="1"
         radius="full"
         style={{ flex: 1, textAlign: "right" }}
-        defaultValue="0.0"
+        defaultValue={radToDeg(modelTransformEvent.last!.yaw).toFixed(1)}
         onBlur={() => {
           const value = Number(yawInput.current!.value);
 
           if (isNaN(value)) {
             yawInput.current!.value = radToDeg(
-              modelTransformEvent.last!.yaw
+              modelTransformEvent.last!.yaw,
             ).toFixed(1);
             return;
           }
@@ -83,15 +85,15 @@ export function QuickInputs() {
           const [pitch, yaw] = applyPitchYawLimits(
             modelTransformEvent.last!.pitch,
             degToRad(value),
-            gunModelDefinition.pitch,
+            gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
           yawInput.current!.value = radToDeg(
-            modelTransformEvent.last!.yaw
+            modelTransformEvent.last!.yaw,
           ).toFixed(1);
         }}
         onKeyDown={(event) => {
@@ -113,7 +115,9 @@ export function QuickInputs() {
         size="1"
         radius="full"
         style={{ flex: 1, textAlign: "right" }}
-        defaultValue="0.0"
+        defaultValue={(
+          radToDeg(modelTransformEvent.last!.pitch) + initialGunPitch
+        ).toFixed(1)}
         onBlur={() => {
           const value = Number(pitchInput.current!.value);
           if (isNaN(value)) {
@@ -125,10 +129,10 @@ export function QuickInputs() {
           const [pitch, yaw] = applyPitchYawLimits(
             degToRad(value + initialGunPitch),
             modelTransformEvent.last!.yaw,
-            gunModelDefinition.pitch,
+            gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
           modelTransformEvent.dispatch({ pitch, yaw });
           pitchInput.current!.value = (

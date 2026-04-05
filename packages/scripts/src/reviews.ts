@@ -5,6 +5,7 @@ import {
   Video,
   youtubers,
 } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
 import { google } from "googleapis";
 import { cloneDeep, uniqBy } from "lodash-es";
 import { AssetUploader } from "./core/github/assetUploader";
@@ -42,9 +43,11 @@ for (const tank of tanksSanitized) {
   }
 
   try {
+    const q = `World of Tanks Blitz ${tank.name!.locales[locales.default]}`;
+
     const results = await youtube.search.list({
       part: ["snippet"],
-      q: `World of Tanks Blitz ${tank.name}`,
+      q,
     });
 
     if (!results.data.items || results.data.items.length === 0) continue;
@@ -54,9 +57,9 @@ for (const tank of tanksSanitized) {
         (item) =>
           item.snippet?.channelId &&
           item.id?.videoId &&
-          youtubers.some(({ id }) => id === item.snippet?.channelId)
+          youtubers.some(({ id }) => id === item.snippet?.channelId),
       ),
-      (item) => item.snippet!.channelId
+      (item) => item.snippet!.channelId,
     );
 
     reviews.reviews[tank.id] = {
@@ -66,11 +69,13 @@ for (const tank of tanksSanitized) {
           ({
             id: item.id!.videoId!,
             author: item.snippet!.channelId!,
-          } satisfies Video)
+          }) satisfies Video,
       ),
     };
 
-    console.log(`${++done} done; found ${items.length} for ${tank.name.locales.en}`);
+    console.log(
+      `${++done} done; found ${items.length} for ${tank.name!.locales.en}`,
+    );
 
     await new Promise((resolve) => setTimeout(resolve, 1000 / 5));
   } catch (error) {

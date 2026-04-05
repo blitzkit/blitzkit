@@ -19,7 +19,7 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
-import { Duel, type EquipmentMatrix } from "../../../../stores/duel";
+import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
 import { transitionEvent } from "../../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
@@ -88,24 +88,18 @@ export function PrimaryArmorSceneComponent({
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!
+        isExplosive(shell.type) ? 90 : shell.ricochet!,
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0
+        shell.normalization ?? 0,
       );
       material.uniforms.isExplosive.value = isExplosive(shell.type);
       material.uniforms.canSplash.value = canSplash(shell.type);
       material.uniforms.damage.value = shell.armor_damage;
       material.uniforms.explosionRadius.value = shell.explosion_radius;
 
-      handleProtagonistEquipmentChange(
-        Duel.state.protagonist.equipmentMatrix,
-        true
-      );
-      handleAntagonistEquipmentChange(
-        Duel.state.antagonist.equipmentMatrix,
-        true
-      );
+      handleProtagonistEquipmentChange(true);
+      handleAntagonistEquipmentChange(true);
 
       invalidate();
     }
@@ -122,38 +116,43 @@ export function PrimaryArmorSceneComponent({
     function handleWireframeChange(wireframe: boolean) {
       material.wireframe = wireframe;
     }
-    function handleProtagonistEquipmentChange(
-      equipment: EquipmentMatrix,
-      noInvalidate = false
-    ) {
+    function handleProtagonistEquipmentChange(noInvalidate = false) {
+      const equipment = Duel.state.protagonist.equipmentMatrix;
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+      const equalizer =
+        (Duel.state.equalize
+          ? Duel.state.protagonist.tank.equalizer?.armor
+          : undefined) ?? 1;
+
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
 
       if (!noInvalidate) invalidate();
     }
-    function handleAntagonistEquipmentChange(
-      equipment: EquipmentMatrix,
-      noInvalidate = false
-    ) {
+    function handleAntagonistEquipmentChange(noInvalidate = false) {
+      const equipment = Duel.state.antagonist.equipmentMatrix;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
-      const penetration = shell.penetration.near;
+      const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(
+          hasCalibratedShells,
+          Duel.state.equalize,
+          shell.type,
+          Duel.state.antagonist.tank.equalizer,
+        );
 
       if (!noInvalidate) invalidate();
     }
@@ -165,12 +164,12 @@ export function PrimaryArmorSceneComponent({
     handleShellChange();
     handleGreenPenetrationChange(TankopediaPersistent.state.greenPenetration);
     handleAdvancedHighlightingChange(
-      TankopediaPersistent.state.advancedHighlighting
+      TankopediaPersistent.state.advancedHighlighting,
     );
     handleOpaqueChange(TankopediaPersistent.state.opaque);
     handleWireframeChange(TankopediaPersistent.state.wireframe);
-    handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
-    handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
+    handleProtagonistEquipmentChange();
+    handleAntagonistEquipmentChange();
 
     transitionEvent.on(handleTransitionEvent);
 
@@ -179,20 +178,27 @@ export function PrimaryArmorSceneComponent({
       Tankopedia.on((state) => state.customShell, handleShellChange),
       TankopediaPersistent.on(
         (state) => state.greenPenetration,
-        handleGreenPenetrationChange
+        handleGreenPenetrationChange,
       ),
       TankopediaPersistent.on(
         (state) => state.advancedHighlighting,
-        handleAdvancedHighlightingChange
+        handleAdvancedHighlightingChange,
       ),
       TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        (equipment) => handleProtagonistEquipmentChange(equipment)
+        () => handleProtagonistEquipmentChange(),
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        (equipment) => handleAntagonistEquipmentChange(equipment)
+        () => handleAntagonistEquipmentChange(),
+      ),
+      Duel.on(
+        (state) => state.equalize,
+        () => {
+          handleProtagonistEquipmentChange();
+          handleAntagonistEquipmentChange();
+        },
       ),
       () => transitionEvent.off(handleTransitionEvent),
     ];
@@ -204,7 +210,7 @@ export function PrimaryArmorSceneComponent({
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(
-      gl.getPixelRatio()
+      gl.getPixelRatio(),
     );
     material.uniforms.spacedArmorBuffer.value = spacedArmorRenderTarget.texture;
     material.uniforms.spacedArmorDepth.value =

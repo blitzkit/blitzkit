@@ -1,5 +1,5 @@
-import { TankClass, TankType, TREE_TYPE_ICONS } from '@blitzkit/core';
-import { theme } from '../../../../stitches.config';
+import { TankClass, TankType, TREE_TYPE_ICONS } from "@blitzkit/core";
+import { theme } from "../../../../stitches.config";
 
 export interface ItemProps {
   tankClass?: TankClass;
@@ -8,9 +8,9 @@ export interface ItemProps {
 }
 
 const TREE_TYPE_COLOR = {
-  [TankType.RESEARCHABLE]: '',
-  [TankType.PREMIUM]: '_amber',
-  [TankType.COLLECTOR]: '_blue',
+  [TankType.TANK_TYPE_RESEARCHABLE]: "",
+  [TankType.TANK_TYPE_PREMIUM]: "_amber",
+  [TankType.TANK_TYPE_COLLECTOR]: "_blue",
 } as const;
 
 export function Item({
@@ -21,12 +21,12 @@ export function Item({
   return (
     <div
       style={{
-        display: 'flex',
+        display: "flex",
         height: 32,
         paddingLeft: 8,
         paddingRight: 8,
-        overflow: 'hidden',
-        alignItems: 'center',
+        overflow: "hidden",
+        alignItems: "center",
         borderRadius: 4,
         backgroundColor:
           theme.colors[`componentInteractive${TREE_TYPE_COLOR[treeType]}`],
@@ -34,12 +34,12 @@ export function Item({
     >
       <div
         style={{
-          display: 'flex',
+          display: "flex",
           gap: 4,
           flex: 1,
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          overflow: 'hidden',
+          alignItems: "center",
+          justifyContent: "flex-start",
+          overflow: "hidden",
         }}
       >
         {tankType && (
@@ -52,7 +52,7 @@ export function Item({
         <span
           style={{
             fontSize: 16,
-            whiteSpace: 'nowrap',
+            whiteSpace: "nowrap",
             color: theme.colors[`textLowContrast${TREE_TYPE_COLOR[treeType]}`],
           }}
         >

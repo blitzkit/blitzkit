@@ -38,6 +38,7 @@ import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent
 import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
+import { EqualIcon } from "../../../../EqualIcon";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";
 import { SmallTankIcon } from "../../../../SmallTankIcon";
@@ -54,12 +55,12 @@ type OptionsProps = MaybeSkeletonComponentProps & {
 
 export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const hasCustomShell = Tankopedia.use(
-    (state) => state.customShell !== undefined
+    (state) => state.customShell !== undefined,
   );
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const isFullScreen = useFullScreen();
   const advancedHighlighting = TankopediaPersistent.use(
-    (state) => state.advancedHighlighting
+    (state) => state.advancedHighlighting,
   );
   const fullScreenAvailable = useFullscreenAvailability(true);
   const protagonistTank = Duel.use((state) => state.protagonist.tank);
@@ -75,6 +76,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
+  const equalize = Duel.use((state) => state.equalize);
+  const equalizer = Duel.use((state) => state.antagonist.tank.equalizer);
 
   return (
     <>
@@ -102,8 +105,10 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
-                  antagonistShell.type
-                ) * antagonistShell.penetration.near
+                  equalize,
+                  antagonistShell.type,
+                  equalizer,
+                ) * antagonistShell.penetration!.near
               ).toFixed(0),
             })}
           </Text>
@@ -203,7 +208,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               }}
             >
               <img
-                alt={unwrap(thisShell.name)}
+                alt={unwrap(thisShell.name!)}
                 src={asset(`icons/shells/${thisShell.icon}.webp`)}
                 style={{
                   width: "50%",
@@ -212,7 +217,6 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               />
             </IconButton>
           ))}
-
           <CustomShellButton />
         </Flex>
 
@@ -281,6 +285,22 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             <DynamicArmorSwitcher />
           </Suspense>
         )}
+
+        <IconButton
+          variant="soft"
+          size={{ initial: "2", sm: "3" }}
+          color={equalize ? undefined : "gray"}
+          onClick={() => {
+            Duel.mutate((draft) => {
+              draft.equalize = !draft.equalize;
+            });
+            Tankopedia.mutate((draft) => {
+              draft.shot = undefined;
+            });
+          }}
+        >
+          <EqualIcon />
+        </IconButton>
       </Flex>
 
       <Flex
@@ -456,7 +476,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               <Dialog.Trigger>
                 <Button variant="solid" highContrast>
                   <Crosshair1Icon />
-                  {unwrap(antagonistTank.name)}
+                  {unwrap(antagonistTank.name!)}
                   <SmallTankIcon id={antagonistTank.id} size={16} />
                 </Button>
               </Dialog.Trigger>

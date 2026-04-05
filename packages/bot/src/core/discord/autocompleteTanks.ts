@@ -13,13 +13,13 @@ import {
 } from "./autocompleteClan/constants";
 
 export const tankNamesTechTreeOnly = fetchTankNames().then((names) =>
-  names.filter((tank) => tank.treeType === TankType.RESEARCHABLE)
+  names.filter((tank) => tank.treeType === TankType.TANK_TYPE_RESEARCHABLE),
 );
 
 export async function autocompleteTanks(
   interaction: AutocompleteInteraction<CacheType>,
   techTreeOnly = false,
-  fields = ["tank"]
+  fields = ["tank"],
 ) {
   const { unwrap } = translator(interaction.locale);
   const focusedOption = interaction.options.getFocused(true);
@@ -31,7 +31,7 @@ export async function autocompleteTanks(
           go(
             focusedOption.value,
             await (techTreeOnly ? tankNamesTechTreeOnly : tankNames),
-            { keys: SEARCH_KEYS, limit: 10 }
+            { keys: SEARCH_KEYS, limit: 10 },
           ).map(async (item) => {
             let name = unwrap(item.obj.searchableName);
 
@@ -42,7 +42,7 @@ export async function autocompleteTanks(
                 0,
                 unwrap(item.obj.searchableName).length -
                   overSize -
-                  OVERFLOW_SUFFIX.length
+                  OVERFLOW_SUFFIX.length,
               )}${OVERFLOW_SUFFIX}`;
             }
 
@@ -50,8 +50,8 @@ export async function autocompleteTanks(
               name,
               value: `${item.obj.id}`,
             } satisfies ApplicationCommandOptionChoiceData<string>;
-          })
+          }),
         )
-      : []
+      : [],
   );
 }

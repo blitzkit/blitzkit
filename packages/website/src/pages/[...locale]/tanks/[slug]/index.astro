@@ -33,7 +33,7 @@ export const getStaticPaths = (async () => {
       parentPaths.map((parent) => ({
         params: { ...parent.params, slug: tank.slug },
         props: { ...parent.props, id: tank.id },
-      }))
+      })),
     )
     .flat();
 }) satisfies GetStaticPaths;
@@ -50,7 +50,7 @@ const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
 const unwrap = unwrapper(locale);
 const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
-  name: unwrap(tank.name),
+  name: unwrap(tank.name!),
   tier: TIER_ROMAN_NUMERALS[tank.tier],
   nationality:
     strings.common.nations_adjectives[
@@ -86,19 +86,20 @@ const characteristics = tankCharacteristics(
     stockTrack: tank.tracks[0],
     track: tank.tracks.at(-1)!,
     assaultDistance: 0,
+    equalize: false,
   },
-  { equipmentDefinitions, provisionDefinitions, tankModelDefinition }
+  { equipmentDefinitions, provisionDefinitions, tankModelDefinition },
 );
 const description = literals(
   strings.website.tools.tankopedia.tank_seo_description,
   {
-    name: unwrap(tank.name),
+    name: unwrap(tank.name!),
     dpm: Math.round(characteristics.dpm).toLocaleString(locale),
     alpha: Math.round(characteristics.damage).toLocaleString(locale),
     penetration: Math.round(characteristics.penetration).toLocaleString(locale),
     speed: Math.round(characteristics.speedForwards).toLocaleString(locale),
     health: Math.round(characteristics.health).toLocaleString(locale),
-  }
+  },
 );
 
 const guideUrl = `${assertSecret(import.meta.env.PUBLIC_GUIDE_WEBSITE)}/${tank.slug}`;

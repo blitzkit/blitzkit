@@ -8,7 +8,7 @@ const tanks = Object.values(tankDefinitions.tanks).filter((tank) => {
   const turret = tank.turrets.at(-1)!;
   const turretModel = tankModel.turrets[turret.id];
 
-  return tank.tier >= 10 && !turretModel.yaw;
+  return !turretModel.yaw;
 });
 
 export function curateMixer() {

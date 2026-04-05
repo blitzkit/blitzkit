@@ -35,49 +35,49 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
     command: createLocalizedCommand("research")
       .addStringOption((option) =>
         option
-          .setName(strings.bot.commands.research.options.target_tank.name)
+          .setName(strings.bot.commands.research.options.target_tank.name!)
           .setNameLocalizations(
             localizationObject(
               (strings) =>
                 strings.bot.commands.research.options.target_tank.name,
               undefined,
-              true
-            )
+              true,
+            ),
           )
           .setDescription(
-            strings.bot.commands.research.options.target_tank.description
+            strings.bot.commands.research.options.target_tank.description,
           )
           .setDescriptionLocalizations(
             localizationObject(
               (strings) =>
-                strings.bot.commands.research.options.target_tank.description
-            )
+                strings.bot.commands.research.options.target_tank.description,
+            ),
           )
           .setAutocomplete(true)
-          .setRequired(true)
+          .setRequired(true),
       )
       .addStringOption((option) =>
         option
-          .setName(strings.bot.commands.research.options.starting_tank.name)
+          .setName(strings.bot.commands.research.options.starting_tank.name!)
           .setNameLocalizations(
             localizationObject(
               (strings) =>
                 strings.bot.commands.research.options.starting_tank.name,
               undefined,
-              true
-            )
+              true,
+            ),
           )
           .setDescription(
-            strings.bot.commands.research.options.starting_tank.description
+            strings.bot.commands.research.options.starting_tank.description,
           )
           .setDescriptionLocalizations(
             localizationObject(
               (strings) =>
-                strings.bot.commands.research.options.starting_tank.description
-            )
+                strings.bot.commands.research.options.starting_tank.description,
+            ),
           )
           .setAutocomplete(true)
-          .setRequired(false)
+          .setRequired(false),
       )
       .addStringOption(addUsernameChoices),
 
@@ -87,7 +87,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
       const targetTankId = await resolveTankId(
         interaction.options.getString("target-tank", true),
         interaction.locale,
-        true
+        true,
       );
       const startingTankRaw = interaction.options.getString("starting-tank");
       const targetTank = awaitedTankDefinitions.tanks[targetTankId];
@@ -99,13 +99,13 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
         startingTankId = await resolveTankId(
           startingTankRaw,
           interaction.locale,
-          true
+          true,
         );
 
         if (targetTankId === startingTankId) {
           return literals(
             strings.bot.commands.research.errors.start_end_equal,
-            { tank: escapeMarkdown(unwrap(targetTank.name)) }
+            { tank: escapeMarkdown(unwrap(targettank.name!)) },
           );
         }
 
@@ -113,8 +113,8 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
         if (startingTank.tier > targetTank.tier) {
           return literals(strings.bot.commands.research.errors.unordered, {
-            tank_1: escapeMarkdown(unwrap(startingTank.name)),
-            tank_2: escapeMarkdown(unwrap(targetTank.name)),
+            tank_1: escapeMarkdown(unwrap(startingtank.name!)),
+            tank_2: escapeMarkdown(unwrap(targettank.name!)),
           });
         }
 
@@ -122,21 +122,21 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
           return literals(
             strings.bot.commands.research.errors.tanks_not_on_line,
             {
-              tank_1: escapeMarkdown(unwrap(targetTank.name)),
-              tank_2: escapeMarkdown(unwrap(startingTank.name)),
-            }
+              tank_1: escapeMarkdown(unwrap(targettank.name!)),
+              tank_2: escapeMarkdown(unwrap(startingtank.name!)),
+            },
           );
         }
       } else {
-        if (targetTank.type !== TankType.RESEARCHABLE) {
+        if (targetTank.type !== TankType.TANK_TYPE_RESEARCHABLE) {
           return literals(strings.bot.commands.research.errors.non_tech_tree, {
-            tank: escapeMarkdown(unwrap(targetTank.name)),
+            tank: escapeMarkdown(unwrap(targettank.name!)),
           });
         }
 
         if (targetTank.tier === 1) {
           return literals(strings.bot.commands.research.errors.tier_1, {
-            tank: escapeMarkdown(unwrap(targetTank.name)),
+            tank: escapeMarkdown(unwrap(targettank.name!)),
           });
         }
 
@@ -149,14 +149,14 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
         if (tankStats.some(({ tank_id }) => tank_id === targetTankId)) {
           return literals(
             strings.bot.commands.research.errors.already_researched,
-            { tank: escapeMarkdown(unwrap(targetTank.name)) }
+            { tank: escapeMarkdown(unwrap(targettank.name!)) },
           );
         }
 
         const foundAncestor = targetTankAncestry.find(
           (id) =>
             awaitedTankDefinitions.tanks[id].tier === 1 ||
-            tankStats.some(({ tank_id }) => tank_id === id)
+            tankStats.some(({ tank_id }) => tank_id === id),
         );
 
         if (foundAncestor === undefined) {
@@ -168,7 +168,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
 
       const techTreeLine = await buildTechTreeLine(
         startingTankId,
-        targetTankId
+        targetTankId,
       );
 
       const line = [...techTreeLine, startingTankId].reverse();
@@ -190,7 +190,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
             ) {
               turretXps.set(
                 turret.id,
-                turret.research_cost.research_cost_type!.value
+                turret.research_cost.research_cost_type!.value,
               );
             }
 
@@ -211,7 +211,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
             ) {
               engineXps.set(
                 engine.id,
-                engine.research_cost.research_cost_type!.value
+                engine.research_cost.research_cost_type!.value,
               );
             }
           });
@@ -223,7 +223,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
             ) {
               trackXps.set(
                 track.id,
-                track.research_cost.research_cost_type!.value
+                track.research_cost.research_cost_type!.value,
               );
             }
           });
@@ -245,13 +245,13 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
           return {
             research: tank.research_cost!.research_cost_type!.value as number,
             upgrades: moduleXp,
-            purchase: tank.price.value,
+            purchase: tank.price!.value,
             equipment: equipmentPriceMatrix[tank.tier].reduce(
               (a, b) => a + 3 * b,
-              0
+              0,
             ),
           };
-        })
+        }),
       );
 
       const image = (
@@ -456,7 +456,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         }}
                       >
                         <img
-                          alt={unwrap(tank.name)}
+                          alt={unwrap(tank.name!)}
                           src={TANK_ICONS[tank.class]}
                           width={16}
                           height={16}
@@ -467,7 +467,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                             color: theme.colors.textHighContrast,
                           }}
                         >
-                          {unwrap(tank.name)}
+                          {unwrap(tank.name!)}
                         </span>
                       </div>
                     </div>
@@ -505,9 +505,9 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                             strings.bot.commands.research.body.research,
                             {
                               cost: costs[index].research?.toLocaleString(
-                                interaction.locale
+                                interaction.locale,
                               ),
-                            }
+                            },
                           )}
                         </span>
                       </div>
@@ -523,7 +523,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                           <img
                             alt="Free XP icon"
                             src={await iconPng(
-                              asset("icons/currencies/free-xp.webp")
+                              asset("icons/currencies/free-xp.webp"),
                             )}
                             width={16}
                             height={16}
@@ -536,7 +536,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                           >
                             {literals(
                               strings.bot.commands.research.body.upgrades,
-                              { cost: costs[index].upgrades.toLocaleString() }
+                              { cost: costs[index].upgrades.toLocaleString() },
                             )}
                           </span>
                         </div>
@@ -552,7 +552,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         <img
                           alt="Silver icon"
                           src={await iconPng(
-                            asset("icons/currencies/silver.webp")
+                            asset("icons/currencies/silver.webp"),
                           )}
                           width={16}
                           height={16}
@@ -567,9 +567,9 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                             strings.bot.commands.research.body.purchase,
                             {
                               cost: costs[index].purchase.toLocaleString(
-                                interaction.locale
+                                interaction.locale,
                               ),
-                            }
+                            },
                           )}
                         </span>
                       </div>
@@ -584,7 +584,7 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                         <img
                           alt="Silver icon"
                           src={await iconPng(
-                            asset("icons/currencies/silver.webp")
+                            asset("icons/currencies/silver.webp"),
                           )}
                           width={16}
                           height={16}
@@ -599,16 +599,16 @@ export const researchCommand = new Promise<CommandRegistry>((resolve) => {
                             strings.bot.commands.research.body.equipment,
                             {
                               cost: costs[index].equipment.toLocaleString(
-                                interaction.locale
+                                interaction.locale,
                               ),
-                            }
+                            },
                           )}
                         </span>
                       </div>
                     </div>
                   </div>
                 );
-              })
+              }),
             )}
           </div>
         </CommandWrapper>

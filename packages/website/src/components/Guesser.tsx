@@ -82,10 +82,10 @@ export function Guesser() {
       });
 
       setResults(
-        searchResults.map((result) => tankDefinitions.tanks[result.obj.id])
+        searchResults.map((result) => tankDefinitions.tanks[result.obj.id]),
       );
     }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -126,11 +126,11 @@ export function Guesser() {
                       onClick={() => {
                         if (!input.current) return;
 
-                        input.current.value = unwrap(result.name);
+                        input.current.value = unwrap(result.name!);
                         setSelected(result);
                         setResults(null);
                       }}
-                      text={unwrap(result.name)}
+                      text={unwrap(result.name!)}
                       prefix={
                         <img
                           style={{ width: "1em", height: "1em" }}
@@ -321,7 +321,7 @@ export function Guesser() {
                 return tiers.includes(tank.tier);
               });
               const id = Number(
-                filteredIds[Math.floor(Math.random() * filteredIds.length)]
+                filteredIds[Math.floor(Math.random() * filteredIds.length)],
               );
               const tank = tankDefinitions.tanks[id];
 

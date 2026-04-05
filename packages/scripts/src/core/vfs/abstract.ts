@@ -1,7 +1,8 @@
 import { readDVPL } from "@blitzkit/core";
+import { Options, parse as parseCSV } from "csv-parse/sync";
 import { XMLParser } from "fast-xml-parser";
 import { normalize } from "path/posix";
-import { parse } from "yaml";
+import { parse as parseYaml } from "yaml";
 
 export abstract class AbstractVFS {
   textDecoder = new TextDecoder();
@@ -11,24 +12,22 @@ export abstract class AbstractVFS {
 
   abstract dispose(): void;
 
-  abstract has(path: string): boolean;
+  abstract has(path: string): Promise<boolean>;
 
   abstract raw(path: string): Promise<Uint8Array>;
 
-  abstract paths(): string[];
-
-  resolve(path: string) {
+  async resolve(path: string) {
     const normalized = normalize(path);
-    if (this.has(normalized)) return normalized;
+    if (await this.has(normalized)) return normalized;
 
     const dvplPath = `${normalized}.dvpl`;
-    if (this.has(dvplPath)) return dvplPath;
+    if (await this.has(dvplPath)) return dvplPath;
 
     return null;
   }
 
-  assert(path: string) {
-    const resolved = this.resolve(path);
+  async assert(path: string) {
+    const resolved = await this.resolve(path);
 
     if (resolved === null) throw new Error(`File not found: ${path}`);
 
@@ -36,7 +35,7 @@ export abstract class AbstractVFS {
   }
 
   async file(file: string) {
-    const resolved = this.assert(file);
+    const resolved = await this.assert(file);
     const raw = await this.raw(resolved);
     let buffer = raw;
 
@@ -47,21 +46,7 @@ export abstract class AbstractVFS {
     return buffer;
   }
 
-  dir(path: string) {
-    const parentSegments = path.split("/").length;
-    const children = new Set<string>();
-
-    for (const child of this.paths()) {
-      if (!child.startsWith(path) || child === path) continue;
-
-      const childSegments = child.split("/");
-      const nextSegment = childSegments[parentSegments];
-
-      children.add(nextSegment);
-    }
-
-    return Array.from(children);
-  }
+  abstract dir(path: string): Promise<string[]>;
 
   async text(path: string) {
     const file = await this.file(path);
@@ -70,12 +55,22 @@ export abstract class AbstractVFS {
 
   async yaml<Type>(path: string) {
     const file = await this.text(path);
-    return parse(file) as Type;
+    return parseYaml(file) as Type;
   }
 
   async xml<Type>(path: string) {
     const file = await this.text(path);
     return this.xmlParser.parse(file) as Type;
+  }
+
+  async _csv(text: string, options: Options = {}) {
+    const parsed = parseCSV(text, options);
+    return parsed;
+  }
+
+  async csv(path: string, options: Options = {}) {
+    const text = await this.text(path);
+    return await this._csv(text, options);
   }
 
   [Symbol.dispose]() {

@@ -6,7 +6,7 @@ export async function camouflageIcons() {
 
   using uploader = new AssetUploader("camo icons");
   const content = await vfs.file(
-    `Data/Gfx/UI/Hangar/IconCamouflage.packed.webp`
+    `Data/Gfx/UI/Hangar/IconCamouflage.packed.webp`,
   );
 
   await uploader.add({ content, path: "icons/camo.webp" });

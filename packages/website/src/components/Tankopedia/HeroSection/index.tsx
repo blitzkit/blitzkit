@@ -2,6 +2,7 @@ import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { useEffect, useMemo, useRef } from "react";
 import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -14,7 +15,7 @@ import { Title } from "./components/TankSandbox/Title";
 const tankDefinitions = await awaitableTankDefinitions;
 
 export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
-  const revealed = Tankopedia.use((state) => state.revealed);
+  const equalize = Duel.use((state) => state.equalize);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const canvas = useRef<HTMLCanvasElement>(null!);
   const isFullScreen = useFullScreen();
@@ -22,20 +23,22 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const thicknessRange = useMemo(() => {
     const entries = Object.values(tankDefinitions.tanks);
     const filtered = entries.filter(
-      (thisTank) => thisTank.tier === protagonist.tier
+      (thisTank) => thisTank.tier === protagonist.tier,
     );
     const value =
       (filtered.reduce((accumulator, thisTank) => {
         return (
           accumulator +
-          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration.near
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+            ((equalize ? thisTank.equalizer : undefined) ?? defaultEqualizer)
+              .penetration
         );
       }, 0) /
         filtered.length) *
       (3 / 4);
 
     return { value } satisfies ThicknessRange;
-  }, [protagonist]);
+  }, [protagonist, equalize]);
 
   useEffect(() => {
     if (disturbed) {
@@ -99,11 +102,11 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
           isFullScreen
             ? "100vh"
             : disturbed
-            ? "calc(100svh - 8rem)"
-            : {
-                initial: "28rem",
-                md: "calc(100svh - 14rem)",
-              }
+              ? "calc(100svh - 8rem)"
+              : {
+                  initial: "28rem",
+                  md: "calc(100svh - 14rem)",
+                }
         }
         maxWidth={isFullScreen ? undefined : "120rem"}
         flexGrow="1"

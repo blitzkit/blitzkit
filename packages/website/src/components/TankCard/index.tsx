@@ -33,7 +33,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
       style,
       ...props
     }: TankCardProps,
-    ref
+    ref,
   ) => {
     const { unwrap, locale } = useLocale();
     const provideLink = !noLink && onSelect === undefined;
@@ -46,13 +46,13 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         tabIndex={onSelect ? 0 : undefined}
         size="2"
         color={
-          tank.type === TankType.COLLECTOR
+          tank.type === TankType.TANK_TYPE_COLLECTOR
             ? "blue"
-            : tank.type === TankType.PREMIUM
+            : tank.type === TankType.TANK_TYPE_PREMIUM
               ? "amber"
               : "gray"
         }
-        highContrast={tank.type === TankType.RESEARCHABLE}
+        highContrast={tank.type === TankType.TANK_TYPE_RESEARCHABLE}
         onClick={() => {
           onSelect?.(tank);
           TankopediaPersistent.mutate((draft) => {
@@ -79,7 +79,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
           }}
         >
           <img
-            alt={unwrap(tank.name)}
+            alt={unwrap(tank.name!)}
             src={asset(`icons/tanks/big/${tank.id}.webp`)}
             className="image"
             draggable={false}
@@ -95,7 +95,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
           >
             <Icon className="class-icon" />
             <Text align="center" className="name">
-              {unwrap(tank.name)}
+              {unwrap(tank.name!)}
             </Text>
           </Flex>
 
@@ -115,5 +115,5 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         </LinkI18n>
       </Text>
     );
-  }
+  },
 );

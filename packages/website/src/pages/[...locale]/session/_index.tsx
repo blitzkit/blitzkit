@@ -69,7 +69,7 @@ function Content() {
   const input = useRef<HTMLInputElement>(null);
   const session = Session.use();
   const [tankStatsB, setTankStatsB] = useState<IndividualTankStats[] | null>(
-    null
+    null,
   );
   const [accountInfo, setAccountInfo] = useState<
     IndividualAccountInfo | null | undefined
@@ -81,7 +81,7 @@ function Content() {
       if (!id) return setAccountInfo(null);
 
       setAccountInfo(
-        session.tracking ? await getAccountInfo(idToRegion(id), id) : null
+        session.tracking ? await getAccountInfo(idToRegion(id), id) : null,
       );
     })();
   }, [session.tracking && session.player.id]);
@@ -95,20 +95,20 @@ function Content() {
               const average = averageDefinitions.averages[tank.id];
               const composite = compositeStats(
                 { ...entry.all, battle_life_time: entry.battle_life_time },
-                average?.mu
+                average?.mu!,
               );
 
               return { tank, composite };
             })
         : undefined,
-    [session.tracking && session.player, tankStatsB]
+    [session.tracking && session.player, tankStatsB],
   );
   const total = useMemo(
     () =>
       delta
         ? sumCompositeStats(delta.map(({ composite }) => composite))
         : undefined,
-    [delta]
+    [delta],
   );
   const search = debounce(async () => {
     if (!input.current) return;
@@ -150,7 +150,7 @@ function Content() {
 
       const tankStats = await getTankStats(
         idToRegion(session.player.id),
-        session.player.id
+        session.player.id,
       );
       setTankStatsB(tankStats);
     }
@@ -294,7 +294,7 @@ function Content() {
               onClick={async () => {
                 const stats = await getTankStats(
                   session.player.region,
-                  session.player.id
+                  session.player.id,
                 );
 
                 if (stats === null) {
@@ -365,7 +365,7 @@ function Content() {
                                 onClick={() => {
                                   Session.mutate((draft) => {
                                     (draft as SessionTracking).columns.unshift(
-                                      key
+                                      key,
                                     );
                                   });
                                 }}
@@ -402,7 +402,8 @@ function Content() {
                         {compositeStatsKeys
                           .filter(
                             (item) =>
-                              !session.columns.includes(item) || item === column
+                              !session.columns.includes(item) ||
+                              item === column,
                           )
                           .map((key) => (
                             <Select.Item key={key} value={key}>
@@ -452,7 +453,7 @@ function Content() {
                         {formatCompositeStat(
                           composite[column],
                           column,
-                          composite
+                          composite,
                         )}
                       </Table.Cell>
                     ))}

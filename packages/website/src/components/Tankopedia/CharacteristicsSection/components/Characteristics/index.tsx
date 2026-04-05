@@ -26,13 +26,14 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const camouflage = Duel.use((state) => state.protagonist.camouflage);
   const assaultDistance = Duel.use(
-    (state) => state.protagonist.assaultDistance
+    (state) => state.protagonist.assaultDistance,
   );
   const equipmentMatrix = Duel.use(
-    (state) => state.protagonist.equipmentMatrix
+    (state) => state.protagonist.equipmentMatrix,
   );
+  const equalize = Duel.use((state) => state.equalize);
   const { tank, turret, gun, engine, track, shell } = Duel.use(
-    (state) => state.protagonist
+    (state) => state.protagonist,
   );
   const stockEngine = tank.engines[0];
   const stockTrack = tank.tracks[0];
@@ -62,12 +63,13 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
       applyDynamicArmor: false,
       applySpallLiner: false,
       assaultDistance,
+      equalize,
     },
     {
       tankModelDefinition,
       equipmentDefinitions: equipmentDefinitions,
       provisionDefinitions: provisionDefinitions,
-    }
+    },
   );
 
   const hasImprovedVerticalStabilizer = useEquipment(122);
@@ -77,10 +79,10 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
     const [pitch, yaw] = applyPitchYawLimits(
       modelTransformEvent.last!.pitch,
       modelTransformEvent.last!.yaw,
-      gunModelDefinition.pitch,
+      gunModelDefinition.pitch!,
       turretModelDefinition.yaw,
       hasImprovedVerticalStabilizer,
-      hasDownImprovedVerticalStabilizer
+      hasDownImprovedVerticalStabilizer,
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });

@@ -19,7 +19,7 @@ type GalleryCardProps = MaybeSkeletonComponentProps<{
 
 export function GalleryCard(props: GalleryCardProps) {
   const src = asset(
-    `gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`
+    `gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
   );
   const card = useRef<HTMLDivElement>(null!);
   const { unwrap } = useLocale();
@@ -54,11 +54,11 @@ export function GalleryCard(props: GalleryCardProps) {
               objectFit: "cover",
             }}
             src={src}
-            alt={unwrap(props.avatar.name)}
+            alt={unwrap(props.avatar.name!)}
           />
 
           <Text size="1" align="center" style={{ maxWidth: "100%" }}>
-            {unwrap(props.avatar.name)}
+            {unwrap(props.avatar.name!)}
           </Text>
         </>
       )}
@@ -90,12 +90,12 @@ export function GalleryCard(props: GalleryCardProps) {
         </Flex>
 
         <Flex px="4" justify="center" mt="3">
-          <img src={src} alt={unwrap(props.avatar.name)} />
+          <img src={src} alt={unwrap(props.avatar.name!)} />
         </Flex>
 
         <Flex justify="center" mt="4">
           <Dialog.Title align="center" style={{ maxWidth: "10rem" }}>
-            {unwrap(props.avatar.name)}
+            {unwrap(props.avatar.name!)}
           </Dialog.Title>
         </Flex>
       </Dialog.Content>

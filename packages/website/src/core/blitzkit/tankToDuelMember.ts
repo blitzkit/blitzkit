@@ -1,10 +1,11 @@
 import {
   createDefaultProvisions,
+  Equalizer,
   type ProvisionDefinitions,
   type TankDefinition,
-} from '@blitzkit/core';
-import type { DuelMember } from '../../stores/duel';
-import { genericDefaultEquipmentMatrix } from '../../stores/duel/constants';
+} from "@blitzkit/core";
+import type { DuelMember } from "../../stores/duel";
+import { genericDefaultEquipmentMatrix } from "../../stores/duel/constants";
 
 export function tankToDuelMember(
   tank: TankDefinition,
@@ -28,3 +29,11 @@ export function tankToDuelMember(
     assaultDistance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
   } satisfies DuelMember;
 }
+
+export const defaultEqualizer: Equalizer = {
+  armor: 1,
+  damage: 1,
+  health: 1,
+  module_health: 1,
+  penetration: 1,
+};

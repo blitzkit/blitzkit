@@ -84,7 +84,7 @@ export function Model() {
 
   useEffect(() => {
     function handleModelTransform(
-      event: QuicklimeEvent<ModelTransformEventData>
+      event: QuicklimeEvent<ModelTransformEventData>,
     ) {
       turretGroup.current.rotation.z = event.data.yaw;
       gunGroup.current.rotation.x = event.data.pitch;
@@ -118,16 +118,16 @@ export function Model() {
         ref={turretGroup}
         rotation={[0, 0, modelTransformEvent.last!.yaw]}
         position={[
-          tankModel.turret_origin.x + trackModel.origin.x,
-          tankModel.turret_origin.z + trackModel.origin.z,
-          tankModel.turret_origin.y + trackModel.origin.y,
+          tankModel.turret_origin!.x + trackModel.origin!.x,
+          tankModel.turret_origin!.z + trackModel.origin!.z,
+          tankModel.turret_origin!.y + trackModel.origin!.y,
         ]}
       >
         <group
           position={[
-            -turretTankModel.turret_origin.x - turretTrackModel.origin.x,
-            -turretTankModel.turret_origin.z - turretTrackModel.origin.z,
-            -turretTankModel.turret_origin.y - turretTrackModel.origin.y,
+            -turretTankModel.turret_origin!.x - turretTrackModel.origin!.x,
+            -turretTankModel.turret_origin!.z - turretTrackModel.origin!.z,
+            -turretTankModel.turret_origin!.y - turretTrackModel.origin!.y,
           ]}
         >
           {turretNodes.map((node) => {
@@ -160,38 +160,81 @@ export function Model() {
             ref={gunGroup}
             rotation={[modelTransformEvent.last!.pitch, 0, 0]}
             position={[
-              turretTankModel.turret_origin.x +
-                turretTrackModel.origin.x +
-                turretModel.gun_origin.x,
-              turretTankModel.turret_origin.z +
-                turretTrackModel.origin.z +
-                turretModel.gun_origin.z,
-              turretTankModel.turret_origin.y +
-                turretTrackModel.origin.y +
-                turretModel.gun_origin.y,
+              turretTankModel.turret_origin!.x +
+                turretTrackModel.origin!.x +
+                turretModel.gun_origin!.x,
+              turretTankModel.turret_origin!.z +
+                turretTrackModel.origin!.z +
+                turretModel.gun_origin!.z,
+              turretTankModel.turret_origin!.y +
+                turretTrackModel.origin!.y +
+                turretModel.gun_origin!.y,
             ]}
           >
             <group
               position={[
-                -gunTankModel.turret_origin.x -
-                  gunTrackModel.origin.x -
-                  gunTurretModel.gun_origin.x,
-                -gunTankModel.turret_origin.z -
-                  gunTrackModel.origin.z -
-                  gunTurretModel.gun_origin.z,
-                -gunTankModel.turret_origin.y -
-                  gunTrackModel.origin.y -
-                  gunTurretModel.gun_origin.y,
+                -turretTankModel.turret_origin!.x -
+                  turretTrackModel.origin!.x -
+                  turretModel.gun_origin!.x,
+                -turretTankModel.turret_origin!.z -
+                  turretTrackModel.origin!.z -
+                  turretModel.gun_origin!.z,
+                -turretTankModel.turret_origin!.y -
+                  turretTrackModel.origin!.y -
+                  turretModel.gun_origin!.y,
+              ]}
+            >
+              {turretNodes.map((node) => {
+                const isCurrentMantlet =
+                  node.name ===
+                  `gun_${turretModel.guns[turret.turret.guns.at(-1)!.id].model_id.toString().padStart(2, "0")}_mask`;
+                // const isCurrentGun =
+                //   node.name ===
+                //   `gun_${gunModel.model_id.toString().padStart(2, "0")}`;
+                const isVisible = isCurrentMantlet;
+
+                if (!isVisible) return null;
+
+                return jsxTree(node, {
+                  mesh(_, props, key) {
+                    return (
+                      <mesh
+                        {...props}
+                        key={key}
+                        castShadow
+                        receiveShadow
+                        onPointerDown={(event) => {
+                          enablePitchRotation.current = true;
+                          handlePointerDown(event);
+                        }}
+                      />
+                    );
+                  },
+                });
+              })}
+            </group>
+
+            <group
+              position={[
+                -gunTankModel.turret_origin!.x -
+                  gunTrackModel.origin!.x -
+                  gunTurretModel.gun_origin!.x,
+                -gunTankModel.turret_origin!.z -
+                  gunTrackModel.origin!.z -
+                  gunTurretModel.gun_origin!.z,
+                -gunTankModel.turret_origin!.y -
+                  gunTrackModel.origin!.y -
+                  gunTurretModel.gun_origin!.y,
               ]}
             >
               {gunNodes.map((node) => {
-                const isCurrentMantlet =
-                  node.name ===
-                  `gun_${gunModel.model_id.toString().padStart(2, "0")}_mask`;
+                // const isCurrentMantlet =
+                //   node.name ===
+                //   `gun_${gunModel.model_id.toString().padStart(2, "0")}_mask`;
                 const isCurrentGun =
                   node.name ===
                   `gun_${gunModel.model_id.toString().padStart(2, "0")}`;
-                const isVisible = isCurrentGun || isCurrentMantlet;
+                const isVisible = isCurrentGun;
 
                 if (!isVisible) return null;
 

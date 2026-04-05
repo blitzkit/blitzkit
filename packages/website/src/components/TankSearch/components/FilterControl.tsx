@@ -85,11 +85,11 @@ for (const gameModeIdString in gameModeRoleSets) {
 
     outerLoop: for (const id of role.consumables) {
       const name =
-        consumableDefinitions.consumables[id].name.locales[locales.default];
+        consumableDefinitions.consumables[id].name!.locales[locales.default];
 
       for (const otherConsumable of consumables.values()) {
         const otherName =
-          consumableDefinitions.consumables[otherConsumable].name.locales[
+          consumableDefinitions.consumables[otherConsumable].name!.locales[
             locales.default
           ];
 
@@ -102,11 +102,11 @@ for (const gameModeIdString in gameModeRoleSets) {
 
     outerLoop: for (const id of role.provisions) {
       const name =
-        provisionDefinitions.provisions[id].name.locales[locales.default];
+        provisionDefinitions.provisions[id].name!.locales[locales.default];
 
       for (const otherProvision of provisions.values()) {
         const otherName =
-          provisionDefinitions.provisions[otherProvision].name.locales[
+          provisionDefinitions.provisions[otherProvision].name!.locales[
             locales.default
           ];
 
@@ -129,7 +129,7 @@ const consumablesArray = Object.values(consumableDefinitions.consumables)
   .filter(
     (consumable) =>
       !consumable.game_mode_exclusive &&
-      consumable.name.locales[locales.default],
+      consumable.name!.locales[locales.default],
   )
   .map((consumable) => consumable.id);
 const provisionsArray = Array.from(
@@ -137,11 +137,11 @@ const provisionsArray = Array.from(
     .filter(
       (provision) =>
         !provision.game_mode_exclusive &&
-        provision.name.locales[locales.default],
+        provision.name!.locales[locales.default],
     )
     .reduce((uniqueMap, consumable) => {
-      if (!uniqueMap.has(consumable.name.locales[locales.default])) {
-        uniqueMap.set(consumable.name.locales[locales.default], consumable.id);
+      if (!uniqueMap.has(consumable.name!.locales[locales.default])) {
+        uniqueMap.set(consumable.name!.locales[locales.default], consumable.id);
       }
 
       return uniqueMap;
@@ -149,10 +149,10 @@ const provisionsArray = Array.from(
     .values(),
 );
 const shellTypeIcons: Record<ShellType, string> = {
-  [ShellType.AP]: "ap",
-  [ShellType.APCR]: "ap_cr",
-  [ShellType.HE]: "he",
-  [ShellType.HEAT]: "hc",
+  [ShellType.SHELL_TYPE_AP]: "ap",
+  [ShellType.SHELL_TYPE_APCR]: "ap_cr",
+  [ShellType.SHELL_TYPE_HE]: "he",
+  [ShellType.SHELL_TYPE_HEAT]: "hc",
 };
 
 const GUN_TYPE_ICONS: Record<
@@ -165,9 +165,9 @@ const GUN_TYPE_ICONS: Record<
 };
 
 const TANK_TYPE_COLORS: Record<TankType, string> = {
-  [TankType.RESEARCHABLE]: "gray",
-  [TankType.PREMIUM]: "amber",
-  [TankType.COLLECTOR]: "blue",
+  [TankType.TANK_TYPE_RESEARCHABLE]: "gray",
+  [TankType.TANK_TYPE_PREMIUM]: "amber",
+  [TankType.TANK_TYPE_COLLECTOR]: "blue",
 };
 
 const GUN_TYPES = Object.keys(
@@ -566,12 +566,12 @@ function TypeFilter() {
       <DropdownMenu.Trigger>
         <Button color="gray" variant="surface">
           <Flex gap="1">
-            {types.map((tankType, index) => {
+            {types.map((tankType) => {
               return (
                 <ResearchedIcon
                   style={{
                     color: `var(--${TANK_TYPE_COLORS[tankType]}-${
-                      tankType === TankType.RESEARCHABLE ? "12" : "11"
+                      tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
                     })`,
                     filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
                     opacity: 1,
@@ -609,7 +609,7 @@ function TypeFilter() {
               <ResearchedIcon
                 style={{
                   color: `var(--${TANK_TYPE_COLORS[tankType]}-${
-                    tankType === TankType.RESEARCHABLE ? "12" : "11"
+                    tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
                   })`,
                   opacity: 1,
                   width: "1.25em",
@@ -941,7 +941,7 @@ function ConsumablesFilter() {
                 src={asset(`icons/consumables/${consumable}.webp`)}
               />
 
-              {unwrap(consumableDefinition.name)}
+              {unwrap(consumableDefinition.name!)}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -1035,7 +1035,7 @@ function ProvisionsFilter() {
                 src={asset(`icons/provisions/${provision}.webp`)}
               />
 
-              {unwrap(provisionDefinition.name)}
+              {unwrap(provisionDefinition.name!)}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -1125,9 +1125,9 @@ function GameModeAbilitiesFilter() {
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.active, {
-                        name: unwrap(gameMode.name),
+                        name: unwrap(gameMode.name!),
                       })
-                    : unwrap(gameMode.name)}
+                    : unwrap(gameMode.name!)}
                 </DropdownMenu.Label>
               )}
 
@@ -1164,7 +1164,7 @@ function GameModeAbilitiesFilter() {
                         src={asset(`icons/consumables/${consumable}.webp`)}
                       />
 
-                      {unwrap(abilityDefinition.name)}
+                      {unwrap(abilityDefinition.name!)}
                     </DropdownMenu.CheckboxItem>
                   );
                 }
@@ -1174,9 +1174,9 @@ function GameModeAbilitiesFilter() {
                 <DropdownMenu.Label>
                   {hasBoth
                     ? literals(strings.website.common.tank_search.passive, {
-                        name: unwrap(gameMode.name),
+                        name: unwrap(gameMode.name!),
                       })
-                    : unwrap(gameMode.name)}
+                    : unwrap(gameMode.name!)}
                 </DropdownMenu.Label>
               )}
 
@@ -1213,7 +1213,7 @@ function GameModeAbilitiesFilter() {
                         src={asset(`icons/provisions/${provision}.webp`)}
                       />
 
-                      {unwrap(powerDefinition.name)}
+                      {unwrap(powerDefinition.name!)}
                     </DropdownMenu.CheckboxItem>
                   );
                 }

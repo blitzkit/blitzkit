@@ -1,12 +1,12 @@
-import { Locale, SlashCommandStringOption } from 'discord.js';
-import { translator } from '../localization/translator';
-import { localizationObject } from './localizationObject';
+import { Locale, SlashCommandStringOption } from "discord.js";
+import { translator } from "../localization/translator";
+import { localizationObject } from "./localizationObject";
 
 export function addTankChoices(option: SlashCommandStringOption) {
   const { strings } = translator(Locale.EnglishUS);
 
   return option
-    .setName(strings.bot.common.options.tank.name)
+    .setName(strings.bot.common.options.tank.name!)
     .setNameLocalizations(
       localizationObject(
         (strings) => strings.bot.common.options.tank.name,

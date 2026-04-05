@@ -73,7 +73,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
             const [pitch, yaw] = applyPitchYawLimits(
               -Infinity,
               0,
-              gunModelDefinition.pitch,
+              gunModelDefinition.pitch!,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
               hasDownImprovedVerticalStabilizer,
@@ -88,7 +88,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
             const [pitch, yaw] = applyPitchYawLimits(
               Infinity,
               0,
-              gunModelDefinition.pitch,
+              gunModelDefinition.pitch!,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
             );
@@ -102,7 +102,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
             const [pitch, yaw] = applyPitchYawLimits(
               0,
               0,
-              gunModelDefinition.pitch,
+              gunModelDefinition.pitch!,
               turretModelDefinition.yaw,
               hasImprovedVerticalStabilizer,
             );
@@ -124,7 +124,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
       const [pitch, yaw] = applyPitchYawLimits(
         modelTransformEvent.last!.pitch,
         modelTransformEvent.last!.yaw,
-        gunModelDefinition.pitch,
+        gunModelDefinition.pitch!,
         turretModelDefinition.yaw,
         hasImprovedVerticalStabilizer,
       );

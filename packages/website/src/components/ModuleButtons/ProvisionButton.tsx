@@ -1,8 +1,8 @@
-import { asset } from '@blitzkit/core';
-import { awaitableProvisionDefinitions } from '../../core/awaitables/provisionDefinitions';
-import { useLocale } from '../../hooks/useLocale';
-import { GenericTankComponentButton } from './GenericTankComponentButton';
-import type { TankComponentButtonProps } from './TankComponentButton';
+import { asset } from "@blitzkit/core";
+import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { useLocale } from "../../hooks/useLocale";
+import { GenericTankComponentButton } from "./GenericTankComponentButton";
+import type { TankComponentButtonProps } from "./TankComponentButton";
 
 interface ProvisionButtonProps extends TankComponentButtonProps {
   provision: number;
@@ -15,7 +15,7 @@ export function ProvisionButton({ provision, ...props }: ProvisionButtonProps) {
 
   return (
     <GenericTankComponentButton
-      tooltip={unwrap(provisionDefinitions.provisions[provision].name)}
+      tooltip={unwrap(provisionDefinitions.provisions[provision].name!)}
       icon={asset(`icons/provisions/${provision}.webp`)}
       {...props}
     />

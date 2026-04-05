@@ -3,19 +3,20 @@ import {
   TankPriceType,
   TankType,
   TIER_ROMAN_NUMERALS,
-} from '@blitzkit/core';
-import { Box, Code, Flex } from '@radix-ui/themes';
-import { Var } from '../../../core/radix/var';
-import { useLocale } from '../../../hooks/useLocale';
-import { App } from '../../../stores/app';
-import { Duel } from '../../../stores/duel';
-import { classIcons } from '../../ClassIcon';
-import { Listing } from './components/Listing';
+} from "@blitzkit/core";
+import { Box, Flex } from "@radix-ui/themes";
+import { Var } from "../../../core/radix/var";
+import { useLocale } from "../../../hooks/useLocale";
+import { App } from "../../../stores/app";
+import { Duel } from "../../../stores/duel";
+import { classIcons } from "../../ClassIcon";
+import { CopyableCode } from "../../CopyableCode";
+import { Listing } from "./components/Listing";
 
 const NATIONAL_BANNER_POSITION_OVERRIDES: Record<string, string> = {
-  germany: '50% 35%',
-  france: '50% 35%',
-  other: '50% 35%',
+  germany: "50% 35%",
+  france: "50% 35%",
+  other: "50% 35%",
 };
 
 export function MetaSection() {
@@ -29,10 +30,10 @@ export function MetaSection() {
       <Box
         style={{
           background: `url(/assets/images/national-wallpapers/${protagonist.nation}.jpg)`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
           backgroundPosition:
-            NATIONAL_BANNER_POSITION_OVERRIDES[protagonist.nation] ?? 'center',
+            NATIONAL_BANNER_POSITION_OVERRIDES[protagonist.nation] ?? "center",
         }}
         flexGrow="1"
         maxWidth="120rem"
@@ -40,9 +41,9 @@ export function MetaSection() {
         <Box
           style={{
             background: `url(${asset(`flags/scratched/${protagonist.nation}.webp`)})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'min(53rem, 80vw)',
-            backgroundPosition: '-8rem 50%',
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "min(53rem, 80vw)",
+            backgroundPosition: "-8rem 50%",
           }}
         >
           <Flex
@@ -50,19 +51,19 @@ export function MetaSection() {
             align="center"
             py="6rem"
             style={{
-              background: `linear-gradient(${Var('black-a8')}, ${Var('black-a8')}, ${Var('gray-1')})`,
+              background: `linear-gradient(${Var("black-a8")}, ${Var("black-a8")}, ${Var("gray-1")})`,
             }}
           >
             <Flex direction="column" align="center" gap="6">
               <Flex
-                gap={{ initial: '2', sm: '8' }}
-                direction={{ initial: 'column', sm: 'row' }}
+                gap={{ initial: "2", sm: "8" }}
+                direction={{ initial: "column", sm: "row" }}
               >
                 <Flex direction="column" width="100%" gap="2">
                   <Listing label={strings.website.tools.tankopedia.meta.nation}>
                     <Flex align="center" gap="1">
                       <img
-                        style={{ width: '1em', height: '1em' }}
+                        style={{ width: "1em", height: "1em" }}
                         alt={protagonist.nation}
                         src={asset(`flags/circle/${protagonist.nation}.webp`)}
                       />
@@ -85,10 +86,10 @@ export function MetaSection() {
                   <Listing
                     label={strings.website.tools.tankopedia.meta.type}
                     color={
-                      protagonist.type === TankType.COLLECTOR
-                        ? 'blue'
-                        : protagonist.type === TankType.PREMIUM
-                          ? 'amber'
+                      protagonist.type === TankType.TANK_TYPE_COLLECTOR
+                        ? "blue"
+                        : protagonist.type === TankType.TANK_TYPE_PREMIUM
+                          ? "amber"
                           : undefined
                     }
                   >
@@ -101,40 +102,62 @@ export function MetaSection() {
                     <Listing
                       label={strings.website.tools.tankopedia.meta.dev_id}
                     >
-                      <Code>{protagonist.id}</Code>
+                      <CopyableCode
+                        copy={`${protagonist.id}`}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
+                        {protagonist.id}
+                      </CopyableCode>
                     </Listing>
                   )}
-                  {protagonist.type === TankType.PREMIUM && (
+                  {developerMode && (
+                    <Listing
+                      label={strings.website.tools.tankopedia.meta.dev_name}
+                    >
+                      <CopyableCode
+                        copy={protagonist.dev_name}
+                        variant="soft"
+                        highContrast
+                        color="gray"
+                      >
+                        {protagonist.dev_name}
+                      </CopyableCode>
+                    </Listing>
+                  )}
+                  {protagonist.type === TankType.TANK_TYPE_PREMIUM && (
                     <Listing
                       label={strings.website.tools.tankopedia.meta.purchase}
                     >
                       <Flex align="center" gap="1">
-                        {protagonist.price.value / 400}
+                        {protagonist.price!.value / 400}
                         <img
-                          style={{ width: '1em', height: '1em' }}
+                          style={{ width: "1em", height: "1em" }}
                           alt="gold"
-                          src={asset('icons/currencies/gold.webp')}
+                          src={asset("icons/currencies/gold.webp")}
                         />
                       </Flex>
                     </Listing>
                   )}
                   <Listing
                     label={
-                      protagonist.type === TankType.RESEARCHABLE
+                      protagonist.type === TankType.TANK_TYPE_RESEARCHABLE
                         ? strings.website.tools.tankopedia.meta.purchase
                         : strings.website.tools.tankopedia.meta.restoration
                     }
                   >
                     <Flex align="center" gap="1">
-                      {protagonist.price.value.toLocaleString(locale)}
+                      {protagonist.price!.value.toLocaleString(locale)}
                       <img
-                        style={{ width: '1em', height: '1em' }}
-                        alt={TankPriceType[protagonist.price.type]}
+                        style={{ width: "1em", height: "1em" }}
+                        alt={TankPriceType[protagonist.price!.type]}
                         src={asset(
                           `icons/currencies/${
-                            protagonist.price.type === TankPriceType.GOLD
-                              ? 'gold'
-                              : 'silver'
+                            protagonist.price!.type ===
+                            TankPriceType.TANK_PRICE_TYPE_GOLD
+                              ? "gold"
+                              : "silver"
                           }.webp`,
                         )}
                       />
@@ -142,15 +165,16 @@ export function MetaSection() {
                   </Listing>
                   <Listing label={strings.website.tools.tankopedia.meta.sale}>
                     <Flex align="center" gap="1">
-                      {(protagonist.price.value / 2).toLocaleString(locale)}
+                      {(protagonist.price!.value / 2).toLocaleString(locale)}
                       <img
-                        style={{ width: '1em', height: '1em' }}
-                        alt={TankPriceType[protagonist.price.type]}
+                        style={{ width: "1em", height: "1em" }}
+                        alt={TankPriceType[protagonist.price!.type]}
                         src={asset(
                           `icons/currencies/${
-                            protagonist.price.type === TankPriceType.GOLD
-                              ? 'gold'
-                              : 'silver'
+                            protagonist.price!.type ===
+                            TankPriceType.TANK_PRICE_TYPE_GOLD
+                              ? "gold"
+                              : "silver"
                           }.webp`,
                         )}
                       />
@@ -166,9 +190,9 @@ export function MetaSection() {
                             .value as number
                         ).toLocaleString(locale)}
                         <img
-                          style={{ width: '1em', height: '1em' }}
+                          style={{ width: "1em", height: "1em" }}
                           alt="xp"
-                          src={asset('icons/currencies/xp.webp')}
+                          src={asset("icons/currencies/xp.webp")}
                         />
                       </Flex>
                     </Listing>

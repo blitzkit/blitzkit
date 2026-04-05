@@ -2,28 +2,28 @@ syntax = "proto2";
 
 package blitzkit;
 
-import "packages/core/src/protos/i18n.proto";
+import "i18n.proto";
 
 message ConsumableDefinitions {
   map<uint32, Consumable> consumables = 1;
 }
 
 message Consumable {
-  required uint32 id = 1;
-  required I18nString name = 2;
-  required uint32 cooldown = 3;
-  optional float duration = 4;
-  required bool game_mode_exclusive = 5;
-  repeated ConsumableTankFilter include = 6;
-  repeated ConsumableTankFilter exclude = 7;
+  required uint32               id                  = 1;
+  required I18nString           name                = 2;
+  required uint32               cooldown            = 3;
+  optional float                duration            = 4;
+  required bool                 game_mode_exclusive = 5;
+  repeated ConsumableTankFilter include             = 6;
+  repeated ConsumableTankFilter exclude             = 7;
 }
 
 message ConsumableTankFilter {
   oneof filter_type {
-    ConsumableTankTierFilter tiers = 1;
-    ConsumableTankIdsFilter ids = 2;
+    ConsumableTankTierFilter     tiers      = 1;
+    ConsumableTankIdsFilter      ids        = 2;
     ConsumableTankCategoryFilter categories = 3;
-    ConsumableTankNationFilter nations = 4;
+    ConsumableTankNationFilter   nations    = 4;
   }
 }
 

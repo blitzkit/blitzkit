@@ -41,6 +41,7 @@ export interface DuelMember {
 export interface DuelStore {
   protagonist: DuelMember;
   antagonist: DuelMember;
+  equalize: boolean;
 }
 
 const provisionDefinitions = await awaitableProvisionDefinitions;
@@ -51,5 +52,5 @@ export const Duel = new Varuna<
 >(({ tank, model }) => {
   const protagonist = tankToDuelMember(tank, provisionDefinitions);
 
-  return { protagonist, antagonist: protagonist, model };
+  return { protagonist, antagonist: protagonist, model, equalize: false };
 });

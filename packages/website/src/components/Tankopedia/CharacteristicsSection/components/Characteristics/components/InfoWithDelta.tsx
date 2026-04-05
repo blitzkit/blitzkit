@@ -59,11 +59,12 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
     const delta = useDelta(uhWhatDoICallThisVariable);
     const protagonistTank = Duel.use((state) => state.protagonist.tank);
     const shellIndex = Duel.use((state) =>
-      state.protagonist.gun.shells.indexOf(state.protagonist.shell)
+      state.protagonist.gun.shells.indexOf(state.protagonist.shell),
     );
     const equipmentMatrix = Duel.use(
-      (state) => state.protagonist.equipmentMatrix
+      (state) => state.protagonist.equipmentMatrix,
     );
+    const equalize = Duel.use((state) => state.equalize);
     const others = useMemo(() => {
       const defaultSkills = createDefaultSkills(skillDefinitions);
 
@@ -75,7 +76,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               tank.class === protagonistTank.class) ||
             (relativeAgainst === TankopediaRelativeAgainst.Tier &&
               tank.tier === protagonistTank.tier) ||
-            relativeAgainst === TankopediaRelativeAgainst.All
+            relativeAgainst === TankopediaRelativeAgainst.All,
         )
         .map((tank) => {
           const member = tankToDuelMember(tank, provisionDefinitions);
@@ -105,12 +106,13 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
               track: member.track,
               turret: member.turret,
               assaultDistance: member.assaultDistance,
+              equalize,
             },
             {
               equipmentDefinitions,
               provisionDefinitions,
               tankModelDefinition: modelDefinitions.models[tank.id],
-            }
+            },
           );
         })
         .filter((tank) => {
@@ -123,7 +125,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
 
           return othersValue !== undefined;
         }) as TankCharacteristics[];
-    }, [relativeAgainst, shellIndex, equipmentMatrix]);
+    }, [relativeAgainst, shellIndex, equipmentMatrix, equalize]);
     const betterTanks = others.filter((tank) => {
       const othersValue =
         typeof props.value === "function"
@@ -183,5 +185,5 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
 
   (a, b) =>
     (typeof a.value === "function" ? a.value(a.stats) : a.stats[a.value]) ===
-    (typeof b.value === "function" ? b.value(b.stats) : b.stats[b.value])
+    (typeof b.value === "function" ? b.value(b.stats) : b.stats[b.value]),
 );

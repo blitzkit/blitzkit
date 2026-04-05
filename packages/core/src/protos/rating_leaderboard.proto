@@ -14,7 +14,7 @@ message RatingLeaderboardV1 {
 }
 
 message RatingLeaderboardEntryV1 {
-  required uint32 id = 1;
+  required uint32 id    = 1;
   required uint32 score = 2;
 }
 
@@ -23,11 +23,11 @@ message RatingLeaderboardV2 {
 }
 
 message RatingLeaderboardEntryV2 {
-  required uint32 id = 1;
-  required uint32 score = 2;
-  required uint32 battles = 3;
-  required uint32 wins = 4;
+  required uint32 id       = 1;
+  required uint32 score    = 2;
+  required uint32 battles  = 3;
+  required uint32 wins     = 4;
   required uint32 survived = 5;
-  required uint32 damage = 6;
-  required uint32 kills = 7;
+  required uint32 damage   = 6;
+  required uint32 kills    = 7;
 }

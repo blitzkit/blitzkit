@@ -55,7 +55,7 @@ export function TankCard({ index, tank }: TankCardProps) {
         };
       });
       const closest = distances.reduce((a, b) =>
-        a.distance < b.distance ? a : b
+        a.distance < b.distance ? a : b,
       );
 
       dropIndex = closest.index;
@@ -85,8 +85,8 @@ export function TankCard({ index, tank }: TankCardProps) {
       CompareEphemeral.mutate((draft) => {
         const fromIndex = index;
         const toIndex = dropIndex > index ? dropIndex - 1 : dropIndex;
-
         const member = draft.members[fromIndex];
+
         draft.members.splice(fromIndex, 1);
         draft.members.splice(toIndex, 0, member);
       });
@@ -99,7 +99,7 @@ export function TankCard({ index, tank }: TankCardProps) {
     return () => {
       draggable.current?.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, []);
+  }, [index]);
 
   return (
     <StickyColumnHeaderCell width="0">
@@ -119,7 +119,7 @@ export function TankCard({ index, tank }: TankCardProps) {
           }}
         >
           <img
-            alt={unwrap(tank.name)}
+            alt={unwrap(tank.name!)}
             src={tankIcon(tank.id)}
             width={64}
             height={64}
@@ -137,11 +137,10 @@ export function TankCard({ index, tank }: TankCardProps) {
               textOverflow: "ellipsis",
             }}
           >
-            {unwrap(tank.name)}
+            {unwrap(tank.name!)}
           </Text>
         </Flex>
       </Flex>
-
       <InsertionMarker index={index + 1} />
     </StickyColumnHeaderCell>
   );

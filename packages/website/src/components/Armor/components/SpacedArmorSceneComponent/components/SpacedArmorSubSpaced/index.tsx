@@ -10,7 +10,7 @@ import { degToRad } from "three/src/math/MathUtils.js";
 import type { ArmorUserData } from "../..";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
-import { Duel, type EquipmentMatrix } from "../../../../../../stores/duel";
+import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { ArmorType } from "../../../SpacedArmorScene";
 import fragmentShader from "./shaders/fragment.glsl?raw";
@@ -53,55 +53,78 @@ export function SpacedArmorSubSpaced({
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
 
-      material.uniforms.penetration.value = shell.penetration.near;
+      material.uniforms.penetration.value = shell.penetration!.near;
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!
+        isExplosive(shell.type) ? 90 : shell.ricochet!,
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0
+        shell.normalization ?? 0,
       );
     }
-    function handleProtagonistEquipmentChange(equipment: EquipmentMatrix) {
+    function handleProtagonistEquipmentChange() {
+      const equipment = Duel.state.protagonist.equipmentMatrix;
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
-      material.uniforms.thickness.value = hasEnhancedArmor
-        ? thickness * 1.03
-        : thickness;
+      const equalizer =
+        (Duel.state.equalize
+          ? Duel.state.protagonist.tank.equalizer?.armor
+          : undefined) ?? 1;
+
+      material.uniforms.thickness.value =
+        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
     }
-    function handleAntagonistEquipmentChange(equipment: EquipmentMatrix) {
+    function handleAntagonistEquipmentChange() {
+      const equipment = Duel.state.antagonist.equipmentMatrix;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
-      const penetration = shell.penetration.near;
+      const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        equipment
+        equipment,
       );
+      const equalize =
+        (Duel.state.equalize
+          ? Duel.state.antagonist.tank.equalizer?.penetration
+          : undefined) ?? 1;
 
       material.uniforms.penetration.value =
         penetration *
-        resolvePenetrationCoefficient(hasCalibratedShells, shell.type);
+        resolvePenetrationCoefficient(
+          hasCalibratedShells,
+          Duel.state.equalize,
+          shell.type,
+          Duel.state.antagonist.tank.equalizer,
+        ) *
+        equalize;
     }
 
     handleShellChange();
-    handleProtagonistEquipmentChange(Duel.state.protagonist.equipmentMatrix);
-    handleAntagonistEquipmentChange(Duel.state.antagonist.equipmentMatrix);
+    handleProtagonistEquipmentChange();
+    handleAntagonistEquipmentChange();
 
     const unsubscribes = [
       Duel.on((state) => state.antagonist.shell, handleShellChange),
       Tankopedia.on((state) => state.customShell, handleShellChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        handleProtagonistEquipmentChange
+        handleProtagonistEquipmentChange,
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        handleAntagonistEquipmentChange
+        handleAntagonistEquipmentChange,
+      ),
+      Duel.on(
+        (state) => state.equalize,
+        () => {
+          handleProtagonistEquipmentChange();
+          handleAntagonistEquipmentChange();
+        },
       ),
     ];
 

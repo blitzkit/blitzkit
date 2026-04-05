@@ -51,21 +51,21 @@ export function GunFlexibilityVisualizer({
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [minPitch, setMinPitch] = useState(
-    -degToRad(gunModel.pitch.front?.max ?? gunModel.pitch.max)
+    -degToRad(gunModel.pitch!.front?.max ?? gunModel.pitch!.max),
   );
   const [maxPitch, setMaxPitch] = useState(
-    -degToRad(gunModel.pitch.front?.min ?? gunModel.pitch.min)
+    -degToRad(gunModel.pitch!.front?.min ?? gunModel.pitch!.min),
   );
 
   const container = useRef<HTMLDivElement>(null);
   const highlighter = useRef<HTMLDivElement>(null);
   const pointer = useRef<HTMLDivElement>(null);
 
-  const p = gunModel.pitch;
+  const p = gunModel.pitch!;
   const y = turretModel.yaw;
   const f = p.front;
   const b = p.back;
-  const t = gunModel.pitch.transition ?? DEFAULT_PITCH_TRANSITION;
+  const t = gunModel.pitch!.transition ?? DEFAULT_PITCH_TRANSITION;
 
   let d = "";
 
@@ -223,12 +223,12 @@ export function GunFlexibilityVisualizer({
           const hasImprovedVerticalStabilizer = hasEquipment(
             122,
             Duel.state.protagonist.tank.equipment_preset,
-            Duel.state.protagonist.equipmentMatrix
+            Duel.state.protagonist.equipmentMatrix,
           );
           const hasDownImprovedVerticalStabilizer = hasEquipment(
             124,
             Duel.state.protagonist.tank.equipment_preset,
-            Duel.state.protagonist.equipmentMatrix
+            Duel.state.protagonist.equipmentMatrix,
           );
 
           const min = applyPitchYawLimits(
@@ -237,7 +237,7 @@ export function GunFlexibilityVisualizer({
             p,
             y,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
           const max = applyPitchYawLimits(
             Math.PI,
@@ -245,7 +245,7 @@ export function GunFlexibilityVisualizer({
             p,
             y,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           yaw = min[1];
