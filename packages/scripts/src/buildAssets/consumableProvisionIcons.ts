@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import { AssetUploader } from "../core/github/assetUploader";
+import { parsePackedSpriteRect } from "../core/blitz/parsePackedSpriteRect";
 import { vfs } from "./constants";
 import { ConsumablesCommon, ProvisionsCommon } from "./definitions";
 
@@ -57,8 +58,35 @@ export async function consumableProvisionIcons() {
         .replace(".txt", "");
 
       if (await vfs.resolve(`Data/${configPath}.packed.webp`)) {
-        const image = sharp(await vfs.file(`Data/${configPath}.packed.webp`));
-        const content = await image.trim({ threshold: 100 }).toBuffer();
+        const packedBuffer = await vfs.file(`Data/${configPath}.packed.webp`);
+        const consumablesTexture = sharp(packedBuffer);
+        const sizes = parsePackedSpriteRect(packedBuffer);
+        let content: Buffer;
+
+        if (sizes) {
+          try {
+            content = await consumablesTexture
+              .clone()
+              .extract({
+                left: sizes[0],
+                top: sizes[1],
+                width: sizes[2],
+                height: sizes[3],
+              })
+              .toBuffer();
+          } catch {
+            console.warn(
+              `Failed to extract consumable ${consumable.icon} from RIFF data; falling back to trim...`,
+            );
+            content = await consumablesTexture
+              .trim({ threshold: 100 })
+              .toBuffer();
+          }
+        } else {
+          content = await consumablesTexture
+            .trim({ threshold: 100 })
+            .toBuffer();
+        }
 
         await uploader.add({
           path: `icons/consumables/${consumable.id}.webp`,
@@ -122,8 +150,33 @@ export async function consumableProvisionIcons() {
         .replace(".txt", "");
 
       if (await vfs.resolve(`Data/${configPath}.packed.webp`)) {
-        const image = sharp(await vfs.file(`Data/${configPath}.packed.webp`));
-        const content = await image.trim({ threshold: 100 }).toBuffer();
+        const packedBuffer = await vfs.file(`Data/${configPath}.packed.webp`);
+        const provisionsTexture = sharp(packedBuffer);
+        const sizes = parsePackedSpriteRect(packedBuffer);
+        let content: Buffer;
+
+        if (sizes) {
+          try {
+            content = await provisionsTexture
+              .clone()
+              .extract({
+                left: sizes[0],
+                top: sizes[1],
+                width: sizes[2],
+                height: sizes[3],
+              })
+              .toBuffer();
+          } catch {
+            console.warn(
+              `Failed to extract provision ${provision.icon} from RIFF data; falling back to trim...`,
+            );
+            content = await provisionsTexture
+              .trim({ threshold: 100 })
+              .toBuffer();
+          }
+        } else {
+          content = await provisionsTexture.trim({ threshold: 100 }).toBuffer();
+        }
 
         await uploader.add({
           path: `icons/provisions/${provision.id}.webp`,
