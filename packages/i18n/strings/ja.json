@@ -960,6 +960,7 @@
           "tier": "Tier",
           "type": "タイプ",
           "dev_id": "DEV: ID",
+          "dev_name": "DEV: NAME",
           "purchase": "購入価格",
           "restoration": "再購入価格",
           "sale": "売却価格",
@@ -980,6 +981,11 @@
         },
         "configuration": {
           "title": "構成",
+          "equalizer": {
+            "title": "Equalizer",
+            "equalize": "Equalize",
+            "beta": "Beta"
+          },
           "modules": {
             "title": "モジュール",
             "stock": "初期装備",
@@ -1149,7 +1155,8 @@
           },
           "skills": {
             "clear": "クリア",
-            "maximize": "最大"
+            "maximize": "最大",
+            "equalize": "Equalize"
           },
           "modules": {
             "stock": "初期装備",

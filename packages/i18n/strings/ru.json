@@ -960,6 +960,7 @@
           "tier": "Уровень",
           "type": "Тип",
           "dev_id": "DEV: ID",
+          "dev_name": "DEV: NAME",
           "purchase": "Цена покупки",
           "restoration": "Цена восстановления",
           "sale": "Цена продажи",
@@ -980,6 +981,11 @@
         },
         "configuration": {
           "title": "Конфигурация",
+          "equalizer": {
+            "title": "Уравнение",
+            "equalize": "Уравнять",
+            "beta": "Бета"
+          },
           "modules": {
             "title": "Модули",
             "stock": "Сток",
@@ -1149,7 +1155,8 @@
           },
           "skills": {
             "clear": "Очистить",
-            "maximize": "Максимум"
+            "maximize": "Максимум",
+            "equalize": "Уравнять"
           },
           "modules": {
             "stock": "Сток",

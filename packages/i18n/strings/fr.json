@@ -960,6 +960,7 @@
           "tier": "Rang",
           "type": "Type",
           "dev_id": "DEV: ID",
+          "dev_name": "DEV: NAME",
           "purchase": "Purchase price",
           "restoration": "Restoration price",
           "sale": "Sale price",
@@ -980,6 +981,11 @@
         },
         "configuration": {
           "title": "Configuration",
+          "equalizer": {
+            "title": "Equalizer",
+            "equalize": "Equalize",
+            "beta": "Beta"
+          },
           "modules": {
             "title": "Modules",
             "stock": "Stock",
@@ -1149,7 +1155,8 @@
           },
           "skills": {
             "clear": "Clear",
-            "maximize": "Maximize"
+            "maximize": "Maximize",
+            "equalize": "Equalize"
           },
           "modules": {
             "stock": "Stock",
