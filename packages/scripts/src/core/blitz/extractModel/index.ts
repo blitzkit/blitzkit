@@ -170,8 +170,12 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
             break;
 
           case "TransformComponent": {
-            component["tc.localTranslation"] = [0, 0, 0]; // Game when is loading model resets position to [0, 0, 0], so any set value is ignored.
-            node.setTranslation(component["tc.localTranslation"]);
+            const localTranslation = component["tc.localTranslation"];
+             // The game resets top-level node translation to [0, 0, 0] on load.
+             // Child nodes must keep their authored local offsets.
+            node.setTranslation(
+              parent instanceof Scene ? [0, 0, 0] : localTranslation,
+            );
             node.setRotation(component["tc.localRotation"]);
             node.setScale(component["tc.localScale"]);
 
