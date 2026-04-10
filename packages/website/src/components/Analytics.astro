@@ -1,5 +1,5 @@
 ---
-import { assertSecret } from '@blitzkit/core';
+import { assertSecret } from "@blitzkit/core";
 
 const PUBLIC_GOOGLE_TAG_MANAGER_ID = assertSecret(
   import.meta.env.PUBLIC_GOOGLE_TAG_MANAGER_ID,
@@ -19,7 +19,7 @@ const PUBLIC_GOOGLE_TAG_MANAGER_ID = assertSecret(
     dataLayer.push(arguments);
   }
 
-  gtag('js', new Date());
+  gtag("js", new Date());
 
-  gtag('config', PUBLIC_GOOGLE_TAG_MANAGER_ID);
+  gtag("config", PUBLIC_GOOGLE_TAG_MANAGER_ID);
 </script>

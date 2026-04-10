@@ -38,19 +38,19 @@ export function Lighting() {
       draft.revealed = true;
     });
 
-    t0.current = clock.elapsedTime - REVEAL_ANIMATION_TIME;
+    t0.current = performance.now() / 1000 - REVEAL_ANIMATION_TIME;
   }, []);
 
   useFrame(({ invalidate }) => {
     if (transition.current) {
       transition.current = false;
-      t0.current = clock.elapsedTime;
+      t0.current = performance.now() / 1000;
     }
 
     const x = clamp(
-      (clock.elapsedTime - t0.current) / animationTime.current,
+      (performance.now() / 1000 - t0.current) / animationTime.current,
       0,
-      2
+      2,
     );
     const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
 

@@ -183,11 +183,12 @@ export function tankCharacteristics(
     (coefficient([hasGunRammer, -0.05]) *
       coefficient([true, degressiveStat(loaderMastery)])) /
     coefficient([hasAdrenaline && gun.gun_type!.$case === "regular", 0.17]);
-  const penetrationCoefficient =
-    coefficient([
-      hasCalibratedShells,
-      resolvePenetrationCoefficient(true, equalize, shell.type, equalizer) - 1,
-    ]) * equalizer.penetration;
+  const penetrationCoefficient = resolvePenetrationCoefficient(
+    hasCalibratedShells,
+    equalize,
+    shell.type,
+    equalizer,
+  );
   const healthCoefficient =
     coefficient(
       [hasSandbagArmor, 0.03],

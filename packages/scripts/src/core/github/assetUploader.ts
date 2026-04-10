@@ -1,4 +1,4 @@
-import { assertSecret } from "@blitzkit/core";
+import { assertSecret, asset } from "@blitzkit/core";
 import { Octokit } from "@octokit/rest";
 import ProgressBar from "progress";
 import { compareUint8Arrays } from "./compareUint8Arrays";
@@ -49,9 +49,8 @@ export class AssetUploader {
   }
 
   async add(change: FileChange) {
-    const blobPath = `${this.owner}/${this.repo}/${this.branch}/${change.path}`;
     const response = await fetch(
-      `https://raw.githubusercontent.com/${blobPath}`,
+      asset(change.path),
       { headers: { "Accept-Encoding": "identity" } },
     );
     let diff: { change: number; status: DiffStatus };
