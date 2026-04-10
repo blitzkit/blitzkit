@@ -263,5 +263,5 @@
     "youtubers",
     "zoomable"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "protobuf.includes": ["${workspaceFolder}/path/to/protos"]
 }
