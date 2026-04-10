@@ -8,8 +8,8 @@ if (typeof window === "undefined") {
   const { ServerAPI } = await import("./server");
 
   const proxyClient = await new ProxyClient(
-    assertSecret(import.meta.env.WOTB_SERVER)
-  ).handshake();
+    assertSecret(import.meta.env.WOTB_SERVER),
+  ).handshake(assertSecret(import.meta.env.WOTB_VERSION));
   const metadata = await proxyClient.metadata();
 
   dynamicAPI = new ServerAPI(metadata);
@@ -20,5 +20,3 @@ if (typeof window === "undefined") {
 }
 
 export const api = dynamicAPI;
-
-

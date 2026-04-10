@@ -2,19 +2,18 @@ import type { MetadataAccessor } from "@blitzkit/closed";
 import { assertSecret, sluggify } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
-import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
-import type { DeepPartial } from "@protos/blitz_static_reward_currency";
+import type { Avatar, DeepPartial } from "@protos/blitzkit/avatar";
+import type { Background } from "@protos/blitzkit/background";
+import type { PopularTanks } from "@protos/blitzkit/popular_tanks";
+import type { Tank } from "@protos/blitzkit/tank";
+import type { TankListEntry } from "@protos/blitzkit/tank_list";
+import type { Tanks } from "@protos/blitzkit/tanks";
+import type { RemoteStorageComponent } from "@protos/game/proto/legacy/blitz_static_remote_storage_component";
 import { existsSync } from "fs";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { google } from "googleapis";
 import { merge } from "lodash-es";
 import { parse } from "yaml";
-import type { Avatar } from "../../protos/avatar";
-import type { Background } from "../../protos/background";
-import type { PopularTanks } from "../../protos/popular_tanks";
-import type { Tank } from "../../protos/tank";
-import type { TankListEntry } from "../../protos/tank_list";
-import type { Tanks } from "../../protos/tanks";
 import { AbstractAPI, Cache } from "./abstract";
 
 if (typeof window !== "undefined") {
@@ -200,15 +199,19 @@ export class ServerAPI extends AbstractAPI {
     const clientConfig = this.metadata.item(group[0].id);
     const localizationResources = clientConfig.LocalizationResources();
 
-    if (!localizationResources.remote_storage) {
-      throw new Error("Localization resources not found");
+    console.log("localizationResources", localizationResources);
+
+    if (localizationResources.remote_storages.length !== 1) {
+      throw new RangeError(
+        `Don't know how to handle ${group.length} remote_storages`,
+      );
     }
 
+    const remoteStorageName = localizationResources.remote_storages[0];
     let remoteStorage: RemoteStorageComponent | undefined = undefined;
 
-    for (const candidateId of localizationResources.remote_storage
-      .remote_urls) {
-      const item = this.metadata.item(candidateId);
+    for (const remoteUrl of remoteStorageName.remote_urls) {
+      const item = this.metadata.item(remoteUrl);
       const candidate = item.RemoteStorage();
 
       if (
