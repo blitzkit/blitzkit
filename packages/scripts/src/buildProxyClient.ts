@@ -1,7 +1,8 @@
 import { readFile, writeFile } from "fs/promises";
 
-const IMPORT = "@protos/auto_legacy_proxy_client";
-const SOURCE = "../../packages/closed/protos/auto_legacy_proxy_client.proto";
+const IMPORT = "@protos/game/proto/legacy/auto_legacy_proxy_client";
+const SOURCE =
+  "../../packages/closed/protos/game/proto/legacy/auto_legacy_proxy_client.proto";
 const TARGET = "../../packages/closed/src/unreal/methodPopulatedProxyClient.ts";
 
 const requestPattern = /^message (\w+)Request {/gm;

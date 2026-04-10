@@ -1,6 +1,6 @@
 import { readdir, readFile, writeFile } from "fs/promises";
 
-const SOURCES = "../../packages/closed/protos";
+const SOURCES = "../../packages/closed/protos/game/proto/legacy";
 const TARGET = "../../packages/closed/src/unreal/catalogItemAccessor.ts";
 
 const componentPattern = /^message (\w+)Component {/gm;
@@ -8,15 +8,15 @@ const componentPattern = /^message (\w+)Component {/gm;
 const files = await readdir(SOURCES).then((files) =>
   files.filter(
     (file) =>
-      file.startsWith("blitz_static_") && file.endsWith("_component.proto")
-  )
+      file.startsWith("blitz_static_") && file.endsWith("_component.proto"),
+  ),
 );
 
 const imports: { name: string; file: string }[] = [];
 
 for (const file of files) {
   const content = await readFile(`${SOURCES}/${file}`).then((buffer) =>
-    buffer.toString()
+    buffer.toString(),
   );
   const components = content.matchAll(componentPattern);
 
@@ -26,7 +26,7 @@ for (const file of files) {
 
     if (duplicate) {
       console.warn(
-        `Duplicate component ${name} across ${duplicate.file}.proto and ${file}`
+        `Duplicate component ${name} across ${duplicate.file}.proto and ${file}`,
       );
       continue;
     }
@@ -40,7 +40,7 @@ for (const file of files) {
 let content = "";
 
 for (const _import of imports) {
-  content += `import { ${_import.name}Component } from "@protos/${_import.file}";\n`;
+  content += `import { ${_import.name}Component } from "@protos/game/proto/legacy/${_import.file}";\n`;
 }
 
 content +=
