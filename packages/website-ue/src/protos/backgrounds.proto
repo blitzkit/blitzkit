@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package blitzkit;
-
-import "background.proto";
-
-message Backgrounds {
-  repeated Background backgrounds = 1;
-}
