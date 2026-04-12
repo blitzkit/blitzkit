@@ -75,6 +75,19 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
           .setImage(baseColor),
       );
 
+      if (
+        node.enabledPresets?.AlphaTest &&
+        node.properties.alphatestThreshold
+      ) {
+        const view = new DataView(node.properties.alphatestThreshold);
+        const alphaCutoff =
+          view.byteLength < 4
+            ? 0.5
+            : view.getFloat32(view.byteLength - 4, true);
+
+        material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
+      }
+
       if (node.configCount) {
         for (
           let configIndex = 0;
@@ -91,8 +104,10 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
           }
 
           const view = new DataView(archive.properties.alphatestThreshold);
-          const _ = view.getUint8(0); // only god knows what these flags are
-          const alphaCutoff = view.getFloat32(1, true);
+          const alphaCutoff =
+            view.byteLength < 4
+              ? 0.5
+              : view.getFloat32(view.byteLength - 4, true);
 
           material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
