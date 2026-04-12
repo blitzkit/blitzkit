@@ -75,9 +75,26 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
           .setImage(baseColor),
       );
 
+      const defaultConfigArchive =
+        typeof node.configCount === "number"
+          ? (times(
+              node.configCount,
+              (index) => node[`configArchive_${index}`],
+            ).find((archive) => archive.configName === "Default") ??
+            node.configArchive_0)
+          : undefined;
+      const customCullMode =
+        node.customCullMode ?? defaultConfigArchive?.customCullMode;
+
+      if (customCullMode === 0) {
+        material.setDoubleSided(true);
+      } else if (customCullMode !== undefined) {
+        material.setDoubleSided(false);
+      }
+
       if (
         node.enabledPresets?.AlphaTest &&
-        node.properties.alphatestThreshold
+        node.properties?.alphatestThreshold
       ) {
         const view = new DataView(node.properties.alphatestThreshold);
         const alphaCutoff =
@@ -98,7 +115,8 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
 
           if (
             archive.configName !== "Default" ||
-            !archive.enabledPresets?.AlphaTest
+            !archive.enabledPresets?.AlphaTest ||
+            !archive.properties?.alphatestThreshold
           ) {
             continue;
           }
