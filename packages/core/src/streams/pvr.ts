@@ -1,5 +1,5 @@
-import { clamp, isEqual, times } from 'lodash-es';
-import { ReadStream } from './buffer';
+import { clamp, isEqual, times } from "lodash-es";
+import { ReadStream } from "./buffer";
 
 export enum PvrFlags {
   NoFlag = 0,
@@ -96,7 +96,7 @@ export class PvrReadStream extends ReadStream {
     const header = this.header();
     this.metadata();
 
-    if (typeof header.pixelFormat === 'number') {
+    if (typeof header.pixelFormat === "number") {
       switch (header.pixelFormat) {
         default:
           throw new TypeError(
@@ -142,12 +142,12 @@ export class PvrReadStream extends ReadStream {
 
           times(pixelCount, (index) => {
             const buffer = this.consumeUint8Array(2);
-            const bufferIndex = index * 4;
+            const bufferIndex = index * 3;
             const r = ((buffer[1] & 0b11111000) >>> 3) / 31;
             const g =
-              ((buffer[1] & 0b111) << 3) |
-              (((buffer[0] & 0b11100000) >>> 5) / 31);
-            const b = buffer[0] & 0b11111;
+              (((buffer[1] & 0b111) << 3) | ((buffer[0] & 0b11100000) >>> 5)) /
+              63;
+            const b = (buffer[0] & 0b11111) / 31;
 
             data[bufferIndex] = Math.round(clamp(r * 255, 0, 255));
             data[bufferIndex + 1] = Math.round(clamp(g * 255, 0, 255));
@@ -186,7 +186,7 @@ export class PvrReadStream extends ReadStream {
       metadataSize: this.uint32(),
     };
 
-    if (header.version !== 'PVR\x03') throw new TypeError('Endian mismatch');
+    if (header.version !== "PVR\x03") throw new TypeError("Endian mismatch");
 
     return header;
   }
@@ -205,19 +205,19 @@ export class PvrReadStream extends ReadStream {
   resolveBitRatePixelFormat(
     pixelFormat: Exclude<ReturnType<typeof this.pixelFormat>, number>,
   ) {
-    if (pixelFormat.order === 'rgba') {
+    if (pixelFormat.order === "rgba") {
       if (isEqual(pixelFormat.bitRates, [4, 4, 4, 4])) {
         return ResolvedBitRatePixelFormat.R4G4B4A4;
       } else
         throw new TypeError(
-          `Unhandled rgba bit rate ${pixelFormat.bitRates.join(', ')}`,
+          `Unhandled rgba bit rate ${pixelFormat.bitRates.join(", ")}`,
         );
-    } else if (pixelFormat.order === 'rgb\0') {
+    } else if (pixelFormat.order === "rgb\0") {
       if (isEqual(pixelFormat.bitRates, [5, 6, 5, 0])) {
         return ResolvedBitRatePixelFormat.R5G6B5A0;
       } else
         throw new TypeError(
-          `Unhandled rgb bit rate ${pixelFormat.bitRates.join(', ')}`,
+          `Unhandled rgb bit rate ${pixelFormat.bitRates.join(", ")}`,
         );
     } else {
       throw new TypeError(`Unhandled pixel order ${pixelFormat.order}`);
