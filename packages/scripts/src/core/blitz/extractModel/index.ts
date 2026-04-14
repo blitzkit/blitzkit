@@ -1,5 +1,6 @@
 import {
   bufferToBigInt,
+  ConfigArchive,
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
@@ -75,14 +76,20 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
           .setImage(baseColor),
       );
 
-      const defaultConfigArchive =
-        typeof node.configCount === "number"
-          ? (times(
-              node.configCount,
-              (index) => node[`configArchive_${index}`],
-            ).find((archive) => archive.configName === "Default") ??
-            node.configArchive_0)
-          : undefined;
+      let defaultConfigArchive: ConfigArchive | undefined = undefined;
+
+      if (node.configCount) {
+        const names = times(
+          node.configCount,
+          (index) => node[`configArchive_${index}`],
+        );
+
+        defaultConfigArchive = names.find(
+          (archive) => archive.configName === "Default",
+        );
+        defaultConfigArchive ??= node.configArchive_0;
+      }
+
       const customCullMode =
         node.customCullMode ?? defaultConfigArchive?.customCullMode;
 
@@ -204,8 +211,8 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
 
           case "TransformComponent": {
             const localTranslation = component["tc.localTranslation"];
-             // The game resets top-level node translation to [0, 0, 0] on load.
-             // Child nodes must keep their authored local offsets.
+            // The game resets top-level node translation to [0, 0, 0] on load.
+            // Child nodes must keep their authored local offsets.
             node.setTranslation(
               parent instanceof Scene ? [0, 0, 0] : localTranslation,
             );
