@@ -1,5 +1,6 @@
 import {
   bufferToBigInt,
+  ConfigArchive,
   Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
@@ -75,6 +76,42 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
           .setImage(baseColor),
       );
 
+      let defaultConfigArchive: ConfigArchive | undefined = undefined;
+
+      if (node.configCount) {
+        const names = times(
+          node.configCount,
+          (index) => node[`configArchive_${index}`],
+        );
+
+        defaultConfigArchive = names.find(
+          (archive) => archive.configName === "Default",
+        );
+        defaultConfigArchive ??= node.configArchive_0;
+      }
+
+      const customCullMode =
+        node.customCullMode ?? defaultConfigArchive?.customCullMode;
+
+      if (customCullMode === 0) {
+        material.setDoubleSided(true);
+      } else if (customCullMode !== undefined) {
+        material.setDoubleSided(false);
+      }
+
+      if (
+        node.enabledPresets?.AlphaTest &&
+        node.properties?.alphatestThreshold
+      ) {
+        const view = new DataView(node.properties.alphatestThreshold);
+        const alphaCutoff =
+          view.byteLength < 4
+            ? 0.5
+            : view.getFloat32(view.byteLength - 4, true);
+
+        material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
+      }
+
       if (node.configCount) {
         for (
           let configIndex = 0;
@@ -85,14 +122,17 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
 
           if (
             archive.configName !== "Default" ||
-            !archive.enabledPresets?.AlphaTest
+            !archive.enabledPresets?.AlphaTest ||
+            !archive.properties?.alphatestThreshold
           ) {
             continue;
           }
 
           const view = new DataView(archive.properties.alphatestThreshold);
-          const _ = view.getUint8(0); // only god knows what these flags are
-          const alphaCutoff = view.getFloat32(1, true);
+          const alphaCutoff =
+            view.byteLength < 4
+              ? 0.5
+              : view.getFloat32(view.byteLength - 4, true);
 
           material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
@@ -171,8 +211,8 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
 
           case "TransformComponent": {
             const localTranslation = component["tc.localTranslation"];
-             // The game resets top-level node translation to [0, 0, 0] on load.
-             // Child nodes must keep their authored local offsets.
+            // The game resets top-level node translation to [0, 0, 0] on load.
+            // Child nodes must keep their authored local offsets.
             node.setTranslation(
               parent instanceof Scene ? [0, 0, 0] : localTranslation,
             );
