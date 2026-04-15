@@ -1,14 +1,14 @@
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
-import type { Avatar } from "../../protos/avatar";
-import type { AvatarList } from "../../protos/avatar_list";
-import type { Avatars } from "../../protos/avatars";
-import type { Background } from "../../protos/background";
-import type { Backgrounds } from "../../protos/backgrounds";
-import type { PopularTanks } from "../../protos/popular_tanks";
-import type { Tank } from "../../protos/tank";
-import type { TankList } from "../../protos/tank_list";
-import type { Tanks } from "../../protos/tanks";
+import type { Avatar } from "@protos/blitzkit/avatar";
+import type { AvatarList } from "@protos/blitzkit/avatar_list";
+import type { Avatars } from "@protos/blitzkit/avatars";
+import type { Background } from "@protos/blitzkit/background";
+import type { Backgrounds } from "@protos/blitzkit/backgrounds";
+import type { PopularTanks } from "@protos/blitzkit/popular_tanks";
+import type { Tank } from "@protos/blitzkit/tank";
+import type { TankList } from "@protos/blitzkit/tank_list";
+import type { Tanks } from "@protos/blitzkit/tanks";
 
 export abstract class AbstractAPI {
   abstract tankList(): Promise<TankList>;

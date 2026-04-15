@@ -1,11 +1,11 @@
-import { TankClass } from "@protos/blitz_static_tank_component";
+import type { Tank } from "@protos/blitzkit/tank";
+import { TankClass } from "@protos/game/proto/legacy/blitz_static_tank_component";
 import {
-  ShellUpgrageSingleChange_AttributeName,
+  ShellUpgradeSingleChange_AttributeName,
   StageParameters,
   TankAttributeChange_AttributeName,
-} from "@protos/blitz_static_tank_upgrade_single_stage";
+} from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 import { radToDeg } from "three/src/math/MathUtils.js";
-import type { Tank } from "../../protos/tank";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
 
@@ -15,8 +15,8 @@ type Characteristic = (helpers: {
   characteristic: (name: CharacteristicName) => CharacteristicOutput;
   attribute: (name: TankAttributeChange_AttributeName) => number;
   attributeSafe: (name: TankAttributeChange_AttributeName) => number | null;
-  shell: (name: ShellUpgrageSingleChange_AttributeName) => number;
-  shellSafe: (name: ShellUpgrageSingleChange_AttributeName) => number | null;
+  shell: (name: ShellUpgradeSingleChange_AttributeName) => number;
+  shellSafe: (name: ShellUpgradeSingleChange_AttributeName) => number | null;
   state: TankState;
   tank: Tank;
   parameters: StageParameters;
@@ -60,19 +60,19 @@ export const characteristics = {
 
   damage({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_ARMOR_DAMAGE,
     );
   },
 
   module_damage({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MODULE_DAMAGE,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_MODULE_DAMAGE,
     );
   },
 
   penetration({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER,
     );
   },
 
@@ -168,37 +168,37 @@ export const characteristics = {
   },
 
   caliber({ shell }) {
-    return shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_CALIBER);
+    return shell(ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_CALIBER);
   },
 
   normalization({ shellSafe }) {
     return shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_NORMALIZATION,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_NORMALIZATION,
     );
   },
 
   ricochet({ shell }) {
     return shell(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_RICOCHET_ANGLE,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_RICOCHET_ANGLE,
     );
   },
 
   shell_velocity({ shell }) {
     return (
-      shell(ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED) / 100
+      shell(ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_SPEED) / 100
     );
   },
 
   shell_range({ shellSafe }) {
     const maxDistance = shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_DISTANCE,
     );
     return maxDistance === null ? Infinity : maxDistance / 100;
   },
 
   shell_capacity({ shellSafe }) {
     const count = shellSafe(
-      ShellUpgrageSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_COUNT,
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_MAX_COUNT,
     );
     return count === -1 || count === null ? Infinity : count;
   },

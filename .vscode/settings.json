@@ -1,4 +1,6 @@
 {
+  "js/ts.experimental.useTsgo": true,
+  "protobuf.includes": ["${workspaceFolder}/path/to/protos"],
   "cSpell.words": [
     "AABBOX",
     "Abhi",
@@ -262,6 +264,5 @@
     "youtuber",
     "youtubers",
     "zoomable"
-  ],
-  "protobuf.includes": ["${workspaceFolder}/path/to/protos"]
+  ]
 }

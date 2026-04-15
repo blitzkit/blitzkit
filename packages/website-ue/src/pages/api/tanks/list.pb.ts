@@ -1,5 +1,5 @@
+import { TankList } from "@protos/blitzkit/tank_list";
 import { api } from "../../../core/api/dynamic";
-import { TankList } from "../../../protos/tank_list";
 
 /**
  * List!!

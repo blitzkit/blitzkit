@@ -1,8 +1,8 @@
+import type { Tank } from "@blitzkit/closed/protos/blitzkit/tank";
 import {
-  ShellUpgrageSingleChange_AttributeName,
+  ShellUpgradeSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
-} from "@protos/blitz_static_tank_upgrade_single_stage";
-import type { Tank } from "../../protos/tank";
+} from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 import { aggregateStageParameters } from "./aggregateStageParameters";
 import {
   characteristics,
@@ -19,11 +19,11 @@ export type ComputedCharacteristics = Record<
 export function computeCharacteristics(
   id: string,
   tank: Tank,
-  state: TankState
+  state: TankState,
 ) {
   const parameters = aggregateStageParameters(
     tank.tank!.base_stats!,
-    tank.tank!.upgrade_stages.slice(0, state.stage)
+    tank.tank!.upgrade_stages.slice(0, state.stage),
   );
 
   const computed: Partial<ComputedCharacteristics> = {};
@@ -35,7 +35,7 @@ export function computeCharacteristics(
 
   function attributeSafe(name: TankAttributeChange_AttributeName) {
     const attribute = parameters.attributes.find(
-      (attribute) => attribute.attribute_name === name
+      (attribute) => attribute.attribute_name === name,
     );
 
     return attribute ? attribute.value : null;
@@ -46,37 +46,37 @@ export function computeCharacteristics(
 
     if (attribute === null) {
       throw new Error(
-        `Attribute ${TankAttributeChange_AttributeName[name]} (${name}) not found`
+        `Attribute ${TankAttributeChange_AttributeName[name]} (${name}) not found`,
       );
     }
 
     return attribute;
   }
 
-  function shellSafe(name: ShellUpgrageSingleChange_AttributeName) {
+  function shellSafe(name: ShellUpgradeSingleChange_AttributeName) {
     const shell = parameters.shells_upgrades.find(
-      (shell) => shell.shell_id === state.shell
+      (shell) => shell.shell_id === state.shell,
     );
 
     if (!shell) {
       throw new Error(
-        `Shell ${ShellUpgrageSingleChange_AttributeName[name]} (${name}) not found`
+        `Shell ${ShellUpgradeSingleChange_AttributeName[name]} (${name}) not found`,
       );
     }
 
     const attribute = shell.changes.find(
-      (change) => change.attribute_name === name
+      (change) => change.attribute_name === name,
     );
 
     return attribute ? attribute.value : null;
   }
 
-  function shell(name: ShellUpgrageSingleChange_AttributeName) {
+  function shell(name: ShellUpgradeSingleChange_AttributeName) {
     const attribute = shellSafe(name);
 
     if (attribute === null) {
       throw new Error(
-        `Shell attribute ${ShellUpgrageSingleChange_AttributeName[name]} (${name}) not found`
+        `Shell attribute ${ShellUpgradeSingleChange_AttributeName[name]} (${name}) not found`,
       );
     }
 

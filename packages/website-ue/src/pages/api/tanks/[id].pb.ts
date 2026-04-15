@@ -1,6 +1,6 @@
+import { Tank } from "@protos/blitzkit/tank";
 import type { APIContext, GetStaticPaths } from "astro";
 import { api } from "../../../core/api/dynamic";
-import { Tank } from "../../../protos/tank";
 
 export const getStaticPaths = (async () => {
   const { list } = await api.tankList();

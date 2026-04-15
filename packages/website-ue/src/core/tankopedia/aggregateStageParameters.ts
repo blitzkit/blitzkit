@@ -1,16 +1,16 @@
-import { StandardSinglePrice } from "@protos/blitz_static_standard_single_price";
-import { PenetrationGroup } from "@protos/blitz_static_tank_penetration_group";
+import { TankAttributeChange } from "@protos/game/proto/legacy/auto_items";
+import { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
+import { PenetrationGroup } from "@protos/game/proto/legacy/blitz_static_tank_penetration_group";
 import {
   PenetrationGroupUpgrade,
   PitchLimit,
   ShellUpgrade,
-  ShellUpgrageSingleChange,
+  ShellUpgradeSingleChange,
   StageParameters,
-  TankAttributeChange,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
   VisualChanges,
-} from "@protos/blitz_static_tank_upgrade_single_stage";
+} from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 
 function patch(stage0: StageParameters, stage1: StageParameters) {
   if (stage1.stage_number !== ++stage0.stage_number) {
@@ -29,14 +29,14 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
       case TankAttributeChange_Modifier.MODIFIER_ADD:
         const attribute0 = stage0.attributes.find(
           (attribute0) =>
-            attribute0.attribute_name === attribute1.attribute_name
+            attribute0.attribute_name === attribute1.attribute_name,
         );
 
         if (!attribute0) {
           throw new Error(
             `Missing attribute ${
               TankAttributeChange_AttributeName[attribute1.attribute_name]
-            } (${attribute1.attribute_name}) to modify`
+            } (${attribute1.attribute_name}) to modify`,
           );
         }
 
@@ -54,7 +54,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
         throw new Error(
           `Unhandled modified ${
             TankAttributeChange_Modifier[attribute1.modifier]
-          }`
+          }`,
         );
     }
 
@@ -64,7 +64,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
       value: value1,
     });
     const index0 = stage0.attributes.findIndex(
-      (attribute) => attribute.attribute_name === attribute1.attribute_name
+      (attribute) => attribute.attribute_name === attribute1.attribute_name,
     );
 
     if (index0 === -1) {
@@ -76,7 +76,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 
   for (const penetrationGroupUpgrade1 of stage1.penetration_groups_upgrades) {
     const penetrationGroupUpgrade0 = stage0.penetration_groups_upgrades.find(
-      (group) => group.tank_part === penetrationGroupUpgrade1.tank_part
+      (group) => group.tank_part === penetrationGroupUpgrade1.tank_part,
     );
 
     if (penetrationGroupUpgrade0) {
@@ -87,7 +87,8 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
       for (const penetrationGroup1 of penetrationGroupUpgrade1.penetration_groups) {
         const penetrationGroup0 =
           penetrationGroupUpgrade0.penetration_groups.find(
-            (baseGroup) => baseGroup.group_name === penetrationGroup1.group_name
+            (baseGroup) =>
+              baseGroup.group_name === penetrationGroup1.group_name,
           );
 
         if (penetrationGroup0) {
@@ -95,13 +96,13 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
           penetrationGroup0.armor = penetrationGroup1.armor;
         } else {
           penetrationGroupUpgrade0.penetration_groups.push(
-            PenetrationGroup.create(penetrationGroup1)
+            PenetrationGroup.create(penetrationGroup1),
           );
         }
       }
     } else {
       stage0.penetration_groups_upgrades.push(
-        PenetrationGroupUpgrade.create(penetrationGroupUpgrade1)
+        PenetrationGroupUpgrade.create(penetrationGroupUpgrade1),
       );
     }
   }
@@ -112,7 +113,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 
   for (const shellUpgrades1 of stage1.shells_upgrades) {
     let shellUpgrades0 = stage0.shells_upgrades.find(
-      (baseShell) => baseShell.shell_id === shellUpgrades1.shell_id
+      (baseShell) => baseShell.shell_id === shellUpgrades1.shell_id,
     );
 
     if (shellUpgrades0) {
@@ -122,14 +123,14 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
         const shellUpgrade0 = shellUpgrades0.changes.find(
           (baseShellUpgrade) =>
             baseShellUpgrade.attribute_name ===
-            changedShellUpgrade.attribute_name
+            changedShellUpgrade.attribute_name,
         );
 
         if (shellUpgrade0) {
           shellUpgrade0.value = changedShellUpgrade.value;
         } else {
           shellUpgrades0.changes.push(
-            ShellUpgrageSingleChange.create(changedShellUpgrade)
+            ShellUpgradeSingleChange.create(changedShellUpgrade),
           );
         }
       }
@@ -169,7 +170,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
   for (const visualChange1 of stage1.visual_changes) {
     const visualChange0 = stage0.visual_changes.find(
       (baseVisualChange) =>
-        baseVisualChange.tank_part === visualChange1.tank_part
+        baseVisualChange.tank_part === visualChange1.tank_part,
     );
 
     if (visualChange0) {
@@ -182,7 +183,7 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 
 export function aggregateStageParameters(
   base: StageParameters,
-  stages: StageParameters[]
+  stages: StageParameters[],
 ) {
   const stage0 = StageParameters.create({ ...base, stage_number: 0 });
 
@@ -195,7 +196,7 @@ export function aggregateStageParameters(
 
   if (base.stage_number === 0 && import.meta.env.DEV) {
     throw new Error(
-      "Base stats are now stage 0. In-game bug fixed, please remove hack."
+      "Base stats are now stage 0. In-game bug fixed, please remove hack.",
     );
   }
 

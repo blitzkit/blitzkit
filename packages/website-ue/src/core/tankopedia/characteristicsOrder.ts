@@ -2,7 +2,7 @@ import {
   Nation,
   TankClass,
   TankType,
-} from "@protos/blitz_static_tank_component";
+} from "@protos/game/proto/legacy/blitz_static_tank_component";
 import {
   GunType,
   type CharacteristicName,

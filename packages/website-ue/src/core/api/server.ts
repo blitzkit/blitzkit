@@ -186,7 +186,7 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  @Cache()
+  // @Cache()
   async gameStrings(locale: string) {
     const group = this.metadata.group("ClientConfigsEntity");
 
@@ -198,8 +198,6 @@ export class ServerAPI extends AbstractAPI {
 
     const clientConfig = this.metadata.item(group[0].id);
     const localizationResources = clientConfig.LocalizationResources();
-
-    console.log("localizationResources", localizationResources);
 
     if (localizationResources.remote_storages.length !== 1) {
       throw new RangeError(
@@ -227,7 +225,7 @@ export class ServerAPI extends AbstractAPI {
     }
 
     const strings: Record<string, string> = {};
-    const configPath = `${remoteStorage.url}/${remoteStorage.relative_path}/config.yaml`;
+    const configPath = `${remoteStorage.url}${remoteStorage.relative_path}/config.yaml`;
 
     try {
       const config = await fetch(configPath)
@@ -235,23 +233,21 @@ export class ServerAPI extends AbstractAPI {
         .then((text) => parse(text) as LocalizationConfig);
 
       for (const namespace of config.namespaces) {
-        Object.assign(
-          strings,
-          await fetch(
-            `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`,
-          )
-            .then((response) => response.text())
-            .then((text) => {
-              const strings: Record<string, string> = {};
-              const parsed = parse(text) as Record<string, string>;
+        const url = `${remoteStorage.url}${remoteStorage.relative_path}/${namespace}/${locale}.yaml`;
+        const response = await fetch(url);
+        const text = await response.text();
+        const namespaceStrings: Record<string, string> = {};
+        const parsed = parse(text) as Record<string, string>;
 
-              for (const key in parsed) {
-                strings[key] = parsed[key].replaceAll('\\"', '"');
-              }
+        for (const key in parsed) {
+          strings[key] = parsed[key].replaceAll('\\"', '"');
+        }
 
-              return strings;
-            }),
+        console.log(
+          namespaceStrings["ProfileAvatarEntity__1_ct_legendary__DisplayName"],
         );
+
+        Object.assign(strings, namespaceStrings);
       }
     } catch (error) {
       console.warn(
