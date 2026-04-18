@@ -4,6 +4,7 @@ using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.JavaScript.NodeApi;
+using SkiaSharp;
 
 namespace BlitzKit.Game.JSExport;
 
@@ -44,20 +45,20 @@ public class GameInterface
 
       if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
       {
-        try
+        FSoftObjectPath objectPath = pda.Get<FSoftObjectPath>("BigIcon");
+        UTexture2D uTexture = objectPath.Load<UTexture2D>();
+        CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+
+        if (cTexture is null)
         {
-          return pda.Get<FSoftObjectPath>("BigIcon")
-            .Load<UTexture2D>()
-            .Decode(ETexturePlatform.DesktopMobile)!
-            .ToSkBitmap()
-            .Encode(SkiaSharp.SKEncodedImageFormat.Webp, 80)
-            .ToArray();
+          continue;
         }
-        catch (Exception e)
-        {
-          Console.WriteLine(e);
-          throw;
-        }
+
+        SKBitmap bitmap = cTexture.ToSkBitmap();
+        SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+        byte[] bytes = data.ToArray();
+
+        return bytes;
       }
       else
       {
@@ -65,6 +66,6 @@ public class GameInterface
       }
     }
 
-    throw new FileNotFoundException($"Tank {tankId}/{pdaName} not found in any nation");
+    return [];
   }
 }
