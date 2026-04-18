@@ -1,6 +1,5 @@
 .text {
   font-size: var(--font-size-regular);
-  color: var(--gray-12);
 
   &[data-size="minor"] {
     font-size: var(--font-size-minor);

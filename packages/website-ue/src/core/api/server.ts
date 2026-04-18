@@ -243,10 +243,6 @@ export class ServerAPI extends AbstractAPI {
           strings[key] = parsed[key].replaceAll('\\"', '"');
         }
 
-        console.log(
-          namespaceStrings["ProfileAvatarEntity__1_ct_legendary__DisplayName"],
-        );
-
         Object.assign(strings, namespaceStrings);
       }
     } catch (error) {

@@ -21,6 +21,13 @@ export function Text({
   color = "gray",
   ...props
 }: TextProps) {
+  const scale = color === "gray" && lowContrast ? "white" : color;
+  let power: string | number = 12;
+
+  if (lowContrast) {
+    power = color === "gray" ? "a9" : 11;
+  }
+
   return (
     <span
       className={classNames(styles.text, className)}
@@ -28,7 +35,9 @@ export function Text({
       data-size={size}
       data-weight={weight}
       data-align={align === "left" ? undefined : align}
-      style={{ color: `var(--${color}-${lowContrast ? 10 : 12})` }}
+      style={{
+        color: `var(--${scale}-${power})`,
+      }}
       {...props}
     />
   );
