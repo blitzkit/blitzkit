@@ -1,8 +1,8 @@
+import type { PopularTank } from "@protos/blitzkit/popular_tanks";
 import { api } from "../../core/api/dynamic";
 import { useAwait } from "../../hooks/useAwait";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useLocale } from "../../hooks/useLocale";
-import type { PopularTank } from "../../protos/popular_tanks";
 import { LinkI18n } from "../LinkI18n";
 import { Text } from "../Text";
 import styles from "./index.module.css";

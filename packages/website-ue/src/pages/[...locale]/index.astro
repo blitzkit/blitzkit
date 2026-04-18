@@ -3,7 +3,10 @@ import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
 import ColorScale from "../../components/ColorScale.astro";
 import HomeCosmetics from "../../components/HomeCosmetics.astro";
+import HomeGames from "../../components/HomeGames.astro";
 import HomeHero from "../../components/HomeHero.astro";
+import HomePlayers from "../../components/HomePlayers.astro";
+import HomeTanks from "../../components/HomeTanks.astro";
 import HomeTechnical from "../../components/HomeTechnical.astro";
 import { tools } from "../../core/tools/tools";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -25,6 +28,9 @@ const { locale } = Astro.props;
 
   {Object.values(tools).map((tool) => <ColorScale color={tool.accent} />)}
 
+  <HomeTanks {locale} />
+  <HomePlayers {locale} />
+  <HomeGames {locale} />
   <HomeCosmetics {locale} />
   <HomeTechnical {locale} />
 </BaseLayout>

@@ -64,7 +64,7 @@ export abstract class AbstractAPI {
 export function Cache<Arguments extends unknown[]>(
   discriminator: (...args: Arguments) => string = (...args) => args.join("-"),
 ) {
-  const cache = new WeakMap<object, Map<string, unknown>>();
+  const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
   return function (
     _target: unknown,
@@ -73,18 +73,32 @@ export function Cache<Arguments extends unknown[]>(
   ) {
     const original = descriptor.value;
 
-    descriptor.value = async function (...args: Arguments) {
+    descriptor.value = function (...args: Arguments) {
       const key = discriminator(...args);
-      const thisCache = cache.get(this) ?? new Map<string, unknown>();
 
-      if (!cache.has(this)) cache.set(this, thisCache);
-      if (thisCache.has(key)) return thisCache.get(key);
+      let thisCache = cache.get(this);
 
-      const result = await original.apply(this, args);
+      if (!thisCache) {
+        thisCache = new Map();
+        cache.set(this, thisCache);
+      }
 
-      thisCache.set(key, result);
+      if (thisCache.has(key)) {
+        return thisCache.get(key);
+      }
 
-      return result;
+      const promise = (async () => {
+        try {
+          return await original.apply(this, args);
+        } catch (error) {
+          thisCache!.delete(key);
+          throw error;
+        }
+      })();
+
+      thisCache.set(key, promise);
+
+      return promise;
     };
   };
 }
