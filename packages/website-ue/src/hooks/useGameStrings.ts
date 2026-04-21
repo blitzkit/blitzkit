@@ -5,7 +5,7 @@ import { useLocale } from "./useLocale";
 export function useGameStrings(group: string) {
   const locale = useLocale();
   const strings = useAwait(
-    () => api._groupedGameStrings(locale, group, true),
+    () => api.groupedGameStrings(locale, group, true),
     `game-strings-${locale}-${group}`,
   );
   return strings;

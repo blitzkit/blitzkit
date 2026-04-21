@@ -207,8 +207,6 @@ export class ServerAPI extends AbstractAPI {
         const item = this.metadata.item(remoteUrl);
         const candidate = item.RemoteStorage();
 
-        console.log(remoteUrl, candidate);
-
         if (
           remoteStorage === undefined ||
           candidate.download_speed_weight > remoteStorage.download_speed_weight
