@@ -186,7 +186,7 @@ export class ServerAPI extends AbstractAPI {
     return strings;
   }
 
-  // @Cache()
+  @Cache()
   async gameStrings(locale: string) {
     const group = this.metadata.group("ClientConfigsEntity");
 
@@ -198,36 +198,30 @@ export class ServerAPI extends AbstractAPI {
 
     const clientConfig = this.metadata.item(group[0].id);
     const localizationResources = clientConfig.LocalizationResources();
-
-    if (localizationResources.remote_storages.length !== 1) {
-      throw new RangeError(
-        `Don't know how to handle ${group.length} remote_storages`,
-      );
-    }
-
-    const remoteStorageName = localizationResources.remote_storages[0];
-    let remoteStorage: RemoteStorageComponent | undefined = undefined;
-
-    for (const remoteUrl of remoteStorageName.remote_urls) {
-      const item = this.metadata.item(remoteUrl);
-      const candidate = item.RemoteStorage();
-
-      if (
-        remoteStorage === undefined ||
-        candidate.download_speed_weight > remoteStorage.download_speed_weight
-      ) {
-        remoteStorage = candidate;
-      }
-    }
-
-    if (remoteStorage === undefined) {
-      throw new Error("No suitable production remote storage found");
-    }
-
     const strings: Record<string, string> = {};
-    const configPath = `${remoteStorage.url}${remoteStorage.relative_path}/config.yaml`;
 
-    try {
+    for (const remoteStorageSettings of localizationResources.remote_storages) {
+      let remoteStorage: RemoteStorageComponent | undefined = undefined;
+
+      for (const remoteUrl of remoteStorageSettings.remote_urls) {
+        const item = this.metadata.item(remoteUrl);
+        const candidate = item.RemoteStorage();
+
+        console.log(remoteUrl, candidate);
+
+        if (
+          remoteStorage === undefined ||
+          candidate.download_speed_weight > remoteStorage.download_speed_weight
+        ) {
+          remoteStorage = candidate;
+        }
+      }
+
+      if (remoteStorage === undefined) {
+        throw new Error("No suitable production remote storage found");
+      }
+
+      const configPath = `${remoteStorage.url}${remoteStorage.relative_path}/config.yaml`;
       const config = await fetch(configPath)
         .then((response) => response.text())
         .then((text) => parse(text) as LocalizationConfig);
@@ -245,11 +239,6 @@ export class ServerAPI extends AbstractAPI {
 
         Object.assign(strings, namespaceStrings);
       }
-    } catch (error) {
-      console.warn(
-        `Failed to fetch config from ${configPath}. Returning empty strings. This will throw an error in production. Error:`,
-        error,
-      );
     }
 
     return strings;
