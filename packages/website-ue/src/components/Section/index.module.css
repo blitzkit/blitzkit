@@ -1,11 +1,12 @@
 .section {
   display: flex;
   justify-content: center;
-  padding: var(--space-5);
+  padding: var(--space-4);
 
   .content {
     flex: 1;
     max-width: var(--page-width);
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
