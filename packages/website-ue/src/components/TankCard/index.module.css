@@ -23,7 +23,7 @@
     }
 
     .icon {
-      width: 11rem;
+      width: var(--tank-card-width);
       height: 7rem;
       position: relative;
 

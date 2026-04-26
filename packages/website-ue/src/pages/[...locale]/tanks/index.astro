@@ -1,9 +1,11 @@
 ---
 import "@radix-ui/colors/violet-dark.css";
+import { Section } from "../../../components/Section";
 import ToolBanner from "../../../components/ToolBanner.astro";
 import { api } from "../../../core/api/dynamic";
 import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
@@ -14,16 +16,11 @@ const tankList = await api.tankList();
 <BaseLayout {locale} accent="purple">
   <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
 
-  <h1>tanks</h1>
+  <Section>
+    <Page {locale} client:load />
+  </Section>
 
-  {
-    tankList.list.map(({ id, slug }) => (
-      <p>
-        <a href={`/tanks/${slug}`}>
-          <img height="128" width="128" src={`/api/tanks/${id}.webp`} />
-          {slug} ({id})
-        </a>
-      </p>
-    ))
-  }
+  <!-- {
+   
+  } -->
 </BaseLayout>

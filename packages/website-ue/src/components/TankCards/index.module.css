@@ -1,0 +1,6 @@
+.tank-cards {
+  display: grid;
+  gap: var(--space-5) var(--space-4);
+  grid-template-columns: repeat(auto-fill, var(--tank-card-width));
+  justify-content: center;
+}

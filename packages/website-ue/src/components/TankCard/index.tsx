@@ -1,4 +1,3 @@
-import type { PopularTank } from "@protos/blitzkit/popular_tanks";
 import { api } from "../../core/api/dynamic";
 import { useAwait } from "../../hooks/useAwait";
 import { useGameStrings } from "../../hooks/useGameStrings";
@@ -7,7 +6,12 @@ import { LinkI18n } from "../LinkI18n";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
-export function TankCard({ id }: PopularTank) {
+interface TankCardProps {
+  id: string;
+  subtitle?: string;
+}
+
+export function TankCard({ id }: TankCardProps) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
   const gameStrings = useGameStrings("TankEntity");
   const locale = useLocale();
