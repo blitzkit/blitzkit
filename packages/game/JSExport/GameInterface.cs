@@ -1,4 +1,6 @@
-﻿using BlitzKit.Game.Models;
+﻿using System.IO;
+using System.Text.RegularExpressions;
+using BlitzKit.Game.Models;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Objects.Engine;
@@ -9,7 +11,7 @@ using SkiaSharp;
 namespace BlitzKit.Game.JSExport;
 
 [JSExport]
-public class GameInterface
+public partial class GameInterface
 {
   private readonly BlitzFileProvider provider;
 
@@ -51,7 +53,7 @@ public class GameInterface
 
         if (cTexture is null)
         {
-          continue;
+          return [];
         }
 
         SKBitmap bitmap = cTexture.ToSkBitmap();
@@ -60,9 +62,50 @@ public class GameInterface
 
         return bytes;
       }
-      else
+    }
+
+    return [];
+  }
+
+  [GeneratedRegex(@"T_UI_Flag_(\w+)_S")]
+  private static partial Regex FlagNameRegex();
+
+  public byte[] Flag(string nation)
+  {
+    var flagsBase = "Blitz/Content/UI/Textures/Flag/TankCard/";
+
+    foreach (var path in provider.Files.Keys)
+    {
+      if (!path.StartsWith(flagsBase))
       {
         continue;
+      }
+
+      var fileName = Path.GetFileNameWithoutExtension(path);
+      var match = FlagNameRegex().Match(fileName);
+
+      if (
+        match.Success
+        && match.Groups[1].Value.Equals(nation, StringComparison.CurrentCultureIgnoreCase)
+      )
+      {
+        if (provider.TryLoadPackageObject<UTexture2D>($"{path}.{fileName}", out var uTexture))
+        {
+          CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+
+          if (cTexture is null)
+          {
+            return [];
+          }
+
+          SKBitmap bitmap = cTexture.ToSkBitmap();
+          SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+          byte[] bytes = data.ToArray();
+
+          return bytes;
+        }
+
+        return [];
       }
     }
 

@@ -23,7 +23,7 @@ export function TankCard({ id }: PopularTank) {
         <div
           className={styles.flag}
           style={{
-            backgroundImage: "url(https://i.imgur.com/QGUfXNo.png)",
+            backgroundImage: `url(/api/nations/${tank.tank!.nation}.webp)`,
           }}
         />
 
