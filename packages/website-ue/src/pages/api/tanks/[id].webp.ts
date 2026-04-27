@@ -2,7 +2,7 @@ import type { APIContext } from "astro";
 import { api } from "../../../core/api/dynamic";
 import { game } from "../../../core/game/game";
 
-export { getStaticPaths } from "./[id].pb";
+export { getStaticPaths } from "./[id].json";
 
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const tank = await api.tank(params.id);

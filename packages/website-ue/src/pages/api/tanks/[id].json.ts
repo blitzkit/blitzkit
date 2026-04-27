@@ -1,7 +1,10 @@
-import type { APIContext } from "astro";
+import type { APIContext, GetStaticPaths } from "astro";
 import { api } from "../../../core/api/dynamic";
 
-export { getStaticPaths } from "./[id].pb";
+export const getStaticPaths = (async () => {
+  const { list } = await api.tankList();
+  return list.map(({ id }) => ({ params: { id } }));
+}) satisfies GetStaticPaths;
 
 /**
  * Even Noah can't save these animals.

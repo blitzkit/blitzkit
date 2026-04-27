@@ -2,8 +2,8 @@ import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "@protos/blitzkit/avatars";
 import { PopularTanks } from "@protos/blitzkit/popular_tanks";
-import { Tank } from "@protos/blitzkit/tank";
 import { TankList } from "@protos/blitzkit/tank_list";
+import { Tanks } from "@protos/blitzkit/tanks";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");
@@ -15,13 +15,14 @@ export class ClientAPI extends AbstractAPI {
   }
 
   @Cache()
-  tank(id: string) {
-    return fetchPB(`/api/tanks/${id}.pb`, Tank);
+  async tank(id: string) {
+    const tanks = await this.tanks();
+    return tanks.tanks[id];
   }
 
-  @UnimplementedOnClient
+  @Cache()
   tanks() {
-    return rejected;
+    return fetchPB("/api/tanks/all.pb", Tanks);
   }
 
   @Cache()
