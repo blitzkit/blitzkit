@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { classNames } from "../../core/ui/classNames";
-import type { Color } from "../../core/ui/color";
+import type { ColorWithBW } from "../../core/ui/color";
 import styles from "./index.module.css";
 
 export interface TextProps extends ComponentProps<"span"> {
@@ -8,7 +8,7 @@ export interface TextProps extends ComponentProps<"span"> {
   lowContrast?: boolean;
   size?: "regular" | "minor" | "major";
   align?: "left" | "center" | "right";
-  color?: Color;
+  color?: ColorWithBW;
 }
 
 export function Text({
@@ -22,10 +22,11 @@ export function Text({
   ...props
 }: TextProps) {
   const scale = color === "gray" && lowContrast ? "white" : color;
-  let power: string | number = 12;
+  const isBW = color === "black" || color === "white";
+  let power: string | number = isBW ? "a12" : 12;
 
   if (lowContrast) {
-    power = color === "gray" ? "a9" : 11;
+    power = color === "gray" ? "a9" : isBW ? "a11" : 11;
   }
 
   return (

@@ -21,6 +21,6 @@
   }
 
   &[data-light-text="true"] {
-    color: var(--gray-12);
+    color: var(--white-a12);
   }
 }
