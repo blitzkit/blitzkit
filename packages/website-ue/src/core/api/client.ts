@@ -3,14 +3,15 @@ import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "@protos/blitzkit/avatars";
 import { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import { Tank } from "@protos/blitzkit/tank";
+import { TankList } from "@protos/blitzkit/tank_list";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");
 
 export class ClientAPI extends AbstractAPI {
-  @UnimplementedOnClient
+  @Cache()
   tankList() {
-    return rejected;
+    return fetchPB("/api/tanks/list.pb", TankList);
   }
 
   @Cache()
