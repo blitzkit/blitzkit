@@ -4,6 +4,6 @@
   .content {
     display: flex;
 
-    gap: 2rem;
+    gap: var(--space-4);
   }
 }
