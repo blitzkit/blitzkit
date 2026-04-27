@@ -21,7 +21,7 @@ function Content() {
 
   return (
     <TankCards>
-      {tankList.list.map(({ id }) => (
+      {tankList.list.slice(0, 32).map(({ id }) => (
         <TankCard key={id} id={id} />
       ))}
     </TankCards>
