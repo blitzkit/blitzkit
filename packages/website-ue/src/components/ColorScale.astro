@@ -11,18 +11,31 @@ const ALPHA_ONLY_COLORS = ["black", "white"] as const;
 type AlphaOnlyColor = (typeof ALPHA_ONLY_COLORS)[number];
 
 const { color, alpha } = Astro.props;
-const name = `${color}${
+const nameLight = `${color}${alpha ? "A" : ""}`;
+const nameDark = `${color}${
   ALPHA_ONLY_COLORS.includes(color as AlphaOnlyColor) ? "" : "Dark"
 }${alpha ? "A" : ""}`;
-const scale = colors[name as keyof typeof colors];
+const scaleLight = colors[nameLight as keyof typeof colors];
+const scaleDark = colors[nameDark as keyof typeof colors];
 
 let styles = "";
 
-styles += ":root{";
+styles += ":root.dark{";
 
 for (let i = 0; i < 12; i++) {
   const n = i + 1;
-  const value = scale[`${color}${alpha ? "A" : ""}${n}` as keyof typeof scale];
+  const value =
+    scaleDark[`${color}${alpha ? "A" : ""}${n}` as keyof typeof scaleDark];
+  styles += `--${color}-${alpha ? "a" : ""}${n}:${value};`;
+}
+
+styles += "}";
+styles += ":root.light{";
+
+for (let i = 0; i < 12; i++) {
+  const n = i + 1;
+  const value =
+    scaleLight[`${color}${alpha ? "A" : ""}${n}` as keyof typeof scaleLight];
   styles += `--${color}-${alpha ? "a" : ""}${n}:${value};`;
 }
 

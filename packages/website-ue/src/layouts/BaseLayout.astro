@@ -16,7 +16,7 @@ interface Props {
 const { accent, noNavbar, locale } = Astro.props;
 ---
 
-<html lang={locale}>
+<html lang={locale} class="dark">
   <head>
     <BaseMeta />
 
@@ -56,10 +56,23 @@ const { accent, noNavbar, locale } = Astro.props;
       }
     </style>
 
+    <script>
+      const root = document.documentElement;
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
+        root.classList.toggle("dark", e.matches);
+        root.classList.toggle("light", !e.matches);
+      }
+
+      applyTheme(media);
+      media.addEventListener("change", applyTheme);
+    </script>
+
     <slot name="head" />
   </head>
 
-  <body class="dark">
+  <body>
     {!noNavbar && <Navbar {locale} />}
 
     <slot name="pre-app" />
