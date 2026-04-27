@@ -21,12 +21,16 @@ const { locale } = Astro.props;
     justify-content: center;
 
     z-index: 1;
-    background-color: var(--gray-a2);
     box-shadow: var(--shadow-none);
-    backdrop-filter: var(--blur-glass) brightness(10%);
+    backdrop-filter: var(--blur-glass);
     box-shadow: var(--shadow-subtle);
+    background-color: var(--black-a9);
 
     transition-duration: var(--duration-brief);
+
+    :root.light & {
+      background-color: var(--white-a9);
+    }
 
     &[data-sticky="true"] {
       transform: translateY(-100%);
