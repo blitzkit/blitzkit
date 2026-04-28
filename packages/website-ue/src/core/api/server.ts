@@ -8,6 +8,7 @@ import type { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import type { Tank } from "@protos/blitzkit/tank";
 import type { TankListEntry } from "@protos/blitzkit/tank_list";
 import type { Tanks } from "@protos/blitzkit/tanks";
+import type { Tiers } from "@protos/blitzkit/tiers";
 import type { RemoteStorageComponent } from "@protos/game/proto/legacy/blitz_static_remote_storage_component";
 import { existsSync } from "fs";
 import { mkdir, readFile, writeFile } from "fs/promises";
@@ -171,6 +172,18 @@ export class ServerAPI extends AbstractAPI {
 
     const data = await readFile("../../temp/popular.json", "utf-8");
     return JSON.parse(data) as PopularTanks;
+  }
+
+  @Cache()
+  async tiers() {
+    const group = this.metadata.group("TankTierEntity");
+    const tiers: Tiers = { tiers: {} };
+
+    for (const item of group) {
+      tiers.tiers[item.name] = item.TankTier();
+    }
+
+    return tiers;
   }
 
   @Cache()

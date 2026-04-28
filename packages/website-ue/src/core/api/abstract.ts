@@ -9,12 +9,15 @@ import type { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import type { Tank } from "@protos/blitzkit/tank";
 import type { TankList } from "@protos/blitzkit/tank_list";
 import type { Tanks } from "@protos/blitzkit/tanks";
+import type { Tiers } from "@protos/blitzkit/tiers";
 
 export abstract class AbstractAPI {
   abstract tankList(): Promise<TankList>;
   abstract tank(id: string): Promise<Tank>;
   abstract tanks(): Promise<Tanks>;
   abstract popularTanks(): Promise<PopularTanks>;
+
+  abstract tiers(): Promise<Tiers>;
 
   abstract strings(locale: string): Promise<Strings>;
   abstract gameStrings(locale: string): Promise<Record<string, string>>;

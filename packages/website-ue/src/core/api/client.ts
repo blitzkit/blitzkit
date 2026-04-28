@@ -4,6 +4,7 @@ import { Avatars } from "@protos/blitzkit/avatars";
 import { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import { TankList } from "@protos/blitzkit/tank_list";
 import { Tanks } from "@protos/blitzkit/tanks";
+import { Tiers } from "@protos/blitzkit/tiers";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");
@@ -28,6 +29,11 @@ export class ClientAPI extends AbstractAPI {
   @Cache()
   popularTanks() {
     return fetchPB("/api/tanks/popular.pb", PopularTanks);
+  }
+
+  @Cache()
+  tiers() {
+    return fetchPB("/api/tiers.pb", Tiers);
   }
 
   @Cache()
