@@ -7,28 +7,82 @@ import { characteristicsOrder } from "../../../../core/tankopedia/characteristic
 import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
 import { TerrainHardness } from "../../../../core/tankopedia/tankState";
 import { useAwait } from "../../../../hooks/useAwait";
+import { useGameStrings } from "../../../../hooks/useGameStrings";
+import { LocaleProvider } from "../../../../hooks/useLocale";
 import { Tankopedia, TankopediaCompare } from "../../../../stores/tankopedia";
 
-export function Page({ id }: { id: string }) {
+interface PageProps {
+  id: string;
+  locale: string;
+}
+
+export function Page({ id, locale }: PageProps) {
+  const tank = useAwait(() => api.tank(id), `tank-${id}`);
+
+  Tankopedia.useInitialization(tank);
+
+  return (
+    <LocaleProvider locale={locale}>
+      <Content />
+    </LocaleProvider>
+  );
+
   return (
     <Suspense fallback={null}>
-      <Content id={id} />
+      <Content />
     </Suspense>
   );
 }
 
-function Content({ id }: { id: string }) {
-  const tank = useAwait(() => api.tank(id), `tank-${id}`);
-  // const tankList = useAwait(() => api.tankList(), "tank-list");
-  // const otherTanks = useAwait(() => api.tanks(), "tanks");
-
-  Tankopedia.useInitialization(tank.tank!);
+function Content() {
+  const tankEntityGameStrings = useGameStrings("TankEntity");
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
+  const protagonistTank = useAwait(
+    () => api.tank(protagonist.id),
+    `tank-${protagonist.id}`,
+  );
+
+  return (
+    <>
+      <h1>{protagonist.id}</h1>
+
+      <br />
+
+      {protagonistTank.tank!.upgrade_lines.map((line) => {
+        return (
+          <>
+            <h2>
+              {line.name} ({protagonist.upgrades[line.name]})
+            </h2>
+
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {line.stages.map((stage, index) => {
+                return (
+                  <button
+                    key={stage.tech_name}
+                    onClick={() => {
+                      Tankopedia.mutate((draft) => {
+                        draft.protagonist.upgrades[line.name] = index;
+                      });
+                    }}
+                  >
+                    {protagonist.upgrades[line.name] === index && "✓"}{" "}
+                    {tankEntityGameStrings[stage.display_name]}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        );
+      })}
+    </>
+  );
+
   const compare = Tankopedia.use((state) => state.compare);
   const characteristics = useMemo(
     () => computeCharacteristics(id, tank, protagonist),
-    [protagonist]
+    [protagonist],
   );
   // const otherCharacteristics = useMemo(
   //   () =>
@@ -187,7 +241,7 @@ function Content({ id }: { id: string }) {
                 {TerrainHardness[hardness]}{" "}
                 {hardness === protagonist.terrainHardness && "(selected)"}
               </button>
-            )
+            ),
         )}
       </div>
 
@@ -222,7 +276,7 @@ function Content({ id }: { id: string }) {
               >
                 {TankopediaCompare[c]} {c === compare && "(selected)"}
               </button>
-            )
+            ),
         )}
       </div>
 
@@ -242,7 +296,7 @@ function Content({ id }: { id: string }) {
                 others={[]}
                 config={config}
               />
-            )
+            ),
           )}
         </>
       ))}

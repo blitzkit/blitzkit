@@ -1,16 +1,26 @@
-import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
-import { TerrainHardness } from "./tankState";
+import type { Tank } from "@protos/blitzkit/tank";
+import { TerrainHardness, type TankState } from "./tankState";
 
-export function createTankState(tank: TankCatalogComponent) {
+export function createTankState({ tank, id }: Tank) {
+  const upgrades: Record<string, number> = {};
+
+  for (const upgradeLine of tank!.upgrade_lines) {
+    upgrades[upgradeLine.name] = upgradeLine.stages.length - 1;
+  }
+
   return {
-    stage: tank.upgrade_stages.length,
+    id,
+
+    upgrades,
+
     shell: 0,
-    isGunDamaged: false,
-    isHullTraversing: false,
-    isShooting: false,
-    isTurretTraversing: false,
     speed: 0,
     terrainHardness: TerrainHardness.Hard,
+
+    isShooting: false,
+    isGunDamaged: false,
+    isTurretTraversing: false,
+    isHullTraversing: false,
     isCaughtOnFire: false,
-  };
+  } satisfies TankState;
 }

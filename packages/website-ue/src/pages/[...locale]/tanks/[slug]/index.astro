@@ -19,5 +19,5 @@ const { id, locale } = Astro.props;
 ---
 
 <BaseLayout {locale} accent="violet">
-  <Page {id} client:load />
+  <Page {locale} {id} client:load />
 </BaseLayout>

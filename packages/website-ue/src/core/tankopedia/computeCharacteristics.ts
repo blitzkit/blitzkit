@@ -1,4 +1,4 @@
-import type { Tank } from "@blitzkit/closed/protos/blitzkit/tank";
+import type { Tank } from "@protos/blitzkit/tank";
 import {
   ShellUpgradeSingleChange_AttributeName,
   TankAttributeChange_AttributeName,

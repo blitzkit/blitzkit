@@ -5,13 +5,17 @@ export enum TerrainHardness {
 }
 
 export interface TankState {
-  stage: number;
+  id: string;
+
+  upgrades: Record<string, number>;
+
   shell: number;
   speed: number;
-  isHullTraversing: boolean;
-  isTurretTraversing: boolean;
+  terrainHardness: TerrainHardness;
+
   isShooting: boolean;
   isGunDamaged: boolean;
-  terrainHardness: TerrainHardness;
+  isTurretTraversing: boolean;
+  isHullTraversing: boolean;
   isCaughtOnFire: boolean;
 }

@@ -1,4 +1,4 @@
-import type { TankCatalogComponent } from "@protos/game/proto/legacy/blitz_static_tank_component";
+import type { Tank } from "@protos/blitzkit/tank";
 import { Varuna } from "varuna";
 import { createTankState } from "../core/tankopedia/createTankState";
 import { type TankState } from "../core/tankopedia/tankState";
@@ -14,9 +14,8 @@ export enum TankopediaCompare {
   All,
 }
 
-export const Tankopedia = new Varuna<Tankopedia, TankCatalogComponent>(
-  (tank) => ({
-    compare: TankopediaCompare.TierAndClass,
-    protagonist: createTankState(tank),
-  }),
-);
+export const Tankopedia = new Varuna<Tankopedia, Tank>((tank) => ({
+  compare: TankopediaCompare.TierAndClass,
+
+  protagonist: createTankState(tank),
+}));
