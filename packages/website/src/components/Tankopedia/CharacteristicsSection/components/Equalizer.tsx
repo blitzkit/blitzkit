@@ -70,37 +70,6 @@ export function Equalizer() {
           <Switch checked={equalize} />
         </Flex>
       </Box>
-
-      <Popover.Root>
-        <Popover.Trigger>
-          <Text style={{ cursor: "pointer" }} size="2" color="gray">
-            <Flex align="center" gap="2">
-              Brought to you by{" "}
-              <img
-                src="/assets/images/third-party/wotb-news.png"
-                style={{
-                  width: "1rem",
-                  height: "1rem",
-                  objectFit: "cover",
-                  borderRadius: "50%",
-                }}
-              />{" "}
-              WoTB News <InfoCircledIcon />
-            </Flex>
-          </Text>
-        </Popover.Trigger>
-
-        <Popover.Content>
-          <Text>
-            This feature was brought to you early, ahead of the release of the
-            game mode, thanks to{" "}
-            <Link href="https://discord.gg/WHdER7ZPAD" target="_blank">
-              WoTB News
-            </Link>
-            .
-          </Text>
-        </Popover.Content>
-      </Popover.Root>
     </ConfigurationChildWrapper>
   );
 }
