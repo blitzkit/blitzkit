@@ -50,10 +50,12 @@ export function TankCard(props: PropsWithSkeleton<TankCardProps>) {
         {props.skeleton && <Skeleton className={styles.icon} />}
       </div>
 
-      <Text className={styles.name}>
-        {props.skeleton && <InlineSkeleton className={styles.skeleton} />}
-        {!props.skeleton && gameStrings![tank!.tank!.name!.value]}
-      </Text>
+      <div className={styles.name}>
+        <Text className={styles.text} data-skeleton={props.skeleton}>
+          {props.skeleton && <InlineSkeleton className={styles.skeleton} />}
+          {!props.skeleton && gameStrings![tank!.tank!.name!.value]}
+        </Text>
+      </div>
     </LinkI18n>
   );
 }

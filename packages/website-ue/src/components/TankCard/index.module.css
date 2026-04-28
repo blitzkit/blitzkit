@@ -35,13 +35,23 @@
   }
 
   .name {
-    white-space: nowrap;
-    overflow: hidden;
+    display: flex;
     width: 100%;
-    text-overflow: ellipsis;
 
-    .skeleton {
-      width: 100%;
+    justify-content: center;
+
+    .text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &[data-skeleton="true"] {
+        width: 100%;
+      }
+
+      .skeleton {
+        width: 100%;
+      }
     }
   }
 }
