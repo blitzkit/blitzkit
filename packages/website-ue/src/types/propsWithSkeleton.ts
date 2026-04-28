@@ -1,3 +1,3 @@
 export type PropsWithSkeleton<Props> =
-  | { skeleton: true }
+  | { skeleton: true; onIntersection?: () => void }
   | (Props & { skeleton?: false });

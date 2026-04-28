@@ -1,5 +1,6 @@
 import fuzzysort from "fuzzysort";
 import { useMemo } from "react";
+import { IncrementalLoader } from "../../../components/IncrementalLoader";
 import { TankCard } from "../../../components/TankCard";
 import { TankCards } from "../../../components/TankCards";
 import { TankSearch } from "../../../components/TankSearch";
@@ -41,7 +42,7 @@ function Content() {
       compareTiers(a.tank!.tier_catalog_id, b.tank!.tier_catalog_id),
     );
 
-    return list;
+    return list.map(({ id }) => id);
   }, []);
   const tanksFiltered = useMemo(() => {
     if (!search) return tanksOrdered;
@@ -50,17 +51,32 @@ function Content() {
       keys: ["id", "name", "deburred"],
     });
 
-    return results.map(({ obj }) => obj);
+    return results.map(({ obj }) => obj.id);
   }, [search]);
 
   return (
     <>
       <TankSearch />
-      <TankCards>
-        {tanksFiltered.slice(0, 32).map(({ id }) => (
-          <TankCard key={id} id={id} />
-        ))}
-      </TankCards>
+      <List tanks={tanksFiltered} />
     </>
+  );
+}
+
+interface ListProps {
+  tanks: string[];
+}
+
+function List({ tanks }: ListProps) {
+  const data = useMemo(() => tanks.map((id) => ({ key: id, id })), [tanks]);
+
+  return (
+    <TankCards>
+      <IncrementalLoader
+        initial={7 * 5}
+        intermediate={7 * 3}
+        data={data}
+        Component={TankCard}
+      />
+    </TankCards>
   );
 }

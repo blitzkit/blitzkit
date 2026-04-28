@@ -1,12 +1,12 @@
 @keyframes skeleton-animation {
   0% {
-    background-color: var(--black-a8);
+    background-color: var(--black-a6);
   }
   50% {
     background-color: var(--black-a5);
   }
   100% {
-    background-color: var(--black-a8);
+    background-color: var(--black-a6);
   }
 }
 
