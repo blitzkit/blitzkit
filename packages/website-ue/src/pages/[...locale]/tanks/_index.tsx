@@ -34,6 +34,9 @@ function Content() {
   const tanksOrdered = useMemo(() => {
     let list = Object.values(tanks.tanks);
 
+    list = list.sort((a, b) => a.tank!.tank_type - b.tank!.tank_type);
+    list = list.sort((a, b) => a.tank!.tank_class - b.tank!.tank_class);
+    list = list.sort((a, b) => a.tank!.nation - b.tank!.nation);
     list = list.sort((a, b) =>
       compareTiers(a.tank!.tier_catalog_id, b.tank!.tier_catalog_id),
     );

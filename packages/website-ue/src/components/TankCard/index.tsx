@@ -27,7 +27,7 @@ export function TankCard({ id }: TankCardProps) {
         <div
           className={styles.flag}
           style={{
-            backgroundImage: `url(/api/nations/${tank.tank!.nation}.webp)`,
+            backgroundImage: `url(/api/nations/${tank.tank!.nation}/card.webp)`,
           }}
         />
 
