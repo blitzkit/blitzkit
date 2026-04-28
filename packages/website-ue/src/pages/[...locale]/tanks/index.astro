@@ -2,7 +2,6 @@
 import "@radix-ui/colors/violet-dark.css";
 import { Section } from "../../../components/Section";
 import ToolBanner from "../../../components/ToolBanner.astro";
-import { api } from "../../../core/api/dynamic";
 import { tools } from "../../../core/tools/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
@@ -10,7 +9,6 @@ import { Page } from "./_index";
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.props;
-const tankList = await api.tankList();
 ---
 
 <BaseLayout {locale} accent="purple">

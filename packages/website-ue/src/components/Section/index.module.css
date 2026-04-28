@@ -6,7 +6,6 @@
   .content {
     flex: 1;
     max-width: var(--page-width);
-    overflow: hidden;
 
     display: flex;
     flex-direction: column;

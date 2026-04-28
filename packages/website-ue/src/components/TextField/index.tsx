@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { classNames } from "../../core/ui/classNames";
-import "./index.css";
+import styles from "./index.module.css";
 
 export interface TextFieldProps extends ComponentProps<"input"> {
   children?: ReactNode;
@@ -51,7 +51,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     return (
       <div
         {...props}
-        className={classNames("text-field", className)}
+        className={classNames(styles["text-field"], className)}
         data-has-icon={children !== undefined}
         data-disabled={disabled}
         data-variant={variant}

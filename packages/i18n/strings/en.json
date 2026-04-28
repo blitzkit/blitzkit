@@ -121,5 +121,11 @@
     "no_docs": "This method has no documentation.",
     "test": "Test",
     "view_full": "View full types"
+  },
+
+  "tanks": {
+    "search": {
+      "placeholder": "Search tanks..."
+    }
   }
 }
