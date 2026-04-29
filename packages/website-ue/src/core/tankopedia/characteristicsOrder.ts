@@ -18,6 +18,7 @@ export interface CharacteristicRenderConfig {
   name: CharacteristicName;
   decimals?: number;
   units?: string;
+  strings?: string;
   render?: (output: CharacteristicOutput) => string;
 }
 
@@ -35,7 +36,7 @@ export const characteristicsOrder: CharacteristicsOrder = [
   {
     group: "meta",
     order: [
-      { name: "name" },
+      { name: "name", strings: "TankEntity" },
       { name: "tier" },
       {
         name: "nation",

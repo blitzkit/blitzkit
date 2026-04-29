@@ -2,8 +2,10 @@ import { Grade } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_st
 import { StageParameters_StageType } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 import { useMemo } from "react";
 import { api } from "../../../../core/api/dynamic";
+import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
 import { useAwait } from "../../../../hooks/useAwait";
+import { useCharacteristicRenderer } from "../../../../hooks/useCharacteristicRenderer";
 import { useGameStrings } from "../../../../hooks/useGameStrings";
 import { LocaleProvider } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
@@ -27,6 +29,7 @@ export function Page({ id, locale }: PageProps) {
 
 function Content() {
   const tankEntityGameStrings = useGameStrings("TankEntity");
+  const renderCharacteristic = useCharacteristicRenderer();
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const protagonistTank = useAwait(
@@ -146,11 +149,32 @@ function Content() {
 
       <h2>characteristics</h2>
 
-      {Object.entries(characteristics).map(([key, value]) => (
+      {/* {Object.entries(characteristics).map(([key, value]) => (
         <p>
           {key}: {value}
         </p>
-      ))}
+      ))} */}
+
+      {characteristicsOrder.map((group) => {
+        return (
+          <>
+            <h3>{group.group}</h3>
+
+            {group.order.map((item) => {
+              if ("toy" in item) {
+                return <span>toy: {item.toy}</span>;
+              }
+
+              return (
+                <span>
+                  {item.name}:{" "}
+                  {renderCharacteristic(characteristics[item.name], item)}
+                </span>
+              );
+            })}
+          </>
+        );
+      })}
     </>
   );
 

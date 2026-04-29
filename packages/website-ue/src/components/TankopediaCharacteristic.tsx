@@ -1,6 +1,6 @@
 import type { CharacteristicOutput } from "../core/tankopedia/characteristics";
 import type { CharacteristicRenderConfig } from "../core/tankopedia/characteristicsOrder";
-import { renderCharacteristic } from "../core/tankopedia/renderCharacteristic";
+import { renderCharacteristic } from "../hooks/useCharacteristicRenderer";
 
 interface Props {
   characteristic: CharacteristicOutput;
