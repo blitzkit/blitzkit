@@ -3,7 +3,7 @@ import {
   ShellUpgradeSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
 } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
-import { aggregateStageParameters } from "./aggregateParameters";
+import { aggregateParameters } from "./aggregateParameters";
 import {
   characteristics,
   type CharacteristicName,
@@ -16,15 +16,8 @@ export type ComputedCharacteristics = Record<
   CharacteristicOutput
 >;
 
-export function computeCharacteristics(
-  id: string,
-  tank: Tank,
-  state: TankState,
-) {
-  const parameters = aggregateStageParameters(
-    tank.tank!.base_stats!,
-    tank.tank!.upgrade_stages.slice(0, state.stage),
-  );
+export function computeCharacteristics(tank: Tank, state: TankState) {
+  const parameters = aggregateParameters(tank.tank!, state.upgrades);
 
   const computed: Partial<ComputedCharacteristics> = {};
 
@@ -94,7 +87,6 @@ export function computeCharacteristics(
       state,
       tank,
       parameters,
-      id,
     });
     computed[name] = value;
   }

@@ -20,7 +20,6 @@ type Characteristic = (helpers: {
   state: TankState;
   tank: Tank;
   parameters: StageParameters;
-  id: string;
 }) => CharacteristicOutput;
 
 export type CharacteristicName = keyof typeof characteristics;
@@ -409,8 +408,8 @@ export const characteristics = {
     return tank.tank!.tank_type;
   },
 
-  id({ id }) {
-    return id;
+  id({ state }) {
+    return state.id;
   },
 
   slug({ tank }) {
