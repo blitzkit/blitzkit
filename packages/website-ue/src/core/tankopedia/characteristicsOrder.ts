@@ -1,3 +1,4 @@
+import type { Strings } from "@blitzkit/i18n";
 import {
   Nation,
   TankClass,
@@ -19,7 +20,11 @@ export interface CharacteristicRenderConfig {
   decimals?: number;
   units?: string;
   strings?: string;
-  render?: (output: CharacteristicOutput) => string;
+  render?: (data: {
+    output: CharacteristicOutput;
+    strings: Strings;
+    gameStrings: Record<string, string>;
+  }) => string;
 }
 
 type CharacteristicsOrder = {
@@ -36,23 +41,35 @@ export const characteristicsOrder: CharacteristicsOrder = [
   {
     group: "meta",
     order: [
-      { name: "name", strings: "TankEntity" },
-      { name: "tier" },
+      {
+        name: "name",
+        strings: "TankEntity",
+        render({ output, gameStrings }) {
+          return gameStrings[output as string];
+        },
+      },
+      {
+        name: "tier",
+        render({ output, strings }) {
+          const [, name] = (output as string).split(".");
+          return strings.tiers[name as keyof typeof strings.tiers];
+        },
+      },
       {
         name: "nation",
-        render(output) {
+        render({ output }) {
           return Nation[output as Nation];
         },
       },
       {
         name: "class",
-        render(output) {
+        render({ output }) {
           return TankClass[output as TankClass];
         },
       },
       {
         name: "type",
-        render(output) {
+        render({ output }) {
           return TankType[output as TankType];
         },
       },
@@ -66,7 +83,7 @@ export const characteristicsOrder: CharacteristicsOrder = [
     order: [
       {
         name: "gun_type",
-        render(output) {
+        render({ output }) {
           return GunType[output as GunType];
         },
       },

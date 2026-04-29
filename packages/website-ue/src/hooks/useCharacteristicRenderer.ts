@@ -5,6 +5,7 @@ import {
   type CharacteristicRenderConfig,
 } from "../core/tankopedia/characteristicsOrder";
 import { useGameStrings } from "./useGameStrings";
+import { useStrings } from "./useStrings";
 
 export function useCharacteristicRenderer() {
   const groups = useMemo(() => {
@@ -20,7 +21,9 @@ export function useCharacteristicRenderer() {
 
     return groups;
   }, []);
-  const tankEntityStrings = useGameStrings(groups);
+
+  const strings = useStrings();
+  const gameStrings = useGameStrings(groups);
 
   function renderCharacteristic(
     characteristic: CharacteristicOutput,
@@ -28,7 +31,8 @@ export function useCharacteristicRenderer() {
   ): string | null {
     if (characteristic === null) return null;
 
-    if (config.render) return config.render(characteristic);
+    if (config.render)
+      return config.render({ output: characteristic, strings, gameStrings });
 
     if (typeof characteristic === "number") {
       if (Number.isFinite(characteristic)) {
@@ -43,10 +47,6 @@ export function useCharacteristicRenderer() {
     }
 
     if (typeof characteristic === "string") {
-      if (config.strings) {
-        return tankEntityStrings[characteristic];
-      }
-
       return characteristic;
     }
 

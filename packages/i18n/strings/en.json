@@ -1,4 +1,15 @@
 {
+  "tiers": {
+    "vintage": "Vintage",
+    "four": "IV",
+    "five": "V",
+    "six": "VI",
+    "seven": "VII",
+    "eight": "VIII",
+    "nine": "IX",
+    "ten": "X"
+  },
+
   "common": {
     "name": "BlitzKit"
   },
