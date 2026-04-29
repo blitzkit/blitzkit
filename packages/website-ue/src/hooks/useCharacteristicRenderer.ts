@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import type { CharacteristicOutput } from "../core/tankopedia/characteristics";
 import {
   characteristicsOrder,
@@ -28,7 +28,7 @@ export function useCharacteristicRenderer() {
   function renderCharacteristic(
     characteristic: CharacteristicOutput,
     config: CharacteristicRenderConfig,
-  ): string | null {
+  ): ReactNode {
     if (characteristic === null) return null;
 
     if (config.render)

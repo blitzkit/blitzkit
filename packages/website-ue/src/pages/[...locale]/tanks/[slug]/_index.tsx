@@ -149,12 +149,6 @@ function Content() {
 
       <h2>characteristics</h2>
 
-      {/* {Object.entries(characteristics).map(([key, value]) => (
-        <p>
-          {key}: {value}
-        </p>
-      ))} */}
-
       {characteristicsOrder.map((group) => {
         return (
           <>

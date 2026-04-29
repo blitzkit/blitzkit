@@ -4,6 +4,8 @@ import {
   TankClass,
   TankType,
 } from "@protos/game/proto/legacy/blitz_static_tank_component";
+import type { ReactNode } from "react";
+import { VintageIcon } from "../../icons/Vintage";
 import {
   GunType,
   type CharacteristicName,
@@ -24,7 +26,7 @@ export interface CharacteristicRenderConfig {
     output: CharacteristicOutput;
     strings: Strings;
     gameStrings: Record<string, string>;
-  }) => string;
+  }) => ReactNode;
 }
 
 type CharacteristicsOrder = {
@@ -52,6 +54,11 @@ export const characteristicsOrder: CharacteristicsOrder = [
         name: "tier",
         render({ output, strings }) {
           const [, name] = (output as string).split(".");
+
+          if (name == "vintage") {
+            return <VintageIcon />;
+          }
+
           return strings.tiers[name as keyof typeof strings.tiers];
         },
       },
