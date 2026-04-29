@@ -51,6 +51,24 @@ export const characteristicsOrder: CharacteristicsOrder = [
         },
       },
       {
+        name: "class",
+        render({ output, strings }) {
+          return strings.classes.full[output as TankClass];
+        },
+      },
+      {
+        name: "type",
+        render({ output, strings }) {
+          return strings.types[output as TankType];
+        },
+      },
+      {
+        name: "nation",
+        render({ output, strings }) {
+          return strings.nations[output as Nation];
+        },
+      },
+      {
         name: "tier",
         render({ output, strings }) {
           const [, name] = (output as string).split(".");
@@ -60,24 +78,6 @@ export const characteristicsOrder: CharacteristicsOrder = [
           }
 
           return strings.tiers[name as keyof typeof strings.tiers];
-        },
-      },
-      {
-        name: "nation",
-        render({ output }) {
-          return Nation[output as Nation];
-        },
-      },
-      {
-        name: "class",
-        render({ output }) {
-          return TankClass[output as TankClass];
-        },
-      },
-      {
-        name: "type",
-        render({ output }) {
-          return TankType[output as TankType];
         },
       },
       { name: "compensation" },

@@ -1,4 +1,62 @@
 {
+  "nations": {
+    "0": "Unspecified",
+    "1": "USSR",
+    "2": "Germany",
+    "3": "USA",
+    "4": "China",
+    "5": "France",
+    "6": "UK",
+    "7": "Japan",
+    "8": "European",
+    "9": "Poland",
+    "10": "Australia",
+    "11": "Canada",
+    "12": "Italy",
+    "13": "Finland",
+    "14": "Czechoslovakia",
+    "15": "Hybrid Nation",
+    "16": "GDR",
+    "17": "Ireland",
+    "18": "Scotland",
+    "19": "Sweden",
+    "20": "Argo Coalition",
+    "21": "Titan Labs",
+    "22": "Defenders",
+    "23": "Progresston",
+    "24": "Wasteland",
+    "25": "Hunter's Moon",
+    "26": "Cold Front",
+    "27": "The Explorers",
+    "28": "Fablegear, Inc.",
+    "29": "Outlaws",
+    "30": "Girls Und Panzer",
+    "31": "Dune",
+    "32": "Terminator",
+    "33": "Warhammer 40,000",
+    "34": "Valkyria Chronicles",
+    "35": "Mecha",
+    "36": "TMNT",
+    "37": "Star Trek"
+  },
+
+  "types": {
+    "0": "Unspecified",
+    "1": "Common",
+    "2": "Premium",
+    "3": "Collectible"
+  },
+
+  "classes": {
+    "full": {
+      "0": "Unspecified",
+      "1": "Heavy",
+      "2": "Light",
+      "3": "Medium",
+      "4": "Tank Destroyer"
+    }
+  },
+
   "tiers": {
     "vintage": "Vintage",
     "four": "IV",
