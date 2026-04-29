@@ -76,22 +76,73 @@ function Content() {
                   throw new Error("Custom picture not supported");
                 }
 
-                if (stage.required_upgrades.length > 0) {
-                  console.log(stage.required_upgrades);
-                  throw new Error("Required upgrades not supported");
-                }
-
                 return (
                   <button
                     key={stage.tech_name}
                     onClick={() => {
                       Tankopedia.mutate((draft) => {
                         draft.protagonist.upgrades[line.name] = index;
+
+                        for (const required of stage.required_upgrades) {
+                          for (const line of protagonistTank.tank!
+                            .upgrade_lines) {
+                            let i = 0;
+
+                            for (const stage of line.stages) {
+                              if (stage.tech_name === required) {
+                                draft.protagonist.upgrades[line.name] =
+                                  Math.max(
+                                    draft.protagonist.upgrades[line.name],
+                                    i,
+                                  );
+                              }
+
+                              i++;
+                            }
+                          }
+                        }
+
+                        for (const line of protagonistTank.tank!
+                          .upgrade_lines) {
+                          let i = draft.protagonist.upgrades[line.name];
+
+                          while (i > 0) {
+                            const currentStage = line.stages[i];
+                            const valid = currentStage.required_upgrades.every(
+                              (required) => {
+                                for (const line of protagonistTank.tank!
+                                  .upgrade_lines) {
+                                  const idx =
+                                    draft.protagonist.upgrades[line.name];
+
+                                  if (
+                                    line.stages[idx]?.tech_name === required
+                                  ) {
+                                    return true;
+                                  }
+                                }
+
+                                return false;
+                              },
+                            );
+
+                            if (valid) break;
+
+                            i--;
+                          }
+
+                          draft.protagonist.upgrades[line.name] = i;
+                        }
                       });
                     }}
+                    style={{
+                      backgroundColor:
+                        protagonist.upgrades[line.name] === index
+                          ? "green"
+                          : undefined,
+                    }}
                   >
-                    {protagonist.upgrades[line.name] === index && "✓"}
-                    {Grade[stage.grade]}
+                    {stage.tech_name}: {Grade[stage.grade]}
                     {StageParameters_StageType[stage.stage_type]}
                     {tankEntityGameStrings[stage.display_name]}
                   </button>
