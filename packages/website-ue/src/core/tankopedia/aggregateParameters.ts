@@ -193,7 +193,7 @@ export function aggregateParameters(
 
     stage0.number = 0;
 
-    for (let i = 0; i < stage; i++) {
+    for (let i = 0; i <= stage; i++) {
       patch(stage0, line.stages[i]);
     }
   }
