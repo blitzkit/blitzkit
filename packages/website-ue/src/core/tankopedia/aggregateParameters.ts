@@ -1,4 +1,4 @@
-import { TankAttributeChange } from "@protos/game/proto/legacy/auto_items";
+import type { TankCatalogComponent } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_component";
 import { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
 import { PenetrationGroup } from "@protos/game/proto/legacy/blitz_static_tank_penetration_group";
 import {
@@ -7,13 +7,14 @@ import {
   ShellUpgrade,
   ShellUpgradeSingleChange,
   StageParameters,
+  TankAttributeChange,
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
   VisualChanges,
 } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 
 function patch(stage0: StageParameters, stage1: StageParameters) {
-  if (stage1.stage_number !== ++stage0.stage_number) {
+  if (stage1.number !== ++stage0.number) {
     throw new Error("Change stage number must be 1 greater than base");
   }
 
@@ -181,26 +182,21 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
   }
 }
 
-export function aggregateStageParameters(
-  base: StageParameters,
-  stages: StageParameters[],
+export function aggregateParameters(
+  tank: TankCatalogComponent,
+  upgrades: Record<string, number>,
 ) {
-  const stage0 = StageParameters.create({ ...base, stage_number: 0 });
+  const stage0 = StageParameters.create({});
 
-  /**
-   * Bug in Reforged: base stats are stage 1, so is the first upgrade. Manually
-   * setting it to stage 0 below and if the bug's been fixed, throw an error
-   * in dev mode to allow clean up in the future. Also, update the initial
-   * stage number to -1.
-   */
+  for (const line of tank.upgrade_lines) {
+    const stage = upgrades[line.name];
 
-  if (base.stage_number === 0 && import.meta.env.DEV) {
-    throw new Error(
-      "Base stats are now stage 0. In-game bug fixed, please remove hack.",
-    );
+    stage0.number = 0;
+
+    for (let i = 0; i < stage; i++) {
+      patch(stage0, line.stages[i]);
+    }
   }
-
-  stages.forEach((stage) => patch(stage0, stage));
 
   return stage0;
 }

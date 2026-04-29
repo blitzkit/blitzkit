@@ -3,7 +3,7 @@ import {
   ShellUpgradeSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
 } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
-import { aggregateStageParameters } from "./aggregateStageParameters";
+import { aggregateStageParameters } from "./aggregateParameters";
 import {
   characteristics,
   type CharacteristicName,
