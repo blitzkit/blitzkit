@@ -159,10 +159,13 @@ function Content() {
                 return <span>toy: {item.toy}</span>;
               }
 
+              const value = characteristics[item.name];
+
+              if (value == null) return null;
+
               return (
                 <span>
-                  {item.name}:{" "}
-                  {renderCharacteristic(characteristics[item.name], item)}
+                  {item.name}: {renderCharacteristic(value, item)}
                 </span>
               );
             })}
