@@ -7,7 +7,6 @@
   border-radius: var(--max-size);
   padding: var(--space-3) var(--space-4);
 
-  background-color: var(--accent-9);
   border: none;
 
   font-family: var(--font-family-regular);
@@ -22,5 +21,15 @@
 
   &[data-light-text="true"] {
     color: var(--white-a12);
+  }
+
+  &[data-variant="solid"] {
+    background-color: var(--accent-8);
+  }
+
+  &[data-variant="surface"] {
+    background-color: var(--accent-3);
+
+    outline: var(--space-1) solid var(--accent-4);
   }
 }

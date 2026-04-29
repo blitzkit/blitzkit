@@ -193,6 +193,10 @@
   },
 
   "tanks": {
+    "loadout": {
+      "modules": "Modules"
+    },
+
     "search": {
       "placeholder": "Search tanks..."
     }

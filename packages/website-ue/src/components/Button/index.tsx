@@ -5,7 +5,8 @@ import styles from "./index.module.css";
 
 export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
-  variant?: "solid";
+  radius?: `${1 | 2 | 3}` | "max";
+  variant?: "solid" | "surface";
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([
@@ -28,14 +29,16 @@ export function Button({
   color,
   variant = "solid",
   style,
+  radius = "max",
   ...props
 }: ButtonProps) {
   return (
     <button
-      className={classNames(styles.button, className)}
+      className={classNames("composable-radius", styles.button, className)}
       data-color={color}
       data-variant={variant}
       data-light-text={variant === "solid"}
+      data-radius={radius}
       style={{
         backgroundColor: color ? `var(--${color}-9)` : undefined,
         ...style,

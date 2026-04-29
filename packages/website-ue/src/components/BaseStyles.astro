@@ -90,3 +90,23 @@ import "@fontsource-variable/roboto-flex";
     --tank-card-min-width: 8rem;
   }
 </style>
+
+<style is:global>
+  .composable-radius {
+    &[data-radius="1"] {
+      border-radius: var(--space-3);
+    }
+
+    &[data-radius="2"] {
+      border-radius: var(--space-4);
+    }
+
+    &[data-radius="3"] {
+      border-radius: var(--space-5);
+    }
+
+    &[data-radius="max"] {
+      border-radius: var(--max-size);
+    }
+  }
+</style>

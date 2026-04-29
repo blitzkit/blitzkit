@@ -46,7 +46,7 @@ export abstract class AbstractAPI {
     return supported;
   }
 
-  @Cache<[string, string, boolean]>((...args) => args.join("-"))
+  @Cache()
   async groupedGameStrings(locale: string, group: string, prefix: boolean) {
     this.assertLocale(locale);
 
@@ -64,9 +64,7 @@ export abstract class AbstractAPI {
   }
 }
 
-export function Cache<Arguments extends unknown[]>(
-  discriminator: (...args: Arguments) => string = (...args) => args.join("-"),
-) {
+export function Cache<Arguments extends unknown[]>(disableInDev = false) {
   const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
   return function (
@@ -77,7 +75,7 @@ export function Cache<Arguments extends unknown[]>(
     const original = descriptor.value;
 
     descriptor.value = function (...args: Arguments) {
-      const key = discriminator(...args);
+      const key = args.join("-");
 
       let thisCache = cache.get(this);
 
@@ -86,7 +84,9 @@ export function Cache<Arguments extends unknown[]>(
         cache.set(this, thisCache);
       }
 
-      if (thisCache.has(key)) {
+      const disabled = disableInDev && import.meta.env.DEV;
+
+      if (thisCache.has(key) && !disabled) {
         return thisCache.get(key);
       }
 

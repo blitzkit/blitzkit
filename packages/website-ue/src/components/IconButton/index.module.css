@@ -1,0 +1,7 @@
+.icon-button {
+  padding: var(--space-3);
+
+  aspect-ratio: 1 / 1;
+
+  font-size: 2rem;
+}

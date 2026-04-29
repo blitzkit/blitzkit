@@ -186,7 +186,7 @@ export class ServerAPI extends AbstractAPI {
     return tiers;
   }
 
-  @Cache()
+  @Cache(true)
   async strings(locale: string) {
     const localized = (await globbedStrings[
       `../../../../i18n/strings/${locale}.json`

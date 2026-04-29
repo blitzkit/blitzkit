@@ -1,6 +1,5 @@
-import { Grade } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_standard_grades_enum";
-import { StageParameters_StageType } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 import { useMemo } from "react";
+import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
 import { api } from "../../../../core/api/dynamic";
 import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
@@ -48,7 +47,9 @@ function Content() {
 
       <br />
 
-      <h2>upgrades</h2>
+      <TankopediaLoadout />
+
+      {/* <h2>upgrades</h2>
 
       {protagonistTank.tank!.upgrade_lines.map((line) => {
         return (
@@ -145,7 +146,7 @@ function Content() {
             </div>
           </>
         );
-      })}
+      })} */}
 
       <h2>characteristics</h2>
 
