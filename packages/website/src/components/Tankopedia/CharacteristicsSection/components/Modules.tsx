@@ -256,7 +256,7 @@ export function Modules() {
 
           if (module === undefined) return null;
 
-          const tooltip = module.name ? unwrap(module.name) : undefined;
+          const tooltip = unwrap(module.name!);
 
           return (
             <Flex
