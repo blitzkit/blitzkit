@@ -101,6 +101,9 @@ function Line({ line }: LineProps) {
               }}
             >
               <img src={`/api/tanks/modules/${stage.stage_type}.webp`} />
+              {/* {stage.display_name} */}
+              {/* {stage.grade} */}
+              {/* {stage.number} */}
             </IconButton>
           </>
         );
