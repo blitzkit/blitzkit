@@ -28,7 +28,7 @@ jobs:
         run: bun run build:bot
 
       - name: Archive build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: bot
           path: dist/bot
