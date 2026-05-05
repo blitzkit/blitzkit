@@ -72,6 +72,11 @@
     "name": "BlitzKit"
   },
 
+  "client_unmounted": {
+    "title": "Client-Unmounted Mode",
+    "body": "This version of BlitzKit is running in Client-Unmounted mode (it was compiled without access to an installation of World of Tanks Blitz). Some important features may be missing like tank icons, models, collision, etc."
+  },
+
   "units": {
     "hp_min": "{value}hp/min",
     "s": "{value}s",
