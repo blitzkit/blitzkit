@@ -5,6 +5,7 @@
   gap: var(--space-2);
 
   overflow: hidden;
+  min-width: var(--tank-card-min-width);
 
   .icon-wrapper {
     position: relative;
@@ -24,7 +25,6 @@
     }
 
     .icon {
-      min-width: var(--tank-card-min-width);
       aspect-ratio: 4 / 3;
       position: relative;
 
