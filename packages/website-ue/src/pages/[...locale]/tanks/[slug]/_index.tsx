@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
 import { api } from "../../../../core/api/dynamic";
 import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
@@ -152,12 +152,12 @@ function Content() {
 
       {characteristicsOrder.map((group) => {
         return (
-          <>
+          <Fragment key={group.group}>
             <h3>{group.group}</h3>
 
             {group.order.map((item) => {
               if ("toy" in item) {
-                return <span>toy: {item.toy}</span>;
+                return <span key={`toy-${item.toy}`}>toy: {item.toy}</span>;
               }
 
               const value = characteristics[item.name];
@@ -165,12 +165,12 @@ function Content() {
               if (value == null) return null;
 
               return (
-                <span>
+                <span key={`characteristic-${item.name}`}>
                   {item.name}: {renderCharacteristic(value, item)}
                 </span>
               );
             })}
-          </>
+          </Fragment>
         );
       })}
     </>

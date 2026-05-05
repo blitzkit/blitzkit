@@ -1,5 +1,6 @@
 import type { UpgradeLine } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_upgrade_line";
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import { Fragment } from "react";
 import { api } from "../../core/api/dynamic";
 import { useAwait } from "../../hooks/useAwait";
 import { useStrings } from "../../hooks/useStrings";
@@ -21,7 +22,7 @@ export function TankopediaLoadout() {
 
       <div className={styles.lines}>
         {tank.tank!.upgrade_lines.map((line) => (
-          <Line line={line} />
+          <Line key={line.name} line={line} />
         ))}
       </div>
     </Section>
@@ -43,7 +44,7 @@ function Line({ line }: LineProps) {
         const isSelected = upgrades[line.name] === index;
 
         return (
-          <>
+          <Fragment key={stage.tech_name}>
             {index !== 0 && <CaretDownIcon width="1em" height="1em" />}
 
             <IconButton
@@ -105,7 +106,7 @@ function Line({ line }: LineProps) {
               {/* {stage.grade} */}
               {/* {stage.number} */}
             </IconButton>
-          </>
+          </Fragment>
         );
       })}
     </div>
