@@ -1,13 +1,11 @@
+import { assertSecret } from "@blitzkit/core";
 import { GameInterface } from "@blitzkit/game";
-
-export const clientUnmounted = !("WOTB_CLIENT" in import.meta.env);
+import { clientUnmounted } from "./unmounted";
 
 let _game: GameInterface | null = null;
 
 if (!clientUnmounted) {
-  _game = new GameInterface(import.meta.env.WOTB_CLIENT);
-} else {
-  console.warn("Running in client denied mode...");
+  _game = new GameInterface(assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT));
 }
 
 export const game = _game;

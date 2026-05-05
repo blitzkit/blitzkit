@@ -39,7 +39,7 @@ export function IncrementalLoader<Props extends { key: string }>({
           <Item key={index} rate={rate} setCount={setCount}>
             <Component skeleton />
           </Item>
-        )
+        ),
       )}
     </>
   );

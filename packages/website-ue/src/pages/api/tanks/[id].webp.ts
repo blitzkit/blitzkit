@@ -1,10 +1,11 @@
 import type { APIContext } from "astro";
 import { api } from "../../../core/api/dynamic";
 import {
-    clientUnmountedResponse,
-    notFoundResponse,
+  clientUnmountedResponse,
+  notFoundResponse,
 } from "../../../core/api/responses";
-import { clientUnmounted, game } from "../../../core/game/game";
+import { game } from "../../../core/game/game";
+import { clientUnmounted } from "../../../core/game/unmounted";
 
 export { getStaticPaths } from "./[id].json";
 
