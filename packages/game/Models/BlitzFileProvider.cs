@@ -21,21 +21,7 @@ public class BlitzFileProvider : DefaultFileProvider
     Initialize();
     Mount();
 
-    string libraryExtension;
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    {
-      libraryExtension = "dll";
-    }
-    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-    {
-      libraryExtension = "so";
-    }
-    else
-    {
-      throw new Exception("Unsupported OS");
-    }
-
-    OodleHelper.DownloadOodleDll($"../../temp/oodle.{libraryExtension}");
-    OodleHelper.Initialize($"../../temp/oodle.{libraryExtension}");
+    // OodleHelper.DownloadOodleDll($"../../temp/oodle.so");
+    OodleHelper.Initialize($"../../temp/oodle.so");
   }
 }
