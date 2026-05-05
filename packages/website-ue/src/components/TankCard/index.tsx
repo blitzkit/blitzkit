@@ -1,4 +1,5 @@
 import { api } from "../../core/api/dynamic";
+import { clientUnmounted } from "../../core/game/game";
 import { useAwait } from "../../hooks/useAwait";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useLocale } from "../../hooks/useLocale";
@@ -42,7 +43,9 @@ export function TankCard(props: PropsWithSkeleton<TankCardProps>) {
           <div
             className={styles.icon}
             style={{
-              backgroundImage: `url(/api/tanks/${props.id}.webp)`,
+              backgroundImage: clientUnmounted
+                ? `url(/api/unmounted/tank.png)`
+                : `url(/api/tanks/${props.id}.webp)`,
             }}
           />
         )}
