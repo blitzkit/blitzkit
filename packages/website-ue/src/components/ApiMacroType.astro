@@ -31,10 +31,10 @@ const { value, locale } = Astro.props;
 const strings = await api.strings(locale);
 
 const lang = "ts";
-const roots = ["src/protos", "../closed/protos"];
+const root = "../../packages/closed/protos";
 
 const [route, name] = value.split(".");
-const path = resolve(`${roots[0]}/${route}.ts`);
+const path = resolve(`${root}/${route}.ts`);
 
 const program = createProgram([path], {});
 const source = program.getSourceFile(path);
