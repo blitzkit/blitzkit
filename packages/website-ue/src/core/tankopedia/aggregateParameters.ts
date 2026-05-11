@@ -2,6 +2,8 @@ import type { TankCatalogComponent } from "@blitzkit/closed/protos/game/proto/le
 import { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
 import { PenetrationGroup } from "@protos/game/proto/legacy/blitz_static_tank_penetration_group";
 import {
+  ModuleUpgrade,
+  ModuleUpgrade_Modifier,
   PenetrationGroupUpgrade,
   PitchLimit,
   ShellUpgrade,
@@ -108,8 +110,63 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
     }
   }
 
-  if (stage1.modules_upgrades.length > 0) {
-    throw new Error("Modules upgrades not implemented");
+  for (const upgrade1 of stage1.modules_upgrades) {
+    let value1: number;
+
+    switch (upgrade1.modifier) {
+      case ModuleUpgrade_Modifier.MODIFIER_OVERRIDE:
+        value1 = upgrade1.value!;
+        break;
+
+      case ModuleUpgrade_Modifier.MODIFIER_MULTIPLY:
+      case ModuleUpgrade_Modifier.MODIFIER_ADD:
+        const upgrade0 = stage0.modules_upgrades.find(
+          (base) =>
+            base.module === upgrade1.module &&
+            base.attribute_name === upgrade1.attribute_name,
+        );
+
+        if (!upgrade0) {
+          throw new Error(
+            `Missing module upgrade ${upgrade1.module} ${upgrade1.attribute_name} to modify`,
+          );
+        }
+
+      case ModuleUpgrade_Modifier.MODIFIER_MULTIPLY: {
+        value1 = upgrade0!.value! * upgrade1.value!;
+        break;
+      }
+
+      case ModuleUpgrade_Modifier.MODIFIER_ADD: {
+        value1 = upgrade0!.value! + upgrade1.value!;
+        break;
+      }
+
+      default:
+        throw new Error(
+          `Unhandled module upgrade modifier ${
+            ModuleUpgrade_Modifier[upgrade1.modifier]
+          }`,
+        );
+    }
+
+    const upgrade0 = ModuleUpgrade.create({
+      module: upgrade1.module,
+      attribute_name: upgrade1.attribute_name,
+      modifier: ModuleUpgrade_Modifier.MODIFIER_OVERRIDE,
+      value: value1,
+    });
+    const index0 = stage0.modules_upgrades.findIndex(
+      (upgrade) =>
+        upgrade.module === upgrade1.module &&
+        upgrade.attribute_name === upgrade1.attribute_name,
+    );
+
+    if (index0 === -1) {
+      stage0.modules_upgrades.push(upgrade0);
+    } else {
+      stage0.modules_upgrades[index0] = upgrade0;
+    }
   }
 
   for (const shellUpgrades1 of stage1.shells_upgrades) {
@@ -149,23 +206,20 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
     stage0.pump_reload_times = [...stage1.pump_reload_times];
   }
 
-  if (stage1.pitch_limits_up.length > 0 && stage0.pitch_limits_up.length > 0) {
-    throw new Error("Pitch limits not implemented");
+  if (stage1.pitch_limits_up.length > 0) {
+    stage0.pitch_limits_up = [];
+
+    for (const pitchLimitUp1 of stage1.pitch_limits_up) {
+      stage0.pitch_limits_up.push(PitchLimit.create(pitchLimitUp1));
+    }
   }
 
-  for (const pitchLimitUp1 of stage1.pitch_limits_up) {
-    stage0.pitch_limits_up.push(PitchLimit.create(pitchLimitUp1));
-  }
+  if (stage1.pitch_limits_down.length > 0) {
+    stage0.pitch_limits_down = [];
 
-  if (
-    stage1.pitch_limits_down.length > 0 &&
-    stage0.pitch_limits_down.length > 0
-  ) {
-    throw new Error("Pitch limits not implemented");
-  }
-
-  for (const pitchLimitDown1 of stage1.pitch_limits_down) {
-    stage0.pitch_limits_down.push(PitchLimit.create(pitchLimitDown1));
+    for (const pitchLimitDown1 of stage1.pitch_limits_down) {
+      stage0.pitch_limits_down.push(PitchLimit.create(pitchLimitDown1));
+    }
   }
 
   for (const visualChange1 of stage1.visual_changes) {
