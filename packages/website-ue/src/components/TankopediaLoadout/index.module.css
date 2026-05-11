@@ -1,20 +1,32 @@
 .lines {
   display: flex;
+  flex-direction: column;
 
   gap: var(--space-3);
 
   .line {
     display: flex;
-    flex-direction: column;
     align-items: center;
 
-    gap: var(--space-2);
+    gap: var(--space-3);
 
     .stage {
+      position: relative;
+
       img {
         width: 1em;
         height: 1em;
       }
+
+      .tier {
+        position: absolute;
+        left: var(--space-2);
+        top: var(--space-2);
+      }
+    }
+
+    .arrow {
+      display: contents;
     }
   }
 }

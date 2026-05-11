@@ -1,5 +1,5 @@
 import type { UpgradeLine } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_upgrade_line";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import { romanize } from "@blitzkit/core";
 import { Fragment } from "react";
 import { api } from "../../core/api/dynamic";
 import { useAwait } from "../../hooks/useAwait";
@@ -8,6 +8,7 @@ import { Tankopedia } from "../../stores/tankopedia";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
 import { Section } from "../Section";
+import { Text } from "../Text";
 import styles from "./index.module.css";
 
 export function TankopediaLoadout() {
@@ -40,12 +41,18 @@ function Line({ line }: LineProps) {
 
   return (
     <div className={styles.line}>
+      {line.name}
+
       {line.stages.map((stage, index) => {
         const isSelected = upgrades[line.name] === index;
 
         return (
           <Fragment key={stage.tech_name}>
-            {index !== 0 && <CaretDownIcon width="1em" height="1em" />}
+            {/* {index !== 0 && (
+              <Text lowContrast className={styles.arrow}>
+                <CaretRightIcon width="1em" height="1em" />
+              </Text>
+            )} */}
 
             <IconButton
               variant={isSelected ? "solid" : "surface"}
@@ -104,7 +111,10 @@ function Line({ line }: LineProps) {
               <img src={`/api/tanks/modules/${stage.stage_type}.webp`} />
               {/* {stage.display_name} */}
               {/* {stage.grade} */}
-              {/* {stage.number} */}
+
+              <Text lowContrast size="minor" className={styles.tier}>
+                {romanize(stage.number)}
+              </Text>
             </IconButton>
           </Fragment>
         );
