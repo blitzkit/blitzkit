@@ -58,12 +58,14 @@ export function Guesser() {
   const [results, setResults] = useState<TankDefinition[] | null>(null);
   const [selected, setSelected] = useState<TankDefinition | null>(null);
   const tiers = Guess.use((state) => state.tiers);
+  const status = useRef<HTMLSpanElement>(null);
 
   const requestSearch = useCallback(() => {
     setSelected(null);
     setSearching(true);
     search();
   }, []);
+
   const search = useCallback(
     debounce(() => {
       if (!input.current) return;
@@ -91,6 +93,20 @@ export function Guesser() {
   useEffect(() => {
     if (guessState !== GuessState.NotGuessed) setSelected(null);
   }, [guessState]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!status.current) return;
+
+      status.current.innerText = literals(strings.website.tools.guess.stats, {
+        correct: correctGuesses,
+        total: totalGuesses,
+        streak: streak,
+      });
+    }, 1000 / 60);
+
+    return () => clearInterval(interval);
+  }, [correctGuesses, totalGuesses, streak]);
 
   return (
     <Flex
@@ -158,13 +174,7 @@ export function Guesser() {
       </Box>
 
       <Flex justify="center" style={{ userSelect: "none" }}>
-        <Text>
-          {literals(strings.website.tools.guess.stats, {
-            correct: correctGuesses,
-            total: totalGuesses,
-            streak: streak,
-          })}
-        </Text>
+        <Text ref={status} />
       </Flex>
 
       <Flex gap={{ initial: "2", sm: "3" }}>
