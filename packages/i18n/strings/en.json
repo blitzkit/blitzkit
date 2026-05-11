@@ -199,7 +199,8 @@
 
   "tanks": {
     "loadout": {
-      "modules": "Modules"
+      "modules": "Modules",
+      "alternative": "Alt"
     },
 
     "search": {

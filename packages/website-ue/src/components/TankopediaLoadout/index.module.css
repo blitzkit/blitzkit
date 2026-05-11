@@ -16,6 +16,8 @@
       img {
         width: 1em;
         height: 1em;
+
+        transform: translate(var(--space-1), var(--space-1));
       }
 
       .tier {
@@ -23,10 +25,6 @@
         left: var(--space-2);
         top: var(--space-2);
       }
-    }
-
-    .arrow {
-      display: contents;
     }
   }
 }
