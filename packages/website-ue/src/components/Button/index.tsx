@@ -6,7 +6,7 @@ import styles from "./index.module.css";
 export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
   radius?: `${1 | 2 | 3}` | "max";
-  variant?: "solid" | "surface";
+  variant?: "solid" | "surface" | "soft";
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([

@@ -27,9 +27,12 @@
     background-color: var(--accent-8);
   }
 
-  &[data-variant="surface"] {
+  &[data-variant="surface"],
+  &[data-variant="soft"] {
     background-color: var(--accent-3);
+  }
 
-    outline: var(--space-1) solid var(--accent-4);
+  &[data-variant="surface"] {
+    outline: var(--space-1) solid var(--accent-6);
   }
 }
