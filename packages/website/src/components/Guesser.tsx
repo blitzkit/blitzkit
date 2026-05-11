@@ -322,7 +322,7 @@ export function Guesser() {
                   ? GuessState.Correct
                   : GuessState.Incorrect;
                 draft.totalGuesses++;
-                draft.correctGuesses += correct ? 1 : 0;
+                draft.correctGuesses += correct && draft.tiers.length === 10 ? 1 : 0;
                 draft.streak = correct ? draft.streak + 1 : 0;
               });
             } else {
