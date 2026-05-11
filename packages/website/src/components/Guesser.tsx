@@ -103,7 +103,7 @@ export function Guesser() {
         total: totalGuesses,
         streak: streak,
       });
-    }, 1000 / 60);
+    }, 1000 / 200);
 
     return () => clearInterval(interval);
   }, [correctGuesses, totalGuesses, streak]);
