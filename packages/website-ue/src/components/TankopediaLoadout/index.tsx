@@ -79,6 +79,7 @@ function LineInner({ line, lines }: LineProps) {
       return (
         <Fragment key={stage.tech_name}>
           <IconButton
+            color="gray"
             variant={isSelected ? "solid" : "surface"}
             radius="1"
             className={styles.stage}

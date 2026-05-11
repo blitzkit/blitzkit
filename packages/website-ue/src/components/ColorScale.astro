@@ -40,6 +40,15 @@ for (let i = 0; i < 12; i++) {
 }
 
 styles += "}";
+
+styles += `*[data-accent='${color}']{`;
+
+for (let i = 0; i < 12; i++) {
+  const n = i + 1;
+  styles += `--accent-${alpha ? "a" : ""}${n}:var(--${color}-${alpha ? "a" : ""}${n});`;
+}
+
+styles += "}";
 ---
 
 <style set:html={styles}></style>

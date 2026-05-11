@@ -35,14 +35,10 @@ export function Button({
   return (
     <button
       className={classNames("composable-radius", styles.button, className)}
-      data-color={color}
+      data-accent={color}
       data-variant={variant}
       data-light-text={variant === "solid"}
       data-radius={radius}
-      style={{
-        backgroundColor: color ? `var(--${color}-9)` : undefined,
-        ...style,
-      }}
       {...props}
     />
   );
