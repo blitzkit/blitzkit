@@ -1,23 +1,19 @@
-import { asset } from '@blitzkit/core';
-import { type ObjectMap, useLoader } from '@react-three/fiber';
-import { type GLTF, GLTFLoader } from 'three-stdlib';
-
-const cache: Record<
-  number,
-  { gltf: GLTF & ObjectMap; hasDynamicArmor: boolean }
-> = {};
+import { asset } from "@blitzkit/core";
+import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three-stdlib";
+import { useDispose } from "./useDispose";
 
 export function useArmor(id: number) {
-  const gltf = useLoader(GLTFLoader, asset(`3d/tanks/armor/${id}.glb`));
+  const path = asset(`3d/tanks/armor/${id}.glb`);
+  const gltf = useLoader(GLTFLoader, path);
 
-  if (!cache[id]) {
-    cache[id] = {
-      gltf,
-      hasDynamicArmor: Object.values(gltf.nodes).some(
-        (node) =>
-          node.name.includes('state_00') || node.name.includes('state_01'),
-      ),
-    };
-  }
-  return cache[id];
+  useDispose(gltf, path);
+
+  return {
+    gltf,
+    hasDynamicArmor: Object.values(gltf.nodes).some(
+      (node) =>
+        node.name.includes("state_00") || node.name.includes("state_01"),
+    ),
+  };
 }

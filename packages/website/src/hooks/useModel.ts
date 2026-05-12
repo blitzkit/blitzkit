@@ -1,10 +1,14 @@
 import { asset } from "@blitzkit/core";
-import { type ObjectMap, useLoader } from "@react-three/fiber";
+import { useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
-import { type GLTF, GLTFLoader } from "three-stdlib";
+import { GLTFLoader } from "three-stdlib";
+import { useDispose } from "./useDispose";
 
 export function useModel(id: number) {
-  const gltf = useLoader(GLTFLoader, asset(`3d/tanks/models/${id}.glb`));
+  const path = asset(`3d/tanks/models/${id}.glb`);
+  const gltf = useLoader(GLTFLoader, path);
+
+  useDispose(gltf, path);
 
   return {
     gltf,
@@ -12,7 +16,7 @@ export function useModel(id: number) {
       (node) =>
         node instanceof Mesh &&
         node.material instanceof MeshStandardMaterial &&
-        node.material.roughnessMap !== null
+        node.material.roughnessMap !== null,
     ),
   };
 }
