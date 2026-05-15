@@ -11,15 +11,17 @@
     gap: var(--space-3);
 
     .stage {
-      padding: var(--space-3);
       position: relative;
-      aspect-ratio: 3 / 4;
+
+      padding: var(--space-3);
 
       font-size: 2em;
 
       .icon {
         width: 1em;
         height: 1em;
+
+        padding: var(--space-4) 0;
 
         transform: translate(var(--space-1), calc(-1 * var(--space-1)));
       }
