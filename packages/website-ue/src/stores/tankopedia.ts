@@ -1,7 +1,7 @@
 import type { Tank } from "@protos/blitzkit/tank";
 import { Varuna } from "varuna";
-import { createTankState } from "../core/tankopedia/createTankState";
-import { type TankState } from "../core/tankopedia/tankState";
+import { createTankState } from "../tankopedia/createTankState";
+import { type TankState } from "../tankopedia/tankState";
 
 interface Tankopedia {
   compare: TankopediaCompare;

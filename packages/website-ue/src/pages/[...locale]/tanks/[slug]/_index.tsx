@@ -1,13 +1,13 @@
 import { Fragment, useMemo } from "react";
+import { api } from "../../../../api/dynamic";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
-import { api } from "../../../../core/api/dynamic";
-import { characteristicsOrder } from "../../../../core/tankopedia/characteristicsOrder";
-import { computeCharacteristics } from "../../../../core/tankopedia/computeCharacteristics";
 import { useAwait } from "../../../../hooks/useAwait";
 import { useCharacteristicRenderer } from "../../../../hooks/useCharacteristicRenderer";
 import { useGameStrings } from "../../../../hooks/useGameStrings";
 import { LocaleProvider } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
+import { characteristicsOrder } from "../../../../tankopedia/characteristicsOrder";
+import { computeCharacteristics } from "../../../../tankopedia/computeCharacteristics";
 
 interface PageProps {
   id: string;

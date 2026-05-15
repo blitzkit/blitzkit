@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { classNames } from "../../core/ui/classNames";
+import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
 export interface CodeProps extends ComponentProps<"code"> {

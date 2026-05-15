@@ -2,8 +2,8 @@ import { formatCompact } from "@blitzkit/core";
 import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_standard_price";
 import type { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
 import type { ComponentProps } from "react";
-import { classNames } from "../../core/ui/classNames";
 import { useLocale } from "../../hooks/useLocale";
+import { classNames } from "../../ui/classNames";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 

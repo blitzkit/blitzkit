@@ -1,5 +1,5 @@
 import { deburr } from "lodash-es";
-import { api } from "../core/api/dynamic";
+import { api } from "../api/dynamic";
 import { useAwait } from "./useAwait";
 import { useGameStrings } from "./useGameStrings";
 

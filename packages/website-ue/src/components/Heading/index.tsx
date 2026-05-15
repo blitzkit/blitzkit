@@ -1,4 +1,4 @@
-import { classNames } from "../../core/ui/classNames";
+import { classNames } from "../../ui/classNames";
 import { Text, type TextProps } from "../Text";
 import "./index.css";
 

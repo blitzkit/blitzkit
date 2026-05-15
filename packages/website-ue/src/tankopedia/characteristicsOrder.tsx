@@ -5,7 +5,7 @@ import {
   TankType,
 } from "@protos/game/proto/legacy/blitz_static_tank_component";
 import type { ReactNode } from "react";
-import { VintageIcon } from "../../icons/Vintage";
+import { VintageIcon } from "../icons/Vintage";
 import {
   GunType,
   type CharacteristicName,

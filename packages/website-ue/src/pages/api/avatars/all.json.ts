@@ -1,4 +1,4 @@
-import { api } from "../../../core/api/dynamic";
+import { api } from "../../../api/dynamic";
 
 /**
  * Identical to `avatars/[id].json`, but returns data on all avatars at once,

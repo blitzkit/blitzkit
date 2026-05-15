@@ -4,6 +4,10 @@ import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_stand
 import type { UpgradeLine } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
 import { useMemo } from "react";
+import {
+  alternativeLines,
+  isAlternativeLine,
+} from "../../config/alternativeLines";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
@@ -46,9 +50,14 @@ function Line({ name, lines }: LineProps) {
   const combinedLines = useMemo(() => {
     const names: string[] = [name];
 
-    for (const key in mergeLines) {
-      if (mergeLines[key] === name && lines.some((line) => line.name === key)) {
-        names.push(key);
+    for (const originalLine in alternativeLines) {
+      const alternativeLine = alternativeLines[originalLine];
+
+      if (
+        originalLine === name &&
+        lines.some((line) => line.name === alternativeLine)
+      ) {
+        names.push(alternativeLine);
       }
     }
 
@@ -57,7 +66,7 @@ function Line({ name, lines }: LineProps) {
 
   return (
     <div className={styles.line}>
-      {!(name in mergeLines) &&
+      {!isAlternativeLine(name) &&
         combinedLines.map((name) => (
           <LineInner key={name} name={name} lines={lines} />
         ))}
@@ -173,7 +182,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
       {/* {stage.display_name} */}
 
       <Text lowContrast size="minor" className={styles.tier}>
-        {lineName in mergeLines
+        {isAlternativeLine(lineName)
           ? strings.tanks.loadout.alternative
           : romanize(stage.number)}
       </Text>

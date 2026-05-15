@@ -1,6 +1,6 @@
 import type { ComponentProps, FunctionComponent } from "react";
 import Markdown from "react-markdown";
-import { classNames } from "../../core/ui/classNames";
+import { classNames } from "../../ui/classNames";
 import { Code } from "../Code";
 import { Text } from "../Text";
 import styles from "./index.module.css";

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
-import { classNames } from "../../core/ui/classNames";
-import type { Color } from "../../core/ui/color";
+import { classNames } from "../../ui/classNames";
+import type { Color } from "../../ui/color";
 import styles from "./index.module.css";
 
 export interface LinkProps extends ComponentProps<"a"> {

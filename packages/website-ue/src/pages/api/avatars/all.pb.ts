@@ -1,5 +1,5 @@
 import { Avatars } from "@protos/blitzkit/avatars";
-import { api } from "../../../core/api/dynamic";
+import { api } from "../../../api/dynamic";
 
 export async function GET() {
   const avatars = await api.avatars();

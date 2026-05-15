@@ -1,10 +1,10 @@
 import fuzzysort from "fuzzysort";
 import { useMemo } from "react";
+import { api } from "../../../api/dynamic";
 import { IncrementalLoader } from "../../../components/IncrementalLoader";
 import { TankCard } from "../../../components/TankCard";
 import { TankCards } from "../../../components/TankCards";
 import { TankSearch } from "../../../components/TankSearch";
-import { api } from "../../../core/api/dynamic";
 import { useAwait } from "../../../hooks/useAwait";
 import { LocaleProvider } from "../../../hooks/useLocale";
 import { useSearchableTanks } from "../../../hooks/useSearchableTanks";

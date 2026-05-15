@@ -1,4 +1,4 @@
-import { classNames } from "../../core/ui/classNames";
+import { classNames } from "../../ui/classNames";
 import { Skeleton, type SkeletonProps } from "../Skeleton";
 import "./index.css";
 

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
-import { classNames } from "../../core/ui/classNames";
-import type { ColorWithBW } from "../../core/ui/color";
+import { classNames } from "../../ui/classNames";
+import type { ColorWithBW } from "../../ui/color";
 import styles from "./index.module.css";
 
 export interface TextProps extends ComponentProps<"span"> {

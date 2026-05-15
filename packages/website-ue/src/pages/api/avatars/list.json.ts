@@ -1,4 +1,4 @@
-import { api } from "../../../core/api/dynamic";
+import { api } from "../../../api/dynamic";
 
 /**
  * Returns a list of all avatars ids.

@@ -1,5 +1,5 @@
 import { Tanks } from "@protos/blitzkit/tanks";
-import { api } from "../../../core/api/dynamic";
+import { api } from "../../../api/dynamic";
 
 /**
  * Literally all the tanks in one place lmao.

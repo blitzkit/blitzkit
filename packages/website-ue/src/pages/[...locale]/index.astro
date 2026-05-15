@@ -9,8 +9,8 @@ import HomeHero from "../../components/HomeHero.astro";
 import HomePlayers from "../../components/HomePlayers.astro";
 import HomeTanks from "../../components/HomeTanks.astro";
 import HomeTechnical from "../../components/HomeTechnical.astro";
-import { clientUnmounted } from "../../core/game/unmounted";
-import { tools } from "../../core/tools/tools";
+import { tools } from "../../config/tools";
+import { clientUnmounted } from "../../game/unmounted";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export const getStaticPaths = (() => {

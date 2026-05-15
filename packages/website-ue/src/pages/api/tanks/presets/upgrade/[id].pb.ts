@@ -1,6 +1,6 @@
 import { TankUpgradePricePresetComponent } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_price_preset_component";
 import type { APIContext, GetStaticPaths } from "astro";
-import { api } from "../../../../../core/api/dynamic";
+import { api } from "../../../../../api/dynamic";
 
 export const getStaticPaths = (async () => {
   return api.metadata

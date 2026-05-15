@@ -1,6 +1,6 @@
 import type { APIContext } from "astro";
-import { api } from "../../../core/api/dynamic";
-import { imageProxy } from "../../../core/api/imageProxy";
+import { api } from "../../../api/dynamic";
+import { imageProxy } from "../../../api/imageProxy";
 
 export { getStaticPaths } from "./[id].json";
 

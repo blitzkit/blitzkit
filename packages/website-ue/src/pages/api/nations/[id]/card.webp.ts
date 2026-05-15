@@ -1,8 +1,8 @@
 import { Nation } from "@protos/game/proto/legacy/blitz_static_tank_component";
 import type { APIContext, GetStaticPaths } from "astro";
-import { clientUnmountedResponse } from "../../../../core/api/responses";
-import { game } from "../../../../core/game/game";
-import { clientUnmounted } from "../../../../core/game/unmounted";
+import { clientUnmountedResponse } from "../../../../api/responses";
+import { game } from "../../../../game/game";
+import { clientUnmounted } from "../../../../game/unmounted";
 
 export const getStaticPaths = (async () => {
   return Object.values(Nation)

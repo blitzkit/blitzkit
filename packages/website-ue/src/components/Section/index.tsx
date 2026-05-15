@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
-import { classNames } from "../../core/ui/classNames";
 import type { Space } from "../../types/space";
+import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
 export interface SectionProps extends ComponentProps<"div"> {

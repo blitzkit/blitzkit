@@ -1,4 +1,4 @@
-import { characteristicsOrder } from "../../../core/tankopedia/characteristicsOrder";
+import { characteristicsOrder } from "../../../tankopedia/characteristicsOrder";
 
 /**
  * The naked man fears no pickpocket.

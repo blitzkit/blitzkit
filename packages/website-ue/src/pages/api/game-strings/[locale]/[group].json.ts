@@ -1,6 +1,6 @@
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths, GetStaticPathsResult } from "astro";
-import { api } from "../../../../core/api/dynamic";
+import { api } from "../../../../api/dynamic";
 
 export const getStaticPaths = (async () => {
   const paths: GetStaticPathsResult = [];

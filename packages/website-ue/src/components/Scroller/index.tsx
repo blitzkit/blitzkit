@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ComponentProps } from "react";
 import { clamp } from "three/src/math/MathUtils.js";
-import { classNames } from "../../core/ui/classNames";
+import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
 interface ScrollerProps extends ComponentProps<"div"> {}

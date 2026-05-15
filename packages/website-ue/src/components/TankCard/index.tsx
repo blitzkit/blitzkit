@@ -1,5 +1,5 @@
-import { api } from "../../core/api/dynamic";
-import { clientUnmounted } from "../../core/game/unmounted";
+import { api } from "../../api/dynamic";
+import { clientUnmounted } from "../../game/unmounted";
 import { useAwait } from "../../hooks/useAwait";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useLocale } from "../../hooks/useLocale";

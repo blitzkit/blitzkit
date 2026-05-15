@@ -1,9 +1,9 @@
 import { useMemo, type ReactNode } from "react";
-import type { CharacteristicOutput } from "../core/tankopedia/characteristics";
+import type { CharacteristicOutput } from "../tankopedia/characteristics";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
-} from "../core/tankopedia/characteristicsOrder";
+} from "../tankopedia/characteristicsOrder";
 import { useGameStrings } from "./useGameStrings";
 import { useStrings } from "./useStrings";
 

@@ -1,7 +1,7 @@
 import { TankClass, TankType } from "@blitzkit/core";
 import { Nation } from "@protos/blitz_static_tank_component";
 import type { APIContext, GetStaticPaths } from "astro";
-import { GunType } from "../../../core/tankopedia/characteristics";
+import { GunType } from "../../../tankopedia/characteristics";
 import { GET as _GET } from "./all.json";
 
 export const ENUMS = {

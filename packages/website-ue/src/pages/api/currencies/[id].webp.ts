@@ -1,6 +1,6 @@
 import type { GetStaticPaths } from "astro";
-import { api } from "../../../core/api/dynamic";
-import { imageProxy } from "../../../core/api/imageProxy";
+import { api } from "../../../api/dynamic";
+import { imageProxy } from "../../../api/imageProxy";
 
 export const getStaticPaths = (async () => {
   const group = api.metadata.group("CurrencyEntity");

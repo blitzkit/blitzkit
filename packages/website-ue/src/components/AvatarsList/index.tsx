@@ -1,6 +1,6 @@
 import fuzzysort from "fuzzysort";
 import { useMemo } from "react";
-import { api } from "../../core/api/dynamic";
+import { api } from "../../api/dynamic";
 import { useAwait } from "../../hooks/useAwait";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useLocale } from "../../hooks/useLocale";

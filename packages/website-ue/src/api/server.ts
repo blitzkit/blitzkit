@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
   throw new Error("ServerAPI is being evaluated in the browser");
 }
 
-const globbedStrings = import.meta.glob("../../../../i18n/strings/*.json", {
+const globbedStrings = import.meta.glob("../../../i18n/strings/*.json", {
   import: "default",
 });
 const tankSlugPattern = /^(\/\w+)?\/tanks\/([a-z0-9-]+)\/$/;
@@ -229,10 +229,10 @@ export class ServerAPI extends AbstractAPI {
   @Cache(true)
   async strings(locale: string) {
     const localized = (await globbedStrings[
-      `../../../../i18n/strings/${locale}.json`
+      `../../../i18n/strings/${locale}.json`
     ]()) as DeepPartial<Strings>;
     const defaults = (await globbedStrings[
-      `../../../../i18n/strings/${locales.default}.json`
+      `../../../i18n/strings/${locales.default}.json`
     ]()) as Strings;
     const strings = merge({}, defaults, localized);
 
