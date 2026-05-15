@@ -42,10 +42,6 @@ interface LineProps {
   lines: UpgradeLine[];
 }
 
-const mergeLines = {
-  alternative_guns: "guns",
-} as Record<string, string>;
-
 function Line({ name, lines }: LineProps) {
   const combinedLines = useMemo(() => {
     const names: string[] = [name];
