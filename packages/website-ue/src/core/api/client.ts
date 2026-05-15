@@ -5,11 +5,16 @@ import { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import { TankList } from "@protos/blitzkit/tank_list";
 import { Tanks } from "@protos/blitzkit/tanks";
 import { Tiers } from "@protos/blitzkit/tiers";
+import { TankUpgradePricePresetComponent } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_price_preset_component";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");
 
 export class ClientAPI extends AbstractAPI {
+  get metadata(): never {
+    throw new Error("MetadataAccessor is inaccessible on the client");
+  }
+
   @Cache()
   tankList() {
     return fetchPB("/api/tanks/list.pb", TankList);
@@ -29,6 +34,14 @@ export class ClientAPI extends AbstractAPI {
   @Cache()
   popularTanks() {
     return fetchPB("/api/tanks/popular.pb", PopularTanks);
+  }
+
+  @Cache()
+  tankUpgradePreset(name: string) {
+    return fetchPB(
+      `/api/tanks/presets/upgrade/${name}.pb`,
+      TankUpgradePricePresetComponent,
+    );
   }
 
   @Cache()

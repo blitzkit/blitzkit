@@ -1,5 +1,5 @@
-import type { TankCatalogComponent } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_component";
 import { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
+import type { TankCatalogComponent } from "@protos/game/proto/legacy/blitz_static_tank_component";
 import { PenetrationGroup } from "@protos/game/proto/legacy/blitz_static_tank_penetration_group";
 import {
   ModuleUpgrade,

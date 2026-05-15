@@ -13,17 +13,24 @@
     .stage {
       position: relative;
 
-      img {
+      .icon {
         width: 1em;
         height: 1em;
 
-        transform: translate(var(--space-1), var(--space-1));
+        transform: translateX(var(--space-1));
       }
 
       .tier {
         position: absolute;
         left: var(--space-2);
         top: var(--space-2);
+      }
+
+      .price {
+        position: absolute;
+        left: 50%;
+        bottom: var(--space-2);
+        transform: translateX(-50%);
       }
     }
   }

@@ -31,7 +31,7 @@ interface LocalizationConfig {
 }
 
 export class ServerAPI extends AbstractAPI {
-  constructor(private metadata: MetadataAccessor) {
+  constructor(public metadata: MetadataAccessor) {
     super();
   }
 
@@ -172,6 +172,12 @@ export class ServerAPI extends AbstractAPI {
 
     const data = await readFile("../../temp/popular.json", "utf-8");
     return JSON.parse(data) as PopularTanks;
+  }
+
+  @Cache()
+  async tankUpgradePreset(id: string) {
+    const item = this.metadata.item(`TankUpgradePricePresetEntity.${id}`);
+    return item.TankUpgradePricePreset();
   }
 
   @Cache()

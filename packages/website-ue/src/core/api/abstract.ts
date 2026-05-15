@@ -1,3 +1,4 @@
+import type { MetadataAccessor } from "@blitzkit/closed";
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import type { Avatar } from "@protos/blitzkit/avatar";
@@ -10,12 +11,18 @@ import type { Tank } from "@protos/blitzkit/tank";
 import type { TankList } from "@protos/blitzkit/tank_list";
 import type { Tanks } from "@protos/blitzkit/tanks";
 import type { Tiers } from "@protos/blitzkit/tiers";
+import type { TankUpgradePricePresetComponent } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_price_preset_component";
 
 export abstract class AbstractAPI {
+  abstract metadata: MetadataAccessor;
+
   abstract tankList(): Promise<TankList>;
   abstract tank(id: string): Promise<Tank>;
   abstract tanks(): Promise<Tanks>;
   abstract popularTanks(): Promise<PopularTanks>;
+  abstract tankUpgradePreset(
+    name: string,
+  ): Promise<TankUpgradePricePresetComponent>;
 
   abstract tiers(): Promise<Tiers>;
 

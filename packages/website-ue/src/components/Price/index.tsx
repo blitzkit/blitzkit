@@ -1,0 +1,50 @@
+import { formatCompact } from "@blitzkit/core";
+import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_standard_price";
+import type { StandardSinglePrice } from "@protos/game/proto/legacy/blitz_static_standard_single_price";
+import type { ComponentProps } from "react";
+import { classNames } from "../../core/ui/classNames";
+import { useLocale } from "../../hooks/useLocale";
+import { Text } from "../Text";
+import styles from "./index.module.css";
+
+interface PriceProps extends ComponentProps<"div"> {
+  price: StandardPrice;
+}
+
+export function Price({ price, className, ...props }: PriceProps) {
+  return (
+    <div className={classNames(styles.price, className)} {...props}>
+      {price.price_list.map((entry, index) => (
+        <PriceEntry key={index} entry={entry} />
+      ))}
+    </div>
+  );
+}
+
+interface PriceEntryProps {
+  entry: StandardSinglePrice;
+}
+
+function PriceEntry({ entry }: PriceEntryProps) {
+  const locale = useLocale();
+
+  if (
+    entry.premium_time_price !== undefined ||
+    entry.stuff_price !== undefined ||
+    entry.currency_price === undefined
+  ) {
+    throw new Error("Unsupported price type");
+  }
+
+  return (
+    <Text size="minor" lowContrast className={styles.entry}>
+      <div className={styles.wrapper}>
+        <img
+          className={styles.icon}
+          src="https://static.vecteezy.com/system/resources/thumbnails/047/493/988/small/hairy-fluffy-cat-playing-png.png"
+        />
+        {formatCompact(locale, entry.currency_price.amount)}
+      </div>
+    </Text>
+  );
+}

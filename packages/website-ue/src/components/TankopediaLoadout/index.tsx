@@ -1,12 +1,16 @@
-import type { UpgradeLine } from "@blitzkit/closed/protos/game/proto/legacy/blitz_static_tank_upgrade_line";
 import { romanize } from "@blitzkit/core";
-import { Fragment, useMemo } from "react";
-import { api } from "../../core/api/dynamic";
-import { useAwait } from "../../hooks/useAwait";
+import { Grade } from "@protos/game/proto/legacy/blitz_static_standard_grades_enum";
+import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_standard_price";
+import type { UpgradeLine } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_line";
+import type { StageParameters } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+import { useMemo } from "react";
+import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
+import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
+import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -14,8 +18,7 @@ import styles from "./index.module.css";
 export function TankopediaLoadout() {
   const strings = useStrings();
 
-  const id = Tankopedia.use((state) => state.protagonist.id);
-  const tank = useAwait(() => api.tank(id), `tank-${id}`);
+  const tank = useProtagonist();
 
   return (
     <Section>
@@ -25,7 +28,7 @@ export function TankopediaLoadout() {
         {tank.tank!.upgrade_lines.map((line) => (
           <Line
             key={line.name}
-            line={line.name}
+            name={line.name}
             lines={tank.tank!.upgrade_lines}
           />
         ))}
@@ -35,7 +38,7 @@ export function TankopediaLoadout() {
 }
 
 interface LineProps {
-  line: string;
+  name: string;
   lines: UpgradeLine[];
 }
 
@@ -43,107 +46,143 @@ const mergeLines = {
   alternative_guns: "guns",
 } as Record<string, string>;
 
-function Line({ line, lines }: LineProps) {
+function Line({ name, lines }: LineProps) {
   const combinedLines = useMemo(() => {
-    const lines: string[] = [line];
+    const names: string[] = [name];
 
     for (const key in mergeLines) {
-      if (mergeLines[key] === line) {
-        lines.push(key);
+      if (mergeLines[key] === name && lines.some((line) => line.name === key)) {
+        names.push(key);
       }
     }
 
-    return lines;
-  }, [line]);
+    return names;
+  }, [name]);
 
   return (
     <div className={styles.line}>
-      {!(line in mergeLines) &&
-        combinedLines.map((line) => <LineInner line={line} lines={lines} />)}
+      {!(name in mergeLines) &&
+        combinedLines.map((name) => (
+          <LineInner key={name} name={name} lines={lines} />
+        ))}
     </div>
   );
 }
 
-function LineInner({ line, lines }: LineProps) {
-  const id = Tankopedia.use((state) => state.protagonist.id);
+function LineInner({ name, lines }: LineProps) {
+  const line = lines.find((line) => line.name === name)!;
+
+  return line.stages.map((stage, index) => (
+    <LineElement key={index} index={index} lineName={name} stage={stage} />
+  ));
+}
+
+interface LineElementProps {
+  index: number;
+  lineName: string;
+  stage: StageParameters;
+}
+
+function LineElement({ index, lineName, stage }: LineElementProps) {
   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
-  const tank = useAwait(() => api.tank(id), `tank-${id}`);
-
+  const tank = useProtagonist();
   const strings = useStrings();
+  const upgradePreset = useUpgradePreset(tank.tank!.tank_upgrade_preset);
 
-  return lines
-    .find((l) => l.name === line)!
-    .stages.map((stage, index) => {
-      const isSelected = upgrades[line] === index;
+  let price: StandardPrice | undefined;
 
-      return (
-        <Fragment key={stage.tech_name}>
-          <IconButton
-            color={isSelected ? undefined : "gray"}
-            variant={isSelected ? "surface" : "soft"}
-            radius="1"
-            className={styles.stage}
-            onClick={() => {
-              Tankopedia.mutate((draft) => {
-                draft.protagonist.upgrades[line] = index;
+  switch (stage.grade) {
+    case Grade.GRADE_COMMON:
+      price = upgradePreset.common_grade_price;
+      break;
 
-                for (const required of stage.required_upgrades) {
-                  for (const line of tank.tank!.upgrade_lines) {
-                    let i = 0;
+    case Grade.GRADE_RARE:
+      price = upgradePreset.rare_grade_price;
+      break;
 
-                    for (const stage of line.stages) {
-                      if (stage.tech_name === required) {
-                        draft.protagonist.upgrades[line.name] = Math.max(
-                          draft.protagonist.upgrades[line.name],
-                          i,
-                        );
-                      }
+    case Grade.GRADE_EPIC:
+      price = upgradePreset.unique_grade_price;
+      break;
 
-                      i++;
-                    }
-                  }
+    case Grade.GRADE_LEGENDARY:
+      price = upgradePreset.legendary_grade_price;
+      break;
+  }
+
+  for (const override of upgradePreset.prices_overrides) {
+    if (override.stage_tech_name !== stage.tech_name) continue;
+    price = override.price;
+  }
+
+  const isSelected = upgrades[lineName] === index;
+
+  return (
+    <IconButton
+      color={isSelected ? undefined : "gray"}
+      variant={isSelected ? "surface" : "soft"}
+      radius="1"
+      className={styles.stage}
+      onClick={() => {
+        Tankopedia.mutate((draft) => {
+          draft.protagonist.upgrades[lineName] = index;
+
+          for (const required of stage.required_upgrades) {
+            for (const line of tank.tank!.upgrade_lines) {
+              let i = 0;
+
+              for (const stage of line.stages) {
+                if (stage.tech_name === required) {
+                  draft.protagonist.upgrades[line.name] = Math.max(
+                    draft.protagonist.upgrades[line.name],
+                    i,
+                  );
                 }
 
+                i++;
+              }
+            }
+          }
+
+          for (const line of tank.tank!.upgrade_lines) {
+            let i = draft.protagonist.upgrades[line.name];
+
+            while (i > 0) {
+              const currentStage = line.stages[i];
+              const valid = currentStage.required_upgrades.every((required) => {
                 for (const line of tank.tank!.upgrade_lines) {
-                  let i = draft.protagonist.upgrades[line.name];
+                  const idx = draft.protagonist.upgrades[line.name];
 
-                  while (i > 0) {
-                    const currentStage = line.stages[i];
-                    const valid = currentStage.required_upgrades.every(
-                      (required) => {
-                        for (const line of tank.tank!.upgrade_lines) {
-                          const idx = draft.protagonist.upgrades[line.name];
-
-                          if (line.stages[idx]?.tech_name === required) {
-                            return true;
-                          }
-                        }
-
-                        return false;
-                      },
-                    );
-
-                    if (valid) break;
-
-                    i--;
+                  if (line.stages[idx]?.tech_name === required) {
+                    return true;
                   }
-
-                  draft.protagonist.upgrades[line.name] = i;
                 }
-              });
-            }}
-          >
-            <img src={`/api/tanks/modules/${stage.stage_type}.webp`} />
-            {/* {stage.display_name} */}
-            {/* {stage.grade} */}
 
-            <Text lowContrast size="minor" className={styles.tier}>
-              {line in mergeLines
-                ? strings.tanks.loadout.alternative
-                : romanize(stage.number)}
-            </Text>
-          </IconButton>
-        </Fragment>
-      );
-    });
+                return false;
+              });
+
+              if (valid) break;
+
+              i--;
+            }
+
+            draft.protagonist.upgrades[line.name] = i;
+          }
+        });
+      }}
+    >
+      <img
+        className={styles.icon}
+        src={`/api/tanks/modules/${stage.stage_type}.webp`}
+      />
+      {/* {stage.display_name} */}
+
+      <Text lowContrast size="minor" className={styles.tier}>
+        {lineName in mergeLines
+          ? strings.tanks.loadout.alternative
+          : romanize(stage.number)}
+      </Text>
+
+      {price && <Price className={styles.price} price={price} />}
+    </IconButton>
+  );
 }
