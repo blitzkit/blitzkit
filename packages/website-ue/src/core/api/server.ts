@@ -35,6 +35,40 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
+  resolveRemoteUrl(remoteUrls: string[]) {
+    let remoteStorage: RemoteStorageComponent | undefined = undefined;
+
+    for (const remoteUrl of remoteUrls) {
+      const item = this.metadata.item(remoteUrl);
+      const candidate = item.RemoteStorage();
+
+      if (
+        remoteStorage === undefined ||
+        candidate.download_speed_weight > remoteStorage.download_speed_weight
+      ) {
+        remoteStorage = candidate;
+      }
+    }
+
+    if (remoteStorage === undefined) {
+      throw new Error("No suitable production remote storage found");
+    }
+
+    return remoteStorage;
+  }
+
+  resolveClientConfig() {
+    const group = this.metadata.group("ClientConfigsEntity");
+
+    if (group.length !== 1) {
+      throw new RangeError(
+        `Don't know how to handle ${group.length} ClientConfigsEntities`,
+      );
+    }
+
+    return this.metadata.item(group[0].id);
+  }
+
   @Cache()
   async tankList() {
     const group = this.metadata.group("TankEntity");
@@ -207,37 +241,14 @@ export class ServerAPI extends AbstractAPI {
 
   @Cache()
   async gameStrings(locale: string) {
-    const group = this.metadata.group("ClientConfigsEntity");
-
-    if (group.length !== 1) {
-      throw new RangeError(
-        `Don't know how to handle ${group.length} ClientConfigsEntities`,
-      );
-    }
-
-    const clientConfig = this.metadata.item(group[0].id);
+    const clientConfig = this.resolveClientConfig();
     const localizationResources = clientConfig.LocalizationResources();
     const strings: Record<string, string> = {};
 
     for (const remoteStorageSettings of localizationResources.remote_storages) {
-      let remoteStorage: RemoteStorageComponent | undefined = undefined;
-
-      for (const remoteUrl of remoteStorageSettings.remote_urls) {
-        const item = this.metadata.item(remoteUrl);
-        const candidate = item.RemoteStorage();
-
-        if (
-          remoteStorage === undefined ||
-          candidate.download_speed_weight > remoteStorage.download_speed_weight
-        ) {
-          remoteStorage = candidate;
-        }
-      }
-
-      if (remoteStorage === undefined) {
-        throw new Error("No suitable production remote storage found");
-      }
-
+      const remoteStorage = this.resolveRemoteUrl(
+        remoteStorageSettings.remote_urls,
+      );
       const configPath = `${remoteStorage.url}${remoteStorage.relative_path}/config.yaml`;
       const config = await fetch(configPath)
         .then((response) => response.text())
@@ -343,5 +354,24 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return { backgrounds };
+  }
+
+  @Cache()
+  async currencyIcon(id: string) {
+    const item = this.metadata.item(`CurrencyEntity.${id}`);
+    const stuffUI = item.StuffUI("UIComponent");
+    const config = this.resolveClientConfig();
+    const metroResources = config.MetroResources();
+    const remoteStorage = this.resolveRemoteUrl(
+      metroResources.remote_storage!.remote_urls,
+    );
+
+    const iconPathHack = stuffUI.icon.replace("\n", "");
+
+    if (!stuffUI.icon.includes("\n")) {
+      throw new Error("Icon path doesn't include newline, can't apply hack");
+    }
+
+    return `${remoteStorage.url}${remoteStorage.relative_path}${iconPathHack}`;
   }
 }

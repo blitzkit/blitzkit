@@ -36,13 +36,12 @@ function PriceEntry({ entry }: PriceEntryProps) {
     throw new Error("Unsupported price type");
   }
 
+  const [, iconName] = entry.currency_price.currency_catalog_id.split(".");
+
   return (
     <Text size="minor" lowContrast className={styles.entry}>
       <div className={styles.wrapper}>
-        <img
-          className={styles.icon}
-          src="https://static.vecteezy.com/system/resources/thumbnails/047/493/988/small/hairy-fluffy-cat-playing-png.png"
-        />
+        <img className={styles.icon} src={`/api/currencies/${iconName}.webp`} />
         {formatCompact(locale, entry.currency_price.amount)}
       </div>
     </Text>

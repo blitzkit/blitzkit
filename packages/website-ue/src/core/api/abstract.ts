@@ -41,6 +41,8 @@ export abstract class AbstractAPI {
   abstract background(id: string): Promise<Background>;
   abstract backgrounds(): Promise<Backgrounds>;
 
+  abstract currencyIcon(id: string): Promise<string>;
+
   private assertLocale(locale: string) {
     const supported = locales.supported.find(
       (supported) => supported.locale === locale,

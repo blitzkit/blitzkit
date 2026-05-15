@@ -8,8 +8,8 @@ import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
+import { Button } from "../Button";
 import { Heading } from "../Heading";
-import { IconButton } from "../IconButton";
 import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
@@ -117,7 +117,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
   const isSelected = upgrades[lineName] === index;
 
   return (
-    <IconButton
+    <Button
       color={isSelected ? undefined : "gray"}
       variant={isSelected ? "surface" : "soft"}
       radius="1"
@@ -183,6 +183,6 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
       </Text>
 
       {price && <Price className={styles.price} price={price} />}
-    </IconButton>
+    </Button>
   );
 }
