@@ -15,6 +15,9 @@ type DataNode = {
   qualityGroup?: string;
   fxName?: string;
   textures?: Textures;
+  customCullMode?: number;
+  enabledPresets?: EnabledPresets;
+  properties?: Properties;
 } & (
   | ({
       configCount: number;
@@ -24,7 +27,7 @@ type DataNode = {
     }
 );
 
-interface ConfigArchive {
+export interface ConfigArchive {
   configName: string;
   fxName: string;
   properties: Properties;

@@ -18,6 +18,7 @@ import {
   Heading,
   IconButton,
   Text,
+  Tooltip,
 } from "@radix-ui/themes";
 import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
 import { useLocale } from "../../../../hooks/useLocale";
@@ -55,12 +56,14 @@ function ModuleButton({
   selected,
   unlock,
   top,
+  tooltip,
   onClick,
 }: {
   unlock: Unlock;
   tier: number;
   selected: boolean;
   top: boolean;
+  tooltip?: string;
   onClick: () => void;
 }) {
   const isTank = unlock.type === ModuleType.MODULE_TYPE_VEHICLE;
@@ -134,7 +137,7 @@ function ModuleButton({
     </IconButton>
   );
 
-  return isTank ? (
+  const node = isTank ? (
     <LinkI18n
       locale={locale}
       href={`/tanks/${tankDefinitions.tanks[unlock.id].slug}`}
@@ -144,6 +147,10 @@ function ModuleButton({
   ) : (
     button
   );
+
+  if (!tooltip) return node;
+
+  return <Tooltip content={tooltip}>{node}</Tooltip>;
 }
 
 const tankDefinitions = await awaitableTankDefinitions;
@@ -167,7 +174,7 @@ export function Modules() {
   const topGun = topTurret.guns.at(-1)!;
   const topEngine = tank.engines.at(-1)!;
   const topTrack = tank.tracks.at(-1)!;
-  const { strings } = useLocale();
+  const { strings, unwrap } = useLocale();
 
   function setByUnlock(unlock: Unlock) {
     Duel.mutate((draft) => {
@@ -249,6 +256,8 @@ export function Modules() {
 
           if (module === undefined) return null;
 
+          const tooltip = unwrap(module.name!);
+
           return (
             <Flex
               key={unlock.id}
@@ -301,6 +310,7 @@ export function Modules() {
               <ModuleButton
                 unlock={unlock}
                 tier={extractModule(module).tier}
+                tooltip={tooltip}
                 selected={
                   (unlock.type === ModuleType.MODULE_TYPE_TURRET
                     ? turret.id
