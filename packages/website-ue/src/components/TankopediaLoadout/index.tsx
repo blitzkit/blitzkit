@@ -26,7 +26,28 @@ export function TankopediaLoadout() {
   return (
     <Section>
       <Modules />
+      <Equipment />
     </Section>
+  );
+}
+
+function Equipment() {
+  const strings = useStrings();
+  const tank = useProtagonist();
+  // const equipment = useEquipment(
+  //   tank.tank!.equipment_preset_catalog_id,
+  //   tank.tank!.equipment_price_preset_catalog_id,
+  // );
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.equipment}</Heading>
+      </div>
+      preset: {tank.tank!.equipment_preset_catalog_id}
+      <br />
+      price: {tank.tank!.equipment_price_preset_catalog_id}
+    </div>
   );
 }
 

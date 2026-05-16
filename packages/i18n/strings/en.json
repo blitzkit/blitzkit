@@ -200,6 +200,7 @@
   "tanks": {
     "loadout": {
       "modules": "Modules",
+      "equipment": "Equipment",
       "alternative": "Alt"
     },
 
