@@ -4,16 +4,17 @@
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
+    "setup": "bun install && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccesssor",
+    "dev": "bun run dev:website",
+    "dev:website": "cd packages/website-ue && bun run dev",
     "build:game": "cd packages/game && bun run build",
     "build:website": "cd packages/website-ue && bun run build",
     "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
     "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
     "build:protos": "cd packages/scripts && bun run build:protos",
-    "dev": "bun run dev:website",
-    "dev:website": "cd packages/website-ue && bun run dev",
     "lint": "tsc",
     "lint:website": "cd packages/website-ue && bun run lint",
-    "setup": "bun install && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccesssor"
+    "download:protos": "cd packages/scripts && bun run download:protos"
   },
   "type": "module",
   "workspaces": [

@@ -1,6 +1,7 @@
 import type { MetadataAccessor } from "@blitzkit/closed";
 import type { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import type { TankUpgradePricePresetComponent } from "@protos/blitz/blitz_static_tank_upgrade_price_preset_component";
 import type { Avatar } from "@protos/blitzkit/avatar";
 import type { AvatarList } from "@protos/blitzkit/avatar_list";
 import type { Avatars } from "@protos/blitzkit/avatars";
@@ -11,7 +12,6 @@ import type { Tank } from "@protos/blitzkit/tank";
 import type { TankList } from "@protos/blitzkit/tank_list";
 import type { Tanks } from "@protos/blitzkit/tanks";
 import type { Tiers } from "@protos/blitzkit/tiers";
-import type { TankUpgradePricePresetComponent } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_price_preset_component";
 
 export abstract class AbstractAPI {
   abstract metadata: MetadataAccessor;

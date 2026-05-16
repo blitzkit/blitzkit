@@ -1,4 +1,4 @@
-import { Nation } from "@protos/game/proto/legacy/blitz_static_tank_component";
+import { Nation } from "@protos/blitz/blitz_static_tank_component";
 import type { APIContext, GetStaticPaths } from "astro";
 import { clientUnmountedResponse } from "../../../../api/responses";
 import { game } from "../../../../game/game";

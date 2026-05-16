@@ -1,8 +1,8 @@
-import type { Tank } from "@protos/blitzkit/tank";
 import {
   ShellUpgradeSingleChange_AttributeName,
   TankAttributeChange_AttributeName,
-} from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+} from "@protos/blitz/blitz_static_tank_upgrade_single_stage";
+import type { Tank } from "@protos/blitzkit/tank";
 import { aggregateParameters } from "./aggregateParameters";
 import {
   characteristics,

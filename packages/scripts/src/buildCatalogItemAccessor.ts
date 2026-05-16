@@ -40,7 +40,7 @@ for (const file of files) {
 let content = "";
 
 for (const _import of imports) {
-  content += `import { ${_import.name}Component } from "@protos/game/proto/legacy/${_import.file}";\n`;
+  content += `import { ${_import.name}Component } from "@protos/blitz/${_import.file}";\n`;
 }
 
 content +=

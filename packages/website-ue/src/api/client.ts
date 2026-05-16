@@ -1,11 +1,11 @@
 import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
+import { TankUpgradePricePresetComponent } from "@protos/blitz/blitz_static_tank_upgrade_price_preset_component";
 import { Avatars } from "@protos/blitzkit/avatars";
 import { PopularTanks } from "@protos/blitzkit/popular_tanks";
 import { TankList } from "@protos/blitzkit/tank_list";
 import { Tanks } from "@protos/blitzkit/tanks";
 import { Tiers } from "@protos/blitzkit/tiers";
-import { TankUpgradePricePresetComponent } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_price_preset_component";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");

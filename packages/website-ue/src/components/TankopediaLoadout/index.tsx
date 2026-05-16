@@ -1,8 +1,8 @@
 import { romanize } from "@blitzkit/core";
-import { Grade } from "@protos/game/proto/legacy/blitz_static_standard_grades_enum";
-import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_standard_price";
-import type { UpgradeLine } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_line";
-import type { StageParameters } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+import { Grade } from "@protos/blitz/blitz_static_standard_grades_enum";
+import type { StandardPrice } from "@protos/blitz/blitz_static_standard_price";
+import type { UpgradeLine } from "@protos/blitz/blitz_static_tank_upgrade_line";
+import type { StageParameters } from "@protos/blitz/blitz_static_tank_upgrade_single_stage";
 import { DoubleArrowDownIcon, DoubleArrowUpIcon } from "@radix-ui/react-icons";
 import { useMemo } from "react";
 import {

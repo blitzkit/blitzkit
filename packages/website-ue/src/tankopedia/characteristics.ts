@@ -1,10 +1,10 @@
-import type { Tank } from "@protos/blitzkit/tank";
-import { TankClass } from "@protos/game/proto/legacy/blitz_static_tank_component";
+import { TankClass } from "@protos/blitz/blitz_static_tank_component";
 import {
   ShellUpgradeSingleChange_AttributeName,
   StageParameters,
   TankAttributeChange_AttributeName,
-} from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+} from "@protos/blitz/blitz_static_tank_upgrade_single_stage";
+import type { Tank } from "@protos/blitzkit/tank";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
