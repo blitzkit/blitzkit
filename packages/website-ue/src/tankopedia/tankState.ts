@@ -8,6 +8,7 @@ export interface TankState {
   id: string;
 
   upgrades: Record<string, number>;
+  alternates: Record<string, boolean>;
 
   shell: number;
   speed: number;

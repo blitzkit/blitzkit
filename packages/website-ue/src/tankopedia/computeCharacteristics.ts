@@ -17,7 +17,11 @@ export type ComputedCharacteristics = Record<
 >;
 
 export function computeCharacteristics(tank: Tank, state: TankState) {
-  const parameters = aggregateParameters(tank.tank!, state.upgrades);
+  const parameters = aggregateParameters(
+    tank.tank!,
+    state.upgrades,
+    state.alternates,
+  );
 
   const computed: Partial<ComputedCharacteristics> = {};
 

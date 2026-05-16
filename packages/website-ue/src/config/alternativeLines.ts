@@ -11,3 +11,11 @@ export function isAlternativeLine(line: string) {
 
   return false;
 }
+
+export function originalLineName(line: string) {
+  for (const key in alternativeLines) {
+    if (alternativeLines[key] === line) {
+      return key;
+    }
+  }
+}

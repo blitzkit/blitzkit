@@ -21,7 +21,7 @@
         width: 1em;
         height: 1em;
 
-        padding: var(--space-4) 0;
+        padding: var(--space-3) 0;
 
         transform: translate(var(--space-1), calc(-1 * var(--space-1)));
       }

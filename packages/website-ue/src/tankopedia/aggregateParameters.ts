@@ -14,6 +14,10 @@ import {
   TankAttributeChange_Modifier,
   VisualChanges,
 } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+import {
+  isAlternativeLine,
+  originalLineName,
+} from "../config/alternativeLines";
 
 function patch(stage0: StageParameters, stage1: StageParameters) {
   if (stage1.number !== ++stage0.number) {
@@ -239,11 +243,28 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
 export function aggregateParameters(
   tank: TankCatalogComponent,
   upgrades: Record<string, number>,
+  alternates: Record<string, boolean>,
 ) {
   const stage0 = StageParameters.create({});
 
   for (const line of tank.upgrade_lines) {
-    const stage = upgrades[line.name];
+    let stage: number;
+
+    if (isAlternativeLine(line.name)) {
+      const originalLine = originalLineName(line.name)!;
+
+      if (alternates[originalLine]) {
+        stage = 0;
+      } else {
+        continue;
+      }
+    } else {
+      if (alternates[line.name]) {
+        stage = line.stages.length - 2;
+      } else {
+        stage = upgrades[line.name];
+      }
+    }
 
     stage0.number = 0;
 

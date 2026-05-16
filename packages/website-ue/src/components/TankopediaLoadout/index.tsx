@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import {
   alternativeLines,
   isAlternativeLine,
+  originalLineName,
 } from "../../config/alternativeLines";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
@@ -90,6 +91,7 @@ interface LineElementProps {
 
 function LineElement({ index, lineName, stage }: LineElementProps) {
   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
+  const alternates = Tankopedia.use((state) => state.protagonist.alternates);
   const tank = useProtagonist();
   const strings = useStrings();
   const upgradePreset = useUpgradePreset(tank.tank!.tank_upgrade_preset);
@@ -119,7 +121,18 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
     price = override.price;
   }
 
-  const isSelected = upgrades[lineName] === index;
+  let isSelected: boolean;
+
+  if (isAlternativeLine(lineName)) {
+    const originalLine = originalLineName(lineName);
+    isSelected = alternates[originalLine!];
+  } else {
+    if (alternates[lineName]) {
+      isSelected = false;
+    } else {
+      isSelected = upgrades[lineName] === index;
+    }
+  }
 
   return (
     <Button
@@ -129,14 +142,24 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
       className={styles.stage}
       onClick={() => {
         Tankopedia.mutate((draft) => {
-          draft.protagonist.upgrades[lineName] = index;
+          const tankData = tank.tank!;
+
+          if (isAlternativeLine(lineName)) {
+            const originalLine = originalLineName(lineName)!;
+
+            draft.protagonist.alternates[originalLine] = true;
+            draft.protagonist.upgrades[lineName] = index;
+          } else {
+            draft.protagonist.alternates[lineName] = false;
+            draft.protagonist.upgrades[lineName] = index;
+          }
 
           for (const required of stage.required_upgrades) {
-            for (const line of tank.tank!.upgrade_lines) {
+            for (const line of tankData.upgrade_lines) {
               let i = 0;
 
-              for (const stage of line.stages) {
-                if (stage.tech_name === required) {
+              for (const candidateStage of line.stages) {
+                if (candidateStage.tech_name === required) {
                   draft.protagonist.upgrades[line.name] = Math.max(
                     draft.protagonist.upgrades[line.name],
                     i,
@@ -148,16 +171,21 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
             }
           }
 
-          for (const line of tank.tank!.upgrade_lines) {
+          for (const line of tankData.upgrade_lines) {
+            if (draft.protagonist.alternates[line.name]) {
+              continue;
+            }
+
             let i = draft.protagonist.upgrades[line.name];
 
             while (i > 0) {
               const currentStage = line.stages[i];
-              const valid = currentStage.required_upgrades.every((required) => {
-                for (const line of tank.tank!.upgrade_lines) {
-                  const idx = draft.protagonist.upgrades[line.name];
 
-                  if (line.stages[idx]?.tech_name === required) {
+              const valid = currentStage.required_upgrades.every((required) => {
+                for (const otherLine of tankData.upgrade_lines) {
+                  const idx = draft.protagonist.upgrades[otherLine.name];
+
+                  if (otherLine.stages[idx]?.tech_name === required) {
                     return true;
                   }
                 }
@@ -181,7 +209,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
       />
       {/* {stage.display_name} */}
 
-      <Text lowContrast size="minor" className={styles.tier}>
+      <Text weight="light" lowContrast size="minor" className={styles.tier}>
         {isAlternativeLine(lineName)
           ? strings.tanks.loadout.alternative
           : romanize(stage.number)}
