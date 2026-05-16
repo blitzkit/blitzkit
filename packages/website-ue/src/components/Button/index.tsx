@@ -6,7 +6,8 @@ import styles from "./index.module.css";
 export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
   radius?: `${1 | 2 | 3}` | "max";
-  variant?: "solid" | "surface" | "soft";
+  variant?: "solid" | "surface" | "soft" | "inverted" | "ghost";
+  size?: "regular";
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([
@@ -30,6 +31,7 @@ export function Button({
   variant = "solid",
   style,
   radius = "max",
+  size = "regular",
   ...props
 }: ButtonProps) {
   return (
@@ -39,6 +41,7 @@ export function Button({
       data-variant={variant}
       data-light-text={variant === "solid"}
       data-radius={radius}
+      data-size={size}
       {...props}
     />
   );

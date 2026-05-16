@@ -14,7 +14,9 @@
   color: var(--gray-1);
   font-weight: var(--weight-medium);
 
-  .svg {
+  cursor: pointer;
+
+  svg {
     width: 1em;
     height: 1em;
   }
@@ -30,6 +32,18 @@
   &[data-variant="surface"],
   &[data-variant="soft"] {
     background-color: var(--accent-3);
+  }
+
+  &[data-variant="inverted"] {
+    background-color: var(--accent-12);
+    color: var(--accent-1);
+  }
+
+  &[data-variant="ghost"] {
+    background: none;
+    color: var(--accent-11);
+
+    padding: 0;
   }
 
   &[data-variant="surface"] {

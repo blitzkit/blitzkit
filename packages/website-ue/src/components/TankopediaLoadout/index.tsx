@@ -3,6 +3,7 @@ import { Grade } from "@protos/game/proto/legacy/blitz_static_standard_grades_en
 import type { StandardPrice } from "@protos/game/proto/legacy/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/game/proto/legacy/blitz_static_tank_upgrade_single_stage";
+import { DoubleArrowDownIcon, DoubleArrowUpIcon } from "@radix-ui/react-icons";
 import { useMemo } from "react";
 import {
   alternativeLines,
@@ -15,19 +16,65 @@ import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
+import { IconButton } from "../IconButton";
 import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
 export function TankopediaLoadout() {
-  const strings = useStrings();
+  return (
+    <Section>
+      <Modules />
+    </Section>
+  );
+}
 
+function Modules() {
+  const strings = useStrings();
   const tank = useProtagonist();
 
   return (
-    <Section>
-      <Heading size="3">{strings.tanks.loadout.modules}</Heading>
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.modules}</Heading>
+
+        <IconButton
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              for (const line of tank.tank!.upgrade_lines) {
+                if (isAlternativeLine(line.name)) continue;
+
+                draft.protagonist.upgrades[line.name] = 0;
+                draft.protagonist.alternates[line.name] = false;
+              }
+            });
+          }}
+          color="tomato"
+          variant="ghost"
+        >
+          <DoubleArrowDownIcon />
+        </IconButton>
+
+        <IconButton
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              for (const line of tank.tank!.upgrade_lines) {
+                draft.protagonist.upgrades[line.name] = line.stages.length - 1;
+
+                if (isAlternativeLine(line.name)) {
+                  const original = originalLineName(line.name)!;
+                  draft.protagonist.alternates[original] = true;
+                }
+              }
+            });
+          }}
+          color="jade"
+          variant="ghost"
+        >
+          <DoubleArrowUpIcon />
+        </IconButton>
+      </div>
 
       <div className={styles.lines}>
         {tank.tank!.upgrade_lines.map((line) => (
@@ -38,7 +85,7 @@ export function TankopediaLoadout() {
           />
         ))}
       </div>
-    </Section>
+    </div>
   );
 }
 
