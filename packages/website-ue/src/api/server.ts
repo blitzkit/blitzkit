@@ -366,12 +366,6 @@ export class ServerAPI extends AbstractAPI {
       metroResources.remote_storage!.remote_urls,
     );
 
-    const iconPathHack = stuffUI.icon.replace("\n", "");
-
-    if (!stuffUI.icon.includes("\n")) {
-      throw new Error("Icon path doesn't include newline, can't apply hack");
-    }
-
-    return `${remoteStorage.url}${remoteStorage.relative_path}${iconPathHack}`;
+    return `${remoteStorage.url}${remoteStorage.relative_path}${stuffUI.icon!.value}`;
   }
 }
