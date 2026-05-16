@@ -1,4 +1,4 @@
-import { PopularTanks } from "@protos/blitzkit/popular_tanks";
+import { PopularTanks } from "@protos/popular_tanks";
 import { api } from "../../../api/dynamic";
 
 export async function GET() {

@@ -1,6 +1,6 @@
-import { StandardSinglePrice } from "@protos/blitz/blitz_static_standard_single_price";
-import type { TankCatalogComponent } from "@protos/blitz/blitz_static_tank_component";
-import { PenetrationGroup } from "@protos/blitz/blitz_static_tank_penetration_group";
+import { StandardSinglePrice } from "@protos/blitz_static_standard_single_price";
+import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
+import { PenetrationGroup } from "@protos/blitz_static_tank_penetration_group";
 import {
   ModuleUpgrade,
   ModuleUpgrade_Modifier,
@@ -13,7 +13,7 @@ import {
   TankAttributeChange_AttributeName,
   TankAttributeChange_Modifier,
   VisualChanges,
-} from "@protos/blitz/blitz_static_tank_upgrade_single_stage";
+} from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
   isAlternativeLine,
   originalLineName,

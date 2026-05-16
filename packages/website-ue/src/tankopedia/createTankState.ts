@@ -1,4 +1,4 @@
-import type { Tank } from "@protos/blitzkit/tank";
+import type { Tank } from "@protos/tank";
 import { alternativeLines } from "../config/alternativeLines";
 import { TerrainHardness, type TankState } from "./tankState";
 

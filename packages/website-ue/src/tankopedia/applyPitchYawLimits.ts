@@ -1,5 +1,5 @@
 import { normalizeAngleDeg } from "@blitzkit/core";
-import type { PitchLimit } from "@protos/blitz/blitz_static_tank_upgrade_single_stage";
+import type { PitchLimit } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { clamp, degToRad, lerp, radToDeg } from "three/src/math/MathUtils.js";
 
 export function applyPitchYawLimits(

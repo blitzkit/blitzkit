@@ -1,4 +1,4 @@
-import { Tanks } from "@protos/blitzkit/tanks";
+import { Tanks } from "@protos/tanks";
 import { api } from "../../../api/dynamic";
 
 /**

@@ -39,17 +39,14 @@ args += "--ts_proto_opt=unrecognizedEnum=false\n";
 args += "--ts_proto_opt=snakeToCamel=false\n";
 args += `--ts_proto_out=${ROOT}\n`;
 
-args += `-I=${ROOT}\n`;
-// for (const dir of await readdir(ROOT)) {
-//   args += `-I=${ROOT}/${dir}\n`;
-// }
+for (const dir of await readdir(ROOT)) {
+  args += `-I=${ROOT}/${dir}\n`;
+}
 
 const filesRaw = await readdir(`${ROOT}`, { recursive: true });
 const files: string[] = [];
 
 for (const file of filesRaw) {
-  if (!file.startsWith("blitz/")) continue;
-
   if (file.endsWith(".proto")) {
     files.push(file);
     args += `${ROOT}/${file}\n`;

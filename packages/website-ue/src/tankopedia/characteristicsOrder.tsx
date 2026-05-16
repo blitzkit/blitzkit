@@ -3,7 +3,7 @@ import {
   Nation,
   TankClass,
   TankType,
-} from "@protos/blitz/blitz_static_tank_component";
+} from "@protos/blitz_static_tank_component";
 import type { ReactNode } from "react";
 import { VintageIcon } from "../icons/Vintage";
 import {

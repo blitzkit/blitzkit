@@ -1,11 +1,11 @@
 import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
-import { TankUpgradePricePresetComponent } from "@protos/blitz/blitz_static_tank_upgrade_price_preset_component";
-import { Avatars } from "@protos/blitzkit/avatars";
-import { PopularTanks } from "@protos/blitzkit/popular_tanks";
-import { TankList } from "@protos/blitzkit/tank_list";
-import { Tanks } from "@protos/blitzkit/tanks";
-import { Tiers } from "@protos/blitzkit/tiers";
+import { Avatars } from "@protos/avatars";
+import { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
+import { PopularTanks } from "@protos/popular_tanks";
+import { TankList } from "@protos/tank_list";
+import { Tanks } from "@protos/tanks";
+import { Tiers } from "@protos/tiers";
 import { AbstractAPI, Cache } from "./abstract";
 
 const rejected = Promise.reject("Not implemented on client");

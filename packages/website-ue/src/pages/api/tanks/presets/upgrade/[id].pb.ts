@@ -1,4 +1,4 @@
-import { TankUpgradePricePresetComponent } from "@protos/blitz/blitz_static_tank_upgrade_price_preset_component";
+import { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
 import type { APIContext, GetStaticPaths } from "astro";
 import { api } from "../../../../../api/dynamic";
 

@@ -1,4 +1,4 @@
-import type { Tank } from "@protos/blitzkit/tank";
+import type { Tank } from "@protos/tank";
 import { Varuna } from "varuna";
 import { createTankState } from "../tankopedia/createTankState";
 import { type TankState } from "../tankopedia/tankState";

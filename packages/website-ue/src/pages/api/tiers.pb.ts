@@ -1,4 +1,4 @@
-import { Tiers } from "@protos/blitzkit/tiers";
+import { Tiers } from "@protos/tiers";
 import { api } from "../../api/dynamic";
 
 /**

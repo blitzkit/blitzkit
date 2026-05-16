@@ -1,6 +1,6 @@
 import { literals } from "@blitzkit/i18n";
-import { Grade } from "@protos/blitz/blitz_static_standard_grades_enum";
-import type { Avatar } from "@protos/blitzkit/avatar";
+import type { Avatar } from "@protos/avatar";
+import { Grade } from "@protos/blitz_static_standard_grades_enum";
 import { DownloadIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { useStrings } from "../../hooks/useStrings";

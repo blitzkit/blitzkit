@@ -1,4 +1,4 @@
-import { Avatars } from "@protos/blitzkit/avatars";
+import { Avatars } from "@protos/avatars";
 import { api } from "../../../api/dynamic";
 
 export async function GET() {
