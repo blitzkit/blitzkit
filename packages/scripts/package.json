@@ -47,8 +47,7 @@
     "build:proxyclient": "bun src/buildProxyClient.ts",
     "build:catalogitemaccesssor": "bun src/buildCatalogItemAccessor.ts",
     "build:protos": "bun src/protos.ts",
-    "patchnotes": "bun src/patchNotes.ts",
-    "download:protos": "bun src/downloadProtos.ts"
+    "patchnotes": "bun src/patchNotes.ts"
   },
   "type": "module"
 }

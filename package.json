@@ -13,8 +13,7 @@
     "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
     "build:protos": "cd packages/scripts && bun run build:protos",
     "lint": "tsc",
-    "lint:website": "cd packages/website-ue && bun run lint",
-    "download:protos": "cd packages/scripts && bun run download:protos"
+    "lint:website": "cd packages/website-ue && bun run lint"
   },
   "type": "module",
   "workspaces": [

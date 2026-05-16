@@ -1,6 +1,6 @@
 import { readdir, readFile, writeFile } from "fs/promises";
 
-const SOURCES = "../../packages/closed/protos/game/proto/legacy";
+const SOURCES = "../../packages/closed/protos/blitz";
 const TARGET = "../../packages/closed/src/unreal/catalogItemAccessor.ts";
 
 const componentPattern = /^message (\w+)Component {/gm;
