@@ -9,6 +9,38 @@
     gap: var(--space-3);
   }
 
+  .equipment {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    .row {
+      display: flex;
+      gap: var(--space-3);
+
+      .slots {
+        display: flex;
+
+        .slot {
+          aspect-ratio: 1 / 1;
+          padding: var(--space-3);
+
+          font-size: var(--space-5);
+
+          &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+
+          &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+        }
+      }
+    }
+  }
+
   .lines {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 import type { Tank } from "@protos/tank";
-import { alternativeLines } from "../config/alternativeLines";
+import { alternativeLines } from "../config/modules";
 import { TerrainHardness, type TankState } from "./tankState";
 
 export function createTankState({ tank, id }: Tank) {
@@ -21,6 +21,8 @@ export function createTankState({ tank, id }: Tank) {
 
   return {
     id,
+
+    equipment: {},
 
     upgrades,
     alternates,

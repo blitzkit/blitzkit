@@ -7,6 +7,8 @@ export enum TerrainHardness {
 export interface TankState {
   id: string;
 
+  equipment: Record<number, number>;
+
   upgrades: Record<string, number>;
   alternates: Record<string, boolean>;
 

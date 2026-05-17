@@ -17,7 +17,7 @@ import {
 import {
   isAlternativeLine,
   originalLineName,
-} from "../config/alternativeLines";
+} from "../config/modules";
 
 function patch(stage0: StageParameters, stage1: StageParameters) {
   if (stage1.number !== ++stage0.number) {

@@ -232,15 +232,15 @@ export class ServerAPI extends AbstractAPI {
     const equipment = Equipment.create();
 
     for (const item of this.metadata.group("EquipmentPresetEntity")) {
-      equipment.presets[item.name] = item.EquipmentPreset();
+      equipment.presets[item.id] = item.EquipmentPreset();
     }
 
     for (const item of this.metadata.group("EquipmentPricePresetEntity")) {
-      equipment.prices[item.name] = item.EquipmentPricePreset();
+      equipment.prices[item.id] = item.EquipmentPricePreset();
     }
 
     for (const item of this.metadata.group("EquipmentEntity")) {
-      equipment.equipments[item.name] = item.BlitzStaticEquipment();
+      equipment.equipments[item.id] = item.BlitzStaticEquipment();
     }
 
     return equipment;

@@ -4,12 +4,15 @@ import type { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { DoubleArrowDownIcon, DoubleArrowUpIcon } from "@radix-ui/react-icons";
+import { chunk } from "lodash-es";
 import { useMemo } from "react";
+import { equipmentColumns } from "../../config/equipment";
+import { catImages } from "../../config/images";
 import {
   alternativeLines,
   isAlternativeLine,
   originalLineName,
-} from "../../config/alternativeLines";
+} from "../../config/modules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
@@ -39,11 +42,40 @@ function Equipment() {
     tank.tank!.equipment_preset_catalog_id,
     tank.tank!.equipment_price_preset_catalog_id,
   );
+  const equipmentState = Tankopedia.use((state) => state.protagonist.equipment);
 
   return (
     <div className={styles.section}>
       <div className={styles.header}>
         <Heading size="4">{strings.tanks.loadout.equipment}</Heading>
+      </div>
+
+      <div className={styles.equipment}>
+        {chunk(equipment.preset.slots, equipmentColumns).map((chunk, index) => {
+          return (
+            <div key={index} className={styles.row}>
+              {chunk.map((slot, index) => {
+                return (
+                  <div key={index} className={styles.slots}>
+                    {slot.options_catalog_i_ds.map((id) => {
+                      return (
+                        <Button
+                          color="gray"
+                          variant="soft"
+                          radius="1"
+                          key={id}
+                          className={styles.slot}
+                        >
+                          <img src={catImages.squareTransparent} />
+                        </Button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
