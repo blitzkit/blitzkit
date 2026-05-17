@@ -39,10 +39,7 @@ export function TankopediaLoadout() {
 function Equipment() {
   const strings = useStrings();
   const tank = useProtagonist();
-  const equipment = useEquipment(
-    tank.tank!.equipment_preset_catalog_id,
-    tank.tank!.equipment_price_preset_catalog_id,
-  );
+  const equipment = useEquipment(tank.tank!);
 
   return (
     <div className={styles.section}>
@@ -86,16 +83,25 @@ interface EquipmentSlotProps {
 }
 
 function EquipmentSlot({ slot, rowIndex, columnIndex }: EquipmentSlotProps) {
+  const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
+  const tank = useProtagonist();
+  const equipment = useEquipment(tank.tank!);
+  const { price } = equipment.price.unlock_slot_prices[equipmentIndex];
+
   return (
     <div className={styles.slots}>
-      {slot.options_catalog_i_ds.map((id, index) => (
-        <EquipmentOption
-          key={id}
-          optionIndex={index}
-          rowIndex={rowIndex}
-          columnIndex={columnIndex}
-        />
-      ))}
+      <div className={styles.options}>
+        {slot.options_catalog_i_ds.map((id, index) => (
+          <EquipmentOption
+            key={id}
+            optionIndex={index}
+            rowIndex={rowIndex}
+            columnIndex={columnIndex}
+          />
+        ))}
+      </div>
+
+      <Price price={price!} />
     </div>
   );
 }
@@ -112,11 +118,17 @@ function EquipmentOption({
   columnIndex,
 }: EquipmentOptionProps) {
   const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
+
+  const tank = useProtagonist();
+  const equipment = useEquipment(tank.tank!);
   const isSelected = Tankopedia.use(
     (state) =>
       equipmentIndex in state.protagonist.equipment &&
       state.protagonist.equipment[equipmentIndex] === optionIndex,
   );
+  const name =
+    equipment.preset.slots[equipmentIndex].options_catalog_i_ds[optionIndex];
+  const equipmentData = equipment.equipments[name];
 
   return (
     <Button
@@ -292,87 +304,91 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
   }
 
   return (
-    <Button
-      color={isSelected ? undefined : "gray"}
-      variant={isSelected ? "surface" : "soft"}
-      radius="1"
-      className={styles.stage}
-      onClick={() => {
-        Tankopedia.mutate((draft) => {
-          const tankData = tank.tank!;
+    <div className={styles.wrapper}>
+      <Button
+        className={styles.stage}
+        color={isSelected ? undefined : "gray"}
+        variant={isSelected ? "surface" : "soft"}
+        radius="1"
+        onClick={() => {
+          Tankopedia.mutate((draft) => {
+            const tankData = tank.tank!;
 
-          if (isAlternativeLine(lineName)) {
-            const originalLine = originalLineName(lineName)!;
+            if (isAlternativeLine(lineName)) {
+              const originalLine = originalLineName(lineName)!;
 
-            draft.protagonist.alternates[originalLine] = true;
-            draft.protagonist.upgrades[lineName] = index;
-          } else {
-            draft.protagonist.alternates[lineName] = false;
-            draft.protagonist.upgrades[lineName] = index;
-          }
+              draft.protagonist.alternates[originalLine] = true;
+              draft.protagonist.upgrades[lineName] = index;
+            } else {
+              draft.protagonist.alternates[lineName] = false;
+              draft.protagonist.upgrades[lineName] = index;
+            }
 
-          for (const required of stage.required_upgrades) {
-            for (const line of tankData.upgrade_lines) {
-              let i = 0;
+            for (const required of stage.required_upgrades) {
+              for (const line of tankData.upgrade_lines) {
+                let i = 0;
 
-              for (const candidateStage of line.stages) {
-                if (candidateStage.tech_name === required) {
-                  draft.protagonist.upgrades[line.name] = Math.max(
-                    draft.protagonist.upgrades[line.name],
-                    i,
-                  );
+                for (const candidateStage of line.stages) {
+                  if (candidateStage.tech_name === required) {
+                    draft.protagonist.upgrades[line.name] = Math.max(
+                      draft.protagonist.upgrades[line.name],
+                      i,
+                    );
+                  }
+
+                  i++;
                 }
-
-                i++;
               }
             }
-          }
 
-          for (const line of tankData.upgrade_lines) {
-            if (draft.protagonist.alternates[line.name]) {
-              continue;
+            for (const line of tankData.upgrade_lines) {
+              if (draft.protagonist.alternates[line.name]) {
+                continue;
+              }
+
+              let i = draft.protagonist.upgrades[line.name];
+
+              while (i > 0) {
+                const currentStage = line.stages[i];
+
+                const valid = currentStage.required_upgrades.every(
+                  (required) => {
+                    for (const otherLine of tankData.upgrade_lines) {
+                      const idx = draft.protagonist.upgrades[otherLine.name];
+
+                      if (otherLine.stages[idx]?.tech_name === required) {
+                        return true;
+                      }
+                    }
+
+                    return false;
+                  },
+                );
+
+                if (valid) break;
+
+                i--;
+              }
+
+              draft.protagonist.upgrades[line.name] = i;
             }
+          });
+        }}
+      >
+        <img
+          className={styles.icon}
+          src={`/api/tanks/modules/${stage.stage_type}.webp`}
+        />
+        {/* {stage.display_name} */}
 
-            let i = draft.protagonist.upgrades[line.name];
-
-            while (i > 0) {
-              const currentStage = line.stages[i];
-
-              const valid = currentStage.required_upgrades.every((required) => {
-                for (const otherLine of tankData.upgrade_lines) {
-                  const idx = draft.protagonist.upgrades[otherLine.name];
-
-                  if (otherLine.stages[idx]?.tech_name === required) {
-                    return true;
-                  }
-                }
-
-                return false;
-              });
-
-              if (valid) break;
-
-              i--;
-            }
-
-            draft.protagonist.upgrades[line.name] = i;
-          }
-        });
-      }}
-    >
-      <img
-        className={styles.icon}
-        src={`/api/tanks/modules/${stage.stage_type}.webp`}
-      />
-      {/* {stage.display_name} */}
-
-      <Text weight="light" lowContrast size="minor" className={styles.tier}>
-        {isAlternativeLine(lineName)
-          ? strings.tanks.loadout.alternative
-          : romanize(stage.number)}
-      </Text>
+        <Text weight="light" lowContrast size="minor" className={styles.tier}>
+          {isAlternativeLine(lineName)
+            ? strings.tanks.loadout.alternative
+            : romanize(stage.number)}
+        </Text>
+      </Button>
 
       {price && <Price className={styles.price} price={price} />}
-    </Button>
+    </div>
   );
 }

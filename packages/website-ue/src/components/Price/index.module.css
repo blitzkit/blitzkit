@@ -1,11 +1,11 @@
 .price {
   display: flex;
-  align-items: center;
 
   gap: var(--space-3);
 
   .entry {
     display: block;
+    line-height: 1;
 
     .wrapper {
       display: flex;

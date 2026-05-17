@@ -20,25 +20,32 @@
 
       .slots {
         display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: center;
 
-        .slot {
-          aspect-ratio: 1 / 1;
-          padding: var(--space-3);
+        .options {
+          display: flex;
 
-          font-size: var(--space-5);
+          .slot {
+            aspect-ratio: 1 / 1;
+            padding: var(--space-3);
 
-          &:first-child {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-          }
+            font-size: var(--space-5);
 
-          &:last-child {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-          }
+            &:first-child {
+              border-top-right-radius: 0;
+              border-bottom-right-radius: 0;
+            }
 
-          &[data-selected="true"] {
-            z-index: 1;
+            &:last-child {
+              border-top-left-radius: 0;
+              border-bottom-left-radius: 0;
+            }
+
+            &[data-selected="true"] {
+              z-index: 1;
+            }
           }
         }
       }
@@ -53,37 +60,41 @@
 
     .line {
       display: flex;
-      align-items: center;
 
       gap: var(--space-3);
 
-      .stage {
-        position: relative;
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--space-2);
 
-        padding: var(--space-3);
+        .stage {
+          position: relative;
 
-        font-size: 2em;
+          padding: var(--space-3);
 
-        .icon {
-          width: 1em;
-          height: 1em;
+          font-size: 2em;
 
-          padding: var(--space-3) 0;
+          .icon {
+            width: 1em;
+            height: 1em;
 
-          transform: translate(var(--space-1), calc(-1 * var(--space-1)));
-        }
+            transform: translate(var(--space-1), var(--space-1));
+          }
 
-        .tier {
-          position: absolute;
-          left: var(--space-2);
-          top: var(--space-2);
-        }
+          .tier {
+            position: absolute;
+            left: var(--space-2);
+            top: var(--space-2);
+          }
 
-        .price {
-          position: absolute;
-          left: 50%;
-          bottom: var(--space-2);
-          transform: translateX(-50%);
+          .price {
+            position: absolute;
+            left: 50%;
+            bottom: var(--space-2);
+            transform: translateX(-50%);
+          }
         }
       }
     }
