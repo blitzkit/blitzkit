@@ -3,7 +3,7 @@ import { api } from "../../../../api/dynamic";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
 import { useAwait } from "../../../../hooks/useAwait";
 import { useCharacteristicRenderer } from "../../../../hooks/useCharacteristicRenderer";
-import { useGameStrings } from "../../../../hooks/useGameStrings";
+import { useEquipment } from "../../../../hooks/useEquipment";
 import { LocaleProvider } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { characteristicsOrder } from "../../../../tankopedia/characteristicsOrder";
@@ -27,7 +27,6 @@ export function Page({ id, locale }: PageProps) {
 }
 
 function Content() {
-  const tankEntityGameStrings = useGameStrings("TankEntity");
   const renderCharacteristic = useCharacteristicRenderer();
 
   const protagonist = Tankopedia.use((state) => state.protagonist);
@@ -35,9 +34,15 @@ function Content() {
     () => api.tank(protagonist.id),
     `tank-${protagonist.id}`,
   );
+  const protagonistEquipment = useEquipment(protagonistTank.tank!);
 
   const { characteristics } = useMemo(
-    () => computeCharacteristics(protagonistTank, protagonist),
+    () =>
+      computeCharacteristics(
+        protagonistTank,
+        protagonistEquipment,
+        protagonist,
+      ),
     [protagonist],
   );
 
