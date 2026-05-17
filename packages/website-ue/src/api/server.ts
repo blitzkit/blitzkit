@@ -386,6 +386,6 @@ export class ServerAPI extends AbstractAPI {
       metroResources.remote_storage!.remote_urls,
     );
 
-    return `${remoteStorage.url}${remoteStorage.relative_path}${stuffUI.icon!.value}`;
+    return `${remoteStorage.url}/${remoteStorage.relative_path}${stuffUI.icon!.value}`;
   }
 }
