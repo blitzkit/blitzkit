@@ -7,6 +7,7 @@ const TARGET = "../../packages/closed/src/unreal/catalogItemAccessor.ts";
 const componentPattern = /^export interface (\w+Component) {/gm;
 const componentSuffixPattern = /Component$/;
 const tsSuffixPattern = /\.ts$/;
+const blitzStaticPrefixPattern = /^BlitzStatic/;
 
 let imports = "";
 let methods = "";
@@ -23,10 +24,9 @@ for (const file of files) {
   for (const match of matches) {
     const interfaceName = match[1];
     const componentName = interfaceName.split("_").at(-1)!;
-
-    if (componentName.startsWith("BlitzStatic")) continue;
-
-    const fieldName = lowerFirst(componentName);
+    const fieldName = lowerFirst(
+      componentName.replace(blitzStaticPrefixPattern, ""),
+    );
     const methodName = componentName.replace(componentSuffixPattern, "");
     const importName = file.replace(tsSuffixPattern, "");
 

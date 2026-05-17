@@ -5,6 +5,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import type { Avatar, DeepPartial } from "@protos/avatar";
 import type { Background } from "@protos/background";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
+import { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankListEntry } from "@protos/tank_list";
@@ -224,6 +225,25 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return tiers;
+  }
+
+  @Cache()
+  async equipment() {
+    const equipment = Equipment.create();
+
+    for (const item of this.metadata.group("EquipmentPresetEntity")) {
+      equipment.presets[item.name] = item.EquipmentPreset();
+    }
+
+    for (const item of this.metadata.group("EquipmentPricePresetEntity")) {
+      equipment.prices[item.name] = item.EquipmentPricePreset();
+    }
+
+    for (const item of this.metadata.group("EquipmentEntity")) {
+      equipment.equipments[item.name] = item.BlitzStaticEquipment();
+    }
+
+    return equipment;
   }
 
   @Cache(true)

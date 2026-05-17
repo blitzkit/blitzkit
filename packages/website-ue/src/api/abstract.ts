@@ -7,6 +7,7 @@ import type { Avatars } from "@protos/avatars";
 import type { Background } from "@protos/background";
 import type { Backgrounds } from "@protos/backgrounds";
 import type { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
+import type { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankList } from "@protos/tank_list";
@@ -25,6 +26,7 @@ export abstract class AbstractAPI {
   ): Promise<TankUpgradePricePresetComponent>;
 
   abstract tiers(): Promise<Tiers>;
+  abstract equipment(): Promise<Equipment>;
 
   abstract strings(locale: string): Promise<Strings>;
   abstract gameStrings(locale: string): Promise<Record<string, string>>;

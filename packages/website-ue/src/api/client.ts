@@ -2,13 +2,16 @@ import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "@protos/avatars";
 import { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
+import { Equipment } from "@protos/equipment";
 import { PopularTanks } from "@protos/popular_tanks";
 import { TankList } from "@protos/tank_list";
 import { Tanks } from "@protos/tanks";
 import { Tiers } from "@protos/tiers";
 import { AbstractAPI, Cache } from "./abstract";
 
-const rejected = Promise.reject("Not implemented on client");
+function rejected() {
+  return Promise.reject("Not implemented on client");
+}
 
 export class ClientAPI extends AbstractAPI {
   get metadata(): never {
@@ -50,6 +53,11 @@ export class ClientAPI extends AbstractAPI {
   }
 
   @Cache()
+  equipment() {
+    return fetchPB("/api/equipment.pb", Equipment);
+  }
+
+  @Cache()
   async strings(locale: string) {
     const response = await fetch(`/api/strings/${locale}.json`);
     const json = (await response.json()) as Strings;
@@ -59,7 +67,7 @@ export class ClientAPI extends AbstractAPI {
 
   @UnimplementedOnClient
   gameStrings() {
-    return rejected;
+    return rejected();
   }
 
   @Cache()
@@ -72,12 +80,12 @@ export class ClientAPI extends AbstractAPI {
 
   @UnimplementedOnClient
   gameStringGroups() {
-    return rejected;
+    return rejected();
   }
 
   @UnimplementedOnClient
   avatar() {
-    return rejected;
+    return rejected();
   }
 
   avatars() {
@@ -86,17 +94,22 @@ export class ClientAPI extends AbstractAPI {
 
   @UnimplementedOnClient
   avatarList() {
-    return rejected;
+    return rejected();
   }
 
   @UnimplementedOnClient
   background() {
-    return rejected;
+    return rejected();
   }
 
   @UnimplementedOnClient
   backgrounds() {
-    return rejected;
+    return rejected();
+  }
+
+  @UnimplementedOnClient
+  currencyIcon() {
+    return rejected();
   }
 }
 

@@ -10,6 +10,7 @@ import {
   isAlternativeLine,
   originalLineName,
 } from "../../config/alternativeLines";
+import { useEquipment } from "../../hooks/useEquipment";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
@@ -34,19 +35,16 @@ export function TankopediaLoadout() {
 function Equipment() {
   const strings = useStrings();
   const tank = useProtagonist();
-  // const equipment = useEquipment(
-  //   tank.tank!.equipment_preset_catalog_id,
-  //   tank.tank!.equipment_price_preset_catalog_id,
-  // );
+  const equipment = useEquipment(
+    tank.tank!.equipment_preset_catalog_id,
+    tank.tank!.equipment_price_preset_catalog_id,
+  );
 
   return (
     <div className={styles.section}>
       <div className={styles.header}>
         <Heading size="4">{strings.tanks.loadout.equipment}</Heading>
       </div>
-      preset: {tank.tank!.equipment_preset_catalog_id}
-      <br />
-      price: {tank.tank!.equipment_price_preset_catalog_id}
     </div>
   );
 }
