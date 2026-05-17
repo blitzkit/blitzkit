@@ -41,8 +41,6 @@ function Equipment() {
   const tank = useProtagonist();
   const equipment = useEquipment(tank.tank!);
 
-  console.log(equipment);
-
   return (
     <div className={styles.section}>
       <div className={styles.header}>
