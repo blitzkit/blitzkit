@@ -36,6 +36,10 @@
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
           }
+
+          &[data-selected="true"] {
+            z-index: 1;
+          }
         }
       }
     }

@@ -1,4 +1,5 @@
 import { romanize } from "@blitzkit/core";
+import type { BlitzStaticEquipmentPresetComponent_EquipmentSlot } from "@protos/blitz_static_equipment_preset_component";
 import { Grade } from "@protos/blitz_static_standard_grades_enum";
 import type { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
@@ -42,7 +43,6 @@ function Equipment() {
     tank.tank!.equipment_preset_catalog_id,
     tank.tank!.equipment_price_preset_catalog_id,
   );
-  const equipmentState = Tankopedia.use((state) => state.protagonist.equipment);
 
   return (
     <div className={styles.section}>
@@ -51,33 +51,92 @@ function Equipment() {
       </div>
 
       <div className={styles.equipment}>
-        {chunk(equipment.preset.slots, equipmentColumns).map((chunk, index) => {
-          return (
-            <div key={index} className={styles.row}>
-              {chunk.map((slot, index) => {
-                return (
-                  <div key={index} className={styles.slots}>
-                    {slot.options_catalog_i_ds.map((id) => {
-                      return (
-                        <Button
-                          color="gray"
-                          variant="soft"
-                          radius="1"
-                          key={id}
-                          className={styles.slot}
-                        >
-                          <img src={catImages.squareTransparent} />
-                        </Button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        {chunk(equipment.preset.slots, equipmentColumns).map((chunk, index) => (
+          <EquipmentRow key={index} chunk={chunk} rowIndex={index} />
+        ))}
       </div>
     </div>
+  );
+}
+
+interface EquipmentRowProps {
+  chunk: BlitzStaticEquipmentPresetComponent_EquipmentSlot[];
+  rowIndex: number;
+}
+
+function EquipmentRow({ chunk, rowIndex }: EquipmentRowProps) {
+  return (
+    <div className={styles.row}>
+      {chunk.map((slot, index) => (
+        <EquipmentSlot
+          key={index}
+          slot={slot}
+          rowIndex={rowIndex}
+          columnIndex={index}
+        />
+      ))}
+    </div>
+  );
+}
+
+interface EquipmentSlotProps {
+  slot: BlitzStaticEquipmentPresetComponent_EquipmentSlot;
+  rowIndex: number;
+  columnIndex: number;
+}
+
+function EquipmentSlot({ slot, rowIndex, columnIndex }: EquipmentSlotProps) {
+  return (
+    <div className={styles.slots}>
+      {slot.options_catalog_i_ds.map((id, index) => (
+        <EquipmentOption
+          key={id}
+          optionIndex={index}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+        />
+      ))}
+    </div>
+  );
+}
+
+interface EquipmentOptionProps {
+  optionIndex: number;
+  rowIndex: number;
+  columnIndex: number;
+}
+
+function EquipmentOption({
+  optionIndex,
+  rowIndex,
+  columnIndex,
+}: EquipmentOptionProps) {
+  const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
+  const isSelected = Tankopedia.use(
+    (state) =>
+      equipmentIndex in state.protagonist.equipment &&
+      state.protagonist.equipment[equipmentIndex] === optionIndex,
+  );
+
+  return (
+    <Button
+      color={isSelected ? undefined : "gray"}
+      variant={isSelected ? "surface" : "soft"}
+      data-selected={isSelected}
+      radius="1"
+      className={styles.slot}
+      onClick={() => {
+        Tankopedia.mutate((draft) => {
+          if (isSelected) {
+            delete draft.protagonist.equipment[equipmentIndex];
+          } else {
+            draft.protagonist.equipment[equipmentIndex] = optionIndex;
+          }
+        });
+      }}
+    >
+      <img src={catImages.squareTransparent} />
+    </Button>
   );
 }
 
