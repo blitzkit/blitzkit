@@ -45,7 +45,7 @@
     "build:bot": "bun src/buildBot.ts",
     "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
     "build:proxyclient": "bun src/buildProxyClient.ts",
-    "build:catalogitemaccesssor": "bun src/buildCatalogItemAccessor.ts",
+    "build:catalogitemaccessor": "bun src/buildCatalogItemAccessor.ts",
     "build:protos": "bun src/protos.ts",
     "patchnotes": "bun src/patchNotes.ts"
   },
