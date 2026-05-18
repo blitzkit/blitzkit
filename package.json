@@ -4,6 +4,7 @@
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
+    "setup": "chmod a+x scripts/*.sh && ./scripts/setup.sh",
     "setup": "bun install && bun run build:protos && bun run build:proxyclient && bun run build:catalogitemaccessor",
     "dev": "bun run dev:website",
     "dev:website": "cd packages/website-ue && bun run dev",

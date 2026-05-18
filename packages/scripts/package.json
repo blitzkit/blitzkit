@@ -1,5 +1,21 @@
 {
   "name": "@blitzkit/scripts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build:assets": "bun src/buildAssets/index.ts",
+    "build:averages": "bun src/averages.ts",
+    "setup:depotdownloader": "bun src/setupDepotDownloader.ts",
+    "setup:patches": "bun src/applyPatches.ts",
+    "build:reviews": "bun src/reviews.ts",
+    "build:ids": "bun src/discoverIds.ts",
+    "build:bot": "bun src/buildBot.ts",
+    "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
+    "build:proxyclient": "bun src/buildProxyClient.ts",
+    "build:catalogitemaccessor": "bun src/buildCatalogItemAccessor.ts",
+    "build:protos": "bun src/protos.ts",
+    "patchnotes": "bun src/patchNotes.ts"
+  },
   "dependencies": {
     "@blitzkit/closed": "workspace:*",
     "@blitzkit/core": "workspace:*",
@@ -33,21 +49,5 @@
     "ts-proto": "^2.7.7",
     "unzipit": "^1.4.3",
     "yaml": "^2.8.1"
-  },
-  "private": true,
-  "scripts": {
-    "build:assets": "bun src/buildAssets/index.ts",
-    "build:averages": "bun src/averages.ts",
-    "setup:depotdownloader": "bun src/setupDepotDownloader.ts",
-    "setup:patches": "bun src/applyPatches.ts",
-    "build:reviews": "bun src/reviews.ts",
-    "build:ids": "bun src/discoverIds.ts",
-    "build:bot": "bun src/buildBot.ts",
-    "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
-    "build:proxyclient": "bun src/buildProxyClient.ts",
-    "build:catalogitemaccessor": "bun src/buildCatalogItemAccessor.ts",
-    "build:protos": "bun src/protos.ts",
-    "patchnotes": "bun src/patchNotes.ts"
-  },
-  "type": "module"
+  }
 }
