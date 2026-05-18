@@ -1,6 +1,7 @@
 ---
 import locales from "@blitzkit/i18n/locales.json";
 import type { GetStaticPaths } from "astro";
+import { isChunkEnabled } from "../../astro/isChunkEnabled";
 import ClientUnmountedWarning from "../../components/ClientUnmountedWarning.astro";
 import ColorScale from "../../components/ColorScale.astro";
 import HomeCosmetics from "../../components/HomeCosmetics.astro";
@@ -14,6 +15,8 @@ import { clientUnmounted } from "../../game/unmounted";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export const getStaticPaths = (() => {
+  if (!isChunkEnabled("pages")) return [];
+
   return [
     ...locales.supported
       .filter(({ locale }) => locale !== locales.default)
