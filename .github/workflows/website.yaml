@@ -1,0 +1,71 @@
+name: Website
+
+on:
+  push:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 4 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
+
+env:
+  # blitz
+  WOTB_SERVER: ${{ secrets.WOTB_SERVER }}
+  WOTB_VERSION: ${{ secrets.WOTB_VERSION }}
+
+  # google
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+  PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID: ${{ secrets.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID }}
+
+jobs:
+  build:
+    name: Build chunk ${{ matrix.chunk }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk: [pages, api]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Set up project
+        run: bun run setup
+
+      - name: Build
+        run: bun run build:website
+        env:
+          BUILD_CHUNK: ${{ matrix.chunk }}
+
+      - name: Upload artifact
+        id: upload
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/website
+
+      - name: Trigger target repository
+        run: |
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://github.com \
+          -d '{ "event_type": "deploy-pages", "client_payload": { "artifact_url": "${{ steps.upload.outputs.artifact_url }}" } }'
