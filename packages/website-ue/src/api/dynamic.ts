@@ -3,7 +3,7 @@ import type { AbstractAPI } from "./abstract";
 
 let dynamicAPI: AbstractAPI;
 
-if (typeof window === "undefined") {
+if (import.meta.env.SSR) {
   const { ProxyClient } = await import("@blitzkit/closed");
   const { ServerAPI } = await import("./server");
 
