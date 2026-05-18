@@ -17,6 +17,8 @@ import type { Tiers } from "@protos/tiers";
 export abstract class AbstractAPI {
   abstract metadata: MetadataAccessor;
 
+  abstract mediaPrefix(path: string): string;
+
   abstract tankList(): Promise<TankList>;
   abstract tank(id: string): Promise<Tank>;
   abstract tanks(): Promise<Tanks>;

@@ -18,6 +18,11 @@ export class ClientAPI extends AbstractAPI {
     throw new Error("MetadataAccessor is inaccessible on the client");
   }
 
+  @UnimplementedOnClient
+  mediaPrefix(): never {
+    throw rejected();
+  }
+
   @Cache()
   tankList() {
     return fetchPB("/api/tanks/list.pb", TankList);

@@ -36,6 +36,16 @@ export class ServerAPI extends AbstractAPI {
     super();
   }
 
+  mediaPrefix(path: string) {
+    const config = this.resolveClientConfig();
+    const metroResources = config.MetroResources();
+    const remoteStorage = this.resolveRemoteUrl(
+      metroResources.remote_storage!.remote_urls,
+    );
+
+    return `${remoteStorage.url}/${remoteStorage.relative_path}${path}`;
+  }
+
   resolveRemoteUrl(remoteUrls: string[]) {
     let remoteStorage: RemoteStorageComponent | undefined = undefined;
 
@@ -380,12 +390,7 @@ export class ServerAPI extends AbstractAPI {
   async currencyIcon(id: string) {
     const item = this.metadata.item(`CurrencyEntity.${id}`);
     const stuffUI = item.StuffUI("UIComponent");
-    const config = this.resolveClientConfig();
-    const metroResources = config.MetroResources();
-    const remoteStorage = this.resolveRemoteUrl(
-      metroResources.remote_storage!.remote_urls,
-    );
 
-    return `${remoteStorage.url}/${remoteStorage.relative_path}${stuffUI.icon!.value}`;
+    return this.mediaPrefix(stuffUI.icon!.value);
   }
 }

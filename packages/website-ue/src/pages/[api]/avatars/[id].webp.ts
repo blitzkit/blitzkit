@@ -12,5 +12,7 @@ export { getStaticPaths } from "./[id].json";
  */
 export async function GET({ params }: APIContext<never, { id: string }>) {
   const avatar = await api.avatar(params.id);
-  return await imageProxy(avatar.profile_avatar!.avatar);
+  return await imageProxy(
+    api.mediaPrefix(avatar.profile_avatar!.avatar!.value),
+  );
 }
