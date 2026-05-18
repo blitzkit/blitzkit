@@ -5,15 +5,7 @@
   "private": true,
   "scripts": {
     "setup": "chmod a+x scripts/*.sh && ./scripts/setup.sh",
-    "dev": "bun run dev:website",
-    "dev:website": "cd packages/website-ue && bun run dev",
-    "build:game": "cd packages/game && bun run build",
-    "build:website": "cd packages/website-ue && bun run build",
-    "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
-    "build:catalogitemaccessor": "cd packages/scripts && bun run build:catalogitemaccessor",
-    "build:protos": "cd packages/scripts && bun run build:protos",
-    "lint": "tsc",
-    "lint:website": "cd packages/website-ue && bun run lint"
+    "dev": "./scripts/dev.sh"
   },
   "type": "module",
   "workspaces": [

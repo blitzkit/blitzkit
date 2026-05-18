@@ -28,9 +28,15 @@ import { Text } from "../Text";
 import styles from "./index.module.css";
 
 export function TankopediaLoadout() {
+  const tank = useProtagonist();
+
+  const showModules = tank.tank!.upgrade_lines.some(
+    (line) => line.stages.length > 1 || line.name in alternativeLines,
+  );
+
   return (
     <Section>
-      <Modules />
+      {showModules && <Modules />}
       <Equipment />
     </Section>
   );
@@ -199,6 +205,7 @@ function Modules() {
       </div>
 
       <div className={styles.lines}>
+        {/* TODO: hide lines with 1 module except for alts */}
         {tank.tank!.upgrade_lines.map((line) => (
           <Line
             key={line.name}
