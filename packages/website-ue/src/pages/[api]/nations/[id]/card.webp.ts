@@ -1,14 +1,16 @@
 import { Nation } from "@protos/blitz_static_tank_component";
-import type { APIContext, GetStaticPaths } from "astro";
+import type { APIContext } from "astro";
 import { clientUnmountedResponse } from "../../../../api/responses";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { game } from "../../../../game/game";
 import { clientUnmounted } from "../../../../game/unmounted";
+import { getStaticPaths as _getStaticPaths } from "../../_index";
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   return Object.values(Nation)
     .filter(Number.isInteger)
     .map((id) => ({ params: { id } }));
-}) satisfies GetStaticPaths;
+});
 
 /**
  * Even Noah can't save these animals.

@@ -1,6 +1,8 @@
 import { Tiers } from "@protos/tiers";
 import { api } from "../../api/dynamic";
 
+export { getStaticPaths } from "./_index";
+
 /**
  * Woah!
  */

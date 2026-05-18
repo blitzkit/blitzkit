@@ -1,8 +1,10 @@
 import locales from "@blitzkit/i18n/locales.json";
-import type { GetStaticPaths, GetStaticPathsResult } from "astro";
+import type { GetStaticPathsResult } from "astro";
 import { api } from "../../../../api/dynamic";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import { getStaticPaths as _getStaticPaths } from "../../_index";
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const paths: GetStaticPathsResult = [];
   const groups = await api.gameStringGroups();
 
@@ -13,7 +15,7 @@ export const getStaticPaths = (async () => {
   }
 
   return paths;
-}) satisfies GetStaticPaths;
+});
 
 export async function GET({
   params,

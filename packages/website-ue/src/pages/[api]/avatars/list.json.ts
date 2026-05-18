@@ -1,5 +1,7 @@
 import { api } from "../../../api/dynamic";
 
+export { getStaticPaths } from "../_index";
+
 /**
  * Returns a list of all avatars ids.
  *

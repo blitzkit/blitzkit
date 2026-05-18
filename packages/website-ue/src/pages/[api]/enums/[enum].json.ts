@@ -1,7 +1,12 @@
-import { TankClass, TankType } from "@blitzkit/core";
-import { Nation } from "@protos/blitz_static_tank_component";
-import type { APIContext, GetStaticPaths } from "astro";
+import {
+  Nation,
+  TankClass,
+  TankType,
+} from "@protos/blitz_static_tank_component";
+import type { APIContext } from "astro";
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { GunType } from "../../../tankopedia/characteristics";
+import { getStaticPaths as _getStaticPaths } from "../_index";
 import { GET as _GET } from "./all.json";
 
 export const ENUMS = {
@@ -11,9 +16,9 @@ export const ENUMS = {
   "gun-type": GunType,
 };
 
-export const getStaticPaths = (() => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   return Object.keys(ENUMS).map((name) => ({ params: { enum: name } }));
-}) satisfies GetStaticPaths;
+});
 
 export async function GET({
   params,

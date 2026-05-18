@@ -1,6 +1,8 @@
 import { TankList } from "@protos/tank_list";
 import { api } from "../../../api/dynamic";
 
+export { getStaticPaths } from "../_index";
+
 /**
  * List!!
  */

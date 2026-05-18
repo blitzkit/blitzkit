@@ -1,6 +1,8 @@
 import { Tanks } from "@protos/tanks";
 import { api } from "../../../api/dynamic";
 
+export { getStaticPaths } from "../_index";
+
 /**
  * Literally all the tanks in one place lmao.
  */

@@ -1,13 +1,15 @@
-import type { APIContext, GetStaticPaths } from "astro";
+import type { APIContext } from "astro";
 import { api } from "../../../api/dynamic";
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
+import { getStaticPaths as _getStaticPaths } from "../_index";
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const { avatars } = await api.avatars();
 
   return avatars.map((avatar) => ({
     params: { id: avatar.name },
   }));
-}) satisfies GetStaticPaths;
+});
 
 /**
  * Returns data on an avatar based on its `id`. Do not use the `.webp` URLs

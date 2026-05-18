@@ -1,10 +1,12 @@
 import locales from "@blitzkit/i18n/locales.json";
-import type { APIContext, GetStaticPaths } from "astro";
+import type { APIContext } from "astro";
 import { api } from "../../../api/dynamic";
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
+import { getStaticPaths as _getStaticPaths } from "../_index";
 
-export const getStaticPaths = (() => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   return locales.supported.map(({ locale }) => ({ params: { locale } }));
-}) satisfies GetStaticPaths;
+});
 
 /**
  * BlitzKit strings.

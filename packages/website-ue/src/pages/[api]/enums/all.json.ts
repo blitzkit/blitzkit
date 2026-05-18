@@ -1,5 +1,7 @@
 import { ENUMS } from "./[enum].json";
 
+export { getStaticPaths } from "../_index";
+
 export function GET() {
   const enums: Record<string, Record<number, string>> = {};
 

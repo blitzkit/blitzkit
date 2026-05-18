@@ -1,5 +1,7 @@
 import { api } from "../../api/dynamic";
 
+export { getStaticPaths } from "./_index";
+
 /**
  * Woah! test.
  */
