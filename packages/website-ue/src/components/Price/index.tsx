@@ -26,23 +26,44 @@ interface PriceEntryProps {
 }
 
 function PriceEntry({ entry }: PriceEntryProps) {
-  const locale = useLocale();
+  if (entry.premium_time_price !== undefined) {
+    console.log(entry);
 
-  if (
-    entry.premium_time_price !== undefined ||
-    entry.stuff_price !== undefined ||
-    entry.currency_price === undefined
-  ) {
     throw new Error("Unsupported price type");
   }
 
-  const [, iconName] = entry.currency_price.currency_catalog_id.split(".");
+  return (
+    <>
+      {entry.currency_price && (
+        <PriceInternal
+          icon={`/api/currencies/${entry.currency_price.currency_catalog_id}.webp`}
+          value={entry.currency_price.amount}
+        />
+      )}
+
+      {entry.stuff_price && (
+        <PriceInternal
+          icon={`/api/stuff/${entry.stuff_price.stuff_catalog_id}.webp`}
+          value={entry.stuff_price.amount}
+        />
+      )}
+    </>
+  );
+}
+
+interface PriceInternalProps {
+  icon: string;
+  value: number;
+}
+
+function PriceInternal({ icon, value }: PriceInternalProps) {
+  const locale = useLocale();
 
   return (
     <Text weight="light" size="minor" lowContrast className={styles.entry}>
       <div className={styles.wrapper}>
-        <img className={styles.icon} src={`/api/currencies/${iconName}.webp`} />
-        {formatCompact(locale, entry.currency_price.amount)}
+        <img className={styles.icon} src={icon} />
+        {formatCompact(locale, value)}
       </div>
     </Text>
   );

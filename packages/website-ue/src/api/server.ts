@@ -388,9 +388,16 @@ export class ServerAPI extends AbstractAPI {
 
   @Cache()
   async currencyIcon(id: string) {
-    const item = this.metadata.item(`CurrencyEntity.${id}`);
+    const item = this.metadata.item(id);
     const stuffUI = item.StuffUI("UIComponent");
+    return this.mediaPrefix(stuffUI.icon!.value);
+  }
 
+  @Cache()
+  async stuffIcon(id: string) {
+    const item = this.metadata.item(id);
+    console.log(id);
+    const stuffUI = item.StuffUI("UIComponent");
     return this.mediaPrefix(stuffUI.icon!.value);
   }
 }

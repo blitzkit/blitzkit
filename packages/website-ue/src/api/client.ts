@@ -116,6 +116,11 @@ export class ClientAPI extends AbstractAPI {
   currencyIcon() {
     return rejected();
   }
+
+  @UnimplementedOnClient
+  stuffIcon() {
+    return rejected();
+  }
 }
 
 function UnimplementedOnClient(
