@@ -130,16 +130,11 @@ function EquipmentOption({
 }: EquipmentOptionProps) {
   const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
 
-  const tank = useProtagonist();
-  const equipment = useEquipment(tank.tank!);
   const isSelected = Tankopedia.use(
     (state) =>
       equipmentIndex in state.protagonist.equipment &&
       state.protagonist.equipment[equipmentIndex] === optionIndex,
   );
-  const name =
-    equipment.preset.slots[equipmentIndex].options_catalog_i_ds[optionIndex];
-  const equipmentData = equipment.equipments[name];
 
   return (
     <Button
@@ -248,7 +243,9 @@ function Line({ name, lines }: LineProps) {
     <div className={styles.line}>
       {!isAlternativeLine(name) &&
         combinedLines.map((name) => (
-          <LineInner key={name} name={name} lines={lines} />
+          <div className={styles["chunks-wrapper"]}>
+            <LineInner key={name} name={name} lines={lines} />
+          </div>
         ))}
     </div>
   );
@@ -338,6 +335,8 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
         variant={isSelected ? "surface" : "soft"}
         radius="1"
         onClick={() => {
+          // TODO: make minimum selectable upgrade the last free module for tanks like the destiny
+
           Tankopedia.mutate((draft) => {
             const tankData = tank.tank!;
 

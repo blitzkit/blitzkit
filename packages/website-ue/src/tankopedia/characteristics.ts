@@ -38,11 +38,11 @@ export const characteristics = {
 
     if (isPump === 1) return GunType.AutoReloader;
 
-    const clipSize = attribute(
+    const clipSize = attributeSafe(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE,
     );
 
-    if (clipSize === 1) return GunType.Regular;
+    if (clipSize === null || clipSize === 1) return GunType.Regular;
 
     return GunType.AutoLoader;
   },

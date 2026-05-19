@@ -1,9 +1,10 @@
-import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
   ShellUpgradeSingleChange_AttributeName,
+  StageParameters,
   TankAttributeChange_AttributeName,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import type { Tank } from "@protos/tank";
+import { isAlternativeLine, originalLineName } from "../config/modules";
 import { useEquipment } from "../hooks/useEquipment";
 import { aggregateParameters } from "./aggregateParameters";
 import {
@@ -34,12 +35,38 @@ export function computeCharacteristics(
     equipmentParameters.push(data.upgrade_level!);
   }
 
-  const parameters = aggregateParameters(
-    tank.tank!,
-    state.upgrades,
-    state.alternates,
-    equipmentParameters,
-  );
+  const parameters = StageParameters.create();
+
+  for (const line of tank.tank!.upgrade_lines) {
+    let stage: number;
+
+    if (isAlternativeLine(line.name)) {
+      const originalLine = originalLineName(line.name)!;
+
+      if (state.alternates[originalLine]) {
+        stage = 0;
+      } else {
+        continue;
+      }
+    } else {
+      if (state.alternates[line.name]) {
+        stage = line.stages.length - 2;
+      } else {
+        stage = state.upgrades[line.name];
+      }
+    }
+
+    parameters.number = 0;
+
+    for (let i = 0; i <= stage; i++) {
+      aggregateParameters(parameters, line.stages[i]);
+    }
+  }
+
+  for (const equipmentParameter of equipmentParameters) {
+    parameters.number = -1;
+    aggregateParameters(parameters, equipmentParameter);
+  }
 
   const computed: Partial<ComputedCharacteristics> = {};
 
@@ -73,7 +100,7 @@ export function computeCharacteristics(
       (shell) => shell.shell_id === state.shell,
     );
 
-    if (!shell) {
+    if (shell === undefined) {
       throw new Error(
         `Shell ${ShellUpgradeSingleChange_AttributeName[name]} (${name}) not found`,
       );

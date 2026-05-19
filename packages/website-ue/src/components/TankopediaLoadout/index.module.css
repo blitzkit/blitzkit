@@ -60,56 +60,61 @@
 
     .line {
       display: flex;
-      flex-direction: column;
 
       gap: var(--space-3);
 
-      .line-wrap {
+      .chunks-wrapper {
         display: flex;
-        align-items: center;
-
+        flex-direction: column;
         gap: var(--space-3);
 
-        .wrap-marker {
-          padding-bottom: var(--font-size-minor);
-
-          svg {
-            width: 1em;
-            height: 1em;
-          }
-        }
-
-        .wrapper {
+        .line-wrap {
           display: flex;
-          flex-direction: column;
           align-items: center;
-          gap: var(--space-2);
 
-          .stage {
-            position: relative;
+          gap: var(--space-3);
 
-            padding: var(--space-3);
+          .wrap-marker {
+            padding-bottom: var(--font-size-minor);
 
-            font-size: 2em;
-
-            .icon {
+            svg {
               width: 1em;
               height: 1em;
-
-              transform: translate(var(--space-1), var(--space-1));
             }
+          }
 
-            .tier {
-              position: absolute;
-              left: var(--space-2);
-              top: var(--space-2);
-            }
+          .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
 
-            .price {
-              position: absolute;
-              left: 50%;
-              bottom: var(--space-2);
-              transform: translateX(-50%);
+            .stage {
+              position: relative;
+
+              padding: var(--space-3);
+
+              font-size: 2em;
+
+              .icon {
+                width: 1em;
+                height: 1em;
+
+                transform: translate(var(--space-1), var(--space-1));
+              }
+
+              .tier {
+                position: absolute;
+                left: var(--space-2);
+                top: var(--space-2);
+              }
+
+              .price {
+                position: absolute;
+                left: 50%;
+                bottom: var(--space-2);
+                transform: translateX(-50%);
+              }
             }
           }
         }

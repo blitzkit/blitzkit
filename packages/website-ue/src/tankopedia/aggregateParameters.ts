@@ -1,5 +1,4 @@
 import { StandardSinglePrice } from "@protos/blitz_static_standard_single_price";
-import type { TankCatalogComponent } from "@protos/blitz_static_tank_component";
 import { PenetrationGroup } from "@protos/blitz_static_tank_penetration_group";
 import {
   ModuleUpgrade,
@@ -14,9 +13,11 @@ import {
   TankAttributeChange_Modifier,
   VisualChanges,
 } from "@protos/blitz_static_tank_upgrade_single_stage";
-import { isAlternativeLine, originalLineName } from "../config/modules";
 
-function patch(stage0: StageParameters, stage1: StageParameters) {
+export function aggregateParameters(
+  stage0: StageParameters,
+  stage1: StageParameters,
+) {
   if (stage1.number !== ++stage0.number) {
     throw new Error("Change stage number must be 1 greater than base");
   }
@@ -235,46 +236,4 @@ function patch(stage0: StageParameters, stage1: StageParameters) {
       stage0.visual_changes.push(VisualChanges.create(visualChange1));
     }
   }
-}
-
-export function aggregateParameters(
-  tank: TankCatalogComponent,
-  upgrades: Record<string, number>,
-  alternates: Record<string, boolean>,
-  equipmentParameters: StageParameters[],
-) {
-  const stage0 = StageParameters.create({});
-
-  for (const line of tank.upgrade_lines) {
-    let stage: number;
-
-    if (isAlternativeLine(line.name)) {
-      const originalLine = originalLineName(line.name)!;
-
-      if (alternates[originalLine]) {
-        stage = 0;
-      } else {
-        continue;
-      }
-    } else {
-      if (alternates[line.name]) {
-        stage = line.stages.length - 2;
-      } else {
-        stage = upgrades[line.name];
-      }
-    }
-
-    stage0.number = 0;
-
-    for (let i = 0; i <= stage; i++) {
-      patch(stage0, line.stages[i]);
-    }
-  }
-
-  for (const equipmentParameter of equipmentParameters) {
-    stage0.number = -1;
-    patch(stage0, equipmentParameter);
-  }
-
-  return stage0;
 }
