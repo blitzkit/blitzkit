@@ -9,6 +9,7 @@ import { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankListEntry } from "@protos/tank_list";
+import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import type { Tanks } from "@protos/tanks";
 import type { Tiers } from "@protos/tiers";
 import { existsSync } from "fs";
@@ -95,10 +96,9 @@ export class ServerAPI extends AbstractAPI {
 
       if (!name) continue;
 
-      const id = item.name;
       const slug = sluggify(name);
 
-      list.push({ id, slug });
+      list.push({ id: item.id, slug });
     }
 
     return { list };
@@ -114,7 +114,7 @@ export class ServerAPI extends AbstractAPI {
     }
 
     const { slug } = tankListEntry;
-    const item = this.metadata.item(`TankEntity.${id}`);
+    const item = this.metadata.item(id);
     const tank = item.TankCatalog();
     const compensation = item.Compensation();
 
@@ -220,9 +220,15 @@ export class ServerAPI extends AbstractAPI {
   }
 
   @Cache()
-  async tankUpgradePreset(id: string) {
-    const item = this.metadata.item(`TankUpgradePricePresetEntity.${id}`);
-    return item.TankUpgradePricePreset();
+  async tankUpgradePresets() {
+    const group = this.metadata.group("TankUpgradePricePresetEntity");
+    const presets = TankUpgradePresets.create();
+
+    for (const item of group) {
+      presets.presets[item.id] = item.TankUpgradePricePreset();
+    }
+
+    return presets;
   }
 
   @Cache()
@@ -231,7 +237,7 @@ export class ServerAPI extends AbstractAPI {
     const tiers: Tiers = { tiers: {} };
 
     for (const item of group) {
-      tiers.tiers[item.name] = item.TankTier();
+      tiers.tiers[item.id] = item.TankTier();
     }
 
     return tiers;
@@ -332,7 +338,7 @@ export class ServerAPI extends AbstractAPI {
 
   @Cache()
   async avatar(id: string) {
-    const avatar = this.metadata.item(`ProfileAvatarEntity.${id}`);
+    const avatar = this.metadata.item(id);
     const name = avatar.name;
     const stuff_ui = avatar.StuffUI("UIComponent");
     const profile_avatar = avatar.ProfileAvatar();
@@ -348,7 +354,7 @@ export class ServerAPI extends AbstractAPI {
     const avatars: Avatar[] = [];
 
     for (const item of this.metadata.group("ProfileAvatarEntity")) {
-      avatars.push(await this.avatar(item.name));
+      avatars.push(await this.avatar(item.id));
     }
 
     return { avatars };
@@ -364,7 +370,7 @@ export class ServerAPI extends AbstractAPI {
 
   @Cache()
   async background(id: string) {
-    const background = this.metadata.item(`ProfileBackgroundEntity.${id}`);
+    const background = this.metadata.item(id);
     const name = background.name;
     const stuff_ui = background.StuffUI("UIComponent");
     const profile_background = background.ProfileBackground();

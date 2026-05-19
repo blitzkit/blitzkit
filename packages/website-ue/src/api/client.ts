@@ -1,10 +1,10 @@
 import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "@protos/avatars";
-import { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
 import { Equipment } from "@protos/equipment";
 import { PopularTanks } from "@protos/popular_tanks";
 import { TankList } from "@protos/tank_list";
+import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import { Tanks } from "@protos/tanks";
 import { Tiers } from "@protos/tiers";
 import { AbstractAPI, Cache } from "./abstract";
@@ -45,11 +45,8 @@ export class ClientAPI extends AbstractAPI {
   }
 
   @Cache()
-  tankUpgradePreset(name: string) {
-    return fetchPB(
-      `/api/tanks/presets/upgrade/${name}.pb`,
-      TankUpgradePricePresetComponent,
-    );
+  tankUpgradePresets() {
+    return fetchPB(`/api/tanks/upgrades.pb`, TankUpgradePresets);
   }
 
   @Cache()

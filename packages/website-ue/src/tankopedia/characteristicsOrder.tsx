@@ -71,7 +71,7 @@ export const characteristicsOrder: CharacteristicsOrder = [
       {
         name: "tier",
         render({ output, strings }) {
-          const [, name] = (output as string).split(".");
+          const name = output as string;
 
           if (name == "vintage") {
             return <VintageIcon />;

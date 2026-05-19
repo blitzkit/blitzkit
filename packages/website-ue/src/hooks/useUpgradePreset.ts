@@ -2,11 +2,10 @@ import { api } from "../api/dynamic";
 import { useAwait } from "./useAwait";
 
 export function useUpgradePreset(name: string) {
-  const [, discriminator] = name.split(".");
-  const preset = useAwait(
-    () => api.tankUpgradePreset(discriminator),
-    `tank-upgrade-preset-${discriminator}`,
+  const presets = useAwait(
+    () => api.tankUpgradePresets(),
+    "tank-upgrade-presets",
   );
 
-  return preset;
+  return presets.presets[name];
 }

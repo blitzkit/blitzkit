@@ -6,11 +6,11 @@ import type { AvatarList } from "@protos/avatar_list";
 import type { Avatars } from "@protos/avatars";
 import type { Background } from "@protos/background";
 import type { Backgrounds } from "@protos/backgrounds";
-import type { TankUpgradePricePresetComponent } from "@protos/blitz_static_tank_upgrade_price_preset_component";
 import type { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankList } from "@protos/tank_list";
+import type { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import type { Tanks } from "@protos/tanks";
 import type { Tiers } from "@protos/tiers";
 
@@ -23,9 +23,7 @@ export abstract class AbstractAPI {
   abstract tank(id: string): Promise<Tank>;
   abstract tanks(): Promise<Tanks>;
   abstract popularTanks(): Promise<PopularTanks>;
-  abstract tankUpgradePreset(
-    name: string,
-  ): Promise<TankUpgradePricePresetComponent>;
+  abstract tankUpgradePresets(): Promise<TankUpgradePresets>;
 
   abstract tiers(): Promise<Tiers>;
   abstract equipment(): Promise<Equipment>;

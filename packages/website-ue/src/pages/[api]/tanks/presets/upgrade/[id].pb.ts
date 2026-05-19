@@ -9,8 +9,3 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     .group("TankUpgradePricePresetEntity")
     .map(({ name }) => ({ params: { id: name } }));
 });
-
-export async function GET({ params }: APIContext<never, { id: string }>) {
-  const preset = await api.tankUpgradePreset(params.id);
-  return new Response(TankUpgradePricePresetComponent.encode(preset).finish());
-}
