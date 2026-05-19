@@ -1,10 +1,14 @@
 import { romanize } from "@blitzkit/core";
 import type { BlitzStaticEquipmentPresetComponent_EquipmentSlot } from "@protos/blitz_static_equipment_preset_component";
 import { Grade } from "@protos/blitz_static_standard_grades_enum";
-import type { StandardPrice } from "@protos/blitz_static_standard_price";
+import { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
-import { DoubleArrowDownIcon, DoubleArrowUpIcon } from "@radix-ui/react-icons";
+import {
+  CornerBottomLeftIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
 import { useMemo } from "react";
 import { equipmentColumns } from "../../config/equipment";
@@ -12,6 +16,7 @@ import { catImages } from "../../config/images";
 import {
   alternativeLines,
   isAlternativeLine,
+  maxModulesPerRow,
   originalLineName,
 } from "../../config/modules";
 import { useEquipment } from "../../hooks/useEquipment";
@@ -21,7 +26,7 @@ import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
-import { IconButton } from "../IconButton";
+import { Link } from "../Link";
 import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
@@ -167,7 +172,7 @@ function Modules() {
       <div className={styles.header}>
         <Heading size="4">{strings.tanks.loadout.modules}</Heading>
 
-        <IconButton
+        <Link
           onClick={() => {
             Tankopedia.mutate((draft) => {
               for (const line of tank.tank!.upgrade_lines) {
@@ -178,13 +183,12 @@ function Modules() {
               }
             });
           }}
-          color="tomato"
-          variant="ghost"
+          color="gray"
         >
-          <DoubleArrowDownIcon />
-        </IconButton>
+          <DoubleArrowLeftIcon />
+        </Link>
 
-        <IconButton
+        <Link
           onClick={() => {
             Tankopedia.mutate((draft) => {
               for (const line of tank.tank!.upgrade_lines) {
@@ -197,11 +201,10 @@ function Modules() {
               }
             });
           }}
-          color="jade"
-          variant="ghost"
+          color="gray"
         >
-          <DoubleArrowUpIcon />
-        </IconButton>
+          <DoubleArrowRightIcon />
+        </Link>
       </div>
 
       <div className={styles.lines}>
@@ -254,8 +257,23 @@ function Line({ name, lines }: LineProps) {
 function LineInner({ name, lines }: LineProps) {
   const line = lines.find((line) => line.name === name)!;
 
-  return line.stages.map((stage, index) => (
-    <LineElement key={index} index={index} lineName={name} stage={stage} />
+  return chunk(line.stages, maxModulesPerRow).map((chunk, wrapIndex) => (
+    <div className={styles["line-wrap"]}>
+      {wrapIndex > 0 && (
+        <Text size="minor" className={styles["wrap-marker"]} lowContrast>
+          <CornerBottomLeftIcon />
+        </Text>
+      )}
+
+      {chunk.map((stage, elementIndex) => (
+        <LineElement
+          key={elementIndex}
+          index={wrapIndex * maxModulesPerRow + elementIndex}
+          lineName={name}
+          stage={stage}
+        />
+      ))}
+    </div>
   ));
 }
 
@@ -296,6 +314,8 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
     if (override.stage_tech_name !== stage.tech_name) continue;
     price = override.price;
   }
+
+  price ??= StandardPrice.create();
 
   let isSelected: boolean;
 
@@ -395,7 +415,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
         </Text>
       </Button>
 
-      {price && <Price className={styles.price} price={price} />}
+      {<Price className={styles.price} price={price} />}
     </div>
   );
 }

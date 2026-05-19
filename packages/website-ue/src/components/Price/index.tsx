@@ -17,6 +17,12 @@ export function Price({ price, className, ...props }: PriceProps) {
       {price.price_list.map((entry, index) => (
         <PriceEntry key={index} entry={entry} />
       ))}
+
+      {price.price_list.length === 0 && (
+        <Text className={styles.entry} lowContrast>
+          Free
+        </Text>
+      )}
     </div>
   );
 }
@@ -27,8 +33,6 @@ interface PriceEntryProps {
 
 function PriceEntry({ entry }: PriceEntryProps) {
   if (entry.premium_time_price !== undefined) {
-    console.log(entry);
-
     throw new Error("Unsupported price type");
   }
 
@@ -60,7 +64,7 @@ function PriceInternal({ icon, value }: PriceInternalProps) {
   const locale = useLocale();
 
   return (
-    <Text weight="light" size="minor" lowContrast className={styles.entry}>
+    <Text weight="light" lowContrast className={styles.entry}>
       <div className={styles.wrapper}>
         <img className={styles.icon} src={icon} />
         {formatCompact(locale, value)}

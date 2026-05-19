@@ -1,5 +1,6 @@
 .link {
   text-decoration-color: currentColor;
+  cursor: pointer;
 
   display: inline;
   align-items: center;

@@ -1,3 +1,5 @@
+export const maxModulesPerRow = 5;
+
 export const alternativeLines: Record<string, string> = {
   guns: "alternative_guns",
 };
