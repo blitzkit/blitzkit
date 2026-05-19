@@ -1,19 +1,19 @@
 ---
+import ErrorDisplay from "../components/ErrorDisplay.astro";
+import { api } from "../api/dynamic";
 import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
 import Footer from "../components/Footer.astro";
-import Navbar from "../components/Navbar.astro";
 import type { Color } from "../ui/color";
 
 interface Props {
   locale: string;
   accent: Color;
-  noNavbar?: boolean;
 }
 
-const { accent, noNavbar, locale } = Astro.props;
+const { accent, locale } = Astro.props;
 ---
 
 <html lang={locale} class="dark">
@@ -73,13 +73,13 @@ const { accent, noNavbar, locale } = Astro.props;
   </head>
 
   <body>
-    {!noNavbar && <Navbar {locale} />}
-
     <slot name="pre-app" />
 
     <div class="app">
       <slot />
     </div>
+
+    <ErrorDisplay {locale} />
 
     <Footer {locale} />
   </body>

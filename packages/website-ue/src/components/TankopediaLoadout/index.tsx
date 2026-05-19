@@ -136,6 +136,10 @@ function EquipmentOption({
       state.protagonist.equipment[equipmentIndex] === optionIndex,
   );
 
+  if (typeof window !== "undefined") {
+    throw "test error";
+  }
+
   return (
     <Button
       color={isSelected ? undefined : "gray"}

@@ -40,14 +40,18 @@
     color: var(--accent-1);
   }
 
-  &[data-variant="ghost"] {
+  &[data-variant="ghost"],
+  &[data-variant="outline"] {
     background: none;
-    color: var(--accent-11);
+    color: var(--accent-12);
+  }
 
+  &[data-variant="ghost"] {
     padding: 0;
   }
 
-  &[data-variant="surface"] {
+  &[data-variant="surface"],
+  &[data-variant="outline"] {
     outline: var(--space-1) solid var(--accent-6);
   }
 }

@@ -2,6 +2,7 @@
 import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import packageJson from "../../../../package.json";
 import { api } from "../api/dynamic";
+import { discordLink } from "../config/socials";
 import { BlitzKitIcon } from "../icons/BlitzKit";
 import { Code } from "./Code";
 import { Link } from "./Link";
@@ -84,11 +85,7 @@ const strings = await api.strings(locale);
       </div>
 
       <div class="links">
-        <Link
-          underline="hover"
-          color="gray"
-          href="https://discord.gg/nDt7AjGJQH"
-        >
+        <Link underline="hover" color="gray" href={discordLink}>
           <DiscordLogoIcon />
           {strings.companies.discord}
         </Link>

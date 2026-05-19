@@ -1,0 +1,72 @@
+---
+import { api } from "../api/dynamic";
+import { discordLink } from "../config/socials";
+import { Button } from "./Button";
+import { Heading } from "./Heading";
+import { Link } from "./Link";
+import { Text } from "./Text";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const strings = await api.strings(locale);
+---
+
+<style>
+  .error-display {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-4);
+    padding: var(--space-4);
+    box-sizing: border-box;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+
+    background-color: var(--gray-1);
+
+    body.error & {
+      display: flex;
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      gap: var(--space-3);
+    }
+
+    .options {
+      display: flex;
+      gap: var(--space-3);
+    }
+  }
+</style>
+
+<div class="error-display">
+  <div class="info">
+    <Heading size="2">{strings.error.heading}</Heading>
+    <Text lowContrast>{strings.error.message}</Text>
+  </div>
+
+  <div class="options">
+    <Button variant="outline">{strings.error.view}</Button>
+
+    <Link href="" underline="never">
+      <Button variant="outline">{strings.error.reload}</Button>
+    </Link>
+
+    <Link href={discordLink} target="_blank" underline="never">
+      <Button>{strings.error.support}</Button>
+    </Link>
+  </div>
+</div>

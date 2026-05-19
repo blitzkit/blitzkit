@@ -1,5 +1,6 @@
 import { Fragment, useMemo } from "react";
 import { api } from "../../../../api/dynamic";
+import { ErrorWrapper } from "../../../../components/ErrorWrapper";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
 import { useAwait } from "../../../../hooks/useAwait";
 import { useCharacteristicRenderer } from "../../../../hooks/useCharacteristicRenderer";
@@ -14,7 +15,15 @@ interface PageProps {
   locale: string;
 }
 
-export function Page({ id, locale }: PageProps) {
+export function Page(props: PageProps) {
+  return (
+    <ErrorWrapper>
+      <Wrapper {...props} />
+    </ErrorWrapper>
+  );
+}
+
+function Wrapper({ id, locale }: PageProps) {
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
 
   Tankopedia.useInitialization(tank);
