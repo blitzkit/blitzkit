@@ -1,6 +1,4 @@
 ---
-import ErrorDisplay from "../components/ErrorDisplay.astro";
-import { api } from "../api/dynamic";
 import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
@@ -78,8 +76,6 @@ const { accent, locale } = Astro.props;
     <div class="app">
       <slot />
     </div>
-
-    <ErrorDisplay {locale} />
 
     <Footer {locale} />
   </body>

@@ -1,12 +1,4 @@
 {
-  "error": {
-    "heading": "BlitzKit ran into a critical error",
-    "message": "Sorry about the inconvenience! You have a couple of options.",
-    "view": "View error",
-    "reload": "Reload",
-    "support": "Support"
-  },
-
   "nations": {
     "0": "Unspecified",
     "1": "USSR",
