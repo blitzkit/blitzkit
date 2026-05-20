@@ -1,6 +1,7 @@
 import { Fragment, useMemo } from "react";
 import { api } from "../../../../api/dynamic";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
+import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../hocs/withLocale";
 import { useAwait } from "../../../../hooks/useAwait";
 import { useCharacteristicRenderer } from "../../../../hooks/useCharacteristicRenderer";
@@ -13,59 +14,61 @@ interface PageProps {
   id: string;
 }
 
-export const Page = withLocale(({ id }: PageProps) => {
-  const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
+export const Page = withErrorWrapper(
+  withLocale<PageProps>(({ id }) => {
+    const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
-  Tankopedia.useInitialization(protagonistTank);
+    Tankopedia.useInitialization(protagonistTank);
 
-  const renderCharacteristic = useCharacteristicRenderer();
+    const renderCharacteristic = useCharacteristicRenderer();
 
-  const protagonist = Tankopedia.use((state) => state.protagonist);
-  const protagonistEquipment = useEquipment(protagonistTank.tank!);
+    const protagonist = Tankopedia.use((state) => state.protagonist);
+    const protagonistEquipment = useEquipment(protagonistTank.tank!);
 
-  const { characteristics } = useMemo(
-    () =>
-      computeCharacteristics(
-        protagonistTank,
-        protagonistEquipment,
-        protagonist,
-      ),
-    [protagonist],
-  );
+    const { characteristics } = useMemo(
+      () =>
+        computeCharacteristics(
+          protagonistTank,
+          protagonistEquipment,
+          protagonist,
+        ),
+      [protagonist],
+    );
 
-  return (
-    <>
-      <h1>{protagonist.id}</h1>
+    return (
+      <>
+        <h1>{protagonist.id}</h1>
 
-      <br />
+        <br />
 
-      <TankopediaLoadout />
+        <TankopediaLoadout />
 
-      <h2>characteristics</h2>
+        <h2>characteristics</h2>
 
-      {characteristicsOrder.map((group) => {
-        return (
-          <Fragment key={group.group}>
-            <h3>{group.group}</h3>
+        {characteristicsOrder.map((group) => {
+          return (
+            <Fragment key={group.group}>
+              <h3>{group.group}</h3>
 
-            {group.order.map((item) => {
-              if ("toy" in item) {
-                return <span key={`toy-${item.toy}`}>toy: {item.toy}</span>;
-              }
+              {group.order.map((item) => {
+                if ("toy" in item) {
+                  return <span key={`toy-${item.toy}`}>toy: {item.toy}</span>;
+                }
 
-              const value = characteristics[item.name];
+                const value = characteristics[item.name];
 
-              if (value == null) return null;
+                if (value == null) return null;
 
-              return (
-                <span key={`characteristic-${item.name}`}>
-                  {item.name}: {renderCharacteristic(value, item)}
-                </span>
-              );
-            })}
-          </Fragment>
-        );
-      })}
-    </>
-  );
-});
+                return (
+                  <span key={`characteristic-${item.name}`}>
+                    {item.name}: {renderCharacteristic(value, item)}
+                  </span>
+                );
+              })}
+            </Fragment>
+          );
+        })}
+      </>
+    );
+  }),
+);
