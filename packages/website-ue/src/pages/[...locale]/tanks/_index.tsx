@@ -5,27 +5,15 @@ import { IncrementalLoader } from "../../../components/IncrementalLoader";
 import { TankCard } from "../../../components/TankCard";
 import { TankCards } from "../../../components/TankCards";
 import { TankSearch } from "../../../components/TankSearch";
+import { withLocale } from "../../../hocs/withLocale";
 import { useAwait } from "../../../hooks/useAwait";
-import { LocaleProvider } from "../../../hooks/useLocale";
 import { useSearchableTanks } from "../../../hooks/useSearchableTanks";
 import { useTierCompare } from "../../../hooks/useTierCompare";
 import { TankFilters } from "../../../stores/tankFilters";
 
 const { go } = fuzzysort;
 
-interface PageProps {
-  locale: string;
-}
-
-export function Page({ locale, ...props }: PageProps) {
-  return (
-    <LocaleProvider locale={locale}>
-      <Content {...props} />
-    </LocaleProvider>
-  );
-}
-
-function Content() {
+export const Page = withLocale(() => {
   const tanks = useAwait(() => api.tanks(), "tanks");
 
   const compareTiers = useTierCompare();
@@ -60,7 +48,7 @@ function Content() {
       <List tanks={tanksFiltered} />
     </>
   );
-}
+});
 
 interface ListProps {
   tanks: string[];
