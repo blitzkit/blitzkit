@@ -6,12 +6,14 @@ import type { AvatarList } from "@protos/avatar_list";
 import type { Avatars } from "@protos/avatars";
 import type { Background } from "@protos/background";
 import type { Backgrounds } from "@protos/backgrounds";
+import type { Consumables } from "@protos/consumables";
 import type { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankList } from "@protos/tank_list";
 import type { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import type { Tanks } from "@protos/tanks";
+import type { TierPrices } from "@protos/tier_prices";
 import type { Tiers } from "@protos/tiers";
 
 export abstract class AbstractAPI {
@@ -27,6 +29,8 @@ export abstract class AbstractAPI {
 
   abstract tiers(): Promise<Tiers>;
   abstract equipment(): Promise<Equipment>;
+  abstract consumables(): Promise<Consumables>;
+  abstract tierPrices(): Promise<TierPrices>;
 
   abstract strings(locale: string): Promise<Strings>;
   abstract gameStrings(locale: string): Promise<Record<string, string>>;

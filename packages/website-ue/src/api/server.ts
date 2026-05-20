@@ -5,12 +5,14 @@ import locales from "@blitzkit/i18n/locales.json";
 import type { Avatar, DeepPartial } from "@protos/avatar";
 import type { Background } from "@protos/background";
 import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage_component";
+import { Consumables } from "@protos/consumables";
 import { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
 import type { Tank } from "@protos/tank";
 import type { TankListEntry } from "@protos/tank_list";
 import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import type { Tanks } from "@protos/tanks";
+import { TierPrices } from "@protos/tier_prices";
 import type { Tiers } from "@protos/tiers";
 import { existsSync } from "fs";
 import { mkdir, readFile, writeFile } from "fs/promises";
@@ -260,6 +262,36 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return equipment;
+  }
+
+  @Cache()
+  async consumables() {
+    const consumables = Consumables.create();
+
+    for (const item of this.metadata.group("ConsumableEntity")) {
+      const purchase = item.BlitzStaticPurchase("purchasable");
+      const consumable = item.Consumable();
+      const compatibility = item.Compatibility();
+
+      consumables.consumables[item.id] = {
+        purchase,
+        consumable,
+        compatibility,
+      };
+    }
+
+    return consumables;
+  }
+
+  @Cache()
+  async tierPrices() {
+    const tierPrices = TierPrices.create();
+
+    for (const item of this.metadata.group("TierPricesEntity")) {
+      tierPrices.prices[item.id] = item.TierPrices();
+    }
+
+    return tierPrices;
   }
 
   @Cache(true)

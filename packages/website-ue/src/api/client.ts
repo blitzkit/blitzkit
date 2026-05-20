@@ -1,11 +1,13 @@
 import { fetchPB } from "@blitzkit/core";
 import type { Strings } from "@blitzkit/i18n";
 import { Avatars } from "@protos/avatars";
+import { Consumables } from "@protos/consumables";
 import { Equipment } from "@protos/equipment";
 import { PopularTanks } from "@protos/popular_tanks";
 import { TankList } from "@protos/tank_list";
 import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import { Tanks } from "@protos/tanks";
+import { TierPrices } from "@protos/tier_prices";
 import { Tiers } from "@protos/tiers";
 import { AbstractAPI, Cache } from "./abstract";
 
@@ -57,6 +59,16 @@ export class ClientAPI extends AbstractAPI {
   @Cache()
   equipment() {
     return fetchPB("/api/equipment.pb", Equipment);
+  }
+
+  @Cache()
+  consumables() {
+    return fetchPB("/api/consumables.pb", Consumables);
+  }
+
+  @Cache()
+  tierPrices() {
+    return fetchPB("/api/tier-prices.pb", TierPrices);
   }
 
   @Cache()
