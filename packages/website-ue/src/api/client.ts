@@ -4,6 +4,7 @@ import { Avatars } from "@protos/avatars";
 import { Consumables } from "@protos/consumables";
 import { Equipment } from "@protos/equipment";
 import { PopularTanks } from "@protos/popular_tanks";
+import { Sets } from "@protos/sets";
 import { TankList } from "@protos/tank_list";
 import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
 import { Tanks } from "@protos/tanks";
@@ -69,6 +70,11 @@ export class ClientAPI extends AbstractAPI {
   @Cache()
   tierPrices() {
     return fetchPB("/api/tier-prices.pb", TierPrices);
+  }
+
+  @Cache()
+  sets() {
+    return fetchPB("/api/sets.pb", Sets);
   }
 
   @Cache()

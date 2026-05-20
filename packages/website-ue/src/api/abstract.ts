@@ -9,6 +9,7 @@ import type { Backgrounds } from "@protos/backgrounds";
 import type { Consumables } from "@protos/consumables";
 import type { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
+import type { Sets } from "@protos/sets";
 import type { Tank } from "@protos/tank";
 import type { TankList } from "@protos/tank_list";
 import type { TankUpgradePresets } from "@protos/tank_upgrade_presets";
@@ -31,6 +32,7 @@ export abstract class AbstractAPI {
   abstract equipment(): Promise<Equipment>;
   abstract consumables(): Promise<Consumables>;
   abstract tierPrices(): Promise<TierPrices>;
+  abstract sets(): Promise<Sets>;
 
   abstract strings(locale: string): Promise<Strings>;
   abstract gameStrings(locale: string): Promise<Record<string, string>>;

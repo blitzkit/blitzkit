@@ -19,6 +19,7 @@ import {
   maxModulesPerRow,
   originalLineName,
 } from "../../config/modules";
+import { useCompatibility } from "../../hooks/useCompatibility";
 import { useConsumables } from "../../hooks/useConsumables";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useProtagonist } from "../../hooks/useProtagonist";
@@ -26,7 +27,6 @@ import { useStrings } from "../../hooks/useStrings";
 import { useTierPrices } from "../../hooks/useTierPrices";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
-import { isCompatible } from "../../tankopedia/isCompatible";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
 import { Link } from "../Link";
@@ -54,10 +54,12 @@ export function TankopediaLoadout() {
 function Consumables() {
   const consumables = useConsumables();
   const tierPrices = useTierPrices();
+  const tank = useProtagonist();
+  const isCompatible = useCompatibility();
 
   return Object.values(consumables.consumables).map(
     ({ compatibility, consumable }) => {
-      if (!isCompatible(compatibility!)) return null;
+      if (!isCompatible(compatibility!, tank)) return null;
 
       return <span>{consumable!.name_key}</span>;
     },

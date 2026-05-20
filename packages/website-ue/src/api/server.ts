@@ -8,6 +8,7 @@ import type { RemoteStorageComponent } from "@protos/blitz_static_remote_storage
 import { Consumables } from "@protos/consumables";
 import { Equipment } from "@protos/equipment";
 import type { PopularTanks } from "@protos/popular_tanks";
+import { Sets } from "@protos/sets";
 import type { Tank } from "@protos/tank";
 import type { TankListEntry } from "@protos/tank_list";
 import { TankUpgradePresets } from "@protos/tank_upgrade_presets";
@@ -292,6 +293,17 @@ export class ServerAPI extends AbstractAPI {
     }
 
     return tierPrices;
+  }
+
+  @Cache()
+  async sets() {
+    const sets = Sets.create();
+
+    for (const item of this.metadata.group("TankSetEntity")) {
+      sets.sets[item.id] = item.TankSetCatalog();
+    }
+
+    return sets;
   }
 
   @Cache(true)
