@@ -55,12 +55,11 @@ function Consumables() {
   const consumables = useConsumables();
   const tierPrices = useTierPrices();
   const tank = useProtagonist();
-  const isCompatible = useCompatibility();
+  const isCompatible = useCompatibility(tank);
 
   return Object.values(consumables.consumables).map(
     ({ compatibility, consumable }) => {
-      if (!isCompatible(compatibility!, tank)) return null;
-
+      if (!isCompatible(compatibility!)) return null;
       return <span>{consumable!.name_key}</span>;
     },
   );

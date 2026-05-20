@@ -6,75 +6,60 @@ import type { Sets } from "@protos/sets";
 import type { Tank } from "@protos/tank";
 import { useSets } from "./useSets";
 
-export function useCompatibility(
-  compatibility: CompatibilityComponent,
-  tank: Tank,
-) {
+export function useCompatibility(tank: Tank) {
   const sets = useSets();
 
-  return function (
-    {
-      tank_compatibility,
-      tank_set_compatibility,
-      game_type_compatibility,
-      quest_compatibility,
-      quest_slots_compatibility,
-      tank_style_compatibility,
-    }: CompatibilityComponent,
-    tank: Tank,
-  ) {
+  return function (compatibility: CompatibilityComponent) {
     if (
-      tank_set_compatibility ||
-      game_type_compatibility ||
-      quest_compatibility ||
-      quest_slots_compatibility ||
-      tank_style_compatibility
+      compatibility.tank_set_compatibility ||
+      compatibility.game_type_compatibility ||
+      compatibility.quest_compatibility ||
+      compatibility.quest_slots_compatibility ||
+      compatibility.tank_style_compatibility
     ) {
       throw new Error("Not implemented");
     }
 
-    if (
-      tank_compatibility !== undefined &&
-      (!tankCompatibilityApplies(tank_compatibility.include!, tank, sets) ||
-        tankCompatibilityApplies(tank_compatibility.exclude!, tank, sets))
-    ) {
-      return false;
-    }
-
-    return true;
+    return (
+      compatibility.tank_compatibility === undefined ||
+      (tankCompatibilityApplies(
+        compatibility.tank_compatibility.include,
+        tank,
+        sets,
+      ) &&
+        !tankCompatibilityApplies(
+          compatibility.tank_compatibility.exclude,
+          tank,
+          sets,
+        ))
+    );
   };
 }
 
 function tankCompatibilityApplies(
-  {
-    nations,
-    tiers,
-    tier_catalog_ids,
-    classes,
-    catalogs_id,
-    tank_traits,
-    types,
-    tank_sets_catalog_ids,
-    is_special,
-    tech_tags,
-    ...rest
-  }: TankCompatibility_Include,
+  include: TankCompatibility_Include | undefined,
   tank: Tank,
   sets: Sets,
 ) {
-  if (is_special) {
+  if (include === undefined) {
+    return true;
+  }
+
+  if (include.is_special) {
     throw new Error("is_special Not implemented");
   }
 
   return (
-    nations.some((nation) => nation === tank.tank!.nation) ||
-    tiers.some((tier) => tier === tank.tank!.tier) ||
-    tier_catalog_ids.some((tier) => tier === tank.tank!.tier_catalog_id) ||
-    classes.some((_class) => _class === tank.tank!.tank_class) ||
-    catalogs_id.some((id) => id === tank.id) ||
-    tank_traits.some((trait) => tankHasTraits(trait, tank)) ||
-    types.some((type) => type === tank.tank!.tank_type) ||
-    tank_sets_catalog_ids.some((id) =>
+    include.nations.some((nation) => nation === tank.tank!.nation) ||
+    include.tiers.some((tier) => tier === tank.tank!.tier) ||
+    include.tier_catalog_ids.some(
+      (tier) => tier === tank.tank!.tier_catalog_id,
+    ) ||
+    include.classes.some((_class) => _class === tank.tank!.tank_class) ||
+    include.catalogs_id.some((id) => id === tank.id) ||
+    include.tank_traits.some((trait) => tankHasTraits(trait, tank)) ||
+    include.types.some((type) => type === tank.tank!.tank_type) ||
+    include.tank_sets_catalog_ids.some((id) =>
       Object.entries(sets.sets).some(
         ([setId, set]) =>
           setId === id &&
@@ -85,7 +70,7 @@ function tankCompatibilityApplies(
           ),
       ),
     ) ||
-    tech_tags.some((tag) => tank.tank!.tech_tags.includes(tag))
+    include.tech_tags.some((tag) => tank.tank!.tech_tags.includes(tag))
   );
 }
 
