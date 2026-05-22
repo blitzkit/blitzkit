@@ -58,9 +58,10 @@ function Consumables() {
   const isCompatible = useCompatibility(tank);
 
   return Object.values(consumables.consumables).map(
-    ({ compatibility, consumable }) => {
+    ({ compatibility, consumable, purchase }) => {
       if (!isCompatible(compatibility!)) return null;
-      return <span>{consumable!.name_key}</span>;
+
+      return <span>{JSON.stringify(consumable, null, 2)}</span>;
     },
   );
 }

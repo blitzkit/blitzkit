@@ -8,7 +8,7 @@ namespace BlitzKit.Game.Models;
 
 public class BlitzFileProvider : DefaultFileProvider
 {
-  public BlitzFileProvider(string directory)
+  public BlitzFileProvider(string directory, string map)
     : base(
       directory: directory,
       searchOption: SearchOption.AllDirectories,
@@ -16,12 +16,12 @@ public class BlitzFileProvider : DefaultFileProvider
       pathComparer: StringComparer.OrdinalIgnoreCase
     )
   {
-    MappingsContainer = new FileUsmapTypeMappingsProvider("../../packages/closed/blitz.usmap");
+    MappingsContainer = new FileUsmapTypeMappingsProvider(map);
 
     Initialize();
     Mount();
 
     // OodleHelper.DownloadOodleDll($"../../temp/oodle.so");
-    OodleHelper.Initialize($"../../temp/oodle.so");
+    // OodleHelper.Initialize($"../../temp/oodle.so");
   }
 }

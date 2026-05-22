@@ -1,10 +1,10 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.JavaScript.NodeApi;
 using SkiaSharp;
 
@@ -15,12 +15,12 @@ public partial class GameInterface
 {
   private readonly BlitzFileProvider provider;
 
-  public string[] files;
+  public HashSet<string> files;
   public string[] tanksDirectoryNations;
 
-  public GameInterface(string directory)
+  public GameInterface(string directory, string map)
   {
-    provider = new(directory);
+    provider = new(directory, map);
 
     files = [.. provider.Files.Keys];
 
@@ -36,7 +36,7 @@ public partial class GameInterface
     ];
   }
 
-  public string[] Files => files;
+  public HashSet<string> Files => files;
   public string[] TanksDirectoryNations => tanksDirectoryNations;
 
   public byte[] TankBigIcon(string tankId, string pdaName)
@@ -108,6 +108,37 @@ public partial class GameInterface
         return [];
       }
     }
+
+    return [];
+  }
+
+  private static readonly string equipmentPDAPrefix =
+    "Blitz/Content/TanksStuff/Equipment/PDA_Equipment";
+  private static readonly string equipmentPDASuffix = ".uasset";
+
+  public byte[] EquipmentIcon(string[] names)
+  {
+    List<string> candidates = [];
+
+    foreach (var name in names)
+    {
+      candidates.AddRange([
+        $"{equipmentPDAPrefix}{name}{equipmentPDASuffix}",
+        $"{equipmentPDAPrefix}_{name}{equipmentPDASuffix}",
+      ]);
+    }
+
+    foreach (var candidate in candidates)
+    {
+      if (!files.Contains(candidate))
+      {
+        continue;
+      }
+
+      Console.WriteLine(candidate);
+    }
+
+    // TODO: warn if no equipment icons found
 
     return [];
   }
