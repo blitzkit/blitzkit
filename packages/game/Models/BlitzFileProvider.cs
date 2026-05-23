@@ -2,7 +2,9 @@ using System.Runtime.InteropServices;
 using CUE4Parse.Compression;
 using CUE4Parse.FileProvider;
 using CUE4Parse.MappingsProvider;
+using CUE4Parse.UE4.Exceptions;
 using CUE4Parse.UE4.Versions;
+using CUE4Parse.Utils;
 
 namespace BlitzKit.Game.Models;
 
@@ -20,8 +22,5 @@ public class BlitzFileProvider : DefaultFileProvider
 
     Initialize();
     Mount();
-
-    // OodleHelper.DownloadOodleDll($"../../temp/oodle.so");
-    // OodleHelper.Initialize($"../../temp/oodle.so");
   }
 }

@@ -3,4 +3,4 @@
 	url = https://github.com/blitzkit/closed.git
 [submodule "packages/cue4parse"]
 	path = packages/cue4parse
-	url = https://github.com/FabianFG/CUE4Parse.git
+	url = https://github.com/tresabhi/cue4parse.git

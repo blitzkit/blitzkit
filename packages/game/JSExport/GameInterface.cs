@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion.Textures;
+using CUE4Parse.Compression;
 using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Assets.Objects.Properties;
@@ -37,6 +38,10 @@ public partial class GameInterface
         .Where(nation => !nation.EndsWith(".uasset") && nation != "TankStub")
         .Distinct(),
     ];
+
+    string oodlePath = "temp/oodle.so";
+    OodleHelper.DownloadOodleDll(ref oodlePath);
+    OodleHelper.Initialize(oodlePath);
   }
 
   public HashSet<string> Files => files;
@@ -166,10 +171,18 @@ public partial class GameInterface
         return [];
       }
 
-      var bitmap = cTexture.ToSkBitmap();
-      var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+      try
+      {
+        var bitmap = cTexture.ToSkBitmap();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
 
-      return data.ToArray();
+      // var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+
+      // return data.ToArray();
     }
 
     Console.WriteLine($"Could not load {path} as pda");
