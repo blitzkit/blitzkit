@@ -6,11 +6,13 @@
     <Nullable>enable</Nullable>
     <NodeApiAssemblyJSModuleType>esm</NodeApiAssemblyJSModuleType>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../cue4parse/CUE4Parse/CUE4Parse.csproj" />
     <ProjectReference Include="../cue4parse/CUE4Parse-Conversion/CUE4Parse-Conversion.csproj" />
     <PackageReference Include="Microsoft.JavaScript.NodeApi" Version="0.9.19" />
     <PackageReference Include="Microsoft.JavaScript.NodeApi.Generator" Version="0.9.19" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
   </ItemGroup>
 </Project>
