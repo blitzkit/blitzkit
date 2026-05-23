@@ -1,7 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion.Textures;
+using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Assets.Exports.Texture;
+using CUE4Parse.UE4.Assets.Objects.Properties;
+using CUE4Parse.UE4.IO.Objects;
 using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -47,23 +50,24 @@ public partial class GameInterface
 
       if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
       {
-        FSoftObjectPath objectPath = pda.Get<FSoftObjectPath>("BigIcon");
-        UTexture2D uTexture = objectPath.Load<UTexture2D>();
-        CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+        var icon = pda.Get<FSoftObjectPath>("BigIcon");
+        var uTexture = icon.Load<UTexture2D>();
+        var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
 
         if (cTexture is null)
         {
+          Console.WriteLine($"No tank big icon found for {tankId} in {pdaName}");
           return [];
         }
 
-        SKBitmap bitmap = cTexture.ToSkBitmap();
-        SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
-        byte[] bytes = data.ToArray();
+        var bitmap = cTexture.ToSkBitmap();
+        var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
 
-        return bytes;
+        return data.ToArray();
       }
     }
 
+    Console.WriteLine($"No tank big icon found for {tankId} in {pdaName}");
     return [];
   }
 
@@ -95,20 +99,22 @@ public partial class GameInterface
 
           if (cTexture is null)
           {
+            Console.WriteLine($"No flag found for {nation}");
             return [];
           }
 
           SKBitmap bitmap = cTexture.ToSkBitmap();
           SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
-          byte[] bytes = data.ToArray();
 
-          return bytes;
+          return data.ToArray();
         }
 
+        Console.WriteLine($"No flag found for {nation}");
         return [];
       }
     }
 
+    Console.WriteLine($"No flag found for {nation}");
     return [];
   }
 
@@ -128,18 +134,45 @@ public partial class GameInterface
       ]);
     }
 
-    foreach (var candidate in candidates)
+    string? candidate = null;
+    foreach (var c in candidates)
     {
-      if (!files.Contains(candidate))
+      if (!files.Contains(c))
       {
         continue;
       }
 
-      Console.WriteLine(candidate);
+      candidate = c;
+      break;
     }
 
-    // TODO: warn if no equipment icons found
+    if (candidate is null)
+    {
+      Console.WriteLine($"No equipment pda found for {string.Join(", ", names)}");
+      return [];
+    }
 
+    var path = $"{candidate}.{Path.GetFileNameWithoutExtension(candidate)}";
+
+    if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
+    {
+      var icon = pda.Get<FSoftObjectPath>("Icon");
+      var uTexture = icon.Load<UTexture2D>();
+      var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+
+      if (cTexture is null)
+      {
+        Console.WriteLine($"Could not extract icon for {path}");
+        return [];
+      }
+
+      var bitmap = cTexture.ToSkBitmap();
+      var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+
+      return data.ToArray();
+    }
+
+    Console.WriteLine($"Could not load {path} as pda");
     return [];
   }
 }
