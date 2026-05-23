@@ -10,7 +10,6 @@ using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.JavaScript.NodeApi;
-using SharpGLTF.Schema2;
 using SkiaSharp;
 
 namespace BlitzKit.Game.JSExport;
@@ -80,13 +79,13 @@ public partial class GameInterface
   [GeneratedRegex(@"T_UI_Flag_(\w+)_S")]
   private static partial Regex FlagNameRegex();
 
-  private readonly string flagsPrefix = "Blitz/Content/UI/Textures/Flag/TankCard/";
-
-  public byte[]? Flag(string nation)
+  public byte[] Flag(string nation)
   {
-    foreach (var path in files)
+    var flagsBase = "Blitz/Content/UI/Textures/Flag/TankCard/";
+
+    foreach (var path in provider.Files.Keys)
     {
-      if (!path.StartsWith(flagsPrefix))
+      if (!path.StartsWith(flagsBase))
       {
         continue;
       }
@@ -101,23 +100,34 @@ public partial class GameInterface
       {
         if (provider.TryLoadPackageObject<UTexture2D>($"{path}.{fileName}", out var uTexture))
         {
-          return Image(uTexture);
+          CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+
+          if (cTexture is null)
+          {
+            Console.WriteLine($"No flag found for {nation}");
+            return [];
+          }
+
+          SKBitmap bitmap = cTexture.ToSkBitmap();
+          SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+
+          return data.ToArray();
         }
 
         Console.WriteLine($"No flag found for {nation}");
-        return null;
+        return [];
       }
     }
 
     Console.WriteLine($"No flag found for {nation}");
-    return null;
+    return [];
   }
 
   private static readonly string equipmentPDAPrefix =
     "Blitz/Content/TanksStuff/Equipment/PDA_Equipment";
   private static readonly string equipmentPDASuffix = ".uasset";
 
-  public byte[]? EquipmentIcon(string[] names)
+  public byte[] EquipmentIcon(string[] names)
   {
     List<string> candidates = [];
 
@@ -144,46 +154,30 @@ public partial class GameInterface
     if (candidate is null)
     {
       Console.WriteLine($"No equipment pda found for {string.Join(", ", names)}");
-      return null;
+      return [];
     }
 
-    var pda = PDA(candidate);
-    var icon = pda.Get<FSoftObjectPath>("Icon");
+    var path = $"{candidate}.{Path.GetFileNameWithoutExtension(candidate)}";
 
-    return Image(icon);
-  }
-
-  private UPrimaryDataAsset PDA(string path)
-  {
-    var name = Path.GetFileNameWithoutExtension(path);
-    var fullPath = $"{path}.{name}";
-    var pda = provider.LoadPackageObject<UPrimaryDataAsset>(fullPath);
-
-    return pda;
-  }
-
-  private readonly SKEncodedImageFormat imageFormat = SKEncodedImageFormat.Webp;
-  private readonly int imageQuality = 80;
-
-  private byte[]? Image(UTexture2D uTexture)
-  {
-    var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
-
-    if (cTexture is null)
+    if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
     {
-      Console.WriteLine($"Could not extract icon for {uTexture}");
-      return null;
+      var icon = pda.Get<FSoftObjectPath>("Icon");
+      var uTexture = icon.Load<UTexture2D>();
+      var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+
+      if (cTexture is null)
+      {
+        Console.WriteLine($"Could not extract icon for {path}");
+        return [];
+      }
+
+      var bitmap = cTexture.ToSkBitmap();
+      var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+
+      return data.ToArray();
     }
 
-    var bitmap = cTexture.ToSkBitmap();
-    var data = bitmap.Encode(imageFormat, imageQuality);
-
-    return data.ToArray();
-  }
-
-  private byte[]? Image(FSoftObjectPath image)
-  {
-    var uTexture = image.Load<UTexture2D>();
-    return Image(uTexture);
+    Console.WriteLine($"Could not load {path} as pda");
+    return [];
   }
 }
