@@ -6,7 +6,11 @@ let _game: GameInterface | null = null;
 
 if (!clientUnmounted) {
   const { GameInterface } = await import("@blitzkit/game");
-  _game = new GameInterface(assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT));
+  _game = new GameInterface(
+    assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
+    assertSecret(import.meta.env.WOTB_USMAP),
+    "../../temp",
+  );
 }
 
 export const game = _game;

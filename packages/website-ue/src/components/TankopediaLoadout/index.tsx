@@ -12,7 +12,6 @@ import {
 import { chunk } from "lodash-es";
 import { useMemo } from "react";
 import { equipmentColumns } from "../../config/equipment";
-import { catImages } from "../../config/images";
 import {
   alternativeLines,
   isAlternativeLine,
@@ -148,6 +147,10 @@ function EquipmentOption({
   columnIndex,
 }: EquipmentOptionProps) {
   const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
+  const tank = useProtagonist();
+  const equipment = useEquipment(tank.tank!);
+  const slot = equipment.preset.slots[equipmentIndex];
+  const id = slot.options_catalog_i_ds[optionIndex];
 
   const isSelected = Tankopedia.use(
     (state) =>
@@ -172,7 +175,7 @@ function EquipmentOption({
         });
       }}
     >
-      <img src={catImages.squareTransparent} />
+      <img src={`/media/equipment/${id}.webp`} />
     </Button>
   );
 }

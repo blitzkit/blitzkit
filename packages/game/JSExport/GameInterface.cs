@@ -22,7 +22,7 @@ public partial class GameInterface
   public HashSet<string> files;
   public string[] tanksDirectoryNations;
 
-  public GameInterface(string directory, string map)
+  public GameInterface(string directory, string map, string temp)
   {
     provider = new(directory, map);
 
@@ -39,8 +39,8 @@ public partial class GameInterface
         .Distinct(),
     ];
 
-    string oodlePath = "temp/oodle.so";
-    OodleHelper.DownloadOodleDll(ref oodlePath);
+    string oodlePath = $"{temp}/oodle.so";
+    OodleHelper.DownloadOodleDll(ref oodlePath!);
     OodleHelper.Initialize(oodlePath);
   }
 
@@ -157,27 +157,9 @@ public partial class GameInterface
       return [];
     }
 
-    var path = $"{candidate}.{Path.GetFileNameWithoutExtension(candidate)}";
+    var pda = provider.PDA(candidate);
+    var icon = pda.Get<FSoftObjectPath>("Icon");
 
-    if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
-    {
-      var icon = pda.Get<FSoftObjectPath>("Icon");
-      var uTexture = icon.Load<UTexture2D>();
-      var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
-
-      if (cTexture is null)
-      {
-        Console.WriteLine($"Could not extract icon for {path}");
-        return [];
-      }
-
-      var bitmap = cTexture.ToSkBitmap();
-      var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
-
-      return data.ToArray();
-    }
-
-    Console.WriteLine($"Could not load {path} as pda");
-    return [];
+    return provider.Image(icon);
   }
 }
