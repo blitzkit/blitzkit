@@ -40,14 +40,14 @@ function PriceEntry({ entry }: PriceEntryProps) {
     <>
       {entry.currency_price && (
         <PriceInternal
-          icon={`/api/currencies/${entry.currency_price.currency_catalog_id}.webp`}
+          icon={`/media/currencies/${entry.currency_price.currency_catalog_id}.webp`}
           value={entry.currency_price.amount}
         />
       )}
 
       {entry.stuff_price && (
         <PriceInternal
-          icon={`/api/stuff/${entry.stuff_price.stuff_catalog_id}.webp`}
+          icon={`/media/stuff/${entry.stuff_price.stuff_catalog_id}.webp`}
           value={entry.stuff_price.amount}
         />
       )}

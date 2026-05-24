@@ -2,7 +2,7 @@ import type { APIContext } from "astro";
 import { api } from "../../../api/dynamic";
 import { imageProxy } from "../../../api/imageProxy";
 
-export { getStaticPaths } from "./[id].json";
+export { getStaticPaths } from "../../[api]/avatars/[id].json";
 
 /**
  * Returns an avatar image based on its `id` in the `webp` format.

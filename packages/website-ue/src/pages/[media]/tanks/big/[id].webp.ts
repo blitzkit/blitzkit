@@ -1,13 +1,13 @@
 import type { APIContext } from "astro";
-import { api } from "../../../api/dynamic";
+import { api } from "../../../../api/dynamic";
 import {
   clientUnmountedResponse,
   notFoundResponse,
-} from "../../../api/responses";
-import { game } from "../../../game/game";
-import { clientUnmounted } from "../../../game/unmounted";
+} from "../../../../api/responses";
+import { game } from "../../../../game/game";
+import { clientUnmounted } from "../../../../game/unmounted";
 
-export { getStaticPaths } from "./[id].json";
+export { getStaticPaths } from "../../../[api]/tanks/[id].json";
 
 export async function GET({ params }: APIContext<never, { id: string }>) {
   if (clientUnmounted) return clientUnmountedResponse;

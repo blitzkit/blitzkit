@@ -425,7 +425,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
       >
         <img
           className={styles.icon}
-          src={`/api/tanks/modules/${stage.stage_type}.webp`}
+          src={`/media/modules/${stage.stage_type}.webp`}
         />
         {/* {stage.display_name} */}
 
