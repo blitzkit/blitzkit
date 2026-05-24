@@ -2,10 +2,10 @@
   "name": "@blitzkit/website-ue",
   "type": "module",
   "scripts": {
-    "dev": "PUBLIC_TARGET=web astro dev",
-    "build": "PUBLIC_TARGET=web astro build",
-    "preview": "PUBLIC_TARGET=web astro preview",
-    "lint": "PUBLIC_TARGET=web astro check",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "astro check",
     "astro": "astro"
   },
   "dependencies": {
