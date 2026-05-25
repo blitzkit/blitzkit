@@ -28,6 +28,7 @@ env:
   # steam
   STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
   STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  FINGERPRINT: Manifest_UFSFiles_Win64.txt
 
 jobs:
   build:
@@ -73,6 +74,12 @@ jobs:
       - name: Download fingerprint
         run: |
           ./scripts/download_fingerprint.sh
+
+      - uses: actions/cache@v5
+        id: game-cache
+        with:
+          path: temp/game
+          key: ${{ runner.os }}-${{ hashFiles(format('temp/game/{0}', env.FINGERPRINT)) }}
 
       - name: Build
         run: bun run build-website
