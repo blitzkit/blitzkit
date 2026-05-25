@@ -4,8 +4,8 @@ on:
   push:
   workflow_dispatch:
 
-  schedule:
-    - cron: "0 4 * * *"
+  # schedule:
+  #   - cron: "0 4 * * *"
 
 permissions:
   contents: read
@@ -64,10 +64,14 @@ jobs:
       - name: Set up project
         run: |
           bun run setup
-          bun run setup-depot-downloader
+          ./scripts/setup_depot_downloader.sh
+
+      - name: Download fingerprint
+        run: |
+          ./scripts/download_fingerprint.sh
 
       - name: Build
-        run: bun run build:website
+        run: bun run build-website
         env:
           BUILD_CHUNK: ${{ matrix.chunk }}
 

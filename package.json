@@ -5,7 +5,6 @@
   "private": true,
   "scripts": {
     "setup": "chmod a+x scripts/*.sh && ./scripts/setup.sh",
-    "setup-depot-downloader": "./scripts/setup_depot_downloader.sh",
     "dev": "./scripts/dev.sh",
     "build-game": "./scripts/build_game.sh",
     "build-website": "./scripts/build_website.sh"
