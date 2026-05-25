@@ -34,6 +34,9 @@ jobs:
         chunk: [pages, api, media]
 
     steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
@@ -59,7 +62,9 @@ jobs:
           repo-token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up project
-        run: bun run setup
+        run: |
+          bun run setup
+          bun run setup-depot-downloader
 
       - name: Build
         run: bun run build:website
