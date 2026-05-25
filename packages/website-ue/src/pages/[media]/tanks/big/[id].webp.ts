@@ -6,8 +6,11 @@ import {
 } from "../../../../api/responses";
 import { game } from "../../../../game/game";
 import { clientUnmounted } from "../../../../game/unmounted";
+import { getStaticPaths as _getStaticPaths } from "../../../[api]/tanks/[id].json";
+import { getStaticPaths as __getStaticPaths } from "../../_index";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 
-export { getStaticPaths } from "../../../[api]/tanks/[id].json";
+export const getStaticPaths = mixStaticPaths(__getStaticPaths, _getStaticPaths);
 
 export async function GET({ params }: APIContext<never, { id: string }>) {
   if (clientUnmounted) return clientUnmountedResponse;

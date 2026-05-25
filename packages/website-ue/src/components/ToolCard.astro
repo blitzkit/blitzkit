@@ -76,14 +76,14 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
   className="tool-card"
   underline="never"
   style={{
-    backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
+    backgroundImage: `url(/media/tools/banners/${tool.id}.webp)`,
   }}
   data-gradient={gradient}
 >
   <div
     class="poster"
     style={{
-      backgroundImage: `url(/assets/tools/${tool.id}.webp)`,
+      backgroundImage: `url(/media/tools/banners/${tool.id}.webp)`,
     }}
   >
     {gradient && <div class="gradient" />}

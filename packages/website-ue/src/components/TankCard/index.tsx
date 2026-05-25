@@ -35,8 +35,8 @@ export function TankCard(props: PropsWithSkeleton<TankCardProps>) {
             className={styles.flag}
             style={{
               backgroundImage: clientUnmounted
-                ? "url(/api/unmounted/flag.png)"
-                : `url(/api/nations/${tank!.tank!.nation}/card.webp)`,
+                ? "url(/media/unmounted/flag.png)"
+                : `url(/media/flags/cards/${tank!.tank!.nation}.webp)`,
             }}
           />
         )}
@@ -46,8 +46,8 @@ export function TankCard(props: PropsWithSkeleton<TankCardProps>) {
             className={styles.icon}
             style={{
               backgroundImage: clientUnmounted
-                ? "url(/api/unmounted/tank.png)"
-                : `url(/api/tanks/${props.id}.webp)`,
+                ? "url(/media/unmounted/tank.png)"
+                : `url(/media/tanks/big/${props.id}.webp)`,
             }}
           />
         )}
