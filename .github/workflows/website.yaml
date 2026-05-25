@@ -20,6 +20,8 @@ env:
   # blitz
   WOTB_SERVER: ${{ secrets.WOTB_SERVER }}
   WOTB_VERSION: ${{ secrets.WOTB_VERSION }}
+  PUBLIC_WOTB_CLIENT: ../../temp/game
+  WOTB_USMAP: ../closed/blitz.usmap
 
   # google
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
