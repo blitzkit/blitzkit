@@ -84,7 +84,7 @@ jobs:
           path: temp/game
           key: ${{ runner.os }}-${{ hashFiles(format('temp/game/{0}', env.FINGERPRINT)) }}
 
-      - name: Download cache-missed game
+      - name: Download Steam game
         if: steps.game-cache.outputs.cache-hit != 'true'
         run: |
           ./scripts/download_game.sh
