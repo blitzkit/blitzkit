@@ -8,5 +8,5 @@ set -a
 source .env
 set +a
 
-echo $FINGERPRINT > $FILES
-$DEPOT_DOWNLOADER -os windows -app 3341250 -filelist $FILES -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME
+echo $STEAM_FINGERPRINT > $FILES
+$DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -filelist $FILES -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME
