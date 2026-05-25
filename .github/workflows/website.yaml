@@ -91,21 +91,21 @@ jobs:
         run: |
           ./scripts/download_game.sh
 
-      - name: Build
-        run: bun run build-website
-        env:
-          BUILD_CHUNK: ${{ matrix.chunk }}
+      # - name: Build
+      #   run: bun run build-website
+      #   env:
+      #     BUILD_CHUNK: ${{ matrix.chunk }}
 
-      - name: Upload artifact
-        id: upload
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: dist/website
+      # - name: Upload artifact
+      #   id: upload
+      #   uses: actions/upload-pages-artifact@v4
+      #   with:
+      #     path: dist/website
 
-      - name: Trigger target repository
-        run: |
-          curl -X POST \
-          -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://github.com \
-          -d '{ "event_type": "deploy-pages", "client_payload": { "artifact_url": "${{ steps.upload.outputs.artifact_url }}" } }'
+      # - name: Trigger target repository
+      #   run: |
+      #     curl -X POST \
+      #     -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+      #     -H "Accept: application/vnd.github.v3+json" \
+      #     https://github.com \
+      #     -d '{ "event_type": "deploy-pages", "client_payload": { "artifact_url": "${{ steps.upload.outputs.artifact_url }}" } }'
