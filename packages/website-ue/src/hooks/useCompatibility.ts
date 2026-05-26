@@ -5,8 +5,13 @@ import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upg
 import type { Sets } from "@protos/sets";
 import type { Tank } from "@protos/tank";
 import { useSets } from "./useSets";
+import type { ComputedCharacteristics } from "../tankopedia/computeCharacteristics";
+import { GunType } from "../tankopedia/characteristics";
 
-export function useCompatibility(tank: Tank) {
+export function useCompatibility(
+  tank: Tank,
+  characteristics: ComputedCharacteristics,
+) {
   const sets = useSets();
 
   return function (compatibility: CompatibilityComponent) {
@@ -26,11 +31,13 @@ export function useCompatibility(tank: Tank) {
         compatibility.tank_compatibility.include,
         tank,
         sets,
+        characteristics,
       ) &&
         !tankCompatibilityApplies(
           compatibility.tank_compatibility.exclude,
           tank,
           sets,
+          characteristics,
         ))
     );
   };
@@ -40,6 +47,7 @@ function tankCompatibilityApplies(
   include: TankCompatibility_Include | undefined,
   tank: Tank,
   sets: Sets,
+  characteristics: ComputedCharacteristics,
 ) {
   if (include === undefined) {
     return true;
@@ -57,7 +65,9 @@ function tankCompatibilityApplies(
     ) ||
     include.classes.some((_class) => _class === tank.tank!.tank_class) ||
     include.catalogs_id.some((id) => id === tank.id) ||
-    include.tank_traits.some((trait) => tankHasTraits(trait, tank)) ||
+    include.tank_traits.some((trait) =>
+      tankHasTraits(trait, tank, characteristics),
+    ) ||
     include.types.some((type) => type === tank.tank!.tank_type) ||
     include.tank_sets_catalog_ids.some((id) =>
       Object.entries(sets.sets).some(
@@ -74,23 +84,14 @@ function tankCompatibilityApplies(
   );
 }
 
-function tankHasTraits(traits: TankTraits, tank: Tank) {
+function tankHasTraits(
+  traits: TankTraits,
+  tank: Tank,
+  characteristics: ComputedCharacteristics,
+) {
   switch (traits) {
     case TankTraits.TANK_TRAITS_HAS_CLIP:
-      // TODO: use current tank state to check if the current gun has a clip
-
-      return tank.tank!.upgrade_lines.some((line) =>
-        line.stages.some((stage) =>
-          stage.attributes.every((attribute) =>
-            attribute.attribute_name !==
-              TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP &&
-            attribute.attribute_name ===
-              TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CLIP_SIZE
-              ? attribute.value === 1
-              : true,
-          ),
-        ),
-      );
+      return characteristics.gun_type !== GunType.Regular;
 
     default:
       throw new Error(`Unknown trait: ${traits}`);

@@ -41,7 +41,7 @@ export const Page = withErrorWrapper(
 
         <br />
 
-        <TankopediaLoadout />
+        <TankopediaLoadout characteristics={characteristics} />
 
         <h2>characteristics</h2>
 

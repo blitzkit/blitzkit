@@ -5,7 +5,6 @@ import { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
-  ButtonIcon,
   CornerBottomLeftIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
@@ -30,15 +29,18 @@ import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
-import { Link } from "../Link";
+import { IconButton } from "../IconButton";
 import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
 import styles from "./index.module.css";
-import { IconButton } from "../IconButton";
-import { Tank } from "@protos/tank";
+import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 
-export function TankopediaLoadout() {
+interface TankopediaLoadoutProps {
+  characteristics: ComputedCharacteristics;
+}
+
+export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
   const tank = useProtagonist();
 
   const showModules = tank.tank!.upgrade_lines.some(
@@ -49,22 +51,30 @@ export function TankopediaLoadout() {
     <Section>
       {showModules && <Modules />}
       <Equipment />
-      <Consumables />
+      <Consumables characteristics={characteristics} />
     </Section>
   );
 }
 
-function Consumables() {
+interface ConsumablesProps {
+  characteristics: ComputedCharacteristics;
+}
+
+function Consumables({ characteristics }: ConsumablesProps) {
   const consumables = useConsumables();
   const tierPrices = useTierPrices();
   const tank = useProtagonist();
-  const isCompatible = useCompatibility(tank);
+  const isCompatible = useCompatibility(tank, characteristics);
 
-  return Object.values(consumables.consumables).map(
-    ({ compatibility, consumable, purchase }) => {
+  return Object.entries(consumables.consumables).map(
+    ([id, { compatibility, consumable, purchase }]) => {
       if (!isCompatible(compatibility!)) return null;
 
-      return <span>{JSON.stringify(consumable, null, 2)}</span>;
+      return (
+        <span>
+          {id} {JSON.stringify(consumable, null, 2)}
+        </span>
+      );
     },
   );
 }

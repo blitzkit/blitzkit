@@ -31,7 +31,7 @@ export enum GunType {
 }
 
 export const characteristics = {
-  gun_type({ attributeSafe, attribute }) {
+  gun_type({ attributeSafe }) {
     const isPump =
       attributeSafe(TankAttributeChange_AttributeName.ATTRIBUTE_NAME_IS_PUMP) ??
       0;
