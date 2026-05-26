@@ -1,5 +1,9 @@
 import type { CompatibilityComponent } from "@protos/blitz_static_compatibility_component";
-import type { TankCompatibility_Include } from "@protos/blitz_static_tank_compatibility";
+import type {
+  TankCompatibility,
+  TankCompatibility_Exclude,
+  TankCompatibility_Include,
+} from "@protos/blitz_static_tank_compatibility";
 import { TankTraits } from "@protos/blitz_static_tank_compatibility";
 import { TankAttributeChange_AttributeName } from "@protos/blitz_static_tank_upgrade_single_stage";
 import type { Sets } from "@protos/sets";
@@ -26,40 +30,54 @@ export function useCompatibility(
     }
 
     return (
-      compatibility.tank_compatibility === undefined ||
-      (tankCompatibilityApplies(
-        compatibility.tank_compatibility.include,
+      compatibility.tank_compatibility &&
+      tankCompatibility(
+        compatibility.tank_compatibility,
         tank,
         sets,
         characteristics,
-      ) &&
-        !tankCompatibilityApplies(
-          compatibility.tank_compatibility.exclude,
-          tank,
-          sets,
-          characteristics,
-        ))
+      )
     );
   };
 }
 
-function tankCompatibilityApplies(
-  include: TankCompatibility_Include | undefined,
+function tankCompatibility(
+  compatibility: TankCompatibility,
   tank: Tank,
   sets: Sets,
   characteristics: ComputedCharacteristics,
 ) {
-  if (include === undefined) {
-    return true;
-  }
+  return (
+    (compatibility.include === undefined ||
+      tankCompatibilityInequality(
+        compatibility.include,
+        tank,
+        sets,
+        characteristics,
+      )) &&
+    (compatibility.exclude === undefined ||
+      !tankCompatibilityInequality(
+        compatibility.exclude,
+        tank,
+        sets,
+        characteristics,
+      ))
+  );
+}
 
+function tankCompatibilityInequality(
+  include: TankCompatibility_Include | TankCompatibility_Exclude,
+  tank: Tank,
+  sets: Sets,
+  characteristics: ComputedCharacteristics,
+) {
   if (include.is_special) {
     throw new Error("is_special Not implemented");
   }
 
   return (
     include.nations.some((nation) => nation === tank.tank!.nation) ||
-    include.tiers.some((tier) => tier === tank.tank!.tier) ||
+    // include.tiers.some((tier) => tier === tank.tank!.tier) ||
     include.tier_catalog_ids.some(
       (tier) => tier === tank.tank!.tier_catalog_id,
     ) ||
