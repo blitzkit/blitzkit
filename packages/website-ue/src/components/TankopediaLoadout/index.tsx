@@ -35,6 +35,8 @@ import { Section } from "../Section";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
+import { Tooltip } from "../Tooltip";
+import { useGameStrings } from "../../hooks/useGameStrings";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
@@ -178,6 +180,7 @@ function EquipmentOption({
   const equipment = useEquipment(tank.tank!);
   const slot = equipment.preset.slots[equipmentIndex];
   const id = slot.options_catalog_i_ds[optionIndex];
+  const gameStrings = useGameStrings("EquipmentEntity");
 
   const isSelected = Tankopedia.use(
     (state) =>
@@ -186,25 +189,27 @@ function EquipmentOption({
   );
 
   return (
-    <Button
-      color={isSelected ? undefined : "gray"}
-      variant={isSelected ? "surface" : "soft"}
-      data-selected={isSelected}
-      radius="1"
-      array
-      className={styles.slot}
-      onClick={() => {
-        Tankopedia.mutate((draft) => {
-          if (isSelected) {
-            delete draft.protagonist.equipment[equipmentIndex];
-          } else {
-            draft.protagonist.equipment[equipmentIndex] = optionIndex;
-          }
-        });
-      }}
-    >
-      <img src={`/media/equipment/${id}.webp`} />
-    </Button>
+    <Tooltip tooltip={gameStrings[equipment.equipments[id].equipment_name]}>
+      <Button
+        color={isSelected ? undefined : "gray"}
+        variant={isSelected ? "surface" : "soft"}
+        data-selected={isSelected}
+        radius="1"
+        parentArray
+        className={styles.slot}
+        onClick={() => {
+          Tankopedia.mutate((draft) => {
+            if (isSelected) {
+              delete draft.protagonist.equipment[equipmentIndex];
+            } else {
+              draft.protagonist.equipment[equipmentIndex] = optionIndex;
+            }
+          });
+        }}
+      >
+        <img src={`/media/equipment/${id}.webp`} />
+      </Button>
+    </Tooltip>
   );
 }
 
@@ -362,6 +367,7 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
   const alternates = Tankopedia.use((state) => state.protagonist.alternates);
   const tank = useProtagonist();
   const strings = useStrings();
+  const gameStrings = useGameStrings("TankEntity");
   const upgradePreset = useUpgradePreset(tank.tank!.tank_upgrade_preset);
 
   let price: StandardPrice | undefined;
@@ -405,93 +411,94 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <Button
-        className={styles.stage}
-        color={isSelected ? undefined : "gray"}
-        variant={isSelected ? "surface" : "soft"}
-        radius="1"
-        onClick={() => {
-          // TODO: make minimum selectable upgrade the last free module for tanks like the destiny
+    <Tooltip tooltip={gameStrings[stage.display_name]}>
+      <div className={styles.wrapper}>
+        <Button
+          className={styles.stage}
+          color={isSelected ? undefined : "gray"}
+          variant={isSelected ? "surface" : "soft"}
+          radius="1"
+          onClick={() => {
+            // TODO: make minimum selectable upgrade the last free module for tanks like the destiny
 
-          Tankopedia.mutate((draft) => {
-            const tankData = tank.tank!;
+            Tankopedia.mutate((draft) => {
+              const tankData = tank.tank!;
 
-            if (isAlternativeLine(lineName)) {
-              const originalLine = originalLineName(lineName)!;
+              if (isAlternativeLine(lineName)) {
+                const originalLine = originalLineName(lineName)!;
 
-              draft.protagonist.alternates[originalLine] = true;
-              draft.protagonist.upgrades[lineName] = index;
-            } else {
-              draft.protagonist.alternates[lineName] = false;
-              draft.protagonist.upgrades[lineName] = index;
-            }
-
-            for (const required of stage.required_upgrades) {
-              for (const line of tankData.upgrade_lines) {
-                let i = 0;
-
-                for (const candidateStage of line.stages) {
-                  if (candidateStage.tech_name === required) {
-                    draft.protagonist.upgrades[line.name] = Math.max(
-                      draft.protagonist.upgrades[line.name],
-                      i,
-                    );
-                  }
-
-                  i++;
-                }
-              }
-            }
-
-            for (const line of tankData.upgrade_lines) {
-              if (draft.protagonist.alternates[line.name]) {
-                continue;
+                draft.protagonist.alternates[originalLine] = true;
+                draft.protagonist.upgrades[lineName] = index;
+              } else {
+                draft.protagonist.alternates[lineName] = false;
+                draft.protagonist.upgrades[lineName] = index;
               }
 
-              let i = draft.protagonist.upgrades[line.name];
+              for (const required of stage.required_upgrades) {
+                for (const line of tankData.upgrade_lines) {
+                  let i = 0;
 
-              while (i > 0) {
-                const currentStage = line.stages[i];
-
-                const valid = currentStage.required_upgrades.every(
-                  (required) => {
-                    for (const otherLine of tankData.upgrade_lines) {
-                      const idx = draft.protagonist.upgrades[otherLine.name];
-
-                      if (otherLine.stages[idx]?.tech_name === required) {
-                        return true;
-                      }
+                  for (const candidateStage of line.stages) {
+                    if (candidateStage.tech_name === required) {
+                      draft.protagonist.upgrades[line.name] = Math.max(
+                        draft.protagonist.upgrades[line.name],
+                        i,
+                      );
                     }
 
-                    return false;
-                  },
-                );
-
-                if (valid) break;
-
-                i--;
+                    i++;
+                  }
+                }
               }
 
-              draft.protagonist.upgrades[line.name] = i;
-            }
-          });
-        }}
-      >
-        <img
-          className={styles.icon}
-          src={`/media/modules/${stage.stage_type}.webp`}
-        />
-        {/* {stage.display_name} */}
+              for (const line of tankData.upgrade_lines) {
+                if (draft.protagonist.alternates[line.name]) {
+                  continue;
+                }
 
-        <Text weight="light" lowContrast size="minor" className={styles.tier}>
-          {isAlternativeLine(lineName)
-            ? strings.tanks.loadout.alternative
-            : romanize(stage.number)}
-        </Text>
-      </Button>
+                let i = draft.protagonist.upgrades[line.name];
 
-      {<Price className={styles.price} price={price} />}
-    </div>
+                while (i > 0) {
+                  const currentStage = line.stages[i];
+
+                  const valid = currentStage.required_upgrades.every(
+                    (required) => {
+                      for (const otherLine of tankData.upgrade_lines) {
+                        const idx = draft.protagonist.upgrades[otherLine.name];
+
+                        if (otherLine.stages[idx]?.tech_name === required) {
+                          return true;
+                        }
+                      }
+
+                      return false;
+                    },
+                  );
+
+                  if (valid) break;
+
+                  i--;
+                }
+
+                draft.protagonist.upgrades[line.name] = i;
+              }
+            });
+          }}
+        >
+          <img
+            className={styles.icon}
+            src={`/media/modules/${stage.stage_type}.webp`}
+          />
+
+          <Text weight="light" lowContrast size="minor" className={styles.tier}>
+            {isAlternativeLine(lineName)
+              ? strings.tanks.loadout.alternative
+              : romanize(stage.number)}
+          </Text>
+        </Button>
+
+        {<Price className={styles.price} price={price} />}
+      </div>
+    </Tooltip>
   );
 }
