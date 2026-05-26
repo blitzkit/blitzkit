@@ -50,11 +50,11 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
   );
 
   return (
-    <Section>
+    <>
       {showModules && <Modules />}
       <Equipment />
-      <Consumables characteristics={characteristics} />
-    </Section>
+      {/*<Consumables characteristics={characteristics} />*/}
+    </>
   );
 }
 

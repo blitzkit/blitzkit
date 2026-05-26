@@ -1,0 +1,7 @@
+.sandbox {
+  position: relative;
+  height: 100%;
+
+  .canvas {
+  }
+}

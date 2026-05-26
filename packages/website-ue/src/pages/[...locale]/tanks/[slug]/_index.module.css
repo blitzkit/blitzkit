@@ -1,0 +1,17 @@
+.page {
+  flex-grow: 1;
+  display: flex;
+
+  .sandbox {
+    flex-grow: 1;
+    background-color: black;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-5);
+    padding: var(--space-5);
+  }
+}

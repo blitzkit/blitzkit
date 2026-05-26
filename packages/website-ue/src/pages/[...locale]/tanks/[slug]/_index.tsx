@@ -9,12 +9,48 @@ import { useEquipment } from "../../../../hooks/useEquipment";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { characteristicsOrder } from "../../../../tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../../tankopedia/computeCharacteristics";
+import styles from "./_index.module.css";
+import { TankopediaSandbox } from "../../../../components/TankopediaSandbox";
 
 interface PageProps {
   id: string;
 }
 
 export const Page = withErrorWrapper(
+  withLocale<PageProps>(({ id }) => {
+    const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
+
+    Tankopedia.useInitialization(protagonistTank);
+
+    // const renderCharacteristic = useCharacteristicRenderer();
+
+    const protagonist = Tankopedia.use((state) => state.protagonist);
+    const protagonistEquipment = useEquipment(protagonistTank.tank!);
+
+    const { characteristics } = useMemo(
+      () =>
+        computeCharacteristics(
+          protagonistTank,
+          protagonistEquipment,
+          protagonist,
+        ),
+      [protagonist],
+    );
+
+    return (
+      <div className={styles.page}>
+        <div className={styles.sandbox}>
+          <TankopediaSandbox />
+        </div>
+        <div className={styles.stats}>
+          <TankopediaLoadout characteristics={characteristics} />
+        </div>
+      </div>
+    );
+  }),
+);
+
+export const _Page = withErrorWrapper(
   withLocale<PageProps>(({ id }) => {
     const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
