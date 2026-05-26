@@ -5,6 +5,7 @@ import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
+import ColorScale from "../../../../components/ColorScale.astro";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const { list } = await api.tankList();
@@ -19,5 +20,7 @@ const { id, locale } = Astro.props;
 ---
 
 <BaseLayout {locale} accent="violet">
+    <ColorScale color="red" />
+
   <Page {locale} {id} client:load />
 </BaseLayout>

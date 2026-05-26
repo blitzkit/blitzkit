@@ -5,9 +5,11 @@ import { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
+  ButtonIcon,
   CornerBottomLeftIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
 import { useMemo } from "react";
@@ -76,6 +78,19 @@ function Equipment() {
     <div className={styles.section}>
       <div className={styles.header}>
         <Heading size="4">{strings.tanks.loadout.equipment}</Heading>
+
+        <IconButton
+          color="red"
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              for (const key in draft.protagonist.equipment) {
+                delete draft.protagonist.equipment[key];
+              }
+            });
+          }}
+        >
+          <TrashIcon />
+        </IconButton>
       </div>
 
       <div className={styles.equipment}>
