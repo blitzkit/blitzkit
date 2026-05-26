@@ -6,7 +6,11 @@
   .header {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-4);
+
+    .upgrade-buttons {
+      display: flex;
+    }
   }
 
   .equipment {
@@ -32,16 +36,6 @@
             padding: var(--space-3);
 
             font-size: var(--space-5);
-
-            &:first-child {
-              border-top-right-radius: 0;
-              border-bottom-right-radius: 0;
-            }
-
-            &:last-child {
-              border-top-left-radius: 0;
-              border-bottom-left-radius: 0;
-            }
 
             &[data-selected="true"] {
               z-index: 1;

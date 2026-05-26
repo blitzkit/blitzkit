@@ -7,7 +7,8 @@ export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
   radius?: `${1 | 2 | 3}` | "max";
   variant?: "solid" | "surface" | "soft" | "inverted" | "ghost" | "outline";
-  size?: "regular";
+  size?: "regular" | "minor";
+  array?: boolean;
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([
@@ -32,6 +33,7 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
+  array = false,
   ...props
 }: ButtonProps) {
   return (
@@ -42,6 +44,7 @@ export function Button({
       data-light-text={variant === "solid"}
       data-radius={radius}
       data-size={size}
+      data-array={array}
       {...props}
     />
   );

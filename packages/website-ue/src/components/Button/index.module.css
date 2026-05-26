@@ -10,11 +10,27 @@
   border: none;
 
   font-family: var(--font-family-regular);
-  font-size: var(--font-size-minor);
+  font-size: 0.75rem;
   color: var(--gray-1);
   font-weight: var(--weight-medium);
 
   cursor: pointer;
+
+  &[data-size="minor"] {
+    font-size: 0.75rem;
+  }
+
+  &[data-array="true"] {
+    &:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
 
   svg,
   img {
@@ -33,6 +49,7 @@
   &[data-variant="surface"],
   &[data-variant="soft"] {
     background-color: var(--accent-3);
+    color: var(--gray-12);
   }
 
   &[data-variant="inverted"] {

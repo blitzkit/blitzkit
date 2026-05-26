@@ -33,6 +33,8 @@ import { Price } from "../Price";
 import { Section } from "../Section";
 import { Text } from "../Text";
 import styles from "./index.module.css";
+import { IconButton } from "../IconButton";
+import { Tank } from "@protos/tank";
 
 export function TankopediaLoadout() {
   const tank = useProtagonist();
@@ -164,6 +166,7 @@ function EquipmentOption({
       variant={isSelected ? "surface" : "soft"}
       data-selected={isSelected}
       radius="1"
+      array
       className={styles.slot}
       onClick={() => {
         Tankopedia.mutate((draft) => {
@@ -183,45 +186,72 @@ function EquipmentOption({
 function Modules() {
   const strings = useStrings();
   const tank = useProtagonist();
+  const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
+  const alternates = Tankopedia.use((state) => state.protagonist.alternates);
+  const isStock = useMemo(() => {
+    return tank.tank!.upgrade_lines.every((line) => {
+      if (isAlternativeLine(line.name)) return true;
+      return upgrades[line.name] === 0;
+    });
+  }, [upgrades]);
+  const isUpgraded = useMemo(() => {
+    return tank.tank!.upgrade_lines.every((line) => {
+      if (isAlternativeLine(line.name)) return true;
+
+      return (
+        upgrades[line.name] === line.stages.length - 1 ||
+        (line.name in alternates && alternates[line.name])
+      );
+    });
+  }, [upgrades]);
 
   return (
     <div className={styles.section}>
       <div className={styles.header}>
         <Heading size="4">{strings.tanks.loadout.modules}</Heading>
 
-        <Link
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              for (const line of tank.tank!.upgrade_lines) {
-                if (isAlternativeLine(line.name)) continue;
+        <div className={styles["upgrade-buttons"]}>
+          <IconButton
+            variant={isStock ? "solid" : "soft"}
+            size="minor"
+            array
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                for (const line of tank.tank!.upgrade_lines) {
+                  if (isAlternativeLine(line.name)) continue;
 
-                draft.protagonist.upgrades[line.name] = 0;
-                draft.protagonist.alternates[line.name] = false;
-              }
-            });
-          }}
-          color="gray"
-        >
-          <DoubleArrowLeftIcon />
-        </Link>
-
-        <Link
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              for (const line of tank.tank!.upgrade_lines) {
-                draft.protagonist.upgrades[line.name] = line.stages.length - 1;
-
-                if (isAlternativeLine(line.name)) {
-                  const original = originalLineName(line.name)!;
-                  draft.protagonist.alternates[original] = true;
+                  draft.protagonist.upgrades[line.name] = 0;
+                  draft.protagonist.alternates[line.name] = false;
                 }
-              }
-            });
-          }}
-          color="gray"
-        >
-          <DoubleArrowRightIcon />
-        </Link>
+              });
+            }}
+            color="gray"
+          >
+            <DoubleArrowLeftIcon />
+          </IconButton>
+
+          <IconButton
+            variant={isUpgraded ? "solid" : "soft"}
+            size="minor"
+            array
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                for (const line of tank.tank!.upgrade_lines) {
+                  draft.protagonist.upgrades[line.name] =
+                    line.stages.length - 1;
+
+                  if (isAlternativeLine(line.name)) {
+                    const original = originalLineName(line.name)!;
+                    draft.protagonist.alternates[original] = true;
+                  }
+                }
+              });
+            }}
+            color="gray"
+          >
+            <DoubleArrowRightIcon />
+          </IconButton>
+        </div>
       </div>
 
       <div className={styles.lines}>
