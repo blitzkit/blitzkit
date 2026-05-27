@@ -79,17 +79,16 @@ jobs:
         run: |
           ./scripts/download_fingerprint.sh
 
-      - name: Download cached game
-        uses: actions/cache@v5
-        id: game-cache
-        with:
-          path: temp/game
-          key: ${{ runner.os }}-${{ hashFiles(format('temp/game/{0}', env.FINGERPRINT)) }}
+      # - name: Download cached game
+      #   uses: actions/cache@v5
+      #   id: game-cache
+      #   with:
+      #     path: temp/game
+      #     key: ${{ runner.os }}-${{ hashFiles(format('temp/game/{0}', env.FINGERPRINT)) }}
 
       - name: Download Steam game
-        if: steps.game-cache.outputs.cache-hit != 'true'
-        run: |
-          ./scripts/download_game.sh
+        # if: steps.game-cache.outputs.cache-hit != 'true'
+        run: scripts/download_game.sh
 
       # - name: Build
       #   run: bun run build-website
