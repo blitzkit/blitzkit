@@ -6,7 +6,7 @@
   .header {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-3);
 
     .upgrade-buttons {
       display: flex;

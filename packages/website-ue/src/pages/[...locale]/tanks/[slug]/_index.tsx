@@ -42,6 +42,7 @@ export const Page = withErrorWrapper(
         <div className={styles.sandbox}>
           <TankopediaSandbox />
         </div>
+
         <div className={styles.stats}>
           <TankopediaLoadout characteristics={characteristics} />
         </div>

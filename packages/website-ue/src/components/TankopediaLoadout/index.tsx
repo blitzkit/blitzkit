@@ -37,12 +37,14 @@ import styles from "./index.module.css";
 import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 import { Tooltip } from "../Tooltip";
 import { useGameStrings } from "../../hooks/useGameStrings";
+import { TankopediaCollapsible } from "../TankopediaCollapsible";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
 }
 
 export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
+  const strings = useStrings();
   const tank = useProtagonist();
 
   const showModules = tank.tank!.upgrade_lines.some(
@@ -51,9 +53,15 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
 
   return (
     <>
-      {showModules && <Modules />}
-      <Equipment />
-      {/*<Consumables characteristics={characteristics} />*/}
+      <TankopediaCollapsible title={strings.tanks.loadout.title}>
+        {showModules && <Modules />}
+        <Equipment />
+        <Consumables characteristics={characteristics} />
+      </TankopediaCollapsible>
+
+      <TankopediaCollapsible title={strings.tanks.characteristics.title}>
+        lmao
+      </TankopediaCollapsible>
     </>
   );
 }

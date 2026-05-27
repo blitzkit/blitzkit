@@ -198,7 +198,12 @@
   },
 
   "tanks": {
+    "characteristics": {
+      "title": "Characteristics"
+    },
+
     "loadout": {
+      "title": "Loadout",
       "modules": "Modules",
       "equipment": "Equipment",
       "alternative": "Alt"
