@@ -16,6 +16,5 @@ export enum TankopediaCompare {
 
 export const Tankopedia = new Varuna<Tankopedia, Tank>((tank) => ({
   compare: TankopediaCompare.TierAndClass,
-
   protagonist: createTankState(tank),
 }));

@@ -5,9 +5,11 @@ import { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
 import type { StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import {
+  ClockIcon,
   CornerBottomLeftIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
+  ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
@@ -26,7 +28,7 @@ import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { useTierPrices } from "../../hooks/useTierPrices";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
-import { Tankopedia } from "../../stores/tankopedia";
+import { Tankopedia, TankopediaCompare } from "../../stores/tankopedia";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
@@ -38,13 +40,15 @@ import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteri
 import { Tooltip } from "../Tooltip";
 import { useGameStrings } from "../../hooks/useGameStrings";
 import { TankopediaCollapsible } from "../TankopediaCollapsible";
+import type { ConsumableComponent } from "@protos/blitz_static_consumable_component";
+import { Tank } from "@protos/tank";
+import { select } from "three/src/nodes/math/ConditionalNode.js";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
 }
 
 export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
-  const strings = useStrings();
   const tank = useProtagonist();
 
   const showModules = tank.tank!.upgrade_lines.some(
@@ -53,15 +57,9 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
 
   return (
     <>
-      <TankopediaCollapsible title={strings.tanks.loadout.title}>
-        {showModules && <Modules />}
-        <Equipment />
-        <Consumables characteristics={characteristics} />
-      </TankopediaCollapsible>
-
-      <TankopediaCollapsible title={strings.tanks.characteristics.title}>
-        lmao
-      </TankopediaCollapsible>
+      {showModules && <Modules />}
+      <Equipment />
+      <Consumables characteristics={characteristics} />
     </>
   );
 }
@@ -71,21 +69,88 @@ interface ConsumablesProps {
 }
 
 function Consumables({ characteristics }: ConsumablesProps) {
+  const strings = useStrings();
   const consumables = useConsumables();
-  const tierPrices = useTierPrices();
   const tank = useProtagonist();
   const isCompatible = useCompatibility(tank, characteristics);
 
-  return Object.entries(consumables.consumables).map(
-    ([id, { compatibility, consumable, purchase }]) => {
-      if (!isCompatible(compatibility!)) return null;
+  return (
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.consumables}</Heading>
 
-      return (
-        <span>
-          {id} {JSON.stringify(consumable, null, 2)}
-        </span>
-      );
-    },
+        <IconButton
+          color="red"
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              draft.protagonist.consumables = [];
+            });
+          }}
+        >
+          <TrashIcon />
+        </IconButton>
+      </div>
+
+      <div className={styles.consumables}>
+        {Object.entries(consumables.consumables).map(
+          ([id, { compatibility, consumable, purchase }]) => {
+            if (!isCompatible(compatibility!)) return null;
+            return <Consumable id={id} consumable={consumable!} />;
+          },
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface ConsumableProps {
+  id: string;
+  consumable: ConsumableComponent;
+}
+
+function Consumable({ id, consumable }: ConsumableProps) {
+  const gameStrings = useGameStrings("ConsumableEntity");
+  const isSelected = Tankopedia.use((state) =>
+    state.protagonist.consumables.includes(id),
+  );
+
+  return (
+    <Tooltip tooltip={gameStrings[consumable!.name_key]}>
+      <Button
+        radius="1"
+        variant={isSelected ? "surface" : "soft"}
+        color={isSelected ? undefined : "gray"}
+        className={styles.consumable}
+        onClick={() => {
+          Tankopedia.mutate((draft) => {
+            const index = draft.protagonist.consumables.indexOf(id);
+
+            if (index === -1) {
+              draft.protagonist.consumables.push(id);
+            } else {
+              draft.protagonist.consumables.splice(index, 1);
+            }
+          });
+        }}
+      >
+        <img src={`/media/consumables/${id}.webp`} />
+        <div className={styles.info}>
+          <Text lowContrast size="minor">
+            <div className={styles.entry}>
+              <ClockIcon />
+              10s
+            </div>
+          </Text>
+
+          <Text lowContrast size="minor">
+            <div className={styles.entry}>
+              <ResetIcon />
+              10s
+            </div>
+          </Text>
+        </div>
+      </Button>
+    </Tooltip>
   );
 }
 

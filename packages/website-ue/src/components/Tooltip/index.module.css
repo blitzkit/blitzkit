@@ -20,9 +20,7 @@
     white-space: nowrap;
   }
 
-  &:hover,
-  &:active,
-  &:focus-within {
+  &:hover {
     .text {
       display: block;
     }

@@ -23,6 +23,7 @@ export function createTankState({ tank, id }: Tank) {
     id,
 
     equipment: {},
+    consumables: [],
 
     upgrades,
     alternates,

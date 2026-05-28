@@ -13,6 +13,36 @@
     }
   }
 
+  .consumables {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+
+    .consumable {
+      font-size: var(--space-5);
+
+      img {
+        width: 1em;
+        height: 1em;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+
+        .entry {
+          display: flex;
+          gap: var(--space-2);
+
+          svg {
+            width: 1em;
+            height: 1em;
+          }
+        }
+      }
+    }
+  }
+
   .equipment {
     display: flex;
     flex-direction: column;
