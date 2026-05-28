@@ -1,6 +1,8 @@
 import { Fragment, useMemo } from "react";
 import { api } from "../../../../api/dynamic";
+import { TankopediaCharacteristics } from "../../../../components/TankopediaCharacteristics";
 import { TankopediaLoadout } from "../../../../components/TankopediaLoadout";
+import { TankopediaSandbox } from "../../../../components/TankopediaSandbox";
 import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../hocs/withLocale";
 import { useAwait } from "../../../../hooks/useAwait";
@@ -10,9 +12,6 @@ import { Tankopedia } from "../../../../stores/tankopedia";
 import { characteristicsOrder } from "../../../../tankopedia/characteristicsOrder";
 import { computeCharacteristics } from "../../../../tankopedia/computeCharacteristics";
 import styles from "./_index.module.css";
-import { TankopediaSandbox } from "../../../../components/TankopediaSandbox";
-import { TankopediaNavigation } from "../../../../components/TankopediaNavigation";
-import { TankopediaCharacteristics } from "../../../../components/TankopediaCharacteristics";
 
 interface PageProps {
   id: string;
@@ -23,8 +22,6 @@ export const Page = withErrorWrapper(
     const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
     Tankopedia.useInitialization(protagonistTank);
-
-    // const renderCharacteristic = useCharacteristicRenderer();
 
     const protagonist = Tankopedia.use((state) => state.protagonist);
     const protagonistEquipment = useEquipment(protagonistTank.tank!);
@@ -41,14 +38,13 @@ export const Page = withErrorWrapper(
 
     return (
       <div className={styles.page}>
+        <div className={styles.loadout}>
+          <TankopediaLoadout characteristics={characteristics} />
+        </div>
+
         <div className={styles.sandbox}>
           <TankopediaSandbox />
           <TankopediaCharacteristics />
-          <TankopediaNavigation />
-        </div>
-
-        <div className={styles.stats}>
-          <TankopediaLoadout characteristics={characteristics} />
         </div>
       </div>
     );

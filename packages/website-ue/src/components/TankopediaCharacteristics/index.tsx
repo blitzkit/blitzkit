@@ -1,21 +1,17 @@
 import { CaretDownIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { useStrings } from "../../hooks/useStrings";
+import { Tankopedia } from "../../stores/tankopedia";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
   type CharacteristicsGroup,
 } from "../../tankopedia/characteristicsOrder";
-import styles from "./index.module.css";
 import { Heading } from "../Heading";
-import { Tankopedia, TankopediaTab } from "../../stores/tankopedia";
-import { useStrings } from "../../hooks/useStrings";
+import styles from "./index.module.css";
 
 export function TankopediaCharacteristics() {
-  const isVisible = Tankopedia.use(
-    (state) => state.tab === TankopediaTab.Characteristics,
-  );
-
   return (
-    <div className={styles.characteristics} data-visible={isVisible}>
+    <div className={styles.characteristics}>
       {characteristicsOrder.map((group) => (
         <Group {...group} />
       ))}

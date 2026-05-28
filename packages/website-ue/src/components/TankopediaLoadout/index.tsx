@@ -1,5 +1,7 @@
 import { romanize } from "@blitzkit/core";
+import type { ConsumableComponent } from "@protos/blitz_static_consumable_component";
 import type { BlitzStaticEquipmentPresetComponent_EquipmentSlot } from "@protos/blitz_static_equipment_preset_component";
+import type { BlitzStaticPurchaseComponent } from "@protos/blitz_static_purchase_component";
 import { Grade } from "@protos/blitz_static_standard_grades_enum";
 import { StandardPrice } from "@protos/blitz_static_standard_price";
 import type { UpgradeLine } from "@protos/blitz_static_tank_upgrade_line";
@@ -24,26 +26,20 @@ import {
 import { useCompatibility } from "../../hooks/useCompatibility";
 import { useConsumables } from "../../hooks/useConsumables";
 import { useEquipment } from "../../hooks/useEquipment";
+import { useGameStrings } from "../../hooks/useGameStrings";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { useTierPrices } from "../../hooks/useTierPrices";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
-import { Tankopedia, TankopediaCompare } from "../../stores/tankopedia";
+import { Tankopedia } from "../../stores/tankopedia";
+import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
 import { Price } from "../Price";
-import { Section } from "../Section";
 import { Text } from "../Text";
-import styles from "./index.module.css";
-import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 import { Tooltip } from "../Tooltip";
-import { useGameStrings } from "../../hooks/useGameStrings";
-import { TankopediaCollapsible } from "../TankopediaCollapsible";
-import type { ConsumableComponent } from "@protos/blitz_static_consumable_component";
-import { Tank } from "@protos/tank";
-import { select } from "three/src/nodes/math/ConditionalNode.js";
-import type { BlitzStaticPurchaseComponent } from "@protos/blitz_static_purchase_component";
+import styles from "./index.module.css";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;

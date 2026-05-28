@@ -6,7 +6,6 @@ import { characteristicsOrder } from "../tankopedia/characteristicsOrder";
 
 interface Tankopedia {
   compare: TankopediaCompare;
-  tab: TankopediaTab;
   groups: Record<string, boolean>;
 
   protagonist: TankState;
@@ -18,11 +17,6 @@ export enum TankopediaCompare {
   All,
 }
 
-export enum TankopediaTab {
-  Tank,
-  Characteristics,
-}
-
 const groups: Record<string, boolean> = {};
 
 for (const { group } of characteristicsOrder) {
@@ -31,7 +25,6 @@ for (const { group } of characteristicsOrder) {
 
 export const Tankopedia = new Varuna<Tankopedia, Tank>((tank) => ({
   compare: TankopediaCompare.TierAndClass,
-  tab: TankopediaTab.Characteristics,
   groups,
 
   protagonist: createTankState(tank),

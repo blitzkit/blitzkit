@@ -1,22 +1,21 @@
-import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import styles from "./index.module.css";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three-stdlib";
-import { Tankopedia } from "../../stores/tankopedia";
-import { TankopediaTab } from "../../stores/tankopedia";
+import styles from "./index.module.css";
 
 export function TankopediaSandbox() {
-  const isVisible = Tankopedia.use((state) => state.tab === TankopediaTab.Tank);
-
   return (
-    <div className={styles.sandbox} data-visible={isVisible}>
-      <Canvas
-        shadows
-        className={styles.canvas}
-        frameloop={isVisible ? "always" : "never"}
-      >
-        {!import.meta.env.SSR && <Content />}
-      </Canvas>
+    <div className={styles.wrapper}>
+      <div className={styles.sandbox}>
+        <Canvas
+          // scene={{ fog: new Fog("black", 15, 40) }}
+          shadows
+          className={styles.canvas}
+          frameloop="demand"
+        >
+          {!import.meta.env.SSR && <Content />}
+        </Canvas>
+      </div>
     </div>
   );
 }
@@ -34,8 +33,8 @@ function Content() {
       <pointLight castShadow position={[3, 10, 5]} intensity={1000} />
 
       <mesh receiveShadow position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial color="green" />
+        <planeGeometry args={[2 ** 8, 2 ** 8]} />
+        <meshStandardMaterial color="black" />
       </mesh>
 
       <OrbitControls />

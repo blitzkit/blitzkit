@@ -4,13 +4,12 @@
   display: flex;
 
   .sandbox {
-    position: relative;
-
     flex-grow: 1;
-    background-color: black;
+
+    overflow-y: auto;
   }
 
-  .stats {
+  .loadout {
     display: flex;
     flex-direction: column;
 
@@ -18,5 +17,7 @@
     padding: var(--space-5);
 
     overflow-y: auto;
+
+    background-color: var(--gray-2);
   }
 }
