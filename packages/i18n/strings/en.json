@@ -202,6 +202,20 @@
   },
 
   "tanks": {
+    "characteristics": {
+      "titles": {
+        "meta": "Meta",
+        "firepower": "Firepower",
+        "maneuverability": "Maneuverability",
+        "survivability": "Survivability"
+      }
+    },
+
+    "navigation": {
+      "tank": "Tank",
+      "characteristics": "Characteristics"
+    },
+
     "loadout": {
       "consumables": "Consumables",
       "modules": "Modules",

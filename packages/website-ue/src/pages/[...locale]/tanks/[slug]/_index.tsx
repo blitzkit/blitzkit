@@ -11,6 +11,8 @@ import { characteristicsOrder } from "../../../../tankopedia/characteristicsOrde
 import { computeCharacteristics } from "../../../../tankopedia/computeCharacteristics";
 import styles from "./_index.module.css";
 import { TankopediaSandbox } from "../../../../components/TankopediaSandbox";
+import { TankopediaNavigation } from "../../../../components/TankopediaNavigation";
+import { TankopediaCharacteristics } from "../../../../components/TankopediaCharacteristics";
 
 interface PageProps {
   id: string;
@@ -41,6 +43,8 @@ export const Page = withErrorWrapper(
       <div className={styles.page}>
         <div className={styles.sandbox}>
           <TankopediaSandbox />
+          <TankopediaCharacteristics />
+          <TankopediaNavigation />
         </div>
 
         <div className={styles.stats}>

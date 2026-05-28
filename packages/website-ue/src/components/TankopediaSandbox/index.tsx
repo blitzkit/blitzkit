@@ -2,11 +2,19 @@ import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import styles from "./index.module.css";
 import { GLTFLoader } from "three-stdlib";
+import { Tankopedia } from "../../stores/tankopedia";
+import { TankopediaTab } from "../../stores/tankopedia";
 
 export function TankopediaSandbox() {
+  const isVisible = Tankopedia.use((state) => state.tab === TankopediaTab.Tank);
+
   return (
-    <div className={styles.sandbox}>
-      <Canvas shadows className={styles.canvas}>
+    <div className={styles.sandbox} data-visible={isVisible}>
+      <Canvas
+        shadows
+        className={styles.canvas}
+        frameloop={isVisible ? "always" : "never"}
+      >
         {!import.meta.env.SSR && <Content />}
       </Canvas>
     </div>

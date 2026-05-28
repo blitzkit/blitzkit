@@ -29,7 +29,7 @@ export interface CharacteristicRenderConfig {
   }) => ReactNode;
 }
 
-type CharacteristicsOrder = {
+export type CharacteristicsGroup = {
   group: string;
   order: (
     | CharacteristicRenderConfig
@@ -37,9 +37,9 @@ type CharacteristicsOrder = {
         toy: string;
       }
   )[];
-}[];
+};
 
-export const characteristicsOrder: CharacteristicsOrder = [
+export const characteristicsOrder: CharacteristicsGroup[] = [
   {
     group: "meta",
     order: [
