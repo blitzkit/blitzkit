@@ -43,6 +43,7 @@ import { TankopediaCollapsible } from "../TankopediaCollapsible";
 import type { ConsumableComponent } from "@protos/blitz_static_consumable_component";
 import { Tank } from "@protos/tank";
 import { select } from "three/src/nodes/math/ConditionalNode.js";
+import type { BlitzStaticPurchaseComponent } from "@protos/blitz_static_purchase_component";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
@@ -95,7 +96,13 @@ function Consumables({ characteristics }: ConsumablesProps) {
         {Object.entries(consumables.consumables).map(
           ([id, { compatibility, consumable, purchase }]) => {
             if (!isCompatible(compatibility!)) return null;
-            return <Consumable id={id} consumable={consumable!} />;
+            return (
+              <Consumable
+                id={id}
+                consumable={consumable!}
+                purchase={purchase!}
+              />
+            );
           },
         )}
       </div>
@@ -106,51 +113,72 @@ function Consumables({ characteristics }: ConsumablesProps) {
 interface ConsumableProps {
   id: string;
   consumable: ConsumableComponent;
+  purchase: BlitzStaticPurchaseComponent;
 }
 
-function Consumable({ id, consumable }: ConsumableProps) {
+function Consumable({ id, consumable, purchase }: ConsumableProps) {
   const gameStrings = useGameStrings("ConsumableEntity");
   const isSelected = Tankopedia.use((state) =>
     state.protagonist.consumables.includes(id),
   );
+  const tank = useProtagonist();
+  const tierPrices = useTierPrices();
+
+  const price = useMemo(() => {
+    const { prices } = tierPrices.prices[purchase.price_per_tier_catalog_id];
+
+    for (const { tier_catalog_id, unlock_price } of prices) {
+      if (tier_catalog_id === tank.tank!.tier_catalog_id) {
+        return unlock_price;
+      }
+    }
+
+    throw new Error(
+      `No price found for tier catalog id ${tank.tank!.tier_catalog_id}`,
+    );
+  }, [tank.id, purchase.price_per_tier_catalog_id]);
 
   return (
-    <Tooltip tooltip={gameStrings[consumable!.name_key]}>
-      <Button
-        radius="1"
-        variant={isSelected ? "surface" : "soft"}
-        color={isSelected ? undefined : "gray"}
-        className={styles.consumable}
-        onClick={() => {
-          Tankopedia.mutate((draft) => {
-            const index = draft.protagonist.consumables.indexOf(id);
+    <div className={styles["consumable-wrapper"]}>
+      <Tooltip tooltip={gameStrings[consumable!.name_key]}>
+        <Button
+          radius="1"
+          variant={isSelected ? "surface" : "soft"}
+          color={isSelected ? undefined : "gray"}
+          className={styles.consumable}
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              const index = draft.protagonist.consumables.indexOf(id);
 
-            if (index === -1) {
-              draft.protagonist.consumables.push(id);
-            } else {
-              draft.protagonist.consumables.splice(index, 1);
-            }
-          });
-        }}
-      >
-        <img src={`/media/consumables/${id}.webp`} />
-        <div className={styles.info}>
-          <Text lowContrast size="minor">
-            <div className={styles.entry}>
-              <ClockIcon />
-              10s
-            </div>
-          </Text>
+              if (index === -1) {
+                draft.protagonist.consumables.push(id);
+              } else {
+                draft.protagonist.consumables.splice(index, 1);
+              }
+            });
+          }}
+        >
+          <img src={`/media/consumables/${id}.webp`} />
+          <div className={styles.info}>
+            <Text lowContrast size="minor">
+              <div className={styles.entry}>
+                <ClockIcon />
+                10s
+              </div>
+            </Text>
 
-          <Text lowContrast size="minor">
-            <div className={styles.entry}>
-              <ResetIcon />
-              10s
-            </div>
-          </Text>
-        </div>
-      </Button>
-    </Tooltip>
+            <Text lowContrast size="minor">
+              <div className={styles.entry}>
+                <ResetIcon />
+                10s
+              </div>
+            </Text>
+          </div>
+        </Button>
+      </Tooltip>
+
+      <Price price={price} />
+    </div>
   );
 }
 
@@ -484,8 +512,8 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
   }
 
   return (
-    <Tooltip tooltip={gameStrings[stage.display_name]}>
-      <div className={styles.wrapper}>
+    <div className={styles.wrapper}>
+      <Tooltip tooltip={gameStrings[stage.display_name]}>
         <Button
           className={styles.stage}
           color={isSelected ? undefined : "gray"}
@@ -569,9 +597,9 @@ function LineElement({ index, lineName, stage }: LineElementProps) {
               : romanize(stage.number)}
           </Text>
         </Button>
+      </Tooltip>
 
-        {<Price className={styles.price} price={price} />}
-      </div>
-    </Tooltip>
+      {<Price className={styles.price} price={price} />}
+    </div>
   );
 }

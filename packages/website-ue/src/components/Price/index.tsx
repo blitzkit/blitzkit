@@ -6,23 +6,35 @@ import { useLocale } from "../../hooks/useLocale";
 import { classNames } from "../../ui/classNames";
 import { Text } from "../Text";
 import styles from "./index.module.css";
+import { useStrings } from "../../hooks/useStrings";
 
 interface PriceProps extends ComponentProps<"div"> {
-  price: StandardPrice;
+  price?: StandardPrice;
 }
 
 export function Price({ price, className, ...props }: PriceProps) {
+  const strings = useStrings();
+  const normalized =
+    price === undefined
+      ? []
+      : price.price_list.filter(
+          (entry) =>
+            entry.currency_price === undefined ||
+            entry.currency_price.amount !== 0,
+        );
+
   return (
     <div className={classNames(styles.price, className)} {...props}>
-      {price.price_list.map((entry, index) => (
+      {normalized.map((entry, index) => (
         <PriceEntry key={index} entry={entry} />
       ))}
 
-      {price.price_list.length === 0 && (
-        <Text className={styles.entry} lowContrast>
-          Free
-        </Text>
-      )}
+      {price === undefined ||
+        (normalized.length === 0 && (
+          <Text className={styles.entry} lowContrast>
+            {strings.price.free}
+          </Text>
+        ))}
     </div>
   );
 }
