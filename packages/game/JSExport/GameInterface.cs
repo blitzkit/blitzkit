@@ -11,6 +11,10 @@ using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.JavaScript.NodeApi;
 using SkiaSharp;
+using CUE4Parse.UE4.AssetRegistry.Objects;
+using CUE4Parse.UE4.Readers;
+using CUE4Parse.UE4.AssetRegistry.Readers;
+using CUE4Parse.UE4.AssetRegistry;
 
 namespace BlitzKit.Game.JSExport;
 
@@ -24,7 +28,7 @@ public partial class GameInterface
 
   public GameInterface(string directory, string map, string temp)
   {
-    provider = new(directory, map);
+    provider = new(directory, map, temp);
 
     files = [.. provider.Files.Keys];
 
@@ -38,10 +42,6 @@ public partial class GameInterface
         .Where(nation => !nation.EndsWith(".uasset") && nation != "TankStub")
         .Distinct(),
     ];
-
-    string oodlePath = $"{temp}/oodle.so";
-    OodleHelper.DownloadOodleDll(ref oodlePath!);
-    OodleHelper.Initialize(oodlePath);
   }
 
   public HashSet<string> Files => files;
@@ -121,6 +121,13 @@ public partial class GameInterface
 
     Console.WriteLine($"No flag found for {nation}");
     return [];
+  }
+
+  public byte[] ConsumableIcon(string tag)
+  {
+    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+    var icon = pda.Get<FSoftObjectPath>("Icon");
+    return provider.Image(icon);
   }
 
   private static readonly string equipmentPDAPrefix =
