@@ -130,43 +130,10 @@ public partial class GameInterface
     return provider.Image(icon);
   }
 
-  private static readonly string equipmentPDAPrefix =
-    "Blitz/Content/TanksStuff/Equipment/PDA_Equipment";
-  private static readonly string equipmentPDASuffix = ".uasset";
-
-  public byte[] EquipmentIcon(string[] names)
+  public byte[] EquipmentIcon(string tag)
   {
-    List<string> candidates = [];
-
-    foreach (var name in names)
-    {
-      candidates.AddRange([
-        $"{equipmentPDAPrefix}{name}{equipmentPDASuffix}",
-        $"{equipmentPDAPrefix}_{name}{equipmentPDASuffix}",
-      ]);
-    }
-
-    string? candidate = null;
-    foreach (var c in candidates)
-    {
-      if (!files.Contains(c))
-      {
-        continue;
-      }
-
-      candidate = c;
-      break;
-    }
-
-    if (candidate is null)
-    {
-      Console.WriteLine($"No equipment pda found for {string.Join(", ", names)}");
-      return [];
-    }
-
-    var pda = provider.PDA(candidate);
+    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
     var icon = pda.Get<FSoftObjectPath>("Icon");
-
     return provider.Image(icon);
   }
 }

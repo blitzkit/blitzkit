@@ -4,7 +4,7 @@ import { notFoundResponse } from "../../../api/responses";
 import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { game } from "../../../game/game";
 import { getStaticPaths as _getStaticPaths } from "../_index";
-import { assetsDiscovery } from "../../../game/assetsDiscovery";
+import { assertDiscoveryTag } from "../../../game/assertDiscoveryTag";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   return api.metadata
@@ -18,13 +18,9 @@ const HACK_nameMap: Record<string, string> = {
 
 export function GET({ params }: APIContext<never, { id: string }>) {
   const item = api.metadata.item(params.id);
-  const names = assetsDiscovery(item, HACK_nameMap);
-  const icon = game!.equipmentIcon(names);
-
-  if (icon.length === 0) {
-    return notFoundResponse;
-  }
-
+  const assetsDiscovery = item.BlitzStaticAssetsDiscovery();
+  const tag = assertDiscoveryTag(assetsDiscovery);
+  const icon = game!.equipmentIcon(tag);
   const array = new Uint8Array(icon);
 
   return new Response(array);
