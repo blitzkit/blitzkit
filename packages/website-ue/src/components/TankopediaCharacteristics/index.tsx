@@ -7,6 +7,7 @@ import {
   type CharacteristicsGroup,
 } from "../../tankopedia/characteristicsOrder";
 import { Heading } from "../Heading";
+import { Text } from "../Text";
 import styles from "./index.module.css";
 
 export function TankopediaCharacteristics() {
@@ -29,7 +30,11 @@ function Group({ group, order }: CharacteristicsGroup) {
         <Heading className={styles.title} size="3">
           <div className={styles["title-content"]}>
             {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
-            {strings.tanks.characteristics.titles[group]}
+            {
+              (strings.tanks.characteristics.titles as Record<string, string>)[
+                group
+              ]
+            }
           </div>
         </Heading>
 
@@ -49,10 +54,27 @@ interface ToyProps {
   toy: string;
 }
 
-function Toy({ toy }: ToyProps) {
-  return <span className={styles.toy}></span>;
+function Item({ name }: CharacteristicRenderConfig) {
+  return (
+    <span className={styles.item}>
+      <div className={styles.value}>
+        <Text lowContrast>{name}</Text>
+        <Text>123</Text>
+      </div>
+
+      <div className={styles.ranking}>
+        <div className={styles["bar-wrapper"]}>
+          <div className={styles.bar} />
+        </div>
+
+        <Text lowContrast size="minor" className={styles.number}>
+          1 / 132
+        </Text>
+      </div>
+    </span>
+  );
 }
 
-function Item({ name }: CharacteristicRenderConfig) {
-  return <span className={styles.item}></span>;
+function Toy({ toy }: ToyProps) {
+  return <span className={styles.toy}></span>;
 }

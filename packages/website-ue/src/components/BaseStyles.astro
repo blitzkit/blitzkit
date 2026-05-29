@@ -19,6 +19,7 @@ import "@fontsource-variable/roboto-flex";
     --page-width: 64rem;
 
     --max-size: max(100vw, 100vh);
+    --radius-max: var(--max-size);
 
     --font-size-regular: 1rem;
     --font-size-minor: 0.75rem;
@@ -106,7 +107,7 @@ import "@fontsource-variable/roboto-flex";
     }
 
     &[data-radius="max"] {
-      border-radius: var(--max-size);
+      border-radius: var(--radius-max);
     }
   }
 </style>
