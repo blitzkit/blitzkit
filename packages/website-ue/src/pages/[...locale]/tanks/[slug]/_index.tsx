@@ -44,7 +44,7 @@ export const Page = withErrorWrapper(
 
         <div className={styles.sandbox}>
           <TankopediaSandbox />
-          <TankopediaCharacteristics />
+          <TankopediaCharacteristics characteristics={characteristics} />
         </div>
       </div>
     );

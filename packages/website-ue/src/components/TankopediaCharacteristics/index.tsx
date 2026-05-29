@@ -1,27 +1,41 @@
 import { CaretDownIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { useCharacteristicRenderer } from "../../hooks/useCharacteristicRenderer";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
+import type { CharacteristicOutput } from "../../tankopedia/characteristics";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
   type CharacteristicsGroup,
 } from "../../tankopedia/characteristicsOrder";
+import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 import { Heading } from "../Heading";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
-export function TankopediaCharacteristics() {
+interface TankopediaCharacteristicsProps {
+  characteristics: ComputedCharacteristics;
+}
+
+export function TankopediaCharacteristics({
+  characteristics,
+}: TankopediaCharacteristicsProps) {
   return (
     <div className={styles.characteristics}>
       {characteristicsOrder.map((group) => (
-        <Group {...group} />
+        <Group group={group} characteristics={characteristics} />
       ))}
     </div>
   );
 }
 
-function Group({ group, order }: CharacteristicsGroup) {
-  const isOpen = Tankopedia.use((state) => state.groups[group]);
+interface GroupProps {
+  group: CharacteristicsGroup;
+  characteristics: ComputedCharacteristics;
+}
+
+function Group({ group, characteristics }: GroupProps) {
+  const isOpen = Tankopedia.use((state) => state.groups[group.group]);
   const strings = useStrings();
 
   return (
@@ -32,7 +46,7 @@ function Group({ group, order }: CharacteristicsGroup) {
             {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
             {
               (strings.tanks.characteristics.titles as Record<string, string>)[
-                group
+                group.group
               ]
             }
           </div>
@@ -42,20 +56,26 @@ function Group({ group, order }: CharacteristicsGroup) {
       </div>
 
       <div className={styles.content}>
-        {order.map((item) =>
-          "toy" in item ? <Toy {...item} /> : <Item {...item} />,
+        {group.order.map((item) =>
+          "toy" in item ? (
+            <Toy {...item} />
+          ) : (
+            <Item config={item} value={characteristics[item.name]} />
+          ),
         )}
       </div>
     </div>
   );
 }
 
-interface ToyProps {
-  toy: string;
+interface ItemProps {
+  config: CharacteristicRenderConfig;
+  value: CharacteristicOutput;
 }
 
-function Item({ name }: CharacteristicRenderConfig) {
+function Item({ config, value }: ItemProps) {
   const strings = useStrings();
+  const renderCharacteristic = useCharacteristicRenderer();
 
   return (
     <span className={styles.item}>
@@ -63,11 +83,11 @@ function Item({ name }: CharacteristicRenderConfig) {
         <Text lowContrast>
           {
             (strings.tanks.characteristics.items as Record<string, string>)[
-              name
+              config.name
             ]
           }
         </Text>
-        <Text>123</Text>
+        <Text>{renderCharacteristic(value, config)}</Text>
       </div>
 
       <div className={styles.ranking}>
@@ -81,6 +101,10 @@ function Item({ name }: CharacteristicRenderConfig) {
       </div>
     </span>
   );
+}
+
+interface ToyProps {
+  toy: string;
 }
 
 function Toy({ toy }: ToyProps) {
