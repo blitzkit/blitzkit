@@ -1,5 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useLoader } from "@react-three/fiber";
+import { FogExp2 } from "three";
 import { GLTFLoader } from "three-stdlib";
 import styles from "./index.module.css";
 
@@ -8,7 +9,7 @@ export function TankopediaSandbox() {
     <div className={styles.wrapper}>
       <div className={styles.sandbox}>
         <Canvas
-          // scene={{ fog: new Fog("black", 15, 40) }}
+          scene={{ fog: new FogExp2("black", 0.05) }}
           shadows
           className={styles.canvas}
           frameloop="demand"
@@ -22,6 +23,11 @@ export function TankopediaSandbox() {
 
 function Content() {
   const gltf = useLoader(GLTFLoader, "/amogos.glb");
+
+  gltf.scene.traverse(child =>
+  {
+    child.castShadow = true;
+    })
 
   return (
     <>

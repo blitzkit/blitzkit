@@ -50,9 +50,9 @@ interface ToyProps {
 }
 
 function Toy({ toy }: ToyProps) {
-  return <span>{toy}</span>;
+  return <span className={styles.toy}></span>;
 }
 
 function Item({ name }: CharacteristicRenderConfig) {
-  return <span>{name}</span>;
+  return <span className={styles.item}></span>;
 }
