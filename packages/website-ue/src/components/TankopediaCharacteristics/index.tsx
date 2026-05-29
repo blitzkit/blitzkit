@@ -55,10 +55,18 @@ interface ToyProps {
 }
 
 function Item({ name }: CharacteristicRenderConfig) {
+  const strings = useStrings();
+
   return (
     <span className={styles.item}>
       <div className={styles.value}>
-        <Text lowContrast>{name}</Text>
+        <Text lowContrast>
+          {
+            (strings.tanks.characteristics.items as Record<string, string>)[
+              name
+            ]
+          }
+        </Text>
         <Text>123</Text>
       </div>
 

@@ -77,7 +77,7 @@ export class ClientAPI extends AbstractAPI {
     return fetchPB("/api/sets.pb", Sets);
   }
 
-  @Cache()
+  @Cache(true)
   async strings(locale: string) {
     const response = await fetch(`/api/strings/${locale}.json`);
     const json = (await response.json()) as Strings;

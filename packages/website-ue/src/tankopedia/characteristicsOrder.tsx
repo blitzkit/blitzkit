@@ -121,7 +121,6 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
       { toy: "flexibility" },
       { name: "gun_depression", decimals: 0, units: "deg" },
       { name: "gun_elevation", decimals: 0, units: "deg" },
-
     ],
   },
   {
@@ -150,6 +149,8 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
       { name: "view_range", units: "m" },
       { name: "camouflage", decimals: 0, units: "%" },
 
+      // TODO: implement width
+      // { name: "width", units: "m" },
       { name: "height", units: "m" },
       { name: "length", units: "m" },
       { name: "volume", units: "m" },
