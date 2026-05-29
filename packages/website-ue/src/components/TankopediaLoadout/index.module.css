@@ -13,6 +13,16 @@
     }
   }
 
+  .state {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+
+    .toggle {
+      font-size: 2em;
+    }
+  }
+
   .consumables {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

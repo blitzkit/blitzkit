@@ -263,6 +263,7 @@
     },
 
     "loadout": {
+      "state": "State",
       "consumables": "Consumables",
       "modules": "Modules",
       "equipment": "Equipment",
