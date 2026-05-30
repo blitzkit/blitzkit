@@ -1,6 +1,11 @@
 import type { Tank } from "@protos/tank";
 import { alternativeLines } from "../config/modules";
-import { TerrainHardness, type TankState } from "./tankState";
+import {
+  TerrainHardness,
+  vehicleStatusKeys,
+  type TankState,
+  type VehicleStatusKey,
+} from "./tankState";
 
 export function createTankState({ tank, id }: Tank) {
   const upgrades: Record<string, number> = {};
@@ -19,6 +24,12 @@ export function createTankState({ tank, id }: Tank) {
     }
   }
 
+  const status: Partial<Record<VehicleStatusKey, boolean>> = {};
+
+  for (const key of vehicleStatusKeys) {
+    status[key] = false;
+  }
+
   return {
     id,
 
@@ -32,10 +43,6 @@ export function createTankState({ tank, id }: Tank) {
     speed: 0,
     terrainHardness: TerrainHardness.Hard,
 
-    isShooting: false,
-    isGunDamaged: false,
-    isTurretTraversing: false,
-    isHullTraversing: false,
-    isCaughtOnFire: false,
+    status: status as Record<VehicleStatusKey, boolean>,
   } satisfies TankState;
 }

@@ -11,7 +11,6 @@ import {
   CornerBottomLeftIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
-  ExclamationTriangleIcon,
   ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
@@ -34,6 +33,7 @@ import { useTierPrices } from "../../hooks/useTierPrices";
 import { useUpgradePreset } from "../../hooks/useUpgradePreset";
 import { Tankopedia } from "../../stores/tankopedia";
 import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
+import { vehicleStatusKeys } from "../../tankopedia/tankState";
 import { Button } from "../Button";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
@@ -65,19 +65,7 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
 
 function State() {
   const strings = useStrings();
-  const isShooting = Tankopedia.use((state) => state.protagonist.isShooting);
-  const isGunDamaged = Tankopedia.use(
-    (state) => state.protagonist.isGunDamaged,
-  );
-  const isTurretTraversing = Tankopedia.use(
-    (state) => state.protagonist.isTurretTraversing,
-  );
-  const isHullTraversing = Tankopedia.use(
-    (state) => state.protagonist.isHullTraversing,
-  );
-  const isCaughtOnFire = Tankopedia.use(
-    (state) => state.protagonist.isCaughtOnFire,
-  );
+  const status = Tankopedia.use((state) => state.protagonist.status);
 
   return (
     <div className={styles.section}>
@@ -97,78 +85,22 @@ function State() {
       </div>
 
       <div className={styles.state}>
-        <IconButton
-          radius="1"
-          className={styles.toggle}
-          color={isShooting ? undefined : "gray"}
-          variant={isShooting ? "surface" : "soft"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.isShooting = !draft.protagonist.isShooting;
-            });
-          }}
-        >
-          <ExclamationTriangleIcon />
-        </IconButton>
-
-        <IconButton
-          radius="1"
-          className={styles.toggle}
-          color={isGunDamaged ? undefined : "gray"}
-          variant={isGunDamaged ? "surface" : "soft"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.isGunDamaged = !draft.protagonist.isGunDamaged;
-            });
-          }}
-        >
-          <ExclamationTriangleIcon />
-        </IconButton>
-
-        <IconButton
-          radius="1"
-          className={styles.toggle}
-          color={isTurretTraversing ? undefined : "gray"}
-          variant={isTurretTraversing ? "surface" : "soft"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.isTurretTraversing =
-                !draft.protagonist.isTurretTraversing;
-            });
-          }}
-        >
-          <ExclamationTriangleIcon />
-        </IconButton>
-
-        <IconButton
-          radius="1"
-          className={styles.toggle}
-          color={isHullTraversing ? undefined : "gray"}
-          variant={isHullTraversing ? "surface" : "soft"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.isHullTraversing =
-                !draft.protagonist.isHullTraversing;
-            });
-          }}
-        >
-          <ExclamationTriangleIcon />
-        </IconButton>
-
-        <IconButton
-          radius="1"
-          className={styles.toggle}
-          color={isCaughtOnFire ? undefined : "gray"}
-          variant={isCaughtOnFire ? "surface" : "soft"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.isCaughtOnFire =
-                !draft.protagonist.isCaughtOnFire;
-            });
-          }}
-        >
-          <ExclamationTriangleIcon />
-        </IconButton>
+        {vehicleStatusKeys.map((key) => (
+          <IconButton
+            key={key}
+            radius="1"
+            className={styles.toggle}
+            color={status[key] ? undefined : "gray"}
+            variant={status[key] ? "surface" : "soft"}
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.protagonist.status[key] = !draft.protagonist.status[key];
+              });
+            }}
+          >
+            <img src={`/media/status/${key}.svg`} />
+          </IconButton>
+        ))}
       </div>
     </div>
   );

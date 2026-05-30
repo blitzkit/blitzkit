@@ -17,9 +17,27 @@ export interface TankState {
   speed: number;
   terrainHardness: TerrainHardness;
 
-  isShooting: boolean;
-  isGunDamaged: boolean;
-  isTurretTraversing: boolean;
-  isHullTraversing: boolean;
-  isCaughtOnFire: boolean;
+  status: Record<VehicleStatusKey, boolean>;
 }
+
+export const vehicleStatusKeys = [
+  "commander_dead",
+  "gunner_dead",
+  "driver_dead",
+  "loader_dead",
+
+  "fuel_tank_damaged",
+  "engine_damaged",
+  "chassis_damaged",
+  "viewport_damaged",
+  "ammo_bay_damaged",
+  "gun_damaged",
+  "turret_damaged",
+
+  "caught_on_fire",
+  "shooting",
+  "turret_traversing",
+  "hull_traversing",
+] as const;
+
+export type VehicleStatusKey = (typeof vehicleStatusKeys)[number];
