@@ -21,23 +21,19 @@ export interface TankState {
 }
 
 export const vehicleStatusKeys = [
-  "commander_dead",
-  "gunner_dead",
-  "driver_dead",
-  "loader_dead",
+  ["commander_dead", "gunner_dead", "driver_dead", "loader_dead"],
 
-  "fuel_tank_damaged",
-  "engine_damaged",
-  "chassis_damaged",
-  "viewport_damaged",
-  "ammo_bay_damaged",
-  "gun_damaged",
-  "turret_damaged",
+  [
+    "fuel_tank_damaged",
+    "engine_damaged",
+    "chassis_damaged",
+    "viewport_damaged",
+    "ammo_bay_damaged",
+    "gun_damaged",
+    "turret_damaged",
+  ],
 
-  "caught_on_fire",
-  "shooting",
-  "turret_traversing",
-  "hull_traversing",
+  ["caught_on_fire", "shooting", "turret_traversing", "hull_traversing"],
 ] as const;
 
-export type VehicleStatusKey = (typeof vehicleStatusKeys)[number];
+export type VehicleStatusKey = (typeof vehicleStatusKeys)[number][number];

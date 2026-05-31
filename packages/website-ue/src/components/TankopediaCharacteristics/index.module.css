@@ -41,8 +41,8 @@
     }
 
     .content {
-      --cell-width: 3rem;
-      --toy-span: 5;
+      --cell-width: 2rem;
+      --toy-span: 6;
 
       display: grid;
       grid-auto-rows: var(--cell-width);
@@ -71,14 +71,14 @@
 
           .bar-wrapper {
             flex: 1;
-            height: var(--space-2);
+            height: var(--space-1);
 
             background-color: var(--gray-3);
             border-radius: var(--radius-max);
             overflow: hidden;
 
             .bar {
-              background-color: green;
+              background-color: var(--jade-9);
               width: 75%;
               height: 100%;
             }

@@ -84,22 +84,28 @@ function State() {
         </IconButton>
       </div>
 
-      <div className={styles.state}>
-        {vehicleStatusKeys.map((key) => (
-          <IconButton
-            key={key}
-            radius="1"
-            className={styles.toggle}
-            color={status[key] ? undefined : "gray"}
-            variant={status[key] ? "surface" : "soft"}
-            onClick={() => {
-              Tankopedia.mutate((draft) => {
-                draft.protagonist.status[key] = !draft.protagonist.status[key];
-              });
-            }}
-          >
-            <img src={`/media/status/${key}.svg`} />
-          </IconButton>
+      <div className={styles.states}>
+        {vehicleStatusKeys.map((group, index) => (
+          <div key={index} className={styles.group}>
+            {group.map((key) => (
+              <IconButton
+                key={key}
+                radius="1"
+                className={styles.state}
+                data-selected={status[key]}
+                color={status[key] ? "amber" : "gray"}
+                variant={status[key] ? "surface" : "soft"}
+                onClick={() => {
+                  Tankopedia.mutate((draft) => {
+                    draft.protagonist.status[key] =
+                      !draft.protagonist.status[key];
+                  });
+                }}
+              >
+                <img src={`/media/status/${key}.png`} />
+              </IconButton>
+            ))}
+          </div>
         ))}
       </div>
     </div>

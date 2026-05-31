@@ -13,13 +13,25 @@
     }
   }
 
-  .state {
+  .states {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
+    flex-direction: column;
+    gap: var(--space-2);
 
-    .toggle {
-      font-size: 2em;
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .state {
+        font-size: 1.25em;
+
+        &[data-selected="true"] {
+          img {
+            filter: sepia(1) saturate(10);
+          }
+        }
+      }
     }
   }
 

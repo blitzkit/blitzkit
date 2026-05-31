@@ -242,12 +242,12 @@ export const characteristics = {
     const maxSpeed = characteristic("speed_forward") as number;
 
     return (
-      (state.isGunDamaged ? gunDamaged : 1) *
+      (state.status.gun_damaged ? gunDamaged : 1) *
       (base +
         (state.speed / maxSpeed) * movement +
-        (state.isHullTraversing ? vehicleRotation : 0) +
-        (state.isTurretTraversing ? turretRotation : 0) +
-        (state.isShooting ? afterShot : 0))
+        (state.status.hull_traversing ? vehicleRotation : 0) +
+        (state.status.turret_traversing ? turretRotation : 0) +
+        (state.status.shooting ? afterShot : 0))
     );
   },
 
@@ -376,7 +376,7 @@ export const characteristics = {
       100 *
       base *
       (1 + moving * state.speed) *
-      (state.isShooting ? shooting : 1)
+      (state.status.shooting ? shooting : 1)
     );
   },
 
@@ -409,7 +409,7 @@ export const characteristics = {
   },
 
   id({ state }) {
-    return state.id;
+    return state.id.split(".").at(-1)!;
   },
 
   slug({ tank }) {
