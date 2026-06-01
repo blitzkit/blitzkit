@@ -419,4 +419,60 @@ export const characteristics = {
   compensation({ tank }) {
     return tank.compensation!.compensation?.currency_reward?.amount ?? null;
   },
+
+  purchase_price() {
+    return -Infinity;
+  },
+
+  upgrade_price() {
+    return -Infinity;
+  },
+
+  research_level() {
+    return -Infinity;
+  },
+
+  crew_xp_multiplier() {
+    return -Infinity;
+  },
+
+  clipping_potential() {
+    return -Infinity;
+  },
+
+  burst_size() {
+    return -Infinity;
+  },
+
+  intra_burst() {
+    return -Infinity;
+  },
+
+  dispersion_angle() {
+    return -Infinity;
+  },
+
+  gun_yaw_range() {
+    return -Infinity;
+  },
+
+  brake_force() {
+    return -Infinity;
+  },
+
+  gun_traverse_speed() {
+    return -Infinity;
+  },
+
+  fire_health_burn() {
+    return -Infinity;
+  },
+
+  ramming_resistance() {
+    return -Infinity;
+  },
+
+  width() {
+    return -Infinity;
+  },
 } satisfies Record<string, Characteristic>;

@@ -1,7 +1,6 @@
-import { CaretDownIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { GearIcon } from "@radix-ui/react-icons";
 import { useCharacteristicRenderer } from "../../hooks/useCharacteristicRenderer";
 import { useStrings } from "../../hooks/useStrings";
-import { Tankopedia } from "../../stores/tankopedia";
 import type { CharacteristicOutput } from "../../tankopedia/characteristics";
 import {
   characteristicsOrder,
@@ -9,7 +8,6 @@ import {
   type CharacteristicsGroup,
 } from "../../tankopedia/characteristicsOrder";
 import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
-import { Heading } from "../Heading";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
@@ -35,35 +33,35 @@ interface GroupProps {
 }
 
 function Group({ group, characteristics }: GroupProps) {
-  const isOpen = Tankopedia.use((state) => state.groups[group.group]);
   const strings = useStrings();
+  const toys = group.order.filter((item) => "toy" in item).length;
+  const items = group.order.filter((item) => "name" in item).length;
+  const span = `calc(${toys} * var(--group-span) + ${items} + 1)`;
 
   return (
-    <div className={styles.group}>
+    <div
+      className={styles.group}
+      style={{
+        gridRow: `span ${span}`,
+        gridTemplateRows: `repeat(${span}, 1fr)`,
+      }}
+    >
       <div className={styles["title-wrapper"]}>
-        <Heading className={styles.title} size="3">
-          <div className={styles["title-content"]}>
-            {isOpen ? <CaretDownIcon /> : <CaretRightIcon />}
-            {
-              (strings.tanks.characteristics.titles as Record<string, string>)[
-                group.group
-              ]
-            }
+        <Text className={styles.title}>
+          <div className={styles.content}>
+            {group.group}
+            <GearIcon />
           </div>
-        </Heading>
-
-        <div className={styles.separator} />
+        </Text>
       </div>
 
-      <div className={styles.content}>
-        {group.order.map((item) =>
-          "toy" in item ? (
-            <Toy {...item} />
-          ) : (
-            <Item config={item} value={characteristics[item.name]} />
-          ),
-        )}
-      </div>
+      {group.order.map((item) =>
+        "toy" in item ? (
+          <Toy {...item} />
+        ) : (
+          <Item config={item} value={characteristics[item.name]} />
+        ),
+      )}
     </div>
   );
 }
@@ -80,13 +78,7 @@ function Item({ config, value }: ItemProps) {
   return (
     <span className={styles.item}>
       <div className={styles.value}>
-        <Text lowContrast>
-          {
-            (strings.tanks.characteristics.items as Record<string, string>)[
-              config.name
-            ]
-          }
-        </Text>
+        <Text lowContrast>{config.name}</Text>
         <Text>{renderCharacteristic(value, config)}</Text>
       </div>
 
@@ -108,5 +100,11 @@ interface ToyProps {
 }
 
 function Toy({ toy }: ToyProps) {
-  return <span className={styles.toy}></span>;
+  return (
+    <div className={styles.toy}>
+      <div className={styles.content}>
+        <Text lowContrast>{toy} toy</Text>
+      </div>
+    </div>
+  );
 }
