@@ -204,10 +204,14 @@
   "tanks": {
     "characteristics": {
       "titles": {
-        "meta": "Meta",
-        "firepower": "Firepower",
+        "gun": "Gun",
+        "clip": "Clip",
+        "shell": "Shell",
+        "accuracy": "Accuracy",
+        "flexibility": "Flexibility",
         "maneuverability": "Maneuverability",
-        "survivability": "Survivability"
+        "survivability": "Survivability",
+        "concealment": "Concealment"
       },
 
       "items": {

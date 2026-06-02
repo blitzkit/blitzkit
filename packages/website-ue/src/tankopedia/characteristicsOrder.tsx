@@ -1,11 +1,5 @@
 import type { Strings } from "@blitzkit/i18n";
-import {
-  Nation,
-  TankClass,
-  TankType,
-} from "@protos/blitz_static_tank_component";
 import type { ReactNode } from "react";
-import { VintageIcon } from "../icons/Vintage";
 import {
   GunType,
   type CharacteristicName,
@@ -45,65 +39,65 @@ export enum CharacteristicsGroupRender {
 }
 
 export const characteristicsOrder: CharacteristicsGroup[] = [
-  {
-    group: "meta",
-    render: CharacteristicsGroupRender.Flashy,
-    order: [
-      {
-        name: "name",
-        strings: "TankEntity",
-        render({ output, gameStrings }) {
-          return gameStrings[output as string];
-        },
-      },
-      {
-        name: "class",
-        render({ output, strings }) {
-          return strings.classes.full[output as TankClass];
-        },
-      },
-      {
-        name: "type",
-        render({ output, strings }) {
-          return strings.types[output as TankType];
-        },
-      },
-      {
-        name: "nation",
-        render({ output, strings }) {
-          return strings.nations[output as Nation];
-        },
-      },
-      {
-        name: "tier",
-        render({ output, strings }) {
-          const name = output as string;
+  // {
+  //   group: "meta",
+  //   render: CharacteristicsGroupRender.Flashy,
+  //   order: [
+  //     {
+  //       name: "name",
+  //       strings: "TankEntity",
+  //       render({ output, gameStrings }) {
+  //         return gameStrings[output as string];
+  //       },
+  //     },
+  //     {
+  //       name: "class",
+  //       render({ output, strings }) {
+  //         return strings.classes.full[output as TankClass];
+  //       },
+  //     },
+  //     {
+  //       name: "type",
+  //       render({ output, strings }) {
+  //         return strings.types[output as TankType];
+  //       },
+  //     },
+  //     {
+  //       name: "nation",
+  //       render({ output, strings }) {
+  //         return strings.nations[output as Nation];
+  //       },
+  //     },
+  //     {
+  //       name: "tier",
+  //       render({ output, strings }) {
+  //         const name = output as string;
 
-          if (name == "vintage") {
-            return <VintageIcon />;
-          }
+  //         if (name == "vintage") {
+  //           return <VintageIcon />;
+  //         }
 
-          return strings.tiers[name as keyof typeof strings.tiers];
-        },
-      },
-      { name: "id" },
-      { name: "slug" },
-    ],
-  },
+  //         return strings.tiers[name as keyof typeof strings.tiers];
+  //       },
+  //     },
+  //     { name: "id" },
+  //     { name: "slug" },
+  //   ],
+  // },
 
-  {
-    group: "economics",
-    render: CharacteristicsGroupRender.Statistical,
-    order: [
-      { name: "purchase_price" },
-      { name: "compensation" },
-      { name: "upgrade_price" },
-      { name: "research_level" },
-      { name: "crew_xp_multiplier" },
+  // {
+  //   group: "economics",
+  //   render: CharacteristicsGroupRender.Statistical,
+  //   order: [
+  //     { name: "purchase_price" },
+  //     { name: "compensation" },
+  //     { name: "upgrade_price" },
+  //     { name: "research_level" },
+  //     { name: "crew_xp_multiplier" },
 
-      // TODO: investigate ATTRIBUTE_NAME_CREW_XP_MULTIPLIER
-    ],
-  },
+  //     // TODO: investigate ATTRIBUTE_NAME_CREW_XP_MULTIPLIER
+  //   ],
+  // },
 
   {
     group: "gun",

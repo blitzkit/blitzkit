@@ -20,10 +20,12 @@ const { id, locale } = Astro.props;
 ---
 
 <BaseLayout {locale} accent="violet">
-  <ColorScale color="red" />
-  <ColorScale color="jade" />
-  <ColorScale color="amber" />
   <ColorScale color="amber" alpha />
+
+  <ColorScale color="red" />
+  <ColorScale color="orange" />
+  <ColorScale color="amber" />
+  <ColorScale color="jade" />
 
   <Page {locale} {id} client:load />
 </BaseLayout>
