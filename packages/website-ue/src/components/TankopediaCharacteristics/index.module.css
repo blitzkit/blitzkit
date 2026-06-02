@@ -19,8 +19,6 @@
     grid-auto-rows: var(--cell-height);
     grid-auto-flow: dense;
 
-    gap: var(--cell-gap);
-
     box-sizing: border-box;
 
     .group {
@@ -60,18 +58,18 @@
 
       .content {
         margin: 0 var(--space-4);
-        padding: var(--space-0);
 
         gap: inherit;
         height: 100%;
 
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: inherit;
+        grid-auto-rows: inherit;
 
         .item {
           padding: 0 var(--space-3);
 
-          flex: 1;
+          grid-row: span 1;
 
           display: flex;
           flex-direction: column;
@@ -104,7 +102,7 @@
         }
 
         .toy {
-          flex: var(--group-span);
+          grid-row: span var(--group-span);
           padding: var(--space-4) 0;
 
           .sandbox {
