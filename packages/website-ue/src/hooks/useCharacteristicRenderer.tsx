@@ -1,13 +1,14 @@
+import { literalsArray } from "@blitzkit/i18n";
 import { useMemo, type ReactNode } from "react";
+import { Text } from "../components/Text";
 import type { CharacteristicOutput } from "../tankopedia/characteristics";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
 } from "../tankopedia/characteristicsOrder";
 import { useGameStrings } from "./useGameStrings";
-import { useStrings } from "./useStrings";
 import { useLocale } from "./useLocale";
-import { literals } from "@blitzkit/i18n";
+import { useStrings } from "./useStrings";
 
 export function useCharacteristicRenderer() {
   const groups = useMemo(() => {
@@ -39,7 +40,7 @@ export function useCharacteristicRenderer() {
 
     if (typeof characteristic === "number") {
       if (Number.isFinite(characteristic)) {
-        let value: string | number = characteristic;
+        let value: ReactNode = characteristic;
 
         if (config.decimals !== undefined) {
           value *= 10 ** config.decimals;
@@ -54,8 +55,9 @@ export function useCharacteristicRenderer() {
         }
 
         if (config.units !== undefined) {
-          // TODO: render units with lowContrast Text
-          value = literals(strings.units[config.units], { value });
+          value = literalsArray(strings.units[config.units], {
+            value: <Text>{value}</Text>,
+          });
         }
 
         return value;

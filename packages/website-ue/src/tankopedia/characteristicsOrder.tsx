@@ -110,7 +110,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
           return GunType[output as GunType];
         },
       },
-      { name: "dpm", decimals: 0, units: "hp_min", localize: true },
+      { name: "dpm", decimals: 0, units: "hp", localize: true },
       { name: "damage", units: "hp", localize: true },
       { name: "module_damage", units: "hp", localize: true },
       { name: "reload", decimals: 1, units: "s" },

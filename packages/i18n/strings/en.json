@@ -82,7 +82,6 @@
   },
 
   "units": {
-    "hp_min": "{value}hp/min",
     "s": "{value}s",
     "hp": "{value}hp",
     "mm": "{value}mm",

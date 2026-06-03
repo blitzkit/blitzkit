@@ -95,6 +95,7 @@ interface ItemProps {
 function Item({ config, value }: ItemProps) {
   const strings = useStrings();
   const renderCharacteristic = useCharacteristicRenderer();
+  const hasUnits = config.units !== undefined;
 
   return (
     <span className={styles.item}>
@@ -106,7 +107,12 @@ function Item({ config, value }: ItemProps) {
             ]
           }
         </Text>
-        <Text>{renderCharacteristic(value, config)}</Text>
+
+        <Text lowContrast={hasUnits} size={hasUnits ? "minor" : undefined}>
+          <div className={styles.units}>
+            {renderCharacteristic(value, config)}
+          </div>
+        </Text>
       </div>
 
       <div className={styles.ranking}>
