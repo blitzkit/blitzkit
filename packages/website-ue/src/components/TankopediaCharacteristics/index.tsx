@@ -58,7 +58,7 @@ function Group({ group, characteristics }: GroupProps) {
                   strings.tanks.characteristics.titles as Record<string, string>
                 )[group.group]
               }
-              {/*<GearIcon />*/}
+              <img src={`/media/groups/${group.group}.png`} />
             </div>
           </Heading>
         </div>
@@ -96,7 +96,13 @@ function Item({ config, value }: ItemProps) {
   return (
     <span className={styles.item}>
       <div className={styles.value}>
-        <Text lowContrast>{config.name}</Text>
+        <Text lowContrast>
+          {
+            (strings.tanks.characteristics.items as Record<string, string>)[
+              config.name
+            ]
+          }
+        </Text>
         <Text>{renderCharacteristic(value, config)}</Text>
       </div>
 

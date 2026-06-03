@@ -142,6 +142,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "penetration", units: "mm" },
+      { name: "penetration_loss" },
       { name: "shell_velocity", units: "m_s" },
       { name: "shell_range", units: "m" },
       { name: "shell_capacity" },
@@ -170,7 +171,8 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     order: [
       { name: "gun_depression", decimals: 0, units: "deg" },
       { name: "gun_elevation", decimals: 0, units: "deg" },
-      { name: "gun_yaw_range", decimals: 0, units: "deg" },
+      { name: "azimuth_left", decimals: 0, units: "deg" },
+      { name: "azimuth_right", decimals: 0, units: "deg" },
 
       { toy: "flexibility" },
     ],
@@ -186,9 +188,9 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
       { name: "engine_power", units: "bhp" },
       { name: "brake_force", units: "N" },
       { name: "weight", decimals: 1, units: "t" },
+      { name: "power_to_weight", decimals: 1, units: "bhp_t" },
 
       { name: "terrain_coefficient" },
-      { name: "power_to_weight", decimals: 1, units: "bhp_t" },
 
       { name: "hull_traverse_speed", units: "deg_s" },
       { name: "turret_traverse_speed", units: "deg_s" },
@@ -208,7 +210,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     order: [
       { name: "health", units: "hp" },
       { name: "fire_chance", units: "%" },
-      { name: "fire_health_burn", units: "hp_s" },
+      { name: "fire_rate", units: "hp_s" },
       { name: "ramming_resistance", units: "%" },
 
       { toy: "fire_health_burn" },
@@ -229,7 +231,6 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
       { name: "width", units: "m" },
       { name: "height", units: "m" },
       { name: "length", units: "m" },
-      { name: "volume", units: "m" },
     ],
   },
 ];

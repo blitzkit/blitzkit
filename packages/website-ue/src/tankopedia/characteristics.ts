@@ -345,17 +345,12 @@ export const characteristics = {
     );
   },
 
-  class({ tank }) {
-    return tank.tank!.tank_class;
-  },
-
-  camouflage({ attribute, characteristic, attributeSafe, state }) {
-    const tankClass = characteristic("class");
+  camouflage({ attribute, characteristic, attributeSafe, state, tank }) {
     const base = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_STILL,
     );
     const moving =
-      tankClass === TankClass.TANK_CLASS_LIGHT
+      tank.tank!.tank_class === TankClass.TANK_CLASS_LIGHT
         ? 0
         : attribute(
             TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_MOVING,
@@ -388,52 +383,8 @@ export const characteristics = {
     return -Infinity;
   },
 
-  volume() {
-    return -Infinity;
-  },
-
-  nation({ tank }) {
-    return tank.tank!.nation;
-  },
-
-  name({ tank }) {
-    return tank.tank!.name!.value;
-  },
-
-  tier({ tank }) {
-    return tank.tank!.tier_catalog_id;
-  },
-
-  type({ tank }) {
-    return tank.tank!.tank_type;
-  },
-
-  id({ state }) {
-    return state.id.split(".").at(-1)!;
-  },
-
-  slug({ tank }) {
-    return tank.slug;
-  },
-
   compensation({ tank }) {
     return tank.compensation!.compensation?.currency_reward?.amount ?? null;
-  },
-
-  purchase_price() {
-    return -Infinity;
-  },
-
-  upgrade_price() {
-    return -Infinity;
-  },
-
-  research_level() {
-    return -Infinity;
-  },
-
-  crew_xp_multiplier() {
-    return -Infinity;
   },
 
   clipping_potential() {
@@ -452,7 +403,11 @@ export const characteristics = {
     return -Infinity;
   },
 
-  gun_yaw_range() {
+  azimuth_left() {
+    return -Infinity;
+  },
+
+  azimuth_right() {
     return -Infinity;
   },
 
@@ -464,7 +419,7 @@ export const characteristics = {
     return -Infinity;
   },
 
-  fire_health_burn() {
+  fire_rate() {
     return -Infinity;
   },
 
@@ -473,6 +428,10 @@ export const characteristics = {
   },
 
   width() {
+    return -Infinity;
+  },
+
+  penetration_loss() {
     return -Infinity;
   },
 } satisfies Record<string, Characteristic>;
