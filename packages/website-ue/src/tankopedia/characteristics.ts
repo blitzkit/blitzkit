@@ -387,8 +387,16 @@ export const characteristics = {
     return tank.compensation!.compensation?.currency_reward?.amount ?? null;
   },
 
-  clipping_potential() {
-    return -Infinity;
+  clipping_potential({ characteristic }) {
+    const gunType = characteristic("gun_type")!;
+
+    if (gunType === GunType.Regular) return null;
+
+    const damage = characteristic("damage") as number;
+    const clipSize = characteristic("clip_size") as number;
+    const clipPotential = damage * clipSize;
+
+    return clipPotential;
   },
 
   burst_size() {

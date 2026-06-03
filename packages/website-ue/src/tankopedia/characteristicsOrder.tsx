@@ -124,7 +124,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     group: "clip",
     render: CharacteristicsGroupRender.Statistical,
     order: [
-      { name: "clipping_potential" },
+      { name: "clipping_potential", localize: true, units: "hp" },
       { name: "clip_size" },
       { name: "optimal_shell" },
       { name: "intra_clip", decimals: 2, units: "s" },
