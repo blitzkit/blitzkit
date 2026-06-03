@@ -90,10 +90,10 @@ jobs:
         # if: steps.game-cache.outputs.cache-hit != 'true'
         run: scripts/download_game.sh
 
-      # - name: Build
-      #   run: bun run build-website
-      #   env:
-      #     BUILD_CHUNK: ${{ matrix.chunk }}
+      - name: Build
+        run: bun run build-website
+        env:
+          BUILD_CHUNK: ${{ matrix.chunk }}
 
       # - name: Upload artifact
       #   id: upload
