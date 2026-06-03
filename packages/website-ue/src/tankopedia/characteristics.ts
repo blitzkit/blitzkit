@@ -8,6 +8,7 @@ import type { Tank } from "@protos/tank";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
+import { attribute } from "three/src/nodes/core/AttributeNode.js";
 
 export type CharacteristicOutput = number | number[] | string | null;
 
@@ -127,6 +128,8 @@ export const characteristics = {
   },
 
   dpm({ characteristic }) {
+    // TODO: add burst effect
+
     let dps: number;
     const gunType = characteristic("gun_type")!;
     const damage = characteristic("damage") as number;
@@ -399,12 +402,26 @@ export const characteristics = {
     return clipPotential;
   },
 
-  burst_size() {
-    return -Infinity;
+  burst_size({ attributeSafe }) {
+    const burstSize = attributeSafe(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BURST_SIZE,
+    );
+
+    if (burstSize === null || burstSize === 1) return null;
+
+    return burstSize;
   },
 
-  intra_burst() {
-    return -Infinity;
+  intra_burst({ characteristic, attribute }) {
+    const burstSize = characteristic("burst_size");
+
+    if (burstSize === null) return null;
+
+    const burstRate = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BURST_RATE,
+    );
+
+    return 60 / burstRate;
   },
 
   dispersion_angle({ characteristic }) {
