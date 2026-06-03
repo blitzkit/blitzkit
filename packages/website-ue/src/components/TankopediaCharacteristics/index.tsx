@@ -21,9 +21,16 @@ export function TankopediaCharacteristics({
   return (
     <div className={styles["characteristics-wrapper"]}>
       <div className={styles.characteristics}>
-        {characteristicsOrder.map((group) => (
-          <Group group={group} characteristics={characteristics} />
-        ))}
+        {characteristicsOrder.map((group) => {
+          const items = group.order.filter(
+            (item) => "name" in item && characteristics[item.name] !== null,
+          ).length;
+          const shouldRender = items > 0;
+
+          if (!shouldRender) return null;
+
+          return <Group group={group} characteristics={characteristics} />;
+        })}
       </div>
     </div>
   );

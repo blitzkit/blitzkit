@@ -1,5 +1,6 @@
 import { TankClass } from "@protos/blitz_static_tank_component";
 import {
+  ModuleUpgrade_AttributeName,
   ShellUpgradeSingleChange_AttributeName,
   StageParameters,
   TankAttributeChange_AttributeName,
@@ -8,7 +9,6 @@ import type { Tank } from "@protos/tank";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "./applyPitchYawLimits";
 import { TerrainHardness, type TankState } from "./tankState";
-import { attribute } from "three/src/nodes/core/AttributeNode.js";
 
 export type CharacteristicOutput = number | number[] | string | null;
 
@@ -458,7 +458,19 @@ export const characteristics = {
     return -Infinity;
   },
 
-  penetration_loss() {
-    return -Infinity;
+  penetration_loss_after_ricochet({ shell }) {
+    const loss = shell(
+      ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER_LOSS_AFTER_HIT,
+    );
+
+    return loss;
+  },
+
+  penetration_loss_by_distance({ attributeSafe }) {
+    const loss = attributeSafe(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_SHELLS_PIERCING_POWER_LOSS_REDUCTION,
+    );
+
+    return loss ?? 0;
   },
 } satisfies Record<string, Characteristic>;

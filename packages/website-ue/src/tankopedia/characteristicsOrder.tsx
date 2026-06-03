@@ -143,13 +143,14 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "penetration", units: "mm" },
-      { name: "penetration_loss" },
+      { name: "penetration_loss_by_distance" },
+      { name: "penetration_loss_after_ricochet" },
       { name: "shell_velocity", units: "m_s" },
       { name: "shell_range", units: "m" },
       { name: "shell_capacity" },
       { name: "caliber", units: "mm" },
-      { name: "normalization", units: "deg" },
       { name: "ricochet", units: "deg" },
+      { name: "normalization", units: "deg" },
 
       { toy: "ricochet" },
     ],
