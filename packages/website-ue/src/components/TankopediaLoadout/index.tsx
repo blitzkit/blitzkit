@@ -50,7 +50,7 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
   const tank = useProtagonist();
 
   const showModules = tank.tank!.upgrade_lines.some(
-    (line) => line.stages.length > 1 || line.name in alternativeLines,
+    (line) => line.stages.length > 1 || isAlternativeLine(line.name),
   );
 
   return (
