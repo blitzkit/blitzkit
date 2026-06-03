@@ -187,12 +187,12 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
       { name: "speed_forward", units: "km_h" },
       { name: "speed_backward", units: "km_h" },
 
-      { name: "engine_power", units: "bhp" },
-      { name: "brake_force", units: "N" },
       { name: "weight", decimals: 1, units: "t" },
+      { name: "engine_power", units: "bhp" },
       { name: "power_to_weight", decimals: 1, units: "bhp_t" },
+      { name: "brake_force", decimals: 1, units: "kN" },
 
-      { name: "terrain_coefficient" },
+      { name: "terrain_coefficient", decimals: 2 },
 
       { name: "hull_traverse_speed", units: "deg_s" },
       { name: "turret_traverse_speed", units: "deg_s" },

@@ -322,8 +322,11 @@ export const characteristics = {
     );
   },
 
-  hull_traverse_speed() {
-    return -Infinity;
+  hull_traverse_speed({ attribute }) {
+    const speed = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_HULL_ROTATION_SPEED,
+    );
+    return speed * (180 / Math.PI);
   },
 
   health({ attribute }) {
@@ -438,32 +441,46 @@ export const characteristics = {
     return -Infinity;
   },
 
-  brake_force() {
-    return -Infinity;
+  brake_force({ attribute }) {
+    const brakeForce = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_BRAKE_FORCE,
+    );
+
+    return brakeForce / 1000;
   },
 
-  gun_traverse_speed() {
-    return -Infinity;
+  gun_traverse_speed({ attribute }) {
+    const speed = attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_GUN_ROTATION_SPEED,
+    );
+    return speed;
   },
 
-  fire_rate() {
-    return -Infinity;
+  fire_rate({ attribute }) {
+    return attribute(
+      TankAttributeChange_AttributeName.ATTRIBUTE_NAME_HEALTH_BURN_PER_SEC,
+    );
   },
 
-  ramming_resistance() {
-    return -Infinity;
+  ramming_resistance({ attributeSafe }) {
+    const resistance =
+      attributeSafe(
+        TankAttributeChange_AttributeName.ATTRIBUTE_NAME_RAMMING_DAMAGE_RESISTANCE,
+      ) ?? 0;
+
+    return resistance * 100;
   },
 
   width() {
     return -Infinity;
   },
 
-  penetration_loss_after_ricochet({ shell }) {
-    const loss = shell(
+  penetration_loss_after_ricochet({ shellSafe }) {
+    const loss = shellSafe(
       ShellUpgradeSingleChange_AttributeName.ATTRIBUTE_NAME_PIERCING_POWER_LOSS_AFTER_HIT,
     );
 
-    return loss;
+    return loss ?? 0;
   },
 
   penetration_loss_by_distance({ attributeSafe }) {

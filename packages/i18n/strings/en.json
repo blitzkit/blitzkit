@@ -82,6 +82,8 @@
   },
 
   "units": {
+    "hp_s": "{value}hp/s",
+    "kN": "{value}kN",
     "s": "{value}s",
     "hp": "{value}hp",
     "mm": "{value}mm",
