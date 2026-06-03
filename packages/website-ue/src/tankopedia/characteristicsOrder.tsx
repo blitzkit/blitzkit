@@ -14,7 +14,8 @@ export enum BetterDirection {
 export interface CharacteristicRenderConfig {
   name: CharacteristicName;
   decimals?: number;
-  units?: string;
+  units?: keyof Strings["units"];
+  localize?: boolean;
   strings?: string;
   render?: (data: {
     output: CharacteristicOutput;
@@ -109,11 +110,11 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
           return GunType[output as GunType];
         },
       },
-      { name: "dpm", decimals: 0, units: "hp_min" },
-      { name: "damage", units: "hp" },
-      { name: "module_damage", units: "hp" },
-      { name: "reload", decimals: 2, units: "s" },
-      { name: "reloads", decimals: 2, units: "s" },
+      { name: "dpm", decimals: 0, units: "hp_min", localize: true },
+      { name: "damage", units: "hp", localize: true },
+      { name: "module_damage", units: "hp", localize: true },
+      { name: "reload", decimals: 1, units: "s" },
+      { name: "reloads", decimals: 1, units: "s" },
 
       { toy: "reload" },
     ],
@@ -160,7 +161,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
     order: [
       { name: "aim_time", decimals: 1, units: "s" },
       { name: "dispersion", decimals: 3, units: "m" },
-      { name: "dispersion_angle", decimals: 3, units: "m" },
+      { name: "dispersion_angle", decimals: 3, units: "deg" },
       { toy: "aim_time" },
     ],
   },

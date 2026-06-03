@@ -345,7 +345,7 @@ export const characteristics = {
     );
   },
 
-  camouflage({ attribute, characteristic, attributeSafe, state, tank }) {
+  camouflage({ attribute, attributeSafe, state, tank }) {
     const base = attribute(
       TankAttributeChange_AttributeName.ATTRIBUTE_NAME_CONCEALMENT_STILL,
     );
@@ -399,8 +399,10 @@ export const characteristics = {
     return -Infinity;
   },
 
-  dispersion_angle() {
-    return -Infinity;
+  dispersion_angle({ characteristic }) {
+    const dispersion = characteristic("dispersion") as number;
+    const angle = Math.atan2(dispersion / 2, 100) * (180 / Math.PI);
+    return angle;
   },
 
   azimuth_left() {

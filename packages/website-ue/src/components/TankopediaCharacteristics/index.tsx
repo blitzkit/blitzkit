@@ -37,7 +37,9 @@ interface GroupProps {
 function Group({ group, characteristics }: GroupProps) {
   const strings = useStrings();
   const toys = group.order.filter((item) => "toy" in item).length;
-  const items = group.order.filter((item) => "name" in item).length;
+  const items = group.order.filter(
+    (item) => "name" in item && characteristics[item.name] !== null,
+  ).length;
   const groupSpan = `calc(${toys} * var(--group-span) + ${items} + 2)`;
   const contentSpan = `calc(${toys} * var(--group-span) + ${items})`;
 
@@ -70,13 +72,14 @@ function Group({ group, characteristics }: GroupProps) {
           gridRow: `span ${contentSpan}`,
         }}
       >
-        {group.order.map((item) =>
-          "toy" in item ? (
-            <Toy {...item} />
-          ) : (
-            <Item config={item} value={characteristics[item.name]} />
-          ),
-        )}
+        {group.order.map((item) => (
+          <>
+            {"toy" in item && <Toy {...item} />}
+            {"name" in item && characteristics[item.name] !== null && (
+              <Item config={item} value={characteristics[item.name]} />
+            )}
+          </>
+        ))}
 
         <div className={styles.dead} />
       </div>
@@ -107,7 +110,7 @@ function Item({ config, value }: ItemProps) {
       </div>
 
       <div className={styles.ranking}>
-        <Bar value={Math.random()} />
+        <Bar value={0.5} />
 
         <Text lowContrast size="minor" className={styles.number}>
           1 / 132

@@ -6,6 +6,8 @@ import {
 } from "../tankopedia/characteristicsOrder";
 import { useGameStrings } from "./useGameStrings";
 import { useStrings } from "./useStrings";
+import { useLocale } from "./useLocale";
+import { literals } from "@blitzkit/i18n";
 
 export function useCharacteristicRenderer() {
   const groups = useMemo(() => {
@@ -22,6 +24,7 @@ export function useCharacteristicRenderer() {
     return groups;
   }, []);
 
+  const locale = useLocale();
   const strings = useStrings();
   const gameStrings = useGameStrings(groups);
 
@@ -36,11 +39,26 @@ export function useCharacteristicRenderer() {
 
     if (typeof characteristic === "number") {
       if (Number.isFinite(characteristic)) {
-        if (config.decimals === undefined) {
-          return characteristic.toString();
+        let value: string | number = characteristic;
+
+        if (config.decimals !== undefined) {
+          value *= 10 ** config.decimals;
+          value = Math.round(value);
+          value /= 10 ** config.decimals;
         }
 
-        return characteristic.toFixed(config.decimals);
+        if (config.localize) {
+          value = value.toLocaleString(locale);
+        } else {
+          value = value.toFixed(config.decimals);
+        }
+
+        if (config.units !== undefined) {
+          // TODO: render units with lowContrast Text
+          value = literals(strings.units[config.units], { value });
+        }
+
+        return value;
       }
 
       return `${characteristic < 0 ? "-" : ""}∞`;
