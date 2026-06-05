@@ -430,7 +430,7 @@ export class ServerAPI extends AbstractAPI {
     const backgrounds: Background[] = [];
 
     for (const item of this.metadata.group("ProfileBackgroundEntity")) {
-      backgrounds.push(await this.background(item.name));
+      backgrounds.push(await this.background(item.id));
     }
 
     return { backgrounds };
