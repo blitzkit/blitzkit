@@ -100,4 +100,18 @@ public partial class GameInterface
     var icon = pda.Get<FSoftObjectPath>("Icon");
     return provider.Image(icon);
   }
+
+
+  private readonly string[] tankPartEntries = ["DT_Chassis", "DT_Hulls", "DT_Turrets", "DT_Guns"];
+  public byte[] TankPart(string tag, string part)
+  {
+    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+
+    foreach (var entry in tankPartEntries) {
+      pda.Get<FSoftObjectPath>(entry);
+      // var icon = pda.Get<FSoftObjectPath>("Icon");
+    }
+
+    return [];
+  }
 }
