@@ -16,6 +16,12 @@ export default defineConfig({
       minifySyntax: false,
       minifyWhitespace: true,
     },
+
+    build: {
+      rollupOptions: {
+        external: ["@blitzkit/game"],
+      },
+    },
   },
   output: "static",
   site: "https://blitzkit.app",
@@ -25,18 +31,5 @@ export default defineConfig({
   build: { concurrency: 4 },
   adapter: undefined,
 
-  integrations: [
-    favicons({
-      name: strings.common.name,
-      short_name: strings.common.name,
-
-      background: mauveDark.mauve1,
-      themes: [mauve.mauve1, mauveDark.mauve1],
-      appleStatusBarStyle: "black-translucent",
-
-      version: packageJSON.version,
-    }),
-
-    react(),
-  ],
+  integrations: [favicons(), react()],
 });

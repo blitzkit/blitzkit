@@ -37,5 +37,5 @@ export async function GET({
   const tag = assertDiscoveryTag(assetDiscovery);
   const part = game!.tankPart(tag, params.part);
 
-  return Response.json(parts.length);
+  return Response.json(part.length);
 }
