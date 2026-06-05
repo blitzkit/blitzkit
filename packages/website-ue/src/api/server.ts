@@ -406,7 +406,7 @@ export class ServerAPI extends AbstractAPI {
   @Cache()
   async avatarList() {
     const avatars = await this.avatars();
-    const list = avatars.avatars.map((avatar) => avatar.name);
+    const list = avatars.avatars.map((avatar) => avatar.id);
 
     return { list };
   }
@@ -414,14 +414,13 @@ export class ServerAPI extends AbstractAPI {
   @Cache()
   async background(id: string) {
     const background = this.metadata.item(id);
-    const name = background.name;
     const stuff_ui = background.StuffUI("UIComponent");
     const profile_background = background.ProfileBackground();
     const sellable = background.components.sellableComponent
       ? background.Sellable()
       : undefined;
 
-    return { name, stuff_ui, profile_background, sellable };
+    return { id, stuff_ui, profile_background, sellable };
   }
 
   @Cache()

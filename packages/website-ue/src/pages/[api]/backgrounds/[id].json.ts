@@ -5,10 +5,7 @@ import { getStaticPaths as _getStaticPaths } from "../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const { backgrounds } = await api.backgrounds();
-
-  return backgrounds.map((background) => ({
-    params: { id: background.name },
-  }));
+  return backgrounds.map(({ id }) => ({ params: { id } }));
 });
 
 export async function GET({ params }: APIContext<never, { id: string }>) {
