@@ -1,8 +1,13 @@
 import type { APIContext } from "astro";
 import { api } from "../../../api/dynamic";
 import { imageProxy } from "../../../api/imageProxy";
+import { getStaticPaths as _getStaticPaths } from "../_index";
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 
-export { getStaticPaths } from "../../[api]/avatars/[id].json";
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const { avatars } = await api.avatars();
+  return avatars.map(({ id }) => ({ params: { id } }));
+});
 
 /**
  * Returns an avatar image based on its `id` in the `webp` format.
