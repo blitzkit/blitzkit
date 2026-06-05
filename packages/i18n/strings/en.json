@@ -272,7 +272,8 @@
     },
 
     "loadout": {
-      "state": "State",
+      "dynamics": "Dynamics",
+      "status": "Status",
       "consumables": "Consumables",
       "modules": "Modules",
       "equipment": "Equipment",

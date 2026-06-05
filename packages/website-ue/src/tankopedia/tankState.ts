@@ -17,6 +17,10 @@ export interface TankState {
   speed: number;
   terrainHardness: TerrainHardness;
 
+  isHullRotating: boolean;
+  isTurretRotating: boolean;
+  isGunRotating: boolean;
+
   status: Record<VehicleStatusKey, boolean>;
 }
 

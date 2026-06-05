@@ -1,5 +1,5 @@
 .characteristics-wrapper {
-  margin: 0 var(--space-4);
+  margin: var(--space-4);
 
   --base-cell-width: 20rem;
   --group-span: 7;

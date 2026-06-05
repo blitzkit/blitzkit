@@ -55,22 +55,25 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
 
   return (
     <>
-      <State />
       {showModules && <Modules />}
       <Equipment />
       <Consumables characteristics={characteristics} />
+      <State />
+      <Status />
     </>
   );
 }
 
 function State() {
   const strings = useStrings();
-  const status = Tankopedia.use((state) => state.protagonist.status);
+
+  const shell = Tankopedia.use((state) => state.protagonist.shell);
+  const speed = Tankopedia.use((state) => state.protagonist.speed);
 
   return (
     <div className={styles.section}>
       <div className={styles.header}>
-        <Heading size="4">{strings.tanks.loadout.state}</Heading>
+        <Heading size="4">{strings.tanks.loadout.dynamics}</Heading>
 
         <IconButton
           color="red"
@@ -84,7 +87,36 @@ function State() {
         </IconButton>
       </div>
 
-      <div className={styles.states}>
+      <div className={styles.state}>
+        <span>shell: {shell}</span>
+        <span>speed: {speed}</span>
+      </div>
+    </div>
+  );
+}
+
+function Status() {
+  const strings = useStrings();
+  const status = Tankopedia.use((state) => state.protagonist.status);
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.status}</Heading>
+
+        <IconButton
+          color="red"
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              draft.protagonist.consumables = [];
+            });
+          }}
+        >
+          <TrashIcon />
+        </IconButton>
+      </div>
+
+      <div className={styles.status}>
         {vehicleStatusKeys.map((group, index) => (
           <div key={index} className={styles.group}>
             {group.map((key) => (

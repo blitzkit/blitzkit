@@ -24,56 +24,20 @@ public partial class GameInterface
   private readonly BlitzFileProvider provider;
 
   public HashSet<string> files;
-  public string[] tanksDirectoryNations;
 
   public GameInterface(string directory, string map, string temp)
   {
     provider = new(directory, map, temp);
-
     files = [.. provider.Files.Keys];
-
-    var tanksBase = "Blitz/Content/Tanks/";
-    tanksDirectoryNations =
-    [
-      .. files
-        .Where(path => path.StartsWith(tanksBase))
-        .Select(path => path[tanksBase.Length..])
-        .Select(path => path.Split('/')[0])
-        .Where(nation => !nation.EndsWith(".uasset") && nation != "TankStub")
-        .Distinct(),
-    ];
   }
 
   public HashSet<string> Files => files;
-  public string[] TanksDirectoryNations => tanksDirectoryNations;
 
-  public byte[] TankBigIcon(string tankId, string pdaName)
+  public byte[] TankBigIcon(string tag)
   {
-    foreach (var nation in tanksDirectoryNations)
-    {
-      var path = $"Blitz/Content/Tanks/{nation}/{tankId}/{pdaName}.{pdaName}";
-
-      if (provider.TryLoadPackageObject<UPrimaryDataAsset>(path, out var pda))
-      {
-        var icon = pda.Get<FSoftObjectPath>("BigIcon");
-        var uTexture = icon.Load<UTexture2D>();
-        var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
-
-        if (cTexture is null)
-        {
-          Console.WriteLine($"No tank big icon found for {tankId} in {pdaName}");
-          return [];
-        }
-
-        var bitmap = cTexture.ToSkBitmap();
-        var data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
-
-        return data.ToArray();
-      }
-    }
-
-    Console.WriteLine($"No tank big icon found for {tankId} in {pdaName}");
-    return [];
+    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+    var icon = pda.Get<FSoftObjectPath>("BigIcon");
+    return provider.Image(icon);
   }
 
   [GeneratedRegex(@"T_UI_Flag_(\w+)_S")]
