@@ -5,10 +5,7 @@ import { getStaticPaths as _getStaticPaths } from "../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const { avatars } = await api.avatars();
-
-  return avatars.map((avatar) => ({
-    params: { id: avatar.name },
-  }));
+  return avatars.map(({ id }) => ({ params: { id } }));
 });
 
 /**

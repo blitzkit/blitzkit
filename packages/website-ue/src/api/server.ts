@@ -383,14 +383,13 @@ export class ServerAPI extends AbstractAPI {
   @Cache()
   async avatar(id: string) {
     const avatar = this.metadata.item(id);
-    const name = avatar.name;
     const stuff_ui = avatar.StuffUI("UIComponent");
     const profile_avatar = avatar.ProfileAvatar();
     const sellable = avatar.components.sellableComponent
       ? avatar.Sellable()
       : undefined;
 
-    return { name, stuff_ui, profile_avatar, sellable };
+    return { id, stuff_ui, profile_avatar, sellable };
   }
 
   @Cache()
