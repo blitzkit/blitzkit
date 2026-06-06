@@ -4,9 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-  # schedule:
-  #   - cron: "0 4 * * *"
-
 permissions:
   contents: read
   pages: write
@@ -75,36 +72,10 @@ jobs:
           bun run setup
           ./scripts/setup_depot_downloader.sh
 
-      - name: Download fingerprint
-        run: |
-          ./scripts/download_fingerprint.sh
-
-      # - name: Download cached game
-      #   uses: actions/cache@v5
-      #   id: game-cache
-      #   with:
-      #     path: temp/game
-      #     key: ${{ runner.os }}-${{ hashFiles(format('temp/game/{0}', env.FINGERPRINT)) }}
-
       - name: Download Steam game
-        # if: steps.game-cache.outputs.cache-hit != 'true'
         run: scripts/download_game.sh
 
       - name: Build
         run: bun run build-website
         env:
           BUILD_CHUNK: ${{ matrix.chunk }}
-
-      # - name: Upload artifact
-      #   id: upload
-      #   uses: actions/upload-pages-artifact@v4
-      #   with:
-      #     path: dist/website
-
-      # - name: Trigger target repository
-      #   run: |
-      #     curl -X POST \
-      #     -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-      #     -H "Accept: application/vnd.github.v3+json" \
-      #     https://github.com \
-      #     -d '{ "event_type": "deploy-pages", "client_payload": { "artifact_url": "${{ steps.upload.outputs.artifact_url }}" } }'

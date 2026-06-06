@@ -67,7 +67,6 @@ public partial class BlitzFileProvider : DefaultFileProvider
 
   public T Discovered<T>(string path) where T : UObject
   {
-    Console.WriteLine(discovered[path]);
     return LoadPackageObject<T>(discovered[path]);
   }
 

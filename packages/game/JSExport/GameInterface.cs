@@ -15,6 +15,11 @@ using CUE4Parse.UE4.AssetRegistry.Objects;
 using CUE4Parse.UE4.Readers;
 using CUE4Parse.UE4.AssetRegistry.Readers;
 using CUE4Parse.UE4.AssetRegistry;
+using CUE4Parse.UE4.Assets.Exports.Engine;
+using CUE4Parse.UE4.Assets.Objects;
+using CUE4Parse.UE4.Assets.Exports.StaticMesh;
+using CUE4Parse_Conversion.Meshes;
+using CUE4Parse_Conversion;
 
 namespace BlitzKit.Game.JSExport;
 
@@ -102,16 +107,44 @@ public partial class GameInterface
   }
 
 
-  private readonly string[] tankPartEntries = ["DT_Chassis", "DT_Hulls", "DT_Turrets", "DT_Guns"];
+  readonly Dictionary<string, string> tankPartPrefixes = new()
+  {
+    {"chassis", "DT_Chassis"},
+    {"hull", "DT_Hulls"},
+    {"turret", "DT_Turrets"},
+    {"gun", "DT_Guns"},
+  };
   public byte[] TankPart(string tag, string part)
   {
     var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+    UDataTable? dataTable = null;
 
-    foreach (var entry in tankPartEntries) {
-      pda.Get<FSoftObjectPath>(entry);
-      // var icon = pda.Get<FSoftObjectPath>("Icon");
+    foreach (var (prefix, name) in tankPartPrefixes)
+    {
+      if (!part.StartsWith(prefix)) { continue; }
+
+      dataTable = pda.Get<UDataTable>(name);
+      break;
     }
 
-    return [];
+    if (dataTable == null)
+    {
+      throw new ArgumentException($"Unknown tank part: {part}");
+    }
+
+    dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
+
+    if (row == null)
+    {
+      throw new ArgumentException($"Unknown tank part: {part}");
+    }
+
+    var visualData = row.Get<UObject>("VisualData");
+    var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
+    // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
+    var mesh = meshSettings.Get<UStaticMesh>("GunMesh");
+    var gltf = new MonoGltf(mesh);
+
+    return [.. gltf.Write()];
   }
 }
