@@ -1,150 +1,175 @@
 ﻿using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
+using CUE4Parse_Conversion;
+using CUE4Parse_Conversion.Meshes;
 using CUE4Parse_Conversion.Textures;
-using CUE4Parse.Compression;
+using CUE4Parse_Conversion.UEFormat.Enums;
 using CUE4Parse.UE4.Assets.Exports;
+using CUE4Parse.UE4.Assets.Exports.Engine;
+using CUE4Parse.UE4.Assets.Exports.StaticMesh;
 using CUE4Parse.UE4.Assets.Exports.Texture;
-using CUE4Parse.UE4.Assets.Objects.Properties;
-using CUE4Parse.UE4.IO.Objects;
+using CUE4Parse.UE4.Assets.Objects;
 using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.JavaScript.NodeApi;
 using SkiaSharp;
-using CUE4Parse.UE4.AssetRegistry.Objects;
-using CUE4Parse.UE4.Readers;
-using CUE4Parse.UE4.AssetRegistry.Readers;
-using CUE4Parse.UE4.AssetRegistry;
-using CUE4Parse.UE4.Assets.Exports.Engine;
-using CUE4Parse.UE4.Assets.Objects;
-using CUE4Parse.UE4.Assets.Exports.StaticMesh;
-using CUE4Parse_Conversion.Meshes;
-using CUE4Parse_Conversion;
 
 namespace BlitzKit.Game.JSExport;
 
 [JSExport]
 public partial class GameInterface
 {
-  private readonly BlitzFileProvider provider;
+    private readonly BlitzFileProvider provider;
+    private readonly BlitzExporter exporter;
 
-  public HashSet<string> files;
+    public HashSet<string> files;
 
-  public GameInterface(string directory, string map, string temp)
-  {
-    provider = new(directory, map, temp);
-    files = [.. provider.Files.Keys];
-  }
-
-  public HashSet<string> Files => files;
-
-  public byte[] TankBigIcon(string tag)
-  {
-    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-    var icon = pda.Get<FSoftObjectPath>("BigIcon");
-    return provider.Image(icon);
-  }
-
-  [GeneratedRegex(@"T_UI_Flag_(\w+)_S")]
-  private static partial Regex FlagNameRegex();
-
-  public byte[] Flag(string nation)
-  {
-    var flagsBase = "Blitz/Content/UI/Textures/Flag/TankCard/";
-
-    foreach (var path in provider.Files.Keys)
+    public GameInterface(string directory, string map, string temp)
     {
-      if (!path.StartsWith(flagsBase))
-      {
-        continue;
-      }
+        provider = new(directory, map, temp);
+        exporter = new();
 
-      var fileName = Path.GetFileNameWithoutExtension(path);
-      var match = FlagNameRegex().Match(fileName);
+        files = [.. provider.Files.Keys];
+    }
 
-      if (
-        match.Success
-        && match.Groups[1].Value.Equals(nation, StringComparison.CurrentCultureIgnoreCase)
-      )
-      {
-        if (provider.TryLoadPackageObject<UTexture2D>($"{path}.{fileName}", out var uTexture))
+    public HashSet<string> Files => files;
+
+    public byte[] TankBigIcon(string tag)
+    {
+        var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+        var icon = pda.Get<FSoftObjectPath>("BigIcon");
+        return provider.Image(icon);
+    }
+
+    [GeneratedRegex(@"T_UI_Flag_(\w+)_S")]
+    private static partial Regex FlagNameRegex();
+
+    public byte[] Flag(string nation)
+    {
+        var flagsBase = "Blitz/Content/UI/Textures/Flag/TankCard/";
+
+        foreach (var path in provider.Files.Keys)
         {
-          CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
+            if (!path.StartsWith(flagsBase))
+            {
+                continue;
+            }
 
-          if (cTexture is null)
-          {
-            Console.WriteLine($"No flag found for {nation}");
-            return [];
-          }
+            var fileName = Path.GetFileNameWithoutExtension(path);
+            var match = FlagNameRegex().Match(fileName);
 
-          SKBitmap bitmap = cTexture.ToSkBitmap();
-          SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+            if (
+                match.Success
+                && match.Groups[1].Value.Equals(nation, StringComparison.CurrentCultureIgnoreCase)
+            )
+            {
+                if (
+                    provider.TryLoadPackageObject<UTexture2D>(
+                        $"{path}.{fileName}",
+                        out var uTexture
+                    )
+                )
+                {
+                    CTexture? cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
 
-          return data.ToArray();
+                    if (cTexture is null)
+                    {
+                        Console.WriteLine($"No flag found for {nation}");
+                        return [];
+                    }
+
+                    SKBitmap bitmap = cTexture.ToSkBitmap();
+                    SKData data = bitmap.Encode(SKEncodedImageFormat.Webp, 80);
+
+                    return data.ToArray();
+                }
+
+                Console.WriteLine($"No flag found for {nation}");
+                return [];
+            }
         }
 
         Console.WriteLine($"No flag found for {nation}");
         return [];
-      }
     }
 
-    Console.WriteLine($"No flag found for {nation}");
-    return [];
-  }
-
-  public byte[] ConsumableIcon(string tag)
-  {
-    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-    var icon = pda.Get<FSoftObjectPath>("Icon");
-    return provider.Image(icon);
-  }
-
-  public byte[] EquipmentIcon(string tag)
-  {
-    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-    var icon = pda.Get<FSoftObjectPath>("Icon");
-    return provider.Image(icon);
-  }
-
-
-  readonly Dictionary<string, string> tankPartPrefixes = new()
-  {
-    {"chassis", "DT_Chassis"},
-    {"hull", "DT_Hulls"},
-    {"turret", "DT_Turrets"},
-    {"gun", "DT_Guns"},
-  };
-  public byte[] TankPart(string tag, string part)
-  {
-    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-    UDataTable? dataTable = null;
-
-    foreach (var (prefix, name) in tankPartPrefixes)
+    public byte[] ConsumableIcon(string tag)
     {
-      if (!part.StartsWith(prefix)) { continue; }
-
-      dataTable = pda.Get<UDataTable>(name);
-      break;
+        var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+        var icon = pda.Get<FSoftObjectPath>("Icon");
+        return provider.Image(icon);
     }
 
-    if (dataTable == null)
+    public byte[] EquipmentIcon(string tag)
     {
-      throw new ArgumentException($"Unknown tank part: {part}");
+        var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+        var icon = pda.Get<FSoftObjectPath>("Icon");
+        return provider.Image(icon);
     }
 
-    dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
-
-    if (row == null)
+    readonly Dictionary<string, string> tankPartPrefixes = new()
     {
-      throw new ArgumentException($"Unknown tank part: {part}");
+        { "chassis", "DT_Chassis" },
+        { "hull", "DT_Hulls" },
+        { "turret", "DT_Turrets" },
+        { "gun", "DT_Guns" },
+    };
+
+    public byte[] TankPart(string tag, string part)
+    {
+        var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+        UDataTable? dataTable = null;
+
+        foreach (var (prefix, name) in tankPartPrefixes)
+        {
+            if (!part.StartsWith(prefix))
+            {
+                continue;
+            }
+
+            dataTable = pda.Get<UDataTable>(name);
+            break;
+        }
+
+        if (dataTable == null)
+        {
+            throw new ArgumentException($"Unknown tank part: {part}");
+        }
+
+        dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
+
+        if (row == null)
+        {
+            throw new ArgumentException($"Unknown tank part: {part}");
+        }
+
+        var visualData = row.Get<UObject>("VisualData");
+        var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
+        // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
+        var mesh = meshSettings.Get<UStaticMesh>("GunMesh");
+        var gltf = new MonoGltf(mesh);
+
+        exporter.glb(mesh);
+
+        // var options = new ExporterOptions() {
+        //   LodFormat = ELodFormat.FirstLod,
+        //   MeshFormat = EMeshFormat.Gltf2,
+        //   TextureFormat = ETextureFormat.Jpeg,
+        // };
+        // var exporter = new MeshExporter(mesh, options);
+        // var lod0 = exporter.MeshLods[0];
+
+        // exporter.TryWriteToDir(new("../../temp/model"), out var _, out var _);
+
+        // Console.WriteLine(lod0.FileName);
+        // Console.WriteLine(lod0.FileData.Length);
+
+        // foreach (var material in lod0.Materials)
+        // {
+        //   material.ma
+        //   // material.TryWriteToDir
+        // }
+
+        return [];
     }
-
-    var visualData = row.Get<UObject>("VisualData");
-    var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-    // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
-    var mesh = meshSettings.Get<UStaticMesh>("GunMesh");
-    var gltf = new MonoGltf(mesh);
-
-    return [.. gltf.Write()];
-  }
 }

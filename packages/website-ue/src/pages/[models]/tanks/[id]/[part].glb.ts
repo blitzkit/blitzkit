@@ -36,6 +36,7 @@ export async function GET({
   const assetDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetDiscovery);
   const part = game!.tankPart(tag, params.part);
+  const array = new Uint8Array(part);
 
-  return Response.json(part.length);
+  return new Response(array);
 }

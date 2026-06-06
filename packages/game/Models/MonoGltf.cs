@@ -18,247 +18,269 @@ using SharpGLTF.Scenes;
 namespace BlitzKit.Game.Models;
 
 using ConfiguredMeshBuilder = MeshBuilder<
-  VertexPositionNormalTangent,
-  VertexColorXTextureX,
-  VertexEmpty
+    VertexPositionNormalTangent,
+    VertexColorXTextureX,
+    VertexEmpty
 >;
 
 public class MonoGltf
 {
-  readonly SceneBuilder Scene;
+    readonly SceneBuilder Scene;
 
-  public MonoGltf(UStaticMesh staticMesh)
-  {
-    Scene = new(staticMesh.Name);
-    ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
-    staticMesh.TryConvert(out var convertedMesh);
-    var lod =
-      convertedMesh.LODs.Find(lod => !lod.SkipLod) ?? throw new Exception("Failed to find lod0"); // first non-skippable lod is the highest quality
-
-    MaterialBuilder emptyMaterial = new("empty_material");
-    Dictionary<string, MaterialBuilder> namedMaterials = [];
-
-    int sectionIndex = 0;
-    foreach (var section in lod.Sections.Value)
+    public MonoGltf(UStaticMesh staticMesh)
     {
-      ConfiguredMeshBuilder meshBuilder = new($"{staticMesh.Name}_section_{sectionIndex}");
-      MaterialBuilder materialBuilder;
+        Scene = new(staticMesh.Name);
+        ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
+        staticMesh.TryConvert(out var convertedMesh);
+        var lod =
+            convertedMesh.LODs.Find(lod => !lod.SkipLod)
+            ?? throw new Exception("Failed to find lod0");
 
-      if (section.Material == null || section.MaterialName == null)
-      {
-        materialBuilder = emptyMaterial;
-      }
-      else if (namedMaterials.TryGetValue(section.MaterialName, out MaterialBuilder? value))
-      {
-        materialBuilder = value;
-      }
-      else
-      {
-        var materialInterface = section.Material.Load<UMaterialInterface>()!;
-        MaterialData materialData = new() { Textures = [], Parameters = new() };
-        materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
-        materialBuilder = new(section.MaterialName);
+        MaterialBuilder emptyMaterial = new("empty_material");
+        Dictionary<string, MaterialBuilder> namedMaterials = [];
 
-        foreach (var parameterTexture in materialData.Parameters.Textures)
+        int sectionIndex = 0;
+        foreach (var section in lod.Sections.Value)
         {
-          var texture = parameterTexture.Value;
+            ConfiguredMeshBuilder meshBuilder = new($"{staticMesh.Name}_section_{sectionIndex}");
+            MaterialBuilder materialBuilder;
 
-          if (
-            texture is not UTexture2D texture2d
-            || texture2d.Decode(options.Platform) is not { } bitmap
-          )
-            return;
-
-          try
-          {
-            switch (parameterTexture.Key)
+            if (section.Material == null || section.MaterialName == null)
             {
-              case "BaseColor":
-              {
-                var encoded = bitmap.Encode(options.TextureFormat, 100);
-                var bytes = encoded.ToArray();
-                materialBuilder.WithBaseColor(bytes);
+                materialBuilder = emptyMaterial;
+            }
+            else if (namedMaterials.TryGetValue(section.MaterialName, out MaterialBuilder? value))
+            {
+                materialBuilder = value;
+            }
+            else
+            {
+                var materialInterface = section.Material.Load<UMaterialInterface>()!;
+                MaterialData materialData = new() { Textures = [], Parameters = new() };
+                materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
+                materialBuilder = new(section.MaterialName);
 
-                break;
-              }
-
-              case "RM":
-              {
-                var encoded = bitmap.Encode(options.TextureFormat, 100);
-
-                for (int y = 0; y < bitmap.Height; y++)
+                foreach (var parameterTexture in materialData.Parameters.Textures)
                 {
-                  for (int x = 0; x < bitmap.Width; x++)
-                  {
-                    var index = y * bitmap.Width + x;
-                    var color = bitmap.Pixels[index];
-                    bitmap.Pixels[index] = new(color.Blue, color.Red, color.Green, color.Alpha);
-                  }
+                    var texture = parameterTexture.Value;
+
+                    if (
+                        texture is not UTexture2D texture2d
+                        || texture2d.Decode(options.Platform) is not { } bitmap
+                    )
+                        return;
+
+                    try
+                    {
+                        switch (parameterTexture.Key)
+                        {
+                            case "BaseColor":
+                            {
+                                var encoded = bitmap.Encode(
+                                    options.TextureFormat,
+                                    false,
+                                    out var _
+                                );
+                                var bytes = encoded.ToArray();
+                                materialBuilder.WithBaseColor(bytes);
+
+                                break;
+                            }
+
+                            case "RM":
+                            {
+                                var encoded = bitmap.Encode(
+                                    options.TextureFormat,
+                                    false,
+                                    out var _
+                                );
+
+                                // for (int y = 0; y < bitmap.Height; y++)
+                                // {
+                                //     for (int x = 0; x < bitmap.Width; x++)
+                                //     {
+                                //         var index = y * bitmap.Width + x;
+                                //         var color = bitmap.Pixels[index];
+                                //         bitmap.Pixels[index] = new(
+                                //             color.Blue,
+                                //             color.Red,
+                                //             color.Green,
+                                //             color.Alpha
+                                //         );
+                                //     }
+                                // }
+
+                                var bytes = encoded.ToArray();
+                                materialBuilder.WithBaseColor(bytes);
+
+                                break;
+                            }
+
+                            case "PM_SpecularMasks":
+                                // materialBuilder.WithSpecularGlossiness(textureBytes);
+                                break;
+
+                            case "PM_Diffuse":
+                                // materialBuilder.WithDiffuse(textureBytes);
+                                break;
+
+                            case "T_R90_IS_4_MISC":
+                            case "T_R90_IS_4_MASK":
+                            case "Misc":
+                            case "Mask":
+                                break;
+
+                            default:
+                                throw new Exception(
+                                    $"Unsupported texture type: {parameterTexture.Key}"
+                                );
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine($"Failed to load texture: {parameterTexture.Key}");
+                    }
+                }
+            }
+
+            var primitive = meshBuilder.UsePrimitive(materialBuilder);
+
+            for (int faceIndex = 0; faceIndex < section.NumFaces; faceIndex++)
+            {
+                var wedgeIndex = new int[3];
+                for (var k = 0; k < wedgeIndex.Length; k++)
+                {
+                    wedgeIndex[k] = (int)lod.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
                 }
 
-                var bytes = encoded.ToArray();
-                materialBuilder.WithBaseColor(bytes);
+                var vertex1 = lod.Verts[wedgeIndex[0]];
+                var vertex2 = lod.Verts[wedgeIndex[1]];
+                var vertex3 = lod.Verts[wedgeIndex[2]];
 
-                break;
-              }
+                var (v1, v2, v3) = PrepareTris(vertex1, vertex2, vertex3);
+                var (c1, c2, c3) = PrepareUVsAndTexCoords(
+                    lod,
+                    vertex1,
+                    vertex2,
+                    vertex3,
+                    wedgeIndex
+                );
 
-              case "PM_SpecularMasks":
-                // materialBuilder.WithSpecularGlossiness(textureBytes);
-                break;
-
-              case "PM_Diffuse":
-                // materialBuilder.WithDiffuse(textureBytes);
-                break;
-
-              case "T_R90_IS_4_MISC":
-              case "T_R90_IS_4_MASK":
-              case "Misc":
-              case "Mask":
-                break;
-
-              default:
-                throw new Exception($"Unsupported texture type: {parameterTexture.Key}");
+                primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
             }
-          }
-          catch
-          {
-            PrettyLog.Warn($"Failed to load texture: {parameterTexture.Key}");
-          }
+
+            Scene.AddRigidMesh(meshBuilder, Matrix4x4.Identity);
         }
-      }
-
-      var primitive = meshBuilder.UsePrimitive(materialBuilder);
-
-      for (int faceIndex = 0; faceIndex < section.NumFaces; faceIndex++)
-      {
-        var wedgeIndex = new int[3];
-        for (var k = 0; k < wedgeIndex.Length; k++)
-        {
-          wedgeIndex[k] = lod.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
-        }
-
-        var vertex1 = lod.Verts[wedgeIndex[0]];
-        var vertex2 = lod.Verts[wedgeIndex[1]];
-        var vertex3 = lod.Verts[wedgeIndex[2]];
-
-        var (v1, v2, v3) = PrepareTris(vertex1, vertex2, vertex3);
-        var (c1, c2, c3) = PrepareUVsAndTexCoords(lod, vertex1, vertex2, vertex3, wedgeIndex);
-
-        primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
-      }
-
-      Scene.AddRigidMesh(meshBuilder, Matrix4x4.Identity);
     }
-  }
 
-  public ArraySegment<byte> Write()
-  {
-    return Scene.ToGltf2().WriteGLB();
-  }
-
-  private static (
-    VertexPositionNormalTangent,
-    VertexPositionNormalTangent,
-    VertexPositionNormalTangent
-  ) PrepareTris(CMeshVertex vert1, CMeshVertex vert2, CMeshVertex vert3)
-  {
-    VertexPositionNormalTangent v1 = new(
-      SwapYZ(vert1.Position * 0.01f),
-      SwapYZAndNormalize((FVector)vert1.Normal),
-      SwapYZAndNormalize((Vector4)vert1.Tangent)
-    );
-    VertexPositionNormalTangent v2 = new(
-      SwapYZ(vert2.Position * 0.01f),
-      SwapYZAndNormalize((FVector)vert2.Normal),
-      SwapYZAndNormalize((Vector4)vert2.Tangent)
-    );
-    VertexPositionNormalTangent v3 = new(
-      SwapYZ(vert3.Position * 0.01f),
-      SwapYZAndNormalize((FVector)vert3.Normal),
-      SwapYZAndNormalize((Vector4)vert3.Tangent)
-    );
-
-    return (v1, v2, v3);
-  }
-
-  public static FVector SwapYZ(FVector vec)
-  {
-    var res = new FVector(vec.X, vec.Z, vec.Y);
-    return res;
-  }
-
-  public static FVector SwapYZAndNormalize(FVector vec)
-  {
-    var res = SwapYZ(vec);
-    res.Normalize();
-    return res;
-  }
-
-  public static Vector4 SwapYZAndNormalize(Vector4 vec)
-  {
-    return Vector4.Normalize(new Vector4(vec.X, vec.Z, vec.Y, vec.W));
-  }
-
-  public static (
-    VertexColorXTextureX,
-    VertexColorXTextureX,
-    VertexColorXTextureX
-  ) PrepareUVsAndTexCoords(
-    CBaseMeshLod lod,
-    CMeshVertex vert1,
-    CMeshVertex vert2,
-    CMeshVertex vert3,
-    int[] indices
-  )
-  {
-    return PrepareUVsAndTexCoords(
-      lod.VertexColors ?? new FColor[lod.NumVerts],
-      vert1,
-      vert2,
-      vert3,
-      lod.ExtraUV.Value,
-      indices
-    );
-  }
-
-  public static (
-    VertexColorXTextureX,
-    VertexColorXTextureX,
-    VertexColorXTextureX
-  ) PrepareUVsAndTexCoords(
-    FColor[] colors,
-    CMeshVertex vert1,
-    CMeshVertex vert2,
-    CMeshVertex vert3,
-    FMeshUVFloat[][] uvs,
-    int[] indices
-  )
-  {
-    var (uvs1, uvs2, uvs3) = PrepareUVs(vert1, vert2, vert3, uvs, indices);
-    var c1 = new VertexColorXTextureX((Vector4)colors[indices[0]] / 255, uvs1);
-    var c2 = new VertexColorXTextureX((Vector4)colors[indices[1]] / 255, uvs2);
-    var c3 = new VertexColorXTextureX((Vector4)colors[indices[2]] / 255, uvs3);
-    return (c1, c2, c3);
-  }
-
-  private static (List<Vector2>, List<Vector2>, List<Vector2>) PrepareUVs(
-    CMeshVertex vert1,
-    CMeshVertex vert2,
-    CMeshVertex vert3,
-    FMeshUVFloat[][] uvs,
-    int[] indices
-  )
-  {
-    var uvs1 = new List<Vector2>() { (Vector2)vert1.UV };
-    var uvs2 = new List<Vector2>() { (Vector2)vert2.UV };
-    var uvs3 = new List<Vector2>() { (Vector2)vert3.UV };
-    foreach (var uv in uvs)
+    public ArraySegment<byte> Write()
     {
-      uvs1.Add((Vector2)uv[indices[0]]);
-      uvs2.Add((Vector2)uv[indices[1]]);
-      uvs3.Add((Vector2)uv[indices[2]]);
+        return Scene.ToGltf2().WriteGLB();
     }
 
-    return (uvs1, uvs2, uvs3);
-  }
+    private static (
+        VertexPositionNormalTangent,
+        VertexPositionNormalTangent,
+        VertexPositionNormalTangent
+    ) PrepareTris(CMeshVertex vert1, CMeshVertex vert2, CMeshVertex vert3)
+    {
+        VertexPositionNormalTangent v1 = new(
+            SwapYZ(vert1.Position * 0.01f),
+            SwapYZAndNormalize((FVector)vert1.Normal),
+            SwapYZAndNormalize((Vector4)vert1.Tangent)
+        );
+        VertexPositionNormalTangent v2 = new(
+            SwapYZ(vert2.Position * 0.01f),
+            SwapYZAndNormalize((FVector)vert2.Normal),
+            SwapYZAndNormalize((Vector4)vert2.Tangent)
+        );
+        VertexPositionNormalTangent v3 = new(
+            SwapYZ(vert3.Position * 0.01f),
+            SwapYZAndNormalize((FVector)vert3.Normal),
+            SwapYZAndNormalize((Vector4)vert3.Tangent)
+        );
+
+        return (v1, v2, v3);
+    }
+
+    public static FVector SwapYZ(FVector vec)
+    {
+        var res = new FVector(vec.X, vec.Z, vec.Y);
+        return res;
+    }
+
+    public static FVector SwapYZAndNormalize(FVector vec)
+    {
+        var res = SwapYZ(vec);
+        res.Normalize();
+        return res;
+    }
+
+    public static Vector4 SwapYZAndNormalize(Vector4 vec)
+    {
+        return Vector4.Normalize(new Vector4(vec.X, vec.Z, vec.Y, vec.W));
+    }
+
+    public static (
+        VertexColorXTextureX,
+        VertexColorXTextureX,
+        VertexColorXTextureX
+    ) PrepareUVsAndTexCoords(
+        CBaseMeshLod lod,
+        CMeshVertex vert1,
+        CMeshVertex vert2,
+        CMeshVertex vert3,
+        int[] indices
+    )
+    {
+        return PrepareUVsAndTexCoords(
+            lod.VertexColors ?? new FColor[lod.NumVerts],
+            vert1,
+            vert2,
+            vert3,
+            lod.ExtraUV.Value,
+            indices
+        );
+    }
+
+    public static (
+        VertexColorXTextureX,
+        VertexColorXTextureX,
+        VertexColorXTextureX
+    ) PrepareUVsAndTexCoords(
+        FColor[] colors,
+        CMeshVertex vert1,
+        CMeshVertex vert2,
+        CMeshVertex vert3,
+        FMeshUVFloat[][] uvs,
+        int[] indices
+    )
+    {
+        var (uvs1, uvs2, uvs3) = PrepareUVs(vert1, vert2, vert3, uvs, indices);
+        var c1 = new VertexColorXTextureX((Vector4)colors[indices[0]] / 255, uvs1);
+        var c2 = new VertexColorXTextureX((Vector4)colors[indices[1]] / 255, uvs2);
+        var c3 = new VertexColorXTextureX((Vector4)colors[indices[2]] / 255, uvs3);
+        return (c1, c2, c3);
+    }
+
+    private static (List<Vector2>, List<Vector2>, List<Vector2>) PrepareUVs(
+        CMeshVertex vert1,
+        CMeshVertex vert2,
+        CMeshVertex vert3,
+        FMeshUVFloat[][] uvs,
+        int[] indices
+    )
+    {
+        var uvs1 = new List<Vector2>() { (Vector2)vert1.UV };
+        var uvs2 = new List<Vector2>() { (Vector2)vert2.UV };
+        var uvs3 = new List<Vector2>() { (Vector2)vert3.UV };
+        foreach (var uv in uvs)
+        {
+            uvs1.Add((Vector2)uv[indices[0]]);
+            uvs2.Add((Vector2)uv[indices[1]]);
+            uvs3.Add((Vector2)uv[indices[2]]);
+        }
+
+        return (uvs1, uvs2, uvs3);
+    }
 }
