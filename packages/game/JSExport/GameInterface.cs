@@ -20,14 +20,12 @@ namespace BlitzKit.Game.JSExport;
 public partial class GameInterface
 {
     private readonly BlitzFileProvider provider;
-    private readonly BlitzExporter exporter;
 
     public HashSet<string> files;
 
     public GameInterface(string directory, string map, string temp)
     {
         provider = new(directory, map, temp);
-        exporter = new();
 
         files = [.. provider.Files.Keys];
     }
@@ -149,27 +147,6 @@ public partial class GameInterface
         var mesh = meshSettings.Get<UStaticMesh>("GunMesh");
         var gltf = new MonoGltf(mesh);
 
-        exporter.glb(mesh);
-
-        // var options = new ExporterOptions() {
-        //   LodFormat = ELodFormat.FirstLod,
-        //   MeshFormat = EMeshFormat.Gltf2,
-        //   TextureFormat = ETextureFormat.Jpeg,
-        // };
-        // var exporter = new MeshExporter(mesh, options);
-        // var lod0 = exporter.MeshLods[0];
-
-        // exporter.TryWriteToDir(new("../../temp/model"), out var _, out var _);
-
-        // Console.WriteLine(lod0.FileName);
-        // Console.WriteLine(lod0.FileData.Length);
-
-        // foreach (var material in lod0.Materials)
-        // {
-        //   material.ma
-        //   // material.TryWriteToDir
-        // }
-
-        return [];
+        return [.. gltf.Write()];
     }
 }

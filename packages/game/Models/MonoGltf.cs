@@ -39,9 +39,13 @@ public class MonoGltf
         MaterialBuilder emptyMaterial = new("empty_material");
         Dictionary<string, MaterialBuilder> namedMaterials = [];
 
+        Console.WriteLine(lod.Sections.Value.Length);
+
         int sectionIndex = 0;
         foreach (var section in lod.Sections.Value)
         {
+            Console.WriteLine(section.MaterialName);
+
             ConfiguredMeshBuilder meshBuilder = new($"{staticMesh.Name}_section_{sectionIndex}");
             MaterialBuilder materialBuilder;
 
@@ -68,82 +72,74 @@ public class MonoGltf
                         texture is not UTexture2D texture2d
                         || texture2d.Decode(options.Platform) is not { } bitmap
                     )
-                        return;
-
-                    try
                     {
-                        switch (parameterTexture.Key)
-                        {
-                            case "BaseColor":
-                            {
-                                var encoded = bitmap.Encode(
-                                    options.TextureFormat,
-                                    false,
-                                    out var _
-                                );
-                                var bytes = encoded.ToArray();
-                                materialBuilder.WithBaseColor(bytes);
-
-                                break;
-                            }
-
-                            case "RM":
-                            {
-                                var encoded = bitmap.Encode(
-                                    options.TextureFormat,
-                                    false,
-                                    out var _
-                                );
-
-                                // for (int y = 0; y < bitmap.Height; y++)
-                                // {
-                                //     for (int x = 0; x < bitmap.Width; x++)
-                                //     {
-                                //         var index = y * bitmap.Width + x;
-                                //         var color = bitmap.Pixels[index];
-                                //         bitmap.Pixels[index] = new(
-                                //             color.Blue,
-                                //             color.Red,
-                                //             color.Green,
-                                //             color.Alpha
-                                //         );
-                                //     }
-                                // }
-
-                                var bytes = encoded.ToArray();
-                                materialBuilder.WithBaseColor(bytes);
-
-                                break;
-                            }
-
-                            case "PM_SpecularMasks":
-                                // materialBuilder.WithSpecularGlossiness(textureBytes);
-                                break;
-
-                            case "PM_Diffuse":
-                                // materialBuilder.WithDiffuse(textureBytes);
-                                break;
-
-                            case "T_R90_IS_4_MISC":
-                            case "T_R90_IS_4_MASK":
-                            case "Misc":
-                            case "Mask":
-                                break;
-
-                            default:
-                                throw new Exception(
-                                    $"Unsupported texture type: {parameterTexture.Key}"
-                                );
-                        }
+                        Console.WriteLine($"Failed to decode texture: {texture?.Name}");
+                        continue;
                     }
-                    catch
+
+                    switch (parameterTexture.Key)
                     {
-                        Console.WriteLine($"Failed to load texture: {parameterTexture.Key}");
+                        case "BaseColor":
+                        {
+                            var encoded = bitmap.Encode(options.TextureFormat, false, out var _);
+                            var bytes = encoded.ToArray();
+                            materialBuilder.WithBaseColor(bytes);
+
+                            break;
+                        }
+
+                        case "Normal":
+                        {
+                            var encoded = bitmap.Encode(options.TextureFormat, false, out var _);
+                            var bytes = encoded.ToArray();
+                            materialBuilder.WithNormal(bytes);
+
+                            break;
+                        }
+
+                        case "RMAO":
+                        {
+                            var encoded = bitmap.Encode(options.TextureFormat, false, out var _);
+
+                            // for (int y = 0; y < bitmap.Height; y++)
+                            // {
+                            //     for (int x = 0; x < bitmap.Width; x++)
+                            //     {
+                            //         var index = y * bitmap.Width + x;
+                            //         var color = bitmap.Pixels[index];
+                            //         bitmap.Pixels[index] = new(
+                            //             color.Blue,
+                            //             color.Red,
+                            //             color.Green,
+                            //             color.Alpha
+                            //         );
+                            //     }
+                            // }
+
+                            var bytes = encoded.ToArray();
+                            materialBuilder.WithBaseColor(bytes);
+
+                            break;
+                        }
+
+                        case "CDE":
+                        {
+                            // idk wtf this is
+                            break;
+                        }
+
+                        default:
+                        {
+                            Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
+                            break;
+                        }
                     }
                 }
             }
 
             var primitive = meshBuilder.UsePrimitive(materialBuilder);
+
+            Console.WriteLine($"faces: {section.NumFaces}");
 
             for (int faceIndex = 0; faceIndex < section.NumFaces; faceIndex++)
             {
