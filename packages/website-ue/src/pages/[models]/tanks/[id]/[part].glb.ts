@@ -35,8 +35,8 @@ export async function GET({
   const item = api.metadata.item(params.id);
   const assetDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetDiscovery);
-  const part = game!.tankPart(tag, params.part);
-  const array = new Uint8Array(part);
+  const asd = game!.tankPart(tag, params.part);
+  // const array = new Uint8Array(part);
 
-  return new Response(array);
+  return Response.json(asd);
 }
