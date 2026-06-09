@@ -109,7 +109,7 @@ public partial class GameInterface
     { "gun", "DT_Guns" },
   };
 
-  public string TankPart(string tag, string part)
+  public byte[] TankPart(string tag, string part)
   {
     try
     {
@@ -146,7 +146,7 @@ public partial class GameInterface
 
       var gltf = new MonoGltf(mesh);
 
-      return gltf.Write();
+      return gltf.Write($"{tag}/${part}");
     }
     catch (Exception e)
     {

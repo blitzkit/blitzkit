@@ -122,48 +122,26 @@ public class MonoGltf
     }
   }
 
-  public string Write()
+  public byte[] Write(string name)
   {
-    try
-    {
-      var model = scene.ToGltf2();
+    var stream = new MemoryStream();
+    var context = WriteContext
+      .CreateFromStream(stream)
+      .WithSettingsFrom(
+        new()
+        {
+          ImageWriting = ResourceWriteMode.SatelliteFile,
+          ImageWriteCallback = (context, assetName, image) =>
+          {
+            return "/textures/my-ass.png";
+          },
+        }
+      );
+    var model = scene.ToGltf2();
 
-      var stream = new MemoryStream();
-      var context = WriteContext
-        .CreateFromStream(stream)
-        .WithSettingsFrom(new WriteSettings() { ImageWriting = ResourceWriteMode.SatelliteFile });
+    context.WriteBinarySchema2(name, model);
 
-      context.ImageWriteCallback = (WriteContext context, string assetName, MemoryImage image) =>
-      {
-        // image.Content is the raw data
-        // var bytes = image.Content.ToArray();
-
-        // store.Files[suggestedName] = bytes;
-
-        // // return URI used in JSON
-        //
-        return assetName;
-      };
-
-      foreach (var img in model.LogicalImages)
-      {
-        Console.WriteLine(img.Content.SourcePath);
-        Console.WriteLine(img.Content.FileExtension);
-      }
-
-      model.SaveGLTF
-
-      context.WriteTextSchema2("model.gltf", model);
-
-      stream.Position = 0;
-      using var reader = new StreamReader(stream);
-
-      return reader.ReadToEnd();
-    }
-    catch (Exception ex)
-    {
-      throw new Exception("Failed to write GLTF", ex);
-    }
+    return stream.ToArray();
   }
 
   private static (
