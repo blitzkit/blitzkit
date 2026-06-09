@@ -41,88 +41,91 @@ public class MonoGltf
   };
   readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
 
-  public MonoGltf(UStaticMesh staticMesh)
+  public MonoGltf(List<UStaticMesh> meshes)
   {
     var options = new ExporterOptions() { TextureFormat = ETextureFormat.Jpeg };
 
-    staticMesh.TryConvert(out var convertedMesh);
-    var lod0 =
-      convertedMesh.LODs.Find(lod => !lod.SkipLod) ?? throw new Exception("Failed to find lod0");
-
-    var emptyMaterial = new MaterialBuilder("empty_material");
-    var materialMap = new Dictionary<string, MaterialBuilder>();
-
-    int sectionIndex = 0;
-    foreach (var section in lod0.Sections.Value)
+    foreach (var mesh in meshes)
     {
-      var meshBuilder = new ConfiguredMeshBuilder();
-      MaterialBuilder materialBuilder;
+      mesh.TryConvert(out var converted);
+      var lod0 =
+        converted.LODs.Find(lod => !lod.SkipLod) ?? throw new Exception("Failed to find lod0");
 
-      if (section.Material == null || section.MaterialName == null)
-      {
-        materialBuilder = emptyMaterial;
-      }
-      else if (materialMap.TryGetValue(section.MaterialName, out MaterialBuilder? value))
-      {
-        materialBuilder = value;
-      }
-      else
-      {
-        var materialInterface = section.Material.Load<UMaterialInterface>()!;
-        var materialData = new MaterialData() { Parameters = new() };
+      var emptyMaterial = new MaterialBuilder("empty_material");
+      var materialMap = new Dictionary<string, MaterialBuilder>();
 
-        materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
-        materialBuilder = new();
-        materialMap.Add(section.MaterialName, materialBuilder);
+      int sectionIndex = 0;
+      foreach (var section in lod0.Sections.Value)
+      {
+        var meshBuilder = new ConfiguredMeshBuilder();
+        MaterialBuilder materialBuilder;
 
-        foreach (var parameterTexture in materialData.Parameters.Textures)
+        if (section.Material == null || section.MaterialName == null)
         {
-          if (knownChannels.TryGetValue(parameterTexture.Key, out var channel))
+          materialBuilder = emptyMaterial;
+        }
+        else if (materialMap.TryGetValue(section.MaterialName, out MaterialBuilder? value))
+        {
+          materialBuilder = value;
+        }
+        else
+        {
+          var materialInterface = section.Material.Load<UMaterialInterface>()!;
+          var materialData = new MaterialData() { Parameters = new() };
+
+          materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
+          materialBuilder = new();
+          materialMap.Add(section.MaterialName, materialBuilder);
+
+          foreach (var parameterTexture in materialData.Parameters.Textures)
           {
-            var texture = parameterTexture.Value;
-            var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
-            var path = $"../../../textures/{name}.webp";
+            if (knownChannels.TryGetValue(parameterTexture.Key, out var channel))
+            {
+              var texture = parameterTexture.Value;
+              var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
+              var path = $"../../../textures/{name}.webp";
 
-            var lastIndex = stubBytes.Length - 1;
-            stubBytes[lastIndex] = (byte)(++stubBytes[lastIndex] % 255);
-            var uniqueBytes = (byte[])stubBytes.Clone();
-            var stubImage = new MemoryImage(uniqueBytes);
+              var lastIndex = stubBytes.Length - 1;
+              stubBytes[lastIndex] = (byte)(++stubBytes[lastIndex] % 255);
+              var uniqueBytes = (byte[])stubBytes.Clone();
+              var stubImage = new MemoryImage(uniqueBytes);
 
-            // Console.WriteLine(
-            //   $"created stub image {stubImage} @ {stubImage.SourcePath} w/ byte {uniqueBytes[lastIndex]}"
-            // );
+              // Console.WriteLine(
+              //   $"created stub image {stubImage} @ {stubImage.SourcePath} w/ byte {uniqueBytes[lastIndex]}"
+              // );
 
-            materialBuilder.WithChannelImage(channel, stubImage);
-            materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
-          }
-          else
-          {
-            // Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
+              materialBuilder.WithChannelImage(channel, stubImage);
+              materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
+            }
+            else
+            {
+              // Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
+            }
           }
         }
-      }
 
-      var primitive = meshBuilder.UsePrimitive(materialBuilder);
+        var primitive = meshBuilder.UsePrimitive(materialBuilder);
 
-      for (int faceIndex = 0; faceIndex < section.NumFaces; faceIndex++)
-      {
-        var wedgeIndex = new int[3];
-        for (var k = 0; k < wedgeIndex.Length; k++)
+        for (int faceIndex = 0; faceIndex < section.NumFaces; faceIndex++)
         {
-          wedgeIndex[k] = (int)lod0.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
+          var wedgeIndex = new int[3];
+          for (var k = 0; k < wedgeIndex.Length; k++)
+          {
+            wedgeIndex[k] = (int)lod0.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
+          }
+
+          var vertex1 = lod0.Verts[wedgeIndex[0]];
+          var vertex2 = lod0.Verts[wedgeIndex[1]];
+          var vertex3 = lod0.Verts[wedgeIndex[2]];
+
+          var (v1, v2, v3) = PrepareTris(vertex1, vertex2, vertex3);
+          var (c1, c2, c3) = PrepareUVsAndTexCoords(lod0, vertex1, vertex2, vertex3, wedgeIndex);
+
+          primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
         }
 
-        var vertex1 = lod0.Verts[wedgeIndex[0]];
-        var vertex2 = lod0.Verts[wedgeIndex[1]];
-        var vertex3 = lod0.Verts[wedgeIndex[2]];
-
-        var (v1, v2, v3) = PrepareTris(vertex1, vertex2, vertex3);
-        var (c1, c2, c3) = PrepareUVsAndTexCoords(lod0, vertex1, vertex2, vertex3, wedgeIndex);
-
-        primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
+        scene.AddRigidMesh(meshBuilder, Matrix4x4.Identity);
       }
-
-      scene.AddRigidMesh(meshBuilder, Matrix4x4.Identity);
     }
   }
 

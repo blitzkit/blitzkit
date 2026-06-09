@@ -2,6 +2,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
 import { GLTFLoader } from "three-stdlib";
+import { useProtagonist } from "../../hooks/useProtagonist";
 import styles from "./index.module.css";
 
 export function TankopediaSandbox() {
@@ -22,28 +23,46 @@ export function TankopediaSandbox() {
 }
 
 function Content() {
-  const gltf = useLoader(
+  const tank = useProtagonist();
+
+  const turret = useLoader(
     GLTFLoader,
-    "/models/tanks/TankEntity.A128_Concept_1b/hull.glb",
+    `/models/tanks/${tank.id}/turret_01.glb`,
   );
+  const gun = useLoader(GLTFLoader, `/models/tanks/${tank.id}/gun_01.glb`);
+  const hull = useLoader(GLTFLoader, `/models/tanks/${tank.id}/hull.glb`);
+  const chassis = useLoader(GLTFLoader, `/models/tanks/${tank.id}/chassis.glb`);
 
-  gltf.scene.traverse((child) => {
-    if (
-      child instanceof Mesh &&
-      child.material instanceof MeshStandardMaterial
-    ) {
-      // TODO: remove this hack and fix the gltf
-      child.material.vertexColors = false;
-    }
+  const gltfs = [turret, gun, hull, chassis];
 
-    child.castShadow = true;
-    child.receiveShadow = true;
-  });
+  for (const gltf of gltfs) {
+    gltf.scene.traverse((child) => {
+      if (
+        child instanceof Mesh &&
+        child.material instanceof MeshStandardMaterial
+      ) {
+        // TODO: remove this hack and fix the gltf
+        child.material.vertexColors = false;
+      }
+
+      child.castShadow = true;
+      child.receiveShadow = true;
+    });
+  }
 
   return (
     <>
       <group>
-        <primitive object={gltf.scene} />
+        <primitive object={chassis.scene} />
+        <primitive object={hull.scene} />
+      </group>
+
+      <group position={[0, 0, 5]}>
+        <primitive object={turret.scene} />
+      </group>
+
+      <group position={[0, 0, -5]}>
+        <primitive object={gun.scene} />
       </group>
 
       <spotLight
@@ -54,7 +73,7 @@ function Content() {
       />
       <ambientLight />
 
-      <mesh receiveShadow position={[0, -1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2 ** 8, 2 ** 8]} />
         <meshStandardMaterial color="gray" />
       </mesh>

@@ -224,10 +224,24 @@ public partial class GameInterface
 
       var visualData = row.Get<UObject>("VisualData");
       var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-      // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
-      var mesh = meshSettings.Get<UStaticMesh>("Mesh");
+      var meshes = new List<UStaticMesh>();
 
-      var gltf = new MonoGltf(mesh);
+      foreach (var property in meshSettings.Properties)
+      {
+        var name = property.Name.Text;
+
+        if (name == "CollisionMesh")
+        {
+          continue;
+        }
+
+        if (meshSettings.TryGet<UStaticMesh>(name, out var mesh))
+        {
+          meshes.Add(mesh);
+        }
+      }
+
+      var gltf = new MonoGltf(meshes);
 
       return gltf.Write($"{tag}/{part}");
     }
