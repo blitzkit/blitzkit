@@ -110,7 +110,7 @@
     "tank_class_short_plural_lowercase": {
       "0": "nights",
       "1": "pediums",
-      "2": "identify for ai-powered check",
+      "2": "identif",
       "3": "ПТ-САУ"
     },
     "tank_class_medium": {
@@ -139,7 +139,7 @@
       }
     },
     "leagues": {
-      "diamond": "Диамант",
+      "diamond": "Diamond",
       "platinum": "Платиновая",
       "gold": "Золотая",
       "silver": "Серебряная",
@@ -216,7 +216,7 @@
       },
       "subcommands": {
         "today": {
-          "name": "cегодня",
+          "name": "today",
           "description": "Cегодня"
         },
         "30": {
@@ -291,8 +291,8 @@
       },
       "periods": {
         "career": "Карьера",
-        "today": "Вчера",
-        "days": "{days}",
+        "today": "Today",
+        "days": "{days} День",
         "custom": "{day_1} - {day_2} дней"
       },
       "filters": {
@@ -351,10 +351,10 @@
           "upgrades": "Улучшения: {cost}",
           "purchase": "Покупка: {cost}",
           "equipment": "Снаряжение: {cost}",
-          "estimation": "# Это приблизительная оценка!\n\nВ этот список могут входить уже исследованные танки из-за неточной информации, предоставляемой Wargaming. Попробуйте указать «стартовый-танк» в строке при использовании команды, если сможете."
+          "estimation": "# This is an estimation!\n\nThis list may include already researched tanks because of the inaccurate information Wargaming provides. Try providing a `starting-tank` from the line when using the command if you can."
         },
         "errors": {
-          "non_tech_tree": "# {tank} отсутствует в дереве танков\n\nВы не можете исследовать премиумный / коллекционный танк.",
+          "non_tech_tree": "# {tank} is not on the tech tree\n\nYou cannot research a premium/collector tank.",
           "tier_1": "# {tank} — танк I уровня\n\nУровень I всегда открыт бесплатно для всех игроков.",
           "already_researched": "# {tank} уже исследован\n\nПопробуйте предоставить «starting-tank» при использовании команды для просмотра итогов уже исследованной ветки.",
           "start_end_equal": "# {tank} был предоставлен дважды\n\nУбедитесь, что «starting-tank» и «target-tank» различаются.",
@@ -363,7 +363,7 @@
         }
       },
       "about": {
-        "name": "о-боте",
+        "name": "about",
         "description": "Вся необходимая информация о боте",
         "subcommands": {
           "commands": {
@@ -372,7 +372,7 @@
             "body": "# Команды\n\nBlitzKit предлагает следующие команды:\n\n"
           },
           "embeds": {
-            "name": "встраиваемые-элементы",
+            "name": "embeds",
             "description": "Как работают встраиваемые элементы"
           },
           "introduction": {
@@ -384,7 +384,7 @@
             "description": "Как пригласить бота"
           },
           "timezones": {
-            "name": "часовой-пояс",
+            "name": "timezones",
             "description": "Как BlitzKit определяет и использует ваш часовой пояс"
           },
           "credits": {
@@ -409,11 +409,11 @@
         "name": "отладка",
         "description": "Сведения для отладки",
         "body": {
-          "title": "# Отладка",
+          "title": "# Debug\n\n",
           "version": "Версия",
           "shard": {
             "label": "Фрагмент",
-            "default": "по умолчанию"
+            "default": "default"
           },
           "uptime": "Время работы"
         }
@@ -443,11 +443,11 @@
         },
         "body": {
           "subtitle": "Неактивен {days}+ дней",
-          "listing": "{days} дней"
+          "listing": "{days{days}"
         }
       },
       "full_stats": {
-        "name": "полная-статистика",
+        "name": "full-Stats",
         "description": "Полная игровая статистика",
         "body": {
           "cards": {
@@ -486,7 +486,7 @@
         "body": {
           "accounts_linked": "Аккаунты привязаны",
           "no_role_permissions": {
-            "title": "{name} не удалось проверить",
+            "title": "{name} Failed to verify",
             "description": "У меня нет разрешения на управление ролями."
           }
         },
@@ -496,7 +496,7 @@
         }
       },
       "search_clans": {
-        "name": "поиск-кланов",
+        "name": "search-clans",
         "description": "Поиск кланов",
         "options": {
           "limit": {
@@ -510,7 +510,7 @@
         }
       },
       "search_players": {
-        "name": "поиск-игроков",
+        "name": "search-players",
         "description": "Поиск игроков",
         "options": {
           "limit": {
@@ -524,7 +524,7 @@
         }
       },
       "rating_leaderboard": {
-        "name": "таблица-лидеров",
+        "name": "rating-leaderboard",
         "description": "Статистика рейтингов боёв",
         "subcommands": {
           "neighbors": {
@@ -563,7 +563,7 @@
         }
       },
       "today": {
-        "name": "cегодня",
+        "name": "today",
         "description": "Танки, на которых сыграли сегодня и статистика"
       },
       "stats": {
@@ -607,8 +607,8 @@
         }
       },
       "player_info": {
-        "name": "информация-об-игроке",
-        "description": "Основная информация о игроке",
+        "name": "player-ifor",
+        "description": "Basic information about a player",
         "body": {
           "title": "Информация о {name}",
           "nickname": "Никнейм",
@@ -659,7 +659,7 @@
     "common": {
       "player_search": {
         "hint": "Поиск игроков...",
-        "no_results": "Ничего не найденo",
+        "no_results": "Нет информ",
         "searching": "Поиск..."
       },
       "copy_button": {
@@ -674,10 +674,10 @@
         "recent": "Недавние",
         "select_all": "Выбрать всё",
         "count_singular": "1 танк",
-        "count_plural": "Танков: {count}",
+        "count_plural": "{count} Tanks",
         "sorting_by": "Сортировать по {name}",
         "clear": "Очистить",
-        "tier": "{tier} уровень",
+        "tier": "Tier one {tier}",
         "passive": "{name} (Пассивный)",
         "active": "{name} (Активный)",
         "no_tanks_found": {
@@ -686,12 +686,12 @@
           "clear_filters": "Попробуйте очистить фильтры."
         },
         "sort": {
-          "meta.none": "Никак",
+          "meta.none": "none",
           "survivability.health": "прочность",
           "survivability.viewRange": "обзор",
-          "survivability.camouflageStill": "маскировка когда неподвижен",
+          "survivability.camouflageStill": "camouflage still",
           "survivability.camouflageMoving": "маскировка в движении",
-          "survivability.camouflageShooting": "маскировка при выстреле",
+          "survivability.camouflageShooting": "camouflage shooting",
           "survivability.volume": "объём",
           "survivability.length": "длина",
           "fire.dpm": "базовый ДПМ",
@@ -699,8 +699,8 @@
           "fire.reload": "перезарядка",
           "fire.caliber": "калибр",
           "fire.standardPenetration": "базовое пробитие",
-          "fire.premiumPenetration": "премиумное пробитие ",
-          "fire.tertiaryPenetration": "пробитие третьего снаряда",
+          "fire.premiumPenetration": "premium penetration",
+          "fire.tertiaryPenetration": "tertiaryPenetrations",
           "fire.damage": "урон",
           "fire.moduleDamage": "урон по модулям",
           "fire.shellVelocity": "скорость снаряда",
