@@ -18,7 +18,7 @@
     },
     "gun_types": {
       "auto_loader": "Барабан",
-      "auto_reloader": "Барабан с дозарядкой",
+      "auto_reloader": "Auto reloader",
       "regular": "Цикличный"
     },
     "shells": {
