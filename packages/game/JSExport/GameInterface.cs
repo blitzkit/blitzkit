@@ -107,6 +107,13 @@ public partial class GameInterface
 
   public List<string> Textures => [.. texturePaths.Keys];
 
+  public byte[] Texture(string name)
+  {
+    var path = texturePaths[name];
+    var texture = provider.LoadPackageObject<UTexture2D>(path);
+    return provider.Image(texture);
+  }
+
   public HashSet<string> Files => files;
 
   public byte[] TankBigIcon(string tag)

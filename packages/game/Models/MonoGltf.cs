@@ -88,7 +88,7 @@ public class MonoGltf
           }
           else
           {
-            Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
+            // Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
           }
         }
       }

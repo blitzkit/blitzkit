@@ -8,5 +8,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 });
 
 export function GET({ params }: APIContext<never, { name: string }>) {
-  return Response.json(params);
+  const image = game!.texture(params.name);
+  const array = new Uint8Array(image);
+  return new Response(array);
 }
