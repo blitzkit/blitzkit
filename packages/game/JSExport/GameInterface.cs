@@ -233,7 +233,9 @@ public partial class GameInterface
     }
     catch (Exception e)
     {
-      throw new Exception($"Failed to export tank part: {part}", e);
+      Console.WriteLine(e);
     }
+
+    return [];
   }
 }

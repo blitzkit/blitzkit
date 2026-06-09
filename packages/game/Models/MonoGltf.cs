@@ -39,7 +39,7 @@ public class MonoGltf
     { "RMAO", KnownChannel.MetallicRoughness },
     // { "CDE", ?? },
   };
-  readonly string stubTexture = "../../stub/stupid.png";
+  readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
 
   public MonoGltf(UStaticMesh staticMesh)
   {
@@ -83,7 +83,16 @@ public class MonoGltf
             var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
             var path = $"../../../textures/{name}.webp";
 
-            materialBuilder.WithChannelImage(channel, stubTexture);
+            var lastIndex = stubBytes.Length - 1;
+            stubBytes[lastIndex] = (byte)(++stubBytes[lastIndex] % 255);
+            var uniqueBytes = (byte[])stubBytes.Clone();
+            var stubImage = new MemoryImage(uniqueBytes);
+
+            // Console.WriteLine(
+            //   $"created stub image {stubImage} @ {stubImage.SourcePath} w/ byte {uniqueBytes[lastIndex]}"
+            // );
+
+            materialBuilder.WithChannelImage(channel, stubImage);
             materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
           }
           else
@@ -126,8 +135,11 @@ public class MonoGltf
 
     var mappedTextures = new Dictionary<MemoryImage, string>();
 
+    // Console.WriteLine($"found {model.LogicalImages.Count} logical images");
+
     foreach (var image in model.LogicalImages)
     {
+      // Console.WriteLine($"mapping {image.Content} ({image.Name})");
       mappedTextures[image.Content] = image.Name!;
       image.Name = null;
     }
@@ -141,6 +153,8 @@ public class MonoGltf
           ImageWriting = ResourceWriteMode.SatelliteFile,
           ImageWriteCallback = (context, assetName, image) =>
           {
+            // Console.WriteLine($"got {image} -> {mappedTextures[image]}");
+
             return mappedTextures[image];
           },
         }
