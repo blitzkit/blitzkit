@@ -81,7 +81,7 @@ public class MonoGltf
           {
             var texture = parameterTexture.Value;
             var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
-            var path = $"textures/{name}.webp";
+            var path = $"../../textures/{name}.webp";
 
             materialBuilder.WithChannelImage(channel, stubTexture);
             materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
