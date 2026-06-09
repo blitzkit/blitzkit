@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: [pages, api, media, models]
+        chunk: [pages, api, media, models, textures]
 
     steps:
       - name: Free disk space

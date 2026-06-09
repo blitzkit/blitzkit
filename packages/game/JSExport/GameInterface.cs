@@ -1,11 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion;
+using CUE4Parse_Conversion.Materials;
 using CUE4Parse_Conversion.Meshes;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse_Conversion.UEFormat.Enums;
 using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Assets.Exports.Engine;
+using CUE4Parse.UE4.Assets.Exports.Material;
 using CUE4Parse.UE4.Assets.Exports.StaticMesh;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Assets.Objects;
@@ -30,6 +32,80 @@ public partial class GameInterface
 
     files = [.. provider.Files.Keys];
   }
+
+  readonly Dictionary<string, string> texturePaths = new();
+
+  public void DiscoverTextures(string[] tankTags)
+  {
+    Console.WriteLine("Discovering textures...");
+
+    var options = new ExporterOptions() { TextureFormat = ETextureFormat.Jpeg };
+
+    foreach (var tag in tankTags)
+    {
+      var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+
+      foreach (var group in tankPartPrefixes.Values)
+      {
+        var dataTable = pda.Get<UDataTable>(group);
+
+        foreach (var row in dataTable.RowMap.Values)
+        {
+          var visualData = row.Get<UObject>("VisualData");
+          var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
+
+          foreach (var property in meshSettings.Properties)
+          {
+            if (meshSettings.TryGet<UStaticMesh>(property.Name.Text, out var mesh))
+            {
+              mesh.TryConvert(out var convertedMesh);
+
+              var lod0 = convertedMesh.LODs.Find(lod => !lod.SkipLod);
+
+              if (lod0 == null || lod0.Sections == null)
+              {
+                continue;
+              }
+
+              foreach (var section in lod0.Sections.Value)
+              {
+                if (section.Material == null)
+                {
+                  continue;
+                }
+
+                var materialInterface = section.Material.Load<UMaterialInterface>();
+
+                if (materialInterface == null)
+                {
+                  continue;
+                }
+
+                var materialData = new MaterialData() { Parameters = new() };
+
+                materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
+
+                foreach (var parameterTexture in materialData.Parameters.Textures)
+                {
+                  if (MonoGltf.knownChannels.TryGetValue(parameterTexture.Key, out var channel))
+                  {
+                    var path = parameterTexture.Value.GetPathName();
+                    var name = Path.GetFileNameWithoutExtension(path);
+
+                    texturePaths[name] = path;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    Console.WriteLine($"Discovered {texturePaths.Count} textures");
+  }
+
+  public List<string> Textures => [.. texturePaths.Keys];
 
   public HashSet<string> Files => files;
 

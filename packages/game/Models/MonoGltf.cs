@@ -32,7 +32,7 @@ public class MonoGltf
 {
   readonly SceneBuilder scene = new();
 
-  readonly Dictionary<string, KnownChannel> knownChannels = new()
+  public static readonly Dictionary<string, KnownChannel> knownChannels = new()
   {
     { "BaseColor", KnownChannel.BaseColor },
     { "Normal", KnownChannel.Normal },
@@ -46,14 +46,14 @@ public class MonoGltf
     var options = new ExporterOptions() { TextureFormat = ETextureFormat.Jpeg };
 
     staticMesh.TryConvert(out var convertedMesh);
-    var lod =
+    var lod0 =
       convertedMesh.LODs.Find(lod => !lod.SkipLod) ?? throw new Exception("Failed to find lod0");
 
     var emptyMaterial = new MaterialBuilder("empty_material");
     var materialMap = new Dictionary<string, MaterialBuilder>();
 
     int sectionIndex = 0;
-    foreach (var section in lod.Sections.Value)
+    foreach (var section in lod0.Sections.Value)
     {
       var meshBuilder = new ConfiguredMeshBuilder();
       MaterialBuilder materialBuilder;
@@ -100,15 +100,15 @@ public class MonoGltf
         var wedgeIndex = new int[3];
         for (var k = 0; k < wedgeIndex.Length; k++)
         {
-          wedgeIndex[k] = (int)lod.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
+          wedgeIndex[k] = (int)lod0.Indices.Value[section.FirstIndex + faceIndex * 3 + k];
         }
 
-        var vertex1 = lod.Verts[wedgeIndex[0]];
-        var vertex2 = lod.Verts[wedgeIndex[1]];
-        var vertex3 = lod.Verts[wedgeIndex[2]];
+        var vertex1 = lod0.Verts[wedgeIndex[0]];
+        var vertex2 = lod0.Verts[wedgeIndex[1]];
+        var vertex3 = lod0.Verts[wedgeIndex[2]];
 
         var (v1, v2, v3) = PrepareTris(vertex1, vertex2, vertex3);
-        var (c1, c2, c3) = PrepareUVsAndTexCoords(lod, vertex1, vertex2, vertex3, wedgeIndex);
+        var (c1, c2, c3) = PrepareUVsAndTexCoords(lod0, vertex1, vertex2, vertex3, wedgeIndex);
 
         primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
       }
