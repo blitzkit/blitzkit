@@ -84,12 +84,12 @@ public class MonoGltf
         {
           if (knownChannels.TryGetValue(parameterTexture.Key, out var channel))
           {
-            var texture = parameterTexture.Value;
-            var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
-            var path = $"/textures/{name}";
-            // var path = texture.GetPathName();
+            materialBuilder.WithChannelImage(channel, "../../stub/stupid.png");
 
-            textures.Add(channel, path);
+            // var texture = parameterTexture.Value;
+            // var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
+
+            // textures.Add(channel, name);
           }
           else
           {
@@ -122,12 +122,48 @@ public class MonoGltf
     }
   }
 
-  public MappedGltf Write()
+  public string Write()
   {
-    var model = scene.ToGltf2();
-    var json = model.GetJSON(false);
+    try
+    {
+      var model = scene.ToGltf2();
 
-    return new MappedGltf(json, textureMap);
+      var stream = new MemoryStream();
+      var context = WriteContext
+        .CreateFromStream(stream)
+        .WithSettingsFrom(new WriteSettings() { ImageWriting = ResourceWriteMode.SatelliteFile });
+
+      context.ImageWriteCallback = (WriteContext context, string assetName, MemoryImage image) =>
+      {
+        // image.Content is the raw data
+        // var bytes = image.Content.ToArray();
+
+        // store.Files[suggestedName] = bytes;
+
+        // // return URI used in JSON
+        //
+        return assetName;
+      };
+
+      foreach (var img in model.LogicalImages)
+      {
+        Console.WriteLine(img.Content.SourcePath);
+        Console.WriteLine(img.Content.FileExtension);
+      }
+
+      model.SaveGLTF
+
+      context.WriteTextSchema2("model.gltf", model);
+
+      stream.Position = 0;
+      using var reader = new StreamReader(stream);
+
+      return reader.ReadToEnd();
+    }
+    catch (Exception ex)
+    {
+      throw new Exception("Failed to write GLTF", ex);
+    }
   }
 
   private static (

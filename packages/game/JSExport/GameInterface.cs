@@ -109,40 +109,48 @@ public partial class GameInterface
     { "gun", "DT_Guns" },
   };
 
-  public MappedGltf TankPart(string tag, string part)
+  public string TankPart(string tag, string part)
   {
-    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-    UDataTable? dataTable = null;
-
-    foreach (var (prefix, name) in tankPartPrefixes)
+    try
     {
-      if (!part.StartsWith(prefix))
+      var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+      UDataTable? dataTable = null;
+
+      foreach (var (prefix, name) in tankPartPrefixes)
       {
-        continue;
+        if (!part.StartsWith(prefix))
+        {
+          continue;
+        }
+
+        dataTable = pda.Get<UDataTable>(name);
+        break;
       }
 
-      dataTable = pda.Get<UDataTable>(name);
-      break;
-    }
+      if (dataTable == null)
+      {
+        throw new ArgumentException($"Unknown tank part: {part}");
+      }
 
-    if (dataTable == null)
+      dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
+
+      if (row == null)
+      {
+        throw new ArgumentException($"Unknown tank part: {part}");
+      }
+
+      var visualData = row.Get<UObject>("VisualData");
+      var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
+      // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
+      var mesh = meshSettings.Get<UStaticMesh>("Mesh");
+
+      var gltf = new MonoGltf(mesh);
+
+      return gltf.Write();
+    }
+    catch (Exception e)
     {
-      throw new ArgumentException($"Unknown tank part: {part}");
+      throw new Exception($"Failed to export tank part: {part}", e);
     }
-
-    dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
-
-    if (row == null)
-    {
-      throw new ArgumentException($"Unknown tank part: {part}");
-    }
-
-    var visualData = row.Get<UObject>("VisualData");
-    var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-    // var collisionMesh = meshSettings.Get<UStaticMesh>("CollisionMesh");
-    var mesh = meshSettings.Get<UStaticMesh>("Mesh");
-    var gltf = new MonoGltf(mesh);
-
-    return gltf.Write();
   }
 }

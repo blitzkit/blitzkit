@@ -1,4 +1,5 @@
-﻿using Microsoft.JavaScript.NodeApi;
+﻿using System.Text.Json;
+using Microsoft.JavaScript.NodeApi;
 using SharpGLTF.Materials;
 
 namespace BlitzKit.Game.JSExport;
@@ -13,5 +14,10 @@ public readonly struct MappedGltf
   {
     Json = json;
     TextureMap = textureMap;
+  }
+
+  public string ToJson()
+  {
+    return JsonSerializer.Serialize(this);
   }
 }

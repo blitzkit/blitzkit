@@ -1,3 +1,4 @@
+import { Document, NodeIO } from "@gltf-transform/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import { api } from "../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
@@ -29,14 +30,20 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   return paths;
 });
 
+type KnownChannel = "BaseColor" | "Normal" | "MetallicRoughness";
+
+interface MappedGltf {
+  Json: string;
+  TextureMap: Record<string, Record<KnownChannel, string>>;
+}
+
 export async function GET({
   params,
 }: APIContext<never, { id: string; part: string }>) {
   const item = api.metadata.item(params.id);
   const assetDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetDiscovery);
-  const asd = game!.tankPart(tag, params.part);
-  // const array = new Uint8Array(part);
+  const part = game!.tankPart(tag, params.part);
 
-  return Response.json(asd);
+  return Response.json(part);
 }
