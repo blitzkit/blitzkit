@@ -30,20 +30,14 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   return paths;
 });
 
-type KnownChannel = "BaseColor" | "Normal" | "MetallicRoughness";
-
-interface MappedGltf {
-  Json: string;
-  TextureMap: Record<string, Record<KnownChannel, string>>;
-}
-
 export async function GET({
   params,
 }: APIContext<never, { id: string; part: string }>) {
   const item = api.metadata.item(params.id);
   const assetDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetDiscovery);
-  const part = game!.tankPart(tag, params.part);
+  const bytes = game!.tankPart(tag, params.part);
+  const array = new Uint8Array(bytes);
 
-  return Response.json(part);
+  return new Response(array);
 }

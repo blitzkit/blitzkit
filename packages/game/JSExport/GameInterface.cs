@@ -146,7 +146,7 @@ public partial class GameInterface
 
       var gltf = new MonoGltf(mesh);
 
-      return gltf.Write($"{tag}/${part}");
+      return gltf.Write($"{tag}/{part}");
     }
     catch (Exception e)
     {

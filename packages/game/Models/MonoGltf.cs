@@ -30,8 +30,7 @@ using ConfiguredMeshBuilder = MeshBuilder<
 
 public class MonoGltf
 {
-  readonly SceneBuilder scene;
-  readonly Dictionary<string, Dictionary<KnownChannel, string>> textureMap = [];
+  readonly SceneBuilder scene = new();
 
   readonly Dictionary<string, KnownChannel> knownChannels = new()
   {
@@ -40,23 +39,23 @@ public class MonoGltf
     { "RMAO", KnownChannel.MetallicRoughness },
     // { "CDE", ?? },
   };
+  readonly string stubTexture = "../../stub/stupid.png";
 
   public MonoGltf(UStaticMesh staticMesh)
   {
-    scene = new(staticMesh.Name);
     var options = new ExporterOptions() { TextureFormat = ETextureFormat.Jpeg };
 
     staticMesh.TryConvert(out var convertedMesh);
     var lod =
       convertedMesh.LODs.Find(lod => !lod.SkipLod) ?? throw new Exception("Failed to find lod0");
 
-    MaterialBuilder emptyMaterial = new("empty_material");
-    Dictionary<string, MaterialBuilder> materialMap = [];
+    var emptyMaterial = new MaterialBuilder("empty_material");
+    var materialMap = new Dictionary<string, MaterialBuilder>();
 
     int sectionIndex = 0;
     foreach (var section in lod.Sections.Value)
     {
-      ConfiguredMeshBuilder meshBuilder = new($"{staticMesh.Name}_section_{sectionIndex}");
+      var meshBuilder = new ConfiguredMeshBuilder();
       MaterialBuilder materialBuilder;
 
       if (section.Material == null || section.MaterialName == null)
@@ -73,27 +72,23 @@ public class MonoGltf
         var materialData = new MaterialData() { Parameters = new() };
 
         materialInterface.GetParams(materialData.Parameters, options.MaterialFormat);
-        materialBuilder = new(section.MaterialName);
-
-        var textures = new Dictionary<KnownChannel, string>();
-
+        materialBuilder = new();
         materialMap.Add(section.MaterialName, materialBuilder);
-        textureMap.Add(section.MaterialName, textures);
 
         foreach (var parameterTexture in materialData.Parameters.Textures)
         {
           if (knownChannels.TryGetValue(parameterTexture.Key, out var channel))
           {
-            materialBuilder.WithChannelImage(channel, "../../stub/stupid.png");
+            var texture = parameterTexture.Value;
+            var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
+            var path = $"textures/{name}.webp";
 
-            // var texture = parameterTexture.Value;
-            // var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
-
-            // textures.Add(channel, name);
+            materialBuilder.WithChannelImage(channel, stubTexture);
+            materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
           }
           else
           {
-            // Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
+            Console.WriteLine($"Unsupported texture type: {parameterTexture.Key}");
           }
         }
       }
@@ -124,6 +119,19 @@ public class MonoGltf
 
   public byte[] Write(string name)
   {
+    var model = scene.ToGltf2();
+
+    model.Asset.Copyright = null;
+    model.Asset.Generator = null;
+
+    var mappedTextures = new Dictionary<MemoryImage, string>();
+
+    foreach (var image in model.LogicalImages)
+    {
+      mappedTextures[image.Content] = image.Name!;
+      image.Name = null;
+    }
+
     var stream = new MemoryStream();
     var context = WriteContext
       .CreateFromStream(stream)
@@ -133,11 +141,10 @@ public class MonoGltf
           ImageWriting = ResourceWriteMode.SatelliteFile,
           ImageWriteCallback = (context, assetName, image) =>
           {
-            return "/textures/my-ass.png";
+            return mappedTextures[image];
           },
         }
       );
-    var model = scene.ToGltf2();
 
     context.WriteBinarySchema2(name, model);
 
@@ -150,17 +157,17 @@ public class MonoGltf
     VertexPositionNormalTangent
   ) PrepareTris(CMeshVertex vert1, CMeshVertex vert2, CMeshVertex vert3)
   {
-    VertexPositionNormalTangent v1 = new(
+    var v1 = new VertexPositionNormalTangent(
       SwapYZ(vert1.Position * 0.01f),
       SwapYZAndNormalize((FVector)vert1.Normal),
       SwapYZAndNormalize((Vector4)vert1.Tangent)
     );
-    VertexPositionNormalTangent v2 = new(
+    var v2 = new VertexPositionNormalTangent(
       SwapYZ(vert2.Position * 0.01f),
       SwapYZAndNormalize((FVector)vert2.Normal),
       SwapYZAndNormalize((Vector4)vert2.Tangent)
     );
-    VertexPositionNormalTangent v3 = new(
+    var v3 = new VertexPositionNormalTangent(
       SwapYZ(vert3.Position * 0.01f),
       SwapYZAndNormalize((FVector)vert3.Normal),
       SwapYZAndNormalize((Vector4)vert3.Tangent)
@@ -223,9 +230,11 @@ public class MonoGltf
   )
   {
     var (uvs1, uvs2, uvs3) = PrepareUVs(vert1, vert2, vert3, uvs, indices);
+
     var c1 = new VertexColorXTextureX((Vector4)colors[indices[0]] / 255, uvs1);
     var c2 = new VertexColorXTextureX((Vector4)colors[indices[1]] / 255, uvs2);
     var c3 = new VertexColorXTextureX((Vector4)colors[indices[2]] / 255, uvs3);
+
     return (c1, c2, c3);
   }
 
@@ -240,6 +249,7 @@ public class MonoGltf
     var uvs1 = new List<Vector2>() { (Vector2)vert1.UV };
     var uvs2 = new List<Vector2>() { (Vector2)vert2.UV };
     var uvs3 = new List<Vector2>() { (Vector2)vert3.UV };
+
     foreach (var uv in uvs)
     {
       uvs1.Add((Vector2)uv[indices[0]]);
