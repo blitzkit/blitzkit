@@ -28,8 +28,9 @@ public partial class GameInterface
 
   public GameInterface(string directory, string map, string temp)
   {
-    provider = new(directory, map, temp);
+    Console.WriteLine("GameInterface constructor called");
 
+    provider = new(directory, map, temp);
     files = [.. provider.Files.Keys];
   }
 
