@@ -1,3 +1,7 @@
+import {
+  VisualChanges_TankPart,
+  type StageParameters,
+} from "@protos/blitz_static_tank_upgrade_single_stage";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
@@ -5,7 +9,11 @@ import { GLTFLoader } from "three-stdlib";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import styles from "./index.module.css";
 
-export function TankopediaSandbox() {
+interface TankopediaSandboxProps {
+  parameters: StageParameters;
+}
+
+export function TankopediaSandbox({ parameters }: TankopediaSandboxProps) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.sandbox}>
@@ -15,23 +23,33 @@ export function TankopediaSandbox() {
           className={styles.canvas}
           frameloop="demand"
         >
-          {!import.meta.env.SSR && <Content />}
+          {!import.meta.env.SSR && <Content parameters={parameters} />}
         </Canvas>
       </div>
     </div>
   );
 }
 
-function Content() {
+function Content({ parameters }: TankopediaSandboxProps) {
   const tank = useProtagonist();
 
-  const turret = useLoader(
-    GLTFLoader,
-    `/models/tanks/${tank.id}/turret_01.glb`,
-  );
-  const gun = useLoader(GLTFLoader, `/models/tanks/${tank.id}/gun_01.glb`);
+  const selectedTurret = parameters.visual_changes.find(
+    ({ tank_part }) => tank_part === VisualChanges_TankPart.TANK_PART_TURRET,
+  )!.name;
+  const selectedGun = parameters.visual_changes.find(
+    ({ tank_part }) => tank_part === VisualChanges_TankPart.TANK_PART_GUN,
+  )!.name;
+
   const hull = useLoader(GLTFLoader, `/models/tanks/${tank.id}/hull.glb`);
   const chassis = useLoader(GLTFLoader, `/models/tanks/${tank.id}/chassis.glb`);
+  const turret = useLoader(
+    GLTFLoader,
+    `/models/tanks/${tank.id}/${selectedTurret}.glb`,
+  );
+  const gun = useLoader(
+    GLTFLoader,
+    `/models/tanks/${tank.id}/${selectedGun}.glb`,
+  );
 
   const gltfs = [turret, gun, hull, chassis];
 

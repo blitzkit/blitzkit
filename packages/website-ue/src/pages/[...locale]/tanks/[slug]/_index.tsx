@@ -24,7 +24,7 @@ export const Page = withErrorWrapper(
     const protagonist = Tankopedia.use((state) => state.protagonist);
     const protagonistEquipment = useEquipment(protagonistTank.tank!);
 
-    const { characteristics } = useMemo(
+    const { characteristics, parameters } = useMemo(
       () =>
         computeCharacteristics(
           protagonistTank,
@@ -41,7 +41,7 @@ export const Page = withErrorWrapper(
         </div>
 
         <div className={styles.sandbox}>
-          <TankopediaSandbox />
+          <TankopediaSandbox parameters={parameters} />
           <TankopediaCharacteristics characteristics={characteristics} />
         </div>
       </div>
