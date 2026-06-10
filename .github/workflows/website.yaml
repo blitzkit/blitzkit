@@ -31,6 +31,9 @@ env:
   STEAM_OS: windows
   STEAM_FINGERPRINT: Manifest_UFSFiles_Win64.txt
 
+  # debug
+  DOTNET_EnableDiagnostics: 1
+
 jobs:
   build:
     name: Build chunk ${{ matrix.chunk }}
@@ -75,11 +78,9 @@ jobs:
       - name: Download Steam game
         run: scripts/download_game.sh
 
-      - run: |
-          dotnet --info
-          dotnet --list-runtimes
-          bun --version
-          node --version
+      - name: Enable core dumps
+        run: |
+          ulimit -c unlimited
 
       - name: Build
         run: bun run build-website
