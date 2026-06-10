@@ -47,11 +47,10 @@ public partial class BlitzFileProvider : DefaultFileProvider
     Console.WriteLine("Mount called");
 
     string oodlePath = $"{temp}/oodle.so";
-    OodleHelper.DownloadOodleDll(ref oodlePath!);
+    // OodleHelper.DownloadOodleDll(ref oodlePath!);
+    // Console.WriteLine("DownloadOodleDll called");
 
-    Console.WriteLine("DownloadOodleDll called");
-
-    OodleHelper.Initialize(oodlePath);
+    OodleHelper.Initialize("../../stupid/oodle.so");
 
     Console.WriteLine("Initialize called");
 
