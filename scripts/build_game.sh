@@ -1,3 +1,3 @@
 cd packages/game
-dotnet build --no-restore -clp:ErrorsOnly
+dotnet build -clp:ErrorsOnly
 find ./bin -type f | sort
