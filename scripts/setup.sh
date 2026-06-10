@@ -5,6 +5,5 @@ bun run build:protos
 bun run build:proxyclient
 bun run build:catalogitemaccessor
 
-cd ../game
-dotnet restore
-dotnet build
+cd ../..
+bun build-game
