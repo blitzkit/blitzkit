@@ -31,7 +31,12 @@ public partial class GameInterface
     Console.WriteLine("GameInterface constructor called");
 
     provider = new(directory, map, temp);
+
+    Console.WriteLine("Provider created");
+
     files = [.. provider.Files.Keys];
+
+    Console.WriteLine("Files loaded");
   }
 
   readonly Dictionary<string, string> texturePaths = new();

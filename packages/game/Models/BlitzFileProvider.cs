@@ -32,14 +32,28 @@ public partial class BlitzFileProvider : DefaultFileProvider
       pathComparer: StringComparer.OrdinalIgnoreCase
     )
   {
+    Console.WriteLine("BlitzFileProvider constructor called");
+
     MappingsContainer = new FileUsmapTypeMappingsProvider(map);
 
+    Console.WriteLine("MappingsContainer initialized");
+
     Initialize();
+
+    Console.WriteLine("Initialize called");
+
     Mount();
+
+    Console.WriteLine("Mount called");
 
     string oodlePath = $"{temp}/oodle.so";
     OodleHelper.DownloadOodleDll(ref oodlePath!);
+
+    Console.WriteLine("DownloadOodleDll called");
+
     OodleHelper.Initialize(oodlePath);
+
+    Console.WriteLine("Initialize called");
 
     if (TryGetGameFile("Blitz/AssetRegistry.bin", out var file))
     {
