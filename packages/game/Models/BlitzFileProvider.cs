@@ -1,19 +1,19 @@
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse.Compression;
 using CUE4Parse.FileProvider;
 using CUE4Parse.MappingsProvider;
+using CUE4Parse.UE4.AssetRegistry;
+using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Exceptions;
 using CUE4Parse.UE4.Objects.Engine;
 using CUE4Parse.UE4.Objects.UObject;
+using CUE4Parse.UE4.Readers;
 using CUE4Parse.UE4.Versions;
 using CUE4Parse.Utils;
 using SkiaSharp;
-using CUE4Parse.UE4.Readers;
-using CUE4Parse.UE4.AssetRegistry;
-using System.Text.RegularExpressions;
-using CUE4Parse.UE4.Assets.Exports;
 
 namespace BlitzKit.Game.Models;
 
@@ -32,27 +32,14 @@ public partial class BlitzFileProvider : DefaultFileProvider
       pathComparer: StringComparer.OrdinalIgnoreCase
     )
   {
-    Console.WriteLine("BlitzFileProvider constructor called");
-
     MappingsContainer = new FileUsmapTypeMappingsProvider(map);
 
-    Console.WriteLine("MappingsContainer initialized");
-
     Initialize();
-
-    Console.WriteLine("Initialize called");
-
     Mount();
 
-    Console.WriteLine("Mount called");
-
-    string oodlePath = $"{temp}/oodle.so";
+    // string oodlePath = $"{temp}/oodle.so";
     // OodleHelper.DownloadOodleDll(ref oodlePath!);
-    // Console.WriteLine("DownloadOodleDll called");
-
     OodleHelper.Initialize("../../stupid/oodle.so");
-
-    Console.WriteLine("Initialize called");
 
     if (TryGetGameFile("Blitz/AssetRegistry.bin", out var file))
     {
@@ -78,7 +65,8 @@ public partial class BlitzFileProvider : DefaultFileProvider
     }
   }
 
-  public T Discovered<T>(string path) where T : UObject
+  public T Discovered<T>(string path)
+    where T : UObject
   {
     return LoadPackageObject<T>(discovered[path]);
   }

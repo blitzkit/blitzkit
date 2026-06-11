@@ -175,8 +175,10 @@ function Consumables({ characteristics }: ConsumablesProps) {
         {Object.entries(consumables.consumables).map(
           ([id, { compatibility, consumable, purchase }]) => {
             if (!isCompatible(compatibility!)) return null;
+
             return (
               <Consumable
+                key={id}
                 id={id}
                 consumable={consumable!}
                 purchase={purchase!}

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion;
 using CUE4Parse_Conversion.Materials;
@@ -28,22 +29,31 @@ public partial class GameInterface
 
   public GameInterface(string directory, string map, string temp)
   {
-    Console.WriteLine("GameInterface constructor called");
-
     provider = new(directory, map, temp);
-
-    Console.WriteLine("Provider created");
-
     files = [.. provider.Files.Keys];
-
-    Console.WriteLine("Files loaded");
   }
 
   readonly Dictionary<string, string> texturePaths = new();
+  readonly string textureCache = "../../temp/textures.json";
 
   public void DiscoverTextures(string[] tankTags)
   {
-    Console.WriteLine("Discovering textures...");
+    if (File.Exists(textureCache))
+    {
+      Console.WriteLine("Found textures cache");
+
+      var content = File.ReadAllText(textureCache);
+      var cached = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+
+      foreach (var (key, value) in cached)
+      {
+        texturePaths[key] = value;
+      }
+
+      return;
+    }
+
+    Console.WriteLine("Textures cache not found, building...");
 
     var options = new ExporterOptions() { TextureFormat = ETextureFormat.Jpeg };
 
@@ -109,6 +119,13 @@ public partial class GameInterface
     }
 
     Console.WriteLine($"Discovered {texturePaths.Count} textures");
+    Directory.CreateDirectory(Path.GetDirectoryName(textureCache));
+
+    var json = JsonSerializer.Serialize(texturePaths);
+
+    File.WriteAllText(textureCache, json);
+
+    Console.WriteLine("Saved textures cache");
   }
 
   public List<string> Textures => [.. texturePaths.Keys];
@@ -200,62 +217,53 @@ public partial class GameInterface
 
   public byte[] TankPart(string tag, string part)
   {
-    try
+    var pda = provider.Discovered<UPrimaryDataAsset>(tag);
+    UDataTable? dataTable = null;
+
+    foreach (var (prefix, name) in tankPartPrefixes)
     {
-      var pda = provider.Discovered<UPrimaryDataAsset>(tag);
-      UDataTable? dataTable = null;
-
-      foreach (var (prefix, name) in tankPartPrefixes)
+      if (!part.StartsWith(prefix))
       {
-        if (!part.StartsWith(prefix))
-        {
-          continue;
-        }
-
-        dataTable = pda.Get<UDataTable>(name);
-        break;
+        continue;
       }
 
-      if (dataTable == null)
-      {
-        throw new ArgumentException($"Unknown tank part: {part}");
-      }
-
-      dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
-
-      if (row == null)
-      {
-        throw new ArgumentException($"Unknown tank part: {part}");
-      }
-
-      var visualData = row.Get<UObject>("VisualData");
-      var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-      var meshes = new List<UStaticMesh>();
-
-      foreach (var property in meshSettings.Properties)
-      {
-        var name = property.Name.Text;
-
-        if (name == "CollisionMesh")
-        {
-          continue;
-        }
-
-        if (meshSettings.TryGet<UStaticMesh>(name, out var mesh))
-        {
-          meshes.Add(mesh);
-        }
-      }
-
-      var gltf = new MonoGltf(meshes);
-
-      return gltf.Write($"{tag}/{part}");
-    }
-    catch (Exception e)
-    {
-      Console.WriteLine(e);
+      dataTable = pda.Get<UDataTable>(name);
+      break;
     }
 
-    return [];
+    if (dataTable == null)
+    {
+      throw new ArgumentException($"Unknown tank part: {part}");
+    }
+
+    dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
+
+    if (row == null)
+    {
+      throw new ArgumentException($"Unknown tank part: {part}");
+    }
+
+    var visualData = row.Get<UObject>("VisualData");
+    var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
+    var meshes = new List<UStaticMesh>();
+
+    foreach (var property in meshSettings.Properties)
+    {
+      var name = property.Name.Text;
+
+      if (name == "CollisionMesh")
+      {
+        continue;
+      }
+
+      if (meshSettings.TryGet<UStaticMesh>(name, out var mesh))
+      {
+        meshes.Add(mesh);
+      }
+    }
+
+    var gltf = new MonoGltf(meshes);
+
+    return gltf.Write($"{tag}/{part}");
   }
 }

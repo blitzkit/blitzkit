@@ -7,19 +7,13 @@ import { assertDiscoveryTag } from "./assertDiscoveryTag";
 let _game: GameInterface | null = null;
 
 if (!clientUnmounted && import.meta.env.SSR) {
-  console.log("Pre-import");
-
   const { GameInterface } = await import("@blitzkit/game");
-
-  console.log("Pre-creation");
 
   _game = new GameInterface(
     assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
     assertSecret(import.meta.env.WOTB_USMAP),
     "../../temp",
   );
-
-  console.log("Pre-tags");
 
   const tankTags: string[] = [];
 
@@ -30,11 +24,7 @@ if (!clientUnmounted && import.meta.env.SSR) {
     tankTags.push(tag);
   }
 
-  console.log("Pre-discovery");
-
   _game.discoverTextures(tankTags);
-
-  console.log("Post-discovery");
 }
 
 export const game = _game;
