@@ -77,7 +77,7 @@ function Details({ avatars }: DetailsProps) {
           <div
             className={styles.image}
             style={{
-              backgroundImage: `url(/api/avatars/${avatar.name}.webp)`,
+              backgroundImage: `url(/media/avatars/${avatar.id}.webp)`,
             }}
           />
           <Badge
@@ -102,7 +102,7 @@ function Details({ avatars }: DetailsProps) {
 
           <Link
             underline="never"
-            href={`/api/avatars/${avatar.name}.webp`}
+            href={`/media/avatars/${avatar.id}.webp`}
             download
           >
             <Button>
@@ -128,7 +128,7 @@ function Series(props: PropsWithSkeleton<SeriesProps>) {
       {!props.skeleton &&
         props.avatars.slice(-MAX_CARDS).map((avatar, index) => (
           <div
-            key={avatar.name}
+            key={avatar.id}
             className={styles.entry}
             style={{
               filter: `brightness(${(index + 1) / count})`,
@@ -136,7 +136,7 @@ function Series(props: PropsWithSkeleton<SeriesProps>) {
               left: `calc(${index} * ${CARD_TRIM})`,
               width: `calc(100% - ${CARD_TRIM} * ${count - 1})`,
               height: `calc(100% - ${CARD_TRIM} * ${count - 1})`,
-              backgroundImage: `url(/api/avatars/${avatar.name}.webp)`,
+              backgroundImage: `url(/media/avatars/${avatar.id}.webp)`,
             }}
           />
         ))}
