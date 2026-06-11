@@ -29,7 +29,13 @@ export function TankopediaCharacteristics({
 
           if (!shouldRender) return null;
 
-          return <Group group={group} characteristics={characteristics} />;
+          return (
+            <Group
+              key={group.name}
+              group={group}
+              characteristics={characteristics}
+            />
+          );
         })}
       </div>
     </div>
@@ -65,9 +71,9 @@ function Group({ group, characteristics }: GroupProps) {
               {
                 (
                   strings.tanks.characteristics.titles as Record<string, string>
-                )[group.group]
+                )[group.name]
               }
-              <img src={`/media/groups/${group.group}.png`} />
+              <img src={`/media/groups/${group.name}.png`} />
             </div>
           </Heading>
         </div>

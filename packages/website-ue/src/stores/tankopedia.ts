@@ -19,8 +19,8 @@ export enum TankopediaCompare {
 
 const groups: Record<string, boolean> = {};
 
-for (const { group } of characteristicsOrder) {
-  groups[group] = true;
+for (const { name } of characteristicsOrder) {
+  groups[name] = true;
 }
 
 export const Tankopedia = new Varuna<Tankopedia, Tank>((tank) => ({

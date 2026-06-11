@@ -29,7 +29,7 @@ export interface ToyRenderConfig {
 }
 
 export type CharacteristicsGroup = {
-  group: string;
+  name: string;
   render: CharacteristicsGroupRender;
   order: (CharacteristicRenderConfig | ToyRenderConfig)[];
 };
@@ -101,7 +101,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   // },
 
   {
-    group: "gun",
+    name: "gun",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       {
@@ -121,7 +121,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "clip",
+    name: "clip",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "clipping_potential", localize: true, units: "hp" },
@@ -139,7 +139,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "shell",
+    name: "shell",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "penetration", units: "mm" },
@@ -157,7 +157,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "accuracy",
+    name: "accuracy",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "aim_time", decimals: 1, units: "s" },
@@ -168,7 +168,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "flexibility",
+    name: "flexibility",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "gun_depression", decimals: 0, units: "deg" },
@@ -181,7 +181,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "maneuverability",
+    name: "maneuverability",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "speed_forward", units: "km_h" },
@@ -207,7 +207,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "survivability",
+    name: "survivability",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "health", units: "hp" },
@@ -222,7 +222,7 @@ export const characteristicsOrder: CharacteristicsGroup[] = [
   },
 
   {
-    group: "concealment",
+    name: "concealment",
     render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "view_range", units: "m" },
