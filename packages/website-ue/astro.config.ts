@@ -28,7 +28,7 @@ export default defineConfig({
   outDir: "../../dist/website",
   prefetch: { defaultStrategy: "hover", prefetchAll: true },
 
-  build: { concurrency: 16 },
+  build: { concurrency: 2 },
   adapter: undefined,
 
   integrations: [favicons(), react()],
