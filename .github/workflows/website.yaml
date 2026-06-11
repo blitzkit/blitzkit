@@ -87,3 +87,9 @@ jobs:
         run: bun run build-website
         env:
           BUILD_CHUNK: ${{ matrix.chunk }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: chunk-${{ matrix.chunk }}
+          path: ${{ matrix.chunk == 'pages' && 'dist/website' || format('dist/website/{0}', matrix.chunk) }}
