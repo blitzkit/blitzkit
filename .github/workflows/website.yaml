@@ -39,6 +39,7 @@ jobs:
     name: Build chunk ${{ matrix.chunk }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         chunk: [pages, api, media, models, textures]
 
