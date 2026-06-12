@@ -255,28 +255,23 @@ public partial class GameInterface
     return gltf.Write($"{tag}/{part}");
   }
 
-  static List<UObject> CollectMeshes(FStructFallback settings)
+  static List<(string, UObject)> CollectMeshes(FStructFallback settings)
   {
-    var meshes = new List<UObject>();
+    var meshes = new List<(string, UObject)>();
 
     foreach (var property in settings.Properties)
     {
       var key = property.Name.Text;
 
-      if (key == "CollisionMesh")
-      {
-        continue;
-      }
-
       if (settings.TryGet<UStaticMesh>(key, out var staticMesh))
       {
-        meshes.Add(staticMesh);
+        meshes.Add((key, staticMesh));
         continue;
       }
 
       if (settings.TryGet<USkeletalMesh>(key, out var skeletalMesh))
       {
-        meshes.Add(skeletalMesh);
+        meshes.Add((key, skeletalMesh));
         continue;
       }
 
@@ -289,9 +284,9 @@ public partial class GameInterface
         continue;
       }
 
-      Console.WriteLine(
-        $"{key} -> {property.Tag} ({property.TagData}) [{property.PropertyTagFlags}]"
-      );
+      // Console.WriteLine(
+      //   $"{key} -> {property.Tag} ({property.TagData}) [{property.PropertyTagFlags}]"
+      // );
     }
 
     return meshes;

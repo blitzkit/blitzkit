@@ -42,12 +42,14 @@ public class MonoGltf
   };
   readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
 
-  public MonoGltf(List<UObject> meshes)
+  public MonoGltf(List<(string, UObject)> meshes)
   {
     var materialMap = new Dictionary<string, MaterialBuilder>();
 
-    foreach (var mesh in meshes)
+    foreach (var (key, mesh) in meshes)
     {
+      var group = new NodeBuilder(key);
+
       if (mesh is UStaticMesh staticMesh)
       {
         staticMesh.TryConvert(out var convertedStaticMesh);
@@ -56,7 +58,7 @@ public class MonoGltf
 
         foreach (var section in lod0.Sections!.Value)
         {
-          ParseSection(section, materialMap, lod0, lod0.Verts!);
+          scene.AddRigidMesh(ParseSection(section, materialMap, lod0, lod0.Verts!), group);
         }
       }
       else if (mesh is USkeletalMesh skeletalMesh)
@@ -67,13 +69,19 @@ public class MonoGltf
 
         foreach (var section in lod0.Sections!.Value)
         {
-          ParseSection(section, materialMap, lod0, lod0.Verts!);
+          scene.AddRigidMesh(ParseSection(section, materialMap, lod0, lod0.Verts!), group);
         }
       }
+      else
+      {
+        continue;
+      }
+
+      scene.AddNode(group);
     }
   }
 
-  void ParseSection(
+  ConfiguredMeshBuilder ParseSection(
     CMeshSection section,
     Dictionary<string, MaterialBuilder> materialMap,
     CBaseMeshLod lod,
@@ -139,7 +147,7 @@ public class MonoGltf
       primitive.AddTriangle((v1, c1), (v2, c2), (v3, c3));
     }
 
-    scene.AddRigidMesh(meshBuilder, Matrix4x4.Identity);
+    return meshBuilder;
   }
 
   public byte[] Write(string name)
