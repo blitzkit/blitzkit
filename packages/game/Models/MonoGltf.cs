@@ -58,7 +58,8 @@ public class MonoGltf
 
         foreach (var section in lod0.Sections!.Value)
         {
-          scene.AddRigidMesh(ParseSection(section, materialMap, lod0, lod0.Verts!), group);
+          var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
+          scene.AddRigidMesh(configured, group);
         }
       }
       else if (mesh is USkeletalMesh skeletalMesh)
@@ -69,15 +70,14 @@ public class MonoGltf
 
         foreach (var section in lod0.Sections!.Value)
         {
-          scene.AddRigidMesh(ParseSection(section, materialMap, lod0, lod0.Verts!), group);
+          var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
+          scene.AddRigidMesh(configured, group);
         }
       }
       else
       {
         continue;
       }
-
-      scene.AddNode(group);
     }
   }
 
