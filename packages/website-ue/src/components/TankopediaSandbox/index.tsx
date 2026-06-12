@@ -42,6 +42,9 @@ function Content({ parameters }: TankopediaSandboxProps) {
 
   const hull = useLoader(GLTFLoader, `/models/tanks/${tank.id}/hull.glb`);
   const chassis = useLoader(GLTFLoader, `/models/tanks/${tank.id}/chassis.glb`);
+
+  console.log(chassis);
+
   const turret = useLoader(
     GLTFLoader,
     `/models/tanks/${tank.id}/${selectedTurret}.glb`,
