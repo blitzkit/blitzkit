@@ -7,12 +7,16 @@ using CUE4Parse_Conversion.Meshes;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse_Conversion.UEFormat.Enums;
 using CUE4Parse.UE4.Assets.Exports;
+using CUE4Parse.UE4.Assets.Exports.Component;
 using CUE4Parse.UE4.Assets.Exports.Engine;
 using CUE4Parse.UE4.Assets.Exports.Material;
+using CUE4Parse.UE4.Assets.Exports.SkeletalMesh;
 using CUE4Parse.UE4.Assets.Exports.StaticMesh;
 using CUE4Parse.UE4.Assets.Exports.Texture;
 using CUE4Parse.UE4.Assets.Objects;
+using CUE4Parse.UE4.Assets.Objects.Properties;
 using CUE4Parse.UE4.Objects.Engine;
+using CUE4Parse.UE4.Objects.GameplayTags;
 using CUE4Parse.UE4.Objects.UObject;
 using Microsoft.JavaScript.NodeApi;
 using SharpGLTF.Materials;
@@ -245,25 +249,51 @@ public partial class GameInterface
 
     var visualData = row.Get<UObject>("VisualData");
     var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-    var meshes = new List<UStaticMesh>();
+    var meshes = CollectMeshes(meshSettings);
+    var gltf = new MonoGltf(meshes);
 
-    foreach (var property in meshSettings.Properties)
+    return gltf.Write($"{tag}/{part}");
+  }
+
+  static List<UObject> CollectMeshes(FStructFallback settings)
+  {
+    var meshes = new List<UObject>();
+
+    foreach (var property in settings.Properties)
     {
-      var name = property.Name.Text;
+      var key = property.Name.Text;
 
-      if (name == "CollisionMesh")
+      if (key == "CollisionMesh")
       {
         continue;
       }
 
-      if (meshSettings.TryGet<UStaticMesh>(name, out var mesh))
+      if (settings.TryGet<UStaticMesh>(key, out var staticMesh))
       {
-        meshes.Add(mesh);
+        meshes.Add(staticMesh);
+        continue;
       }
+
+      if (settings.TryGet<USkeletalMesh>(key, out var skeletalMesh))
+      {
+        meshes.Add(skeletalMesh);
+        continue;
+      }
+
+      if (settings.TryGet<FStructFallback[]>(key, out var array))
+      {
+        foreach (var item in array)
+        {
+          meshes.AddRange(CollectMeshes(item));
+        }
+        continue;
+      }
+
+      Console.WriteLine(
+        $"{key} -> {property.Tag} ({property.TagData}) [{property.PropertyTagFlags}]"
+      );
     }
 
-    var gltf = new MonoGltf(meshes);
-
-    return gltf.Write($"{tag}/{part}");
+    return meshes;
   }
 }
