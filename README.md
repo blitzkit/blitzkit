@@ -13,3 +13,9 @@ Before you touch any code, you'll need the following.
 #### 1. Linux
 
 Because Node API for .NET doesn't resolve runtime-specific object files for libraries, the entirety of the BlitzKit project is "vendor-locked" to a single OS. GitHub Actions, responsible for BlitzKit CD/CI works best with Ubuntu, thus we must also use a Linux OS.
+
+#### 2. Bun
+
+https://bun.com/
+
+BlitzKit is written mostly in TypeScript, with packages fetched from NPM, managed by Bun.
