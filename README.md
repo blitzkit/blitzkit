@@ -10,45 +10,55 @@ Setting up a local developer environment for BlitzKit is more complex than most 
 
 Before you touch any code, you'll need the following.
 
-#### 1. Linux
+#### Linux
 
 Because Node API for .NET doesn't resolve runtime-specific object files for libraries, the entirety of the BlitzKit project is "vendor-locked" to a single OS. GitHub Actions, responsible for BlitzKit CD/CI works best with Ubuntu, thus we must also use a Linux OS.
 
-#### 2. Bun
+#### Windows (Optional)
+
+...
+
+#### Bun
 
 https://bun.com/
 
 BlitzKit is written mostly in TypeScript, with packages fetched from NPM, managed by Bun.
 
-#### 3. .NET
+#### .NET
 
 https://dotnet.microsoft.com/download/dotnet/9.0/
 
 You'll need the .NET 9.0 SDK to build and run the interface layer between BlitzKit and your local installation of World of Tanks Blitz.
 
-#### 4. Protocol Buffers
+#### Protocol Buffers
 
 https://protobuf.dev/installation/
 
 Both BlitzKit and World of Tanks Blitz encode their APIs with Protocol Buffers.
 
-#### 5. World of Tanks Blitz
+#### World of Tanks Blitz
 
 https://store.steampowered.com/app/444200/
 
 You'll need an up-to-date installation of World of Tanks Blitz on your computer. You may use the same installation that you play, even on a Windows partition if you dual boot.
 
-#### 6. UE4SS
+#### UE4SS
 
 ...
 
-#### 7. FModel
+#### protodump
+
+...
+
+#### FModel (Optional)
 
 ...
 
 ### Set Up
 
-#### 1. Cloning
+Now we can start installing and initiating the code of BlitzKit.
+
+#### Cloning
 
 BlitzKit is a massive monorepo with a lot of submodules. You'll likely not need all the branches and commit history. So, clone with depth 1.
 
@@ -58,30 +68,38 @@ cd blitzkit
 git submodule update --init --recursive --depth 1
 ```
 
-#### 2. Proto Files
+#### Proto Files
 
 ...
 
-#### 3. Mappings
+#### Mappings
 
 ...
 
-#### 4. Environment Variables
+#### Environment Variables
 
 ...
 
-#### 5. The Big One
+#### The Big One
 
 ...
 
-### Development Server
+### Modifying The Code
+
+This is where you can start changing things and proposing them through pull requests.
+
+#### Server
 
 ...
 
-### Building
+#### Building
 
 ...
 
-### Branches & Pull Requests
+#### Branches & Pull Requests
+
+...
+
+#### Updating
 
 ...
