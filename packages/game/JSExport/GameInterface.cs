@@ -249,8 +249,10 @@ public partial class GameInterface
 
     var visualData = row.Get<UObject>("VisualData");
     var meshSettings = visualData.Get<FStructFallback>("MeshSettings");
-    var meshes = CollectMeshes(meshSettings);
-    var gltf = new MonoGltf(meshes);
+    // var meshes = CollectMeshes(meshSettings);
+    // var gltf = new MonoGltf(meshes);
+
+    var gltf = new MonoGltf(meshSettings);
 
     return gltf.Write($"{tag}/{part}");
   }

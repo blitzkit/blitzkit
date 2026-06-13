@@ -9,9 +9,9 @@ using CUE4Parse.UE4.Assets.Exports;
 using CUE4Parse.UE4.Assets.Exports.Material;
 using CUE4Parse.UE4.Assets.Exports.SkeletalMesh;
 using CUE4Parse.UE4.Assets.Exports.StaticMesh;
+using CUE4Parse.UE4.Assets.Objects;
 using CUE4Parse.UE4.Objects.Core.Math;
 using CUE4Parse.UE4.Objects.Meshes;
-using Org.BouncyCastle.Crypto.Engines;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
@@ -30,10 +30,10 @@ using ConfiguredMeshBuilder = MeshBuilder<
 public class MonoGltf
 {
   readonly SceneBuilder scene = new();
+  readonly Dictionary<string, MaterialBuilder> materialMap = [];
 
   readonly MaterialBuilder emptyMaterial = new("empty_material");
   readonly ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
-
   public static readonly Dictionary<string, KnownChannel> knownChannels = new()
   {
     { "BaseColor", KnownChannel.BaseColor },
@@ -43,57 +43,92 @@ public class MonoGltf
   };
   readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
 
-  public MonoGltf(List<(string, UObject)> meshes)
+  public MonoGltf(FStructFallback settings)
   {
-    var materialMap = new Dictionary<string, MaterialBuilder>();
+    var root = new NodeBuilder("root");
 
-    foreach (var (key, mesh) in meshes)
+    Traverse(settings, root);
+    scene.AddNode(root);
+  }
+
+  void Traverse(FStructFallback settings, NodeBuilder parent)
+  {
+    foreach (var property in settings.Properties)
     {
-      var group = new NodeBuilder(key);
+      var key = property.Name.Text;
 
-      if (mesh is UStaticMesh staticMesh)
+      if (settings.TryGet<UStaticMesh>(key, out var staticMesh))
       {
-        staticMesh.TryConvert(out var convertedStaticMesh);
-
-        var lod0 = convertedStaticMesh.LODs.Find(lod => !lod.SkipLod)!;
-
-        var i = 0;
-        foreach (var section in lod0.Sections!.Value)
-        {
-          var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
-          var node = group.CreateNode($"{i++}");
-
-          scene.AddRigidMesh(configured, node);
-        }
-      }
-      else if (mesh is USkeletalMesh skeletalMesh)
-      {
-        skeletalMesh.TryConvert(out var convertedSkeletalMesh);
-
-        var lod0 = convertedSkeletalMesh.LODs.Find(lod => !lod.SkipLod)!;
-
-        var i = 0;
-        foreach (var section in lod0.Sections!.Value)
-        {
-          var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
-          var node = group.CreateNode($"{i++}");
-
-          scene.AddRigidMesh(configured, node);
-        }
-      }
-      else
-      {
+        AddMesh(key, parent, staticMesh);
         continue;
       }
+
+      if (settings.TryGet<USkeletalMesh>(key, out var skeletalMesh))
+      {
+        AddMesh(key, parent, skeletalMesh);
+        continue;
+      }
+
+      if (settings.TryGet<FStructFallback[]>(key, out var array))
+      {
+        var group = parent.CreateNode(key);
+
+        foreach (var item in array)
+        {
+          Traverse(item, group);
+        }
+
+        continue;
+      }
+
+      // Console.WriteLine(
+      //   $"{key} -> {property.Tag} ({property.TagData}) [{property.PropertyTagFlags}]"
+      // );
     }
   }
 
-  ConfiguredMeshBuilder ParseSection(
-    CMeshSection section,
-    Dictionary<string, MaterialBuilder> materialMap,
-    CBaseMeshLod lod,
-    CMeshVertex[] vertices
-  )
+  void AddMesh(string key, NodeBuilder parent, UObject mesh)
+  {
+    var meshNode = parent.CreateNode(key);
+
+    if (mesh is UStaticMesh staticMesh)
+    {
+      staticMesh.TryConvert(out var convertedStaticMesh);
+
+      var lod0 = convertedStaticMesh.LODs.Find(lod => !lod.SkipLod)!;
+
+      var i = 0;
+      foreach (var section in lod0.Sections!.Value)
+      {
+        var sectionNode = meshNode.CreateNode($"{i++}");
+        var configured = ParseSection(section, lod0, lod0.Verts!);
+
+        scene.AddRigidMesh(configured, sectionNode);
+      }
+
+      return;
+    }
+
+    if (mesh is USkeletalMesh skeletalMesh)
+    {
+      skeletalMesh.TryConvert(out var convertedSkeletalMesh);
+
+      var lod0 = convertedSkeletalMesh.LODs.Find(lod => !lod.SkipLod)!;
+
+      var i = 0;
+      foreach (var section in lod0.Sections!.Value)
+      {
+        var sectionNode = meshNode.CreateNode($"{i++}");
+        var configured = ParseSection(section, lod0, lod0.Verts!);
+
+        scene.AddRigidMesh(configured, sectionNode);
+      }
+
+      return;
+    }
+  }
+
+  ConfiguredMeshBuilder ParseSection(CMeshSection section, CBaseMeshLod lod, CMeshVertex[] vertices)
   {
     var meshBuilder = new ConfiguredMeshBuilder();
     MaterialBuilder materialBuilder;
