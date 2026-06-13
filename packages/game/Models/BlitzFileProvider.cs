@@ -17,6 +17,12 @@ using SkiaSharp;
 
 namespace BlitzKit.Game.Models;
 
+public enum ImagePostProcess
+{
+  None,
+  RMAO,
+}
+
 public partial class BlitzFileProvider : DefaultFileProvider
 {
   [GeneratedRegex(@"\(GameplayTags=\(\(TagName=""(.+)""\)\)\)")]
@@ -87,13 +93,37 @@ public partial class BlitzFileProvider : DefaultFileProvider
   private readonly SKEncodedImageFormat imageFormat = SKEncodedImageFormat.Webp;
   private readonly int imageQuality = 80;
 
-  public byte[] Image(UTexture2D uTexture)
+  public byte[] Image(UTexture2D uTexture, ImagePostProcess postProcess = ImagePostProcess.None)
   {
     var cTexture = uTexture.Decode(ETexturePlatform.DesktopMobile);
 
     ArgumentNullException.ThrowIfNull(cTexture);
 
     var bitmap = cTexture.ToSkBitmap();
+
+    return Image(bitmap, postProcess);
+  }
+
+  private byte[] Image(SKBitmap bitmap, ImagePostProcess postProcess)
+  {
+    if (postProcess != ImagePostProcess.None)
+    {
+      for (int y = 0; y < bitmap.Height; y++)
+      {
+        for (int x = 0; x < bitmap.Width; x++)
+        {
+          var color = bitmap.GetPixel(x, y);
+
+          switch (postProcess)
+          {
+            case ImagePostProcess.RMAO:
+              bitmap.SetPixel(x, y, new SKColor(color.Blue, color.Red, color.Green, color.Alpha));
+              break;
+          }
+        }
+      }
+    }
+
     var data = bitmap.Encode(imageFormat, imageQuality);
 
     return data.ToArray();

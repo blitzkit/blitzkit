@@ -138,7 +138,10 @@ public partial class GameInterface
   {
     var path = texturePaths[name];
     var texture = provider.LoadPackageObject<UTexture2D>(path);
-    return provider.Image(texture);
+    var isRMAO = name.EndsWith("_RMAO");
+    var postProcess = isRMAO ? ImagePostProcess.RMAO : ImagePostProcess.None;
+
+    return provider.Image(texture, postProcess);
   }
 
   public HashSet<string> Files => files;

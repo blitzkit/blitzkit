@@ -1,14 +1,11 @@
-import {
-  VisualChanges_TankPart,
-  type StageParameters,
-} from "@protos/blitz_static_tank_upgrade_single_stage";
+import { type StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useProtagonist } from "../../hooks/useProtagonist";
 import { useTankChassisModel } from "../../hooks/useTankChassisModel";
 import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
 import { useTankTurretModel } from "../../hooks/useTankTurretModel";
+import { TankopediaLighting } from "../TankopediaLighting";
 import styles from "./index.module.css";
 
 interface TankopediaSandboxProps {
@@ -33,17 +30,6 @@ export function TankopediaSandbox({ parameters }: TankopediaSandboxProps) {
 }
 
 function Content({ parameters }: TankopediaSandboxProps) {
-  const tank = useProtagonist();
-
-  const selectedTurret = parameters.visual_changes.find(
-    ({ tank_part }) => tank_part === VisualChanges_TankPart.TANK_PART_TURRET,
-  )!.name;
-  const selectedGun = parameters.visual_changes.find(
-    ({ tank_part }) => tank_part === VisualChanges_TankPart.TANK_PART_GUN,
-  )!.name;
-
-  const collision = false;
-
   const hull = useTankHullModel();
   const chassis = useTankChassisModel();
   const turret = useTankTurretModel(parameters);
@@ -64,23 +50,11 @@ function Content({ parameters }: TankopediaSandboxProps) {
         <primitive object={gun} />
       </group>
 
-      <spotLight
-        castShadow
-        position={[3, 10, 5]}
-        intensity={2 ** 10}
-        penumbra={1}
-      />
-      <spotLight
-        castShadow
-        position={[-3, -10, -5]}
-        intensity={2 ** 10}
-        penumbra={1}
-      />
-      <ambientLight />
+      <TankopediaLighting />
 
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[2 ** 8, 2 ** 8]} />
-        <meshStandardMaterial color="gray" />
+        <planeGeometry args={[2 ** 9, 2 ** 9]} />
+        <meshStandardMaterial color="black" />
       </mesh>
 
       <OrbitControls />
