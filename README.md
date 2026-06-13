@@ -22,6 +22,12 @@ BlitzKit is written mostly in TypeScript, with packages fetched from NPM, manage
 
 #### 3. .NET
 
-https://dotnet.microsoft.com/download/dotnet/9.0
+https://dotnet.microsoft.com/download/dotnet/9.0/
 
 You'll need the .NET 9.0 SDK to build and run the interface layer between BlitzKit and your local installation of World of Tanks Blitz.
+
+#### 4. Protocol Buffers
+
+https://protobuf.dev/installation/
+
+Both BlitzKit and World of Tanks Blitz encode their APIs with Protocol Buffers.
