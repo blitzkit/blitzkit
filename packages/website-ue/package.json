@@ -27,8 +27,6 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@types/lodash-es": "^4.17.12",
-    "@types/react": "^19.2.15",
-    "@types/react-dom": "^19.2.3",
     "@types/three": "^0.184.1",
     "@vite-pwa/astro": "^1.2.0",
     "@wooorm/starry-night": "^3.9.0",

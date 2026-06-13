@@ -2,7 +2,7 @@
   "extends": ["../../tsconfig.json", "astro/tsconfigs/base"],
   "compilerOptions": {
     "paths": {
-      "@protos/*": ["../../packages/closed/protos/*"]
-    }
-  }
+      "@protos/*": ["../../packages/closed/protos/*"],
+    },
+  },
 }

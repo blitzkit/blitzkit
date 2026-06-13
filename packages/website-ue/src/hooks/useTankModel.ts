@@ -2,7 +2,6 @@ import { useLoader } from "@react-three/fiber";
 import { useEffect } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 import { GLTFLoader } from "three-stdlib";
-import { OnObjectUpdate } from "three/src/nodes/utils/EventNode.js";
 
 export function useTankModel(url: string, map: Record<string, boolean>) {
   const gltf = useLoader(GLTFLoader, url);
