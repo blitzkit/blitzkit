@@ -1,6 +1,6 @@
 # BlitzKit
 
-Apps for World of Tanks Blitz.
+Encyclopedia for World of Tanks Blitz.
 
 ## Development
 
