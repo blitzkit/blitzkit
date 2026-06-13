@@ -240,14 +240,16 @@ public partial class GameInterface
 
     if (dataTable == null)
     {
-      throw new ArgumentException($"Unknown tank part: {part}");
+      Console.WriteLine($"Unknown tank part (no matching data table): {part}");
+      return [];
     }
 
     dataTable.TryGetDataTableRow(part, StringComparison.Ordinal, out var row);
 
     if (row == null)
     {
-      throw new ArgumentException($"Unknown tank part: {part}");
+      Console.WriteLine($"Unknown tank part (no matching row): {part}");
+      return [];
     }
 
     var visualData = row.Get<UObject>("VisualData");

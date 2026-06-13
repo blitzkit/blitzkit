@@ -5,6 +5,7 @@ import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 import { assertDiscoveryTag } from "../../../../game/assertDiscoveryTag";
 import { game } from "../../../../game/game";
+import { bufferProxy } from "../../../../api/bufferProxy";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const tanks = await api.tanks();
@@ -36,8 +37,9 @@ export async function GET({
   const item = api.metadata.item(params.id);
   const assetDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetDiscovery);
-  const bytes = game!.tankPart(tag, params.part);
-  const array = new Uint8Array(bytes);
 
-  return new Response(array);
+  return bufferProxy(
+    () => game!.tankPart(tag, params.part),
+    `tank-part-${tag}-${params.part}`,
+  );
 }

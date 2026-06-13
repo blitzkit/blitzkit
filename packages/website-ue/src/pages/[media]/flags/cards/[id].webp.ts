@@ -5,6 +5,7 @@ import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { game } from "../../../../game/game";
 import { clientUnmounted } from "../../../../game/unmounted";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
+import { bufferProxy } from "../../../../api/bufferProxy";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   return Object.values(Nation)
@@ -20,7 +21,6 @@ export async function GET({ params }: APIContext<never, { id: string }>) {
 
   const enumName = Nation[Number(params.id)];
   const nationName = enumName.replace("NATION_", "").toLowerCase();
-  const flag = game!.flag(nationName);
 
-  return new Response(new Uint8Array(flag));
+  return bufferProxy(() => game!.flag(nationName), `flag-card-${nationName}`);
 }

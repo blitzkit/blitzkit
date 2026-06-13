@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import { bufferProxy } from "./bufferProxy";
 
 export async function imageProxy(url: string) {
   if (import.meta.env.DEV) {

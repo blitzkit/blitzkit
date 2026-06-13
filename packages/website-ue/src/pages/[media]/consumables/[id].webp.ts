@@ -4,6 +4,7 @@ import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { game } from "../../../game/game";
 import { getStaticPaths as _getStaticPaths } from "../_index";
 import { assertDiscoveryTag } from "../../../game/assertDiscoveryTag";
+import { bufferProxy } from "../../../api/bufferProxy";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   return api.metadata
@@ -11,13 +12,10 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
     .map(({ id }) => ({ params: { id } }));
 });
 
-
 export function GET({ params }: APIContext<never, { id: string }>) {
   const item = api.metadata.item(params.id);
   const assetsDiscovery = item.BlitzStaticAssetsDiscovery();
   const tag = assertDiscoveryTag(assetsDiscovery);
-  const icon = game!.consumableIcon(tag);
-  const array = new Uint8Array(icon);
 
-  return new Response(array);
+  return bufferProxy(() => game!.consumableIcon(tag), `consumable-icon-${tag}`);
 }
