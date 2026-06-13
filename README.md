@@ -31,3 +31,10 @@ You'll need the .NET 9.0 SDK to build and run the interface layer between BlitzK
 https://protobuf.dev/installation/
 
 Both BlitzKit and World of Tanks Blitz encode their APIs with Protocol Buffers.
+
+#### 5. World of Tanks Blitz
+
+https://store.steampowered.com/app/444200/
+
+You'll need an up-to-date installation of World of Tanks Blitz on your computer. You may use the same installation that you play, even on a Windows partition if you dual boot.
+
