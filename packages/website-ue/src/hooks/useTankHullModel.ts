@@ -3,5 +3,11 @@ import { useTankModel } from "./useTankModel";
 
 export function useTankHullModel() {
   const tank = useProtagonist();
-  return useTankModel(`/models/tanks/${tank.id}/hull.glb`);
+
+  const map = {
+    Mesh: true,
+    CollisionMesh: false,
+  };
+
+  return useTankModel(`/models/tanks/${tank.id}/hull.glb`, map);
 }

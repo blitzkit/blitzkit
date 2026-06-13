@@ -6,8 +6,9 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useTankChassisModel } from "../../hooks/useTankChassisModel";
+import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
-import { useTankModel } from "../../hooks/useTankModel";
+import { useTankTurretModel } from "../../hooks/useTankTurretModel";
 import styles from "./index.module.css";
 
 interface TankopediaSandboxProps {
@@ -45,8 +46,8 @@ function Content({ parameters }: TankopediaSandboxProps) {
 
   const hull = useTankHullModel();
   const chassis = useTankChassisModel();
-  const turret = useTankModel(`/models/tanks/${tank.id}/${selectedTurret}.glb`);
-  const gun = useTankModel(`/models/tanks/${tank.id}/${selectedGun}.glb`);
+  const turret = useTankTurretModel(parameters);
+  const gun = useTankGunModel(parameters);
 
   return (
     <>

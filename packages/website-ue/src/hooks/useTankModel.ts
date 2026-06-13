@@ -2,11 +2,11 @@ import { useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
 import { GLTFLoader } from "three-stdlib";
 
-export function useTankModel(url: string) {
-  const collision = false;
+export function useTankModel(url: string, map: Record<string, boolean>) {
   const gltf = useLoader(GLTFLoader, url);
+  const [root] = gltf.scene.children;
 
-  gltf.scene.traverse((child) => {
+  root.traverse((child) => {
     if (
       child instanceof Mesh &&
       child.material instanceof MeshStandardMaterial
@@ -19,9 +19,15 @@ export function useTankModel(url: string) {
     child.receiveShadow = true;
   });
 
-  for (const child of gltf.scene.children) {
-    child.visible = (child.name === "CollisionMesh") === collision;
+  for (const child of root.children) {
+    if (child.name in map) {
+      child.visible = map[child.name];
+      continue;
+    }
+
+    child.visible = false;
+    console.warn(`Root child ${child.name} isn't recognized`);
   }
 
-  return gltf.scene;
+  return root;
 }
