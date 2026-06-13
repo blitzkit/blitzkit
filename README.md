@@ -38,6 +38,14 @@ https://store.steampowered.com/app/444200/
 
 You'll need an up-to-date installation of World of Tanks Blitz on your computer. You may use the same installation that you play, even on a Windows partition if you dual boot.
 
+#### 6. UE4SS
+
+...
+
+#### 7. FModel
+
+...
+
 ### Set Up
 
 #### 1. Cloning
@@ -49,3 +57,31 @@ git clone --depth 1 https://github.com/blitzkit/blitzkit.git
 cd blitzkit
 git submodule update --init --recursive --depth 1
 ```
+
+#### 2. Proto Files
+
+...
+
+#### 3. Mappings
+
+...
+
+#### 4. Environment Variables
+
+...
+
+#### 5. The Big One
+
+...
+
+### Development Server
+
+...
+
+### Building
+
+...
+
+### Branches & Pull Requests
+
+...
