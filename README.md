@@ -19,3 +19,9 @@ Because Node API for .NET doesn't resolve runtime-specific object files for libr
 https://bun.com/
 
 BlitzKit is written mostly in TypeScript, with packages fetched from NPM, managed by Bun.
+
+#### 3. .NET
+
+https://dotnet.microsoft.com/download/dotnet/9.0
+
+You'll need the .NET 9.0 SDK to build and run the interface layer between BlitzKit and your local installation of World of Tanks Blitz.
