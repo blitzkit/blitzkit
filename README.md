@@ -42,9 +42,10 @@ You'll need an up-to-date installation of World of Tanks Blitz on your computer.
 
 #### 1. Cloning
 
-BlitzKit is a massive monorepo and you will likely not need all the branches and commit history. So, clone with depth 1.
+BlitzKit is a massive monorepo with a lot of submodules. You'll likely not need all the branches and commit history. So, clone with depth 1.
 
 ```bash
 git clone --depth 1 https://github.com/blitzkit/blitzkit.git
 cd blitzkit
+git submodule update --init --recursive --depth 1
 ```
