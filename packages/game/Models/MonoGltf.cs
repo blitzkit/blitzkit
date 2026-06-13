@@ -11,6 +11,7 @@ using CUE4Parse.UE4.Assets.Exports.SkeletalMesh;
 using CUE4Parse.UE4.Assets.Exports.StaticMesh;
 using CUE4Parse.UE4.Objects.Core.Math;
 using CUE4Parse.UE4.Objects.Meshes;
+using Org.BouncyCastle.Crypto.Engines;
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
@@ -56,10 +57,13 @@ public class MonoGltf
 
         var lod0 = convertedStaticMesh.LODs.Find(lod => !lod.SkipLod)!;
 
+        var i = 0;
         foreach (var section in lod0.Sections!.Value)
         {
           var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
-          scene.AddRigidMesh(configured, group);
+          var node = group.CreateNode($"{i++}");
+
+          scene.AddRigidMesh(configured, node);
         }
       }
       else if (mesh is USkeletalMesh skeletalMesh)
@@ -68,10 +72,13 @@ public class MonoGltf
 
         var lod0 = convertedSkeletalMesh.LODs.Find(lod => !lod.SkipLod)!;
 
+        var i = 0;
         foreach (var section in lod0.Sections!.Value)
         {
           var configured = ParseSection(section, materialMap, lod0, lod0.Verts!);
-          scene.AddRigidMesh(configured, group);
+          var node = group.CreateNode($"{i++}");
+
+          scene.AddRigidMesh(configured, node);
         }
       }
       else
