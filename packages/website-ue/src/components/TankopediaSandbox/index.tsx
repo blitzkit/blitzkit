@@ -1,5 +1,6 @@
 import { type StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { Canvas } from "@react-three/fiber";
+import { fov } from "../../config/fov";
 import { useTankChassisModel } from "../../hooks/useTankChassisModel";
 import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
@@ -18,7 +19,7 @@ export function TankopediaSandbox({ parameters }: TankopediaSandboxProps) {
     <div className={styles.wrapper}>
       <div className={styles.sandbox}>
         <Canvas
-          camera={{ fov: 40 }}
+          camera={{ fov }}
           shadows
           className={styles.canvas}
           frameloop="demand"

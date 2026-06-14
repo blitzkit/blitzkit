@@ -1,26 +1,22 @@
-import { J_HAT, K_HAT } from "@blitzkit/core";
+import { I_HAT, J_HAT } from "@blitzkit/core";
 import { invalidate, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { Vector2, Vector3 } from "three";
+import { Quaternion, Vector2, Vector3 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 
-const initialDistance = 8;
-const initialRotation = new Vector2(degToRad(45), degToRad(45));
-
 const clientPosition = new Vector2();
-const workingVector2 = new Vector2();
 const workingVector3 = new Vector3();
+const workingQuaternion = new Quaternion();
 
 const cameraCenter = new Vector3(0, 1, 0);
-
-const cameraRotation = initialRotation.clone();
-let cameraDistance = initialDistance;
 
 export function TankopediaControls() {
   const canvas = useThree((state) => state.gl.domElement);
   const camera = useThree((state) => state.camera);
 
   useEffect(() => {
+    setCameraPosition(15, degToRad(90 - 20), degToRad(90 + 25));
+
     function handlePointerDown(event: PointerEvent) {
       clientPosition.set(event.clientX, event.clientY);
 
@@ -29,20 +25,24 @@ export function TankopediaControls() {
     }
 
     function handlePointerMove(event: PointerEvent) {
-      workingVector2.set(event.clientX, event.clientY).sub(clientPosition);
+      event.preventDefault();
 
-      workingVector2.x *= -(2 * Math.PI) / canvas.width;
-      workingVector2.y *= (2 * Math.PI) / canvas.height;
+      workingVector3.copy(camera.position).sub(cameraCenter);
 
-      cameraRotation.x += workingVector2.x;
+      const r = workingVector3.length();
+      const dx = event.movementX / window.innerWidth;
+      const dy = event.movementY / window.innerHeight;
 
-      if (cameraRotation.y + workingVector2.y < Math.PI / 2) {
-        cameraRotation.y += workingVector2.y;
-      }
+      const dTheta = -dx * Math.PI;
+      const dPhi = -dy * Math.PI;
 
-      clientPosition.set(event.clientX, event.clientY);
+      const theta = Math.atan2(workingVector3.x, workingVector3.z) + dTheta;
+      const phi0 = Math.acos(workingVector3.y / r);
+      let phi = phi0 + dPhi;
 
-      updateCameraPosition();
+      if (phi < 0 || phi > Math.PI) phi = phi0;
+
+      setCameraPosition(r, phi, theta);
     }
 
     function handlePointerUp() {
@@ -50,13 +50,20 @@ export function TankopediaControls() {
       window.removeEventListener("pointerup", handlePointerUp);
     }
 
-    function updateCameraPosition() {
-      camera.position
-        .set(cameraDistance, 0, 0)
-        .applyAxisAngle(J_HAT, cameraRotation.x)
-        .applyAxisAngle(K_HAT, cameraRotation.y)
-        .add(cameraCenter);
-      camera.lookAt(cameraCenter);
+    function setCameraPosition(r: number, phi: number, theta: number) {
+      workingVector3
+        .set(
+          Math.sin(phi) * Math.sin(theta),
+          Math.cos(phi),
+          Math.sin(phi) * Math.cos(theta),
+        )
+        .multiplyScalar(r);
+      camera.position.copy(cameraCenter).add(workingVector3);
+
+      workingQuaternion.setFromAxisAngle(I_HAT, phi - Math.PI / 2);
+      camera.quaternion
+        .setFromAxisAngle(J_HAT, theta)
+        .multiply(workingQuaternion);
 
       invalidate();
     }
@@ -67,4 +74,6 @@ export function TankopediaControls() {
       canvas.removeEventListener("pointerdown", handlePointerDown);
     };
   }, []);
+
+  return null;
 }
