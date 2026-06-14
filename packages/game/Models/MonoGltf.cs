@@ -34,11 +34,11 @@ public class MonoGltf
 
   readonly MaterialBuilder emptyMaterial = new("empty_material");
   readonly ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
-  public static readonly Dictionary<string, KnownChannel> knownChannels = new()
+  public static readonly Dictionary<string, KnownChannel[]> knownChannels = new()
   {
-    { "BaseColor", KnownChannel.BaseColor },
-    { "Normal", KnownChannel.Normal },
-    { "RMAO", KnownChannel.MetallicRoughness },
+    { "BaseColor", [KnownChannel.BaseColor] },
+    { "Normal", [KnownChannel.Normal] },
+    { "RMAO", [KnownChannel.MetallicRoughness, KnownChannel.Occlusion] },
     // { "CDE", ?? },
   };
   readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
@@ -152,7 +152,7 @@ public class MonoGltf
 
       foreach (var parameterTexture in materialData.Parameters.Textures)
       {
-        if (knownChannels.TryGetValue(parameterTexture.Key, out var channel))
+        if (knownChannels.TryGetValue(parameterTexture.Key, out var channels))
         {
           var texture = parameterTexture.Value;
           var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
@@ -163,8 +163,11 @@ public class MonoGltf
           var uniqueBytes = (byte[])stubBytes.Clone();
           var stubImage = new MemoryImage(uniqueBytes);
 
-          materialBuilder.WithChannelImage(channel, stubImage);
-          materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
+          foreach (var channel in channels)
+          {
+            materialBuilder.WithChannelImage(channel, stubImage);
+            materialBuilder.GetChannel(channel).Texture.PrimaryImage.Name = path;
+          }
         }
       }
     }

@@ -16,8 +16,6 @@ export function useTankModel(url: string, map: Record<string, boolean>) {
       }
     }
 
-    console.log(gltf.nodes);
-
     for (const node of Object.values(gltf.nodes)) {
       if (node instanceof Mesh) {
         node.castShadow = true;

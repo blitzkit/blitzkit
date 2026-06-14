@@ -18,6 +18,7 @@ export function TankopediaSandbox({ parameters }: TankopediaSandboxProps) {
       <div className={styles.sandbox}>
         <Canvas
           // scene={{ fog: new FogExp2("black", 0.05) }}
+          camera={{ fov: 40 }}
           shadows
           className={styles.canvas}
           frameloop="demand"
@@ -42,11 +43,11 @@ function Content({ parameters }: TankopediaSandboxProps) {
         <primitive object={hull} />
       </group>
 
-      <group position={[0, 0, 5]}>
+      <group position={[19.515463 / 100, 129.6958 / 100, 0.0039617573 / 100]}>
         <primitive object={turret} />
       </group>
 
-      <group position={[0, 0, -5]}>
+      <group position={[154.39078 / 100, 178.7401 / 100, 0.11611016 / 100]}>
         <primitive object={gun} />
       </group>
 
