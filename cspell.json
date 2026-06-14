@@ -14,7 +14,10 @@
     "RMAO",
     "Verts",
     "drei",
-    "frameloop"
+    "frameloop",
+    "pointermove",
+    "pointerup",
+    "pointerdown"
   ],
   "userWords": [
     "WOTB",

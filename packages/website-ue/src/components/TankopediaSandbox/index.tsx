@@ -1,10 +1,10 @@
 import { type StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
-import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useTankChassisModel } from "../../hooks/useTankChassisModel";
 import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
 import { useTankTurretModel } from "../../hooks/useTankTurretModel";
+import { TankopediaControls } from "../TankopediaControls";
 import { TankopediaLighting } from "../TankopediaLighting";
 import { SceneProps } from "../TankopediaSceneProps";
 import styles from "./index.module.css";
@@ -53,8 +53,7 @@ function Content({ parameters }: TankopediaSandboxProps) {
 
       <TankopediaLighting />
       <SceneProps />
-
-      <OrbitControls />
+      <TankopediaControls />
     </>
   );
 }
