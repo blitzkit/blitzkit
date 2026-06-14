@@ -5,6 +5,8 @@ import { type TankState } from "../tankopedia/tankState";
 import { characteristicsOrder } from "../tankopedia/characteristicsOrder";
 
 interface Tankopedia {
+  disturbed: boolean;
+
   compare: TankopediaCompare;
   groups: Record<string, boolean>;
 
@@ -24,6 +26,8 @@ for (const { name } of characteristicsOrder) {
 }
 
 export const Tankopedia = new Varuna<Tankopedia, Tank>((tank) => ({
+  disturbed: false,
+
   compare: TankopediaCompare.TierAndClass,
   groups,
 

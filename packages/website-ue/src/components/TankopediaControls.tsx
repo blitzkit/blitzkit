@@ -1,12 +1,17 @@
 import { I_HAT, J_HAT } from "@blitzkit/core";
-import { invalidate, useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { invalidate, useFrame, useThree } from "@react-three/fiber";
+import { useCallback, useEffect, useRef, type RefObject } from "react";
 import { Quaternion, Vector2, Vector3 } from "three";
 import {
+  cameraSwingHorizontalAmplitude,
+  cameraSwingHorizontalFrequency,
+  cameraSwingVerticalAmplitude,
+  cameraSwingVerticalFrequency,
   initialCameraPhi,
   initialCameraR,
   initialCameraTheta,
 } from "../config/camera";
+import { Tankopedia } from "../stores/tankopedia";
 
 const clientPosition = new Vector2();
 const workingVector3 = new Vector3();
@@ -20,10 +25,38 @@ export function TankopediaControls() {
   const canvas = useThree((state) => state.gl.domElement);
   const camera = useThree((state) => state.camera);
 
+  const r = useRef(initialCameraR);
+  const phi = useRef(initialCameraPhi);
+  const theta = useRef(initialCameraTheta);
+
+  const disturbed = Tankopedia.use((state) => state.disturbed);
+
+  const updateCameraPosition = useCallback(() => {
+    workingVector3
+      .set(
+        Math.sin(phi.current) * Math.sin(theta.current),
+        Math.cos(phi.current),
+        Math.sin(phi.current) * Math.cos(theta.current),
+      )
+      .multiplyScalar(r.current);
+    camera.position.copy(cameraCenter).add(workingVector3);
+
+    workingQuaternion.setFromAxisAngle(I_HAT, phi.current - Math.PI / 2);
+    camera.quaternion
+      .setFromAxisAngle(J_HAT, theta.current)
+      .multiply(workingQuaternion);
+
+    invalidate();
+  }, []);
+
   useEffect(() => {
-    setCameraPosition(initialCameraR, initialCameraPhi, initialCameraTheta);
+    updateCameraPosition();
 
     function handlePointerDown(event: PointerEvent) {
+      Tankopedia.mutate((draft) => {
+        draft.disturbed = true;
+      });
+
       clientPosition.set(event.clientX, event.clientY);
 
       window.addEventListener("pointermove", handlePointerMove);
@@ -35,44 +68,27 @@ export function TankopediaControls() {
 
       workingVector3.copy(camera.position).sub(cameraCenter);
 
-      const r = workingVector3.length();
+      r.current = workingVector3.length();
       const dx = event.movementX / window.innerWidth;
       const dy = event.movementY / window.innerHeight;
 
       const dTheta = -dx * Math.PI;
       const dPhi = -dy * Math.PI;
 
-      const theta = Math.atan2(workingVector3.x, workingVector3.z) + dTheta;
-      const phi0 = Math.acos(workingVector3.y / r);
-      let phi = phi0 + dPhi;
-      const maxPhi = Math.PI / 2 + Math.asin(cameraCenter.y / r) - PHI_EPSILON;
+      theta.current = Math.atan2(workingVector3.x, workingVector3.z) + dTheta;
+      const phi0 = Math.acos(workingVector3.y / r.current);
+      phi.current = phi0 + dPhi;
+      const maxPhi =
+        Math.PI / 2 + Math.asin(cameraCenter.y / r.current) - PHI_EPSILON;
 
-      if (phi < 0 || phi > maxPhi) phi = phi0;
+      if (phi.current < 0 || phi.current > maxPhi) phi.current = phi0;
 
-      setCameraPosition(r, phi, theta);
+      updateCameraPosition();
     }
 
     function handlePointerUp() {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
-    }
-
-    function setCameraPosition(r: number, phi: number, theta: number) {
-      workingVector3
-        .set(
-          Math.sin(phi) * Math.sin(theta),
-          Math.cos(phi),
-          Math.sin(phi) * Math.cos(theta),
-        )
-        .multiplyScalar(r);
-      camera.position.copy(cameraCenter).add(workingVector3);
-
-      workingQuaternion.setFromAxisAngle(I_HAT, phi - Math.PI / 2);
-      camera.quaternion
-        .setFromAxisAngle(J_HAT, theta)
-        .multiply(workingQuaternion);
-
-      invalidate();
     }
 
     canvas.addEventListener("pointerdown", handlePointerDown);
@@ -81,6 +97,40 @@ export function TankopediaControls() {
       canvas.removeEventListener("pointerdown", handlePointerDown);
     };
   }, []);
+
+  return (
+    !disturbed && (
+      <Swing
+        r={r}
+        phi={phi}
+        theta={theta}
+        updateCameraPosition={updateCameraPosition}
+      />
+    )
+  );
+}
+
+interface SwingProps {
+  r: RefObject<number>;
+  phi: RefObject<number>;
+  theta: RefObject<number>;
+  updateCameraPosition: () => void;
+}
+
+export function Swing({ r, phi, theta, updateCameraPosition }: SwingProps) {
+  useFrame(({ clock }) => {
+    const t = 2 * Math.PI * clock.getElapsedTime();
+
+    phi.current =
+      initialCameraPhi +
+      cameraSwingVerticalAmplitude * Math.cos(cameraSwingVerticalFrequency * t);
+    theta.current =
+      initialCameraTheta +
+      cameraSwingHorizontalAmplitude *
+        Math.sin(cameraSwingHorizontalFrequency * t);
+
+    updateCameraPosition();
+  });
 
   return null;
 }

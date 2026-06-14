@@ -43,6 +43,10 @@ export function createTankState({ tank, id }: Tank) {
     speed: 0,
     terrainHardness: TerrainHardness.Hard,
 
+    isHullRotating: false,
+    isTurretRotating: false,
+    isGunRotating: false,
+
     status: status as Record<VehicleStatusKey, boolean>,
   } satisfies TankState;
 }
