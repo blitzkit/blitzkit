@@ -2,7 +2,11 @@ import { I_HAT, J_HAT } from "@blitzkit/core";
 import { invalidate, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
 import { Quaternion, Vector2, Vector3 } from "three";
-import { degToRad } from "three/src/math/MathUtils.js";
+import {
+  initialCameraPhi,
+  initialCameraR,
+  initialCameraTheta,
+} from "../config/camera";
 
 const clientPosition = new Vector2();
 const workingVector3 = new Vector3();
@@ -10,12 +14,14 @@ const workingQuaternion = new Quaternion();
 
 const cameraCenter = new Vector3(0, 1, 0);
 
+const PHI_EPSILON = 2 ** -8;
+
 export function TankopediaControls() {
   const canvas = useThree((state) => state.gl.domElement);
   const camera = useThree((state) => state.camera);
 
   useEffect(() => {
-    setCameraPosition(15, degToRad(90 - 20), degToRad(90 + 25));
+    setCameraPosition(initialCameraR, initialCameraPhi, initialCameraTheta);
 
     function handlePointerDown(event: PointerEvent) {
       clientPosition.set(event.clientX, event.clientY);
@@ -39,8 +45,9 @@ export function TankopediaControls() {
       const theta = Math.atan2(workingVector3.x, workingVector3.z) + dTheta;
       const phi0 = Math.acos(workingVector3.y / r);
       let phi = phi0 + dPhi;
+      const maxPhi = Math.PI / 2 + Math.asin(cameraCenter.y / r) - PHI_EPSILON;
 
-      if (phi < 0 || phi > Math.PI) phi = phi0;
+      if (phi < 0 || phi > maxPhi) phi = phi0;
 
       setCameraPosition(r, phi, theta);
     }

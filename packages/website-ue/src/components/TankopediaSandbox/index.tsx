@@ -1,6 +1,6 @@
 import { type StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { Canvas } from "@react-three/fiber";
-import { fov } from "../../config/fov";
+import { fov } from "../../config/camera";
 import { useTankChassisModel } from "../../hooks/useTankChassisModel";
 import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
