@@ -86,7 +86,7 @@ public class MonoGltf
 
         if (transform.TryGet<FQuat>("Rotation", out var rotation))
         {
-          parent.WithLocalRotation(rotation);
+          parent.WithLocalRotation(SwapYZ(rotation));
         }
 
         if (transform.TryGet<FVector>("Translation", out var translation))
@@ -277,6 +277,11 @@ public class MonoGltf
   {
     var res = new FVector(vec.X, vec.Z, vec.Y);
     return res;
+  }
+
+  public static Quaternion SwapYZ(Quaternion q)
+  {
+    return Quaternion.Normalize(new Quaternion(q.X, q.Z, q.Y, -q.W));
   }
 
   public static FVector SwapYZAndNormalize(FVector vec)

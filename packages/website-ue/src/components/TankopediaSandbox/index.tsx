@@ -6,6 +6,7 @@ import { useTankGunModel } from "../../hooks/useTankGunModel";
 import { useTankHullModel } from "../../hooks/useTankHullModel";
 import { useTankTurretModel } from "../../hooks/useTankTurretModel";
 import { TankopediaLighting } from "../TankopediaLighting";
+import { SceneProps } from "../TankopediaSceneProps";
 import styles from "./index.module.css";
 
 interface TankopediaSandboxProps {
@@ -51,11 +52,7 @@ function Content({ parameters }: TankopediaSandboxProps) {
       </group>
 
       <TankopediaLighting />
-
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[2 ** 9, 2 ** 9]} />
-        <meshStandardMaterial color="black" />
-      </mesh>
+      <SceneProps />
 
       <OrbitControls />
     </>

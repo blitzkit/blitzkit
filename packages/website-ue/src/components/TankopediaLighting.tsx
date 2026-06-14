@@ -9,7 +9,7 @@ const THETA_OFFSET = degToRad(-152);
 const LIGHT_DISTANCE = 13;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 2;
-const INTENSITY_0 = 3.5;
+const INTENSITY_0 = 2.5;
 const INTENSITY_1 = 1.5;
 const HEMISPHERE_INTENSITY = 2;
 
