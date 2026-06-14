@@ -32,8 +32,8 @@ public class MonoGltf
   readonly SceneBuilder scene = new();
   readonly Dictionary<string, MaterialBuilder> materialMap = [];
 
-  readonly MaterialBuilder emptyMaterial = new("empty_material");
-  readonly ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
+  static readonly MaterialBuilder emptyMaterial = new("empty_material");
+  static readonly ExporterOptions options = new() { TextureFormat = ETextureFormat.Jpeg };
   public static readonly Dictionary<string, KnownChannel[]> knownChannels = new()
   {
     { "BaseColor", [KnownChannel.BaseColor] },
@@ -41,7 +41,8 @@ public class MonoGltf
     { "RMAO", [KnownChannel.MetallicRoughness, KnownChannel.Occlusion] },
     // { "CDE", ?? },
   };
-  readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
+  static readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
+  static readonly float scaleCorrection = 0.01f;
 
   public MonoGltf(FStructFallback settings)
   {
@@ -59,23 +60,43 @@ public class MonoGltf
 
       if (settings.TryGet<UStaticMesh>(key, out var staticMesh))
       {
-        AddMesh(key, parent, staticMesh);
+        AddMesh(parent.CreateNode(key), staticMesh);
         continue;
       }
 
       if (settings.TryGet<USkeletalMesh>(key, out var skeletalMesh))
       {
-        AddMesh(key, parent, skeletalMesh);
+        AddMesh(parent.CreateNode(key), skeletalMesh);
         continue;
       }
 
       if (settings.TryGet<FStructFallback[]>(key, out var array))
       {
-        var group = parent.CreateNode(key);
-
         foreach (var item in array)
         {
-          Traverse(item, group);
+          Traverse(item, parent.CreateNode(key));
+        }
+
+        continue;
+      }
+
+      if (key == "BoneTransform")
+      {
+        var transform = settings.Get<FStructFallback>(key);
+
+        if (transform.TryGet<FQuat>("Rotation", out var rotation))
+        {
+          parent.WithLocalRotation(rotation);
+        }
+
+        if (transform.TryGet<FVector>("Translation", out var translation))
+        {
+          parent.WithLocalTranslation(SwapYZ(translation) * scaleCorrection);
+        }
+
+        if (transform.TryGet<FVector>("Scale3D", out var scale))
+        {
+          parent.WithLocalScale(SwapYZ(scale));
         }
 
         continue;
@@ -87,10 +108,8 @@ public class MonoGltf
     }
   }
 
-  void AddMesh(string key, NodeBuilder parent, UObject mesh)
+  void AddMesh(NodeBuilder meshNode, UObject mesh)
   {
-    var meshNode = parent.CreateNode(key);
-
     if (mesh is UStaticMesh staticMesh)
     {
       staticMesh.TryConvert(out var convertedStaticMesh);
@@ -236,17 +255,17 @@ public class MonoGltf
   ) PrepareTriangles(CMeshVertex vert1, CMeshVertex vert2, CMeshVertex vert3)
   {
     var v1 = new VertexPositionNormalTangent(
-      SwapYZ(vert1.Position * 0.01f),
+      SwapYZ(vert1.Position * scaleCorrection),
       SwapYZAndNormalize((FVector)vert1.Normal),
       SwapYZAndNormalize((Vector4)vert1.Tangent)
     );
     var v2 = new VertexPositionNormalTangent(
-      SwapYZ(vert2.Position * 0.01f),
+      SwapYZ(vert2.Position * scaleCorrection),
       SwapYZAndNormalize((FVector)vert2.Normal),
       SwapYZAndNormalize((Vector4)vert2.Tangent)
     );
     var v3 = new VertexPositionNormalTangent(
-      SwapYZ(vert3.Position * 0.01f),
+      SwapYZ(vert3.Position * scaleCorrection),
       SwapYZAndNormalize((FVector)vert3.Normal),
       SwapYZAndNormalize((Vector4)vert3.Tangent)
     );
