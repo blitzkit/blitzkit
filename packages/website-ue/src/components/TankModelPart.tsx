@@ -1,10 +1,14 @@
-import { useLoader } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
-import { GLTFLoader } from "three-stdlib";
 
-export function useTankModel(url: string, map: Record<string, boolean>) {
-  const gltf = useLoader(GLTFLoader, url);
+interface Props {
+  url: string;
+  map: Record<string, boolean>;
+}
+
+export function TankModelPart({ url, map }: Props) {
+  const gltf = useGLTF(url);
   const [root] = gltf.scene.children;
 
   useEffect(() => {
@@ -36,5 +40,5 @@ export function useTankModel(url: string, map: Record<string, boolean>) {
     }
   }, [url, map]);
 
-  return root;
+  return <primitive object={root} />;
 }

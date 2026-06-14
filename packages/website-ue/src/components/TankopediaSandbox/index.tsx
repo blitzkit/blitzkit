@@ -1,10 +1,10 @@
 import { type StageParameters } from "@protos/blitz_static_tank_upgrade_single_stage";
 import { Canvas } from "@react-three/fiber";
 import { fov } from "../../config/camera";
-import { useTankChassisModel } from "../../hooks/useTankChassisModel";
-import { useTankGunModel } from "../../hooks/useTankGunModel";
-import { useTankHullModel } from "../../hooks/useTankHullModel";
-import { useTankTurretModel } from "../../hooks/useTankTurretModel";
+import { TankModelChassis } from "../TankModelChassis";
+import { TankModelGun } from "../TankModelGun";
+import { TankModelHull } from "../TankModelHull";
+import { TankModelTurret } from "../TankModelTurret";
 import { TankopediaControls } from "../TankopediaControls";
 import { TankopediaLighting } from "../TankopediaLighting";
 import { SceneProps } from "../TankopediaSceneProps";
@@ -32,25 +32,14 @@ export function TankopediaSandbox({ parameters }: TankopediaSandboxProps) {
 }
 
 function Content({ parameters }: TankopediaSandboxProps) {
-  const hull = useTankHullModel();
-  const chassis = useTankChassisModel();
-  const turret = useTankTurretModel(parameters);
-  const gun = useTankGunModel(parameters);
-
   return (
     <>
-      <group>
-        <primitive object={chassis} />
-        <primitive object={hull} />
-      </group>
+      <TankModelChassis />
+      <TankModelHull />
+      <TankModelTurret parameters={parameters} />
+      <TankModelGun parameters={parameters} />
 
-      <group>
-        <primitive object={turret} />
-      </group>
-
-      <group>
-        <primitive object={gun} />
-      </group>
+      {/**/}
 
       <TankopediaLighting />
       <SceneProps />
