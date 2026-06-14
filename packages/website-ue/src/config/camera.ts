@@ -10,3 +10,5 @@ export const cameraSwingVerticalAmplitude = degToRad(5);
 export const cameraSwingVerticalFrequency = Math.E ** -6;
 export const cameraSwingHorizontalAmplitude = degToRad(30);
 export const cameraSwingHorizontalFrequency = Math.E ** -5;
+
+export const cameraCenterCorrectionAmplitude = 0.8;

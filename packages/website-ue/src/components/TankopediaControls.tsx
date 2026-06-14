@@ -3,6 +3,7 @@ import { invalidate, useFrame, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useRef, type RefObject } from "react";
 import { Quaternion, Vector2, Vector3 } from "three";
 import {
+  cameraCenterCorrectionAmplitude,
   cameraSwingHorizontalAmplitude,
   cameraSwingHorizontalFrequency,
   cameraSwingVerticalAmplitude,
@@ -32,6 +33,12 @@ export function TankopediaControls() {
   const disturbed = Tankopedia.use((state) => state.disturbed);
 
   const updateCameraPosition = useCallback(() => {
+    // https://www.desmos.com/calculator/wen5z8qdc1
+    cameraCenter.x =
+      cameraCenterCorrectionAmplitude *
+      Math.sin(2 * theta.current) *
+      Math.sign(Math.cos(theta.current));
+
     workingVector3
       .set(
         Math.sin(phi.current) * Math.sin(theta.current),
