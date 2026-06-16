@@ -7,8 +7,8 @@ import {
 } from "@protos/blitz_static_tank_upgrade_single_stage";
 import type { Tank } from "@protos/tank";
 import { radToDeg } from "three/src/math/MathUtils.js";
-import { applyPitchYawLimits } from "./applyPitchYawLimits";
-import { TerrainHardness, type TankState } from "./tankState";
+import { applyPitchYawLimits } from "../tankopedia/applyPitchYawLimits";
+import { TerrainHardness, type TankState } from "../tankopedia/tankState";
 
 export type CharacteristicOutput = number | number[] | string | null;
 

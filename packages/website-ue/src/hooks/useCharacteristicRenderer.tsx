@@ -1,11 +1,11 @@
 import { literalsArray } from "@blitzkit/i18n";
 import { useMemo, type ReactNode } from "react";
 import { Text } from "../components/Text";
-import type { CharacteristicOutput } from "../tankopedia/characteristics";
+import type { CharacteristicOutput } from "../config/characteristics";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
-} from "../tankopedia/characteristicsOrder";
+} from "../config/characteristicsOrder";
 import { useGameStrings } from "./useGameStrings";
 import { useLocale } from "./useLocale";
 import { useStrings } from "./useStrings";

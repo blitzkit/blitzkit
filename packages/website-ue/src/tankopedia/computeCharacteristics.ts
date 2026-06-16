@@ -11,7 +11,7 @@ import {
   characteristics,
   type CharacteristicName,
   type CharacteristicOutput,
-} from "./characteristics";
+} from "../config/characteristics";
 import type { TankState } from "./tankState";
 
 export type ComputedCharacteristics = Record<

@@ -1,11 +1,11 @@
 import { useCharacteristicRenderer } from "../../hooks/useCharacteristicRenderer";
 import { useStrings } from "../../hooks/useStrings";
-import type { CharacteristicOutput } from "../../tankopedia/characteristics";
+import type { CharacteristicOutput } from "../../config/characteristics";
 import {
   characteristicsOrder,
   type CharacteristicRenderConfig,
   type CharacteristicsGroup,
-} from "../../tankopedia/characteristicsOrder";
+} from "../../config/characteristicsOrder";
 import type { ComputedCharacteristics } from "../../tankopedia/computeCharacteristics";
 import { Heading } from "../Heading";
 import { Text } from "../Text";

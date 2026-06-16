@@ -2,7 +2,7 @@ import type { Tank } from "@protos/tank";
 import { Varuna } from "varuna";
 import { createTankState } from "../tankopedia/createTankState";
 import { type TankState } from "../tankopedia/tankState";
-import { characteristicsOrder } from "../tankopedia/characteristicsOrder";
+import { characteristicsOrder } from "../config/characteristicsOrder";
 
 interface Tankopedia {
   disturbed: boolean;

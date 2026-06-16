@@ -10,7 +10,7 @@ import type { Sets } from "@protos/sets";
 import type { Tank } from "@protos/tank";
 import { useSets } from "./useSets";
 import type { ComputedCharacteristics } from "../tankopedia/computeCharacteristics";
-import { GunType } from "../tankopedia/characteristics";
+import { GunType } from "../config/characteristics";
 
 export function useCompatibility(
   tank: Tank,
