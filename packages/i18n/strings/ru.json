@@ -18,7 +18,7 @@
     },
     "gun_types": {
       "auto_loader": "Барабан",
-      "auto_reloader": "Auto reloader",
+      "auto_reloader": "Барабан с дозарядкой",
       "regular": "Цикличный"
     },
     "shells": {
@@ -109,7 +109,7 @@
     },
     "tank_class_short_plural_lowercase": {
       "0": "nights",
-      "1": "pediums",
+      "1": "Средние",
       "2": "identif",
       "3": "ПТ-САУ"
     },
@@ -292,12 +292,12 @@
       "periods": {
         "career": "Карьера",
         "today": "Today",
-        "days": "{days} День",
+        "days": "{days} дней",
         "custom": "{day_1} - {day_2} дней"
       },
       "filters": {
         "none": "Без фильтров",
-        "tier": "{tier} уровни"
+        "tier": "{tier} уровень"
       },
       "no_data": {
         "battles_in_period": "За этот период боёв не было",
@@ -677,7 +677,7 @@
         "count_plural": "{count} Tanks",
         "sorting_by": "Сортировать по {name}",
         "clear": "Очистить",
-        "tier": "Tier one {tier}",
+        "tier": "{tier} уровень",
         "passive": "{name} (Пассивный)",
         "active": "{name} (Активный)",
         "no_tanks_found": {
