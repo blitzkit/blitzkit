@@ -1,4 +1,11 @@
 {
+  "settings": {
+    "quality3": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
   "price": {
     "free": "Free"
   },
@@ -159,6 +166,11 @@
       "name": "Changelogs",
       "slogan": "BlitzKit patch notes",
       "action": "Read up"
+    },
+    "settings": {
+      "name": "Settings",
+      "slogan": "",
+      "action": ""
     }
   },
 

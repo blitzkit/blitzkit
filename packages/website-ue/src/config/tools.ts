@@ -91,4 +91,11 @@ export const tools: Record<string, Tool> = {
     accent: "gray",
     banner_background_position: "bottom",
   },
+
+  settings: {
+    id: "settings",
+
+    accent: "gray",
+    banner_background_position: "center",
+  },
 };
