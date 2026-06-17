@@ -1,62 +1,50 @@
 import { readdir, readFile, writeFile } from "fs/promises";
+import { lowerFirst } from "lodash-es";
 
 const SOURCES = "../../packages/closed/protos";
 const TARGET = "../../packages/closed/src/unreal/catalogItemAccessor.ts";
 
-const componentPattern = /^message (\w+)Component {/gm;
+const componentPattern = /^export interface (\w+Component) {/gm;
+const componentSuffixPattern = /Component$/;
+const tsSuffixPattern = /\.ts$/;
+const blitzStaticPrefixPattern = /^BlitzStatic/;
 
-const files = await readdir(SOURCES).then((files) =>
-  files.filter(
-    (file) =>
-      file.startsWith("blitz_static_") && file.endsWith("_component.proto")
-  )
-);
+let imports = "";
+let methods = "";
 
-const imports: { name: string; file: string }[] = [];
+const files = await readdir(SOURCES);
 
 for (const file of files) {
-  const content = await readFile(`${SOURCES}/${file}`).then((buffer) =>
-    buffer.toString()
-  );
-  const components = content.matchAll(componentPattern);
+  if (!file.endsWith("_component.ts")) continue;
 
-  for (const match of components) {
-    const name = match[1];
-    const duplicate = imports.find((_import) => _import.name === name);
+  const buffer = await readFile(`${SOURCES}/${file}`);
+  const content = buffer.toString();
+  const matches = content.matchAll(componentPattern);
 
-    if (duplicate) {
-      console.warn(
-        `Duplicate component ${name} across ${duplicate.file}.proto and ${file}`
-      );
-      continue;
-    }
+  for (const match of matches) {
+    const interfaceName = match[1];
+    const componentName = interfaceName.split("_").at(-1)!;
+    const fieldName = lowerFirst(
+      componentName.replace(blitzStaticPrefixPattern, ""),
+    );
+    const methodName = componentName.replace(componentSuffixPattern, "");
+    const importName = file.replace(tsSuffixPattern, "");
 
-    const importFile = file.replace(".proto", "");
+    imports += `import { ${interfaceName} } from "@protos/${importName}";\n`;
 
-    imports.push({ name, file: importFile });
+    methods += `  ${methodName}(name = "${fieldName}") {\n`;
+    methods += `    return this.component(name, ${interfaceName});`;
+    methods += "\n  }\n";
   }
 }
 
-let content = "";
+let body = "";
 
-for (const _import of imports) {
-  content += `import { ${_import.name}Component } from "@protos/${_import.file}";\n`;
-}
-
-content +=
+body += imports;
+body +=
   'import { BaseCatalogItemAccessor } from "./baseCatalogItemAccessor";\n\n';
-content +=
-  "export class CatalogItemAccessor extends BaseCatalogItemAccessor {\n";
+body += `export class CatalogItemAccessor extends BaseCatalogItemAccessor {\n`;
+body += methods;
+body += `}\n`;
 
-for (const _import of imports) {
-  const strippedName = _import.name.replace("BlitzStatic", "");
-  const defaultName = strippedName[0].toLowerCase() + strippedName.slice(1);
-
-  content += `  ${strippedName}(name = "${defaultName}Component") {\n`;
-  content += `    return this.component(name, ${_import.name}Component);\n`;
-  content += "  }\n";
-}
-
-content += "}\n";
-
-await writeFile(TARGET, content);
+await writeFile(TARGET, body);

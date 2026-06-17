@@ -1,0 +1,7 @@
+.avatar-controls {
+  display: flex;
+
+  .search {
+    flex: 1;
+  }
+}

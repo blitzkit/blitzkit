@@ -1,0 +1,36 @@
+---
+import { sluggify } from "@blitzkit/core";
+import { Code } from "./Code";
+import { Link } from "./Link";
+import { Text } from "./Text";
+
+interface Props {
+  value: string;
+  locale: string;
+}
+
+const bodyPattern = /^([a-z0-9-\/\.\[\]]+) (.+)$/;
+
+const { value, locale } = Astro.props;
+
+const match = value.match(bodyPattern);
+
+if (match === null) {
+  throw new Error(`Invalid value for ApiMacroSee: ${value}`);
+}
+
+const path = match[1];
+const message = match[2];
+---
+
+<Text>
+  <Text lowContrast weight="medium" color="tomato">
+    <Code>@see</Code>
+  </Text>
+
+  <Link underline="never" href={`#${sluggify(path)}`}>
+    <Code>{path}</Code>
+  </Link>
+
+  {message}
+</Text>

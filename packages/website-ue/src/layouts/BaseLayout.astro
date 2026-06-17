@@ -1,0 +1,82 @@
+---
+import BaseMeta from "../components/BaseMeta.astro";
+import BaseStyles from "../components/BaseStyles.astro";
+import ColorAlias from "../components/ColorAlias.astro";
+import ColorScale from "../components/ColorScale.astro";
+import Footer from "../components/Footer.astro";
+import type { Color } from "../ui/color";
+
+interface Props {
+  locale: string;
+  accent: Color;
+}
+
+const { accent, locale } = Astro.props;
+---
+
+<html lang={locale} class="dark">
+  <head>
+    <BaseMeta />
+
+    <ColorScale color="mauve" />
+    <ColorScale color="mauve" alpha />
+    <ColorAlias color="mauve" alias="gray" />
+    <ColorAlias color="mauve" alpha alias="gray" />
+
+    <ColorScale color="black" alpha />
+    <ColorScale color="white" alpha />
+
+    <ColorScale color={accent} />
+    <ColorScale color={accent} alpha />
+    <ColorAlias color={accent} alias="accent" />
+    <ColorAlias color={accent} alpha alias="accent" />
+
+    <BaseStyles />
+
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+
+        background-color: var(--gray-1);
+        color: var(--gray-12);
+        font-family: var(--font-family-regular);
+
+        .app {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+
+          background-color: var(--gray-1);
+        }
+      }
+    </style>
+
+    <script>
+      const root = document.documentElement;
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
+        root.classList.toggle("dark", e.matches);
+        root.classList.toggle("light", !e.matches);
+      }
+
+      applyTheme(media);
+      media.addEventListener("change", applyTheme);
+    </script>
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <slot name="pre-app" />
+
+    <div class="app">
+      <slot />
+    </div>
+
+    <!-- <Footer {locale} /> -->
+  </body>
+</html>

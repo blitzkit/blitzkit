@@ -1,0 +1,113 @@
+---
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/roboto-flex";
+---
+
+<style>
+  :root {
+    --space-0: 0.0625rem;
+    --space-1: 0.125rem;
+    --space-2: 0.25rem;
+    --space-3: 0.5rem;
+    --space-4: 1rem;
+    --space-5: 2rem;
+    --space-6: 4rem;
+    --space-7: 8rem;
+    --space-8: 16rem;
+    --space-9: 32rem;
+
+    --page-width: 64rem;
+
+    --max-size: max(100vw, 100vh);
+    --radius-max: var(--max-size);
+
+    --font-size-regular: 1rem;
+    --font-size-minor: 0.75rem;
+    --font-size-major: 1.25rem;
+
+    --font-size-heading-1: 3rem;
+    --font-size-heading-2: 2rem;
+    --font-size-heading-3: 1.5rem;
+    --font-size-heading-4: 1.25rem;
+    --font-size-heading-5: 1rem;
+    --font-size-heading-6: 0.75rem;
+
+    --font-family-regular: "Roboto Flex Variable", sans-serif;
+    --font-family-mono: "JetBrains Mono Variable", monospace;
+
+    --color-regular: var(--gray-12);
+    --color-low-contrast: var(--gray-11);
+
+    --weight-light: 300;
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-bold: 700;
+    --weight-black: 900;
+
+    --outline-interactive: var(--space-1) solid var(--gray-4);
+    --outline-focus: var(--space-1) solid var(--accent-6);
+
+    /* --shadow-cavity:
+      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
+        var(--space-1) var(--black-a3),
+      inset calc(var(--space-1) * sin(45deg) * -1)
+        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--white-a1); */
+
+    --shadow-bump:
+      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
+        var(--space-1) var(--white-a3),
+      inset calc(var(--space-1) * sin(45deg) * -1)
+        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--black-a3);
+
+    --shadow-outline-width: 1.5px;
+    --shadow-outline-width-negative: calc(var(--shadow-outline-width) * -1);
+
+    /* --shadow-interactive-background: 0 0 0 var(--shadow-outline-width)
+      var(--gray-6);
+    --shadow-interactive-shine: var(--shadow-outline-width-negative)
+      var(--shadow-outline-width-negative) var(--shadow-outline-width)
+      var(--white-a1);
+    --shadow-interactive-shadow: var(--shadow-outline-width)
+      var(--shadow-outline-width) var(--shadow-outline-width) var(--black-a4);
+    --shadow-interactive:
+      var(--shadow-interactive-shine), var(--shadow-interactive-shadow),
+      var(--shadow-interactive-background); */
+
+    --shadow-aggressive: var(--space-1) var(--space-1) var(--space-4)
+      var(--black-a11);
+    --shadow-subtle: 0 var(--space-1) var(--space-3) var(--black-a5);
+    --shadow-none: 0 0 0 transparent;
+
+    &.light {
+      --shadow-subtle: 0 var(--space-1) var(--space-3) var(--black-a2);
+    }
+
+    --blur-glass: blur(4rem);
+    --blur-tint: blur(8rem);
+
+    --duration-brief: 200ms;
+    --duration-subtle: 2s;
+
+    --tank-card-min-width: 8rem;
+  }
+</style>
+
+<style is:global>
+  .composable-radius {
+    &[data-radius="1"] {
+      border-radius: var(--space-3);
+    }
+
+    &[data-radius="2"] {
+      border-radius: var(--space-4);
+    }
+
+    &[data-radius="3"] {
+      border-radius: var(--space-5);
+    }
+
+    &[data-radius="max"] {
+      border-radius: var(--radius-max);
+    }
+  }
+</style>

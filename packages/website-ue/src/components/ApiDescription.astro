@@ -1,0 +1,85 @@
+---
+import ApiMacroSee from "./ApiMacroSee.astro";
+import ApiMacroType from "./ApiMacroType.astro";
+import { MarkdownCustom } from "./MarkdownCustom";
+
+interface Props {
+  body: string;
+  locale: string;
+}
+
+const macroPattern = /@(\w+) (.+)/;
+const macros: Record<string, string[]> = {};
+
+const macroComponents = {
+  see: ApiMacroSee,
+  type: ApiMacroType,
+};
+
+const { body: bodyOriginal, locale } = Astro.props;
+let body = "";
+
+for (const line of bodyOriginal.split("\n")) {
+  const match = line.match(macroPattern);
+
+  if (match === null) {
+    body += `${line}\n`;
+    continue;
+  }
+
+  const macro = match[1];
+  const value = match[2];
+
+  if (macro in macros) {
+    macros[macro].push(value);
+  } else {
+    macros[macro] = [value];
+  }
+}
+---
+
+<style>
+  .api-description {
+    display: flex;
+
+    .gutter {
+      width: var(--space-2);
+      background: linear-gradient(
+        transparent,
+        var(--gray-6) var(--space-4),
+        var(--gray-6) calc(100% - var(--space-4)),
+        transparent
+      );
+
+      margin: 0 var(--space-4);
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+
+      width: 100%;
+
+      padding-top: var(--space-4);
+      padding-bottom: var(--space-3);
+    }
+  }
+</style>
+
+<div class="api-description">
+  <div class="gutter"></div>
+  <div class="content">
+    <MarkdownCustom {body} />
+
+    {
+      Object.entries(macroComponents).map(([macro, Component]) => {
+        if (!(macro in macros)) return null;
+
+        return macros[macro].map((value) => {
+          return <Component {locale} value={value} />;
+        });
+      })
+    }
+  </div>
+</div>

@@ -11,7 +11,7 @@ export class Varuna<Type, Arguments = void> {
 
   constructor(
     private creator: Type | ((...args: Arguments[]) => Type),
-    private persistence?: string
+    private persistence?: string,
   ) {
     if (typeof creator !== "function") this.initialize(creator);
   }
@@ -100,7 +100,7 @@ export class Varuna<Type, Arguments = void> {
   }
 
   use<Slice = Type>(
-    slicer: (state: Type) => Slice = (state) => state as unknown as Slice
+    slicer: (state: Type) => Slice = (state) => state as unknown as Slice,
   ) {
     return this.useDeferred(slicer, slicer(this.state));
   }

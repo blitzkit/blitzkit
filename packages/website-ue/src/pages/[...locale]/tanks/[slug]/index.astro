@@ -1,0 +1,31 @@
+---
+import "@radix-ui/colors/violet-dark.css";
+import { api } from "../../../../api/dynamic";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import ColorScale from "../../../../components/ColorScale.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
+import { Page } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const { list } = await api.tankList();
+
+  return list.map((tank) => ({
+    params: { slug: tank.slug },
+    props: { id: tank.id },
+  }));
+});
+
+const { id, locale } = Astro.props;
+---
+
+<BaseLayout {locale} accent="violet">
+  <ColorScale color="amber" alpha />
+
+  <ColorScale color="red" />
+  <ColorScale color="orange" />
+  <ColorScale color="amber" />
+  <ColorScale color="jade" />
+
+  <Page {locale} {id} client:load />
+</BaseLayout>

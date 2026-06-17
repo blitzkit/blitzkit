@@ -1,0 +1,13 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ApiEntry from "./ApiEntry.astro";
+
+interface Props {
+  locale: string;
+  apis: CollectionEntry<"api">[];
+}
+
+const { apis, locale } = Astro.props;
+---
+
+{apis.map((api) => <ApiEntry {locale} {api} />)}

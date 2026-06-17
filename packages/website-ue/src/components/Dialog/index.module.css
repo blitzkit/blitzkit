@@ -1,0 +1,36 @@
+.trigger {
+  display: contents;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow-y: scroll;
+
+  background-color: var(--black-a9);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin: var(--space-4);
+    box-sizing: border-box;
+
+    min-width: 25rem;
+
+    background-color: var(--gray-3);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-interactive), var(--shadow-aggressive);
+    border-radius: var(--space-3);
+  }
+}

@@ -1,0 +1,104 @@
+---
+import { DiscordLogoIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import packageJson from "../../../../package.json";
+import { api } from "../api/dynamic";
+import { discordLink } from "../config/socials";
+import { BlitzKitIcon } from "../icons/BlitzKit";
+import { Code } from "./Code";
+import { Link } from "./Link";
+import { Text } from "./Text";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<style>
+  .footer {
+    display: flex;
+    justify-content: center;
+
+    padding: var(--space-5) var(--space-5);
+
+    background-color: var(--gray-3);
+    color: var(--color-low-contrast);
+
+    .content {
+      flex: 1;
+      max-width: var(--page-width);
+
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+
+      .row-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .logo {
+          display: flex;
+          align-items: center;
+          gap: var(--space-4);
+
+          .icon {
+            width: var(--space-6);
+            height: var(--space-6);
+          }
+
+          .info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+          }
+        }
+
+        .links {
+          display: flex;
+          align-items: center;
+          gap: var(--space-5);
+        }
+      }
+    }
+  }
+</style>
+
+<div class="footer">
+  <div class="content">
+    <div class="row-info">
+      <div class="logo">
+        <BlitzKitIcon className="icon" />
+
+        <div class="info">
+          <Text lowContrast weight="medium" size="major">
+            {strings.common.name}
+          </Text>
+
+          <Code>
+            {packageJson.version}
+          </Code>
+        </div>
+      </div>
+
+      <div class="links">
+        <Link underline="hover" color="gray" href={discordLink}>
+          <DiscordLogoIcon />
+          {strings.companies.discord}
+        </Link>
+
+        <Link
+          underline="hover"
+          color="gray"
+          href="https://github.com/blitzkit/blitzkit"
+        >
+          <GitHubLogoIcon />
+          {strings.companies.github}
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>

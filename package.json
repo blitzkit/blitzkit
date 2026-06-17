@@ -1,51 +1,20 @@
 {
   "name": "blitzkit",
-  "version": "1.30.3",
+  "version": "2.0.0-beta.3",
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
-    "build:assets": "cd packages/scripts && bun run build:assets",
-    "build:averages": "bun --filter=@blitzkit/scripts run build:averages",
-    "build:bot": "cd packages/scripts && bun run build:bot",
-    "build:website": "cd packages/website && bun run build",
-    "build:prisma": "prisma generate",
-    "build:proxyclient": "cd packages/scripts && bun run build:proxyclient",
-    "build:catalogitemaccesssor": "cd packages/scripts && bun run build:catalogitemaccesssor",
-    "build:ratingleaderboard": "cd packages/scripts && bun run build:ratingleaderboard",
-    "build:app": "cd packages/app && bun run build",
-    "dev:bot": "bun run build:bot --dev && bun start:bot --dev",
-    "start:bot": "bun dist/bot/main.js",
-    "dev:docs": "vitepress dev docs",
-    "dev:website": "cd packages/website && bun run dev",
-    "dev:app": "cd packages/app && bun run dev",
-    "dev": "bun run dev:website",
-    "dev:api": "bun --filter=@blitzkit/api run dev",
-    "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
-    "setup:patches": "bun --filter=@blitzkit/scripts run setup:patches",
-    "start:website": "bun --filter=@blitzkit/website run start",
-    "host:docs": "vitepress preview docs",
-    "lint": "tsc",
-    "lint:website": "cd packages/website && bun run lint",
-    "format": "prettier --write \"**/*.@(json|js|jsx|css|md|ts|tsx|html|xml|yml|gltf)\"",
-    "update": "yarn upgrade --latest",
-    "tunnel": "cloudflared tunnel --url http://localhost:3000",
-    "discoverids": "scripts/discoverIds.ts",
-    "build:protos": "cd packages/scripts && bun run build:protos",
-    "preview:website": "cd packages/website && bun run preview",
-    "build:reviews": "cd packages/scripts && bun build:reviews",
-    "build:ids": "cd packages/scripts && bun build:ids",
-    "prunestrings": "cd packages/scripts && bun prunestrings",
-    "setup": "bun install && bun run build:prisma && bun run build:proxyclient",
-    "patchnotes": "cd packages/scripts && bun run patchnotes"
+    "setup": "chmod a+x scripts/*.sh && ./scripts/setup.sh",
+    "dev": "./scripts/dev.sh",
+    "build-game": "./scripts/build_game.sh",
+    "build-website": "./scripts/build_website.sh"
   },
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
-    "@prisma/client": "^6.18.0",
-    "prisma": "^6.18.0",
-    "sharp": "^0.34.5",
+    "prettier": "^3.8.3",
     "typescript": "^5.9.3"
   }
 }

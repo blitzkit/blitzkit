@@ -1,0 +1,119 @@
+---
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
+import { BlitzKitIcon } from "../icons/BlitzKit";
+import { Code } from "./Code";
+import { Text } from "./Text";
+import { TextField } from "./TextField";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<style>
+  .home-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    position: relative;
+
+    padding: 0 var(--space-4);
+    margin-bottom: var(--space-4);
+
+    .wallpaper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% - var(--space-5) / 2);
+
+      background-image: url(/media/home-hero.webp);
+      background-size: cover;
+      background-position: top;
+
+      .gradient {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: var(--space-7);
+
+        width: 100%;
+        height: 100%;
+
+        background: linear-gradient(
+          color-mix(in srgb, transparent 50%, var(--gray-1)),
+          var(--gray-1)
+        );
+      }
+    }
+
+    .name {
+      margin: var(--space-6) 0;
+
+      .icon-wrapper {
+        position: relative;
+
+        width: var(--space-6);
+        height: var(--space-6);
+
+        .icon {
+          width: 100%;
+          height: 100%;
+        }
+
+        .version {
+          position: absolute;
+          top: 0;
+          right: 0;
+          transform: translate(100%, 0);
+          padding-left: var(--space-2);
+
+          font-weight: var(--weight-bold);
+          letter-spacing: -0.15em;
+        }
+      }
+
+      .credit {
+        position: relative;
+
+        :root.light & {
+          color: var(--black-a11) !important;
+        }
+      }
+    }
+
+    .search {
+      width: 100%;
+      max-width: 25rem;
+      z-index: 0;
+    }
+  }
+</style>
+
+<div class="home-hero">
+  <div class="wallpaper">
+    <div class="gradient"></div>
+  </div>
+
+  <div class="name">
+    <div class="icon-wrapper">
+      <BlitzKitIcon className="icon" />
+      <Code className="version">2.0</Code>
+    </div>
+
+    <Text className="credit" lowContrast>
+      {strings.home.credit}
+    </Text>
+  </div>
+
+  <TextField className="search" placeholder={strings.home.search}>
+    <MagnifyingGlassIcon />
+  </TextField>
+</div>

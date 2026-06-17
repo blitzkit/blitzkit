@@ -1,0 +1,17 @@
+.section {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4);
+
+  .content {
+    flex: 1;
+    max-width: var(--page-width);
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  &[data-first="true"] .content {
+    padding-top: var(--space-6);
+  }
+}

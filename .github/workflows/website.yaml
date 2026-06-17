@@ -1,0 +1,95 @@
+name: Website
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # blitz
+  WOTB_SERVER: ${{ secrets.WOTB_SERVER }}
+  WOTB_VERSION: ${{ secrets.WOTB_VERSION }}
+  PUBLIC_WOTB_CLIENT: ../../temp/game
+  WOTB_USMAP: ../closed/blitz.usmap
+
+  # google
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+  PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID: ${{ secrets.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID }}
+
+  # steam
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  STEAM_APP: 3341250
+  STEAM_OS: windows
+  STEAM_FINGERPRINT: Manifest_UFSFiles_Win64.txt
+
+  # debug
+  DOTNET_EnableDiagnostics: 1
+
+jobs:
+  build:
+    name: Build chunk ${{ matrix.chunk }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [pages, api, media, models, textures]
+
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: latest
+
+      - name: Set up Dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Set up Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Set up project
+        run: |
+          bun run setup
+          ./scripts/setup_depot_downloader.sh
+
+      - name: Download Steam game
+        run: scripts/download_game.sh
+
+      - name: Enable core dumps
+        run: |
+          ulimit -c unlimited
+
+      - name: Build
+        run: bun run build-website
+        env:
+          BUILD_CHUNK: ${{ matrix.chunk }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: chunk-${{ matrix.chunk }}
+          path: ${{ matrix.chunk == 'pages' && 'dist/website' || format('dist/website/{0}', matrix.chunk) }}

@@ -1,0 +1,23 @@
+.price {
+  font-size: var(--font-size-minor);
+  display: flex;
+
+  gap: var(--space-3);
+  height: 1em;
+
+  .entry {
+    display: block;
+    line-height: 1;
+    font-size: inherit;
+
+    .wrapper {
+      display: flex;
+      gap: var(--space-1);
+
+      .icon {
+        width: 1em;
+        height: 1em;
+      }
+    }
+  }
+}

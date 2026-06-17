@@ -1,0 +1,145 @@
+---
+import { BlitzKitIcon } from "../icons/BlitzKit";
+import { LinkI18n } from "./LinkI18n";
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+---
+
+<style>
+  #navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    z-index: 1;
+    box-shadow: var(--shadow-none);
+    backdrop-filter: var(--blur-glass);
+    box-shadow: var(--shadow-subtle);
+    background-color: var(--black-a9);
+
+    transition-duration: var(--duration-brief);
+
+    :root.light & {
+      background-color: var(--white-a9);
+    }
+
+    &[data-sticky="true"] {
+      transform: translateY(-100%);
+      box-shadow: var(--shadow-none);
+    }
+
+    .content {
+      display: flex;
+      justify-content: space-between;
+
+      width: 100%;
+      max-width: calc(var(--page-width) + 2 * var(--space-4));
+
+      .group {
+        display: flex;
+        gap: var(--space-2);
+
+        .action {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: var(--space-3);
+          gap: var(--space-2);
+
+          cursor: pointer;
+          text-decoration: none;
+
+          .selector {
+            padding: var(--space-2);
+            border-radius: var(--max-size);
+
+            display: flex;
+            justify-content: center;
+
+            width: 100%;
+            max-width: var(--space-6);
+
+            .icon {
+              height: 1.25em;
+              width: 100%;
+              vertical-align: top;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  const navbar = document.getElementById("navbar")!;
+  let lastScrollY = window.scrollY;
+
+  function handleScroll() {
+    const dy = window.scrollY - lastScrollY;
+    lastScrollY = window.scrollY;
+
+    const hide = window.scrollY > navbar.clientHeight && dy > 0;
+
+    navbar.dataset.sticky = `${hide}`;
+  }
+
+  handleScroll();
+  window.addEventListener("scroll", handleScroll);
+</script>
+
+<div id="navbar">
+  <div class="content">
+    <div class="group">
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
+        <div class="selector">
+          <BlitzKitIcon className="icon" />
+        </div>
+      </LinkI18n>
+    </div>
+
+    <div class="group">
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
+        <div class="selector">
+          <MagnifyingGlassIcon className="icon" />
+        </div>
+      </LinkI18n>
+
+      <LinkI18n
+        color="gray"
+        highContrast
+        {locale}
+        href="/"
+        className="action"
+        tabIndex={0}
+      >
+        <div class="selector">
+          <HamburgerMenuIcon className="icon" />
+        </div>
+      </LinkI18n>
+    </div>
+  </div>
+</div>

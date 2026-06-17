@@ -1,0 +1,47 @@
+---
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
+import { Heading } from "./Heading";
+import { Section } from "./Section";
+import { Text } from "./Text";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 30rem;
+
+    padding: var(--space-4);
+    margin: auto;
+
+    background-color: var(--red-3);
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+  }
+</style>
+
+<Section>
+  <div class="card composable-radius" data-radius="1">
+    <Heading size="4">
+      <div class="title">
+        <ExclamationTriangleIcon width="0.75em" height="0.75em" />
+        {strings.client_unmounted.title}
+      </div>
+    </Heading>
+    <Text>{strings.client_unmounted.body}</Text>
+  </div>
+</Section>
