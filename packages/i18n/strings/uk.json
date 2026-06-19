@@ -876,7 +876,7 @@
             "yaw": "Yaw",
             "pitch": "Pitch",
             "min": "Min",
-            "max": "Max"
+            "max": "Макс"
           }
         },
         "sandbox": {
@@ -908,7 +908,7 @@
               "normalization": "Нормалізація",
               "ricochet": "Рикошет",
               "explosion_radius": "Радіус розльоту уламків",
-              "exit": "Exit",
+              "exit": "Вийти",
               "reset": "Reset"
             },
             "advanced": "Advanced highlighting",
@@ -923,7 +923,7 @@
               },
               "status": {
                 "penetration": "{damage}hp penetration",
-                "blocked": "Blocked",
+                "blocked": "Заблоковано",
                 "ricochet": "Рикошет",
                 "splash": "{damage}hp splash"
               },
