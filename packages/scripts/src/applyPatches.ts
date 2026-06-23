@@ -103,3 +103,4 @@ while (true) {
 }
 
 vfs.dispose()
+process.exit(0);
