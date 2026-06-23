@@ -3,7 +3,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "discover-servers": "bun src/discoverServers.ts"
+    "discover-servers": "bun src/discoverServers.ts",
+    "build-protos": "bun src/protos.ts",
+    "build-proxy-client": "bun src/buildProxyClient.ts",
+    "build-catalog-item-accessor": "bun src/buildCatalogItemAccessor.ts"
   },
   "dependencies": {
     "@blitzkit/closed": "workspace:*",
