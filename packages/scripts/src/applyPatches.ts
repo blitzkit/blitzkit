@@ -77,17 +77,23 @@ while (true) {
           data.dynamicContentLocalizationsDir
         }/en.yaml`,
       );
+      console.log('fetched')
       const newStrings = parseYaml(await localizationsResponse.text());
+      console.log('got new strings')
       const oldStrings =
         await vfs.yaml<Record<string, string>>(`Data/Strings/en.yaml`);
+      console.log('got old strings')
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
+      console.log('stringified')
 
       await mkdir(`${PATCHES_ROOT}/Data/Strings`, { recursive: true });
+      console.log('mkdir')
       await writeFile(
         `${PATCHES_ROOT}/Data/Strings/en.yaml`,
         new Uint8Array((Buffer.from(patchedContent))),
       );
+      console.log('file')
     }
 
     patchIndex++;
