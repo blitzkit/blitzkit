@@ -39,6 +39,8 @@ export abstract class AbstractVFS {
     const raw = await this.raw(resolved);
     let buffer = raw;
 
+    console.log(resolved);
+
     if (resolved.endsWith(".dvpl")) {
       buffer = new Uint8Array(readDVPL(Buffer.from(raw)));
     }
