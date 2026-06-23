@@ -79,6 +79,7 @@ while (true) {
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
 
+      await mkdir(`${PATCHES_ROOT}/Data/Strings`, { recursive: true });
       await writeFile(
         `${PATCHES_ROOT}/Data/Strings/en.yaml`,
         new Uint8Array(writeDVPL(Buffer.from(patchedContent))),
