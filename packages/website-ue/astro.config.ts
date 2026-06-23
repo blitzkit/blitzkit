@@ -11,11 +11,7 @@ export default defineConfig({
   vite: {
     server: { allowedHosts: [] },
 
-    esbuild: {
-      minifyIdentifiers: true,
-      minifySyntax: false,
-      minifyWhitespace: true,
-    },
+    esbuild: { target: "es2022" },
 
     build: {
       rollupOptions: {

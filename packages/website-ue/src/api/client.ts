@@ -21,7 +21,7 @@ export class ClientAPI extends AbstractAPI {
     throw new Error("MetadataAccessor is inaccessible on the client");
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   mediaPrefix(): never {
     throw rejected();
   }
@@ -85,7 +85,7 @@ export class ClientAPI extends AbstractAPI {
     return json;
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   gameStrings() {
     return rejected();
   }
@@ -98,12 +98,12 @@ export class ClientAPI extends AbstractAPI {
     return json;
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   gameStringGroups() {
     return rejected();
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   avatar() {
     return rejected();
   }
@@ -112,38 +112,44 @@ export class ClientAPI extends AbstractAPI {
     return fetchPB("/api/avatars/all.pb", Avatars);
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   avatarList() {
     return rejected();
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   background() {
     return rejected();
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   backgrounds() {
     return rejected();
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   currencyIcon() {
     return rejected();
   }
 
-  @UnimplementedOnClient
+  @UnimplementedOnClient()
   stuffIcon() {
     return rejected();
   }
 }
 
-function UnimplementedOnClient(
-  _target: unknown,
-  propertyKey: string,
-  descriptor: PropertyDescriptor,
-) {
-  descriptor.value = function () {
-    throw new Error(`${propertyKey} is not implemented on the client`);
+export function UnimplementedOnClient() {
+  return function <This, Arguments extends any[], Return>(
+    _target: (this: This, ...args: Arguments) => Promise<Return>,
+    context: ClassMethodDecoratorContext<
+      This,
+      (this: This, ...args: Arguments) => Promise<Return>
+    >,
+  ) {
+    return function () {
+      throw new Error(
+        `${String(context.name)} is not implemented on the client`,
+      );
+    };
   };
 }

@@ -82,35 +82,37 @@ export abstract class AbstractAPI {
   }
 }
 
-export function Cache<Arguments extends unknown[]>(disableInDev = false) {
+export function Cache(disableInDev = false) {
   const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
-  return function (
-    _target: unknown,
-    _propertyKey: string,
-    descriptor: PropertyDescriptor,
+  return function <This, Arguments extends any[], Return>(
+    target: (this: This, ...args: Arguments) => Promise<Return>,
+    // TODO: evaluate if we need context to make the error trace easier
+    // context: ClassMethodDecoratorContext<
+    //   This,
+    //   (this: This, ...args: Arguments) => Promise<Return>
+    // >,
   ) {
-    const original = descriptor.value;
-
-    descriptor.value = function (...args: Arguments) {
+    return async function replacementMethod(this: This, ...args: Arguments) {
       const key = args.join("-");
+      let thisCache: Map<string, Promise<Return>>;
 
-      let thisCache = cache.get(this);
-
-      if (!thisCache) {
+      if (cache.has(this as object)) {
+        thisCache = cache.get(this as object) as Map<string, Promise<Return>>;
+      } else {
         thisCache = new Map();
-        cache.set(this, thisCache);
+        cache.set(this as object, thisCache);
       }
 
       const disabled = disableInDev && import.meta.env.DEV;
 
       if (thisCache.has(key) && !disabled) {
-        return thisCache.get(key);
+        return thisCache.get(key)!;
       }
 
       const promise = (async () => {
         try {
-          return await original.apply(this, args);
+          return await target.apply(this, args);
         } catch (error) {
           thisCache!.delete(key);
           throw error;
