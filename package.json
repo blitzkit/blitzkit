@@ -44,6 +44,7 @@
   ],
   "dependencies": {
     "@prisma/client": "^6.18.0",
+    "lz4js": "^0.2.0",
     "prisma": "^6.18.0",
     "sharp": "^0.34.5",
     "typescript": "^5.9.3"

@@ -19,7 +19,6 @@
     "dotenv": "^17.2.2",
     "fast-xml-parser": "^5.3.2",
     "lodash-es": "^4.17.21",
-    "lz4js": "^0.2.0",
     "pickleparser": "^0.2.1",
     "protobufjs": "^7.5.4",
     "three": "^0.180.0",
