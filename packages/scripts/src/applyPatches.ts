@@ -83,7 +83,7 @@ while (true) {
 
       await mkdir(`${PATCHES_ROOT}/Data/Strings`, { recursive: true });
       await writeFile(
-        `${PATCHES_ROOT}/Data/Strings/en.yaml`,
+        `${PATCHES_ROOT}/Data/Strings/en.yaml.dvpl`,
         new Uint8Array(writeDVPL(Buffer.from(patchedContent))),
       );
     }
