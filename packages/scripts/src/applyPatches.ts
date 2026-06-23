@@ -66,18 +66,14 @@ while (true) {
     }
 
     if ("dynamicContentLocalizationsDir" in data) {
-      console.log("Found dynamic content localizations; patching...");
-
       const localizationsResponse = await fetch(
         `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
           data.dynamicContentLocalizationsDir
         }/en.yaml`,
       );
       const newStrings = parseYaml(await localizationsResponse.text());
-      console.log("new scripts computed");
       const oldStrings =
         await vfs.yaml<Record<string, string>>(`Data/Strings/en.yaml`);
-      console.log("old strings loaded");
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
 
