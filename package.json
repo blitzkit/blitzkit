@@ -7,7 +7,8 @@
     "setup": "chmod a+x scripts/*.sh && ./scripts/setup.sh",
     "dev": "./scripts/dev.sh",
     "build-game": "./scripts/build_game.sh",
-    "build-website": "./scripts/build_website.sh"
+    "build-website": "./scripts/build_website.sh",
+    "discover-servers": "./scripts/discover_servers.sh"
   },
   "type": "module",
   "workspaces": [

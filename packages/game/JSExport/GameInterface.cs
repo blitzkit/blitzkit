@@ -28,16 +28,18 @@ namespace BlitzKit.Game.JSExport;
 public partial class GameInterface
 {
   private readonly BlitzFileProvider provider;
-
   public HashSet<string> files;
+  public int textureChunks;
 
-  public GameInterface(string directory, string map, string temp)
+  public GameInterface(string directory, string map, string temp, int textureChunks)
   {
     provider = new(directory, map, temp);
     files = [.. provider.Files.Keys];
+
+    this.textureChunks = textureChunks;
   }
 
-  readonly Dictionary<string, string> texturePaths = new();
+  readonly Dictionary<string, (int, string)> texturePaths = [];
   readonly string textureCache = "../../temp/textures.json";
 
   public void DiscoverTextures(string[] tankTags)
@@ -47,7 +49,7 @@ public partial class GameInterface
       Console.WriteLine("Found textures cache");
 
       var content = File.ReadAllText(textureCache);
-      var cached = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+      var cached = JsonSerializer.Deserialize<Dictionary<string, (int, string)>>(content);
 
       foreach (var (key, value) in cached)
       {
@@ -110,9 +112,10 @@ public partial class GameInterface
                   if (MonoGltf.knownChannels.TryGetValue(parameterTexture.Key, out var channel))
                   {
                     var path = parameterTexture.Value.GetPathName();
+                    var modulus = MonoGltf.TextureModulus(path, textureChunks);
                     var name = Path.GetFileNameWithoutExtension(path);
 
-                    texturePaths[name] = path;
+                    texturePaths[name] = (modulus, path);
                   }
                 }
               }
@@ -132,11 +135,12 @@ public partial class GameInterface
     Console.WriteLine("Saved textures cache");
   }
 
-  public List<string> Textures => [.. texturePaths.Keys];
+  public List<(int, string)> Textures =>
+    [.. texturePaths.Select(texture => (texture.Value.Item1, texture.Key))];
 
   public byte[] Texture(string name)
   {
-    var path = texturePaths[name];
+    var (_, path) = texturePaths[name];
     var texture = provider.LoadPackageObject<UTexture2D>(path);
     var isRMAO = name.EndsWith("_RMAO");
     var postProcess = isRMAO ? ImagePostProcess.RMAO : ImagePostProcess.None;
@@ -257,7 +261,7 @@ public partial class GameInterface
     // var meshes = CollectMeshes(meshSettings);
     // var gltf = new MonoGltf(meshes);
 
-    var gltf = new MonoGltf(meshSettings);
+    var gltf = new MonoGltf(meshSettings, textureChunks);
 
     return gltf.Write($"{tag}/{part}");
   }

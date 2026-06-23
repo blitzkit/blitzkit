@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using CUE4Parse_Conversion.Textures;
 using CUE4Parse.Compression;

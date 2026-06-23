@@ -13,6 +13,7 @@ if (!clientUnmounted && import.meta.env.SSR) {
     assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
     assertSecret(import.meta.env.WOTB_USMAP),
     "../../temp",
+    Number(assertSecret(import.meta.env.TEXTURE_CHUNKS)),
   );
 
   const tankTags: string[] = [];

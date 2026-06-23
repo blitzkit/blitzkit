@@ -1,4 +1,6 @@
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using CUE4Parse_Conversion;
 using CUE4Parse_Conversion.Materials;
 using CUE4Parse_Conversion.Meshes;
@@ -44,9 +46,12 @@ public class MonoGltf
   static readonly byte[] stubBytes = File.ReadAllBytes("../game/stub/small.png");
   static readonly float scaleCorrection = 0.01f;
 
-  public MonoGltf(FStructFallback settings)
+  readonly int textureChunks;
+
+  public MonoGltf(FStructFallback settings, int textureChunks)
   {
     var root = new NodeBuilder("root");
+    this.textureChunks = textureChunks;
 
     Traverse(settings, root);
     scene.AddNode(root);
@@ -173,9 +178,7 @@ public class MonoGltf
       {
         if (knownChannels.TryGetValue(parameterTexture.Key, out var channels))
         {
-          var texture = parameterTexture.Value;
-          var name = Path.GetFileNameWithoutExtension(texture.GetPathName());
-          var path = $"../../../textures/{name}.webp";
+          var path = TexturePath(parameterTexture.Value.GetPathName(), textureChunks);
 
           var lastIndex = stubBytes.Length - 1;
           stubBytes[lastIndex] = (byte)(++stubBytes[lastIndex] % 255);
@@ -212,6 +215,25 @@ public class MonoGltf
     }
 
     return meshBuilder;
+  }
+
+  public static int TextureModulus(string path, int textureChunks)
+  {
+    var name = Path.GetFileNameWithoutExtension(path);
+    var bytes = Encoding.UTF8.GetBytes(name);
+    var hash = SHA256.HashData(bytes);
+    var value = BitConverter.ToUInt32(hash, 0);
+    var modulus = value % textureChunks;
+
+    return (int)modulus;
+  }
+
+  public static string TexturePath(string path, int textureChunks)
+  {
+    var modulus = TextureModulus(path, textureChunks);
+    var name = Path.GetFileNameWithoutExtension(path);
+
+    return $"../../../textures-{modulus}/{name}.webp";
   }
 
   public byte[] Write(string name)
