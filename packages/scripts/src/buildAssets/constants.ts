@@ -3,6 +3,9 @@ import { AbstractVFS } from "../core/vfs/abstract";
 import { LocalVFS } from "../core/vfs/local";
 import { SteamVFS } from "../core/vfs/steam";
 import { ZipVFS } from "../core/vfs/zip";
+import { MixedVFS } from "../core/vfs/mixed";
+
+export const PATCHES_ROOT = "../../temp/patches";
 
 const steamPattern = /steam:(\d+)\/(\d+)/;
 const zipPattern = /zip:(.+)/;
@@ -34,5 +37,7 @@ if (!source) {
 } else {
   throw new Error("No valid source specified");
 }
+
+resolved = new MixedVFS([new LocalVFS(PATCHES_ROOT), resolved]);
 
 export const vfs = resolved;

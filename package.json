@@ -1,6 +1,6 @@
 {
   "name": "blitzkit",
-  "version": "1.30.3",
+  "version": "1.30.4",
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
@@ -21,7 +21,7 @@
     "dev": "bun run dev:website",
     "dev:api": "bun --filter=@blitzkit/api run dev",
     "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
-    "setup:patches": "bun --filter=@blitzkit/scripts run setup:patches",
+    "setup:patches": "cd packages/scripts && bun run setup:patches",
     "start:website": "bun --filter=@blitzkit/website run start",
     "host:docs": "vitepress preview docs",
     "lint": "tsc",

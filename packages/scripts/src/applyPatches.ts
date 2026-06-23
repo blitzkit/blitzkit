@@ -4,7 +4,7 @@ import { mkdir, writeFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import ProgressBar from "progress";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
-import { vfs } from "./buildAssets/constants";
+import { PATCHES_ROOT, vfs } from "./buildAssets/constants";
 import { writeDVPL } from "./core/blitz/writeDVPL";
 
 const versionTextFile = await vfs.text(`Data/version.txt`);
@@ -20,8 +20,8 @@ let patchIndex = 1;
 while (true) {
   const response = await fetch(
     `${assertSecret(
-      import.meta.env.WOTB_DLC_CDN
-    )}/dlc/s${currentVersion}_${patchIndex}.yaml`
+      import.meta.env.WOTB_DLC_CDN,
+    )}/dlc/s${currentVersion}_${patchIndex}.yaml`,
   );
 
   if (response.status === 200) {
@@ -29,18 +29,18 @@ while (true) {
 
     const data = parseYaml(await response.text());
     const dvpm = await fetch(
-      `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${data.dx11}`
+      `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${data.dx11}`,
     ).then((response) => response.arrayBuffer());
     const dvpd = await fetch(
       `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${data.dx11.replace(
         ".dvpm",
-        ".dvpd"
-      )}`
+        ".dvpd",
+      )}`,
     ).then((response) => response.arrayBuffer());
     const files = await dvp(dvpm, dvpd);
     const bar = new ProgressBar(
       `Patching ${files.length} files :bar`,
-      files.length
+      files.length,
     );
 
     for (const { path, data } of files) {
@@ -49,7 +49,7 @@ while (true) {
       const { dir } = parsePath(path);
 
       try {
-        await mkdir(`Data/${dir}`, { recursive: true });
+        await mkdir(`${PATCHES_ROOT}/Data/${dir}`, { recursive: true });
       } catch (error) {
         console.warn(`Failed to make directory "${dir}"`);
       }
@@ -58,8 +58,8 @@ while (true) {
       const buffer = Buffer.from(data);
 
       await writeFile(
-        `Data/${path}${isDvpl ? "" : ".dvpl"}`,
-        new Uint8Array(isDvpl ? buffer : writeDVPL(buffer))
+        `${PATCHES_ROOT}/Data/${path}${isDvpl ? "" : ".dvpl"}`,
+        new Uint8Array(isDvpl ? buffer : writeDVPL(buffer)),
       );
 
       bar.tick();
@@ -71,18 +71,17 @@ while (true) {
       const localizationsResponse = await fetch(
         `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
           data.dynamicContentLocalizationsDir
-        }/en.yaml`
+        }/en.yaml`,
       );
       const newStrings = parseYaml(await localizationsResponse.text());
-      const oldStrings = await vfs.yaml<Record<string, string>>(
-        `Data/Strings/en.yaml`
-      );
+      const oldStrings =
+        await vfs.yaml<Record<string, string>>(`Data/Strings/en.yaml`);
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
 
       await writeFile(
-        `Data/Strings/en.yaml`,
-        new Uint8Array(writeDVPL(Buffer.from(patchedContent)))
+        `${PATCHES_ROOT}/Data/Strings/en.yaml`,
+        new Uint8Array(writeDVPL(Buffer.from(patchedContent))),
       );
     }
 

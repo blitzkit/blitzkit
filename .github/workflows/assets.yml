@@ -73,10 +73,14 @@ jobs:
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
       - uses: oven-sh/setup-bun@v2
+
       - run: bun run setup
 
       - name: AppArmor hack
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+
+      - name: Install patches
+        run: bun run setup:patches
 
       - name: Build assets
         run: bun run build:assets --all-targets --source=${{ github.event.inputs.asset_source || 'steam:444200/444202' }}
