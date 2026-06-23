@@ -101,3 +101,5 @@ while (true) {
 
     patchIndex++;
 }
+
+vfs.dispose()
