@@ -55,6 +55,7 @@ export abstract class AbstractVFS {
 
   async yaml<Type>(path: string) {
     const file = await this.text(path);
+    console.log(file);
     return parseYaml(file) as Type;
   }
 

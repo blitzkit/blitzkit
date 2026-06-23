@@ -74,8 +74,10 @@ while (true) {
         }/en.yaml`,
       );
       const newStrings = parseYaml(await localizationsResponse.text());
+      console.log("new scripts computed");
       const oldStrings =
         await vfs.yaml<Record<string, string>>(`Data/Strings/en.yaml`);
+      console.log("old strings loaded");
       const patchedStrings = { ...oldStrings, ...newStrings };
       const patchedContent = stringifyYaml(patchedStrings);
 
