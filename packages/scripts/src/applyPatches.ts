@@ -54,12 +54,11 @@ while (true) {
         console.warn(`Failed to make directory "${dir}"`);
       }
 
-      const isDvpl = path.endsWith(".dvpl");
       const buffer = Buffer.from(data);
 
       await writeFile(
-        `${PATCHES_ROOT}/Data/${path}${isDvpl ? "" : ".dvpl"}`,
-        new Uint8Array(isDvpl ? buffer : writeDVPL(buffer)),
+        `${PATCHES_ROOT}/Data/${path}`,
+        new Uint8Array(buffer),
       );
 
       bar.tick();
@@ -79,8 +78,8 @@ while (true) {
 
       await mkdir(`${PATCHES_ROOT}/Data/Strings`, { recursive: true });
       await writeFile(
-        `${PATCHES_ROOT}/Data/Strings/en.yaml.dvpl`,
-        new Uint8Array(writeDVPL(Buffer.from(patchedContent))),
+        `${PATCHES_ROOT}/Data/Strings/en.yaml`,
+        new Uint8Array((Buffer.from(patchedContent))),
       );
     }
 
