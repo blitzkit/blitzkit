@@ -24,7 +24,10 @@ while (true) {
     )}/dlc/s${currentVersion}_${patchIndex}.yaml`,
   );
 
-  if (response.status === 200) {
+  console.log(patchIndex, response.status)
+
+  if (!response.ok) break;
+  
     console.log(`Applying patch ${patchIndex}...`);
 
     const data = parseYaml(await response.text());
@@ -97,5 +100,4 @@ while (true) {
     }
 
     patchIndex++;
-  } else break;
 }
