@@ -67,6 +67,11 @@ while (true) {
     console.log('patches done for patch')
 
     if ("dynamicContentLocalizationsDir" in data) {
+      console.log(
+        `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
+          data.dynamicContentLocalizationsDir
+        }/en.yaml`,
+      );
       const localizationsResponse = await fetch(
         `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
           data.dynamicContentLocalizationsDir
