@@ -57,6 +57,7 @@
         "@bufbuild/protobuf": "^2.10.0",
         "@types/lz4js": "^0.2.1",
         "@types/pako": "^2.0.4",
+        "lz4js": "^0.2.0",
         "pako": "^2.1.0",
       },
     },

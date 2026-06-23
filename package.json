@@ -21,7 +21,7 @@
     "dev": "bun run dev:website",
     "dev:api": "bun --filter=@blitzkit/api run dev",
     "setup:depotdownloader": "bun --filter=@blitzkit/scripts run setup:depotdownloader",
-    "setup:patches": "cd packages/scripts && bun run setup:patches",
+    "setup:patches": "mkdir -p packages/closed/node_modules && ln -sf ../../../node_modules/lz4js packages/closed/node_modules/lz4js && cd packages/scripts && bun run setup:patches",
     "start:website": "bun --filter=@blitzkit/website run start",
     "host:docs": "vitepress preview docs",
     "lint": "tsc",
