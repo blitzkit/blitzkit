@@ -39,8 +39,6 @@ export abstract class AbstractVFS {
     const raw = await this.raw(resolved);
     let buffer = raw;
 
-    console.log(resolved);
-
     if (resolved.endsWith(".dvpl")) {
       buffer = new Uint8Array(readDVPL(Buffer.from(raw)));
     }
@@ -57,7 +55,6 @@ export abstract class AbstractVFS {
 
   async yaml<Type>(path: string) {
     const file = await this.text(path);
-    console.log(file);
     return parseYaml(file) as Type;
   }
 
