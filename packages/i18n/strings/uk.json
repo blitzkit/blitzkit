@@ -919,13 +919,13 @@
                 "external": "External",
                 "gap": "Gap",
                 "gun": "Gun",
-                "track": "Tracks"
+                "track": "Гусениці"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
+                "penetration": "{damage} од. шкоди з пробиттям",
                 "blocked": "Заблоковано",
                 "ricochet": "Рикошет",
-                "splash": "{damage}hp splash"
+                "splash": "{damage} Од"
               },
               "stats": {
                 "thickness_and_angle": "{thickness}mm {angle}°",
@@ -1048,7 +1048,7 @@
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
             "damage": "Шкода",
-            "damageWithoutAssault": "Damage without assault shells",
+            "damageWithoutAssault": "Шкода без урахування золотих снарядів",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Шкода по модулях",
             "explosionRadius": "Радіус розльоту уламків",
@@ -1057,7 +1057,7 @@
             "dispersion": "Нерухомо",
             "dispersionMoving": "У русі",
             "dispersionHullTraversing": "Hull traversing",
-            "dispersionTurretTraversing": "Turret traversing",
+            "dispersionTurretTraversing": "Обертання башти",
             "dispersionShooting": "Shooting",
             "dispersionGunDamaged": "Gun damaged",
             "gunDepression": "Depression",
@@ -1174,7 +1174,7 @@
       },
       "performance": {
         "name": "Performance",
-        "button": "View tanks",
+        "button": "Переглянути танки",
         "description": "Tank performance statistics",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
