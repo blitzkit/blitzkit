@@ -922,7 +922,7 @@
                 "track": "Гусениці"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
+                "penetration": "{damage} од. шкоди з пробиттям",
                 "blocked": "Заблоковано",
                 "ricochet": "Рикошет",
                 "splash": "{damage} Од"
@@ -1057,7 +1057,7 @@
             "dispersion": "Нерухомо",
             "dispersionMoving": "У русі",
             "dispersionHullTraversing": "Hull traversing",
-            "dispersionTurretTraversing": "Turret traversing",
+            "dispersionTurretTraversing": "Обертання башти",
             "dispersionShooting": "Shooting",
             "dispersionGunDamaged": "Gun damaged",
             "gunDepression": "Depression",
@@ -1174,7 +1174,7 @@
       },
       "performance": {
         "name": "Performance",
-        "button": "View tanks",
+        "button": "Переглянути танки",
         "description": "Tank performance statistics",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
