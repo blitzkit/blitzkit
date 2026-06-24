@@ -925,7 +925,7 @@
                 "penetration": "{damage}hp penetration",
                 "blocked": "Заблоковано",
                 "ricochet": "Рикошет",
-                "splash": "{damage}hp splash"
+                "splash": "{damage} Од"
               },
               "stats": {
                 "thickness_and_angle": "{thickness}mm {angle}°",
@@ -1048,7 +1048,7 @@
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
             "damage": "Шкода",
-            "damageWithoutAssault": "Damage without assault shells",
+            "damageWithoutAssault": "Шкода без урахування золотих снарядів",
             "clipDamage": "Clipping potential",
             "moduleDamage": "Шкода по модулях",
             "explosionRadius": "Радіус розльоту уламків",
