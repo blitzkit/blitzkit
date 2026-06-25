@@ -1,6 +1,9 @@
+import { assertSecret } from "@blitzkit/core";
 import { execFile } from "child_process";
 import { existsSync } from "fs";
 import { mkdir, readdir, rm, writeFile } from "fs/promises";
+
+const temp = assertSecret(import.meta.env.TEMP);
 
 const TS_PROTO_EXECUTABLE_LOCATIONS = [
   "./node_modules/.bin/protoc-gen-ts_proto",
@@ -28,7 +31,7 @@ if (!tsProtoExecutableLocation) {
   );
 }
 
-await mkdir("../../temp", { recursive: true });
+await mkdir(temp, { recursive: true });
 
 let args = "";
 
@@ -55,9 +58,9 @@ for (const file of filesRaw) {
   if (file.endsWith(".ts")) await rm(`${ROOT}/${file}`);
 }
 
-await writeFile("../../temp/protoc.txt", args);
+await writeFile(`${temp}/protoc.txt`, args);
 
-execFile("protoc", ["@../../temp/protoc.txt"], (error, stdout, stderr) => {
+execFile("protoc", [`@${temp}/protoc.txt`], (error, stdout, stderr) => {
   if (error) throw new Error(error.message);
   if (stderr) console.error(stderr);
   if (stdout) console.log(stdout);

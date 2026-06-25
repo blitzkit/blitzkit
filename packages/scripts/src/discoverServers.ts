@@ -1,8 +1,5 @@
+import { assertSecret } from "@blitzkit/core";
 import { GameInterface } from "@blitzkit/game";
-
-const urls = [
-  //
-];
 
 interface Bindings {
   bindings: Binding[];
@@ -52,12 +49,22 @@ interface Server {
   addr_dsapp?: string;
 }
 
-const game = new GameInterface();
+const game = new GameInterface(
+  assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
+  assertSecret(import.meta.env.WOTB_USMAP),
+  assertSecret(import.meta.env.TEMP),
+  Number(assertSecret(import.meta.env.TEXTURE_CHUNKS)),
+);
 
-urls.forEach(async (url) => {
-  const bindings = await fetch(url).then(
-    (response) => response.json() as Promise<Bindings>,
-  );
+game.discoveryUrls().forEach(async (url) => {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    console.log(`Failed to fetch ${url}: ${response.statusText}`);
+    return;
+  }
+
+  const bindings = (await response.json()) as Bindings;
 
   bindings.bindings.forEach(async (binding) => {
     const discovery = await fetch(binding.discovery).then(

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using BlitzKit.Game.Models;
 using CUE4Parse_Conversion;
@@ -40,7 +41,24 @@ public partial class GameInterface
   }
 
   readonly Dictionary<string, (int, string)> texturePaths = [];
-  readonly string textureCache = "../../temp/textures.json";
+  readonly string textureCache = $"{temp}textures.json";
+
+  [GeneratedRegex(@"\+ClientDiscoveryBindingSources\s*=\s*\(Type=\w+,URL=""(.+)""\)")]
+  private static partial Regex DiscoveryRegex();
+
+  public string[] DiscoveryUrls()
+  {
+    if (provider.TryGetGameFile("Blitz/Config/DefaultEngine.ini", out var file))
+    {
+      var bytes = file.Read();
+      var content = Encoding.UTF8.GetString(bytes);
+      var matches = DiscoveryRegex().Matches(content);
+
+      return [.. matches.Select(match => match.Groups[1].Value)];
+    }
+
+    throw new FileNotFoundException("Engine config not found");
+  }
 
   public void DiscoverTextures(string[] tankTags)
   {

@@ -12,7 +12,7 @@ if (!clientUnmounted && import.meta.env.SSR) {
   _game = new GameInterface(
     assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
     assertSecret(import.meta.env.WOTB_USMAP),
-    "../../temp",
+    assertSecret(import.meta.env.TEMP),
     Number(assertSecret(import.meta.env.TEXTURE_CHUNKS)),
   );
 

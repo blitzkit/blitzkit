@@ -22,6 +22,8 @@ import { merge } from "lodash-es";
 import { parse } from "yaml";
 import { AbstractAPI, Cache } from "./abstract";
 
+const temp = assertSecret(import.meta.env.TEMP);
+
 if (typeof window !== "undefined") {
   throw new Error("ServerAPI is being evaluated in the browser");
 }
@@ -138,7 +140,7 @@ export class ServerAPI extends AbstractAPI {
 
   @Cache()
   async popularTanks() {
-    if (!existsSync("../../temp/popular.json")) {
+    if (!existsSync(`${temp}/popular.json`)) {
       const { tanks } = await this.tanks();
       const tanksArray = Object.values(tanks);
 
@@ -212,13 +214,13 @@ export class ServerAPI extends AbstractAPI {
           .map(([id, views]) => ({ id, views })),
       } satisfies PopularTanks;
 
-      await mkdir("../../temp", { recursive: true });
-      await writeFile("../../temp/popular.json", JSON.stringify(popularTanks));
+      await mkdir(temp, { recursive: true });
+      await writeFile(`${temp}/popular.json`, JSON.stringify(popularTanks));
 
       return popularTanks;
     }
 
-    const data = await readFile("../../temp/popular.json", "utf-8");
+    const data = await readFile(`${temp}/popular.json`, "utf-8");
     return JSON.parse(data) as PopularTanks;
   }
 
