@@ -7,3 +7,4 @@ export * from "./protobuf";
 export * from "./statistics";
 export * from "./streams";
 export * from "./types";
+export * from "./secrets";
