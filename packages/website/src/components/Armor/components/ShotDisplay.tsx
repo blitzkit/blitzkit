@@ -1,9 +1,9 @@
 import { J_HAT, K_HAT } from "@blitzkit/core";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { Html } from "@react-three/drei";
-import { invalidate, useFrame } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { clamp } from "lodash-es";
-import { useEffect, useRef, type ComponentProps } from "react";
+import { useEffect, useRef, type ComponentProps, type RefObject } from "react";
 import {
   BufferGeometry,
   DoubleSide,
@@ -42,11 +42,10 @@ const TRACER_THIN = TRACER_THICK / 2;
 
 export function ShotDisplay() {
   const shot = Tankopedia.use((state) => state.shot);
-  const inTracer = useRef<Mesh>(null);
-  const outTracer = useRef<Mesh>(null);
-  const splashRadiusWrapper = useRef<Group>(null);
-  const splashRadiusMaterial = useRef<MeshBasicMaterial>(null);
-  let animationStartTime: number | null = null;
+  const inTracer = useRef<Mesh>(null!);
+  const outTracer = useRef<Mesh>(null!);
+  const splashRadiusWrapper = useRef<Group>(null!);
+  const splashRadiusMaterial = useRef<MeshBasicMaterial>(null!);
   const { locale } = useLocale();
 
   useEffect(() => {
@@ -64,10 +63,10 @@ export function ShotDisplay() {
         outlineMaterial,
       ).computeLineDistances();
 
-      splashRadiusWrapper.current?.add(outline);
+      splashRadiusWrapper.current.add(outline);
 
       return () => {
-        splashRadiusWrapper.current?.remove(outline);
+        splashRadiusWrapper.current.remove(outline);
       };
     }
   });
@@ -85,44 +84,6 @@ export function ShotDisplay() {
       audio.play();
     }
   }, [shot]);
-
-  useFrame(({ clock }) => {
-    if (!shot) return;
-
-    const t = clock.elapsedTime;
-
-    if (inTracer.current) {
-      const tracerT1 = t % 1;
-      const tracerT2 = (t + 0.5) % 1;
-
-      inTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT1 - 0.5), 1);
-      inTracer.current.position.set(0, (1 - tracerT1) * inLength, 0);
-
-      if (outTracer.current) {
-        outTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT2 - 0.5), 1);
-        outTracer.current.position.set(0, tracerT2 * outLength, 0);
-      }
-
-      invalidate();
-    }
-
-    if (
-      shot.splashRadius !== undefined &&
-      splashRadiusWrapper.current &&
-      splashRadiusMaterial.current
-    ) {
-      if (animationStartTime === null) animationStartTime = t;
-
-      const scale =
-        clamp(4 * (t - animationStartTime), 0, 1) * shot.splashRadius;
-      const opacity = 1 - clamp(2 * (t - animationStartTime), 0, 1);
-
-      splashRadiusWrapper.current.scale.set(scale, scale, scale);
-      splashRadiusMaterial.current.opacity = opacity;
-
-      invalidate();
-    }
-  });
 
   if (!shot) return null;
 
@@ -149,6 +110,15 @@ export function ShotDisplay() {
 
   return (
     <group>
+      <Animator
+        inTracer={inTracer}
+        outTracer={outTracer}
+        inLength={inLength}
+        outLength={outLength}
+        splashRadiusWrapper={splashRadiusWrapper}
+        splashRadiusMaterial={splashRadiusMaterial}
+      />
+
       {shot.splashRadius && (
         <group
           position={inLast.point}
@@ -282,4 +252,60 @@ export function ShotDisplay() {
       )}
     </group>
   );
+}
+
+interface AnimatorProps {
+  inTracer: RefObject<Mesh>;
+  outTracer: RefObject<Mesh>;
+
+  splashRadiusWrapper: RefObject<Group>;
+  splashRadiusMaterial: RefObject<MeshBasicMaterial>;
+
+  inLength: number;
+  outLength: number;
+}
+
+function Animator({
+  inTracer,
+  outTracer,
+  splashRadiusWrapper,
+  splashRadiusMaterial,
+  inLength,
+  outLength,
+}: AnimatorProps) {
+  const shot = Tankopedia.use((state) => state.shot!);
+
+  let animationStartTime: number | null = null;
+
+  useFrame(({ clock, invalidate }) => {
+    const t = clock.elapsedTime;
+
+    const tracerT1 = t % 1;
+    const tracerT2 = (t + 0.5) % 1;
+
+    inTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT1 - 0.5), 1);
+    inTracer.current.position.set(0, (1 - tracerT1) * inLength, 0);
+
+    if (outTracer.current) {
+      outTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT2 - 0.5), 1);
+      outTracer.current.position.set(0, tracerT2 * outLength, 0);
+    }
+
+    invalidate();
+
+    if (shot.splashRadius !== undefined) {
+      if (animationStartTime === null) animationStartTime = t;
+
+      const scale =
+        clamp(4 * (t - animationStartTime), 0, 1) * shot.splashRadius;
+      const opacity = 1 - clamp(2 * (t - animationStartTime), 0, 1);
+
+      splashRadiusWrapper.current.scale.set(scale, scale, scale);
+      splashRadiusMaterial.current.opacity = opacity;
+
+      invalidate();
+    }
+  });
+
+  return null;
 }
