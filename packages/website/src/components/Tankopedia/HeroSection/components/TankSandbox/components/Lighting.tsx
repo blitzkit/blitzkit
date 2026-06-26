@@ -1,9 +1,9 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { times } from "lodash-es";
+import { useFrame } from "@react-three/fiber";
+import { clamp, times } from "lodash-es";
 import { Quicklime } from "quicklime";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
-import { clamp, degToRad, lerp } from "three/src/math/MathUtils.js";
+import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
@@ -25,38 +25,104 @@ export const transitionEvent = new Quicklime<number>(0);
 
 export function Lighting() {
   const wrapper = useRef<Group>(null!);
-  const t0 = useRef(0);
-  const transition = useRef(false);
-  const clock = useThree((state) => state.clock);
-  const display = Tankopedia.use((state) => state.display);
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
-  const animationTime = useRef(REVEAL_ANIMATION_TIME);
+
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
+  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+
+  const animationTime = useRef(REVEAL_ANIMATION_TIME);
+  const t0 = useRef(performance.now() / 1e3 - animationTime.current);
+
+  const isRevealing = useRef(true);
+
+  const [animate, setAnimate] = useState(true);
+
+  console.log(animate);
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {
       draft.revealed = true;
     });
-
-    t0.current = performance.now() / 1000 - REVEAL_ANIMATION_TIME;
   }, []);
 
+  useEffect(() => {
+    if (isRevealing.current) {
+      isRevealing.current = false;
+    } else {
+      animationTime.current = TRANSITION_ANIMATION_TIME;
+      t0.current = performance.now() / 1e3;
+    }
+
+    setAnimate(true);
+  }, [requestedDisplay]);
+
+  return (
+    <>
+      {animate && (
+        <Animator
+          t0={t0}
+          animationTime={animationTime}
+          wrapper={wrapper}
+          stop={() => {
+            setAnimate(false);
+          }}
+        />
+      )}
+
+      <group ref={wrapper}>
+        <hemisphereLight intensity={0} color="#ffffff" groundColor="#afafaf" />
+
+        {times(LIGHTS_COUNT, (index) => {
+          const x = index / (LIGHTS_COUNT - 1);
+          const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
+          const position = [
+            LIGHT_DISTANCE * Math.sin(theta),
+            lerp(LIGHT_HEIGHT_0, LIGHT_HEIGHT_1, x),
+            LIGHT_DISTANCE * Math.cos(theta),
+          ] as const;
+          const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
+
+          return (
+            <HelpingSpotLight
+              userData={{ index }}
+              key={index}
+              position={position}
+              intensity={intensity}
+              penumbra={1}
+              castShadow={highGraphics}
+              decay={0}
+              color="#ffffff"
+              angle={0}
+            />
+          );
+        })}
+      </group>
+    </>
+  );
+}
+
+interface AnimatorProps {
+  stop: () => void;
+
+  t0: RefObject<number>;
+  animationTime: RefObject<number>;
+  wrapper: RefObject<Group>;
+}
+
+function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
+  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+
   useFrame(({ invalidate }) => {
-    if (transition.current) {
-      transition.current = false;
-      t0.current = performance.now() / 1000;
+    const dt = performance.now() / 1e3 - t0.current;
+    const x = clamp(dt / animationTime.current, 0, 2);
+
+    console.log(x);
+
+    if (x === 2) {
+      stop();
+      return;
     }
 
-    const x = clamp(
-      (performance.now() / 1000 - t0.current) / animationTime.current,
-      0,
-      2,
-    );
     const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
-
-    if (t !== transitionEvent.last) {
-      transitionEvent.dispatch(t);
-    }
 
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
@@ -66,53 +132,15 @@ export function Lighting() {
       }
     }
 
-    if (x < 2) invalidate();
+    transitionEvent.dispatch(t);
+    invalidate();
 
-    if (
-      x > 1 &&
-      Tankopedia.state.display !== Tankopedia.state.requestedDisplay
-    ) {
+    if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
       Tankopedia.mutate((draft) => {
         draft.display = requestedDisplay;
       });
     }
   });
 
-  useEffect(() => {
-    if (requestedDisplay === display) return;
-
-    transition.current = true;
-    animationTime.current = TRANSITION_ANIMATION_TIME;
-  }, [requestedDisplay]);
-
-  return (
-    <group ref={wrapper}>
-      <hemisphereLight intensity={0} color="#ffffff" groundColor="#afafaf" />
-
-      {times(LIGHTS_COUNT, (index) => {
-        const x = index / (LIGHTS_COUNT - 1);
-        const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
-        const position = [
-          LIGHT_DISTANCE * Math.sin(theta),
-          lerp(LIGHT_HEIGHT_0, LIGHT_HEIGHT_1, x),
-          LIGHT_DISTANCE * Math.cos(theta),
-        ] as const;
-        const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
-
-        return (
-          <HelpingSpotLight
-            userData={{ index }}
-            key={index}
-            position={position}
-            intensity={intensity}
-            penumbra={1}
-            castShadow={highGraphics}
-            decay={0}
-            color="#ffffff"
-            angle={0}
-          />
-        );
-      })}
-    </group>
-  );
+  return null;
 }
