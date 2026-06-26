@@ -8,17 +8,17 @@ import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
-const ANGLE = Math.PI * 2 ** -2;
+const ANGLE = degToRad(10);
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
-const LIGHTS_COUNT = 5;
-const THETA_OFFSET = degToRad(-152);
-const LIGHT_DISTANCE = 13;
+const LIGHTS_COUNT = 4;
+const THETA_OFFSET = degToRad(180 - 45);
+const LIGHT_DISTANCE = 20;
 const LIGHT_HEIGHT_0 = 4;
-const LIGHT_HEIGHT_1 = 2;
-const INTENSITY_0 = 3.5;
-const INTENSITY_1 = 1.5;
+const LIGHT_HEIGHT_1 = 6;
+const INTENSITY_0 = 6;
+const INTENSITY_1 = 3;
 const HEMISPHERE_INTENSITY = 2;
 
 export const transitionEvent = new Quicklime<number>(0);
@@ -114,8 +114,6 @@ function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   useFrame(({ invalidate }) => {
     const dt = performance.now() / 1e3 - t0.current;
     const x = clamp(dt / animationTime.current, 0, 2);
-
-    console.log(x);
 
     if (x === 2) {
       stop();

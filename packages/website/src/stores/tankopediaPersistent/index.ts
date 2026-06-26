@@ -40,5 +40,5 @@ export const TankopediaPersistent = new Varuna<TankopediaPersistent>(
       direction: "ascending",
     },
   },
-  "tankopedia-2"
+  "tankopedia-3",
 );
