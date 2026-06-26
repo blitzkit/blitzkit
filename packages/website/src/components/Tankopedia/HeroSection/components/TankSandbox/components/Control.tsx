@@ -19,6 +19,8 @@ const poseDistances: Record<Pose, number> = {
   [Pose.Default]: -1,
 };
 
+const inspectModeInitialPosition = new Vector3(-8, 2, -13);
+
 const modelDefinitions = await awaitableModelDefinitions;
 
 interface ControlsProps {
@@ -77,22 +79,6 @@ export function Controls({
     protagonistHullOrigin.y +
     protagonistTurretOrigin.y +
     protagonistGunOrigin.y;
-  const inspectModeInitialPosition = new Vector3(-8, 2, -13);
-
-  const t0 = useRef(Date.now() / 1000);
-  useFrame(() => {
-    if (!doAutoRotate) return;
-
-    const now = Date.now() / 1000;
-    const t = now - t0.current;
-
-    camera.position
-      .copy(inspectModeInitialPosition)
-      .applyAxisAngle(I_HAT, (Math.PI / 32) * Math.sin(t / 9))
-      .applyAxisAngle(J_HAT, (-Math.PI / 16) * Math.sin(t / 7));
-
-    invalidate();
-  });
 
   useEffect(() => {
     function handleControlsEnabled(event: QuicklimeEvent<boolean>) {
@@ -249,15 +235,37 @@ export function Controls({
   }, []);
 
   return (
-    <OrbitControls
-      enableRotate={enableRotate}
-      maxDistance={40}
-      minDistance={5}
-      enableZoom={zoomable}
-      zoomSpeed={zoomable ? undefined : 0}
-      ref={orbitControls}
-      enabled={controlsEnabledEvent.last!}
-      enableDamping={false}
-    />
+    <>
+      {doAutoRotate && <Animator />}
+
+      <OrbitControls
+        enableRotate={enableRotate}
+        maxDistance={40}
+        minDistance={5}
+        enableZoom={zoomable}
+        zoomSpeed={zoomable ? undefined : 0}
+        ref={orbitControls}
+        enabled={controlsEnabledEvent.last!}
+        enableDamping={false}
+      />
+    </>
   );
+}
+
+function Animator() {
+  const clock = useThree((state) => state.clock);
+  const t0 = useRef(clock.elapsedTime);
+
+  useFrame(({ camera }) => {
+    const t = clock.elapsedTime - t0.current;
+
+    camera.position
+      .copy(inspectModeInitialPosition)
+      .applyAxisAngle(I_HAT, (Math.PI / 32) * Math.sin(t / 9))
+      .applyAxisAngle(J_HAT, (-Math.PI / 16) * Math.sin(t / 7));
+
+    invalidate();
+  });
+
+  return null;
 }
