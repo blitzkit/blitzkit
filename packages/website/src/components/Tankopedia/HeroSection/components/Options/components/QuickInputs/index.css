@@ -1,8 +1,0 @@
-.quick-inputs {
-  left: -5rem;
-}
-
-.quick-inputs:focus-within,
-.tank-sandbox-container:hover .quick-inputs {
-  left: 1rem;
-}
