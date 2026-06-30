@@ -6,7 +6,7 @@ export enum SecretType {
   Number,
 }
 
-export type PassableSecretName = WellKnownSecret | (string & {});
+export type PassableSecretName = WellKnownSecret;
 
 export function secret(
   name: PassableSecretName,
@@ -18,10 +18,7 @@ export function secret(
   type: SecretType.Number,
 ): number;
 
-export function secret(
-  name: WellKnownSecret | (string & {}),
-  type = SecretType.String,
-) {
+export function secret(name: PassableSecretName, type = SecretType.String) {
   if (!hasSecret(name)) {
     throw new Error(`Secret "${name}" not defined`);
   }
@@ -30,7 +27,7 @@ export function secret(
 
   switch (type) {
     case SecretType.String:
-      return value;
+      return String(value);
 
     case SecretType.Number:
       return Number(value);

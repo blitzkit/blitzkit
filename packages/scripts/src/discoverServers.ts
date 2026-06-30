@@ -1,4 +1,4 @@
-import { assertSecret } from "@blitzkit/core";
+import { secret } from "@blitzkit/core";
 import { GameInterface } from "@blitzkit/game";
 
 interface Bindings {
@@ -50,10 +50,10 @@ interface Server {
 }
 
 const game = new GameInterface(
-  assertSecret(import.meta.env.PUBLIC_WOTB_CLIENT),
-  assertSecret(import.meta.env.WOTB_USMAP),
-  assertSecret(import.meta.env.TEMP),
-  Number(assertSecret(import.meta.env.TEXTURE_CHUNKS)),
+  secret("PUBLIC_WOTB_CLIENT"),
+  secret("WOTB_USMAP"),
+  secret("TEMP"),
+  Number(secret("TEXTURE_CHUNKS")),
 );
 
 game.discoveryUrls().forEach(async (url) => {
