@@ -1,0 +1,238 @@
+import type { Strings } from "@blitzkit/i18n";
+import type { ReactNode } from "react";
+import {
+  GunType,
+  type CharacteristicName,
+  type CharacteristicOutput,
+} from "./characteristics";
+
+export enum BetterDirection {
+  Higher,
+  Lower,
+}
+
+export interface CharacteristicRenderConfig {
+  name: CharacteristicName;
+  decimals?: number;
+  units?: keyof Strings["units"];
+  localize?: boolean;
+  strings?: string;
+  render?: (data: {
+    output: CharacteristicOutput;
+    strings: Strings;
+    gameStrings: Record<string, string>;
+  }) => ReactNode;
+}
+
+export interface ToyRenderConfig {
+  toy: string;
+}
+
+export type CharacteristicsGroup = {
+  name: string;
+  render: CharacteristicsGroupRender;
+  order: (CharacteristicRenderConfig | ToyRenderConfig)[];
+};
+
+export enum CharacteristicsGroupRender {
+  Flashy,
+  Statistical,
+}
+
+export const characteristicsOrder: CharacteristicsGroup[] = [
+  // {
+  //   group: "meta",
+  //   render: CharacteristicsGroupRender.Flashy,
+  //   order: [
+  //     {
+  //       name: "name",
+  //       strings: "TankEntity",
+  //       render({ output, gameStrings }) {
+  //         return gameStrings[output as string];
+  //       },
+  //     },
+  //     {
+  //       name: "class",
+  //       render({ output, strings }) {
+  //         return strings.classes.full[output as TankClass];
+  //       },
+  //     },
+  //     {
+  //       name: "type",
+  //       render({ output, strings }) {
+  //         return strings.types[output as TankType];
+  //       },
+  //     },
+  //     {
+  //       name: "nation",
+  //       render({ output, strings }) {
+  //         return strings.nations[output as Nation];
+  //       },
+  //     },
+  //     {
+  //       name: "tier",
+  //       render({ output, strings }) {
+  //         const name = output as string;
+
+  //         if (name == "vintage") {
+  //           return <VintageIcon />;
+  //         }
+
+  //         return strings.tiers[name as keyof typeof strings.tiers];
+  //       },
+  //     },
+  //     { name: "id" },
+  //     { name: "slug" },
+  //   ],
+  // },
+
+  // {
+  //   group: "economics",
+  //   render: CharacteristicsGroupRender.Statistical,
+  //   order: [
+  //     { name: "purchase_price" },
+  //     { name: "compensation" },
+  //     { name: "upgrade_price" },
+  //     { name: "research_level" },
+  //     { name: "crew_xp_multiplier" },
+
+  //     // TODO: investigate ATTRIBUTE_NAME_CREW_XP_MULTIPLIER
+  //   ],
+  // },
+
+  {
+    name: "gun",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      {
+        name: "gun_type",
+        render({ output }) {
+          return GunType[output as GunType];
+        },
+      },
+      { name: "dpm", decimals: 0, units: "hp", localize: true },
+      { name: "damage", units: "hp", localize: true },
+      { name: "module_damage", units: "hp", localize: true },
+      { name: "reload", decimals: 1, units: "s" },
+      { name: "reloads", decimals: 1, units: "s" },
+
+      { toy: "reload" },
+    ],
+  },
+
+  {
+    name: "clip",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "clipping_potential", localize: true, units: "hp" },
+      { name: "clip_size" },
+      { name: "optimal_shell" },
+      { name: "intra_clip", decimals: 2, units: "s" },
+      { name: "burst_size" },
+      { name: "intra_burst", decimals: 2, units: "s" },
+
+      // TODO: investigate ATTRIBUTE_NAME_SHELLS_SLOTS
+      // TODO: investigate ATTRIBUTE_NAME_RELOAD_SPEED_SCALE
+      // TODO: investigate ATTRIBUTE_NAME_AVERAGE_THICKNESS
+      // TODO: investigate ATTRIBUTE_NAME_TRACER_SHELLS_OBSERVATION_TIMEOUT
+    ],
+  },
+
+  {
+    name: "shell",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "penetration", units: "mm" },
+      { name: "penetration_loss_by_distance" },
+      { name: "penetration_loss_after_ricochet" },
+      { name: "shell_velocity", units: "m_s" },
+      { name: "shell_range", units: "m" },
+      { name: "shell_capacity" },
+      { name: "caliber", units: "mm" },
+      { name: "ricochet", units: "deg" },
+      { name: "normalization", units: "deg" },
+
+      { toy: "ricochet" },
+    ],
+  },
+
+  {
+    name: "accuracy",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "aim_time", decimals: 1, units: "s" },
+      { name: "dispersion", decimals: 3, units: "m" },
+      { name: "dispersion_angle", decimals: 3, units: "deg" },
+      { toy: "aim_time" },
+    ],
+  },
+
+  {
+    name: "flexibility",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "gun_depression", decimals: 0, units: "deg" },
+      { name: "gun_elevation", decimals: 0, units: "deg" },
+      { name: "azimuth_left", decimals: 0, units: "deg" },
+      { name: "azimuth_right", decimals: 0, units: "deg" },
+
+      { toy: "flexibility" },
+    ],
+  },
+
+  {
+    name: "maneuverability",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "speed_forward", units: "km_h" },
+      { name: "speed_backward", units: "km_h" },
+
+      { name: "weight", decimals: 1, units: "t" },
+      { name: "engine_power", units: "bhp" },
+      { name: "power_to_weight", decimals: 1, units: "bhp_t" },
+      { name: "brake_force", decimals: 1, units: "kN" },
+
+      { name: "terrain_coefficient", decimals: 2 },
+
+      { name: "hull_traverse_speed", units: "deg_s" },
+      { name: "turret_traverse_speed", units: "deg_s" },
+      { name: "gun_traverse_speed", units: "deg_s" },
+
+      { toy: "traverse" },
+
+      // TODO: investigate ATTRIBUTE_NAME_TERRAIN_SIDE_FRICTION
+      // TODO: investigate ATTRIBUTE_NAME_TERRAIN_FORWARD_FRICTION
+      // TODO: investigate ATTRIBUTE_NAME_RESERVE_TRACK_BACKWARD_SPEED
+    ],
+  },
+
+  {
+    name: "survivability",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "health", units: "hp" },
+      { name: "fire_chance", units: "%" },
+      { name: "fire_rate", units: "hp_s" },
+      { name: "ramming_resistance", units: "%" },
+
+      { toy: "fire_health_burn" },
+
+      // TODO: investigate ATTRIBUTE_NAME_MAX_FIRE_DURATION
+    ],
+  },
+
+  {
+    name: "concealment",
+    render: CharacteristicsGroupRender.Statistical,
+    order: [
+      { name: "view_range", units: "m" },
+      { name: "camouflage", decimals: 0, units: "%" },
+
+      { toy: "view_range" },
+
+      { name: "width", units: "m" },
+      { name: "height", units: "m" },
+      { name: "length", units: "m" },
+    ],
+  },
+];

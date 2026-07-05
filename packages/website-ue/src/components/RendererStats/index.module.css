@@ -1,0 +1,29 @@
+.stats {
+  padding: var(--space-3);
+  gap: var(--space-3);
+
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .graphs {
+    display: flex;
+    gap: var(--space-2);
+
+    .graph {
+      position: static !important;
+    }
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+  }
+}

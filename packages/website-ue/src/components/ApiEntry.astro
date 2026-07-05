@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { api } from "../api/dynamic";
+import ApiDescription from "./ApiDescription.astro";
+import { ApiTester } from "./ApiTester";
+
+interface Props {
+  locale: string;
+  api: CollectionEntry<"api">;
+}
+
+const { locale, api: apiData } = Astro.props;
+const strings = await api.strings(locale);
+const body = apiData.data.docs ?? strings.api.no_docs;
+---
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<div class="container">
+  <ApiTester client:idle {locale} path={apiData.id} />
+  <ApiDescription {locale} {body} />
+</div>

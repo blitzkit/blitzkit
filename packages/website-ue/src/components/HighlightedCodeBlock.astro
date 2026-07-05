@@ -1,0 +1,23 @@
+---
+import { all, createStarryNight } from "@wooorm/starry-night";
+import { HighlightedCodeContent } from "./HighlightedCodeContent";
+
+interface Props {
+  lang: string;
+  content: string;
+}
+
+const { lang, content } = Astro.props;
+
+const starryNight = await createStarryNight(all);
+const scope = starryNight.flagToScope(lang);
+
+if (scope === undefined && lang.length > 0) {
+  throw new Error(`Unsupported language: ${lang}`);
+}
+
+const tree =
+  lang.length === 0 ? content : starryNight.highlight(content, scope!);
+---
+
+<HighlightedCodeContent {tree} />

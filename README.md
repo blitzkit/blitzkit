@@ -1,47 +1,105 @@
 # BlitzKit
 
-Tools for everything and anything, World of Tanks Blitz.
+Encyclopedia for World of Tanks Blitz.
 
-This GitHub repository contains the code for BlitzKit and all its services. If you are here, looking to use BlitzKit, go to https://blitzkit.app/.
+## Development
 
-If you intend to contribute to the code, note that you may need to check out sensitive, closed-source submodules to locally develop certain aspects of BlitzKit. Communicate with `@tresabhi` on Discord to get started or discuss sensitive content, such as environment variables or submodules.
+Setting up a local developer environment for BlitzKit is more complex than most projects, but this section will guide you through all the steps. If you're ever lost or confused, feel free to ask for help in [the official Discord server](https://discord.gg/nDt7AjGJQH).
 
-## Packages
+### Prerequisites
 
-| Package                              | Title                | Source                                                                                                                                                                                     | Memo                                                                                                                     |
-| ------------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| [packages/app](packages/app)         | BlitzKit             | [Play Store](https://play.google.com/store/apps/details?id=com.tresabhi.blitzkit), [App Store](https://apps.apple.com/app/4321), [Microsoft Store](https://apps.microsoft.com/detail/zyxw) | The native app of BlitzKit for all platforms. Unavailable from stores at this time.                                      |
-| [packages/bot](packages/bot)         | BlitzKit Discord Bot | [Discord Application Directory](https://discord.com/discovery/applications/1097673957865443370)                                                                                            | The one-in-all Discord bot for statistics.                                                                               |
-| [packages/core](packages/core)       |                      |                                                                                                                                                                                            | Mutual internal code shared between all other packages.                                                                  |
-| [packages/i18n](packages/i18n)       |                      | [Crowdin](https://crowdin.com/project/blitzkrieg)                                                                                                                                          | Translations served as JSON shared across all other packages, including some utility code.                               |
-| [packages/scripts](packages/scripts) |                      |                                                                                                                                                                                            | CLI utilities for the development and deployment of BlitzKit services.                                                   |
-| [packages/varuna](packages/varuna)   | Varuna               | [NPM](https://www.npmjs.com/package/varuna)                                                                                                                                                | React and Astro-oriented state management library, awaiting separation from BlitzKit. Unavailable from NPM at this time. |
-| [packages/website](packages/website) | BlitzKit             | https://blitzkit.app                                                                                                                                                                       | The BlitzKit website provides a wide range of tools, APIs, and interconnects all other services.                         |
+Before you touch any code, you'll need the following.
 
-## Submodules
+#### Linux
 
-| Submodule                                              | Title     | Source                                                | Memo                                                                                                                                                                        |
-| ------------------------------------------------------ | --------- | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [submodules/blitzkit-closed](packages/blitzkit-closed) | ClosedKit | [blitzkit/closed](https://github.com/blitzkit/closed) | Closed source, sensitive code hidden from the public to prevent bad actors from abusing the game. Discuss with `@tresabhi` on Discord for **special permission** to access. |
+Because Node API for .NET doesn't resolve runtime-specific object files for libraries, the entirety of the BlitzKit project is "vendor-locked" to a single OS. GitHub Actions, responsible for BlitzKit CD/CI works best with Ubuntu, thus we must also use a Linux OS.
 
-## Environment Variables
+#### Windows (Optional)
 
-| Name                                                          | Source                                                                           | BlitzKit Default                    | Memo                                                                                                                                |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `PUBLIC_WARGAMING_APPLICATION_ID`                             | [Wargaming Developer's Room](https://developers.wargaming.net/)                  |                                     | Application ID needed to communicate with Wargaming APIs.                                                                           |
-| `PUBLIC_PROMOTE_OPENTEST`                                     |                                                                                  | `false`                             | Optional boolean dictating whether the website advertises [the opentest subdomain of BlitzKit](https://opentest.blitzkit.app/).     |
-| `ALLOW_ROBOTS`                                                |                                                                                  | `true`                              | Toggles between `Allow: /` and `Disallow: /` in the website's `/robots.txt`. This is usually `false` for all BlitzKit's subdomains. |
-| `WOTB_GLOSSARY`, `WOTB_GLOSSARY_DOMAIN`, `WOTB_GLOSSARY_PATH` |                                                                                  |                                     |                                                                                                                                     |
-| `PUBLIC_GOOGLE_TAG_MANAGER_ID`                                | [Google Tag Manager](https://tagmanager.google.com/)                             | `G-GL2JVHCGPQ`                      | Google Tag Manager's unique identifier for analytical purposes.                                                                     |
-| `PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID`                         | [Google Analytics](https://analytics.google.com/)                                | `430711767`                         | Google Analytics' unique property ID for [BlitzKit's apex domain](https://blitzkit.app/) and subdomains.                            |
-| `GOOGLE_APPLICATION_CREDENTIALS`                              | [Google Cloud](https://cloud.google.com/)                                        |                                     | Google Cloud's API key, primarily used for ranking popular tanks and finding relevant tank review videos in Tankopedia.             |
-| `PUBLIC_DISCORD_SERVER_ID`                                    | [BlitzKit Discord Server](https://discord.gg/nDt7AjGJQH)                         | `734786591205359697`                | BlitzKit Discord Server's id.                                                                                                       |
-| `PUBLIC_ASSET_BASE`                                           | [blitzkit/assets](https://github.com/blitzkit/assets)                            | `https://blitzkit.github.io/assets` | The root domain and path that serves the external assets like tank models and icons.                                                |
-| `PUBLIC_BRANCH`                                               |                                                                                  | `main`                              | The branch that the website is operating on. This is completely nominal.                                                            |
-| `PUBLIC_GUIDE_WEBSITE`                                        | [GuidesBlitz](https://guidesblitz.com/)                                          | `https://guidesblitz.com`           | The website that serves the encyclopedia-like content in BlitzKit.                                                                  |
-| `SERVICING`                                                   |                                                                                  | `false`                             | Wether the website is down for servicing.                                                                                           |
-| `DISCORD_CLIENT_ID`                                           | [Discord Developer Portal](https://discord.com/developers/applications)          | `1097673957865443370`               | The BlitzKit Discord Bot's user ID.                                                                                                 |
-| `GH_TOKEN`                                                    | [GitHub Fine-Grained Tokens](https://github.com/settings/personal-access-tokens) |                                     | The GitHub API key used for checking out private submodules and pushing content to the asset repository.                            |
-| `DISCORD_TOKEN`                                               | [Discord Developer Portal](https://discord.com/developers/applications)          |                                     | The Discord API Key for the BlitzKit Discord Bot.                                                                                   |
-| `DATABASE_URL`                                                | [CockroachDB](https://www.cockroachlabs.com/)                                    |                                     | The CockroachDB-SQL database URL used to link Wargaming and Discord users.                                                          |
-| `WOTB_DLC_CDN`                                                |                                                                                  |                                     |                                                                                                                                     |
+...
+
+#### Bun
+
+https://bun.com/
+
+BlitzKit is written mostly in TypeScript, with packages fetched from NPM, managed by Bun.
+
+#### .NET
+
+https://dotnet.microsoft.com/download/dotnet/9.0/
+
+You'll need the .NET 9.0 SDK to build and run the interface layer between BlitzKit and your local installation of World of Tanks Blitz.
+
+#### Protocol Buffers
+
+https://protobuf.dev/installation/
+
+Both BlitzKit and World of Tanks Blitz encode their APIs with Protocol Buffers.
+
+#### World of Tanks Blitz
+
+https://store.steampowered.com/app/444200/
+
+You'll need an up-to-date installation of World of Tanks Blitz on your computer. You may use the same installation that you play, even on a Windows partition if you dual boot.
+
+#### UE4SS
+
+...
+
+#### protodump
+
+...
+
+#### FModel (Optional)
+
+...
+
+### Set Up
+
+Now we can start installing and initiating the code of BlitzKit.
+
+#### Cloning
+
+BlitzKit is a massive monorepo with a lot of submodules. You'll likely not need all the branches and commit history. So, clone with depth 1.
+
+```bash
+git clone --depth 1 https://github.com/blitzkit/blitzkit.git
+cd blitzkit
+git submodule update --init --recursive --depth 1
+```
+
+#### Proto Files
+
+...
+
+#### Mappings
+
+...
+
+#### Environment Variables
+
+...
+
+#### The Big One
+
+...
+
+### Modifying The Code
+
+This is where you can start changing things and proposing them through pull requests.
+
+#### Server
+
+...
+
+#### Building
+
+...
+
+#### Branches & Pull Requests
+
+...
+
+#### Updating
+
+...

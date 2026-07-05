@@ -1,0 +1,58 @@
+.tank-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+
+  overflow: hidden;
+  min-width: var(--tank-card-min-width);
+
+  .icon-wrapper {
+    position: relative;
+
+    width: 100%;
+
+    .flag {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      background-size: cover;
+      background-position: left center;
+
+      width: 75%;
+      height: 50%;
+    }
+
+    .icon {
+      aspect-ratio: 4 / 3;
+      position: relative;
+
+      background-size: 140%;
+      background-position: 40% center;
+    }
+  }
+
+  .name {
+    display: flex;
+    width: 100%;
+
+    overflow-x: hidden;
+
+    justify-content: center;
+
+    .text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &[data-skeleton="true"] {
+        width: 100%;
+      }
+
+      .skeleton {
+        width: 100%;
+      }
+    }
+  }
+}

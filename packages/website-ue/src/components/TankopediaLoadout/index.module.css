@@ -1,0 +1,183 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+
+    .upgrade-buttons {
+      display: flex;
+    }
+  }
+
+  .state {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .status {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    .group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .state {
+        font-size: 1.25em;
+
+        &[data-selected="true"] {
+          img {
+            filter: sepia(1) saturate(10);
+          }
+        }
+      }
+    }
+  }
+
+  .consumables {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+
+    .consumable-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+
+      .consumable {
+        font-size: var(--space-5);
+
+        img {
+          width: 1em;
+          height: 1em;
+        }
+
+        .info {
+          display: flex;
+          flex-direction: column;
+
+          .entry {
+            display: flex;
+            gap: var(--space-2);
+
+            svg {
+              width: 1em;
+              height: 1em;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .equipment {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    .row {
+      display: flex;
+      gap: var(--space-3);
+
+      .slots {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: center;
+
+        .options {
+          display: flex;
+
+          .slot {
+            aspect-ratio: 1 / 1;
+            padding: var(--space-3);
+
+            font-size: var(--space-5);
+
+            &[data-selected="true"] {
+              z-index: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-3);
+
+    .line {
+      display: flex;
+
+      gap: var(--space-3);
+
+      .chunks-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+
+        .line-wrap {
+          display: flex;
+          align-items: center;
+
+          gap: var(--space-3);
+
+          .wrap-marker {
+            padding-bottom: var(--font-size-minor);
+
+            svg {
+              width: 1em;
+              height: 1em;
+            }
+          }
+
+          .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+
+            .stage {
+              position: relative;
+
+              padding: var(--space-3);
+
+              font-size: 2em;
+
+              .icon {
+                width: 1em;
+                height: 1em;
+
+                transform: translate(var(--space-1), var(--space-1));
+              }
+
+              .tier {
+                position: absolute;
+                left: var(--space-2);
+                top: var(--space-2);
+              }
+
+              .price {
+                position: absolute;
+                left: 50%;
+                bottom: var(--space-2);
+                transform: translateX(-50%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

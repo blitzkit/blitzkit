@@ -1,0 +1,20 @@
+---
+import "@radix-ui/colors/violet-dark.css";
+import { Section } from "../../../components/Section";
+import ToolBanner from "../../../components/ToolBanner.astro";
+import { tools } from "../../../config/tools";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout {locale} accent="purple">
+  <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
+
+  <Section>
+    <Page {locale} client:load />
+  </Section>
+</BaseLayout>

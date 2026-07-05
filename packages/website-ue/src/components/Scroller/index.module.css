@@ -1,0 +1,48 @@
+.scroller {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  position: relative;
+
+  .content {
+    overflow: auto;
+
+    padding-bottom: var(--space-4);
+
+    transition: scrollbar-color var(--duration-brief);
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+      scrollbar-color: var(--gray-7) var(--gray-3);
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    .bar-wrapper {
+      opacity: 1;
+    }
+  }
+
+  .curtain {
+    width: min(25%, var(--space-7));
+    height: calc(100% - var(--space-3) - 2 * var(--space-1));
+
+    position: absolute;
+    top: 0;
+
+    opacity: 0;
+    pointer-events: none;
+
+    &[data-side="left"] {
+      left: 0;
+      background: linear-gradient(90deg, var(--gray-1), transparent);
+    }
+
+    &[data-side="right"] {
+      right: 0;
+      background: linear-gradient(90deg, transparent, var(--gray-1));
+    }
+  }
+}
