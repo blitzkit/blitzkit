@@ -2,6 +2,7 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { useCallback, useEffect, useRef } from "react";
 import { Group, Vector2 } from "three";
+import { degToRad } from "three/src/math/MathUtils.js";
 import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import {
@@ -45,6 +46,20 @@ export function Model() {
   const gunTurretModel = gunTankModel.turrets[gun.turret.id];
   const gunModel = gunTurretModel.guns[gun.gun.id];
 
+  // oscillating turrets bake a static tilt into the turret+gun assembly;
+  // the turret's source tank carries this offset, and since gunGroup is
+  // nested inside turretGroup, applying it here tilts both together
+  const initialTurretRotation = turretTankModel.initial_turret_rotation;
+  const initialPitch = initialTurretRotation
+    ? -degToRad(initialTurretRotation.pitch)
+    : 0;
+  const initialRoll = initialTurretRotation
+    ? -degToRad(initialTurretRotation.roll)
+    : 0;
+  const initialYaw = initialTurretRotation
+    ? -degToRad(initialTurretRotation.yaw)
+    : 0;
+
   const pointer = useRef(new Vector2());
   const delta = useRef(new Vector2());
   const enablePitchRotation = useRef(true);
@@ -86,7 +101,11 @@ export function Model() {
     function handleModelTransform(
       event: QuicklimeEvent<ModelTransformEventData>,
     ) {
-      turretGroup.current.rotation.z = event.data.yaw;
+      turretGroup.current.rotation.set(
+        initialPitch,
+        initialRoll,
+        event.data.yaw + initialYaw,
+      );
       gunGroup.current.rotation.x = event.data.pitch;
     }
 
@@ -95,7 +114,7 @@ export function Model() {
     return () => {
       modelTransformEvent.off(handleModelTransform);
     };
-  }, []);
+  }, [initialPitch, initialRoll, initialYaw]);
 
   return (
     <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -116,7 +135,11 @@ export function Model() {
 
       <group
         ref={turretGroup}
-        rotation={[0, 0, modelTransformEvent.last!.yaw]}
+        rotation={[
+          initialPitch,
+          initialRoll,
+          modelTransformEvent.last!.yaw + initialYaw,
+        ]}
         position={[
           tankModel.turret_origin!.x + trackModel.origin!.x,
           tankModel.turret_origin!.z + trackModel.origin!.z,
