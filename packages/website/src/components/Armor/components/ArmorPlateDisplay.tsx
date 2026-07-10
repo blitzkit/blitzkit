@@ -43,7 +43,7 @@ export function ArmorPlateDisplay() {
             }}
           >
             <Flex direction="column">
-              <Text weight="bold">
+              <Text weight="bold" style={{ textTransform: "capitalize" }}>
                 {layerTypeNames[highlightArmor.type]}{" "}
                 {highlightArmor.thickness.toFixed(0)}
                 <Text size="1" weight="regular">
