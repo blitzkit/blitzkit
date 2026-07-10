@@ -63,10 +63,10 @@ export function ShotDisplay() {
         outlineMaterial,
       ).computeLineDistances();
 
-      splashRadiusWrapper.current.add(outline);
+      splashRadiusWrapper.current?.add(outline);
 
       return () => {
-        splashRadiusWrapper.current.remove(outline);
+        splashRadiusWrapper.current?.remove(outline);
       };
     }
   });
@@ -283,17 +283,23 @@ function Animator({
     const tracerT1 = t % 1;
     const tracerT2 = (t + 0.5) % 1;
 
-    inTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT1 - 0.5), 1);
-    inTracer.current.position.set(0, (1 - tracerT1) * inLength, 0);
+    if (inTracer.current) {
+      inTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT1 - 0.5), 1);
+      inTracer.current.position.set(0, (1 - tracerT1) * inLength, 0);
 
-    if (outTracer.current) {
-      outTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT2 - 0.5), 1);
-      outTracer.current.position.set(0, tracerT2 * outLength, 0);
+      if (outTracer.current) {
+        outTracer.current.scale.set(1, 1 - 2 * Math.abs(tracerT2 - 0.5), 1);
+        outTracer.current.position.set(0, tracerT2 * outLength, 0);
+      }
+
+      invalidate();
     }
 
-    invalidate();
-
-    if (shot.splashRadius !== undefined) {
+    if (
+      shot.splashRadius !== undefined &&
+      splashRadiusWrapper.current &&
+      splashRadiusMaterial.current
+    ) {
       if (animationStartTime === null) animationStartTime = t;
 
       const scale =
