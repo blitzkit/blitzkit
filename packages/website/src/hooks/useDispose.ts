@@ -36,7 +36,9 @@ export function useDispose(gltf: GLTF & ObjectMap, path: string) {
             for (const map of maps) {
               if (!map) continue;
 
-              map.source.data.close();
+              if (typeof map.source.data.close === "function") {
+                map.source.data.close();
+              }
               map.dispose();
             }
 
