@@ -6,7 +6,7 @@ import {
 import { clamp } from "lodash-es";
 import { degToRad } from "three/src/math/MathUtils.js";
 
-export const DEFAULT_PITCH_TRANSITION = 15;
+export const DEFAULT_PITCH_TRANSITION = 20;
 
 export function applyPitchYawLimits(
   pitch: number, // rad
@@ -31,7 +31,7 @@ export function applyPitchYawLimits(
   let lowerPitch = -degToRad(pitchLimits.max) - depressionBuff;
   let upperPitch = -degToRad(pitchLimits.min) + elevationBuff;
   const transition = degToRad(
-    pitchLimits.transition ?? DEFAULT_PITCH_TRANSITION,
+    pitchLimits.transition || DEFAULT_PITCH_TRANSITION,
   );
 
   if (pitchLimits.back) {
