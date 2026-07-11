@@ -23,8 +23,8 @@ const THETA_OFFSET = degToRad(180 - 45);
 const LIGHT_DISTANCE = 20;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 6;
-const INTENSITY_0 = 6;
-const INTENSITY_1 = 3;
+const INTENSITY_0 = 6 * 9;
+const INTENSITY_1 = 3 * 9;
 const HEMISPHERE_INTENSITY = 2;
 
 export const transitionEvent = new Quicklime<number>(0);
@@ -93,7 +93,7 @@ export function Lighting() {
               intensity={intensity}
               penumbra={1}
               castShadow={highGraphics}
-              decay={0}
+              decay={1}
               color="#ffffff"
               angle={0}
             />
