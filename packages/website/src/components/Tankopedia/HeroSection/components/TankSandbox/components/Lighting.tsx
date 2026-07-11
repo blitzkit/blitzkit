@@ -8,17 +8,17 @@ import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
-const ANGLE = degToRad(10);
+const ANGLE = degToRad(32);
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
 const LIGHTS_COUNT = 4;
 const THETA_OFFSET = degToRad(180 - 45);
-const LIGHT_DISTANCE = 20;
+const LIGHT_DISTANCE = 14;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 6;
-const INTENSITY_0 = 6;
-const INTENSITY_1 = 3;
+const INTENSITY_0 = 4;
+const INTENSITY_1 = 2;
 const HEMISPHERE_INTENSITY = 2;
 
 export const transitionEvent = new Quicklime<number>(0);
@@ -35,8 +35,6 @@ export function Lighting() {
   const isRevealing = useRef(true);
 
   const [animate, setAnimate] = useState(true);
-
-  console.log(animate);
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {
@@ -88,7 +86,9 @@ export function Lighting() {
               position={position}
               intensity={intensity}
               penumbra={1}
-              castShadow={highGraphics}
+              castShadow={highGraphics && index === 0}
+              shadow-mapSize={[2048, 2048]}
+              shadow-bias={-0.0005}
               decay={0}
               color="#ffffff"
               angle={0}

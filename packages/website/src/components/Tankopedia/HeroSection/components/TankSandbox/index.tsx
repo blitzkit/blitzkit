@@ -156,7 +156,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           localClippingEnabled: true,
           preserveDrawingBuffer: true,
         }}
-        shadows="basic"
+        shadows="soft"
         onPointerDown={handlePointerDown}
         onPointerMissed={() => {
           Tankopedia.mutate((draft) => {
