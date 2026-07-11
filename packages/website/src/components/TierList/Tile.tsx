@@ -1,14 +1,16 @@
-import type { TankDefinition } from '@blitzkit/core';
-import { Box } from '@radix-ui/themes';
+import type { TankDefinition } from "@blitzkit/core";
+import { Box } from "@radix-ui/themes";
 import {
   useCallback,
   useEffect,
   useRef,
   type PointerEvent as ReactPointerEvent,
-} from 'react';
-import { TierList } from '../../stores/tierList';
-import { TankCard } from '../TankCard';
-import { tierListCardElements, tierListRowElements } from './Table/constants';
+} from "react";
+import { TierList } from "../../stores/tierList";
+import { TankCard } from "../TankCard";
+import { tierListCardElements, tierListRowElements } from "./Table/constants";
+
+const SCROLL_ZONE = 1 / 3;
 
 type TierListTileProps = {
   tank: TankDefinition;
@@ -26,6 +28,33 @@ type TierListTileProps = {
 export function TierListTile(props: TierListTileProps) {
   const card = useRef<HTMLDivElement>(null);
   const lastPosition = useRef({ x: 0, y: 0 });
+  const autoScroll = useRef(false);
+  const lastT = useRef(0);
+
+  const autoScrollLoop = useCallback(() => {
+    if (!autoScroll.current) return;
+
+    let scrollSpeed = 0;
+    const v = lastPosition.current.y / window.innerHeight;
+
+    if (v <= SCROLL_ZONE) {
+      scrollSpeed = v / SCROLL_ZONE - 1;
+    } else if (v >= 1 - SCROLL_ZONE) {
+      scrollSpeed = 1 - (1 - v) / SCROLL_ZONE;
+    }
+
+    const t = performance.now();
+    const dt = t - lastT.current;
+    lastT.current = t;
+
+    window.scrollBy({
+      behavior: "instant",
+      top: scrollSpeed * dt,
+    });
+
+    requestAnimationFrame(autoScrollLoop);
+  }, []);
+
   const handlePointerDown = useCallback(
     (event: ReactPointerEvent<HTMLSpanElement>) => {
       if (!card.current) return;
@@ -34,22 +63,26 @@ export function TierListTile(props: TierListTileProps) {
 
       const rect = card.current.getBoundingClientRect();
 
-      card.current.style.position = 'fixed';
-      card.current.style.cursor = 'grabbing';
-      card.current.style.zIndex = '1';
+      card.current.style.position = "fixed";
+      card.current.style.cursor = "grabbing";
+      card.current.style.zIndex = "1";
       card.current.style.left = `${rect.left}px`;
       card.current.style.top = `${rect.top}px`;
 
       lastPosition.current = { x: event.clientX, y: event.clientY };
 
-      window.scrollTo({ behavior: 'smooth', top: 124 });
+      window.scrollTo({ behavior: "instant", top: 124 });
 
-      window.addEventListener('pointermove', handlePointerMove);
-      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
 
       TierList.mutate((draft) => {
         draft.dragging = true;
       });
+
+      autoScroll.current = true;
+      lastT.current = performance.now();
+      autoScrollLoop();
     },
     [],
   );
@@ -141,12 +174,14 @@ export function TierListTile(props: TierListTileProps) {
       });
     }
 
-    card.current.style.position = 'static';
-    card.current.style.zIndex = 'unset';
-    card.current.style.cursor = 'grab';
+    card.current.style.position = "static";
+    card.current.style.zIndex = "unset";
+    card.current.style.cursor = "grab";
 
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerup", handlePointerUp);
+
+    autoScroll.current = false;
   }, []);
 
   useEffect(() => {
@@ -168,7 +203,7 @@ export function TierListTile(props: TierListTileProps) {
       data-tile-index={props.isPlaced ? props.tileIndex : undefined}
       data-tile-id={props.tank.id}
       onPointerDown={handlePointerDown}
-      style={{ cursor: 'grab', touchAction: 'none' }}
+      style={{ cursor: "grab", touchAction: "none" }}
     >
       <TankCard noLink tank={props.tank} />
     </Box>
