@@ -42,10 +42,10 @@ const TRACER_THIN = TRACER_THICK / 2;
 
 export function ShotDisplay() {
   const shot = Tankopedia.use((state) => state.shot);
-  const inTracer = useRef<Mesh>(null!);
-  const outTracer = useRef<Mesh>(null!);
-  const splashRadiusWrapper = useRef<Group>(null!);
-  const splashRadiusMaterial = useRef<MeshBasicMaterial>(null!);
+  const inTracer = useRef<Mesh>(null);
+  const outTracer = useRef<Mesh>(null);
+  const splashRadiusWrapper = useRef<Group>(null);
+  const splashRadiusMaterial = useRef<MeshBasicMaterial>(null);
   const { locale } = useLocale();
 
   useEffect(() => {
@@ -255,11 +255,11 @@ export function ShotDisplay() {
 }
 
 interface AnimatorProps {
-  inTracer: RefObject<Mesh>;
-  outTracer: RefObject<Mesh>;
+  inTracer: RefObject<Mesh | null>;
+  outTracer: RefObject<Mesh | null>;
 
-  splashRadiusWrapper: RefObject<Group>;
-  splashRadiusMaterial: RefObject<MeshBasicMaterial>;
+  splashRadiusWrapper: RefObject<Group | null>;
+  splashRadiusMaterial: RefObject<MeshBasicMaterial | null>;
 
   inLength: number;
   outLength: number;
