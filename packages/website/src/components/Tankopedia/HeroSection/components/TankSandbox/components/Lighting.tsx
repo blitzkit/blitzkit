@@ -1,7 +1,13 @@
 import { useFrame } from "@react-three/fiber";
 import { clamp, times } from "lodash-es";
 import { Quicklime } from "quicklime";
-import { useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
@@ -35,8 +41,6 @@ export function Lighting() {
   const isRevealing = useRef(true);
 
   const [animate, setAnimate] = useState(true);
-
-  console.log(animate);
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {
@@ -111,17 +115,7 @@ interface AnimatorProps {
 function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
 
-  useFrame(({ invalidate }) => {
-    const dt = performance.now() / 1e3 - t0.current;
-    const x = clamp(dt / animationTime.current, 0, 2);
-
-    if (x === 2) {
-      stop();
-      return;
-    }
-
-    const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
-
+  const apply = useCallback((t: number) => {
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
         child.angle = ANGLE * t;
@@ -131,6 +125,22 @@ function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
     }
 
     transitionEvent.dispatch(t);
+  }, []);
+
+  useFrame(({ invalidate }) => {
+    const dt = performance.now() / 1e3 - t0.current;
+    const x = clamp(dt / animationTime.current, 0, 2);
+
+    if (x === 2) {
+      apply(1);
+      stop();
+      return;
+    }
+
+    // https://www.desmos.com/calculator/awsbahxjku
+    const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
+
+    apply(t);
     invalidate();
 
     if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
