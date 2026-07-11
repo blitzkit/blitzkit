@@ -22,7 +22,7 @@ export function ArmorPlateDisplay() {
   const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const input = useRef<HTMLInputElement>(null);
-  const { locale } = useLocale();
+  const { locale, strings } = useLocale();
 
   if (highlightArmor === undefined) return null;
 
@@ -44,7 +44,10 @@ export function ArmorPlateDisplay() {
           >
             <Flex direction="column">
               <Text weight="bold">
-                {layerTypeNames[highlightArmor.type]}{" "}
+                {
+                  strings.website.tools.tankopedia.sandbox.dynamic.shot_card
+                    .element[layerTypeNames[highlightArmor.type]]
+                }{" "}
                 {highlightArmor.thickness.toFixed(0)}
                 <Text size="1" weight="regular">
                   mm
