@@ -36,7 +36,10 @@ export function useDispose(gltf: GLTF & ObjectMap, path: string) {
             for (const map of maps) {
               if (!map) continue;
 
-              map.source.data.close();
+              if (map.source.data instanceof ImageBitmap) {
+                map.source.data.close();
+              }
+
               map.dispose();
             }
 
