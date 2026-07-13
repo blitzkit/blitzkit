@@ -46,6 +46,7 @@ import { TankSearch } from "../../../../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
 import { QuickInputs } from "./components/QuickInputs";
+import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 import { Thicknesses } from "./components/Thicknesses";
 
 type OptionsProps = MaybeSkeletonComponentProps & {
@@ -278,6 +279,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               }}
             />
           </IconButton>
+
+          <SpallLinerSwitcher />
         </Flex>
 
         {!skeleton && (
