@@ -13,18 +13,18 @@
       "hp": "{value} 生命值",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}度°/秒",
+      "deg_s": "{value}度每秒",
       "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "弹夹型坦克",
-      "auto_reloader": "自动装填型坦克",
+      "auto_reloader": "弹鼓型坦克",
       "regular": "单发"
     },
     "shells": {
       "ap": "穿甲弹",
-      "ap_cr": "硬式复合穿甲弹",
-      "hc": "反战车高爆弹",
+      "ap_cr": "复合穿甲弹",
+      "hc": "破甲弹",
       "he": "高爆弹"
     },
     "player_count_period": {
@@ -60,23 +60,23 @@
       "3": "平均",
       "4": "高于平均",
       "5": "好",
-      "6": "非常好",
+      "6": "好",
       "7": "很好",
-      "8": "极品",
-      "9": "超级强势玩家"
+      "8": "非常好",
+      "9": "极品"
     },
     "bkni_percentile": {
-      "0": "Super malum",
-      "1": "Malum",
-      "2": "非常差",
+      "0": "垃圾",
+      "1": "非常差",
+      "2": "很差",
       "3": "差",
       "4": "低于平均",
       "5": "平均",
-      "6": "高于平均",
+      "6": "较好",
       "7": "好",
-      "8": "非常好",
-      "9": "極品",
-      "10": "超级强势玩家"
+      "8": "很好",
+      "9": "非常好",
+      "10": "极品"
     },
     "nations": {
       "ussr": "苏联",
@@ -101,7 +101,7 @@
       "other": "X系"
     },
     "tank_class_short": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "轻型坦克",
       "1": "中型坦克",
       "2": "重型战车",
@@ -114,14 +114,14 @@
       "3": "坦克歼击车"
     },
     "tank_class_medium": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "轻型坦克",
       "1": "中型坦克",
       "2": "重型坦克",
       "3": "坦克歼击车"
     },
     "tree_type": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "科技树",
       "1": "金币车",
       "2": "收藏车"
@@ -156,7 +156,7 @@
       "normalized_shots": "开火次数",
       "normalized_spotted": "侦查次数",
       "normalized_survived_battles": "存活率",
-      "normalized_win_and_survived": "存活胜利率",
+      "normalized_win_and_survived": "胜利并幸存的概率",
       "normalized_wins": "胜率",
       "normalized_xp": "经验值",
       "normalized_battle_life_time": "战斗时间",
@@ -194,7 +194,7 @@
         "tank_id_not_found": "# 找不到坦克\n无法找到ID为 “{search}” 的坦克。 请尝试输入坦克的名称而不是数字。",
         "no_tank_stats": "# 没有这辆战车的数据\n这个玩家没有可用资料。 这可能不是你要找的玩家。",
         "get_help": "Discord的协助服务器",
-        "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[官方Discord](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
+        "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[【官方Discord】](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
         "preview": "# 此命令处于预览\n\n您只能在[官方Discord服务器](https://discord.gg/nDt7AjGJQH)访问此命令。该命令将很快可用。",
         "query_too_small": "# 搜寻内容过短\n您的搜寻必需至少包含 3 个字元。",
         "query_too_long": "# 搜索内容过长\n您搜索的内容必须少于 100 个字符。"
@@ -293,11 +293,11 @@
         "career": "玩家资料",
         "today": "今日：",
         "days": "{days} 天",
-        "custom": "{day_1} - {day_2} 天"
+        "custom": "天数 {day_1} 至 {day_2}"
       },
       "filters": {
         "none": "无筛选器",
-        "tier": "{tier} 阶"
+        "tier": "{tier} 级"
       },
       "no_data": {
         "battles_in_period": "在这段时间里没有参与任何战斗",
@@ -320,7 +320,7 @@
       }
     },
     "commands": {
-      "dead": "# 统计指令现已停用\nBlitzKit Discord 机器人此前依赖 BlitzStars 获取周期性的统计数据。由于 BlitzStars 已启用严格的 Cloudflare 防护，导致 BlitzKit 无法继续使用其 API。这已导致以下指令失效：\n/统计\n/今日\n/损坏\n/演变\n/完整统计\n请使用 [Aftermath](<https://amth.one/invite>) \n作为完全独立于 BlitzStars 的替代方案。由 BlitzKit 托管的统计指令将在近期内恢复。",
+      "dead": "# 统计指令现已停用\nBlitzKit Discord 机器人此前依赖 BlitzStars 获取周期性的统计数据。由于 BlitzStars 已启用严格的 Cloudflare 防护，导致 BlitzKit 无法继续使用其 API。这已导致以下指令失效：\n\n/stats - 统计\n/today - 今日情况\n/breakdown - 被摧毁\n/evolution - 变化情况\n/full-stats - 完整统计\n\n请使用 [Aftermath](<https://amth.one/invite>) 。\n作为完全独立于 BlitzStars 的替代方案，由 BlitzKit 托管的统计指令将在近期内恢复。",
       "replay": {
         "name": "回放",
         "description": "显示重播结果",
@@ -337,7 +337,7 @@
         "options": {
           "target_tank": {
             "name": "目标战车",
-            "description": "需要研发的目标（战车）"
+            "description": "科技线中的下一辆战车"
           },
           "starting_tank": {
             "name": "起始战车",
@@ -347,19 +347,19 @@
         "body": {
           "subtitle": "研发",
           "total": "全部",
-          "research": "研发：{cost}",
+          "research": "研发费用：{cost}",
           "upgrades": "升级：{cost}",
-          "purchase": "购买：{cost}",
+          "purchase": "购买费用：{cost}",
           "equipment": "装备：{cost}",
-          "estimation": "# 这是一个估计值！\n\n这个列表可能包含已经研发过的战车，因为 Wargaming 提供了不正确的资料。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
+          "estimation": "# 这是一个估算值！\n\n因为 Wargaming 提供了不正确的资料，所以该列表可能包含已经研发过的战车。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
         },
         "errors": {
-          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发一个 加值/收藏家 坦克。",
+          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发 金币车 和 收藏车。",
           "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
           "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始坦克”， 以查看全部您已研发过的坦克。",
-          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
+          "start_end_equal": "# \"{tank}\" 被重复提供\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
           "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始坦克” 和 “目标坦克” 在同一研发线路中。",
-          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的阶级更低。"
+          "unordered": "# “{tank_1}” 等级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的等级更低。"
         }
       },
       "about": {
@@ -574,7 +574,7 @@
         "name": "已拥有的坦克",
         "description": "在一个等级中显示所有已拥有的坦克",
         "body": {
-          "title": "# {name} 所拥有的 {tier} 阶坦克\n\n"
+          "title": "# {name} 所拥有的 {tier} 级坦克\n\n"
         }
       },
       "permissions": {
@@ -593,7 +593,7 @@
         "description": "检查机器人是否处于活动状态。",
         "body": {
           "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - {time} 微秒"
+          "pong_with_time": "Pong 🏓 - {time} 毫秒"
         },
         "subcommands": {
           "blitzkit": {
@@ -677,7 +677,7 @@
         "count_plural": "{count} 辆坦克",
         "sorting_by": "按 {name} 排序",
         "clear": "清除",
-        "tier": "{tier} 阶",
+        "tier": "{tier} 级",
         "passive": "{name} (被动)",
         "active": "{name} (主动)",
         "no_tanks_found": {
@@ -809,7 +809,7 @@
       "mixer": {
         "name": "组装",
         "button": "混合搭配",
-        "description": "混合坦克模块",
+        "description": "混搭不同坦克间的模块",
         "seo_description": "《坦克世界：闪击战》的车体, 炮塔, 主炮混合搭配",
         "screenshot": "屏幕截图",
         "randomize": "随机搭配"
@@ -984,7 +984,7 @@
           "equalizer": {
             "title": "Equalizer",
             "equalize": "Equalize",
-            "beta": "Beta"
+            "beta": "测试版"
           },
           "modules": {
             "title": "坦克模块",
@@ -1018,8 +1018,8 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "{tier} {class}",
-            "tier": "All tier {tier}",
+            "class": "{tier} 级的 {class}",
+            "tier": "所有{tier}级的",
             "all": "所有坦克"
           },
           "values": {
@@ -1102,8 +1102,8 @@
             "shellCapacity": "携弹量",
             "gunType": "炮管类型",
             "penetrationAt250m": "两百五十米处的穿透力",
-            "burstShells": "Burst shell count",
-            "burstInterShell": "Burst inter-shell"
+            "burstShells": "爆破计数",
+            "burstInterShell": "爆破弹"
           }
         },
         "firepower": {
@@ -1156,7 +1156,7 @@
           "skills": {
             "clear": "清除",
             "maximize": "最大化",
-            "equalize": "Equalize"
+            "equalize": "平衡"
           },
           "modules": {
             "stock": "白板",
