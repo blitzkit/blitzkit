@@ -48,13 +48,22 @@ export function GunFlexibilityVisualizer({
   const turretModel = tankModel.turrets[turret.id];
   const gunModel = turretModel.guns[gun.id];
 
+  // turret's own baked-in mount tilt (e.g. Minotauro's turret sits pitched
+  // 3deg forward on the hull); must be folded into displayed pitch values
+  // the same way tankCharacteristics.ts and QuickInputs do
+  const initialTurretPitch = degToRad(
+    tankModel.initial_turret_rotation?.pitch ?? 0,
+  );
+
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [minPitch, setMinPitch] = useState(
-    -degToRad(gunModel.pitch!.front?.max ?? gunModel.pitch!.max),
+    -degToRad(gunModel.pitch!.front?.max ?? gunModel.pitch!.max) -
+      initialTurretPitch,
   );
   const [maxPitch, setMaxPitch] = useState(
-    -degToRad(gunModel.pitch!.front?.min ?? gunModel.pitch!.min),
+    -degToRad(gunModel.pitch!.front?.min ?? gunModel.pitch!.min) -
+      initialTurretPitch,
   );
 
   const container = useRef<HTMLDivElement>(null);
@@ -256,8 +265,8 @@ export function GunFlexibilityVisualizer({
 
           setPitch(pitch);
           setYaw(yaw);
-          setMinPitch(min[0]);
-          setMaxPitch(max[0]);
+          setMinPitch(min[0] - initialTurretPitch);
+          setMaxPitch(max[0] - initialTurretPitch);
 
           modelTransformEvent.dispatch({ pitch, yaw });
         }}
@@ -376,7 +385,7 @@ export function GunFlexibilityVisualizer({
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.pitch}
           value={literals(strings.common.units.deg, {
-            value: radToDeg(pitch).toFixed(0),
+            value: radToDeg(pitch - initialTurretPitch).toFixed(0),
           })}
           side="top-left"
         />
