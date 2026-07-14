@@ -1,6 +1,14 @@
 import { asset, isExplosive } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { Flex, Heading, IconButton, Tooltip } from "@radix-ui/themes";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import {
+  Flex,
+  Heading,
+  IconButton,
+  Popover,
+  Text,
+  Tooltip,
+} from "@radix-ui/themes";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
 import { Duel } from "../../../../../../stores/duel";
@@ -77,6 +85,40 @@ export function Firepower({
         {strings.common.gun_types[gun.gun_type!.$case]}
       </Info>
       <InfoWithDelta stats={stats} decimals={0} value="dpm" />
+      {gun.gun_type!.$case === "regular" && (
+        <InfoWithDelta
+          stats={stats}
+          indent
+          decimals={0}
+          noRanking
+          name={
+            <Flex align="center" gap="1" display="inline-flex">
+              {
+                strings.website.tools.tankopedia.characteristics.values
+                  .peekabooDpm
+              }
+
+              <Popover.Root>
+                <Popover.Trigger>
+                  <IconButton variant="ghost" size="1">
+                    <InfoCircledIcon />
+                  </IconButton>
+                </Popover.Trigger>
+
+                <Popover.Content style={{ maxWidth: 280 }}>
+                  <Text size="2">
+                    {
+                      strings.website.tools.tankopedia.characteristics.values
+                        .peekabooDpmInfo
+                    }
+                  </Text>
+                </Popover.Content>
+              </Popover.Root>
+            </Flex>
+          }
+          value={(tank) => tank.peekabooDpm}
+        />
+      )}
       <InfoWithDelta stats={stats} decimals={0} value="damage" />
       {gun.gun_type!.$case !== "regular" && (
         <InfoWithDelta stats={stats} indent decimals={0} value="clipDamage" />

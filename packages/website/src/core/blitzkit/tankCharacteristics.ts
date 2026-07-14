@@ -424,6 +424,10 @@ export function tankCharacteristics(
       : (gun.gun_type!.$case === "regular"
           ? gun.gun_type!.value.reload
           : gun.gun_type!.value.clip_reload) * reloadCoefficient;
+  const peekabooDpm =
+    gun.gun_type!.$case === "regular"
+      ? Math.round(damage * (60 / Math.max(shellReload!, 10)))
+      : undefined;
   const caliber = shell.caliber;
   const penetration = shell.penetration!.near * penetrationCoefficient;
   const clipDamage =
@@ -551,6 +555,7 @@ export function tankCharacteristics(
     shellRicochet,
     dpm,
     dpmEffective,
+    peekabooDpm,
     shells,
     mostOptimalShellIndex,
     shellReloads,
