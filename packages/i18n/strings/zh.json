@@ -23,7 +23,7 @@
     },
     "shells": {
       "ap": "穿甲弹",
-      "ap_cr": "复合穿甲弹",
+      "ap_cr": "硬式复合穿甲弹",
       "hc": "破甲弹",
       "he": "高爆弹"
     },
@@ -297,7 +297,7 @@
       },
       "filters": {
         "none": "无筛选器",
-        "tier": "{tier} 级"
+        "tier": "{tier} 阶"
       },
       "no_data": {
         "battles_in_period": "在这段时间里没有参与任何战斗",
@@ -337,7 +337,7 @@
         "options": {
           "target_tank": {
             "name": "目标战车",
-            "description": "科技线中的下一辆战车"
+            "description": "需要研发的目标（战车）"
           },
           "starting_tank": {
             "name": "起始战车",
@@ -348,18 +348,18 @@
           "subtitle": "研发",
           "total": "全部",
           "research": "研发费用：{cost}",
-          "upgrades": "升级：{cost}",
+          "upgrades": "升级费用：{cost}",
           "purchase": "购买费用：{cost}",
-          "equipment": "装备：{cost}",
+          "equipment": "装备费用：{cost}",
           "estimation": "# 这是一个估算值！\n\n因为 Wargaming 提供了不正确的资料，所以该列表可能包含已经研发过的战车。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
         },
         "errors": {
-          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发 金币车 和 收藏车。",
-          "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
+          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发 金币车 或 收藏车。",
+          "tier_1": "# {tank} 是一阶坦克\n\n一阶坦克一直是对所有玩家免费解锁的。",
           "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始坦克”， 以查看全部您已研发过的坦克。",
           "start_end_equal": "# \"{tank}\" 被重复提供\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
           "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始坦克” 和 “目标坦克” 在同一研发线路中。",
-          "unordered": "# “{tank_1}” 等级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的等级更低。"
+          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的阶级更低。"
         }
       },
       "about": {
@@ -572,9 +572,9 @@
       },
       "owned_tanks": {
         "name": "已拥有的坦克",
-        "description": "在一个等级中显示所有已拥有的坦克",
+        "description": "显示该阶级中您所拥有的全部战车",
         "body": {
-          "title": "# {name} 所拥有的 {tier} 级坦克\n\n"
+          "title": "# {name} 所拥有的 {tier} 阶坦克\n\n"
         }
       },
       "permissions": {
