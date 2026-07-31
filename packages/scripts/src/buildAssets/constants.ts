@@ -1,9 +1,9 @@
 import { assertSecret } from "@blitzkit/core";
 import { AbstractVFS } from "../core/vfs/abstract";
 import { LocalVFS } from "../core/vfs/local";
+import { MixedVFS } from "../core/vfs/mixed";
 import { SteamVFS } from "../core/vfs/steam";
 import { ZipVFS } from "../core/vfs/zip";
-import { MixedVFS } from "../core/vfs/mixed";
 
 export const PATCHES_ROOT = "../../temp/patches";
 

@@ -34,19 +34,14 @@ import {
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { readFile } from "fs/promises";
-import { deburr } from "lodash-es";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
+import { slugify } from "transliteration";
 import { parse as parseYaml } from "yaml";
 import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
 import type { Avatar } from "./skillIcons";
 import type { TankParameters } from "./tankIcons";
-
-const nonAlphanumericRegex = /[^a-z0-9]/g;
-const multipleDashesRegex = /--+/g;
-const trailingDashRegex = /-$/g;
-const leadingDashRegex = /^-/g;
 
 const nationSlugDiscriminators = {
   china: "cn",
@@ -770,11 +765,7 @@ export async function definitions() {
         getString(tank.userString)
       ).locales.en;
 
-      let slug = deburr(name).toLowerCase();
-      slug = slug.replaceAll(nonAlphanumericRegex, "-");
-      slug = slug.replaceAll(multipleDashesRegex, "-");
-      slug = slug.replaceAll(trailingDashRegex, "");
-      slug = slug.replaceAll(leadingDashRegex, "");
+      let slug = slugify(name);
 
       idToNation[tankId] = nation;
 
