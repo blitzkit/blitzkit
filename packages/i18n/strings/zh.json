@@ -677,7 +677,7 @@
         "count_plural": "{count} 辆坦克",
         "sorting_by": "按 {name} 排序",
         "clear": "清除",
-        "tier": "{tier} 级",
+        "tier": "{tier} 阶",
         "passive": "{name} (被动)",
         "active": "{name} (主动)",
         "no_tanks_found": {
@@ -1018,8 +1018,8 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "{tier} 级的 {class}",
-            "tier": "所有{tier}级的",
+            "class": "{tier} 阶的 {class}",
+            "tier": "所有{tier} 阶的",
             "all": "所有坦克"
           },
           "values": {
