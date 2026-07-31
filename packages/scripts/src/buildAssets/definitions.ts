@@ -22,6 +22,7 @@ import {
   ResearchCost,
   ShellType,
   SkillDefinitions,
+  sluggify,
   TankClass,
   TankDefinitions,
   TankPrice,
@@ -36,7 +37,6 @@ import locales from "@blitzkit/i18n/locales.json";
 import { readFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
-import { slugify } from "transliteration";
 import { parse as parseYaml } from "yaml";
 import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
@@ -765,7 +765,7 @@ export async function definitions() {
         getString(tank.userString)
       ).locales.en;
 
-      let slug = slugify(name);
+      let slug = sluggify(name);
 
       idToNation[tankId] = nation;
 

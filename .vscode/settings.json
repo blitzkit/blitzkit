@@ -192,6 +192,7 @@
     "searchtanks",
     "SHAREDEXP",
     "SKLLD",
+    "sluggify",
     "smoothstep",
     "Smri",
     "Specularity",
