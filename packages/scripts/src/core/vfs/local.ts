@@ -24,7 +24,11 @@ export class LocalVFS extends AbstractVFS {
   }
 
   async dir(path: string) {
-    return await readdir(`${this.base}/${path}`);
+    try {
+      return await readdir(`${this.base}/${path}`);
+    } catch (_) {
+      return [];
+    }
   }
 
   dispose() {}
