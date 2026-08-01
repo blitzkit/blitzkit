@@ -47,6 +47,7 @@ import {
   TurretDefinitionsList,
   Unlock,
   UnlocksListing,
+  Vector3,
   VehicleDefinitionArmor,
   VehicleDefinitionList,
   VehicleDefinitions,
@@ -54,6 +55,7 @@ import {
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { parse as parsePath } from "path";
+import { Vector3Tuple } from "three";
 import { parse as parseYaml } from "yaml";
 import { BlitzKitAPI } from "./base";
 
@@ -105,6 +107,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
     HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
   };
+  private botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
 
   private stringsI18n: Record<string, Record<string, string>> = {};
   private nationsDir?: string[];
@@ -240,22 +243,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return { locales: collection } satisfies I18nString;
   }
 
-  private assignArmor(
-    raw: VehicleDefinitionArmor[string],
-    id: number,
-    armor: Armor,
-  ) {
-    if (typeof raw === "number") {
-      armor.thickness[id] = raw;
-    } else if (Array.isArray(raw)) {
-      armor.thickness[id] = raw.at(-1)!;
-    } else {
-      if (!armor.spaced) armor.spaced = [];
-      armor.thickness[id] = raw["#text"];
-      armor.spaced.push(id);
-    }
-  }
-
   private parseResearchCost(raw: number | string) {
     if (typeof raw === "number") {
       return {
@@ -300,7 +287,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
       });
     }
 
-    const botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
     const slugRequesters = new Map<string, { id: number; key: string }[]>();
     const idToNation: Record<number, string> = {};
 
@@ -310,7 +296,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
       );
 
       for (const tankKey in tankList.root) {
-        if (botPattern.test(tankKey)) continue;
+        if (this.botPattern.test(tankKey)) continue;
 
         const tank = tankList.root[tankKey];
         const tankId = toUniqueId(nation, tank.id);
@@ -451,7 +437,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
       }
 
       for (const tankKey in tankList.root) {
-        if (botPattern.test(tankKey)) continue;
+        if (this.botPattern.test(tankKey)) continue;
 
         const gunXps = new Map<number, ResearchCost>();
         const turretXps = new Map<number, ResearchCost>();
@@ -468,9 +454,10 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
         const tankId = toUniqueId(nation, tank.id);
 
         const tankTags = tank.tags.split(" ");
-        const hullArmor: Armor = { spaced: [], thickness: {} };
         const equipment = tankDefinition.root.optDevicePreset;
+
         this.tankStringIdMap[`${nation}:${tankKey}`] = tankId;
+
         const slug = slugs.get(tankId);
 
         if (slug === undefined) {
@@ -496,20 +483,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           };
         }
 
-        Object.keys(tankDefinition.root.hull.armor)
-          .filter((name) => name.startsWith("armor_"))
-          .forEach((name) => {
-            const armorIdString = name.match(/armor_(\d+)/)?.[1];
-
-            if (armorIdString === undefined) {
-              throw new SyntaxError(`Invalid armor id: ${name}`);
-            }
-
-            const armorId = parseInt(armorIdString);
-            const armorRaw = tankDefinition.root.hull.armor[name];
-
-            this.assignArmor(armorRaw, armorId, hullArmor);
-          });
         const crew: Crew[] = [];
         const fixedCamouflage = tankTags.includes("eventCamouflage_user");
         const totalUnlocks: UnlocksListing[] = [];
@@ -699,25 +672,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             const turret = tankDefinition.root.turrets0[turretKey];
             const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
 
-            const turretArmor: Armor = { thickness: {}, spaced: [] };
-
             totalUnlocks.push(turret.unlocks);
-            Object.keys(turret.armor)
-              .filter((name) => name.startsWith("armor_"))
-              .forEach((name) => {
-                const armorIdString = name.match(/armor_(\d+)/)?.[1];
-
-                if (armorIdString === undefined) {
-                  throw new SyntaxError(`Invalid armor id: ${name}`);
-                }
-
-                const armorId = parseInt(armorIdString);
-                const armorRaw = turret.armor[name];
-
-                this.assignArmor(armorRaw, armorId, turretArmor);
-              });
-
-            turret.userString;
 
             tankDefinitions.tanks[tankId].turrets.push({
               id: turretId,
@@ -804,18 +759,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 }
 
                 totalUnlocks.push(gun.unlocks);
-                Object.keys(gun.armor)
-                  .filter((name) => name.startsWith("armor_"))
-                  .forEach((name) => {
-                    const armorIdString = name.match(/armor_(\d+)/)?.[1];
-                    if (armorIdString === undefined) {
-                      throw new SyntaxError(`Invalid armor id: ${name}`);
-                    }
-                    const armorId = parseInt(armorIdString);
-                    const armorRaw = gun.armor[name];
-
-                    this.assignArmor(armorRaw, armorId, gunArmor);
-                  });
 
                 tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
                   id: gunId,
@@ -1038,41 +981,58 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return camouflageDefinitions;
   }
 
+  private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
+    return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
+  }
+
+  private assignArmor(
+    raw: VehicleDefinitionArmor[string],
+    id: number,
+    armor: Armor,
+  ) {
+    if (typeof raw === "number") {
+      armor.thickness[id] = raw;
+    } else if (Array.isArray(raw)) {
+      armor.thickness[id] = raw.at(-1)!;
+    } else {
+      if (!armor.spaced) armor.spaced = [];
+      armor.thickness[id] = raw["#text"];
+      armor.spaced.push(id);
+    }
+  }
+
   async modelDefinitions() {
     const modelDefinitions = ModelDefinitions.create();
 
     for (const nation of this.nationsDir!) {
-      const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
+      const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
         `Data/XML/item_defs/vehicles/${nation}/list.xml`,
       );
-      const turretList = await vfs.xml<{
+      const turretList = await this.vfs.xml<{
         root: TurretDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/turrets.xml`);
-      const gunList = await vfs.xml<{
+      const gunList = await this.vfs.xml<{
         root: GunDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/guns.xml`);
-      const shellList = await vfs.xml<{
-        root: ShellDefinitionsList;
-      }>(`Data/XML/item_defs/vehicles/${nation}/components/shells.xml`);
-      const enginesList = await vfs.xml<{
+      const enginesList = await this.vfs.xml<{
         root: EngineDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/engines.xml`);
-      const chassisList = await vfs.xml<{
+      const chassisList = await this.vfs.xml<{
         root: ChassisDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/chassis.xml`);
 
       for (const tankKey in tankList.root) {
-        if (botPattern.test(tankKey)) continue;
+        if (this.botPattern.test(tankKey)) continue;
 
         const gunXps = new Map<number, ResearchCost>();
         const turretXps = new Map<number, ResearchCost>();
         const engineXps = new Map<number, ResearchCost>();
         const trackXps = new Map<number, ResearchCost>();
         const tank = tankList.root[tankKey];
-        const tankDefinition = await vfs.xml<{ root: VehicleDefinitions }>(
+        const tankDefinition = await this.vfs.xml<{ root: VehicleDefinitions }>(
           `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
         );
-        const tankParameters = await vfs.yaml<TankParameters>(
+        const tankParameters = await this.vfs.yaml<TankParameters>(
           `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
         );
         const turretOrigin = tankDefinition.root.hull.turretPositions.turret
@@ -1080,33 +1040,8 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           .map(Number) as Vector3Tuple;
         const tankId = toUniqueId(nation, tank.id);
 
-        const tankTags = tank.tags.split(" ");
         const hullArmor: Armor = { spaced: [], thickness: {} };
-        tankStringIdMap[`${nation}:${tankKey}`] = tankId;
-        const slug = slugs.get(tankId);
-
-        if (slug === undefined) {
-          throw new Error(
-            `Could not find slug for ${nation}/${tankKey} (${tankId})`,
-          );
-        }
-
-        if (tank.sellPrice) {
-          tankPrice = {
-            type: TankPriceType.TANK_PRICE_TYPE_GOLD,
-            value: tank.sellPrice["#text"] * 2,
-          };
-        } else if (typeof tank.price === "number") {
-          tankPrice = {
-            type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
-            value: tank.price,
-          };
-        } else {
-          tankPrice = {
-            type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
-            value: tank.price["#text"] * 400,
-          };
-        }
+        this.tankStringIdMap[`${nation}:${tankKey}`] = tankId;
 
         Object.keys(tankDefinition.root.hull.armor)
           .filter((name) => name.startsWith("armor_"))
@@ -1120,72 +1055,53 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             const armorId = parseInt(armorIdString);
             const armorRaw = tankDefinition.root.hull.armor[name];
 
-            assignArmor(armorRaw, armorId, hullArmor);
+            this.assignArmor(armorRaw, armorId, hullArmor);
           });
         const crew: Crew[] = [];
-        const totalUnlocks: UnlocksListing[] = [];
 
-        Object.entries(tankDefinition.root.crew).forEach(([crewKey, value]) => {
-          let entry: Crew;
-          const index = crew.findIndex(
-            ({ type }) => blitzkitCrewTypeToBlitz[type] === crewKey,
-          );
-          if (index === -1) {
-            if (crewKey === "#text") return;
-            entry = {
-              type: blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
-              count: 0,
-              substitute: [],
-            };
-            crew.push(entry);
-          } else {
-            entry = crew[index];
-          }
+        for (const crewKey in tankDefinition.root.crew) {
+          const value = tankDefinition.root.crew[crewKey as BlitzCrewType];
 
-          if (typeof value === "string") {
-            entry.count++;
-
-            if (value !== "") {
-              entry.substitute = value.split(/\n| /).map((member) => {
-                return blitzCrewTypeToBlitzkit[member.trim() as BlitzCrewType];
-              });
-            }
-          } else {
-            if (entry.count === undefined) {
-              entry.count = value.length;
+          {
+            let entry: Crew;
+            const index = crew.findIndex(
+              ({ type }) => this.blitzkitCrewTypeToBlitz[type] === crewKey,
+            );
+            if (index === -1) {
+              if (crewKey === "#text") return;
+              entry = {
+                type: this.blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
+                count: 0,
+                substitute: [],
+              };
+              crew.push(entry);
             } else {
-              entry.count += value.length;
+              entry = crew[index];
+            }
+
+            if (typeof value === "string") {
+              entry.count++;
+
+              if (value !== "") {
+                entry.substitute = value.split(/\n| /).map((member) => {
+                  return this.blitzCrewTypeToBlitzkit[
+                    member.trim() as BlitzCrewType
+                  ];
+                });
+              }
+            } else {
+              if (entry.count === undefined) {
+                entry.count = value.length;
+              } else {
+                entry.count += value.length;
+              }
             }
           }
-        });
-
-        let equalizerEntry = tierEqualizer.find(
-          (line) => line[0] === `${nation}:${tankKey}`,
-        );
-
-        if (equalizerEntry) {
-          const [health, penetration, module_health, damage, armor] =
-            equalizerEntry?.slice(1).map(Number);
-          equalizer = { health, penetration, module_health, damage, armor };
-        }
-
-        if (tank.combatRole) {
-          Object.entries(tank.combatRole).forEach(([gameMode, role]) => {
-            const id = Object.entries(gameModeNativeNames).find(
-              ([key]) => key.toLowerCase() === gameMode.toLowerCase(),
-            )?.[1];
-
-            if (id === undefined) {
-              throw new Error(
-                `Unknown game mode in tank ${tankKey}: ${gameMode}`,
-              );
-            }
-          });
         }
 
         modelDefinitions.models[tankId] = {
           armor: hullArmor,
-          turret_origin: vector3TupleToBlitzkit(turretOrigin),
+          turret_origin: this.vector3TupleToBlitzkit(turretOrigin),
           initial_turret_rotation: tankDefinition.root.hull
             .turretInitialRotation
             ? {
@@ -1195,14 +1111,18 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               }
             : undefined,
           bounding_box: {
-            min: vector3TupleToBlitzkit(tankParameters.collision.hull.bbox.min),
-            max: vector3TupleToBlitzkit(tankParameters.collision.hull.bbox.max),
+            min: this.vector3TupleToBlitzkit(
+              tankParameters.collision.hull.bbox.min,
+            ),
+            max: this.vector3TupleToBlitzkit(
+              tankParameters.collision.hull.bbox.max,
+            ),
           },
           turrets: {},
           tracks: {},
         };
 
-        Object.keys(tankDefinition.root.chassis).forEach((key) => {
+        for (const key in tankDefinition.root.chassis) {
           const track = tankDefinition.root.chassis[key];
           const trackId = toUniqueId(nation, chassisList.root.ids[key]);
           const trackArmorRaw = track.armor.leftTrack;
@@ -1210,22 +1130,14 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             .split(" ")
             .map(Number) as Vector3Tuple;
 
-          totalUnlocks.push(track.unlocks);
-
           modelDefinitions.models[tankId].tracks[trackId] = {
             thickness:
               typeof trackArmorRaw === "number"
                 ? trackArmorRaw
                 : trackArmorRaw["#text"],
-            origin: vector3TupleToBlitzkit(hullOrigin),
+            origin: this.vector3TupleToBlitzkit(hullOrigin),
           };
-        });
-
-        Object.keys(tankDefinition.root.engines).forEach((engineKey) => {
-          const engine = tankDefinition.root.engines[engineKey];
-
-          totalUnlocks.push(engine.unlocks);
-        });
+        }
 
         Object.keys(tankDefinition.root.turrets0).forEach((turretKey) => {
           const turret = tankDefinition.root.turrets0[turretKey];
@@ -1249,7 +1161,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             .map(Number) as Vector3Tuple;
           const turretArmor: Armor = { thickness: {}, spaced: [] };
 
-          totalUnlocks.push(turret.unlocks);
           Object.keys(turret.armor)
             .filter((name) => name.startsWith("armor_"))
             .forEach((name) => {
@@ -1262,14 +1173,14 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               const armorId = parseInt(armorIdString);
               const armorRaw = turret.armor[name];
 
-              assignArmor(armorRaw, armorId, turretArmor);
+              this.assignArmor(armorRaw, armorId, turretArmor);
             });
 
           turret.userString;
 
           modelDefinitions.models[tankId].turrets[turretId] = {
             armor: turretArmor,
-            gun_origin: vector3TupleToBlitzkit(gunOrigin),
+            gun_origin: this.vector3TupleToBlitzkit(gunOrigin),
             model_id: turretModel,
             yaw:
               -turretYaw[0] + turretYaw[1] === 360
@@ -1277,12 +1188,12 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 : { min: turretYaw[0], max: turretYaw[1] },
             guns: {},
             bounding_box: {
-              min: vector3TupleToBlitzkit(
+              min: this.vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
                 ].bbox.min,
               ),
-              max: vector3TupleToBlitzkit(
+              max: this.vector3TupleToBlitzkit(
                 tankParameters.collision[
                   parsePath(turret.hitTester.collisionModel).name.toLowerCase()
                 ].bbox.max,
@@ -1305,8 +1216,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             const gunModel = Number(
               parsePath(gun.models.undamaged).name.split("_")[1],
             );
-            // const gunReload = gun.reloadTime;
-            // const shellReloads =
             const front = gun.extraPitchLimits?.front
               ? gun.extraPitchLimits.front.split(" ").map(Number)
               : undefined;
@@ -1324,35 +1233,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               tankParameters.maskSlice?.[maskName]?.enabled ?? false;
             let mask: number | undefined;
 
-            if (gun.extras?.trayShell) {
-              const types = gun.extras.trayShell.kinds
-                .split(" ")
-                .map((string) => {
-                  const trimmed = string.trim();
-
-                  if (trimmed in blitzShellKindToBlitzkit) {
-                    return blitzShellKindToBlitzkit[trimmed as ShellKind];
-                  }
-
-                  throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
-                });
-              const sectorNames = Object.keys(gun.extras.trayShell.sectors);
-
-              if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
-                throw new SyntaxError("Invalid tray shell sector");
-              }
-
-              const sector = gun.extras.trayShell.sectors.sector;
-
-              assault_ranges = {
-                types,
-                ranges: sector.map((value) => ({
-                  factor: value.factor,
-                  distance: value.distance,
-                })),
-              };
-            }
-
             if (maskEnabled) {
               const maskRaw = tankParameters.maskSlice![maskName]!;
               mask = maskRaw.planePosition[1];
@@ -1360,7 +1240,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               mask = undefined;
             }
 
-            totalUnlocks.push(gun.unlocks);
             Object.keys(gun.armor)
               .filter((name) => name.startsWith("armor_"))
               .forEach((name) => {
@@ -1371,7 +1250,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 const armorId = parseInt(armorIdString);
                 const armorRaw = gun.armor[name];
 
-                assignArmor(armorRaw, armorId, gunArmor);
+                this.assignArmor(armorRaw, armorId, gunArmor);
               });
 
             modelDefinitions.models[tankId].turrets[turretId].guns[gunId] = {
@@ -1405,63 +1284,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 transition,
               },
             };
-          });
-        });
-
-        totalUnlocks.forEach((unlocks) => {
-          if (unlocks === undefined) return;
-
-          Object.entries(unlocks).forEach(([key, value]) => {
-            (Array.isArray(value) ? value : [value]).forEach((vehicle) => {
-              switch (key as keyof BlitzModuleType) {
-                case "vehicle": {
-                  const tankListEntry = tankList.root[vehicle["#text"]];
-                  const successorId = toUniqueId(nation, tankListEntry.id);
-
-                  tankXps.set(successorId, parseResearchCost(vehicle.cost));
-
-                  if (currentTank.successors === undefined) {
-                    currentTank.successors = [];
-                  }
-                  if (!currentTank.successors!.includes(successorId)) {
-                    currentTank.successors!.push(successorId);
-                  }
-                  break;
-                }
-
-                case "gun": {
-                  gunXps.set(
-                    toUniqueId(nation, gunList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
-                  );
-                  break;
-                }
-
-                case "turret": {
-                  turretXps.set(
-                    toUniqueId(nation, turretList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
-                  );
-                  break;
-                }
-
-                case "engine": {
-                  engineXps.set(
-                    toUniqueId(nation, enginesList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
-                  );
-                  break;
-                }
-
-                case "chassis": {
-                  trackXps.set(
-                    toUniqueId(nation, chassisList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
-                  );
-                  break;
-                }
-              }
-            });
           });
         });
       }

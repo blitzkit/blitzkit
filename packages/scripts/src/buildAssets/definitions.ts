@@ -23,9 +23,6 @@ const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
 > = {
   clip: ConsumableTankCategoryFilterCategory.CONSUMABLE_TANK_CATEGORY_FILTER_CATEGORY_CLIP,
 };
-function vector3TupleToBlitzkit(tuple: Vector3Tuple) {
-  return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
-}
 
 export interface BlitzStrings {
   [key: string]: string;
