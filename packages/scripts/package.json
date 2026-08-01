@@ -41,7 +41,6 @@
     "setup:patches": "bun src/applyPatches.ts",
     "build:reviews": "bun src/reviews.ts",
     "build:ids": "bun src/discoverIds.ts",
-    "build:bot": "bun src/buildBot.ts",
     "build:ratingleaderboard": "bun src/buildRatingLeaderboard.ts",
     "build:proxyclient": "bun src/buildProxyClient.ts",
     "build:catalogitemaccesssor": "bun src/buildCatalogItemAccessor.ts",
