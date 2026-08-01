@@ -2,7 +2,7 @@ name: Assets
 
 on:
   push:
-    branches: main
+    branches: production
 
   workflow_dispatch:
     inputs:
@@ -21,9 +21,6 @@ on:
         required: false
         description: "Archive URL or Steam to download (example: steam:APP_ID/DEPOT_ID or zip:URL_TO_ZIP)"
         default: "steam:444200/444202"
-
-  schedule:
-    - cron: "0 2 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.asset_repo }}
