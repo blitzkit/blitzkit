@@ -1,10 +1,10 @@
-import { PageWrapper } from "../../../components/PageWrapper";
-import { TankSearch } from "../../../components/TankSearch";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { TankSearch } from "../../../../components/TankSearch";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+} from "../../../../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 export function Page({
   locale,

@@ -1,3 +1,3 @@
-import { fetchTankNames } from '@blitzkit/core';
+import { fetchTankNames } from "@blitzkit/core";
 
 export const awaitableTankNames = fetchTankNames();

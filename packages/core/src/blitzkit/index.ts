@@ -1,5 +1,4 @@
 export * from "./assertSecret";
-export * from "./asset";
 export * from "./availableProvisions";
 export * from "./averageDefinitions";
 // export * from './camouflageDefinitions';
@@ -16,6 +15,7 @@ export * from "./equipmentDefinitions";
 export * from "./eventManager";
 export * from "./getArchivedLatestSeasonNumber";
 export * from "./sluggify";
+export * from "./staticAsset";
 export * from "./vfs";
 // export * from './getArchivedRatingInfo';
 export * from "./getArchivedRatingLeaderboard";

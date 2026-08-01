@@ -2,6 +2,7 @@ import {
   AbstractVFS,
   Armor,
   AssaultRanges,
+  AvailableNationsYaml,
   BlitzCrewType,
   BlitzModuleType,
   BlitzStrings,
@@ -22,6 +23,7 @@ import {
   Equalizer,
   EquipmentDefinitions,
   EquipmentSlot,
+  GameDefinitions,
   GunDefinition,
   GunDefinitionsList,
   I18nString,
@@ -188,6 +190,11 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     );
 
     console.log("Fetching game localizations...");
+
+    if (import.meta.env.DEV) {
+      locales.supported = [locales.supported[0]];
+    }
+
     let fetchedLocalizations = 0;
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
@@ -1588,6 +1595,58 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     }
 
     return skillDefinitions;
+  }
+
+  @Cache()
+  async gameDefinitions() {
+    const gameDefinitions = GameDefinitions.create();
+
+    const consumableNativeNames: Record<string, number> = {};
+    const provisionNativeNames: Record<string, number> = {};
+
+    Object.entries(this.consumablesCommon).forEach(([key, consumable]) => {
+      consumableNativeNames[key] = consumable.id;
+    });
+
+    Object.entries(this.provisionsCommon).forEach(([key, provision]) => {
+      provisionNativeNames[key] = provision.id;
+    });
+
+    const version = (await this.vfs.text("Data/version.txt")).split(" ")[0];
+
+    gameDefinitions.version = version;
+    gameDefinitions.nations = (
+      await this.vfs.yaml<AvailableNationsYaml>("Data/available_nations.yaml")
+    ).available_nations;
+
+    for (const match of this.squadBattleTypeStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
+      /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
+    )) {
+      const id = Number(match[1]);
+      const name = this.getString(match[2]);
+
+      gameDefinitions.gameModes[id] = {
+        name,
+      };
+    }
+
+    Object.entries(this.combatRoles!).forEach(([, value]) => {
+      gameDefinitions.roles[value.id] = { provisions: [], consumables: [] };
+
+      value.default_abilities.forEach((ability) => {
+        if (ability in consumableNativeNames) {
+          gameDefinitions.roles[value.id].consumables.push(
+            consumableNativeNames[ability],
+          );
+        } else if (ability in provisionNativeNames) {
+          gameDefinitions.roles[value.id].provisions.push(
+            provisionNativeNames[ability],
+          );
+        } else throw new Error(`Unknown ability ${ability}`);
+      });
+    });
+
+    return gameDefinitions;
   }
 }
 

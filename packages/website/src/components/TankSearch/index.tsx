@@ -12,10 +12,8 @@ import fuzzysort from "fuzzysort";
 import { times, uniq } from "lodash-es";
 import { memo, useEffect, useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
-import { awaitableModelDefinitions } from "../../core/awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
+import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";
@@ -47,9 +45,9 @@ const DEFAULT_LOADED_CARDS = 64;
 
 const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   await Promise.all([
-    awaitableGameDefinitions,
-    awaitableModelDefinitions,
-    awaitableTankDefinitions,
+    api.gameDefinitions(),
+    api.modelDefinitions(),
+    api.tankDefinitions(),
     awaitableTankNames,
   ]);
 
