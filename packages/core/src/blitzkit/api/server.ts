@@ -145,6 +145,12 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
   }
 
   async init() {
+    console.log("Initializing server; this will take a while...");
+
+    console.log("Initializing virtual file system...");
+    await this.vfs.init();
+
+    console.log("Fetching game data...");
     this.nationsDir = await this.vfs
       .dir("Data/XML/item_defs/vehicles")
       .then((files) => files.filter((nation) => nation !== "common"));
@@ -181,6 +187,8 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
       { delimiter: ";" },
     );
 
+    console.log("Fetching game localizations...");
+    let fetchedLocalizations = 0;
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
         const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
@@ -197,8 +205,14 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           ...cache,
           ...preInstalled,
         };
+
+        console.log(
+          `Fetched localizations for ${locale} (${++fetchedLocalizations}/${locales.supported.length})`,
+        );
       }),
     );
+
+    console.log("Fetching consumable and provision data...");
 
     for (const match of (
       await this.vfs.text(
@@ -233,6 +247,10 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
         ).root,
       );
     }
+
+    console.log("Initialization complete, enjoy :)");
+
+    return this;
   }
 
   private getString(name: string) {
@@ -274,6 +292,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     }
   }
 
+  @Cache()
   async tankDefinitions() {
     const tankDefinitions = TankDefinitions.create();
 
@@ -948,6 +967,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return tankDefinitions;
   }
 
+  @Cache()
   async camouflageDefinitions() {
     const camouflageDefinitions = CamouflageDefinitions.create();
 
@@ -996,6 +1016,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     }
   }
 
+  @Cache()
   async modelDefinitions() {
     const modelDefinitions = ModelDefinitions.create();
 
@@ -1284,6 +1305,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return modelDefinitions;
   }
 
+  @Cache()
   async mapDefinitions() {
     const mapDefinitions = MapDefinitions.create();
 
@@ -1299,6 +1321,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return mapDefinitions;
   }
 
+  @Cache()
   async equipmentDefinitions() {
     const equipmentDefinitions = EquipmentDefinitions.create();
 
@@ -1335,6 +1358,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return equipmentDefinitions;
   }
 
+  @Cache()
   async consumableDefinitions() {
     const consumableDefinitions = ConsumableDefinitions.create();
 
@@ -1439,6 +1463,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return consumableDefinitions;
   }
 
+  @Cache()
   async provisionDefinitions() {
     const provisionDefinitions = ProvisionDefinitions.create();
 
@@ -1546,6 +1571,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     return provisionDefinitions;
   }
 
+  @Cache()
   async skillDefinitions() {
     const skillDefinitions = SkillDefinitions.create();
 
@@ -1562,4 +1588,48 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
 
     return skillDefinitions;
   }
+}
+
+export function Cache(disableInDev = false) {
+  const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
+
+  return function <This, Arguments extends any[], Return>(
+    target: (this: This, ...args: Arguments) => Promise<Return>,
+    // TODO: evaluate if we need context to make the error trace easier
+    // context: ClassMethodDecoratorContext<
+    //   This,
+    //   (this: This, ...args: Arguments) => Promise<Return>
+    // >,
+  ) {
+    return async function replacementMethod(this: This, ...args: Arguments) {
+      const key = args.join("-");
+      let thisCache: Map<string, Promise<Return>>;
+
+      if (cache.has(this as object)) {
+        thisCache = cache.get(this as object) as Map<string, Promise<Return>>;
+      } else {
+        thisCache = new Map();
+        cache.set(this as object, thisCache);
+      }
+
+      const disabled = disableInDev && import.meta.env.DEV;
+
+      if (thisCache.has(key) && !disabled) {
+        return thisCache.get(key)!;
+      }
+
+      const promise = (async () => {
+        try {
+          return await target.apply(this, args);
+        } catch (error) {
+          thisCache!.delete(key);
+          throw error;
+        }
+      })();
+
+      thisCache.set(key, promise);
+
+      return promise;
+    };
+  };
 }
