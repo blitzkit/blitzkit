@@ -5,16 +5,13 @@ import {
   ConsumableDefinitions,
   ConsumableTankCategoryFilterCategory,
   EquipmentDefinitions,
-  EquipmentSlot,
   MapDefinitions,
   ModelDefinitions,
   Provision,
   ProvisionDefinitions,
   SkillDefinitions,
   TankDefinitions,
-  Vector3,
 } from "@blitzkit/core";
-import type { Vector3Tuple } from "three";
 
 type BlitzTankFilterDefinitionCategory = "clip";
 const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
@@ -85,48 +82,6 @@ type CombatRolesYaml = Record<
 >;
 
 export async function definitions() {
-  Object.values(tankDefinitions.tanks).forEach((tank) => {
-    tank.research_cost = tankXps.get(tank.id);
-  });
-
-  Object.values(tankDefinitions.tanks).forEach((tank) => {
-    tank.successors?.forEach((predecessorId) => {
-      if (!tankDefinitions.tanks[predecessorId].ancestors?.includes(tank.id)) {
-        tankDefinitions.tanks[predecessorId].ancestors?.push(tank.id);
-      }
-    });
-  });
-
-  Object.entries(optionalDevices.root).forEach(
-    ([optionalDeviceKey, optionalDeviceEntry]) => {
-      if (optionalDeviceKey === "nextAvailableId") return;
-
-      equipmentDefinitions.equipments[optionalDeviceEntry.id] = {
-        name: getString(optionalDeviceEntry.userString),
-        description: getString(optionalDeviceEntry.description),
-      };
-    },
-  );
-
-  Object.entries(optionalDeviceSlots.root.presets).forEach(
-    ([optionalDeviceSlotKey, optionalDeviceSlotEntry]) => {
-      if (optionalDeviceSlotKey === "emptyPreset") return;
-
-      equipmentDefinitions.presets[optionalDeviceSlotKey] = {
-        slots: Object.values(optionalDeviceSlotEntry)
-          .map((level) => {
-            return Object.values(level).map((options) => {
-              return {
-                left: optionalDevices.root[options.device0].id,
-                right: optionalDevices.root[options.device1].id,
-              } satisfies EquipmentSlot;
-            });
-          })
-          .flat(),
-      };
-    },
-  );
-
   Object.entries(consumablesCommon).forEach(([key, consumable]) => {
     const entry: Consumable = {
       id: consumable.id,
