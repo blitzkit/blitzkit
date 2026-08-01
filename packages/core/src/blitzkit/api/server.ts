@@ -1,69 +1,124 @@
 import {
   AbstractVFS,
-  AvailableNationsYaml,
-  SquadBattleTypeStylesYaml,
+  BlitzStrings,
+  CamouflageDefinitions,
+  ConsumableDefinitions,
+  ConsumablesCommon,
+  EquipmentDefinitions,
+  I18nString,
+  MapDefinitions,
+  ModelDefinitions,
+  OptionalDevices,
+  OptionalDeviceSlots,
+  ProvisionDefinitions,
+  ProvisionsCommon,
+  SkillDefinitions,
+  TankDefinitions,
 } from "@blitzkit/core";
-import { GameDefinitions } from "../../protos";
+import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
+import { parse as parseYaml } from "yaml";
 import { BlitzKitAPI } from "./base";
 
 export class ServerBlitzKitAPI extends BlitzKitAPI {
-  vfs: AbstractVFS;
+  private vfs: AbstractVFS;
+
+  private stringsI18n: Record<string, Record<string, string>> = {};
+
+  private nationsDir?: string[];
+  consumablesCommon: ConsumablesCommon = {};
+  provisionsCommon: ProvisionsCommon = {};
+
+  private optionalDevices?: { root: OptionalDevices };
+  private optionalDeviceSlots?: { root: OptionalDeviceSlots };
 
   constructor(vfs: AbstractVFS) {
     super();
-
     this.vfs = vfs;
   }
 
-  async game() {
-    const versionFile = await this.vfs.text("Data/version.txt");
-    const version = versionFile.split(" ")[0];
+  async init() {
+    await Promise.all(
+      locales.supported.map(async ({ locale }) => {
+        const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
+        const cache = await fetch(
+          `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
+        )
+          .then((response) => response.text())
+          .then((string) => parseYaml(string) as BlitzStrings);
+        const preInstalled = await this.vfs.yaml<BlitzStrings>(
+          `Data/Strings/${blitzLocale}.yaml`,
+        );
 
-    const availableNations = await this.vfs.yaml<AvailableNationsYaml>(
-      "Data/available_nations.yaml",
+        this.stringsI18n[locale] = {
+          ...cache,
+          ...preInstalled,
+        };
+      }),
     );
-    const nations = availableNations.available_nations;
 
-    const game: GameDefinitions = {
-      version,
-      nations,
-      gameModes: {},
-      roles: {},
+    this.nationsDir = await this.vfs
+      .dir("Data/XML/item_defs/vehicles")
+      .then((files) => files.filter((nation) => nation !== "common"));
+
+    this.optionalDevices = await this.vfs.xml<{ root: OptionalDevices }>(
+      "Data/XML/item_defs/vehicles/common/optional_devices.xml",
+    );
+    this.optionalDeviceSlots = await this.vfs.xml<{
+      root: OptionalDeviceSlots;
+    }>(`Data/XML/item_defs/vehicles/common/optional_device_slots.xml`);
+  }
+
+  private getString(name: string) {
+    const collection: Record<string, string> = {
+      [locales.default]: this.stringsI18n[locales.default][name],
     };
 
-    const squadBattleTypeStyles =
-      await this.vfs.yaml<SquadBattleTypeStylesYaml>(
-        `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
-      );
+    for (const { locale } of locales.supported) {
+      const localizedString = this.stringsI18n[locale][name];
 
-    for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-      /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
-    )) {
-      const id = Number(match[1]);
-      const name = getString(match[2]);
+      if (
+        localizedString === undefined ||
+        localizedString === collection[locales.default]
+      ) {
+        continue;
+      }
 
-      gameModeNativeNames[match[3]] = id;
-      game.gameModes[id] = {
-        name,
-      };
+      collection[locale] = localizedString;
     }
 
-    Object.entries(combatRoles).forEach(([, value]) => {
-      gameDefinitions.roles[value.id] = { provisions: [], consumables: [] };
+    return { locales: collection } satisfies I18nString;
+  }
 
-      value.default_abilities.forEach((ability) => {
-        if (ability in consumableNativeNames) {
-          gameDefinitions.roles[value.id].consumables.push(
-            consumableNativeNames[ability],
-          );
-        } else if (ability in provisionNativeNames) {
-          gameDefinitions.roles[value.id].provisions.push(
-            provisionNativeNames[ability],
-          );
-        } else throw new Error(`Unknown ability ${ability}`);
-      });
-    });
+  async tankDefinitions() {
+    const tankDefinitions = TankDefinitions.create();
+  }
 
-    return game;
+  async camouflageDefinitions() {
+    const camouflageDefinitions = CamouflageDefinitions.create();
+  }
+
+  async modelDefinitions() {
+    const modelDefinitions = ModelDefinitions.create();
+  }
+
+  async mapDefinitions() {
+    const mapDefinitions = MapDefinitions.create();
+  }
+
+  async equipmentDefinitions() {
+    const equipmentDefinitions = EquipmentDefinitions.create();
+  }
+
+  async consumableDefinitions() {
+    const consumableDefinitions = ConsumableDefinitions.create();
+  }
+
+  async provisionDefinitions() {
+    const provisionDefinitions = ProvisionDefinitions.create();
+  }
+
+  async skillDefinitions() {
+    const skillDefinitions = SkillDefinitions.create();
   }
 }

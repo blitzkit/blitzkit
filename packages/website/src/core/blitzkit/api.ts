@@ -7,7 +7,7 @@ import {
 let _api: BlitzKitAPI;
 
 if (import.meta.env.SSR) {
-  _api = new ServerBlitzKitAPI();
+  _api = await new ServerBlitzKitAPI(vfs).init();
 } else {
   _api = new ClientBlitzKitAPI();
 }

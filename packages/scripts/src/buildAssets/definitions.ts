@@ -12,7 +12,6 @@ import {
   EquipmentDefinitions,
   EquipmentSlot,
   GunDefinition,
-  I18nString,
   MapDefinitions,
   ModelDefinitions,
   ModuleType,
@@ -22,6 +21,7 @@ import {
   ShellType,
   SkillDefinitions,
   sluggify,
+  SquadBattleTypeStylesYaml,
   TankClass,
   TankDefinitions,
   TankPrice,
@@ -31,13 +31,9 @@ import {
   Unlock,
   Vector3,
 } from "@blitzkit/core";
-import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
-import locales from "@blitzkit/i18n/locales.json";
 import { readFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
-import { parse as parseYaml } from "yaml";
-import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
 import type { Avatar } from "./skillIcons";
 import type { TankParameters } from "./tankIcons";
@@ -350,31 +346,6 @@ interface GunDefinitionsList {
     };
   };
 }
-
-export interface OptionalDevices {
-  [key: string]: {
-    id: number;
-    userString: string;
-    description: string;
-    icon: string;
-    script: unknown;
-    display_params: unknown;
-  };
-}
-
-interface OptionalDeviceSlots {
-  presets: {
-    [key: string]: {
-      level0: OptionalDeviceSlotRow;
-      level1: OptionalDeviceSlotRow;
-      level2: OptionalDeviceSlotRow;
-    };
-  };
-}
-
-interface OptionalDeviceSlotRow {
-  [key: string]: { device0: string; device1: string };
-}
 export interface ConsumablesCommon {
   [key: string]: {
     id: number;
@@ -530,84 +501,7 @@ function assignArmor(
 }
 
 export async function definitions() {
-  console.log("Building definitions...");
-
-  const uploader = new AssetUploader("definitions");
-
-  const tankDefinitions: TankDefinitions = { tanks: {} };
-  const camouflageDefinitions: CamouflageDefinitions = { camouflages: {} };
-  const modelDefinitions: ModelDefinitions = { models: {} };
-  const mapDefinitions: MapDefinitions = { maps: {} };
-  const equipmentDefinitions: EquipmentDefinitions = {
-    presets: {},
-    equipments: {},
-  };
-  const consumableDefinitions: ConsumableDefinitions = { consumables: {} };
-  const provisionDefinitions: ProvisionDefinitions = { provisions: {} };
-  const skillDefinitions: SkillDefinitions = {
-    classes: {
-      [TankClass.TANK_CLASS_LIGHT]: { skills: [] },
-      [TankClass.TANK_CLASS_MEDIUM]: { skills: [] },
-      [TankClass.TANK_CLASS_HEAVY]: { skills: [] },
-      [TankClass.TANK_CLASS_TANK_DESTROYER]: { skills: [] },
-    },
-  };
-  const nations = await vfs
-    .dir("Data/XML/item_defs/vehicles")
-    .then((files) => files.filter((nation) => nation !== "common"));
   const tankStringIdMap: Record<string, number> = {};
-  const optionalDevices = await vfs.xml<{ root: OptionalDevices }>(
-    "Data/XML/item_defs/vehicles/common/optional_devices.xml",
-  );
-  const stringsI18n: Record<string, Record<string, string>> = {};
-
-  await Promise.all(
-    locales.supported.map(async ({ locale }) => {
-      const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
-      const cache = await fetch(
-        `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
-      )
-        .then((response) => response.text())
-        .then((string) => parseYaml(string) as BlitzStrings);
-      const preInstalled = await vfs.yaml<BlitzStrings>(
-        `Data/Strings/${blitzLocale}.yaml`,
-      );
-
-      stringsI18n[locale] = {
-        ...cache,
-        ...preInstalled,
-      };
-
-      console.log(`Loaded strings for ${locale}`);
-    }),
-  );
-
-  function getString(name: string) {
-    const collection: Record<string, string> = {
-      [locales.default]: stringsI18n[locales.default][name],
-    };
-
-    for (const { locale } of locales.supported) {
-      const localizedString = stringsI18n[locale][name];
-
-      if (
-        localizedString === undefined ||
-        localizedString === collection[locales.default]
-      ) {
-        continue;
-      }
-
-      collection[locale] = localizedString;
-    }
-
-    return { locales: collection } satisfies I18nString;
-  }
-
-  const optionalDeviceSlots = await vfs.xml<{
-    root: OptionalDeviceSlots;
-  }>(`Data/XML/item_defs/vehicles/common/optional_device_slots.xml`);
-  const consumables: ConsumablesCommon = {};
-  const provisions: ProvisionsCommon = {};
 
   for (const match of (
     await vfs.text(`Data/XML/item_defs/vehicles/common/consumables/list.xml`)
@@ -615,7 +509,7 @@ export async function definitions() {
     if (match[1] === "prototypes") continue;
 
     Object.assign(
-      consumables,
+      consumablesCommon,
       (
         await vfs.xml<{ root: ConsumablesCommon }>(
           `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`,
@@ -630,7 +524,7 @@ export async function definitions() {
     if (match[1] === "prototypes") continue;
 
     Object.assign(
-      provisions,
+      provisionsCommon,
       (
         await vfs.xml<{ root: ConsumablesCommon }>(
           `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`,
@@ -723,7 +617,7 @@ export async function definitions() {
   const slugRequesters = new Map<string, { id: number; key: string }[]>();
   const idToNation: Record<number, string> = {};
 
-  for (const nation of nations) {
+  for (const nation of nationsDir) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
       `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
@@ -803,7 +697,7 @@ export async function definitions() {
     }
   });
 
-  for (const nation of nations) {
+  for (const nation of nationsDir) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
       `Data/XML/item_defs/vehicles/${nation}/list.xml`,
     );
@@ -1538,7 +1432,7 @@ export async function definitions() {
     },
   );
 
-  Object.entries(consumables).forEach(([key, consumable]) => {
+  Object.entries(consumablesCommon).forEach(([key, consumable]) => {
     consumableNativeNames[key] = consumable.id;
 
     const entry: Consumable = {
@@ -1638,7 +1532,7 @@ export async function definitions() {
     }
   });
 
-  Object.entries(provisions).forEach(([key, provision]) => {
+  Object.entries(provisionsCommon).forEach(([key, provision]) => {
     provisionNativeNames[key] = provision.id;
 
     const entry: Provision = {
