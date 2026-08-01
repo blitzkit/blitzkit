@@ -15,7 +15,7 @@ export type ShellDefinitionsList = Record<
   icons: Record<string, string>;
 };
 
-type ShellKind =
+export type ShellKind =
   | "ARMOR_PIERCING"
   | "ARMOR_PIERCING_CR"
   | "HIGH_EXPLOSIVE"

@@ -4,39 +4,17 @@ import {
   Consumable,
   ConsumableDefinitions,
   ConsumableTankCategoryFilterCategory,
-  CrewType,
   EquipmentDefinitions,
   EquipmentSlot,
   MapDefinitions,
   ModelDefinitions,
   Provision,
   ProvisionDefinitions,
-  ResearchCost,
-  ShellType,
   SkillDefinitions,
-  TankClass,
   TankDefinitions,
   Vector3,
 } from "@blitzkit/core";
 import type { Vector3Tuple } from "three";
-
-function parseResearchCost(raw: number | string) {
-  if (typeof raw === "number") {
-    return {
-      research_cost_type: { $case: "xp", value: raw },
-    } satisfies ResearchCost;
-  } else {
-    return {
-      research_cost_type: {
-        $case: "seasonal_tokens",
-        value: {
-          season: Number(/prx_season_(\d+):\d+/.exec(raw)![1]),
-          tokens: Number(/prx_season_\d+:(\d+)/.exec(raw)![1]),
-        },
-      },
-    } satisfies ResearchCost;
-  }
-}
 
 type BlitzTankFilterDefinitionCategory = "clip";
 const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
@@ -48,17 +26,10 @@ const blitzTankFilterDefinitionCategoryToBlitzkit: Record<
 function vector3TupleToBlitzkit(tuple: Vector3Tuple) {
   return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
 }
-const blitzTankClassToBlitzkit: Record<BlitzTankClass, TankClass> = {
-  lightTank: TankClass.TANK_CLASS_LIGHT,
-  "AT-SPG": TankClass.TANK_CLASS_TANK_DESTROYER,
-  heavyTank: TankClass.TANK_CLASS_HEAVY,
-  mediumTank: TankClass.TANK_CLASS_MEDIUM,
-};
+
 export interface BlitzStrings {
   [key: string]: string;
 }
-
-
 
 export interface ConsumablesCommon {
   [key: string]: {
@@ -115,13 +86,6 @@ type CombatRolesYaml = Record<
     default_abilities: string[];
   }
 >;
-
-const blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
-  ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
-  ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
-  HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
-  HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
-};
 
 export async function definitions() {
   Object.values(tankDefinitions.tanks).forEach((tank) => {

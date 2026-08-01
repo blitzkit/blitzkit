@@ -1,9 +1,11 @@
 import {
   AbstractVFS,
   Armor,
+  AssaultRanges,
   BlitzCrewType,
   BlitzModuleType,
   BlitzStrings,
+  BlitzTankClass,
   CamouflageDefinitions,
   CamouflagesXml,
   CamouflagesYaml,
@@ -14,7 +16,9 @@ import {
   Crew,
   CrewType,
   EngineDefinitionsList,
+  Equalizer,
   EquipmentDefinitions,
+  GunDefinition,
   GunDefinitionsList,
   I18nString,
   MapDefinitions,
@@ -27,14 +31,18 @@ import {
   ProvisionsCommon,
   ResearchCost,
   ShellDefinitionsList,
+  ShellKind,
+  ShellType,
   SkillDefinitions,
   sluggify,
   SquadBattleTypeStylesYaml,
+  TankClass,
   TankDefinitions,
   TankmenAvatar,
   TankParameters,
   TankPrice,
   TankPriceType,
+  TankType,
   toUniqueId,
   TurretDefinitionsList,
   Unlock,
@@ -45,6 +53,7 @@ import {
 } from "@blitzkit/core";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import { parse as parsePath } from "path";
 import { parse as parseYaml } from "yaml";
 import { BlitzKitAPI } from "./base";
 
@@ -83,6 +92,18 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
     gunner: CrewType.CREW_TYPE_GUNNER,
     loader: CrewType.CREW_TYPE_LOADER,
     radioman: CrewType.CREW_TYPE_RADIOMAN,
+  };
+  private blitzTankClassToBlitzkit: Record<BlitzTankClass, TankClass> = {
+    lightTank: TankClass.TANK_CLASS_LIGHT,
+    "AT-SPG": TankClass.TANK_CLASS_TANK_DESTROYER,
+    heavyTank: TankClass.TANK_CLASS_HEAVY,
+    mediumTank: TankClass.TANK_CLASS_MEDIUM,
+  };
+  private blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
+    ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
+    ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
+    HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
+    HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
   };
 
   private stringsI18n: Record<string, Record<string, string>> = {};
@@ -232,6 +253,24 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
       if (!armor.spaced) armor.spaced = [];
       armor.thickness[id] = raw["#text"];
       armor.spaced.push(id);
+    }
+  }
+
+  private parseResearchCost(raw: number | string) {
+    if (typeof raw === "number") {
+      return {
+        research_cost_type: { $case: "xp", value: raw },
+      } satisfies ResearchCost;
+    } else {
+      return {
+        research_cost_type: {
+          $case: "seasonal_tokens",
+          value: {
+            season: Number(/prx_season_(\d+):\d+/.exec(raw)![1]),
+            tokens: Number(/prx_season_\d+:(\d+)/.exec(raw)![1]),
+          },
+        },
+      } satisfies ResearchCost;
     }
   }
 
@@ -515,7 +554,9 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           }
         }
 
-        const camouflages = Object.entries(camouflagesXml.root.camouflages)
+        const camouflages = Object.entries(
+          this.camouflagesXml!.root.camouflages,
+        )
           .filter(([, camo]) => {
             if (!camo.vehicleFilter.include) return false;
             if (camo.unlockCostCategory !== "legendary-skins-gold")
@@ -535,7 +576,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           })
           .map(([, camo]) => camo.id);
 
-        let equalizerEntry = tierEqualizer.find(
+        let equalizerEntry = this.tierEqualizer!.find(
           (line) => line[0] === `${nation}:${tankKey}`,
         );
 
@@ -566,8 +607,8 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           max_provisions: tankDefinition.root.provisionSlots,
           name:
             (tank.shortUserString
-              ? getString(tank.shortUserString)
-              : undefined) ?? getString(tank.userString),
+              ? this.getString(tank.shortUserString)
+              : undefined) ?? this.getString(tank.userString),
           slug,
           nation,
           type: tankTags.includes("collectible")
@@ -576,7 +617,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               ? TankType.TANK_TYPE_PREMIUM
               : TankType.TANK_TYPE_RESEARCHABLE,
           tier: tank.level,
-          class: blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
+          class: this.blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
           testing: tankTags.includes("testTank"),
           deprecated: tankTags.includes("deprecated"),
           price: tankPrice,
@@ -601,7 +642,8 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
               );
             }
 
-            tankDefinitions.tanks[tankId].roles[id] = combatRoles[role].id;
+            tankDefinitions.tanks[tankId].roles[id] =
+              this.combatRoles![role].id;
           });
         }
 
@@ -616,7 +658,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           tankDefinitions.tanks[tankId].tracks.push({
             id: trackId,
             weight: track.weight,
-            name: getString(track.userString),
+            name: this.getString(track.userString),
             traverse_speed: track.rotationSpeed,
             dispersion_move: track.shotDispersionFactors.vehicleMovement,
             dispersion_traverse: track.shotDispersionFactors.vehicleRotation,
@@ -624,7 +666,10 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             resistance_medium: terrainResistances[1],
             resistance_soft: terrainResistances[2],
             tier: track.level,
-            unlocks: resolveUnlocks(track.unlocks),
+            unlocks: resolveUnlocks(
+              this.blitzModuleTypeToBlitzkit,
+              track.unlocks,
+            ),
           });
         });
 
@@ -636,17 +681,21 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
           totalUnlocks.push(engine.unlocks);
           tankDefinitions.tanks[tankId].engines.push({
             id: engineId,
-            name: getString(engineListEntry.userString),
+            name: this.getString(engineListEntry.userString),
             fire_chance: engineListEntry.fireStartingChance,
             tier: engineListEntry.level,
             weight: engineListEntry.weight,
             power: engineListEntry.power,
-            unlocks: resolveUnlocks(engine.unlocks),
+            unlocks: resolveUnlocks(
+              this.blitzModuleTypeToBlitzkit,
+              engine.unlocks,
+            ),
           });
         });
 
-        Object.keys(tankDefinition.root.turrets0).forEach(
-          (turretKey, turretIndex) => {
+        let turretIndex = 0;
+        for (const turretKey in tankDefinition.root.turrets0) {
+          {
             const turret = tankDefinition.root.turrets0[turretKey];
             const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
 
@@ -665,7 +714,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 const armorId = parseInt(armorIdString);
                 const armorRaw = turret.armor[name];
 
-                assignArmor(armorRaw, armorId, turretArmor);
+                this.assignArmor(armorRaw, armorId, turretArmor);
               });
 
             turret.userString;
@@ -673,205 +722,223 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             tankDefinitions.tanks[tankId].turrets.push({
               id: turretId,
               traverse_speed: turret.rotationSpeed,
-              name: getString(turret.userString),
+              name: this.getString(turret.userString),
               tier: turret.level,
               guns: [],
               health: turret.maxHealth,
               view_range: turret.circularVisionRadius,
               weight: turret.weight,
-              unlocks: resolveUnlocks(turret.unlocks),
+              unlocks: resolveUnlocks(
+                this.blitzModuleTypeToBlitzkit,
+                turret.unlocks,
+              ),
             });
 
-            Object.keys(turret.guns).forEach((gunKey, gunIndex) => {
-              const gun = turret.guns[gunKey];
-              const gunId = toUniqueId(nation, gunList.root.ids[gunKey]);
-              const gunListEntry = gunList.root.shared[gunKey];
-              const pitchLimitsRaw =
-                gun.pitchLimits ?? gunListEntry.pitchLimits;
-              const gunPitch = (
-                typeof pitchLimitsRaw === "string"
-                  ? pitchLimitsRaw
-                  : pitchLimitsRaw.at(-1)!
-              )
-                .split(" ")
-                .map(Number) as [number, number];
-              const gunModel = Number(
-                parsePath(gun.models.undamaged).name.split("_")[1],
-              );
-              const gunName = getString(gunListEntry.userString);
-              const gunType =
-                "clip" in gun
-                  ? gun.pumpGunMode
-                    ? "autoReloader"
-                    : "autoLoader"
-                  : "regular";
-              // const gunReload = gun.reloadTime;
-              // const shellReloads =
-              const gunClipCount = gunType === "regular" ? 1 : gun.clip!.count;
-              const gunArmor: Armor = { thickness: {}, spaced: [] };
-              const shotDispersionFactors =
-                gun.shotDispersionFactors ?? gunListEntry.shotDispersionFactors;
-              const maskName = `gun_${gunModel.toString().padStart(2, "0")}`;
-              const maskEnabled =
-                tankParameters.maskSlice?.[maskName]?.enabled ?? false;
-              let assault_ranges: AssaultRanges | undefined;
-
-              if (gun.extras?.trayShell) {
-                const types = gun.extras.trayShell.kinds
+            let gunIndex = 0;
+            for (const gunKey in turret.guns) {
+              {
+                const gun = turret.guns[gunKey];
+                const gunId = toUniqueId(nation, gunList.root.ids[gunKey]);
+                const gunListEntry = gunList.root.shared[gunKey];
+                const pitchLimitsRaw =
+                  gun.pitchLimits ?? gunListEntry.pitchLimits;
+                const gunPitch = (
+                  typeof pitchLimitsRaw === "string"
+                    ? pitchLimitsRaw
+                    : pitchLimitsRaw.at(-1)!
+                )
                   .split(" ")
-                  .map((string) => {
-                    const trimmed = string.trim();
+                  .map(Number) as [number, number];
+                const gunModel = Number(
+                  parsePath(gun.models.undamaged).name.split("_")[1],
+                );
+                const gunName = this.getString(gunListEntry.userString);
+                const gunType =
+                  "clip" in gun
+                    ? gun.pumpGunMode
+                      ? "autoReloader"
+                      : "autoLoader"
+                    : "regular";
+                // const gunReload = gun.reloadTime;
+                // const shellReloads =
+                const gunClipCount =
+                  gunType === "regular" ? 1 : gun.clip!.count;
+                const gunArmor: Armor = { thickness: {}, spaced: [] };
+                const shotDispersionFactors =
+                  gun.shotDispersionFactors ??
+                  gunListEntry.shotDispersionFactors;
+                const maskName = `gun_${gunModel.toString().padStart(2, "0")}`;
+                const maskEnabled =
+                  tankParameters.maskSlice?.[maskName]?.enabled ?? false;
+                let assault_ranges: AssaultRanges | undefined;
 
-                    if (trimmed in blitzShellKindToBlitzkit) {
-                      return blitzShellKindToBlitzkit[trimmed as ShellKind];
-                    }
+                if (gun.extras?.trayShell) {
+                  const types = gun.extras.trayShell.kinds
+                    .split(" ")
+                    .map((string) => {
+                      const trimmed = string.trim();
 
-                    throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
-                  });
-                const sectorNames = Object.keys(gun.extras.trayShell.sectors);
+                      if (trimmed in this.blitzShellKindToBlitzkit) {
+                        return this.blitzShellKindToBlitzkit[
+                          trimmed as ShellKind
+                        ];
+                      }
 
-                if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
-                  throw new SyntaxError("Invalid tray shell sector");
+                      throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
+                    });
+                  const sectorNames = Object.keys(gun.extras.trayShell.sectors);
+
+                  if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
+                    throw new SyntaxError("Invalid tray shell sector");
+                  }
+
+                  const sector = gun.extras.trayShell.sectors.sector;
+
+                  assault_ranges = {
+                    types,
+                    ranges: sector.map((value) => ({
+                      factor: value.factor,
+                      distance: value.distance,
+                    })),
+                  };
                 }
 
-                const sector = gun.extras.trayShell.sectors.sector;
+                totalUnlocks.push(gun.unlocks);
+                Object.keys(gun.armor)
+                  .filter((name) => name.startsWith("armor_"))
+                  .forEach((name) => {
+                    const armorIdString = name.match(/armor_(\d+)/)?.[1];
+                    if (armorIdString === undefined) {
+                      throw new SyntaxError(`Invalid armor id: ${name}`);
+                    }
+                    const armorId = parseInt(armorIdString);
+                    const armorRaw = gun.armor[name];
 
-                assault_ranges = {
-                  types,
-                  ranges: sector.map((value) => ({
-                    factor: value.factor,
-                    distance: value.distance,
-                  })),
-                };
-              }
+                    this.assignArmor(armorRaw, armorId, gunArmor);
+                  });
 
-              if (maskEnabled) {
-                const maskRaw = tankParameters.maskSlice![maskName]!;
-                mask = maskRaw.planePosition[1];
-              } else {
-                mask = undefined;
-              }
-
-              totalUnlocks.push(gun.unlocks);
-              Object.keys(gun.armor)
-                .filter((name) => name.startsWith("armor_"))
-                .forEach((name) => {
-                  const armorIdString = name.match(/armor_(\d+)/)?.[1];
-                  if (armorIdString === undefined) {
-                    throw new SyntaxError(`Invalid armor id: ${name}`);
-                  }
-                  const armorId = parseInt(armorIdString);
-                  const armorRaw = gun.armor[name];
-
-                  assignArmor(armorRaw, armorId, gunArmor);
-                });
-
-              tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
-                id: gunId,
-                weight: gunListEntry.weight,
-                rotation_speed: gunListEntry.rotationSpeed,
-                name: gunName,
-                tier: gunListEntry.level,
-                shells: [],
-                camouflage_loss:
-                  typeof gun.invisibilityFactorAtShot === "number"
-                    ? gun.invisibilityFactorAtShot
-                    : gun.invisibilityFactorAtShot.at(-1)!,
-                aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
-                dispersion_base:
-                  gun.shotDispersionRadius ?? gunListEntry.shotDispersionRadius,
-                dispersion_damaged: shotDispersionFactors.whileGunDamaged,
-                dispersion_shot: shotDispersionFactors.afterShot,
-                dispersion_traverse: shotDispersionFactors.turretRotation,
-                unlocks: resolveUnlocks(gun.unlocks),
-                shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
-                assault_ranges,
-                burst:
-                  gun.burst && gun.burst.count > 1
-                    ? {
-                        count: gun.burst.count,
-                        interval: 60 / gun.burst.rate,
-                      }
-                    : undefined,
-                gun_type:
-                  gunType === "regular"
-                    ? {
-                        $case: "regular",
-                        value: {
-                          reload: gun.reloadTime,
-                        },
-                      }
-                    : gunType === "autoReloader"
+                tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
+                  id: gunId,
+                  weight: gunListEntry.weight,
+                  rotation_speed: gunListEntry.rotationSpeed,
+                  name: gunName,
+                  tier: gunListEntry.level,
+                  shells: [],
+                  camouflage_loss:
+                    typeof gun.invisibilityFactorAtShot === "number"
+                      ? gun.invisibilityFactorAtShot
+                      : gun.invisibilityFactorAtShot.at(-1)!,
+                  aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
+                  dispersion_base:
+                    gun.shotDispersionRadius ??
+                    gunListEntry.shotDispersionRadius,
+                  dispersion_damaged: shotDispersionFactors.whileGunDamaged,
+                  dispersion_shot: shotDispersionFactors.afterShot,
+                  dispersion_traverse: shotDispersionFactors.turretRotation,
+                  unlocks: resolveUnlocks(
+                    this.blitzModuleTypeToBlitzkit,
+                    gun.unlocks,
+                  ),
+                  shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
+                  assault_ranges,
+                  burst:
+                    gun.burst && gun.burst.count > 1
                       ? {
-                          $case: "auto_reloader",
+                          count: gun.burst.count,
+                          interval: 60 / gun.burst.rate,
+                        }
+                      : undefined,
+                  gun_type:
+                    gunType === "regular"
+                      ? {
+                          $case: "regular",
                           value: {
-                            intra_clip: 60 / gun.clip!.rate,
-                            shell_count: gunClipCount,
-                            shell_reloads: gun
-                              .pumpGunReloadTimes!.split(" ")
-                              .map(Number),
+                            reload: gun.reloadTime,
                           },
                         }
-                      : {
-                          $case: "auto_loader",
-                          value: {
-                            intra_clip: 60 / gun.clip!.rate,
-                            clip_reload: gun.reloadTime,
-                            shell_count: gunClipCount,
+                      : gunType === "autoReloader"
+                        ? {
+                            $case: "auto_reloader",
+                            value: {
+                              intra_clip: 60 / gun.clip!.rate,
+                              shell_count: gunClipCount,
+                              shell_reloads: gun
+                                .pumpGunReloadTimes!.split(" ")
+                                .map(Number),
+                            },
+                          }
+                        : {
+                            $case: "auto_loader",
+                            value: {
+                              intra_clip: 60 / gun.clip!.rate,
+                              clip_reload: gun.reloadTime,
+                              shell_count: gunClipCount,
+                            },
                           },
-                        },
-              } satisfies GunDefinition);
+                } satisfies GunDefinition);
 
-              Object.keys(gunListEntry.shots).forEach((shellKey) => {
-                const gunShellEntry = gunListEntry.shots[shellKey];
-                const shell = shellList.root[shellKey];
-                const shellId = toUniqueId(nation, shell.id);
-                const shellName = getString(shell.userString);
-                const penetrationRaw = gunShellEntry.piercingPower
-                  .split(" ")
-                  .filter((penetrationString) => penetrationString !== "")
-                  .map(Number);
+                for (const shellKey in gunListEntry.shots) {
+                  {
+                    const gunShellEntry = gunListEntry.shots[shellKey];
+                    const shell = shellList.root[shellKey];
+                    const shellId = toUniqueId(nation, shell.id);
+                    const shellName = this.getString(shell.userString);
+                    const penetrationRaw = gunShellEntry.piercingPower
+                      .split(" ")
+                      .filter((penetrationString) => penetrationString !== "")
+                      .map(Number);
 
-                tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
-                  gunIndex
-                ].shells.push({
-                  id: shellId,
-                  name: shellName,
-                  velocity: gunShellEntry.speed,
-                  armor_damage: shell.damage.armor,
-                  module_damage: shell.damage.devices,
-                  caliber: shell.caliber,
-                  normalization: shell.normalizationAngle,
-                  ricochet: shell.ricochetAngle,
-                  type: blitzShellKindToBlitzkit[shell.kind],
-                  explosion_radius:
-                    shell.kind === "HIGH_EXPLOSIVE"
-                      ? (shell.explosionRadius ?? 0)
-                      : undefined,
-                  icon: shell.icon,
-                  penetration: {
-                    near: penetrationRaw[0],
-                    far: penetrationRaw[1],
-                  },
-                  range: gunShellEntry.maxDistance,
-                });
-              });
-            });
-          },
-        );
+                    tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
+                      gunIndex
+                    ].shells.push({
+                      id: shellId,
+                      name: shellName,
+                      velocity: gunShellEntry.speed,
+                      armor_damage: shell.damage.armor,
+                      module_damage: shell.damage.devices,
+                      caliber: shell.caliber,
+                      normalization: shell.normalizationAngle,
+                      ricochet: shell.ricochetAngle,
+                      type: this.blitzShellKindToBlitzkit[shell.kind],
+                      explosion_radius:
+                        shell.kind === "HIGH_EXPLOSIVE"
+                          ? (shell.explosionRadius ?? 0)
+                          : undefined,
+                      icon: shell.icon,
+                      penetration: {
+                        near: penetrationRaw[0],
+                        far: penetrationRaw[1],
+                      },
+                      range: gunShellEntry.maxDistance,
+                    });
+                  }
+                }
+              }
 
-        totalUnlocks.forEach((unlocks) => {
+              gunIndex++;
+            }
+          }
+
+          turretIndex++;
+        }
+
+        for (const unlocks of totalUnlocks) {
           if (unlocks === undefined) return;
 
-          Object.entries(unlocks).forEach(([key, value]) => {
-            (Array.isArray(value) ? value : [value]).forEach((vehicle) => {
+          for (const key in unlocks) {
+            const value = unlocks[key as keyof BlitzModuleType];
+
+            for (const vehicle of Array.isArray(value) ? value : [value]) {
               switch (key as keyof BlitzModuleType) {
                 case "vehicle": {
                   const tankListEntry = tankList.root[vehicle["#text"]];
                   const currentTank = tankDefinitions.tanks[tankId];
                   const successorId = toUniqueId(nation, tankListEntry.id);
 
-                  tankXps.set(successorId, parseResearchCost(vehicle.cost));
+                  tankXps.set(
+                    successorId,
+                    this.parseResearchCost(vehicle.cost),
+                  );
 
                   if (currentTank.successors === undefined) {
                     currentTank.successors = [];
@@ -885,7 +952,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 case "gun": {
                   gunXps.set(
                     toUniqueId(nation, gunList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
+                    this.parseResearchCost(vehicle.cost),
                   );
                   break;
                 }
@@ -893,7 +960,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 case "turret": {
                   turretXps.set(
                     toUniqueId(nation, turretList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
+                    this.parseResearchCost(vehicle.cost),
                   );
                   break;
                 }
@@ -901,7 +968,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 case "engine": {
                   engineXps.set(
                     toUniqueId(nation, enginesList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
+                    this.parseResearchCost(vehicle.cost),
                   );
                   break;
                 }
@@ -909,14 +976,14 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
                 case "chassis": {
                   trackXps.set(
                     toUniqueId(nation, chassisList.root.ids[vehicle["#text"]]),
-                    parseResearchCost(vehicle.cost),
+                    this.parseResearchCost(vehicle.cost),
                   );
                   break;
                 }
               }
-            });
-          });
-        });
+            }
+          }
+        }
 
         Object.values(tankDefinitions.tanks[tankId].turrets).forEach(
           (turret) => {
@@ -974,7 +1041,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
   async modelDefinitions() {
     const modelDefinitions = ModelDefinitions.create();
 
-    for (const nation of nationsDir) {
+    for (const nation of this.nationsDir!) {
       const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
         `Data/XML/item_defs/vehicles/${nation}/list.xml`,
       );
