@@ -1,21 +1,19 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { times } from "lodash-es";
-import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
 import type { TankFilters } from "../../stores/tankFilters";
-import { awaitableGameDefinitions } from "../awaitables/gameDefinitions";
-import { awaitableProvisionDefinitions } from "../awaitables/provisionDefinitions";
+import { api } from "./api";
 
 const SHELLS = times(3, (index) => index);
 
-const consumableDefinitions = await awaitableConsumableDefinitions;
-const provisionDefinitions = await awaitableProvisionDefinitions;
-const gameDefinitions = await awaitableGameDefinitions;
+const consumableDefinitions = await api.consumableDefinitions();
+const provisionDefinitions = await api.provisionDefinitions();
+const gameDefinitions = await api.gameDefinitions();
 
 export async function filterTank(
   filters: TankFilters,
   tank: TankDefinition,
-  owned: number[] = []
+  owned: number[] = [],
 ) {
   return (
     ((filters.showOwned && owned.includes(tank.id)) ||
@@ -29,15 +27,15 @@ export async function filterTank(
     (filters.gunType.length === 0 ||
       (filters.gunType.includes("regular") &&
         tank.turrets.some((turret) =>
-          turret.guns.some((gun) => gun.gun_type!.$case === "regular")
+          turret.guns.some((gun) => gun.gun_type!.$case === "regular"),
         )) ||
       (filters.gunType.includes("auto_loader") &&
         tank.turrets.some((turret) =>
-          turret.guns.some((gun) => gun.gun_type!.$case === "auto_loader")
+          turret.guns.some((gun) => gun.gun_type!.$case === "auto_loader"),
         )) ||
       (filters.gunType.includes("auto_reloader") &&
         tank.turrets.some((turret) =>
-          turret.guns.some((gun) => gun.gun_type!.$case === "auto_reloader")
+          turret.guns.some((gun) => gun.gun_type!.$case === "auto_reloader"),
         ))) &&
     tank.turrets.some((turret) =>
       turret.guns.some((gun) =>
@@ -45,9 +43,9 @@ export async function filterTank(
           (index) =>
             filters.shells[index] === null ||
             gun.shells[index] === undefined ||
-            gun.shells[index].type === filters.shells[index]
-        )
-      )
+            gun.shells[index].type === filters.shells[index],
+        ),
+      ),
     ) &&
     (filters.consumables.length === 0 ||
       filters.consumables.every((consumable) =>
@@ -56,10 +54,10 @@ export async function filterTank(
             checkConsumableProvisionInclusivity(
               consumableDefinitions.consumables[consumable],
               tank,
-              gun
-            )
-          )
-        )
+              gun,
+            ),
+          ),
+        ),
       )) &&
     (filters.provisions.length === 0 ||
       filters.provisions.every((provision) =>
@@ -68,22 +66,22 @@ export async function filterTank(
             checkConsumableProvisionInclusivity(
               provisionDefinitions.provisions[provision],
               tank,
-              gun
-            )
-          )
-        )
+              gun,
+            ),
+          ),
+        ),
       )) &&
     (filters.abilities.length === 0 ||
       Object.values(tank.roles).some((id) =>
         gameDefinitions.roles[id as unknown as number].consumables.some(
-          (consumable) => filters.abilities.includes(consumable)
-        )
+          (consumable) => filters.abilities.includes(consumable),
+        ),
       )) &&
     (filters.powers.length === 0 ||
       Object.values(tank.roles).some((id) =>
         gameDefinitions.roles[id as unknown as number].provisions.some(
-          (consumable) => filters.powers.includes(consumable)
-        )
+          (consumable) => filters.powers.includes(consumable),
+        ),
       ))
   );
 }
