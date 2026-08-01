@@ -20,7 +20,6 @@ import {
   ResearchCost,
   ShellType,
   SkillDefinitions,
-  sluggify,
   TankClass,
   TankDefinitions,
   TankPrice,
@@ -30,23 +29,10 @@ import {
   Unlock,
   Vector3,
 } from "@blitzkit/core";
-import { readFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
 import { vfs } from "./constants";
 import type { TankParameters } from "./tankIcons";
-
-const nationSlugDiscriminators = {
-  china: "cn",
-  european: "eu",
-  france: "fr",
-  germany: "de",
-  japan: "jp",
-  other: "ot",
-  uk: "gb",
-  usa: "us",
-  ussr: "ru",
-};
 
 function parseResearchCost(raw: number | string) {
   if (typeof raw === "number") {
@@ -293,22 +279,6 @@ interface VehicleDefinitions {
     };
   };
 }
-export interface VehicleDefinitionList {
-  [key: string]: {
-    id: number;
-    userString: string;
-    shortUserString?: string;
-    description: string;
-    price: number | { gold: ""; "#text": number };
-    sellPrice?: { gold: ""; "#text": number };
-    enrichmentPermanentCost: number;
-    notInShop?: boolean;
-    tags: string;
-    level: number;
-    combatRole?: Record<string, string>;
-    configurationModes: string;
-  };
-}
 interface TurretDefinitionsList {
   nextAvailableId: number;
   ids: Record<string, number>;
@@ -406,7 +376,6 @@ const blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
   HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
   HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
 };
-export const botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
 const blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType> = {
   chassis: ModuleType.MODULE_TYPE_TRACKS,
   engine: ModuleType.MODULE_TYPE_ENGINE,
@@ -432,155 +401,6 @@ function assignArmor(
 }
 
 export async function definitions() {
-  const tankStringIdMap: Record<string, number> = {};
-  const tankXps = new Map<number, ResearchCost>();
-
-  const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
-
-  const gameModeNativeNames: Record<string, number> = {};
-
-  const consumableNativeNames: Record<string, number> = {};
-  const provisionNativeNames: Record<string, number> = {};
-  let equalizerDefinitions: string[][];
-
-  if (
-    await vfs.resolve("Data/XML/item_defs/vehicles/common/tier_equializer.csv")
-  ) {
-    equalizerDefinitions = await vfs.csv(
-      `Data/XML/item_defs/vehicles/common/tier_equializer.csv`,
-      { delimiter: ";" },
-    );
-  } else {
-    const stubEqualizerDefinitions = await readFile("stub/equalizer.csv").then(
-      (buffer) => buffer.toString(),
-    );
-
-    equalizerDefinitions = await vfs._csv(stubEqualizerDefinitions, {
-      delimiter: ";",
-    });
-  }
-
-  for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
-  )) {
-    const id = Number(match[1]);
-
-    gameModeNativeNames[match[3]] = id;
-  }
-
-  for (const match of gameTypeSelectorStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g,
-  )) {
-    Object.entries(gameModeNativeNames).forEach(([key, value]) => {
-      if (key.toLowerCase() === match[2].toLowerCase()) {
-        gameModeNativeNames[match[1]] = value;
-      }
-    });
-  }
-
-  camouflagesXmlEntries.forEach(([camoKey, camo]) => {
-    const yamlEntry = camouflagesYaml[camoKey];
-    const fullName = yamlEntry.userString
-      ? getString(yamlEntry.userString)
-      : undefined;
-    const shortName = yamlEntry.shortUserString
-      ? getString(yamlEntry.shortUserString)
-      : undefined;
-    const resolvedTankName = shortName ?? fullName;
-    const resolvedTankNameFull =
-      resolvedTankName === fullName ? undefined : fullName;
-
-    camouflageDefinitions.camouflages[camo.id] = {
-      id: camo.id,
-      name: getString(camo.userString),
-      tank_name: resolvedTankName,
-      tank_name_full: resolvedTankNameFull,
-    };
-  });
-
-  const slugRequesters = new Map<string, { id: number; key: string }[]>();
-  const idToNation: Record<number, string> = {};
-
-  for (const nation of nationsDir) {
-    const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
-      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
-    );
-
-    for (const tankKey in tankList.root) {
-      if (botPattern.test(tankKey)) continue;
-
-      const tank = tankList.root[tankKey];
-      const tankId = toUniqueId(nation, tank.id);
-
-      const name = (
-        (tank.shortUserString ? getString(tank.shortUserString) : undefined) ??
-        getString(tank.userString)
-      ).locales.en;
-
-      let slug = sluggify(name);
-
-      idToNation[tankId] = nation;
-
-      if (slugRequesters.has(slug)) {
-        slugRequesters.get(slug)!.push({ id: tankId, key: tankKey });
-      } else {
-        slugRequesters.set(slug, [{ id: tankId, key: tankKey }]);
-      }
-    }
-  }
-
-  const slugs = new Map<number, string>();
-
-  slugRequesters.forEach((requesters, slug) => {
-    if (requesters.length === 1) {
-      slugs.set(requesters[0].id, slug);
-      return;
-    }
-
-    console.warn(
-      `Multiple tanks share slug ${slug}: ${requesters
-        .map(({ key }) => key)
-        .join(", ")}`,
-    );
-
-    if (requesters.length !== 2) {
-      throw new Error("Unresolvable number of duplicates :(");
-    }
-
-    const nonCanonical = requesters.find(({ key }) => key.endsWith("TUR"));
-
-    if (nonCanonical === undefined) {
-      console.log("Using nations to discriminate");
-      // both are non-tutorial tanks, will have to discriminate using nation
-
-      requesters.forEach(({ id, key }) => {
-        const nation = idToNation[id];
-        const discriminator =
-          nationSlugDiscriminators[
-            nation as keyof typeof nationSlugDiscriminators
-          ];
-
-        console.log(`Solution: ${key} -> ${slug}-${discriminator}`);
-        slugs.set(id, `${slug}-${discriminator}`);
-      });
-    } else {
-      console.log("Using tutorial bot suffix to discriminate");
-
-      const canonical = requesters.find(({ key }) => !key.endsWith("TUR"));
-
-      if (canonical === undefined) {
-        throw new Error(
-          "Two tutorial bots share the same slug? The world is truly broken.",
-        );
-      }
-
-      console.log(`Solution: ${canonical.key} -> ${slug}`);
-      slugs.set(canonical.id, slug);
-      console.log(`Solution: ${nonCanonical.key} -> ${slug}-tur`);
-      slugs.set(nonCanonical.id, `${slug}-tur`);
-    }
-  });
-
   for (const nation of nationsDir) {
     const tankList = await vfs.xml<{ root: VehicleDefinitionList }>(
       `Data/XML/item_defs/vehicles/${nation}/list.xml`,
@@ -742,7 +562,7 @@ export async function definitions() {
         }
       });
 
-      const camouflages = camouflagesXmlEntries
+      const camouflages = Object.entries(camouflagesXml.root.camouflages)
         .filter(([, camo]) => {
           if (!camo.vehicleFilter.include) return false;
           if (camo.unlockCostCategory !== "legendary-skins-gold") return false;
@@ -761,7 +581,7 @@ export async function definitions() {
         })
         .map(([, camo]) => camo.id);
 
-      let equalizerEntry = equalizerDefinitions.find(
+      let equalizerEntry = tierEqualizer.find(
         (line) => line[0] === `${nation}:${tankKey}`,
       );
 
@@ -1317,8 +1137,6 @@ export async function definitions() {
   );
 
   Object.entries(consumablesCommon).forEach(([key, consumable]) => {
-    consumableNativeNames[key] = consumable.id;
-
     const entry: Consumable = {
       id: consumable.id,
       game_mode_exclusive: "gameModeFilter" in consumable,
@@ -1417,8 +1235,6 @@ export async function definitions() {
   });
 
   Object.entries(provisionsCommon).forEach(([key, provision]) => {
-    provisionNativeNames[key] = provision.id;
-
     const entry: Provision = {
       id: provision.id,
       exclude: [],

@@ -13,3 +13,4 @@ export * from "./provisionsCommon";
 export * from "./squadBattleTypeStylesYaml";
 export * from "./tankmenAvatar";
 export * from "./tanksStats";
+export * from "./vehicleDefinitionList";
