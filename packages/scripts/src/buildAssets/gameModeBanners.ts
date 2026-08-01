@@ -1,16 +1,16 @@
 import sharp from "sharp";
 import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
-import { SquadBattleTypeStyles } from "./definitions";
+import { SquadBattleTypeStylesYaml } from "./definitions";
 
 export async function gameModeBanners() {
   console.log("Building game mode banners...");
 
   using uploader = new AssetUploader("game mode banners");
-  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStyles>(
+  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
     `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
   );
-  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStyles>(
+  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
     `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
   );
   const bannerMatches: { name: string; path: string }[] = [];

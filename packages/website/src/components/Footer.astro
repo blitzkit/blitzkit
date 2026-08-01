@@ -1,7 +1,8 @@
 ---
-import { assertSecret, fetchGameDefinitions } from "@blitzkit/core";
+import { assertSecret } from "@blitzkit/core";
 import { Box, Code, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import packageJson from "../../../../package.json";
+import { api } from "../core/blitzkit/api";
 import { getStrings } from "../core/i18n/getStrings";
 import { LinkI18n } from "./LinkI18n";
 import { LocaleSwitcherThemeWrapper } from "./LocaleSwitcher";
@@ -10,7 +11,7 @@ export interface Props {
   locale: string;
 }
 
-const gameDefinitions = await fetchGameDefinitions();
+const gameDefinitions = await api.game();
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
 const { locale } = Astro.props;
 const strings = getStrings(locale);

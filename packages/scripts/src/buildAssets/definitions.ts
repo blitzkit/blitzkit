@@ -11,7 +11,6 @@ import {
   Equalizer,
   EquipmentDefinitions,
   EquipmentSlot,
-  GameDefinitions,
   GunDefinition,
   I18nString,
   MapDefinitions,
@@ -491,20 +490,6 @@ export interface MapAlly {
   points: Array<number[]>;
 }
 
-interface AvailableNationsYaml {
-  available_nations: string[];
-}
-
-export interface SquadBattleTypeStyles {
-  Prototypes: {
-    components: {
-      UIDataLocalBindingsComponent: {
-        data: [string, string, string][];
-      };
-    };
-  }[];
-}
-
 type CombatRolesYaml = Record<
   string,
   {
@@ -548,14 +533,7 @@ export async function definitions() {
   console.log("Building definitions...");
 
   const uploader = new AssetUploader("definitions");
-  const gameDefinitions: GameDefinitions = {
-    version: (await vfs.text("Data/version.txt")).split(" ")[0],
-    nations: (
-      await vfs.yaml<AvailableNationsYaml>("Data/available_nations.yaml")
-    ).available_nations,
-    gameModes: {},
-    roles: {},
-  };
+
   const tankDefinitions: TankDefinitions = { tanks: {} };
   const camouflageDefinitions: CamouflageDefinitions = { camouflages: {} };
   const modelDefinitions: ModelDefinitions = { models: {} };
@@ -673,10 +651,10 @@ export async function definitions() {
     `Data/camouflages.yaml`,
   );
   const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
-  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStyles>(
+  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
     `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
   );
-  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStyles>(
+  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
     `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
   );
   const gameModeNativeNames: Record<string, number> = {};
@@ -708,12 +686,8 @@ export async function definitions() {
     /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
   )) {
     const id = Number(match[1]);
-    const name = getString(match[2]);
 
     gameModeNativeNames[match[3]] = id;
-    gameDefinitions.gameModes[id] = {
-      name,
-    };
   }
 
   for (const match of gameTypeSelectorStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
@@ -1767,22 +1741,6 @@ export async function definitions() {
     }
   });
 
-  Object.entries(combatRoles).forEach(([, value]) => {
-    gameDefinitions.roles[value.id] = { provisions: [], consumables: [] };
-
-    value.default_abilities.forEach((ability) => {
-      if (ability in consumableNativeNames) {
-        gameDefinitions.roles[value.id].consumables.push(
-          consumableNativeNames[ability],
-        );
-      } else if (ability in provisionNativeNames) {
-        gameDefinitions.roles[value.id].provisions.push(
-          provisionNativeNames[ability],
-        );
-      } else throw new Error(`Unknown ability ${ability}`);
-    });
-  });
-
   Object.entries(avatar.root.skillsByClasses).forEach(([tankClass, skills]) => {
     skillDefinitions.classes[
       blitzTankClassToBlitzkit[tankClass as BlitzTankClass]
@@ -1798,10 +1756,6 @@ export async function definitions() {
     };
   });
 
-  await uploader.add({
-    content: GameDefinitions.encode(gameDefinitions).finish(),
-    path: "definitions/game.pb",
-  });
   await uploader.add({
     content: TankDefinitions.encode(tankDefinitions).finish(),
     path: "definitions/tanks.pb",
