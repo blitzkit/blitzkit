@@ -129,7 +129,7 @@ export function PrimaryArmorSceneComponent({
           : undefined) ?? 1;
 
       material.uniforms.thickness.value =
-        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
+        thickness * (hasEnhancedArmor ? 1.04 : 1) * equalizer;
 
       if (!noInvalidate) invalidate();
     }

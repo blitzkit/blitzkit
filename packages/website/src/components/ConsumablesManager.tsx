@@ -43,7 +43,7 @@ export function ConsumablesManager({
             cooldown={
               timers
                 ? consumable.cooldown *
-                  (hasConsumableDeliverySystem ? 0.88 : 1) *
+                  (hasConsumableDeliverySystem ? 1 - 0.17 : 1) *
                   (1 - cooldownBooster! * 0.1)
                 : undefined
             }

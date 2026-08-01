@@ -193,7 +193,7 @@ export function tankCharacteristics(
     coefficient(
       [hasSandbagArmor, 0.03],
       [hasEnhancedSandbagArmor, 0.06],
-      [hasImprovedAssembly, 0.04],
+      [hasImprovedAssembly, 0.05],
     ) * equalizer.health;
   const shellVelocityCoefficient = coefficient(
     [hasSupercharger, 0.35],
@@ -201,40 +201,34 @@ export function tankCharacteristics(
   );
   const aimTimeCoefficient =
     coefficient(
-      [hasEnhancedGunLayingDrive, -0.15],
+      [hasEnhancedGunLayingDrive, -0.12],
       [hasReticleCalibration, -0.3],
     ) * coefficient([true, degressiveStat(gunnerMastery)]);
   const dispersionStillCoefficient =
-    coefficient([hasRefinedGun, -0.15], [hasReticleCalibration, -0.3]) *
+    coefficient([hasRefinedGun, -0.11], [hasReticleCalibration, -0.3]) *
     coefficient([true, degressiveStat(gunnerMastery)]);
   const dispersionDamagedCoefficient = coefficient([
     hasVerticalStabilizer,
-    -0.12,
+    -0.17,
   ]);
   const dispersionHullTraverseCoefficient = coefficient(
-    [hasVerticalStabilizer, -0.12],
+    [hasVerticalStabilizer, -0.17],
     [true, -crewSkills.smooth_turn / 100],
   );
   const dispersionAfterShotCoefficient = coefficient(
-    [hasVerticalStabilizer, -0.12],
+    [hasVerticalStabilizer, -0.17],
     [true, -crewSkills.soft_recoil / 100],
   );
   const dispersionMovingCoefficient = coefficient(
-    [hasVerticalStabilizer, -0.12],
+    [hasVerticalStabilizer, -0.17],
     [true, -crewSkills.smooth_driving / 100],
   );
   const dispersionTurretTraverseCoefficient = coefficient(
-    [hasVerticalStabilizer, -0.12],
+    [hasVerticalStabilizer, -0.17],
     [true, -crewSkills.smooth_turret * (2 / 100)],
   );
   const enginePowerCoefficient = coefficient(
-    [
-      hasEngineAccelerator,
-      tank.class === TankClass.TANK_CLASS_HEAVY ||
-      tank.class === TankClass.TANK_CLASS_TANK_DESTROYER
-        ? 0.05
-        : 0.04,
-    ],
+    [hasEngineAccelerator, 0.06],
     [hasReducedEnginePowerBoost, 0.1],
     [hasEnginePowerBoost, 0.2],
     [hasImprovedEnginePowerBoost, 0.35],
@@ -248,7 +242,7 @@ export function tankCharacteristics(
     coefficient([true, progressiveStat(gunnerMastery)]);
   const hullTraverseCoefficient =
     coefficient(
-      [hasImprovedControl, 0.11],
+      [hasImprovedControl, 0.12],
       [hasImprovedEnginePowerBoost, 0.01],
       [true, crewSkills.virtuoso / 100],
     ) * coefficient([true, progressiveStat(driverMastery)]);
@@ -305,8 +299,8 @@ export function tankCharacteristics(
         : tank.class === TankClass.TANK_CLASS_MEDIUM
           ? 0.04
           : tank.class === TankClass.TANK_CLASS_LIGHT
-            ? 0.07
-            : 0.1,
+            ? 0.06
+            : 0.07,
     ],
   );
   const camouflageCoefficientStill = sum(

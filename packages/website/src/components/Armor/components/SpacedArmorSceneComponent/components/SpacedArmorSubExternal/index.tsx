@@ -65,7 +65,7 @@ export function SpacedArmorSubExternal({
           : undefined) ?? 1;
 
       material.uniforms.thickness.value =
-        thickness * (hasEnhancedArmor ? 1.03 : 1) * equalizer;
+        thickness * (hasEnhancedArmor ? 1.04 : 1) * equalizer;
     }
     function handleAntagonistEquipmentChange() {
       const equipment = Duel.state.antagonist.equipmentMatrix;

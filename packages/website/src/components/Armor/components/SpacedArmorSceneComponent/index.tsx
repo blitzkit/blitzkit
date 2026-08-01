@@ -129,7 +129,7 @@ export function SpacedArmorSceneComponent({
           antagonistEqualizer,
         );
       const thicknessCoefficient =
-        (hasEnhancedArmor ? 1.03 : 1) * protagonistEqualizer.armor;
+        (hasEnhancedArmor ? 1.04 : 1) * protagonistEqualizer.armor;
       const filteredIntersections = intersections.filter(
         (intersection) =>
           "type" in intersection.object.userData &&

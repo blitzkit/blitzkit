@@ -78,7 +78,7 @@ export function StaticArmorSceneComponent({
   const tank = Duel.use((state) => state.protagonist.tank);
   const equalize = Duel.use((state) => state.equalize);
   const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
-  const thicknessCoefficient = (hasEnhancedArmor ? 1.03 : 1) * equalizer.armor;
+  const thicknessCoefficient = (hasEnhancedArmor ? 1.04 : 1) * equalizer.armor;
   const thickness = thicknessRaw * thicknessCoefficient;
   const x = thickness / thicknessRange.value;
   const xClamped = clamp(x, 0, 1);

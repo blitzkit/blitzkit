@@ -8,12 +8,12 @@ export function resolvePenetrationCoefficient(
 ) {
   const calibrated = calibratedShells
     ? type === ShellType.SHELL_TYPE_AP
-      ? 1.08
+      ? 1.06
       : type === ShellType.SHELL_TYPE_APCR
-        ? 1.05
+        ? 1.06
         : type === ShellType.SHELL_TYPE_HEAT
-          ? 1.13
-          : 1.08
+          ? 1.07
+          : 1.07
     : 1;
   const equalizer = (equalize ? equalizerObj?.penetration : undefined) ?? 1;
 
