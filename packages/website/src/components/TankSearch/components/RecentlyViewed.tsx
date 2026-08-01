@@ -1,7 +1,7 @@
 import { Flex, Separator, Text } from "@radix-ui/themes";
 import { isEqual } from "lodash-es";
 import { useMemo } from "react";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { api } from "../../../core/blitzkit/api";
 import { useLocale } from "../../../hooks/useLocale";
 import { TankFilters } from "../../../stores/tankFilters";
 import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
@@ -9,23 +9,23 @@ import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";
 import { TankCardWrapper } from "./TankCardWrapper";
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function RecentlyViewed() {
   const filters = TankFilters.use();
   // non-reactive because it is a little weird that it updates instantly even before the page loads
   const recentlyViewed = TankopediaPersistent.state.recentlyViewed.filter(
-    (id) => id in tankDefinitions.tanks
+    (id) => id in tankDefinitions.tanks,
   );
   const hasFilters = useMemo(
     () =>
       Object.entries(filters).some(([key, value]) => {
         return !isEqual(
           value,
-          TankFilters.initial[key as keyof typeof TankFilters.initial]
+          TankFilters.initial[key as keyof typeof TankFilters.initial],
         );
       }),
-    [filters]
+    [filters],
   );
   const { strings } = useLocale();
   const by = TankSort.use((state) => state.by);
