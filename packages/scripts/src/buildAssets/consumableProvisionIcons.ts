@@ -1,6 +1,6 @@
 import sharp from "sharp";
-import { AssetUploader } from "../core/github/assetUploader";
 import { parsePackedSpriteRect } from "../core/blitz/parsePackedSpriteRect";
+import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
 import { ConsumablesCommon, ProvisionsCommon } from "./definitions";
 

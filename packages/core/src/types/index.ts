@@ -1,6 +1,7 @@
 export * from "./availableNationsYaml";
 export * from "./blitzModuleType";
 export * from "./blitzStrings";
+export * from "./blitzTankFilterDefinitionCategory";
 export * from "./camouflagesXml";
 export * from "./camouflagesYaml";
 export * from "./chassisDefinitionsList";
