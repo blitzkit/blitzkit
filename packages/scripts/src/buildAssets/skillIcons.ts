@@ -1,31 +1,11 @@
-import { TankClass } from "@blitzkit/core";
 import sharp from "sharp";
 import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
 
-interface SkillIcon {
-  name: string;
-  state: number;
-}
-
-export interface Avatar {
-  roles: unknown;
-  skillsByClasses: Record<TankClass, string>;
-  skills: {
-    [name: string]: {
-      userString: string;
-      effectDescription: string;
-      tipDescription: string;
-      icon: SkillIcon | SkillIcon[];
-      type: "continuous" | "trigger";
-    };
-  };
-}
-
 export async function skillIcons() {
   console.log("Building skill icons...");
 
-  const avatar = await vfs.xml<{ root: Avatar }>(
+  const avatar = await vfs.xml<{ root: TankmenAvatar }>(
     `Data/XML/item_defs/tankmen/avatar.xml`,
   );
   const uploader = new AssetUploader("skill icons");

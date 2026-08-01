@@ -21,7 +21,6 @@ import {
   ShellType,
   SkillDefinitions,
   sluggify,
-  SquadBattleTypeStylesYaml,
   TankClass,
   TankDefinitions,
   TankPrice,
@@ -35,7 +34,6 @@ import { readFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import type { Vector3Tuple } from "three";
 import { vfs } from "./constants";
-import type { Avatar } from "./skillIcons";
 import type { TankParameters } from "./tankIcons";
 
 const nationSlugDiscriminators = {
@@ -389,77 +387,10 @@ export interface ProvisionsCommon {
   };
 }
 
-type CamouflagesInclude =
-  | {
-      nations?: string;
-    }
-  | {
-      vehicle?: { name?: string; minLevel?: number; maxLevel?: number };
-    };
-
-interface CamouflagesXML {
-  camouflages: Record<
-    string,
-    {
-      id: number;
-      userString: string;
-      description: string;
-      category: string;
-      group: string;
-      kind: string;
-      notInShop: boolean;
-      unlockCostCategory?: string;
-      vehicleFilter: {
-        include?: CamouflagesInclude | CamouflagesInclude[];
-      };
-      script: string[] | string;
-      icon?: string;
-      unlockPremium?: string;
-      unlockQuest?: string;
-      unlockClanLevel?: number;
-      unlockShopBundle?: string;
-      unlockTankRank?: number;
-    }
-  >;
-}
-
-type CamouflagesYaml = Record<
-  string,
-  {
-    userString?: string;
-    shortUserString?: string;
-  }
->;
-
 type ConsumablesVehicleFilter =
   | { minLevel: number; maxLevel: number }
   | { name: string }
   | { extendedTags: string };
-
-export interface Maps {
-  maps: {
-    [key: string]: {
-      id: number;
-      tags?: string;
-      localName: string;
-      avaliableInTrainingRoom: boolean; // lol wg typo
-      spriteFrame: number;
-      supremacyPointsThreshold?: number;
-      availableModes: number[];
-      shadowMapsAvailable?: boolean;
-      assaultRespawnPoints: {
-        allies: MapAlly[];
-        enemies: MapAlly[];
-      };
-      levels?: number[];
-    };
-  };
-}
-
-export interface MapAlly {
-  respawnNumber: number;
-  points: Array<number[]>;
-}
 
 type CombatRolesYaml = Record<
   string,
@@ -502,59 +433,12 @@ function assignArmor(
 
 export async function definitions() {
   const tankStringIdMap: Record<string, number> = {};
-
-  for (const match of (
-    await vfs.text(`Data/XML/item_defs/vehicles/common/consumables/list.xml`)
-  ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
-    if (match[1] === "prototypes") continue;
-
-    Object.assign(
-      consumablesCommon,
-      (
-        await vfs.xml<{ root: ConsumablesCommon }>(
-          `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`,
-        )
-      ).root,
-    );
-  }
-
-  for (const match of (
-    await vfs.text(`Data/XML/item_defs/vehicles/common/provisions/list.xml`)
-  ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
-    if (match[1] === "prototypes") continue;
-
-    Object.assign(
-      provisionsCommon,
-      (
-        await vfs.xml<{ root: ConsumablesCommon }>(
-          `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`,
-        )
-      ).root,
-    );
-  }
-
-  const avatar = await vfs.xml<{ root: Avatar }>(
-    `Data/XML/item_defs/tankmen/avatar.xml`,
-  );
-  const maps = await vfs.yaml<Maps>(`Data/maps.yaml`);
   const tankXps = new Map<number, ResearchCost>();
-  const camouflagesXml = await vfs.xml<{ root: CamouflagesXML }>(
-    `Data/XML/item_defs/vehicles/common/camouflages.xml`,
-  );
-  const camouflagesYaml = await vfs.yaml<CamouflagesYaml>(
-    `Data/camouflages.yaml`,
-  );
+
   const camouflagesXmlEntries = Object.entries(camouflagesXml.root.camouflages);
-  const squadBattleTypeStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
-    `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
-  );
-  const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
-    `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
-  );
+
   const gameModeNativeNames: Record<string, number> = {};
-  const combatRoles = await vfs.yaml<CombatRolesYaml>(
-    `Data/XML/item_defs/vehicles/common/combat_roles.yaml`,
-  );
+
   const consumableNativeNames: Record<string, number> = {};
   const provisionNativeNames: Record<string, number> = {};
   let equalizerDefinitions: string[][];
@@ -1635,15 +1519,17 @@ export async function definitions() {
     }
   });
 
-  Object.entries(avatar.root.skillsByClasses).forEach(([tankClass, skills]) => {
-    skillDefinitions.classes[
-      blitzTankClassToBlitzkit[tankClass as BlitzTankClass]
-    ] = {
-      skills: skills.split(" "),
-    };
-  });
+  Object.entries(tankmenAvatar.root.skillsByClasses).forEach(
+    ([tankClass, skills]) => {
+      skillDefinitions.classes[
+        blitzTankClassToBlitzkit[tankClass as BlitzTankClass]
+      ] = {
+        skills: skills.split(" "),
+      };
+    },
+  );
 
-  Object.entries(maps.maps).forEach(([key, map]) => {
+  Object.entries(mapsYaml.maps).forEach(([key, map]) => {
     mapDefinitions.maps[map.id] = {
       id: map.id,
       name: getString(`#maps:${key}:${map.localName}`),
