@@ -11,7 +11,7 @@ export interface Props {
   locale: string;
 }
 
-const gameDefinitions = await api.game();
+const gameDefinitions = await api.gameDefinitions();
 const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
 const { locale } = Astro.props;
 const strings = getStrings(locale);

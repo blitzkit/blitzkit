@@ -526,7 +526,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             ({ type }) => this.blitzkitCrewTypeToBlitz[type] === crewKey,
           );
           if (index === -1) {
-            if (crewKey === "#text") return;
+            if (crewKey === "#text") continue;
             entry = {
               type: this.blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
               count: 0,
@@ -866,7 +866,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
         }
 
         for (const unlocks of totalUnlocks) {
-          if (unlocks === undefined) return;
+          if (unlocks === undefined) continue;
 
           for (const key in unlocks) {
             const value = unlocks[key as keyof BlitzModuleType];
@@ -1082,7 +1082,8 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
             ({ type }) => this.blitzkitCrewTypeToBlitz[type] === crewKey,
           );
           if (index === -1) {
-            if (crewKey === "#text") return;
+            if (crewKey === "#text") continue;
+
             entry = {
               type: this.blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
               count: 0,

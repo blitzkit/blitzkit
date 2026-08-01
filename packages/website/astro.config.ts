@@ -12,7 +12,7 @@ import { tools } from "./src/constants/tools";
 
 const POSSIBLE_TARGETS = ["app", "web"];
 
-const target = process.env.PUBLIC_TARGET ;
+const target = process.env.PUBLIC_TARGET;
 
 if (!target || !POSSIBLE_TARGETS.includes(target)) {
   throw new Error("Invalid target");
@@ -21,7 +21,11 @@ if (!target || !POSSIBLE_TARGETS.includes(target)) {
 export default defineConfig({
   devToolbar: { enabled: false },
 
-  vite: { server: { allowedHosts: [] } },
+  vite: {
+    server: { allowedHosts: [] },
+    esbuild: { target: "es2022" },
+  },
+
   output: target === "web" ? "static" : "server",
   site: "https://blitzkit.app",
   outDir: "../../dist/website",
@@ -50,15 +54,15 @@ export default defineConfig({
           return {
             name: strings.website.tools[stringId].name,
             name_localized: wrapper(
-              (strings) => strings.website.tools[stringId].name
+              (strings) => strings.website.tools[stringId].name,
             ),
             description: strings.website.tools[stringId].description,
             description_localized: wrapper(
-              (strings) => strings.website.tools[stringId].description
+              (strings) => strings.website.tools[stringId].description,
             ),
             short_name: strings.website.tools[stringId].name,
             short_name_localized: wrapper(
-              (strings) => strings.website.tools[stringId].name
+              (strings) => strings.website.tools[stringId].name,
             ),
             url: `/${tool.id}`,
             icon: `public/assets/images/tools/${tool.id}.webp`,
@@ -68,7 +72,7 @@ export default defineConfig({
       manifest: {
         description: strings.website.home.seo_description,
         description_localized: wrapper(
-          (strings) => strings.website.home.seo_description
+          (strings) => strings.website.home.seo_description,
         ),
 
         dir: "ltr",
