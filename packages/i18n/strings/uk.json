@@ -281,21 +281,21 @@
     },
     "home": {
       "discord": {
-        "join_short": "Join cool people!",
-        "join_long": "Join super duper cool people!",
+        "join_short": "Приєднуйся до суспільства!",
+        "join_long": "Приєднуйся до найкрутішого суспільства!",
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "Від {name} ❤️"
       },
       "hot_tanks": {
         "title": "Популярні танки",
-        "subtitle": "Last {days} days"
+        "subtitle": "Останні {days} днів"
       },
       "other_projects": {
         "title": "Інші класні проєкти"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "Будь ласка, допоможіть перекласти {name} на {language}!",
       "seo_description": "Інструменти для всього, пов'язаного з WoT Blitz"
     },
     "docs": {
@@ -309,7 +309,7 @@
         "reset": "Скинути",
         "shuffle": "Перемішати",
         "remove": "Видалити зіграні",
-        "tracking": "BlitzKit is tracking your battles",
+        "tracking": "BlitzKit відстежує ваші бої",
         "sort": {
           "button": "Сортувати за",
           "last_played": "Остання гра",
@@ -342,11 +342,11 @@
         "button": "Mix and match",
         "description": "Mix tank modules",
         "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "screenshot": "Знімок екрану",
+        "randomize": "Рандомізувати"
       },
       "guess": {
-        "name": "Guess",
+        "name": "Гість",
         "button": "What could it be?",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
@@ -354,7 +354,7 @@
           "placeholder": "Type to guess...",
           "skip": "Skip",
           "guess": "Guess",
-          "next": "Next",
+          "next": "Наступний",
           "no_results": "Немає результатів"
         },
         "stats": "{correct} / {total} correct, {streak} streak",
@@ -369,7 +369,7 @@
         "tier": "Рівень {tier}"
       },
       "tankopedia": {
-        "search": "Search a stat...",
+        "search": "Шукаємо стати...",
         "name": "Танкопедія",
         "button": "Знайти танки",
         "description": "Танкова енциклопедія",
