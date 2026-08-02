@@ -335,7 +335,7 @@
         "description": "Tank playlist generator",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
         "button": "Створити",
-        "pool_size": "{count} possible tanks"
+        "pool_size": "{count} можливі танки"
       },
       "mixer": {
         "name": "Mixer",
@@ -346,13 +346,13 @@
         "randomize": "Рандомізувати"
       },
       "guess": {
-        "name": "Гість",
+        "name": "Guess",
         "button": "What could it be?",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {
           "placeholder": "Type to guess...",
-          "skip": "Skip",
+          "skip": "Пропустити",
           "guess": "Guess",
           "next": "Наступний",
           "no_results": "Немає результатів"
@@ -440,7 +440,7 @@
               "ricochet": "Рикошет",
               "explosion_radius": "Радіус розльоту уламків",
               "exit": "Вийти",
-              "reset": "Reset"
+              "reset": "Скинути"
             },
             "advanced": "Advanced highlighting",
             "shot_card": {
@@ -449,7 +449,7 @@
                 "spaced": "Spaced",
                 "external": "External",
                 "gap": "Gap",
-                "gun": "Gun",
+                "gun": "Пушка",
                 "track": "Гусениці"
               },
               "status": {
@@ -459,7 +459,7 @@
                 "splash": "{damage} Од"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
+                "thickness_and_angle": "{thickness}мм {angle}°",
                 "nominal": "{thickness}mm nominal",
                 "ricochet_loss": "{loss}% penetration"
               }
@@ -472,7 +472,7 @@
             "external": "External",
             "edit": {
               "label": "Редагувати",
-              "reset": "Reset"
+              "reset": "Скинути"
             }
           }
         },
@@ -485,7 +485,7 @@
           },
           "vanilla": "Vanilla",
           "opentest": "Відкритий тест",
-          "full_name": "Full name",
+          "full_name": "Повна назва",
           "nation": "Нація",
           "class": "Клас",
           "tier": "Рівень",
@@ -617,7 +617,7 @@
             "hullTraverseHardTerrain": "Hard",
             "hullTraverseMediumTerrain": "Середній",
             "hullTraverseSoftTerrain": "Soft",
-            "health": "Health",
+            "health": "Здоров'я",
             "fireChance": "Fire chance",
             "viewRange": "View range",
             "camouflageStill": "Нерухомо",
@@ -742,10 +742,10 @@
         "name": "Gallery",
         "button": "Browse all",
         "description": "Blitz player avatars",
-        "seo_description": "All World of Tanks Blitz player avatars",
+        "seo_description": "Усі World of Tanks Blitz аватари гравців",
         "last_updated": "Last updated on {time}",
         "search": {
-          "hint": "Search avatars...",
+          "hint": "Шукаємо аватари...",
           "results": "{count} avatars"
         }
       },
@@ -782,18 +782,18 @@
         }
       },
       "tier_list": {
-        "name": "Tier list",
-        "button": "Rank tanks",
-        "description": "Rank Blitz tanks",
+        "name": "Список рівнів",
+        "button": "Ранги танків",
+        "description": "Ранги танків з блітзу",
         "seo_description": "Explore tier lists ranking tanks from best to worst, based on player ratings and statistical performance in World of Tanks Blitz",
         "buttons": {
-          "reset": "Reset",
-          "share": "Share"
+          "reset": "Скинути",
+          "share": "Поділитися"
         }
       },
       "embed": {
         "name": "Embed",
-        "button": "Create now",
+        "button": "Створити зараз",
         "description": "Embeds for streaming",
         "seo_description": "Create embeds for streaming World of Tanks Blitz with extreme customization",
         "coming_soon": "More embeds coming soon.",
@@ -804,20 +804,20 @@
         },
         "configuration": {
           "import": {
-            "title": "Import",
+            "title": "Імпортувати",
             "description": "Paste your current URL if you have one already to import your settings",
-            "hint": "Paste URL...",
+            "hint": "Вставити посилання...",
             "apply": "Apply",
-            "idiot_title": "Invalid URL",
+            "idiot_title": "Некоректне посилання",
             "idiot_description": "Try pasting the URL that BlitzKit previously generated, you silly goose!",
             "idiot_button": "Okay, my bad"
           },
           "export": {
-            "title": "Export",
+            "title": "Експортувати",
             "description": "Copy all properties for you streaming software",
             "generate": {
-              "button": "Generate URL",
-              "title": "Generate URL",
+              "button": "Згенерувати посилання",
+              "title": "Генерація посилання",
               "subtitle": "Search an account to track",
               "cancel": "",
               "success": {
@@ -834,7 +834,7 @@
           },
           "customize": {
             "title": "Customize",
-            "reset": "Reset",
+            "reset": "Скинути",
             "description": "Bells and whistles of your embed"
           }
         },
@@ -882,14 +882,14 @@
         "seo_description": "Live and archived full rating leaderboard for World of Tanks Blitz"
       },
       "discord": {
-        "name": "Discord bot",
-        "button": "Install now",
+        "name": "Діскорд бот",
+        "button": "Встановити зараз",
         "description": "Stats right in Discord",
         "seo_description": "Get stats right in Discord with BlitzKit's Discord bot"
       },
       "more": {
-        "name": "More coming soon",
-        "button": "Join Discord",
+        "name": "Буде через певний час",
+        "button": "Приєднатись до Діскорду",
         "description": "What we're making",
         "seo_description": "What we're making with BlitzKit"
       },
