@@ -4,7 +4,7 @@ let _api: BlitzKitAPI;
 
 if (import.meta.env.SSR) {
   const { ServerBlitzKitAPI } = await import(
-    "@blitzkit/core/src/blitzkit/api/server"
+    "@blitzkit/core/src/blitzkit/api/server/index"
   );
   const { vfs } = await import("./vfs");
 
