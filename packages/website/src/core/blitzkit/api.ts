@@ -1,13 +1,19 @@
-import { type BlitzKitAPI } from "@blitzkit/core";
-import { vfs } from "./vfs";
+import type { BlitzKitAPI } from "@blitzkit/core/src/blitzkit/api/base";
 
 let _api: BlitzKitAPI;
 
 if (import.meta.env.SSR) {
-  const { ServerBlitzKitAPI } = await import("@blitzkit/core");
+  const { ServerBlitzKitAPI } = await import(
+    "@blitzkit/core/src/blitzkit/api/server"
+  );
+  const { vfs } = await import("./vfs");
+
   _api = await new ServerBlitzKitAPI(vfs).init();
 } else {
-  const { ClientBlitzKitAPI } = await import("@blitzkit/core");
+  const { ClientBlitzKitAPI } = await import(
+    "@blitzkit/core/src/blitzkit/api/client"
+  );
+
   _api = new ClientBlitzKitAPI();
 }
 

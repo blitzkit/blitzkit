@@ -1,5 +1,4 @@
 import {
-  AbstractVFS,
   Armor,
   AssaultRanges,
   AvailableNationsYaml,
@@ -59,6 +58,7 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
+import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { parse as parsePath } from "path";
@@ -147,8 +147,6 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
   }
 
   async init() {
-    console.log("Initializing server; this will take a while...");
-
     console.log("Initializing virtual file system...");
     await this.vfs.init();
 
@@ -1650,7 +1648,7 @@ export class ServerBlitzKitAPI extends BlitzKitAPI {
   }
 }
 
-export function Cache(disableInDev = false) {
+function Cache(disableInDev = false) {
   const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
   return function <This, Arguments extends any[], Return>(
