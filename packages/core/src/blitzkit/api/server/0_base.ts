@@ -21,6 +21,8 @@ import {
   SquadBattleTypeStylesYaml,
   TankClass,
   TankmenAvatar,
+  toUniqueId,
+  VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
@@ -217,7 +219,20 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
       );
     }
 
-    console.log("Initialization complete, enjoy :)");
+    for (const nation of this.nationsDir!) {
+      const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
+        `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+      );
+
+      for (const tankKey in tankList.root) {
+        if (this.botPattern.test(tankKey)) continue;
+
+        const tank = tankList.root[tankKey];
+        const tankId = toUniqueId(nation, tank.id);
+
+        this.tankStringIdMap[`${nation}:${tankKey}`] = tankId;
+      }
+    }
 
     return this;
   }

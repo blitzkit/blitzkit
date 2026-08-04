@@ -11,7 +11,7 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
   async provisionDefinitions() {
     const provisionDefinitions = ProvisionDefinitions.create();
 
-    Object.entries(this.provisionsCommon).forEach(([key, provision]) => {
+    Object.entries(this.provisionsCommon).forEach(([, provision]) => {
       const entry: Provision = {
         id: provision.id,
         exclude: [],

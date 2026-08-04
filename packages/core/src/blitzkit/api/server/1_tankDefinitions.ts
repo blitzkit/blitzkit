@@ -15,7 +15,6 @@ import {
   ShellKind,
   sluggify,
   TankDefinitions,
-  TankParameters,
   TankPrice,
   TankPriceType,
   TankType,
@@ -26,10 +25,7 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
-import {
-  Cache,
-  ServerBlitzKitAPI0,
-} from "./0_base";
+import { Cache, ServerBlitzKitAPI0 } from "./0_base";
 
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   private parseResearchCost(raw: number | string) {
@@ -238,15 +234,10 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
         const tankDefinition = await this.vfs.xml<{ root: VehicleDefinitions }>(
           `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
         );
-        const tankParameters = await this.vfs.yaml<TankParameters>(
-          `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
-        );
         const tankId = toUniqueId(nation, tank.id);
 
         const tankTags = tank.tags.split(" ");
         const equipment = tankDefinition.root.optDevicePreset;
-
-        this.tankStringIdMap[`${nation}:${tankKey}`] = tankId;
 
         const slug = slugs.get(tankId);
 

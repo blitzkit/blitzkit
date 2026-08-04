@@ -3,6 +3,7 @@ import {
   CamouflageDefinitions,
   ConsumableDefinitions,
   GameDefinitions,
+  ModelDefinitions,
   ProvisionDefinitions,
   TankDefinitions,
 } from "../../protos";
@@ -27,5 +28,9 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   provisionDefinitions() {
     return fetchPB("/api/definitions/provisions.pb", ProvisionDefinitions);
+  }
+
+  modelDefinitions() {
+    return fetchPB("/api/definitions/models.pb", ModelDefinitions);
   }
 }
