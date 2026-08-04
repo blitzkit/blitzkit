@@ -1,11 +1,9 @@
-import {
-  AbstractVFS,
-  assertSecret,
-  LocalVFS,
-  MixedVFS,
-  SteamVFS,
-  ZipVFS,
-} from "@blitzkit/core";
+import { assertSecret } from "@blitzkit/core";
+import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import { LocalVFS } from "@blitzkit/core/src/blitzkit/vfs/local";
+import { MixedVFS } from "@blitzkit/core/src/blitzkit/vfs/mixed";
+import { SteamVFS } from "@blitzkit/core/src/blitzkit/vfs/steam";
+import { ZipVFS } from "@blitzkit/core/src/blitzkit/vfs/zip";
 
 export const PATCHES_ROOT = "../../temp/patches";
 
