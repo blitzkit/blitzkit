@@ -1,6 +1,6 @@
 import { MapDefinitions } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI3 } from "@blitzkit/core/src/blitzkit/api/server/3";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI3 } from "./3_modelDefinitions";
 
 export abstract class ServerBlitzKitAPI4 extends ServerBlitzKitAPI3 {
   @Cache()

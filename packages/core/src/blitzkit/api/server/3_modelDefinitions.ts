@@ -15,8 +15,8 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI2 } from "@blitzkit/core/src/blitzkit/api/server/2";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI2 } from "./2_camouflageDefinitions";
 import { parse as parsePath } from "path";
 import { Vector3Tuple } from "three";
 

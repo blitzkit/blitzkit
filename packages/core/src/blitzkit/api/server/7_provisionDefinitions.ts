@@ -3,8 +3,8 @@ import {
   Provision,
   ProvisionDefinitions,
 } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI6 } from "@blitzkit/core/src/blitzkit/api/server/6";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI6 } from "./6_consumableDefinitions";
 
 export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
   @Cache()

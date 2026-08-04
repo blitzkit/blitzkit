@@ -1,6 +1,6 @@
 import { CamouflageDefinitions } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI1 } from "@blitzkit/core/src/blitzkit/api/server/1";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI1 } from "./1_tankDefinitions";
 
 export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
   @Cache()

@@ -1,3 +1,3 @@
-import { ServerBlitzKitAPI9 } from "@blitzkit/core/src/blitzkit/api/server/9";
+import { ServerBlitzKitAPI9 } from "./9_gameDefinitions";
 
 export class ServerBlitzKitAPI extends ServerBlitzKitAPI9 {}

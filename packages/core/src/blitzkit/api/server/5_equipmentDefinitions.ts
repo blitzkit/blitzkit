@@ -1,6 +1,6 @@
 import { EquipmentDefinitions, EquipmentSlot } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI4 } from "@blitzkit/core/src/blitzkit/api/server/4";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI4 } from "./4_mapDefinitions";
 
 export abstract class ServerBlitzKitAPI5 extends ServerBlitzKitAPI4 {
   @Cache()

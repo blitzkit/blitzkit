@@ -3,8 +3,8 @@ import {
   Consumable,
   ConsumableDefinitions,
 } from "@blitzkit/core";
-import { Cache } from "@blitzkit/core/src/blitzkit/api/server/0";
-import { ServerBlitzKitAPI5 } from "@blitzkit/core/src/blitzkit/api/server/5";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI5 } from "./5_equipmentDefinitions";
 
 export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
   @Cache()

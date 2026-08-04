@@ -29,7 +29,7 @@ import {
 import {
   Cache,
   ServerBlitzKitAPI0,
-} from "@blitzkit/core/src/blitzkit/api/server/0";
+} from "./0_base";
 
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   private parseResearchCost(raw: number | string) {
