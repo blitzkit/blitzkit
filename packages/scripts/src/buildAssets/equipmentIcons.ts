@@ -3,14 +3,7 @@ import { AssetUploader } from "../core/github/assetUploader";
 import { vfs } from "./constants";
 import { OptionalDevices } from "./definitions";
 
-interface Mappings {
-  Header: { version: number };
 
-  StyleSheets: {
-    selectors: string[];
-    properties: { "bg-sprite": string };
-  }[];
-}
 
 export async function equipmentIcons() {
   console.log("Building equipment icons...");
