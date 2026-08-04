@@ -1,14 +1,14 @@
-import { asset, permanentSkills, romanize } from '@blitzkit/core';
-import { Flex } from '@radix-ui/themes';
-import { awaitableSkillDefinitions } from '../core/awaitables/skillDefinitions';
-import { GenericTankComponentButton } from './ModuleButtons/GenericTankComponentButton';
+import { permanentSkills, romanize } from "@blitzkit/core";
+import { Flex } from "@radix-ui/themes";
+import { api } from "../core/blitzkit/api";
+import { GenericTankComponentButton } from "./ModuleButtons/GenericTankComponentButton";
 
 interface CrewSkillManagerProps {
   skillLevels: Record<string, number>;
   onChange?: (skillLevels: Record<string, number>) => void;
 }
 
-const skillDefinitions = await awaitableSkillDefinitions;
+const skillDefinitions = await api.skillDefinitions();
 
 export function CrewSkillManager({
   skillLevels,
@@ -27,7 +27,7 @@ export function CrewSkillManager({
                 special={!permanentSkills.includes(skill)}
                 selected={level > 0}
                 discriminator={level === 0 ? undefined : romanize(level)}
-                icon={asset(`icons/skills/${skill}.webp`)}
+                icon={`/api/icons/skills/${skill}.webp`}
                 onClick={(event) => {
                   if (!onChange) return;
 

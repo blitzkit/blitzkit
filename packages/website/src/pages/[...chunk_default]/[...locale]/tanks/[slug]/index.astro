@@ -2,30 +2,25 @@
 import { AstroSeo } from "@astrolib/seo";
 import {
   assertSecret,
-  asset,
   createDefaultProvisions,
   createDefaultSkills,
-  fetchEquipmentDefinitions,
-  fetchModelDefinitions,
-  fetchProvisionDefinitions,
-  fetchSkillDefinitions,
-  fetchTankDefinitions,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { unwrapper } from "@blitzkit/i18n";
 import { literals } from "@blitzkit/i18n/src/literals";
 import type { GetStaticPaths } from "astro";
 import { load } from "cheerio";
-import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
-import { getStrings } from "../../../../core/i18n/getStrings";
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import { genericDefaultEquipmentMatrix } from "../../../../stores/duel/constants";
-import type { TankGuide } from "../../../../types/tankGuide";
+import { api } from "../../../../../core/blitzkit/api";
+import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
+import { getStrings } from "../../../../../core/i18n/getStrings";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { genericDefaultEquipmentMatrix } from "../../../../../stores/duel/constants";
+import type { TankGuide } from "../../../../../types/tankGuide";
 import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
-  const tankDefinitions = await fetchTankDefinitions();
+  const tankDefinitions = await api.tankDefinitions();
   const parentPaths = parentGetStaticPaths();
 
   return Object.values(tankDefinitions.tanks)
@@ -40,11 +35,11 @@ export const getStaticPaths = (async () => {
 
 const { id, locale } = Astro.props;
 const strings = getStrings(locale);
-const tankDefinitions = await fetchTankDefinitions();
-const skillDefinitions = await fetchSkillDefinitions();
-const provisionDefinitions = await fetchProvisionDefinitions();
-const equipmentDefinitions = await fetchEquipmentDefinitions();
-const tankModelDefinitions = await fetchModelDefinitions();
+const tankDefinitions = await api.tankDefinitions();
+const skillDefinitions = await api.skillDefinitions();
+const provisionDefinitions = await api.provisionDefinitions();
+const equipmentDefinitions = await api.equipmentDefinitions();
+const tankModelDefinitions = await api.modelDefinitions();
 
 const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
@@ -61,7 +56,7 @@ const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
 });
 const url = import.meta.env.SITE + Astro.url.pathname;
 
-const icon = asset(`icons/tanks/big/${id}.webp`);
+const icon = `/api/tanks/${id}/icons/big.webp`;
 const turret = tank.turrets.at(-1)!;
 const gun = turret.guns.at(-1)!;
 const shell = gun.shells[0];

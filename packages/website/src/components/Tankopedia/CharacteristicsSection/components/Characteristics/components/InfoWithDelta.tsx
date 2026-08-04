@@ -2,11 +2,7 @@ import { createDefaultSkills } from "@blitzkit/core";
 import { Flex, Progress, Text } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
-import { awaitableEquipmentDefinitions } from "../../../../../../core/awaitables/equipmentDefinitions";
-import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
-import { awaitableProvisionDefinitions } from "../../../../../../core/awaitables/provisionDefinitions";
-import { awaitableSkillDefinitions } from "../../../../../../core/awaitables/skillDefinitions";
-import { awaitableTankDefinitions } from "../../../../../../core/awaitables/tankDefinitions";
+import { api } from "../../../../../../core/blitzkit/api";
 import {
   tankCharacteristics,
   type TankCharacteristics,
@@ -41,11 +37,11 @@ const [
   modelDefinitions,
   skillDefinitions,
 ] = await Promise.all([
-  awaitableTankDefinitions,
-  awaitableProvisionDefinitions,
-  awaitableEquipmentDefinitions,
-  awaitableModelDefinitions,
-  awaitableSkillDefinitions,
+  api.tankDefinitions(),
+  api.provisionDefinitions(),
+  api.equipmentDefinitions(),
+  api.modelDefinitions(),
+  api.skillDefinitions(),
 ]);
 
 export const InfoWithDelta = memo<InfoWithDeltaProps>(

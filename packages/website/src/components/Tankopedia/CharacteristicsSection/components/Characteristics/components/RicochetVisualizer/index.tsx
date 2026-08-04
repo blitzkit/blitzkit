@@ -1,4 +1,4 @@
-import { asset, isExplosive } from "@blitzkit/core";
+import { isExplosive } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { useRef, useState } from "react";
@@ -124,7 +124,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
           />
 
           <img
-            src={asset(`icons/shells/${shell.icon}.webp`)}
+            src={`/api/icons/shells/${shell.icon}.webp`}
             style={{
               objectFit: "contain",
               transform: "translate(-50%, -50%) rotate(-45deg)",

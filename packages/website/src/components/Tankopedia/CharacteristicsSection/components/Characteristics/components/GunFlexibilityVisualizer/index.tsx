@@ -3,11 +3,11 @@ import { Box, Card, Flex } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { useRef, useState } from "react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
-import { awaitableModelDefinitions } from "../../../../../../../core/awaitables/modelDefinitions";
 import {
   DEFAULT_PITCH_TRANSITION,
   applyPitchYawLimits,
 } from "../../../../../../../core/blitz/applyPitchYawLimits";
+import { api } from "../../../../../../../core/blitzkit/api";
 import { hasEquipment } from "../../../../../../../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../../../../../../../core/blitzkit/modelTransform";
 import { Var } from "../../../../../../../core/radix/var";
@@ -20,7 +20,7 @@ import { FlexibilityCanvas } from "./components/FlexibilityCanvas";
 
 const ANGLE_COEFFICIENT = 1 / 10;
 
-const modelDefinition = await awaitableModelDefinitions;
+const modelDefinition = await api.modelDefinitions();
 
 function mag(x: number) {
   return (1 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1 / 2;

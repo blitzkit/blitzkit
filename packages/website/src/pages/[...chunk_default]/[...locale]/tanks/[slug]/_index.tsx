@@ -1,23 +1,22 @@
 import { TankType } from "@blitzkit/core";
-import { PageWrapper } from "../../../../components/PageWrapper";
-import { CalloutsSection } from "../../../../components/Tankopedia/CalloutsSection";
-import { CharacteristicsSection } from "../../../../components/Tankopedia/CharacteristicsSection";
-import { GameModeSection } from "../../../../components/Tankopedia/GameModeSection";
-import { GuideSection } from "../../../../components/Tankopedia/GuideSection";
-import { HeroSection } from "../../../../components/Tankopedia/HeroSection";
-import { MetaSection } from "../../../../components/Tankopedia/MetaSection";
-import { TechTreeSection } from "../../../../components/Tankopedia/TechTreeSection";
-import { VideoSection } from "../../../../components/Tankopedia/VideoSection";
-import { awaitableModelDefinitions } from "../../../../core/awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
+import { PageWrapper } from "../../../../../components/PageWrapper";
+import { CalloutsSection } from "../../../../../components/Tankopedia/CalloutsSection";
+import { CharacteristicsSection } from "../../../../../components/Tankopedia/CharacteristicsSection";
+import { GameModeSection } from "../../../../../components/Tankopedia/GameModeSection";
+import { GuideSection } from "../../../../../components/Tankopedia/GuideSection";
+import { HeroSection } from "../../../../../components/Tankopedia/HeroSection";
+import { MetaSection } from "../../../../../components/Tankopedia/MetaSection";
+import { TechTreeSection } from "../../../../../components/Tankopedia/TechTreeSection";
+import { VideoSection } from "../../../../../components/Tankopedia/VideoSection";
+import { api } from "../../../../../core/blitzkit/api";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../../hooks/useLocale";
-import { Duel } from "../../../../stores/duel";
-import { Tankopedia } from "../../../../stores/tankopedia";
-import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
-import type { TankGuide } from "../../../../types/tankGuide";
+} from "../../../../../hooks/useLocale";
+import { Duel } from "../../../../../stores/duel";
+import { Tankopedia } from "../../../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
+import type { TankGuide } from "../../../../../types/tankGuide";
 
 type PageProps = MaybeSkeletonComponentProps &
   LocaleAcceptorProps & {
@@ -26,8 +25,8 @@ type PageProps = MaybeSkeletonComponentProps &
   };
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
-  awaitableModelDefinitions,
+  api.tankDefinitions(),
+  api.modelDefinitions(),
 ]);
 
 export function Page({ id, skeleton, locale, guide }: PageProps) {

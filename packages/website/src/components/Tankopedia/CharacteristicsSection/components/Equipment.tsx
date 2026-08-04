@@ -1,18 +1,18 @@
 import { Button, Flex, Heading } from "@radix-ui/themes";
-import { awaitableEquipmentDefinitions } from "../../../../core/awaitables/equipmentDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { EquipmentManager } from "../../../EquipmentManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const equipmentDefinitions = await awaitableEquipmentDefinitions;
+const equipmentDefinitions = await api.equipmentDefinitions();
 
 export function Equipment() {
   const protagonist = Duel.use((state) => state.protagonist);
   const equipmentPreset =
     equipmentDefinitions.presets[protagonist.tank.equipment_preset];
   const equipmentMatrix = Duel.use(
-    (state) => state.protagonist.equipmentMatrix
+    (state) => state.protagonist.equipmentMatrix,
   );
   const { strings } = useLocale();
 

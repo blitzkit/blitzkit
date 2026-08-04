@@ -1,7 +1,7 @@
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import type { Group } from "three";
-import { awaitableModelDefinitions } from "../../../../../../../../core/awaitables/modelDefinitions";
+import { api } from "../../../../../../../../core/blitzkit/api";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
@@ -9,7 +9,7 @@ import {
 import { Duel } from "../../../../../../../../stores/duel";
 import { ModelChunk } from "./ModelChunk";
 
-const modelDefinitions = await awaitableModelDefinitions;
+const modelDefinitions = await api.modelDefinitions();
 
 export function CanvasContent() {
   const hullWrapper = useRef<Group>(null);

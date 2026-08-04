@@ -1,7 +1,7 @@
 import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { useEffect, useMemo, useRef } from "react";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { api } from "../../../core/blitzkit/api";
 import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
@@ -12,7 +12,7 @@ import { Options } from "./components/Options";
 import { TankSandbox } from "./components/TankSandbox";
 import { Title } from "./components/TankSandbox/Title";
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const equalize = Duel.use((state) => state.equalize);

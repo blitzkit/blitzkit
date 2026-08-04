@@ -1,7 +1,7 @@
-import type { EquipmentMatrix } from '../../stores/duel';
-import { awaitableEquipmentDefinitions } from '../awaitables/equipmentDefinitions';
+import type { EquipmentMatrix } from "../../stores/duel";
+import { api } from "./api";
 
-const equipmentDefinitions = await awaitableEquipmentDefinitions;
+const equipmentDefinitions = await api.equipmentDefinitions();
 
 export function hasEquipment(
   id: number,
@@ -16,7 +16,7 @@ export function hasEquipment(
 
     if (choice === 0) return false;
 
-    const equipped = slot[choice === -1 ? 'left' : 'right'];
+    const equipped = slot[choice === -1 ? "left" : "right"];
 
     return equipped === id;
   });

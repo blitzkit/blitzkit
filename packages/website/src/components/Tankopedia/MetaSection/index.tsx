@@ -1,9 +1,4 @@
-import {
-  asset,
-  TankPriceType,
-  TankType,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { TankPriceType, TankType, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { Box, Flex } from "@radix-ui/themes";
 import { Var } from "../../../core/radix/var";
 import { useLocale } from "../../../hooks/useLocale";
@@ -40,7 +35,7 @@ export function MetaSection() {
       >
         <Box
           style={{
-            background: `url(${asset(`flags/scratched/${protagonist.nation}.webp`)})`,
+            background: `url(${`/api/flags/scratched/${protagonist.nation}.webp`})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "min(53rem, 80vw)",
             backgroundPosition: "-8rem 50%",
@@ -65,7 +60,7 @@ export function MetaSection() {
                       <img
                         style={{ width: "1em", height: "1em" }}
                         alt={protagonist.nation}
-                        src={asset(`flags/circle/${protagonist.nation}.webp`)}
+                        src={`/api/flags/circle/${protagonist.nation}.webp`}
                       />
                       {
                         strings.common.nations[
@@ -135,7 +130,7 @@ export function MetaSection() {
                         <img
                           style={{ width: "1em", height: "1em" }}
                           alt="gold"
-                          src={asset("icons/currencies/gold.webp")}
+                          src={"/api/icons/currencies/gold.webp"}
                         />
                       </Flex>
                     </Listing>
@@ -152,14 +147,12 @@ export function MetaSection() {
                       <img
                         style={{ width: "1em", height: "1em" }}
                         alt={TankPriceType[protagonist.price!.type]}
-                        src={asset(
-                          `icons/currencies/${
-                            protagonist.price!.type ===
-                            TankPriceType.TANK_PRICE_TYPE_GOLD
-                              ? "gold"
-                              : "silver"
-                          }.webp`,
-                        )}
+                        src={`/api/icons/currencies/${
+                          protagonist.price!.type ===
+                          TankPriceType.TANK_PRICE_TYPE_GOLD
+                            ? "gold"
+                            : "silver"
+                        }.webp`}
                       />
                     </Flex>
                   </Listing>
@@ -169,14 +162,12 @@ export function MetaSection() {
                       <img
                         style={{ width: "1em", height: "1em" }}
                         alt={TankPriceType[protagonist.price!.type]}
-                        src={asset(
-                          `icons/currencies/${
-                            protagonist.price!.type ===
-                            TankPriceType.TANK_PRICE_TYPE_GOLD
-                              ? "gold"
-                              : "silver"
-                          }.webp`,
-                        )}
+                        src={`/api/icons/currencies/${
+                          protagonist.price!.type ===
+                          TankPriceType.TANK_PRICE_TYPE_GOLD
+                            ? "gold"
+                            : "silver"
+                        }.webp`}
                       />
                     </Flex>
                   </Listing>
@@ -192,7 +183,7 @@ export function MetaSection() {
                         <img
                           style={{ width: "1em", height: "1em" }}
                           alt="xp"
-                          src={asset("icons/currencies/xp.webp")}
+                          src={"/api/icons/currencies/xp.webp"}
                         />
                       </Flex>
                     </Listing>

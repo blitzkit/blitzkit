@@ -1,8 +1,8 @@
-import { asset, formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Skeleton, Text } from "@radix-ui/themes";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
@@ -15,7 +15,7 @@ type NodeProps = MaybeSkeletonComponentProps & {
 };
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
   awaitableAverageDefinitions,
 ]);
 
@@ -58,7 +58,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         mx={highlight ? "2" : "0"}
         style={{
           background: highlight
-            ? `url(${asset(`flags/fade_small/${tank.nation}.webp`)})`
+            ? `url(${`/api/flags/fade/${tank.nation}.webp`})`
             : undefined,
           backgroundPosition: "center",
           backgroundSize: "cover",

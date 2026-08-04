@@ -8,7 +8,7 @@ import {
   type TurretDefinition,
 } from "@blitzkit/core";
 import { Varuna } from "varuna";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 
 type EquipmentMatrixItem = -1 | 0 | 1;
@@ -44,7 +44,7 @@ export interface DuelStore {
   equalize: boolean;
 }
 
-const provisionDefinitions = await awaitableProvisionDefinitions;
+const provisionDefinitions = await api.provisionDefinitions();
 
 export const Duel = new Varuna<
   DuelStore,

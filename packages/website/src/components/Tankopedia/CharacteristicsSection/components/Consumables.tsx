@@ -8,29 +8,29 @@ import {
   Popover,
   Text,
 } from "@radix-ui/themes";
-import { awaitableConsumableDefinitions } from "../../../../core/awaitables/consumableDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import { useEquipment } from "../../../../hooks/useEquipment";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { ConsumablesManager } from "../../../ConsumablesManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const consumableDefinitions = await awaitableConsumableDefinitions;
+const consumableDefinitions = await api.consumableDefinitions();
 
 export function Consumables() {
   const protagonist = Duel.use((state) => state.protagonist);
   const consumables = Duel.use((state) => state.protagonist.consumables);
   const consumablesList = Object.values(
-    consumableDefinitions.consumables
+    consumableDefinitions.consumables,
   ).filter((consumable) =>
     checkConsumableProvisionInclusivity(
       consumable,
       protagonist.tank,
-      protagonist.gun
-    )
+      protagonist.gun,
+    ),
   );
   const cooldownBooster = Duel.use(
-    (state) => state.protagonist.cooldownBooster
+    (state) => state.protagonist.cooldownBooster,
   );
   const hasConsumableDeliverySystem = useEquipment(118);
   const hasHighEndConsumables = useEquipment(101);

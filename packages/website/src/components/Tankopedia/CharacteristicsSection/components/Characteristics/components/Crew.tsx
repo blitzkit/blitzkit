@@ -3,7 +3,7 @@ import { literals } from "@blitzkit/i18n";
 import { AccessibilityIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, Popover, Text } from "@radix-ui/themes";
 import { Fragment } from "react/jsx-runtime";
-import { awaitableProvisionDefinitions } from "../../../../../../core/awaitables/provisionDefinitions";
+import { api } from "../../../../../../core/blitzkit/api";
 import { useEquipment } from "../../../../../../hooks/useEquipment";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
@@ -11,7 +11,7 @@ import { InfoWithDelta } from "./InfoWithDelta";
 import { StatsTableWrapper } from "./StatsTableWrapper";
 import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
-const provisionDefinitions = await awaitableProvisionDefinitions;
+const provisionDefinitions = await api.provisionDefinitions();
 
 export function Crew({ stats }: StatsAcceptorProps) {
   const tank = Duel.use((state) => state.protagonist.tank);

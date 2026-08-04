@@ -1,5 +1,4 @@
 import {
-  asset,
   EngineDefinition,
   formatCompact,
   GunDefinition,
@@ -20,7 +19,7 @@ import {
   Text,
   Tooltip,
 } from "@radix-ui/themes";
-import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { LinkI18n } from "../../../LinkI18n";
@@ -111,7 +110,7 @@ function ModuleButton({
 
           <img
             alt={unlock.cost!.type}
-            src={asset(`icons/currencies/${unlock.cost!.type}.webp`)}
+            src={`/api/icons/currencies/${unlock.cost!.type}.webp`}
             style={{
               width: 12,
               height: 12,
@@ -126,7 +125,7 @@ function ModuleButton({
         src={
           isTank
             ? tankIcon(unlock.id)
-            : asset(`icons/modules/${moduleTypeTypeIconName[unlock.type]}.webp`)
+            : `/api/icons/modules/${moduleTypeTypeIconName[unlock.type]}.webp`
         }
         style={{
           width: isTank ? 64 : 32,
@@ -153,7 +152,7 @@ function ModuleButton({
   return <Tooltip content={tooltip}>{node}</Tooltip>;
 }
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function Modules() {
   const tank = Duel.use((state) => state.protagonist.tank);

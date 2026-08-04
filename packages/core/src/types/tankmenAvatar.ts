@@ -1,8 +1,6 @@
-import { TankClass } from "@blitzkit/core";
-
 export interface TankmenAvatar {
   roles: unknown;
-  skillsByClasses: Record<TankClass, string>;
+  skillsByClasses: Record<string, string>;
   skills: {
     [name: string]: {
       userString: string;

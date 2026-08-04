@@ -1,5 +1,4 @@
 import {
-  asset,
   resolvePenetrationCoefficient,
   TIER_ROMAN_NUMERALS,
   uniqueGuns,
@@ -140,7 +139,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
 
                 <img
                   alt="Antagonist Gun"
-                  src={asset("icons/modules/gun.webp")}
+                  src={"/api/icons/modules/gun.webp"}
                   style={{
                     width: "65%",
                     height: "65%",
@@ -209,7 +208,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             >
               <img
                 alt={unwrap(thisShell.name!)}
-                src={asset(`icons/shells/${thisShell.icon}.webp`)}
+                src={`/api/icons/shells/${thisShell.icon}.webp`}
                 style={{
                   width: "50%",
                   height: "50%",
@@ -246,7 +245,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           >
             <img
               alt="Calibrated Shells"
-              src={asset("icons/equipment/103.webp")}
+              src={"/api/icons/equipment/103.webp"}
               style={{
                 width: "50%",
                 height: "50%",
@@ -271,7 +270,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           >
             <img
               alt="Enhanced Armor"
-              src={asset("icons/equipment/110.webp")}
+              src={"/api/icons/equipment/110.webp"}
               style={{
                 width: "50%",
                 height: "50%",

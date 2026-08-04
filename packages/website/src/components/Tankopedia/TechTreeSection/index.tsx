@@ -1,9 +1,9 @@
-import { asset, TankType } from "@blitzkit/core";
+import { TankType } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { api } from "../../../core/blitzkit/api";
 import { useLocale } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
@@ -13,7 +13,7 @@ import { Node } from "./components/Node";
 
 type Line = number[];
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export const XP_MULTIPLIERS = [1, 2, 3, 4, 5, 10];
 
@@ -105,7 +105,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="XP"
-                  src={asset("icons/currencies/xp.webp")}
+                  src={"/api/icons/currencies/xp.webp"}
                   style={{
                     width: "1em",
                     height: "1em",

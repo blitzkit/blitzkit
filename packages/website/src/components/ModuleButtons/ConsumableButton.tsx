@@ -1,7 +1,6 @@
-import { asset } from "@blitzkit/core";
 import { ClockIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Flex, Text } from "@radix-ui/themes";
-import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { useDelta } from "../../hooks/useDelta";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
@@ -13,7 +12,7 @@ interface ConsumableButtonProps extends TankComponentButtonProps {
   cooldown?: number;
 }
 
-const consumableDefinitions = await awaitableConsumableDefinitions;
+const consumableDefinitions = await api.consumableDefinitions();
 
 export function ConsumableButton({
   consumable,
@@ -29,7 +28,7 @@ export function ConsumableButton({
     <GenericTankComponentButton
       style={{ width: "6rem" }}
       tooltip={unwrap(consumableDefinitions.consumables[consumable].name!)}
-      icon={asset(`icons/consumables/${consumable}.webp`)}
+      icon={`/api/icons/consumables/${consumable}.webp`}
       {...props}
     >
       {(cooldown || duration) && (
