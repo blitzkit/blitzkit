@@ -1,11 +1,11 @@
-import { GalleryList } from "../../../components/Gallery/List";
-import { GallerySearch } from "../../../components/Gallery/Search";
-import { PageWrapper } from "../../../components/PageWrapper";
+import { GalleryList } from "../../../../components/Gallery/List";
+import { GallerySearch } from "../../../../components/Gallery/Search";
+import { PageWrapper } from "../../../../components/PageWrapper";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+} from "../../../../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 export function Page({
   locale,
