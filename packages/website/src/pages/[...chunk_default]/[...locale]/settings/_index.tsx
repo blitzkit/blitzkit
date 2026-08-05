@@ -1,12 +1,12 @@
 import { Flex, Switch, Text } from "@radix-ui/themes";
-import { LocaleSwitcher } from "../../../components/LocaleSwitcher";
-import { PageWrapper } from "../../../components/PageWrapper";
+import { LocaleSwitcher } from "../../../../components/LocaleSwitcher";
+import { PageWrapper } from "../../../../components/PageWrapper";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
-import { App } from "../../../stores/app";
+} from "../../../../hooks/useLocale";
+import { App } from "../../../../stores/app";
 
 export function Page({ locale }: LocaleAcceptorProps) {
   return (

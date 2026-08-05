@@ -2,14 +2,14 @@
 import { AstroSeo } from "@astrolib/seo";
 import type { GetStaticPaths } from "astro";
 import { readFile } from "fs/promises";
-import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import BaseLayout from "../../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as parentGetStaticPaths } from "../../../index.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = (async () => {
   const parentPaths = parentGetStaticPaths();
-  const ROOT = "../../../../../../../../docs/";
-  const files = import.meta.glob("../../../../../../../../docs/**/*.md", {
+  const ROOT = "../../../../../../../../../docs/";
+  const files = import.meta.glob("../../../../../../../../../docs/**/*.md", {
     eager: true,
   });
 
@@ -19,7 +19,7 @@ export const getStaticPaths = (async () => {
         const couple = file.replace(ROOT, "").split("/");
         couple[1] = couple[1].replace(".md", "");
         const content = await readFile(
-          `../../docs/${couple[0]}/${couple[1]}.md`
+          `../../docs/${couple[0]}/${couple[1]}.md`,
         ).then((buffer) => buffer.toString());
 
         return parentPaths.map((parent) => ({
@@ -30,7 +30,7 @@ export const getStaticPaths = (async () => {
           },
           props: { ...parent.props, content },
         }));
-      })
+      }),
     )
   ).flat();
 }) satisfies GetStaticPaths;

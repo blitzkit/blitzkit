@@ -1,5 +1,5 @@
-import { Markdown } from "../../../../../components/Markdown";
-import { PageWrapper } from "../../../../../components/PageWrapper";
+import { Markdown } from "../../../../../../components/Markdown";
+import { PageWrapper } from "../../../../../../components/PageWrapper";
 
 interface PageProps {
   content: string;
