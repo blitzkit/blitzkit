@@ -38,7 +38,7 @@ env:
   # steam
   STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
   STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-  STEAM_APP: 444202
+  STEAM_APP: 444200
   STEAM_OS: windows
 
 jobs:
