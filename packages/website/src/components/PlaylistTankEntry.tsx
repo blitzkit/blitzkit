@@ -5,7 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Checkbox, Flex, IconButton, Table, Text } from "@radix-ui/themes";
 import { memo } from "react";
-import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
+import { api } from "../core/blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Playlist, type PlaylistEntry } from "../stores/playlist";
 import { TankRowHeaderCell } from "./TankRowHeaderCell";
@@ -14,7 +14,7 @@ interface Props extends PlaylistEntry {
   index: number;
 }
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export const PlaylistTankEntry = memo<Props>(
   ({ id, checked, then, now, index }) => {
@@ -93,7 +93,7 @@ export const PlaylistTankEntry = memo<Props>(
           {now && now.last !== 0
             ? rtf.format(
                 Math.ceil((now.last - dateNow / 1000) / (60 * 60 * 24)),
-                "day"
+                "day",
               )
             : strings.website.tools.playlist.table.unrecorded}
         </Table.Cell>
@@ -103,5 +103,5 @@ export const PlaylistTankEntry = memo<Props>(
   (a, b) =>
     a.checked === b.checked &&
     a.then?.battles === b.then?.battles &&
-    a.index === b.index
+    a.index === b.index,
 );
