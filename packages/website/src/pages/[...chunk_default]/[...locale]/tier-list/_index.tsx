@@ -1,13 +1,13 @@
-import { PageWrapper } from "../../../components/PageWrapper";
-import { FilterControl } from "../../../components/TankSearch/components/FilterControl";
-import { TierListControls } from "../../../components/TierList/Controls";
-import { TierListTable } from "../../../components/TierList/Table";
-import { TierListTiles } from "../../../components/TierList/Tiles";
-import { URLManager } from "../../../components/TierList/URLManager";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { FilterControl } from "../../../../components/TankSearch/components/FilterControl";
+import { TierListControls } from "../../../../components/TierList/Controls";
+import { TierListTable } from "../../../../components/TierList/Table";
+import { TierListTiles } from "../../../../components/TierList/Tiles";
+import { URLManager } from "../../../../components/TierList/URLManager";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
+} from "../../../../hooks/useLocale";
 
 export function Page({ locale }: LocaleAcceptorProps) {
   return (

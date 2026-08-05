@@ -1,16 +1,16 @@
-import { Flex, Table } from '@radix-ui/themes';
-import { useEffect, useRef } from 'react';
-import { awaitableTankDefinitions } from '../../../core/awaitables/tankDefinitions';
-import { TierList } from '../../../stores/tierList';
-import { tierListRowElements } from '../Table/constants';
-import { TierListTile } from '../Tile';
-import { Header } from './components/Header';
+import { Flex, Table } from "@radix-ui/themes";
+import { useEffect, useRef } from "react";
+import { api } from "../../../core/blitzkit/api";
+import { TierList } from "../../../stores/tierList";
+import { tierListRowElements } from "../Table/constants";
+import { TierListTile } from "../Tile";
+import { Header } from "./components/Header";
 
 interface TierListRowProps {
   index: number;
 }
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function TierListRow({ index }: TierListRowProps) {
   const tanks = TierList.use((state) => state.rows[index].tanks);
