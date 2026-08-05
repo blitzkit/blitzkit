@@ -45,6 +45,9 @@ jobs:
         chunk: [default, api]
 
     steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
