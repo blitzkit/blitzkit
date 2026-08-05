@@ -36,21 +36,36 @@ env:
 jobs:
   build:
     name: Build website
+
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        chunk: [default, api]
+
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
-      - uses: oven-sh/setup-bun@v2
-      - uses: arduino/setup-protoc@v3
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v3
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
-      - uses: actions/configure-pages@v6
-      - run: bun run setup
 
-      - name: Build website
-        run: bun run build:website
+      - name: Configure pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

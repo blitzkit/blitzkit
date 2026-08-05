@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "cd packages/website && bun run dev",
+    "build": "cd packages/website && bun run build",
     "build:averages": "cd packages/scripts && bun run build:averages"
   },
   "type": "module",
