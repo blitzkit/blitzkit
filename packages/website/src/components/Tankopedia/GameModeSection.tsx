@@ -37,7 +37,7 @@ export function GameModeSection() {
               direction="column"
               style={{
                 borderRadius: "var(--radius-3)",
-                background: `url(/api/icons/game_mode_banners/${id}.webp)`,
+                background: `url(/api/gamemodes/${id}/banner.webp)`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -45,7 +45,7 @@ export function GameModeSection() {
               <Box
                 flexGrow="1"
                 style={{
-                  background: `url(/api/icons/game_mode_banners/${id}.webp)`,
+                  background: `url(/api/gamemodes/${id}/banner.webp)`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

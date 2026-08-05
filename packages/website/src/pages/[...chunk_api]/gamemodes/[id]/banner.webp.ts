@@ -1,12 +1,13 @@
+import type { SquadBattleTypeStylesYaml } from "@blitzkit/core";
+import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
-import { AssetUploader } from "../core/github/assetUploader";
-import { vfs } from "./constants";
-import { SquadBattleTypeStylesYaml } from "./definitions";
+import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { vfs } from "../../../../core/blitzkit/vfs";
+import { getStaticPaths as _getStaticPaths } from "../../_index";
 
-export async function gameModeBanners() {
-  console.log("Building game mode banners...");
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const paths: GetStaticPathsItem[] = [];
 
-  using uploader = new AssetUploader("game mode banners");
   const gameTypeSelectorStyles = await vfs.yaml<SquadBattleTypeStylesYaml>(
     `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
   );
@@ -34,15 +35,20 @@ export async function gameModeBanners() {
       path = `/Gfx/UI/Hangar/GameTypes/battle-type_${name.toLowerCase()}`;
     }
 
-    const content = await sharp(await vfs.file(`Data${path}.packed.webp`))
-      .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .toBuffer();
-
-    await uploader.add({
-      path: `icons/game_mode_banners/${id}.webp`,
-      content,
+    paths.push({
+      params: { id },
+      props: { path: `Data${path}.packed.webp` },
     });
   }
 
-  await uploader.flush();
+  return paths;
+});
+
+export async function GET({ props }: APIContext<{ path: string }>) {
+  const buffer = await sharp(await vfs.file(props.path))
+    .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .toBuffer();
+  const bytes = new Uint8Array(buffer);
+
+  return new Response(bytes);
 }

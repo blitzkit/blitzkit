@@ -33,7 +33,7 @@ export function Equalizer() {
         style={{
           cursor: "pointer",
           borderRadius: "var(--radius-3)",
-          backgroundImage: "url(/api/icons/game_mode_banners/45.webp)",
+          backgroundImage: "url(/api/gamemodes/45/banner.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           overflow: "hidden",
