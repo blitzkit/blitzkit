@@ -1,7 +1,6 @@
 import { Box } from "@radix-ui/themes";
 import { useEffect } from "react";
-import { awaitableModelDefinitions } from "../../core/awaitables/modelDefinitions";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 import { Var } from "../../core/radix/var";
 import { Duel } from "../../stores/duel";
@@ -10,8 +9,8 @@ import { Tankopedia } from "../../stores/tankopedia";
 import "./index.css";
 
 const [modelDefinitions, provisionDefinitions] = await Promise.all([
-  awaitableModelDefinitions,
-  awaitableProvisionDefinitions,
+  api.modelDefinitions(),
+  api.provisionDefinitions(),
 ]);
 
 export function GuessBackground() {
@@ -42,7 +41,7 @@ export function GuessBackground() {
               ? "accent-2"
               : guessState === GuessState.Correct
                 ? "jade-3"
-                : "tomato-3"
+                : "tomato-3",
           ),
         }}
       >

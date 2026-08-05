@@ -1,25 +1,24 @@
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import { Suspense, useEffect } from "react";
-import { GuessBackground } from "../../../components/GuessBackground";
-import { Guesser } from "../../../components/Guesser";
-import { GuessRenderer } from "../../../components/GuessRenderer";
-import { GuessRendererLoader } from "../../../components/GuessRendererLoader";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { GuessBackground } from "../../../../components/GuessBackground";
+import { Guesser } from "../../../../components/Guesser";
+import { GuessRenderer } from "../../../../components/GuessRenderer";
+import { GuessRendererLoader } from "../../../../components/GuessRendererLoader";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { api } from "../../../../core/blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from "../../../hooks/useLocale";
-import { Duel } from "../../../stores/duel";
-import { Guess, GuessState } from "../../../stores/guess";
-import { Tankopedia } from "../../../stores/tankopedia";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+} from "../../../../hooks/useLocale";
+import { Duel } from "../../../../stores/duel";
+import { Guess, GuessState } from "../../../../stores/guess";
+import { Tankopedia } from "../../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
-  awaitableModelDefinitions,
+  api.tankDefinitions(),
+  api.modelDefinitions(),
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);
