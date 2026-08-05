@@ -17,21 +17,22 @@ concurrency:
   cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
 env:
-  PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
-  PUBLIC_PROMOTE_OPENTEST: ${{ secrets.PUBLIC_PROMOTE_OPENTEST }}
-  ALLOW_ROBOTS: ${{ secrets.ALLOW_ROBOTS }}
+  # blitzkit
+  PUBLIC_BRANCH: main
+  PUBLIC_PROMOTE_OPENTEST: false
+  PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
+  PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com
+
+  # blitz
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
-  PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
-  PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID: ${{ secrets.PUBLIC_GOOGLE_ANALYTICS_PROPERTY_ID }}
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
-  PUBLIC_DISCORD_SERVER_ID: ${{ secrets.PUBLIC_DISCORD_SERVER_ID }}
-  PUBLIC_ASSET_BASE: ${{ secrets.PUBLIC_ASSET_BASE }}
-  PUBLIC_BRANCH: ${{ secrets.PUBLIC_BRANCH }}
-  PUBLIC_GUIDE_WEBSITE: ${{ secrets.PUBLIC_GUIDE_WEBSITE }}
-  SERVICING: ${{ secrets.SERVICING }}
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  # google
+  PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
+
+  # wargaming
+  PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
 
 jobs:
   build:
@@ -66,6 +67,8 @@ jobs:
 
       - name: Build
         run: bun run build
+        env:
+          BUILD_CHUNK: ${{ matrix.chunk }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
