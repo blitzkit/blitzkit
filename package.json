@@ -4,7 +4,8 @@
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
-    "dev": "cd packages/website && bun run dev"
+    "dev": "cd packages/website && bun run dev",
+    "build:averages": "cd packages/scripts && bun run build:averages"
   },
   "type": "module",
   "workspaces": [

@@ -2,7 +2,6 @@ import {
   AverageDefinitions,
   AverageDefinitionsAllStats,
   AverageDefinitionsEntry,
-  type AverageDefinitionsManifest,
   type IndividualTankStats,
   REGIONS,
   type Region,
@@ -22,14 +21,6 @@ interface DataPoint {
   y: number;
   w: number;
 }
-
-type OptionalSecondLevel<T> = {
-  [P in keyof T]: P extends "samples"
-    ? T[P]
-    : {
-        [K in keyof T[P]]?: T[P][K];
-      };
-};
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
@@ -223,25 +214,15 @@ async function postWork() {
   });
 
   const time = Date.now();
-  const latest = Math.round(time / DAY);
   const averageDefinitions = {
     averages,
     samples,
     time,
   } satisfies AverageDefinitions;
 
-  const manifest: AverageDefinitionsManifest = {
-    version: 1,
-    latest,
-  };
-
   await uploader.add({
-    path: `averages/${latest}.pb`,
+    path: "averages.pb",
     content: AverageDefinitions.encode(averageDefinitions).finish(),
-  });
-  await uploader.add({
-    path: "averages/manifest.json",
-    content: new TextEncoder().encode(JSON.stringify(manifest)),
   });
 
   await uploader.flush();
