@@ -1,12 +1,12 @@
-import { PageWrapper } from "../../../components/PageWrapper";
-import { PlayerCountControl } from "../../../components/Performance/PlayerCountControl";
-import { TankTable } from "../../../components/Performance/Table";
-import { FilterControl } from "../../../components/TankSearch/components/FilterControl";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { PlayerCountControl } from "../../../../components/Performance/PlayerCountControl";
+import { TankTable } from "../../../../components/Performance/Table";
+import { FilterControl } from "../../../../components/TankSearch/components/FilterControl";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+} from "../../../../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 type PageProps = MaybeSkeletonComponentProps & LocaleAcceptorProps;
 
