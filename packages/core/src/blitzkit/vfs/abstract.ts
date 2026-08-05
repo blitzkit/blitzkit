@@ -14,7 +14,7 @@ export abstract class AbstractVFS {
 
   abstract has(path: string): Promise<boolean>;
 
-  abstract raw(path: string): Promise<Uint8Array>;
+  abstract raw(path: string): Promise<Uint8Array<ArrayBuffer>>;
 
   async resolve(path: string) {
     const normalized = normalize(path);
