@@ -2,7 +2,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { awaitablePopularTanks } from "../core/awaitables/popularTanks";
-import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
+import { api } from "../core/blitzkit/api";
 import {
   LocaleProvider,
   useLocale,
@@ -11,7 +11,7 @@ import {
 import { TankCard } from "./TankCard";
 
 const [tankDefinitions, popularTanks] = await Promise.all([
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
   awaitablePopularTanks,
 ]);
 

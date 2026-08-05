@@ -1,6 +1,6 @@
 import { FontBoldIcon, FontSizeIcon } from "@radix-ui/react-icons";
 import { Flex, Slider, Text } from "@radix-ui/themes";
-import type { EmbedPreviewControllerProps } from "../../pages/[...locale]/embed/[embed]/_index";
+import type { EmbedPreviewControllerProps } from "../../pages/[...chunk_default]/[...locale]/embed/[embed]/_index";
 import { EmbedState, type RadixSizeWithout0 } from "../../stores/embedState";
 import {
   radixTextWeights,
@@ -12,7 +12,9 @@ import { ColorControllerRaw } from "./ColorControllerRaw";
 export function RichText({ configKey }: EmbedPreviewControllerProps) {
   const state = EmbedState.use(
     (state) =>
-      state[configKey] as EmbedConfigItemType<EmbedItemType.RichText>["default"]
+      state[
+        configKey
+      ] as EmbedConfigItemType<EmbedItemType.RichText>["default"],
   );
 
   return (

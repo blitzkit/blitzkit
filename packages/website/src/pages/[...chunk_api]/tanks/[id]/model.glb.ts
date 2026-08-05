@@ -105,7 +105,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
     }
 
     if (textures) {
-      const { image: baseColor, hasAlpha } = await readBaseColor(
+      const baseColor = await readBaseColor(
         `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
         textures.miscMap
           ? `Data/3d/${dirname(path)}/${textures.miscMap}`
@@ -369,7 +369,6 @@ async function extractModel(vfs: AbstractVFS, path: string) {
 }
 
 async function readBaseColor(path: string, occlusionPath?: string) {
-  let hasAlpha = false;
   const baseRaw = await readTexture(path);
   const occlusionRaw = occlusionPath
     ? await readTexture(occlusionPath)
@@ -399,7 +398,6 @@ async function readBaseColor(path: string, occlusionPath?: string) {
     }
 
     const alpha = base[i * 4 + 3];
-    hasAlpha ||= alpha < 255;
 
     combined[i * 4 + 0] = Math.round(base[i * 4 + 0] * c);
     combined[i * 4 + 1] = Math.round(base[i * 4 + 1] * c);
@@ -413,7 +411,7 @@ async function readBaseColor(path: string, occlusionPath?: string) {
     .webp()
     .toBuffer();
 
-  return { hasAlpha, image };
+  return image;
 }
 
 async function readRoughnessMetallic(path: string) {

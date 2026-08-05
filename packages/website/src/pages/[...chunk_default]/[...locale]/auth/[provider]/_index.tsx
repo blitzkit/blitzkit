@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { App } from "../../../../stores/app";
+import { App } from "../../../../../stores/app";
 
 export const AUTH_PROVIDERS = ["wargaming"] as const;
 

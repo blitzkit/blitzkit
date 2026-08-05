@@ -1,22 +1,22 @@
 import { Box } from "@radix-ui/themes";
 import { useMemo } from "react";
 import { parse } from "urlon";
-import { BlitzKitTheme } from "../../../../../components/BlitzKitTheme";
+import { BlitzKitTheme } from "../../../../../../components/BlitzKitTheme";
 import {
   embedConfigurations,
   embedRenderers,
   extractEmbedConfigDefaults,
-} from "../../../../../constants/embeds";
+} from "../../../../../../constants/embeds";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
-} from "../../../../../hooks/useLocale";
+} from "../../../../../../hooks/useLocale";
 import {
   EmbedState,
   type EmbedConfig,
   type ExtractEmbedConfigTypes,
-} from "../../../../../stores/embedState";
-import { useEmbedStateCurry } from "../../../../../stores/embedState/utilities";
+} from "../../../../../../stores/embedState";
+import { useEmbedStateCurry } from "../../../../../../stores/embedState/utilities";
 
 interface PageProps {
   embed: keyof typeof embedConfigurations;
