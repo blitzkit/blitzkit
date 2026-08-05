@@ -3,21 +3,21 @@ import { AstroSeo } from "@astrolib/seo";
 import { MagicWandIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, Link } from "@radix-ui/themes";
 import { compareVersions } from "compare-versions";
-import { PageWrapper } from "../../../../components/PageWrapper";
-import { getStrings } from "../../../../core/i18n/getStrings";
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { PageWrapper } from "../../../../../components/PageWrapper";
+import { getStrings } from "../../../../../core/i18n/getStrings";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../../index.astro";
 
 // this can't be used in template literal :(
-const ROOT = "../../../../../../../docs/changelogs/";
+const ROOT = "../../../../../../../../docs/changelogs/";
 
 const { locale } = Astro.props;
 const strings = getStrings(locale);
 const versions = Object.keys(
-  import.meta.glob("../../../../../../../docs/changelogs/*.md", {
+  import.meta.glob("../../../../../../../../docs/changelogs/*.md", {
     eager: true,
-  })
+  }),
 )
   .map((file) => file.replace(ROOT, "").replace(".md", ""))
   .sort(compareVersions)
