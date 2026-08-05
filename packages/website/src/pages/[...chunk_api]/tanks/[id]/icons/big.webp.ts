@@ -36,40 +36,32 @@ export async function GET({ props }: APIContext<{ id: number }>) {
       const bigPath = `Data/${parameters.resourcesPath.bigIconPath
         .replace(/~res:\//, "")
         .replace(/\..+/, "")}.packed.webp`;
-      const big = await extractPackedTankIcon(
-        await vfs.file(bigPath),
-        `tank ${tankKey} big`,
-      );
+      const big = await extractPackedTankIcon(await vfs.file(bigPath));
 
       return new Response(big);
     }
   }
 }
 
-export async function extractPackedTankIcon(
-  bytes: Uint8Array,
-  context: string,
-) {
+export async function extractPackedTankIcon(bytes: Uint8Array) {
   const texture = sharp(bytes);
   const spriteRect = parsePackedSpriteRect(bytes);
 
   if (!spriteRect) {
-    throw new Error(`Missing RIFF sprite bounds for ${context}`);
+    throw new Error(`Missing RIFF sprite bounds`);
   }
 
   const [left, top, width, height] = spriteRect;
   const bounds = [left, top, width, height];
 
   if (!bounds.every(Number.isInteger)) {
-    throw new Error(
-      `Invalid RIFF sprite bounds for ${context}: ${bounds.join(" ")}`,
-    );
+    throw new Error(`Invalid RIFF sprite bounds: ${bounds.join(" ")}`);
   }
 
   const metadata = await texture.metadata();
 
   if (metadata.width === undefined || metadata.height === undefined) {
-    throw new Error(`Failed to read image dimensions for ${context}`);
+    throw new Error(`Failed to read image dimensions`);
   }
 
   if (
@@ -81,7 +73,7 @@ export async function extractPackedTankIcon(
     top + height > metadata.height
   ) {
     throw new Error(
-      `Out-of-bounds RIFF sprite for ${context}: ${bounds.join(" ")} in ${metadata.width}x${metadata.height}`,
+      `Out-of-bounds RIFF sprite: ${bounds.join(" ")} in ${metadata.width}x${metadata.height}`,
     );
   }
 
