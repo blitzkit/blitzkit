@@ -7,15 +7,20 @@ import { getStaticPaths as _getStaticPaths } from "../../_index";
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const paths: GetStaticPathsItem[] = [];
 
-  const files = await vfs
-    .dir(`Data/Gfx/Shared/tank-supply/ammunition/big`)
-    .then((files) => files.filter((file) => file.endsWith("_l.txt")));
+  const boosterFiles = await vfs
+    .dir("Data/Gfx/Shared/boosters")
+    .then((files) =>
+      files.filter(
+        (file) => !file.includes("@2x.txt") && !file.startsWith("texture0"),
+      ),
+    );
 
-  for (const file of files) {
-    const id = file.match(/(.+)_l\.txt/)![1];
-    const sizes = (
-      await vfs.text(`Data/Gfx/Shared/tank-supply/ammunition/big/${file}`)
-    )
+  for (const file of boosterFiles) {
+    const id = file.match(/booster_(.+).txt/)?.[1];
+
+    if (id === undefined) continue;
+
+    const sizes = (await vfs.text(`Data/Gfx/Shared/boosters/${file}`))
       .split("\n")[4]
       .split(" ")
       .map(Number);
@@ -31,9 +36,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
 export async function GET({ props }: APIContext<{ sizes: number[] }>) {
   const image = sharp(
-    await vfs.file(
-      `Data/Gfx/Shared/tank-supply/ammunition/big/texture0.packed.webp`,
-    ),
+    await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`),
   );
   const buffer = await image
     .clone()
