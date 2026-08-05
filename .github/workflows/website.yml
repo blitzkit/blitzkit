@@ -27,12 +27,19 @@ env:
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
+  GAME_DIR: temp/game
 
   # google
   PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
 
   # wargaming
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
+
+  # steam
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  STEAM_APP: 444202
+  STEAM_OS: windows
 
 jobs:
   build:
@@ -41,6 +48,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         chunk: [default, api]
 
@@ -67,6 +75,43 @@ jobs:
 
       - name: Install dependencies
         run: bun install
+
+      - name: Setup DepotDownloader
+        run: |
+          REPO_USER="SteamRE"
+          REPO_NAME="DepotDownloader"
+          TEMP="temp"
+
+          OUT="$TEMP/$REPO_NAME"
+          ZIP="$TEMP/$REPO_NAME.zip"
+
+          URL=$(
+            curl -s "https://api.github.com/repos/$REPO_USER/$REPO_NAME/releases/latest" \
+              | jq -r '.assets[]
+                | select(.name | contains("linux-x64"))
+                | .browser_download_url' \
+              | head -n 1
+          )
+
+          mkdir -p "$TEMP"
+          curl -L "$URL" -o "$ZIP"
+          unzip -p "$ZIP" "$REPO_NAME" > "$OUT"
+          rm "$ZIP"
+
+          chmod +x "$OUT"
+
+      - name: Download game
+        run: |
+          TEMP="temp"
+
+          DEPOT_DOWNLOADER="$TEMP/DepotDownloader"
+          GAME="$TEMP/game"
+
+          set -a
+          source .env
+          set +a
+
+          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME
 
       - name: Build
         run: bun run build

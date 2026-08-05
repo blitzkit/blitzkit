@@ -1,5 +1,4 @@
+import { assertSecret } from "@blitzkit/core";
 import { LocalVFS } from "@blitzkit/core/src/blitzkit/vfs/local";
 
-export const vfs = new LocalVFS(
-  "/run/media/tresabhi/Windows/Program Files/WindowsApps/7458BE2C.WorldofTanksBlitz_11.19.272.0_x64__x4tje2y229k00",
-);
+export const vfs = new LocalVFS(assertSecret(import.meta.env.GAME_DIR));
