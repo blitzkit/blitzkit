@@ -1,14 +1,14 @@
 import { Box, Flex, Link, Text } from "@radix-ui/themes";
-import { PreviewWrapper } from "../../../components/Embeds/PreviewWrapper";
-import { LinkI18n } from "../../../components/LinkI18n";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { embedConfigurations } from "../../../constants/embeds";
-import { Var } from "../../../core/radix/var";
+import { PreviewWrapper } from "../../../../components/Embeds/PreviewWrapper";
+import { LinkI18n } from "../../../../components/LinkI18n";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { embedConfigurations } from "../../../../constants/embeds";
+import { Var } from "../../../../core/radix/var";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from "../../../hooks/useLocale";
+} from "../../../../hooks/useLocale";
 
 export function Page({ locale }: LocaleAcceptorProps) {
   return (

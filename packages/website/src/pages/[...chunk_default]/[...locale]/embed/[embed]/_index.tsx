@@ -8,32 +8,32 @@ import {
 } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { CopyButton } from "../../../../components/CopyButton";
-import { Boolean } from "../../../../components/Embeds/Boolean";
-import { Color } from "../../../../components/Embeds/Color";
-import { Enum } from "../../../../components/Embeds/Enum";
-import { GenerateURL } from "../../../../components/Embeds/GenerateURL";
-import { Import } from "../../../../components/Embeds/Import";
-import { PreviewWrapper } from "../../../../components/Embeds/PreviewWrapper";
-import { Radius } from "../../../../components/Embeds/Radius";
-import { RichText } from "../../../../components/Embeds/RichText";
-import { Size } from "../../../../components/Embeds/Size";
-import { SizeWithout0 } from "../../../../components/Embeds/SizeWithout0";
-import { Slider } from "../../../../components/Embeds/Slider";
-import { TextController } from "../../../../components/Embeds/TextController";
-import { PageWrapper } from "../../../../components/PageWrapper";
+import { CopyButton } from "../../../../../components/CopyButton";
+import { Boolean } from "../../../../../components/Embeds/Boolean";
+import { Color } from "../../../../../components/Embeds/Color";
+import { Enum } from "../../../../../components/Embeds/Enum";
+import { GenerateURL } from "../../../../../components/Embeds/GenerateURL";
+import { Import } from "../../../../../components/Embeds/Import";
+import { PreviewWrapper } from "../../../../../components/Embeds/PreviewWrapper";
+import { Radius } from "../../../../../components/Embeds/Radius";
+import { RichText } from "../../../../../components/Embeds/RichText";
+import { Size } from "../../../../../components/Embeds/Size";
+import { SizeWithout0 } from "../../../../../components/Embeds/SizeWithout0";
+import { Slider } from "../../../../../components/Embeds/Slider";
+import { TextController } from "../../../../../components/Embeds/TextController";
+import { PageWrapper } from "../../../../../components/PageWrapper";
 import {
   embedConfigurations,
   extractEmbedConfigDefaults,
-} from "../../../../constants/embeds";
-import { NAVBAR_HEIGHT } from "../../../../constants/navbar";
+} from "../../../../../constants/embeds";
+import { NAVBAR_HEIGHT } from "../../../../../constants/navbar";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from "../../../../hooks/useLocale";
-import { EmbedState, type EmbedConfig } from "../../../../stores/embedState";
-import { EmbedItemType } from "../../../../stores/embedState/constants";
+} from "../../../../../hooks/useLocale";
+import { EmbedState, type EmbedConfig } from "../../../../../stores/embedState";
+import { EmbedItemType } from "../../../../../stores/embedState/constants";
 
 export interface EmbedPreviewControllerProps {
   configKey: string;
@@ -58,7 +58,7 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
 function Content({ embed }: PageProps) {
   const config = embedConfigurations[embed] as EmbedConfig;
   const [backgroundImage, setBackgroundImage] = useState(
-    "/assets/images/backgrounds/embed-default.webp"
+    "/assets/images/backgrounds/embed-default.webp",
   );
   const fileInput = useRef<HTMLInputElement>(null!);
   const { strings } = useLocale();
