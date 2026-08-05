@@ -2,6 +2,7 @@ import {
   CamouflageDefinitions,
   ConsumableDefinitions,
   EquipmentDefinitions,
+  Gallery,
   GameDefinitions,
   MapDefinitions,
   ModelDefinitions,
@@ -20,4 +21,5 @@ export abstract class BlitzKitAPI {
   abstract camouflageDefinitions(): Promise<CamouflageDefinitions>;
   abstract tankDefinitions(): Promise<TankDefinitions>;
   abstract gameDefinitions(): Promise<GameDefinitions>;
+  abstract galleryDefinitions(): Promise<Gallery>;
 }

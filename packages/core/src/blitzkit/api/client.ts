@@ -3,6 +3,7 @@ import {
   CamouflageDefinitions,
   ConsumableDefinitions,
   EquipmentDefinitions,
+  Gallery,
   GameDefinitions,
   ModelDefinitions,
   ProvisionDefinitions,
@@ -42,5 +43,9 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   equipmentDefinitions() {
     return fetchPB("/api/definitions/equipment.pb", EquipmentDefinitions);
+  }
+
+  galleryDefinitions() {
+    return fetchPB("/api/definitions/gallery.pb", Gallery);
   }
 }
