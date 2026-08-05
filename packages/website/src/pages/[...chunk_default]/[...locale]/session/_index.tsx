@@ -33,21 +33,21 @@ import {
 } from "@radix-ui/themes";
 import { debounce } from "lodash-es";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { StickyRowHeaderCell } from "../../../components/StickyRowHeaderCell";
-import { StickyTableRoot } from "../../../components/StickyTableRoot";
-import { TankRowHeaderCell } from "../../../components/TankRowHeaderCell";
-import { awaitableAverageDefinitions } from "../../../core/awaitables/averageDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { StickyRowHeaderCell } from "../../../../components/StickyRowHeaderCell";
+import { StickyTableRoot } from "../../../../components/StickyTableRoot";
+import { TankRowHeaderCell } from "../../../../components/TankRowHeaderCell";
+import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from "../../../hooks/useLocale";
-import { Session, type SessionTracking } from "../../../stores/session";
+} from "../../../../hooks/useLocale";
+import { Session, type SessionTracking } from "../../../../stores/session";
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
   awaitableAverageDefinitions,
 ]);
 
