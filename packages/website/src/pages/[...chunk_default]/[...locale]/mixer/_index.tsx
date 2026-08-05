@@ -1,5 +1,4 @@
 import {
-  asset,
   GunDefinition,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
@@ -19,27 +18,26 @@ import {
   type ButtonProps,
 } from "@radix-ui/themes";
 import { useRef, useState } from "react";
-import { MixerScene } from "../../../components/MixerScene";
-import { ModuleButton } from "../../../components/ModuleButtons/ModuleButton";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { ScreenshotButton } from "../../../components/ScreenshotButton";
-import { TankSearch } from "../../../components/TankSearch";
-import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
-import { curateMixer } from "../../../core/blitzkit/curateMixer";
+import { MixerScene } from "../../../../components/MixerScene";
+import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { ScreenshotButton } from "../../../../components/ScreenshotButton";
+import { TankSearch } from "../../../../components/TankSearch";
+import { api } from "../../../../core/blitzkit/api";
+import { curateMixer } from "../../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,
   useLocale,
   type LocaleAcceptorProps,
-} from "../../../hooks/useLocale";
-import { Mixer } from "../../../stores/mixer";
-import { Tankopedia } from "../../../stores/tankopedia";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+} from "../../../../hooks/useLocale";
+import { Mixer } from "../../../../stores/mixer";
+import { Tankopedia } from "../../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
-const modelDefinition = await awaitableModelDefinitions.then(
-  ({ models }) => models[1]
-);
-const tankDefinitions = await awaitableTankDefinitions;
+const modelDefinition = await api
+  .modelDefinitions()
+  .then(({ models }) => models[1]);
+const tankDefinitions = await api.tankDefinitions();
 
 export function Page({
   locale,
@@ -65,7 +63,7 @@ type ModuleButtonProps = Omit<ButtonProps, "onSelect"> &
     onSelect: (
       tank: TankDefinition,
       turret?: TurretDefinition,
-      gun?: GunDefinition
+      gun?: GunDefinition,
     ) => void;
     turret?: number;
     gun?: number;
@@ -112,7 +110,7 @@ function ModuleChooser({
                   height: "4em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/tanks/big/${tank}.webp`)}
+                src={`/api/tanks/${tank}/icons/big.webp`}
               />
             )}
           </Button>

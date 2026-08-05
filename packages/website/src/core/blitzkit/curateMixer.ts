@@ -1,8 +1,8 @@
-import { awaitableModelDefinitions } from "../awaitables/modelDefinitions";
-import { awaitableTankDefinitions } from "../awaitables/tankDefinitions";
+import { api } from "./api";
 
-const tankDefinitions = await awaitableTankDefinitions;
-const modelDefinitions = await awaitableModelDefinitions;
+const tankDefinitions = await api.tankDefinitions();
+const modelDefinitions = await api.modelDefinitions();
+
 const tanks = Object.values(tankDefinitions.tanks).filter((tank) => {
   const tankModel = modelDefinitions.models[tank.id];
   const turret = tank.turrets.at(-1)!;
