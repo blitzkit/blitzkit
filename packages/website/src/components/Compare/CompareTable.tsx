@@ -1,4 +1,4 @@
-import { asset, availableProvisions, permanentSkills } from "@blitzkit/core";
+import { availableProvisions, permanentSkills } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
 import {
@@ -11,10 +11,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
-import { awaitableEquipmentDefinitions } from "../../core/awaitables/equipmentDefinitions";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
-import { awaitableSkillDefinitions } from "../../core/awaitables/skillDefinitions";
+import { api } from "../../core/blitzkit/api";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { Var } from "../../core/radix/var";
 import { useLocale } from "../../hooks/useLocale";
@@ -42,10 +39,10 @@ const [
   consumableDefinitions,
   provisionDefinitions,
 ] = await Promise.all([
-  awaitableSkillDefinitions,
-  awaitableEquipmentDefinitions,
-  awaitableConsumableDefinitions,
-  awaitableProvisionDefinitions,
+  api.skillDefinitions(),
+  api.equipmentDefinitions(),
+  api.consumableDefinitions(),
+  api.provisionDefinitions(),
 ]);
 
 export function CompareTable({ stats }: CompareTableProps) {
@@ -234,7 +231,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 alt={module}
                                 width={24}
                                 height={24}
-                                src={asset(`icons/modules/${module}.webp`)}
+                                src={`/api/icons/modules/${module}.webp`}
                                 style={{
                                   marginLeft: index > 0 ? -8 : 0,
                                   objectFit: "contain",
@@ -323,9 +320,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                       .name!,
                                   )}
                                   key={provision}
-                                  src={asset(
-                                    `/icons/provisions/${provision}.webp`,
-                                  )}
+                                  src={`/api//icons/provisions/${provision}.webp`}
                                   style={{
                                     left: "50%",
                                     /**
@@ -530,9 +525,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                                     ].name!,
                                   )}
                                   key={consumable}
-                                  src={asset(
-                                    `/icons/consumables/${consumable}.webp`,
-                                  )}
+                                  src={`/api/icons/consumables/${consumable}.webp`}
                                   style={{
                                     left: "50%",
                                     /**
@@ -624,7 +617,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                         variant={camouflage ? "solid" : "outline"}
                       >
                         <img
-                          src={asset("icons/camo.webp")}
+                          src={`/api/icons/camo.webp`}
                           style={{
                             width: "1em",
                             height: "1em",

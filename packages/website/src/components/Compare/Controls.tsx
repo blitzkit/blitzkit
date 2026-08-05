@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex, SegmentedControl } from "@radix-ui/themes";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
@@ -15,7 +15,7 @@ interface ControlsProps {
   onAddTankDialogOpenChange: (open: boolean) => void;
 }
 
-const provisionDefinitions = await awaitableProvisionDefinitions;
+const provisionDefinitions = await api.provisionDefinitions();
 
 export function Controls({
   addTankDialogOpen,
@@ -56,7 +56,7 @@ export function Controls({
                 onSelect={(tank) => {
                   CompareEphemeral.mutate((draft) => {
                     draft.members.push(
-                      tankToCompareMember(tank, provisionDefinitions)
+                      tankToCompareMember(tank, provisionDefinitions),
                     );
                     draft.sorting = undefined;
                   });
@@ -67,7 +67,7 @@ export function Controls({
                     draft.members.push(
                       ...tanks.map((tank) => {
                         return tankToCompareMember(tank, provisionDefinitions);
-                      })
+                      }),
                     );
                     draft.sorting = undefined;
                   });

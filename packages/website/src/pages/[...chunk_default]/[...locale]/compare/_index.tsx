@@ -1,23 +1,19 @@
 import { createDefaultSkills } from "@blitzkit/core";
 import { Flex, Heading, Text } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
-import { CompareTable } from "../../../components/Compare/CompareTable";
-import { Controls } from "../../../components/Compare/Controls";
-import { DamageWarning } from "../../../components/DamageWarning";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { awaitableEquipmentDefinitions } from "../../../core/awaitables/equipmentDefinitions";
-import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
-import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
-import { awaitableSkillDefinitions } from "../../../core/awaitables/skillDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
-import { tankCharacteristics } from "../../../core/blitzkit/tankCharacteristics";
-import { tankToCompareMember } from "../../../core/blitzkit/tankToCompareMember";
+import { CompareTable } from "../../../../components/Compare/CompareTable";
+import { Controls } from "../../../../components/Compare/Controls";
+import { DamageWarning } from "../../../../components/DamageWarning";
+import { PageWrapper } from "../../../../components/PageWrapper";
+import { api } from "../../../../core/blitzkit/api";
+import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
+import { tankToCompareMember } from "../../../../core/blitzkit/tankToCompareMember";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
-} from "../../../hooks/useLocale";
-import { CompareEphemeral } from "../../../stores/compareEphemeral";
+} from "../../../../hooks/useLocale";
+import { CompareEphemeral } from "../../../../stores/compareEphemeral";
 
 const [
   modelDefinitions,
@@ -26,11 +22,11 @@ const [
   skillDefinitions,
   tankDefinitions,
 ] = await Promise.all([
-  awaitableModelDefinitions,
-  awaitableEquipmentDefinitions,
-  awaitableProvisionDefinitions,
-  awaitableSkillDefinitions,
-  awaitableTankDefinitions,
+  api.modelDefinitions(),
+  api.equipmentDefinitions(),
+  api.provisionDefinitions(),
+  api.skillDefinitions(),
+  api.tankDefinitions(),
 ]);
 
 export function Page({ locale }: LocaleAcceptorProps) {
