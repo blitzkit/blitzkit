@@ -79,7 +79,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         >
           <img
             alt={unwrap(tank.name!)}
-            src={asset(`icons/tanks/big/${id}.webp`)}
+            src={`/api/tanks/${id}/icons/big.webp`}
             width={64}
             height={64}
             style={{
@@ -99,7 +99,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                 <Flex gap="1" align="center">
                   <img
                     alt="XP"
-                    src={asset("icons/currencies/xp.webp")}
+                    src={"/api/icons/currencies/xp.webp"}
                     style={{
                       width: "1em",
                       height: "1em",
@@ -114,7 +114,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                 <Flex gap="1" align="center">
                   <img
                     alt="Silver"
-                    src={asset("icons/currencies/silver.webp")}
+                    src={"/api/icons/currencies/silver.webp"}
                     style={{
                       width: "1em",
                       height: "1em",

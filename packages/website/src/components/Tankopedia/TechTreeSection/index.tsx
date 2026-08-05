@@ -121,7 +121,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="Silver"
-                  src={asset("icons/currencies/silver.webp")}
+                  src={"/api/icons/currencies/silver.webp"}
                   style={{
                     width: "1em",
                     height: "1em",

@@ -1,24 +1,66 @@
 import {
   bufferToBigInt,
-  ConfigArchive,
-  Hierarchy,
+  DdsReadStream,
+  PvrReadStream,
   Sc2ReadStream,
   ScgReadStream,
-  Textures,
+  toUniqueId,
   VertexAttribute,
+  type ConfigArchive,
+  type Hierarchy,
+  type TankParameters,
+  type Textures,
+  type VehicleDefinitionList,
 } from "@blitzkit/core";
-import { Document, Material, Node, Scene } from "@gltf-transform/core";
+import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
+import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
+import type { APIContext } from "astro";
 import { times } from "lodash-es";
 import { dirname } from "path";
-import { AbstractVFS } from "../../vfs/abstract";
-import { readBaseColor } from "../readBaseColor";
-import { readNormal } from "../readNormal";
-import { readRoughnessMetallic } from "../readRoughnessMetallic";
+import sharp from "sharp";
+import { vfs } from "../../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
-} from "./constants";
+} from "./collision.glb";
+
+export { getStaticPaths } from "./_index";
+
+export async function GET({ props }: APIContext<{ id: number }>) {
+  const nodeIO = new NodeIO().registerExtensions(ALL_EXTENSIONS);
+  const nations = await vfs
+    .dir(`Data/XML/item_defs/vehicles`)
+    .then((files) => files.filter((nation) => nation !== "common"));
+
+  for (const nationIndex in nations) {
+    const nation = nations[nationIndex];
+    const tanks = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+    );
+    const entries = Object.entries(tanks.root);
+
+    for (const [tankKey, tank] of entries) {
+      if (tankKey.includes("tutorial_bot")) continue;
+
+      const id = toUniqueId(nation, tank.id);
+
+      if (id !== props.id) continue;
+
+      const parameters = await vfs.yaml<TankParameters>(
+        `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
+      );
+      const model = await extractModel(
+        vfs,
+        parameters.resourcesPath.blitzModelPath.replace(/\.sc2$/, ""),
+      );
+      const bytes = await nodeIO.writeBinary(model);
+
+      return new Response(bytes);
+    }
+  }
+}
 
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
@@ -27,7 +69,7 @@ const omitMeshNames = {
   end: ["_POINT"],
 };
 
-export async function extractModel(vfs: AbstractVFS, path: string) {
+async function extractModel(vfs: AbstractVFS, path: string) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
@@ -324,4 +366,116 @@ export async function extractModel(vfs: AbstractVFS, path: string) {
   await document.transform(prune({ keepAttributes: true }), dedup());
 
   return document;
+}
+
+async function readBaseColor(path: string, occlusionPath?: string) {
+  let hasAlpha = false;
+  const baseRaw = await readTexture(path);
+  const occlusionRaw = occlusionPath
+    ? await readTexture(occlusionPath)
+    : undefined;
+  const base = await sharp(baseRaw.data, { raw: baseRaw }).raw().toBuffer();
+  const occlusion = occlusionRaw
+    ? await sharp(occlusionRaw.data, { raw: occlusionRaw })
+        .extractChannel(3)
+        .raw()
+        .toBuffer()
+    : undefined;
+
+  const combined = Buffer.alloc(baseRaw.width * baseRaw.height * 4);
+
+  for (let i = 0; i < baseRaw.width * baseRaw.height; i++) {
+    let c = 1;
+
+    if (occlusionRaw) {
+      const x = i % baseRaw.width;
+      const y = Math.floor(i / baseRaw.width);
+      const u = Math.floor(x * (occlusionRaw.width / baseRaw.width));
+      const v = Math.floor(y * (occlusionRaw.height / baseRaw.height));
+
+      const occlusionI = u + v * occlusionRaw.width;
+
+      c = occlusion![occlusionI] / 255;
+    }
+
+    const alpha = base[i * 4 + 3];
+    hasAlpha ||= alpha < 255;
+
+    combined[i * 4 + 0] = Math.round(base[i * 4 + 0] * c);
+    combined[i * 4 + 1] = Math.round(base[i * 4 + 1] * c);
+    combined[i * 4 + 2] = Math.round(base[i * 4 + 2] * c);
+    combined[i * 4 + 3] = alpha;
+  }
+
+  const image = await sharp(combined, {
+    raw: { width: baseRaw.width, height: baseRaw.height, channels: 4 },
+  })
+    .webp()
+    .toBuffer();
+
+  return { hasAlpha, image };
+}
+
+async function readRoughnessMetallic(path: string) {
+  const raw = await readTexture(path);
+  const blitz = sharp(raw.data, { raw: raw });
+  const metallicness = await blitz?.extractChannel(1).raw().toBuffer();
+  const roughness = await blitz?.extractChannel(3).raw().toBuffer();
+
+  const combined = Buffer.alloc(raw.width * raw.height * 3);
+
+  for (let i = 0; i < raw.width * raw.height; i++) {
+    combined[i * 3 + 1] = roughness[i];
+    combined[i * 3 + 2] = metallicness[i];
+  }
+
+  const image = await sharp(combined, {
+    raw: { width: raw.width, height: raw.height, channels: 3 },
+  })
+    .webp()
+    .toBuffer();
+
+  return image;
+}
+
+async function readNormal(path: string, isBase: boolean) {
+  const raw = await readTexture(path);
+
+  if (!isBase) {
+    return await sharp(raw.data, { raw }).removeAlpha().jpeg().toBuffer();
+  }
+
+  const bytes = 4 * raw.width * raw.height;
+
+  for (let index = 0; index < bytes; index += 4) {
+    /**
+     * Red is always 255 and blue is always 0. Only alpha and green contain any
+     * sort of information.
+     */
+    let x = raw.data[index + 3] * (2 / 255) - 1;
+    let y = raw.data[index + 1] * (2 / 255) - 1;
+    let z = Math.sqrt(Math.max(0, 1 - x ** 2 - y ** 2));
+
+    raw.data[index] = Math.round((x + 1) * (255 / 2));
+    raw.data[index + 1] = Math.round((y + 1) * (255 / 2));
+    raw.data[index + 2] = Math.round((z + 1) * (255 / 2));
+    raw.data[index + 3] = 255;
+  }
+
+  return await sharp(raw.data, { raw }).webp().toBuffer();
+}
+
+async function readTexture(path: string) {
+  const ddsTexturePath = path.replace(".tex", ".dx11.dds");
+  const isDds = await vfs.resolve(ddsTexturePath);
+  const resolvedTexturePath = isDds
+    ? ddsTexturePath
+    : ddsTexturePath.replace(".dds", ".pvr");
+  const file = await vfs.file(resolvedTexturePath);
+
+  const raw = isDds
+    ? await new DdsReadStream(file.buffer as ArrayBuffer).dds()
+    : new PvrReadStream(file.buffer as ArrayBuffer).pvr();
+
+  return raw;
 }

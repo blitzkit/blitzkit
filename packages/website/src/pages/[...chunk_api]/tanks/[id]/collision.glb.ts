@@ -1,18 +1,49 @@
 import {
-  Hierarchy,
   Sc2ReadStream,
   ScgReadStream,
+  toUniqueId,
   VertexAttribute,
+  vertexAttributeVectorSizes,
+  type Hierarchy,
+  type VehicleDefinitionList,
 } from "@blitzkit/core";
-import { Accessor, Document, Node, Scene } from "@gltf-transform/core";
+import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import { Accessor, Document, Node, NodeIO, Scene } from "@gltf-transform/core";
+import type { APIContext } from "astro";
 import { times } from "lodash-es";
-import { AbstractVFS } from "../vfs/abstract";
-import {
-  vertexAttributeGLTFName,
-  vertexAttributeGltfVectorSizes,
-} from "./extractModel/constants";
+import { vfs } from "../../../../core/blitzkit/vfs";
 
-export async function extractArmor(vfs: AbstractVFS, fileName: string) {
+export { getStaticPaths } from "./_index";
+
+export async function GET({ props }: APIContext<{ id: number }>) {
+  const nodeIO = new NodeIO();
+  const nations = await vfs
+    .dir(`Data/XML/item_defs/vehicles`)
+    .then((files) => files.filter((nation) => nation !== "common"));
+
+  for (const nation of nations) {
+    const tanks = await vfs.xml<{ root: VehicleDefinitionList }>(
+      `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+    );
+
+    for (const tankKey in tanks.root) {
+      const tank = tanks.root[tankKey];
+
+      if (tankKey.includes("tutorial_bot")) continue;
+
+      const id = toUniqueId(nation, tank.id);
+
+      if (id !== props.id) continue;
+
+      const model = await extractArmor(vfs, `${nation}-${tankKey}`);
+      const bytes = await nodeIO.writeBinary(model);
+
+      return new Response(bytes);
+    }
+  }
+}
+
+async function extractArmor(vfs: AbstractVFS, fileName: string) {
   const sc2Path = `Data/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
   const scgPath = `Data/3d/Tanks/CollisionMeshes/${fileName}.scg`;
   const sc2 = new Sc2ReadStream(
@@ -142,3 +173,17 @@ export async function extractArmor(vfs: AbstractVFS, fileName: string) {
 
   return document;
 }
+
+export const vertexAttributeGLTFName: Partial<Record<VertexAttribute, string>> =
+  {
+    [VertexAttribute.VERTEX]: "POSITION",
+    [VertexAttribute.NORMAL]: "NORMAL",
+    [VertexAttribute.TEXCOORD0]: "TEXCOORD_0",
+    [VertexAttribute.TEXCOORD1]: "TEXCOORD_1",
+    [VertexAttribute.TEXCOORD2]: "TEXCOORD_2",
+    [VertexAttribute.TEXCOORD3]: "TEXCOORD_3",
+  };
+export const vertexAttributeGltfVectorSizes = {
+  ...vertexAttributeVectorSizes,
+  [VertexAttribute.TANGENT]: 4,
+} as const;

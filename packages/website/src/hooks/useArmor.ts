@@ -1,10 +1,9 @@
-import { asset } from "@blitzkit/core";
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three-stdlib";
 import { useDispose } from "./useDispose";
 
 export function useArmor(id: number) {
-  const path = asset(`3d/tanks/armor/${id}.glb`);
+  const path = `/api/tanks/${id}/collision.glb`;
   const gltf = useLoader(GLTFLoader, path);
 
   useDispose(gltf, path);

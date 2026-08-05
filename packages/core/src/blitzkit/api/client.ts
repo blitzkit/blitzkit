@@ -2,9 +2,11 @@ import { fetchPB } from "../../protobuf";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
+  EquipmentDefinitions,
   GameDefinitions,
   ModelDefinitions,
   ProvisionDefinitions,
+  SkillDefinitions,
   TankDefinitions,
 } from "../../protos";
 import { BlitzKitAPI } from "./base";
@@ -32,5 +34,13 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   modelDefinitions() {
     return fetchPB("/api/definitions/models.pb", ModelDefinitions);
+  }
+
+  skillDefinitions() {
+    return fetchPB("/api/definitions/skills.pb", SkillDefinitions);
+  }
+
+  equipmentDefinitions() {
+    return fetchPB("/api/definitions/equipment.pb", EquipmentDefinitions);
   }
 }
