@@ -112,7 +112,7 @@ jobs:
           DEPOT_DOWNLOADER="$TEMP/DepotDownloader"
           GAME="$TEMP/game"
 
-          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME
+          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME -max-downloads 64
 
       - name: Build
         run: bun run --bun build
