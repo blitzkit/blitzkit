@@ -184,467 +184,6 @@
       "cumulative_battle_life_time": "Загальний час бою"
     }
   },
-  "bot": {
-    "common": {
-      "errors": {
-        "clan_not_found": "# Не вдалося знайти клан\nНе вдалося знайти \"{search}\". Спробуйте обрати клан з результату пошуку.",
-        "player_not_found": "# Не вдалося знайти користувача\nНе вдалося знайти користувача \"{search}\". Спробуйте вибрати користувача із результатів пошуку, ввівши правильне ім'я користувача, або скористайтеся командою  `/link`.",
-        "player_not_linked": "# Використайте команду \"/link\" щоб почати\nЯ не знаю, хто ви, але ви можете сказати мені сьогодні!",
-        "tank_name_not_found": "# Танк не знайдено\nНе вдалося знайти танк із назвою «{search}».",
-        "tank_id_not_found": "# Танк не знайдено\nНе вдалося знайти танк з ID «{search}». Спробуйте ввести назву танка замість номера.",
-        "no_tank_stats": "# Немає статистики для танка\nЦей гравець не має статистики.\nМожливо, це не той гравець, якого ви шукаєте.",
-        "get_help": "Допомогти Discord серверу",
-        "uncaught_error": "# Упс! BlitzKit зіткнувся з помилкою!\nНам дуже шкода. Можете попросити допомоги на [офіційному сервері Discord](https://discord.gg/nDt7AjGJQH).",
-        "preview": "# Ця команда є в попередньому перегляді\n\nВи можете отримати доступ лише до цієї команди на [офіційному сервері Discord](https://discord.gg/nDt7AjGJQH). Команда в цілому буде доступна найближчим часом.",
-        "query_too_small": "# Ваш пошук занадто короткий\nВаш пошук повинен бути щонайменше 3 символи.",
-        "query_too_long": "# Ваш пошук занадто довгий\nВаш пошук повинен бути щонайбільше 100 символи."
-      },
-      "wn8": {
-        "name": "WN8",
-        "types": {
-          "very_bad": "Дуже погано",
-          "bad": "Погано",
-          "below_average": "Нижче середнього",
-          "average": "Середнє",
-          "above_average": "Вище середнього",
-          "good": "Добре",
-          "very_good": "Дуже добре",
-          "great": "Відмінно",
-          "unicum": "Винятковий",
-          "super_unicum": "Супер винятковий"
-        }
-      },
-      "subcommands": {
-        "today": {
-          "name": "сьогодні",
-          "description": "Сьогодні"
-        },
-        "30": {
-          "name": "30",
-          "description": "30 днів"
-        },
-        "60": {
-          "name": "60",
-          "description": "60 днів"
-        },
-        "90": {
-          "name": "90",
-          "description": "90 днів"
-        },
-        "career": {
-          "name": "кар'єра",
-          "description": "Кар'єра"
-        },
-        "custom": {
-          "name": "користувацьке",
-          "description": "Власний діапазон",
-          "options": {
-            "start": {
-              "name": "почати",
-              "description": "Початок за кількістю днів тому від сьогодні"
-            },
-            "end": {
-              "name": "кінець",
-              "description": "Кінець за кількістю днів тому від сьогодні"
-            }
-          }
-        }
-      },
-      "options": {
-        "clan": {
-          "name": "клан",
-          "description": "Назва клану або тег"
-        },
-        "tank": {
-          "name": "танк",
-          "description": "Танк для якого треба отримати статистику"
-        },
-        "username": {
-          "name": "ім'я користувача",
-          "description": "Бліц ім'я гравця"
-        },
-        "filters": {
-          "nation": {
-            "name": "нація",
-            "description": "Нація"
-          },
-          "class": {
-            "name": "клас",
-            "description": "Клас"
-          },
-          "type": {
-            "name": "вид",
-            "description": "Вид"
-          }
-        },
-        "region": {
-          "name": "регіон",
-          "description": "Регіон"
-        },
-        "tier": {
-          "name": "рівень",
-          "description": "Рівень",
-          "choices": {
-            "tier": "Рівень {tier_1} - {tier_2}"
-          }
-        }
-      },
-      "periods": {
-        "career": "Кар'єра",
-        "today": "Сьогодні",
-        "days": "{days} днів",
-        "custom": "{day_1} - {day_2} днів"
-      },
-      "filters": {
-        "none": "Немає фільтрів",
-        "tier": "Рівень {tier}"
-      },
-      "no_data": {
-        "battles_in_period": "За цей період боїв не було",
-        "battles_in_season": "У цьому сезоні боїв не було",
-        "players_in_period": "Немає гравців за цей період",
-        "tanks_found": "Жодних танків не знайдено"
-      },
-      "buttons": {
-        "refresh": "Оновити"
-      },
-      "hero_stats": {
-        "battles": "Бої",
-        "winrate": "Відсоток перемог",
-        "damage": "Шкода",
-        "damage_ratio": "Коефіцієнт шкоди",
-        "tier": "Рівень",
-        "survival": "Виживання",
-        "accuracy": "Точність",
-        "kills": "Знищено"
-      }
-    },
-    "commands": {
-      "dead": ".",
-      "replay": {
-        "name": "реплей",
-        "description": "Показати результати реплею",
-        "options": {
-          "file": {
-            "name": "",
-            "description": "Replay filehttps://crowdin.com/editor/blitzkrieg/80/en-uk?view=side-by-side#9706"
-          }
-        }
-      },
-      "research": {
-        "name": "дослідження",
-        "description": "Показує витрати в дослідженні гілки",
-        "options": {
-          "target_tank": {
-            "name": "цільовий танк",
-            "description": "Останній танк для дослідження в гілці"
-          },
-          "starting_tank": {
-            "name": "початковий танк",
-            "description": "Початковий танк в гілці (виводиться автоматично, якщо не передбачено)"
-          }
-        },
-        "body": {
-          "subtitle": "Дослідження",
-          "total": "Загалом",
-          "research": "Дослідження: {cost}",
-          "upgrades": "Прокачування: {cost}",
-          "purchase": "Вартість: {cost}",
-          "equipment": "Спорядження: {cost}",
-          "estimation": "# Це оцінка!\n\nЦей список може включати вже досліджені танки через неточну інформацію для вантажу. Спробуйте використати \"початковий танк\" з рядка за допомогою команди."
-        },
-        "errors": {
-          "non_tech_tree": "#{tank} відсутній в дереві дослідження\n\nВи не можете дослідити преміум/колеційний танк.",
-          "tier_1": "#{tank} І рівня \n\nТанки І рівня завжди розблоковані для всіх гравців безкоштовно",
-          "already_researched": "# {tank} вже було досліджено\n\nСпробуйте використати `початковий-танк` коли використовуєте команду для перегляду загальної гілки, яку ви вже дослідили",
-          "start_end_equal": "#{tank} було введено двічі  \n\nПереконайтесь що `початковий-танк` та  `ціль-танк` різні",
-          "tanks_not_on_line": "# {tank_1} та {tank_2}  не в одній гілці\n\nПереконайтесь що  `початковий-танк` та  `ціль-танк` знаходяться в єдиній гілці дерева дослідження",
-          "unordered": "# {tank_1} вище рівнем відносно {tank_2}\n\nОбов’язково вкажіть {tank_2} як `початковий-танк`, оскільки це танк нижчого рівня."
-        }
-      },
-      "about": {
-        "name": "про бота",
-        "description": "Вся інформація про бота",
-        "subcommands": {
-          "commands": {
-            "name": "команди",
-            "description": "Список всіх команд та їх описів",
-            "body": "# Команди\n\nBlitzKit пропонує наступні команди:\n\n"
-          },
-          "embeds": {
-            "name": "вкладення",
-            "description": "Як працюють вкладення"
-          },
-          "introduction": {
-            "name": "ознайомлення",
-            "description": "Про бота"
-          },
-          "invite": {
-            "name": "запрошення",
-            "description": "Як запросити бота"
-          },
-          "timezones": {
-            "name": "часові пояси",
-            "description": "Як BlitzKit отримує інформацію про час і використовує ваш часовий пояс"
-          },
-          "credits": {
-            "name": "кредити",
-            "description": "Люди, які допомогли BlitzKit"
-          }
-        }
-      },
-      "breakdown": {
-        "name": "аналіз",
-        "description": "Аналіз періоду за зіграними танками",
-        "body": {
-          "total": "Загалом",
-          "battles": "Бої",
-          "wn8": "WN8",
-          "winrate": "Відсоток перемог",
-          "damage": "Шкода",
-          "unknown_tank": "Невідомий танк {id}"
-        }
-      },
-      "debug": {
-        "name": "налагодження",
-        "description": "Інформація про налагодження бота",
-        "body": {
-          "title": "# Налагодження\n\n",
-          "version": "Версія",
-          "shard": {
-            "label": "Уламок",
-            "default": "за замовчуванням"
-          },
-          "uptime": "Час роботи"
-        }
-      },
-      "evolution": {
-        "name": "еволюція",
-        "description": "Еволюція статистики",
-        "groups": {
-          "player": {
-            "name": "гравець",
-            "description": "Статистика гравця"
-          },
-          "tank": {
-            "name": "танк",
-            "description": "Статистика танків"
-          }
-        }
-      },
-      "inactive": {
-        "name": "неактивний",
-        "description": "Відображає всіх неактивних гравців у клані вище порогу",
-        "options": {
-          "threshold": {
-            "name": "поріг",
-            "description": "Кількість днів неактивності (за замовчуванням: {days} днів)"
-          }
-        },
-        "body": {
-          "subtitle": "Неактивний {days}+ днів",
-          "listing": "{days} днів"
-        }
-      },
-      "full_stats": {
-        "name": "повна статистика",
-        "description": "Повна ігрова статистика",
-        "body": {
-          "cards": {
-            "games": {
-              "title": "Ігри",
-              "winrate": "Відсоток перемог",
-              "battles": "Бої",
-              "wins_losses": "Перемоги / поразки"
-            },
-            "efficiency": {
-              "title": "Ефективність",
-              "wn8": "WN8",
-              "survival": "Виживання",
-              "accuracy": "Точність"
-            },
-            "lethality": {
-              "title": "Летальність",
-              "average_damage": "Середня шкода",
-              "damage_per_tier": "Шкода за рівень",
-              "damage_ratio": "Коефіцієнт шкоди",
-              "average_kills": "Середня кількість знищень"
-            },
-            "miscellaneous": {
-              "title": "Різне",
-              "average_tier": "Середній рівень",
-              "average_spots": "Середній засвіт",
-              "average_xp": "Середній досвід",
-              "kills_to_death_ratio": "Співвідношення знищень до смертей"
-            }
-          }
-        }
-      },
-      "link": {
-        "name": "посилання",
-        "description": "Прив'язує ваш Blitz та Discord акаунт",
-        "body": {
-          "accounts_linked": "Прив'язані акаунти",
-          "no_role_permissions": {
-            "title": "{name} не вдалося перевірити",
-            "description": "У мене немає дозволу керувати ролями."
-          }
-        },
-        "embed": {
-          "title": "Невірний обліковий запис?",
-          "description": "Використайте команду ще раз і виберіть ім'я користувача з результатів пошуку."
-        }
-      },
-      "search_clans": {
-        "name": "пошук кланів",
-        "description": "Пошук кланів",
-        "options": {
-          "limit": {
-            "name": "ліміт",
-            "description": "Максимальна кількість результатів клану (за замовчуванням: {limit})"
-          }
-        },
-        "body": {
-          "title": "Пошук клану для {search} в регіоні {region}",
-          "no_results": "Жодного клану не знайдено"
-        }
-      },
-      "search_players": {
-        "name": "пошук гравців",
-        "description": "Пошук гравців",
-        "options": {
-          "limit": {
-            "name": "ліміт",
-            "description": "Максимальна кількість результатів гравця (за замовчуванням: {limit})"
-          }
-        },
-        "body": {
-          "title": "Пошук гравця для {search} у регіоні {region}",
-          "no_results": "Гравця не знайдено"
-        }
-      },
-      "rating_leaderboard": {
-        "name": "таблиця рейтингу",
-        "description": "Статистика рейтингових боїв",
-        "subcommands": {
-          "neighbors": {
-            "name": "сусіди",
-            "description": "Сусідуючі гравці в лідерборді"
-          },
-          "league": {
-            "name": "ліга",
-            "description": "Найкращий гравець ліги"
-          }
-        },
-        "options": {
-          "limit": {
-            "name": "ліміт",
-            "description": "Скільки сусідів відобразити (за замовчуванням: {count})"
-          },
-          "season": {
-            "name": "сезон",
-            "description": "Базова інформація про гравця",
-            "choices": {
-              "current": "{season} (поточний)"
-            }
-          },
-          "league": {
-            "name": "ліга",
-            "description": "Ліга для відображення"
-          }
-        },
-        "body": {
-          "top_players": "Топ {count} гравців",
-          "no_participation": "# {player} не грав у рейтингу в сезоні {season}\n\nЦей гравець не брав участь у цьому сезоні або не проходив калібрування",
-          "no_ongoing_season": "# Немає поточного сезону\n\nВ даний час немає сезону рейтингу.",
-          "deleted_player": "",
-          "neighbors": "Сусіди по рейтингу",
-          "more": "+  {count} ще"
-        }
-      },
-      "today": {
-        "name": "сьогодні",
-        "description": "Сьогодні зіграні танки та статистика"
-      },
-      "stats": {
-        "name": "статистика",
-        "description": "Коротка статистика за період"
-      },
-      "owned_tanks": {
-        "name": "отримані танки",
-        "description": "Показує всі ваші танки даного рівня",
-        "body": {
-          "title": "# {name} отриманих рівнів {tier} танків\n\n"
-        }
-      },
-      "permissions": {
-        "name": "дозволи",
-        "description": "Перевіряє чи бот має необхідні дозволи для роботи",
-        "body": {
-          "title": "# Дозволи\n\n{body}",
-          "view_channels": "Перегляньте канали: необхідне для знаходження повідомлення, на якому використовувалася кнопка оновлення",
-          "read_message_history": "Прочитайте історію повідомлень: потрібно знайти повідомлення для оновлення",
-          "attach_files": "Закріпіть файли: потрібно для додавання зображень до команд на основі зображень",
-          "external_emojis": "Зовнішні емодзі: потрібні для додавання емодзі національних прапорів та класів техніки"
-        }
-      },
-      "ping": {
-        "name": "",
-        "description": "Перевірити чи бот живий",
-        "body": {
-          "pong": "Понг🏓",
-          "pong_with_time": "Понг🏓 - {time}мс"
-        },
-        "subcommands": {
-          "blitzkit": {
-            "name": "BlitzKit",
-            "description": "Ping BlitzKit"
-          },
-          "wotb": {
-            "name": "WoTB",
-            "description": "Ping World of Tanks Blitz"
-          }
-        }
-      },
-      "player_info": {
-        "name": "інформація про гравця",
-        "description": "Базова інформація про гравця",
-        "body": {
-          "title": "інформація про {name}",
-          "nickname": "Нік",
-          "battles": "Бої",
-          "winrate": "Відсоток перемог",
-          "account_id": "ID акаунта",
-          "created": "Створено",
-          "last_battle": "Остання битва"
-        }
-      },
-      "rating": {
-        "name": "рейтинг",
-        "description": "Статистика рейтингових боїв гравця ",
-        "subcommands": {
-          "today": {
-            "name": "сьогодні",
-            "description": "Сьогоднішня статистика рейтингових боїв"
-          },
-          "season": {
-            "name": "сезон",
-            "description": "Статистика рейтингових боїв поточного сезону"
-          }
-        },
-        "body": {
-          "subtitle": {
-            "today": "Сьогоднішня статистика рейтингових боїв",
-            "season": "Статистика рейтингових боїв даного сезону"
-          }
-        },
-        "errors": {
-          "no_participation": "# {name} не грав рейтингові бої\n\nЦей гравець не брав участь у рейтинговому режимі цього сезону.",
-          "unrecorded_stats": "# Статистика на цей момент недоступна\n\nWargaming наразі зіткнулась з технічними несправностями. Якщо зараз проходить сезон, статистика буде доступною в найближчі 24 години."
-        }
-      }
-    }
-  },
   "website": {
     "redirect": {
       "title": "301: переміщено назавжди",
@@ -741,30 +280,22 @@
       }
     },
     "home": {
-      "pwa": {
-        "title": "",
-        "new": "",
-        "checking": "",
-        "instructions": ".",
-        "install": "",
-        "dismiss": "Dismiss"
-      },
       "discord": {
-        "join_short": "Join cool people!",
-        "join_long": "Join super duper cool people!",
+        "join_short": "Приєднуйся до суспільства!",
+        "join_long": "Приєднуйся до найкрутішого суспільства!",
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "Від {name} ❤️"
       },
       "hot_tanks": {
         "title": "Популярні танки",
-        "subtitle": "Last {days} days"
+        "subtitle": "Останні {days} днів"
       },
       "other_projects": {
         "title": "Інші класні проєкти"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "Будь ласка, допоможіть перекласти {name} на {language}!",
       "seo_description": "Інструменти для всього, пов'язаного з WoT Blitz"
     },
     "docs": {
@@ -778,7 +309,7 @@
         "reset": "Скинути",
         "shuffle": "Перемішати",
         "remove": "Видалити зіграні",
-        "tracking": "BlitzKit is tracking your battles",
+        "tracking": "BlitzKit відстежує ваші бої",
         "sort": {
           "button": "Сортувати за",
           "last_played": "Остання гра",
@@ -804,15 +335,15 @@
         "description": "Tank playlist generator",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
         "button": "Створити",
-        "pool_size": "{count} possible tanks"
+        "pool_size": "{count} можливі танки"
       },
       "mixer": {
         "name": "Mixer",
         "button": "Mix and match",
         "description": "Mix tank modules",
         "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "screenshot": "Знімок екрану",
+        "randomize": "Рандомізувати"
       },
       "guess": {
         "name": "Guess",
@@ -821,9 +352,9 @@
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {
           "placeholder": "Type to guess...",
-          "skip": "Skip",
+          "skip": "Пропустити",
           "guess": "Guess",
-          "next": "Next",
+          "next": "Наступний",
           "no_results": "Немає результатів"
         },
         "stats": "{correct} / {total} correct, {streak} streak",
@@ -838,7 +369,7 @@
         "tier": "Рівень {tier}"
       },
       "tankopedia": {
-        "search": "Search a stat...",
+        "search": "Шукаємо стати...",
         "name": "Танкопедія",
         "button": "Знайти танки",
         "description": "Танкова енциклопедія",
@@ -909,7 +440,7 @@
               "ricochet": "Рикошет",
               "explosion_radius": "Радіус розльоту уламків",
               "exit": "Вийти",
-              "reset": "Reset"
+              "reset": "Скинути"
             },
             "advanced": "Advanced highlighting",
             "shot_card": {
@@ -918,7 +449,7 @@
                 "spaced": "Spaced",
                 "external": "External",
                 "gap": "Gap",
-                "gun": "Gun",
+                "gun": "Пушка",
                 "track": "Гусениці"
               },
               "status": {
@@ -928,7 +459,7 @@
                 "splash": "{damage} Од"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
+                "thickness_and_angle": "{thickness}мм {angle}°",
                 "nominal": "{thickness}mm nominal",
                 "ricochet_loss": "{loss}% penetration"
               }
@@ -941,7 +472,7 @@
             "external": "External",
             "edit": {
               "label": "Редагувати",
-              "reset": "Reset"
+              "reset": "Скинути"
             }
           }
         },
@@ -954,7 +485,7 @@
           },
           "vanilla": "Vanilla",
           "opentest": "Відкритий тест",
-          "full_name": "Full name",
+          "full_name": "Повна назва",
           "nation": "Нація",
           "class": "Клас",
           "tier": "Рівень",
@@ -1086,7 +617,7 @@
             "hullTraverseHardTerrain": "Hard",
             "hullTraverseMediumTerrain": "Середній",
             "hullTraverseSoftTerrain": "Soft",
-            "health": "Health",
+            "health": "Здоров'я",
             "fireChance": "Fire chance",
             "viewRange": "View range",
             "camouflageStill": "Нерухомо",
@@ -1211,10 +742,10 @@
         "name": "Gallery",
         "button": "Browse all",
         "description": "Blitz player avatars",
-        "seo_description": "All World of Tanks Blitz player avatars",
+        "seo_description": "Усі World of Tanks Blitz аватари гравців",
         "last_updated": "Last updated on {time}",
         "search": {
-          "hint": "Search avatars...",
+          "hint": "Шукаємо аватари...",
           "results": "{count} avatars"
         }
       },
@@ -1251,18 +782,18 @@
         }
       },
       "tier_list": {
-        "name": "Tier list",
-        "button": "Rank tanks",
-        "description": "Rank Blitz tanks",
+        "name": "Список рівнів",
+        "button": "Ранги танків",
+        "description": "Ранги танків з блітзу",
         "seo_description": "Explore tier lists ranking tanks from best to worst, based on player ratings and statistical performance in World of Tanks Blitz",
         "buttons": {
-          "reset": "Reset",
-          "share": "Share"
+          "reset": "Скинути",
+          "share": "Поділитися"
         }
       },
       "embed": {
         "name": "Embed",
-        "button": "Create now",
+        "button": "Створити зараз",
         "description": "Embeds for streaming",
         "seo_description": "Create embeds for streaming World of Tanks Blitz with extreme customization",
         "coming_soon": "More embeds coming soon.",
@@ -1273,20 +804,20 @@
         },
         "configuration": {
           "import": {
-            "title": "Import",
+            "title": "Імпортувати",
             "description": "Paste your current URL if you have one already to import your settings",
-            "hint": "Paste URL...",
+            "hint": "Вставити посилання...",
             "apply": "Apply",
-            "idiot_title": "Invalid URL",
+            "idiot_title": "Некоректне посилання",
             "idiot_description": "Try pasting the URL that BlitzKit previously generated, you silly goose!",
             "idiot_button": "Okay, my bad"
           },
           "export": {
-            "title": "Export",
+            "title": "Експортувати",
             "description": "Copy all properties for you streaming software",
             "generate": {
-              "button": "Generate URL",
-              "title": "Generate URL",
+              "button": "Згенерувати посилання",
+              "title": "Генерація посилання",
               "subtitle": "Search an account to track",
               "cancel": "",
               "success": {
@@ -1303,7 +834,7 @@
           },
           "customize": {
             "title": "Customize",
-            "reset": "Reset",
+            "reset": "Скинути",
             "description": "Bells and whistles of your embed"
           }
         },
@@ -1351,14 +882,14 @@
         "seo_description": "Live and archived full rating leaderboard for World of Tanks Blitz"
       },
       "discord": {
-        "name": "Discord bot",
-        "button": "Install now",
+        "name": "Діскорд бот",
+        "button": "Встановити зараз",
         "description": "Stats right in Discord",
         "seo_description": "Get stats right in Discord with BlitzKit's Discord bot"
       },
       "more": {
-        "name": "More coming soon",
-        "button": "Join Discord",
+        "name": "Буде через певний час",
+        "button": "Приєднатись до Діскорду",
         "description": "What we're making",
         "seo_description": "What we're making with BlitzKit"
       },

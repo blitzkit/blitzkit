@@ -13,18 +13,18 @@
       "hp": "{value} 生命值",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}度°/秒",
+      "deg_s": "{value}度每秒",
       "plus": "+{value}"
     },
     "gun_types": {
       "auto_loader": "弹夹型坦克",
-      "auto_reloader": "自动装填型坦克",
+      "auto_reloader": "弹鼓型坦克",
       "regular": "单发"
     },
     "shells": {
       "ap": "穿甲弹",
       "ap_cr": "硬式复合穿甲弹",
-      "hc": "反战车高爆弹",
+      "hc": "破甲弹",
       "he": "高爆弹"
     },
     "player_count_period": {
@@ -60,23 +60,23 @@
       "3": "平均",
       "4": "高于平均",
       "5": "好",
-      "6": "非常好",
+      "6": "好",
       "7": "很好",
-      "8": "极品",
-      "9": "超级强势玩家"
+      "8": "非常好",
+      "9": "极品"
     },
     "bkni_percentile": {
-      "0": "Super malum",
-      "1": "Malum",
-      "2": "非常差",
+      "0": "垃圾",
+      "1": "非常差",
+      "2": "很差",
       "3": "差",
       "4": "低于平均",
       "5": "平均",
-      "6": "高于平均",
+      "6": "较好",
       "7": "好",
-      "8": "非常好",
-      "9": "極品",
-      "10": "超级强势玩家"
+      "8": "很好",
+      "9": "非常好",
+      "10": "极品"
     },
     "nations": {
       "ussr": "苏联",
@@ -101,7 +101,7 @@
       "other": "X系"
     },
     "tank_class_short": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "轻型坦克",
       "1": "中型坦克",
       "2": "重型战车",
@@ -114,14 +114,14 @@
       "3": "坦克歼击车"
     },
     "tank_class_medium": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "轻型坦克",
       "1": "中型坦克",
       "2": "重型坦克",
       "3": "坦克歼击车"
     },
     "tree_type": {
-      "-1": "未识别",
+      "-1": "未知",
       "0": "科技树",
       "1": "金币车",
       "2": "收藏车"
@@ -156,7 +156,7 @@
       "normalized_shots": "开火次数",
       "normalized_spotted": "侦查次数",
       "normalized_survived_battles": "存活率",
-      "normalized_win_and_survived": "存活胜利率",
+      "normalized_win_and_survived": "胜利并幸存的概率",
       "normalized_wins": "胜率",
       "normalized_xp": "经验值",
       "normalized_battle_life_time": "战斗时间",
@@ -182,467 +182,6 @@
       "cumulative_xp": "总经验",
       "cumulative_wn8": "WN8",
       "cumulative_battle_life_time": "总战斗时间"
-    }
-  },
-  "bot": {
-    "common": {
-      "errors": {
-        "clan_not_found": "# 找不到公会\n找不到\"{search}\"。请尝试从搜索结果中选择一个公会。",
-        "player_not_found": "# 找不到玩家\n无法找到玩家 “{search}”。 尝试从搜索结果中选择玩家，或输入一个有效的玩家名称， 或使用“/link”命令。",
-        "player_not_linked": "# 使用 `/link` 来开始\n我不知道你是谁，但你今天可以告诉我！",
-        "tank_name_not_found": "# 找不到坦克\n找不到名为 “{search}” 的坦克。",
-        "tank_id_not_found": "# 找不到坦克\n无法找到ID为 “{search}” 的坦克。 请尝试输入坦克的名称而不是数字。",
-        "no_tank_stats": "# 没有这辆战车的数据\n这个玩家没有可用资料。 这可能不是你要找的玩家。",
-        "get_help": "Discord的协助服务器",
-        "uncaught_error": "# BlitzKit 发生错误！\n我们对此感到抱歉。 欢迎加入[官方Discord](https://discord.gg/nDt7AjGJQH)，以方便帮助你解决问题。",
-        "preview": "# 此命令处于预览\n\n您只能在[官方Discord服务器](https://discord.gg/nDt7AjGJQH)访问此命令。该命令将很快可用。",
-        "query_too_small": "# 搜寻内容过短\n您的搜寻必需至少包含 3 个字元。",
-        "query_too_long": "# 搜索内容过长\n您搜索的内容必须少于 100 个字符。"
-      },
-      "wn8": {
-        "name": "WN8",
-        "types": {
-          "very_bad": "非常差",
-          "bad": "差",
-          "below_average": "低于平均",
-          "average": "平均",
-          "above_average": "高于平均",
-          "good": "好",
-          "very_good": "非常好",
-          "great": "很好",
-          "unicum": "极品",
-          "super_unicum": "超强势玩家"
-        }
-      },
-      "subcommands": {
-        "today": {
-          "name": "今日",
-          "description": "今日："
-        },
-        "30": {
-          "name": "30",
-          "description": "30 天"
-        },
-        "60": {
-          "name": "60",
-          "description": "60 天"
-        },
-        "90": {
-          "name": "90",
-          "description": "90 天"
-        },
-        "career": {
-          "name": "生涯",
-          "description": "玩家资料"
-        },
-        "custom": {
-          "name": "自定义",
-          "description": "自定义范围",
-          "options": {
-            "start": {
-              "name": "开始",
-              "description": "距今若干天前开始"
-            },
-            "end": {
-              "name": "结束",
-              "description": "距今若干天前开结束"
-            }
-          }
-        }
-      },
-      "options": {
-        "clan": {
-          "name": "公会",
-          "description": "公会名称或标签"
-        },
-        "tank": {
-          "name": "坦克",
-          "description": "要获取战绩的坦克"
-        },
-        "username": {
-          "name": "用户名",
-          "description": "玩家的闪击战游戏昵称"
-        },
-        "filters": {
-          "nation": {
-            "name": "国别",
-            "description": "国别"
-          },
-          "class": {
-            "name": "坦克车型",
-            "description": "坦克车型"
-          },
-          "type": {
-            "name": "战车类型",
-            "description": "战车类型"
-          }
-        },
-        "region": {
-          "name": "所在地区",
-          "description": "地区"
-        },
-        "tier": {
-          "name": "阶级",
-          "description": "阶级",
-          "choices": {
-            "tier": "{tier_1} - {tier_2} 阶"
-          }
-        }
-      },
-      "periods": {
-        "career": "玩家资料",
-        "today": "今日：",
-        "days": "{days} 天",
-        "custom": "{day_1} - {day_2} 天"
-      },
-      "filters": {
-        "none": "无筛选器",
-        "tier": "{tier} 阶"
-      },
-      "no_data": {
-        "battles_in_period": "在这段时间里没有参与任何战斗",
-        "battles_in_season": "在这个赛季中没有战斗记录",
-        "players_in_period": "这段时间内没有玩家",
-        "tanks_found": "找不到战车"
-      },
-      "buttons": {
-        "refresh": "刷新"
-      },
-      "hero_stats": {
-        "battles": "战斗场次",
-        "winrate": "胜率",
-        "damage": "伤害",
-        "damage_ratio": "伤害比",
-        "tier": "阶级",
-        "survival": "生存",
-        "accuracy": "命中率",
-        "kills": "击杀数"
-      }
-    },
-    "commands": {
-      "dead": "# 统计指令现已停用\nBlitzKit Discord 机器人此前依赖 BlitzStars 获取周期性的统计数据。由于 BlitzStars 已启用严格的 Cloudflare 防护，导致 BlitzKit 无法继续使用其 API。这已导致以下指令失效：\n/统计\n/今日\n/损坏\n/演变\n/完整统计\n请使用 [Aftermath](<https://amth.one/invite>) \n作为完全独立于 BlitzStars 的替代方案。由 BlitzKit 托管的统计指令将在近期内恢复。",
-      "replay": {
-        "name": "回放",
-        "description": "显示重播结果",
-        "options": {
-          "file": {
-            "name": "file",
-            "description": "Replay file"
-          }
-        }
-      },
-      "research": {
-        "name": "研发",
-        "description": "列出研发线路的费用",
-        "options": {
-          "target_tank": {
-            "name": "目标战车",
-            "description": "需要研发的目标（战车）"
-          },
-          "starting_tank": {
-            "name": "起始战车",
-            "description": "研发线路中的起始战车（如果未提供则自动推定）"
-          }
-        },
-        "body": {
-          "subtitle": "研发",
-          "total": "全部",
-          "research": "研发：{cost}",
-          "upgrades": "升级：{cost}",
-          "purchase": "购买：{cost}",
-          "equipment": "装备：{cost}",
-          "estimation": "# 这是一个估计值！\n\n这个列表可能包含已经研发过的战车，因为 Wargaming 提供了不正确的资料。 如果可以，请尝试在同一研发线路中提供一个 “起始战车” 。"
-        },
-        "errors": {
-          "non_tech_tree": "# \"{tank}\" 不在科技树里\n\n你不能研发一个 加值/收藏家 坦克。",
-          "tier_1": "# {tank} 是一级坦克\n\n一级坦克一直是对所有玩家免费解锁的。",
-          "already_researched": "# \"{tank}\" 已完成研发\n\n请尝试在同一研发线路上提供“起始坦克”， 以查看全部您已研发过的坦克。",
-          "start_end_equal": "# \"{tank}\" 重复提供了\n\n请确认 \"初始坦克\" 和 \"目标坦克\" 是不同的。",
-          "tanks_not_on_line": "# “{tank_1}” 和 “{tank_2}” 不在同一个研发线路上\n\n请确认“起始坦克” 和 “目标坦克” 在同一研发线路中。",
-          "unordered": "# “{tank_1}” 阶级比 “{tank_2}” 高\n\n请以提供 {tank_2} 作为起始坦克，因为它的阶级更低。"
-        }
-      },
-      "about": {
-        "name": "关于",
-        "description": "查看关于机器人的所有信息",
-        "subcommands": {
-          "commands": {
-            "name": "指令",
-            "description": "所有指令及其描述",
-            "body": "# 指令\n\nBlitzKit 提供了以下指令：\n\n"
-          },
-          "embeds": {
-            "name": "嵌入",
-            "description": "嵌入如何运作"
-          },
-          "introduction": {
-            "name": "介绍",
-            "description": "关于此机器人"
-          },
-          "invite": {
-            "name": "邀请",
-            "description": "如何邀请机器人"
-          },
-          "timezones": {
-            "name": "时区",
-            "description": "BlitzKit 如何判断并使用你的时区"
-          },
-          "credits": {
-            "name": "积分",
-            "description": "谁帮助过 BlitzKit"
-          }
-        }
-      },
-      "breakdown": {
-        "name": "详细分析",
-        "description": "在特定时期中， 战车的详细分析",
-        "body": {
-          "total": "全部",
-          "battles": "战斗场次",
-          "wn8": "WN8",
-          "winrate": "胜率",
-          "damage": "伤害",
-          "unknown_tank": "未知坦克 {id}"
-        }
-      },
-      "debug": {
-        "name": "侦错",
-        "description": "机器人侦错信息",
-        "body": {
-          "title": "# 侦错\n\n",
-          "version": "版本",
-          "shard": {
-            "label": "碎片",
-            "default": "默认"
-          },
-          "uptime": "运行时间"
-        }
-      },
-      "evolution": {
-        "name": "演变",
-        "description": "统计资料的演变",
-        "groups": {
-          "player": {
-            "name": "玩家",
-            "description": "玩家数据统计"
-          },
-          "tank": {
-            "name": "坦克",
-            "description": "坦克数据统计"
-          }
-        }
-      },
-      "inactive": {
-        "name": "不活跃",
-        "description": "列出公会中所有超过阈值的不活跃玩家",
-        "options": {
-          "threshold": {
-            "name": "阈值",
-            "description": "未上线天数（ 默认：{days} 天）"
-          }
-        },
-        "body": {
-          "subtitle": "{days}+ 天未上线",
-          "listing": "{days} 天"
-        }
-      },
-      "full_stats": {
-        "name": "完整统计资料",
-        "description": "游戏内完整统计资料",
-        "body": {
-          "cards": {
-            "games": {
-              "title": "游戏",
-              "winrate": "胜率",
-              "battles": "战斗场次",
-              "wins_losses": "胜利/失败"
-            },
-            "efficiency": {
-              "title": "效率",
-              "wn8": "WN8",
-              "survival": "生存率",
-              "accuracy": "命中率"
-            },
-            "lethality": {
-              "title": "致命伤害",
-              "average_damage": "平均伤害",
-              "damage_per_tier": "各阶级伤害",
-              "damage_ratio": "伤害比",
-              "average_kills": "平均击毁"
-            },
-            "miscellaneous": {
-              "title": "杂项",
-              "average_tier": "平均阶级",
-              "average_spots": "平均侦查",
-              "average_xp": "平均经验",
-              "kills_to_death_ratio": "击杀阵亡比"
-            }
-          }
-        }
-      },
-      "link": {
-        "name": "链接",
-        "description": "链接您的 Blitz 和 Discord 账户",
-        "body": {
-          "accounts_linked": "帐号已绑定",
-          "no_role_permissions": {
-            "title": "{name} 验证失败",
-            "description": "我没有管理身份的权限。"
-          }
-        },
-        "embed": {
-          "title": "账户不正确？",
-          "description": "再次使用此命令，从搜索结果中选择一个用户名。"
-        }
-      },
-      "search_clans": {
-        "name": "搜寻-公会资料",
-        "description": "搜寻公会资料",
-        "options": {
-          "limit": {
-            "name": "限制",
-            "description": "公会结果的最大显示数量 (默认：{limit})"
-          }
-        },
-        "body": {
-          "title": "在地区 {region} 中搜索公会 {search}",
-          "no_results": "没有找到该公会"
-        }
-      },
-      "search_players": {
-        "name": "搜索-玩家",
-        "description": "搜索玩家",
-        "options": {
-          "limit": {
-            "name": "限制",
-            "description": "玩家结果的最大显示数量 (默认：{limit})"
-          }
-        },
-        "body": {
-          "title": "在地区 {region} 中搜索玩家 {search}",
-          "no_results": "未找到玩家"
-        }
-      },
-      "rating_leaderboard": {
-        "name": "评价战斗-排行榜",
-        "description": "评价战斗的统计数据",
-        "subcommands": {
-          "neighbors": {
-            "name": "附近的",
-            "description": "排行榜上附近的玩家"
-          },
-          "league": {
-            "name": "段位",
-            "description": "段位中的顶尖玩家"
-          }
-        },
-        "options": {
-          "limit": {
-            "name": "限制",
-            "description": "显示附近有多少玩家（默认：{count}）"
-          },
-          "season": {
-            "name": "赛季",
-            "description": "赛季数 (默认：当前)",
-            "choices": {
-              "current": "{season} (当前)"
-            }
-          },
-          "league": {
-            "name": "段位",
-            "description": "要显示的段位"
-          }
-        },
-        "body": {
-          "top_players": "前 {count} 玩家",
-          "no_participation": "# {player} 没有在赛季 {season} 中进行过评价战斗\n\n该玩家没有参加该赛季或没有完成校准。",
-          "no_ongoing_season": "# 没有进行中的赛季\n\n目前没有赛季。",
-          "deleted_player": "已删除玩家 {id}",
-          "neighbors": "对邻居进行评分",
-          "more": "+ {count} 更多"
-        }
-      },
-      "today": {
-        "name": "今日",
-        "description": "今天玩过的坦克和统计数据"
-      },
-      "stats": {
-        "name": "统计资料",
-        "description": "一段时间内的快速统计"
-      },
-      "owned_tanks": {
-        "name": "已拥有的坦克",
-        "description": "在一个等级中显示所有已拥有的坦克",
-        "body": {
-          "title": "# {name} 所拥有的 {tier} 阶坦克\n\n"
-        }
-      },
-      "permissions": {
-        "name": "权限",
-        "description": "检查机器人是否拥有运行所需的权限",
-        "body": {
-          "title": "# 权限\n\n{body}",
-          "view_channels": "查看频道：需要找到重新整理按钮使用的讯息",
-          "read_message_history": "读取消息历史: 需要找到消息以刷新",
-          "attach_files": "附加文件：需要将图像添加到基于图像的命令",
-          "external_emojis": "外部表情：需要添加国家旗帜和坦克等级表情"
-        }
-      },
-      "ping": {
-        "name": "连接延迟",
-        "description": "检查机器人是否处于活动状态。",
-        "body": {
-          "pong": "Pong 🏓",
-          "pong_with_time": "Pong 🏓 - {time} 微秒"
-        },
-        "subcommands": {
-          "blitzkit": {
-            "name": "blitzkit",
-            "description": "测试BlitzKit的ping值（延迟值）"
-          },
-          "wotb": {
-            "name": "战车世界闪击战",
-            "description": "测试坦克世界闪击战的ping值（延迟值）"
-          }
-        }
-      },
-      "player_info": {
-        "name": "玩家信息",
-        "description": "玩家基本信息",
-        "body": {
-          "title": "{name} 的信息",
-          "nickname": "昵称",
-          "battles": "战斗场次",
-          "winrate": "胜率",
-          "account_id": "账号ID",
-          "created": "创建时间",
-          "last_battle": "最后一场战斗"
-        }
-      },
-      "rating": {
-        "name": "评价战斗",
-        "description": "评价战斗的统计数据",
-        "subcommands": {
-          "today": {
-            "name": "今日",
-            "description": "今日评价战斗统计数据"
-          },
-          "season": {
-            "name": "赛季",
-            "description": "本季评价战斗统计数据"
-          }
-        },
-        "body": {
-          "subtitle": {
-            "today": "今日评价战斗统计数据",
-            "season": "本季评价战斗统计数据"
-          }
-        },
-        "errors": {
-          "no_participation": "# {name} 未曾游玩评价战斗\n\n该玩家未参与本赛季的评价战斗。",
-          "unrecorded_stats": "# 统计数据目前无法使用\n\nWargaming 可能暂停了服务器。 如果有连续的赛季，统计数据可能在24小时内提供。"
-        }
-      }
     }
   },
   "website": {
@@ -741,14 +280,6 @@
       }
     },
     "home": {
-      "pwa": {
-        "title": "安装 BlitzKit 应用程序",
-        "new": "新增",
-        "checking": "正在检查兼容性……",
-        "instructions": "Apple 设备的说明。",
-        "install": "安装",
-        "dismiss": "取消"
-      },
       "discord": {
         "join_short": "加入超级酷的人群！",
         "join_long": "加入我们的Discord社群，和超酷的人一起聊天！",
@@ -809,7 +340,7 @@
       "mixer": {
         "name": "组装",
         "button": "混合搭配",
-        "description": "混合坦克模块",
+        "description": "混搭不同坦克间的模块",
         "seo_description": "《坦克世界：闪击战》的车体, 炮塔, 主炮混合搭配",
         "screenshot": "屏幕截图",
         "randomize": "随机搭配"
@@ -984,7 +515,7 @@
           "equalizer": {
             "title": "Equalizer",
             "equalize": "Equalize",
-            "beta": "Beta"
+            "beta": "测试版"
           },
           "modules": {
             "title": "坦克模块",
@@ -1018,8 +549,8 @@
           "title": "属性",
           "compare": {
             "label": "比较",
-            "class": "{tier} {class}",
-            "tier": "All tier {tier}",
+            "class": "{tier} 阶的 {class}",
+            "tier": "所有{tier} 阶的",
             "all": "所有坦克"
           },
           "values": {
@@ -1102,8 +633,8 @@
             "shellCapacity": "携弹量",
             "gunType": "炮管类型",
             "penetrationAt250m": "两百五十米处的穿透力",
-            "burstShells": "Burst shell count",
-            "burstInterShell": "Burst inter-shell"
+            "burstShells": "爆破计数",
+            "burstInterShell": "爆破弹"
           }
         },
         "firepower": {
@@ -1156,7 +687,7 @@
           "skills": {
             "clear": "清除",
             "maximize": "最大化",
-            "equalize": "Equalize"
+            "equalize": "平衡"
           },
           "modules": {
             "stock": "白板",
