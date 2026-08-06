@@ -9,6 +9,7 @@ import favicons from "astro-favicons";
 import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
 import { tools } from "./src/constants/tools";
+import { armorPosterRendererIntegration } from "./src/integrations/armorPosterRenderer";
 
 const POSSIBLE_TARGETS = ["app", "web"];
 
@@ -93,6 +94,8 @@ export default defineConfig({
         yandex: true,
       },
     }),
+
+    armorPosterRendererIntegration(),
 
     AstroPWA({
       manifest: false,
