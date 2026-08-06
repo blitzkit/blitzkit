@@ -117,7 +117,7 @@ jobs:
       - name: Build
         run: bun run --bun build
         env:
-          BUILD_CHUNK: ${{ matrix.chunk }}
+          CHUNK: ${{ matrix.chunk }}
 
       - name: Upload artifact
         id: upload
