@@ -115,7 +115,7 @@ jobs:
           $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME
 
       - name: Build
-        run: bun run build
+        run: bun run --bun build
         env:
           BUILD_CHUNK: ${{ matrix.chunk }}
 
