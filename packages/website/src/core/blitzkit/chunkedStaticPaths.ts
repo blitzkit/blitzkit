@@ -10,6 +10,6 @@ export function chunkedStaticPaths(chunk: string) {
       return [];
     }
 
-    return [{ params: { [`chunk_${chunk}`]: chunk } }];
+    return [{ params: { [`chunk_${chunk}`]: undefined } }];
   } satisfies GetStaticPaths;
 }

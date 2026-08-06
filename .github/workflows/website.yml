@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
+  # cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
+  cancel-in-progress: true
 
 env:
   # blitzkit
@@ -46,7 +47,6 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
       matrix:
         include:
           - chunk: default

@@ -4,14 +4,15 @@ import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
-import type { GetStaticPaths } from "astro";
 import { AesonPlug } from "../../../components/AesonPlug";
 import HomeHero from "../../../components/HomeHero.astro";
 import { Plugs } from "../../../components/Plugs";
 import ToolCard from "../../../components/ToolCard.astro";
 import { tools, type Tool } from "../../../constants/tools";
+import { mixStaticPaths } from "../../../core/blitzkit/mixStaticPaths";
 import { getStrings } from "../../../core/i18n/getStrings";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../_index";
 
 const MAX_TOOLS_PER_ROW = 2;
 
@@ -38,14 +39,14 @@ for (const id in tools) {
   }
 }
 
-export const getStaticPaths = (() => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   return [
     ...locales.supported
       .filter(({ locale }) => locale !== locales.default)
       .map(({ locale }) => ({ params: { locale }, props: { locale } })),
     { params: { locale: undefined }, props: { locale: locales.default } },
   ];
-}) satisfies GetStaticPaths;
+});
 ---
 
 <AstroSeo
