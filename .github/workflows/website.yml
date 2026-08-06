@@ -25,7 +25,7 @@ env:
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
-  GAME_DIR: temp/game
+  GAME_DIR: ../../temp/game
 
   # google
   PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
@@ -112,7 +112,7 @@ jobs:
           DEPOT_DOWNLOADER="$TEMP/DepotDownloader"
           GAME="$TEMP/game"
 
-          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME -max-downloads 64
+          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME -max-downloads 256
 
       - name: Build
         run: bun run --bun build
