@@ -8,30 +8,25 @@ import {
 } from "@blitzkit/core";
 import { unwrapper } from "@blitzkit/i18n";
 import { literals } from "@blitzkit/i18n/src/literals";
-import type { GetStaticPaths } from "astro";
 import { load } from "cheerio";
 import { api } from "../../../../../core/blitzkit/api";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
 import { getStrings } from "../../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { genericDefaultEquipmentMatrix } from "../../../../../stores/duel/constants";
 import type { TankGuide } from "../../../../../types/tankGuide";
-import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const tankDefinitions = await api.tankDefinitions();
-  const parentPaths = parentGetStaticPaths();
 
-  return Object.values(tankDefinitions.tanks)
-    .map((tank) =>
-      parentPaths.map((parent) => ({
-        params: { ...parent.params, slug: tank.slug },
-        props: { ...parent.props, id: tank.id },
-      })),
-    )
-    .flat();
-}) satisfies GetStaticPaths;
+  return Object.values(tankDefinitions.tanks).map((tank) => ({
+    params: { slug: tank.slug },
+    props: { id: tank.id },
+  }));
+});
 
 const { id, locale } = Astro.props;
 const strings = getStrings(locale);

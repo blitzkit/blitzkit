@@ -1,5 +1,5 @@
-import { api } from "../../../../core/blitzkit/api";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { api } from "../../../../../core/blitzkit/api";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import { getStaticPaths as _getStaticPaths } from "../../../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {

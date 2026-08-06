@@ -20,7 +20,7 @@ import type { APIContext } from "astro";
 import { times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
-import { vfs } from "../../../../core/blitzkit/vfs";
+import { vfs } from "../../../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,

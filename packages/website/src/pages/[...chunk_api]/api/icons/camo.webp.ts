@@ -1,4 +1,4 @@
-import { vfs } from "../../../core/blitzkit/vfs";
+import { vfs } from "../../../../core/blitzkit/vfs";
 
 export { getStaticPaths } from "../../_index";
 

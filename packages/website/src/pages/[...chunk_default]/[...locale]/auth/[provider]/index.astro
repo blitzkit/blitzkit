@@ -1,18 +1,16 @@
 ---
 import { Flex, Heading, Text } from "@radix-ui/themes";
-import type { GetStaticPaths } from "astro";
 import { PageWrapper } from "../../../../../components/PageWrapper";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
-import { getStaticPaths as parentGetStaticPaths } from "../../index.astro";
+import { getStaticPaths as _getStaticPaths } from "../../index.astro";
 import { AUTH_PROVIDER_NAMES, AUTH_PROVIDERS, Authorize } from "./_index";
 
-export const getStaticPaths = (() => {
-  const parentPaths = parentGetStaticPaths();
-
-  return AUTH_PROVIDERS.map((provider) =>
-    parentPaths.map((parent) => ({ params: { ...parent.params, provider } })),
-  ).flat();
-}) satisfies GetStaticPaths;
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return AUTH_PROVIDERS.map((provider) => ({
+    params: { provider },
+  }));
+});
 
 const { provider } = Astro.params;
 const { locale } = Astro.props;

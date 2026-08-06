@@ -1,5 +1,5 @@
 import { ConsumableDefinitions } from "@blitzkit/core";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../../core/blitzkit/api";
 
 export { getStaticPaths } from "../../_index";
 

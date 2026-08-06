@@ -5,8 +5,8 @@ import {
 } from "@blitzkit/core";
 import type { APIContext } from "astro";
 import sharp from "sharp";
-import { parsePackedSpriteRect } from "../../../../../core/blitz/parsePackedSpriteRect";
-import { vfs } from "../../../../../core/blitzkit/vfs";
+import { parsePackedSpriteRect } from "../../../../../../core/blitz/parsePackedSpriteRect";
+import { vfs } from "../../../../../../core/blitzkit/vfs";
 
 export { getStaticPaths } from "../_index";
 

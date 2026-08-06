@@ -1,10 +1,10 @@
 import type { ProvisionsCommon } from "@blitzkit/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
-import { extractPackedIcon } from "../../../../core/blitz/extractPackedIcon";
-import { parsePackedSpriteRect } from "../../../../core/blitz/parsePackedSpriteRect";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
-import { vfs } from "../../../../core/blitzkit/vfs";
+import { extractPackedIcon } from "../../../../../core/blitz/extractPackedIcon";
+import { parsePackedSpriteRect } from "../../../../../core/blitz/parsePackedSpriteRect";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
+import { vfs } from "../../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../../_index";
 
 interface Mappings {

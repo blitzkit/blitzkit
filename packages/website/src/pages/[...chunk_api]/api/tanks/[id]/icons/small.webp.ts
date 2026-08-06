@@ -4,7 +4,7 @@ import {
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { APIContext } from "astro";
-import { vfs } from "../../../../../core/blitzkit/vfs";
+import { vfs } from "../../../../../../core/blitzkit/vfs";
 import { extractPackedTankIcon } from "./big.webp";
 
 export { getStaticPaths } from "../_index";

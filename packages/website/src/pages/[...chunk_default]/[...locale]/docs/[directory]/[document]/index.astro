@@ -1,39 +1,32 @@
 ---
 import { AstroSeo } from "@astrolib/seo";
-import type { GetStaticPaths } from "astro";
 import { readFile } from "fs/promises";
+import { mixStaticPaths } from "../../../../../../core/blitzkit/mixStaticPaths";
 import BaseLayout from "../../../../../../layouts/BaseLayout.astro";
-import { getStaticPaths as parentGetStaticPaths } from "../../../index.astro";
+import { getStaticPaths as _getStaticPaths } from "../../../index.astro";
 import { Page } from "./_index";
 
-export const getStaticPaths = (async () => {
-  const parentPaths = parentGetStaticPaths();
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const ROOT = "../../../../../../../../../docs/";
   const files = import.meta.glob("../../../../../../../../../docs/**/*.md", {
     eager: true,
   });
 
-  return (
-    await Promise.all(
-      Object.keys(files).map(async (file) => {
-        const couple = file.replace(ROOT, "").split("/");
-        couple[1] = couple[1].replace(".md", "");
-        const content = await readFile(
-          `../../docs/${couple[0]}/${couple[1]}.md`,
-        ).then((buffer) => buffer.toString());
+  return await Promise.all(
+    Object.keys(files).map(async (file) => {
+      const couple = file.replace(ROOT, "").split("/");
+      couple[1] = couple[1].replace(".md", "");
+      const content = await readFile(
+        `../../docs/${couple[0]}/${couple[1]}.md`,
+      ).then((buffer) => buffer.toString());
 
-        return parentPaths.map((parent) => ({
-          params: {
-            ...parent.params,
-            directory: couple[0],
-            document: couple[1],
-          },
-          props: { ...parent.props, content },
-        }));
-      }),
-    )
-  ).flat();
-}) satisfies GetStaticPaths;
+      return {
+        params: { directory: couple[0], document: couple[1] },
+        props: { content },
+      };
+    }),
+  );
+});
 
 const { content, locale } = Astro.props;
 

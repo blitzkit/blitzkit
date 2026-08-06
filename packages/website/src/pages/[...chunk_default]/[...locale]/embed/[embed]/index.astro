@@ -1,26 +1,17 @@
 ---
 import { AstroSeo } from "@astrolib/seo";
-import type { GetStaticPaths } from "astro";
 import { capitalize } from "lodash-es";
 import { embedConfigurations } from "../../../../../constants/embeds";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
-import { getStaticPaths as parentGetStaticPaths } from "../index.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
-export const getStaticPaths = (() => {
-  const parentPaths = parentGetStaticPaths();
-
-  return Object.keys(embedConfigurations)
-    .map((embed) =>
-      parentPaths.map((parent) => ({
-        params: {
-          ...parent.params,
-          embed: embed as keyof typeof embedConfigurations,
-        },
-      })),
-    )
-    .flat();
-}) satisfies GetStaticPaths;
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return Object.keys(embedConfigurations).map((embed) => ({
+    params: { embed: embed as keyof typeof embedConfigurations },
+  }));
+});
 
 const name = capitalize(Astro.params.embed);
 const title = `BlitzKit - ${name} embed`;
