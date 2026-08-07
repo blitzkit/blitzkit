@@ -1,6 +1,7 @@
 ---
 import { AstroSeo } from "@astrolib/seo";
 import {
+  alias,
   assertSecret,
   createDefaultProvisions,
   createDefaultSkills,
@@ -51,7 +52,7 @@ const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
 });
 const url = import.meta.env.SITE + Astro.url.pathname;
 
-const icon = `/api/tanks/${id}/icons/big.webp`;
+const icon = alias("api", `/tanks/${id}/icons/big.webp`);
 const turret = tank.turrets.at(-1)!;
 const gun = turret.guns.at(-1)!;
 const shell = gun.shells[0];

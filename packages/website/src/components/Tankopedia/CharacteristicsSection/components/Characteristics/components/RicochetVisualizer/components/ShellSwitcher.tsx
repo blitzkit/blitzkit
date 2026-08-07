@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { useLocale } from "../../../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../../../stores/duel";
@@ -37,7 +38,7 @@ export function ShellSwitcher() {
               <img
                 alt={unwrap(thisShell.name!)}
                 style={{ width: "1.125rem", height: "1.125rem" }}
-                src={`/api/icons/shells/${thisShell.icon}.webp`}
+                src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
               />
             </IconButton>
           </Tooltip>

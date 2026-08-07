@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { fetchPB } from "../../protobuf";
 import {
   CamouflageDefinitions,
@@ -14,38 +15,50 @@ import { BlitzKitAPI } from "./base";
 
 export class ClientBlitzKitAPI extends BlitzKitAPI {
   gameDefinitions() {
-    return fetchPB("/api/definitions/game.pb", GameDefinitions);
+    return fetchPB(alias("api", "/definitions/game.pb"), GameDefinitions);
   }
 
   consumableDefinitions() {
-    return fetchPB("/api/definitions/consumables.pb", ConsumableDefinitions);
+    return fetchPB(
+      alias("api", "/definitions/consumables.pb"),
+      ConsumableDefinitions,
+    );
   }
 
   tankDefinitions() {
-    return fetchPB("/api/definitions/tanks.pb", TankDefinitions);
+    return fetchPB(alias("api", "/definitions/tanks.pb"), TankDefinitions);
   }
 
   camouflageDefinitions() {
-    return fetchPB("/api/definitions/camouflage.pb", CamouflageDefinitions);
+    return fetchPB(
+      alias("api", "/definitions/camouflage.pb"),
+      CamouflageDefinitions,
+    );
   }
 
   provisionDefinitions() {
-    return fetchPB("/api/definitions/provisions.pb", ProvisionDefinitions);
+    return fetchPB(
+      alias("api", "/definitions/provisions.pb"),
+      ProvisionDefinitions,
+    );
   }
 
   modelDefinitions() {
-    return fetchPB("/api/definitions/models.pb", ModelDefinitions);
+    return fetchPB(alias("api", "/definitions/models.pb"), ModelDefinitions);
   }
 
   skillDefinitions() {
-    return fetchPB("/api/definitions/skills.pb", SkillDefinitions);
+    return fetchPB(alias("api", "/definitions/skills.pb"), SkillDefinitions);
   }
 
   equipmentDefinitions() {
-    return fetchPB("/api/definitions/equipment.pb", EquipmentDefinitions);
+    return fetchPB(
+      alias("api", "/definitions/equipment.pb"),
+      EquipmentDefinitions,
+    );
   }
 
   galleryDefinitions() {
-    return fetchPB("/api/definitions/gallery.pb", Gallery);
+    return fetchPB(alias("api", "/definitions/gallery.pb"), Gallery);
   }
 }

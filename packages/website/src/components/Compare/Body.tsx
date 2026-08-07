@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { Flex, Heading, IconButton, Table } from "@radix-ui/themes";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { useLocale } from "../../hooks/useLocale";
@@ -57,7 +58,10 @@ export function Body({ stats }: BodyProps) {
                         alt={unwrap(thisShell.name!)}
                         width={16}
                         height={16}
-                        src={`/api/icons/shells/${thisShell.icon}.webp`}
+                        src={alias(
+                          "api",
+                          `/icons/shells/${thisShell.icon}.webp`,
+                        )}
                       />
                     </IconButton>
                   ))}

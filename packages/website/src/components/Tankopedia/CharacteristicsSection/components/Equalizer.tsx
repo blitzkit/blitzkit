@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { Badge, Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
@@ -33,7 +34,7 @@ export function Equalizer() {
         style={{
           cursor: "pointer",
           borderRadius: "var(--radius-3)",
-          backgroundImage: "url(/api/gamemodes/45/banner.webp)",
+          backgroundImage: `url(${alias("api", `/gamemodes/45/banner.webp`)})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           overflow: "hidden",

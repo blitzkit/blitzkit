@@ -1,8 +1,8 @@
 import { Avatar, fetchGlossary, Gallery } from "@blitzkit/core";
-import { ServerBlitzKitAPI9 } from "@blitzkit/core/src/blitzkit/api/server/9_gameDefinitions";
 import locales from "@blitzkit/i18n/locales.json";
 import { extname } from "path";
 import { Cache } from "./0_base";
+import { ServerBlitzKitAPI9 } from "./9_gameDefinitions";
 
 export abstract class ServerBlitzKitAPI10 extends ServerBlitzKitAPI9 {
   @Cache()

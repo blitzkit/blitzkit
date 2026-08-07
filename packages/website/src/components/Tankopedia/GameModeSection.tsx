@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
@@ -37,7 +38,10 @@ export function GameModeSection() {
               direction="column"
               style={{
                 borderRadius: "var(--radius-3)",
-                background: `url(/api/gamemodes/${id}/banner.webp)`,
+                background: `url(${alias(
+                  "api",
+                  `/gamemodes/${id}/banner.webp`,
+                )})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -45,7 +49,10 @@ export function GameModeSection() {
               <Box
                 flexGrow="1"
                 style={{
-                  background: `url(/api/gamemodes/${id}/banner.webp)`,
+                  background: `url(${alias(
+                    "api",
+                    `/gamemodes/${id}/banner.webp`,
+                  )})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
@@ -80,7 +87,7 @@ export function GameModeSection() {
                               height: "1.5em",
                               objectFit: "contain",
                             }}
-                            src={`/api/icons/provisions/${id}.webp`}
+                            src={alias("api", `/icons/provisions/${id}.webp`)}
                             alt={unwrap(provisions.name!)}
                           />
                           {unwrap(provisions.name!)}
@@ -101,7 +108,7 @@ export function GameModeSection() {
                               height: "1.5em",
                               objectFit: "contain",
                             }}
-                            src={`/api/icons/consumables/${id}.webp`}
+                            src={alias("api", `/icons/consumables/${id}.webp`)}
                             alt={unwrap(consumable.name!)}
                           />
                           {unwrap(consumable.name!)}

@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { Flex, Heading } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
@@ -21,7 +22,7 @@ export function Miscellaneous() {
       <Flex gap="2" align="center">
         {!tank.fixed_camouflage && (
           <GenericTankComponentButton
-            icon={"/api/icons/camo.webp"}
+            icon={alias("api", "/icons/camo.webp")}
             selected={camouflage}
             iconStyles={{
               top: "50%",
@@ -36,7 +37,7 @@ export function Miscellaneous() {
           />
         )}
         <GenericTankComponentButton
-          icon={"/api/icons/boosters/equipment.webp"}
+          icon={alias("api", "/icons/boosters/equipment.webp")}
           selected={cooldownBooster > 0}
           banner={
             cooldownBooster === 0

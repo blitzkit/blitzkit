@@ -1,8 +1,9 @@
-import { assertSecret } from "@blitzkit/core";
+import { assertSecret, environmentConfig } from "@blitzkit/core";
 import type { GetStaticPaths } from "astro";
 
 export function chunkedStaticPaths(chunk: string) {
   return function () {
+    const environment = environmentConfig();
     const chunksEnv = assertSecret(import.meta.env.CHUNK);
     const chunks = chunksEnv.split(",");
 
@@ -10,6 +11,8 @@ export function chunkedStaticPaths(chunk: string) {
       return [];
     }
 
-    return [{ params: { [`chunk_${chunk}`]: undefined } }];
+    return [
+      { params: { [`chunk_${chunk}`]: environment.paths[chunk] ?? undefined } },
+    ];
   } satisfies GetStaticPaths;
 }

@@ -1,3 +1,5 @@
+import { alias } from "@blitzkit/core";
+
 interface SmallTankIconProps {
   id: number;
   size?: number;
@@ -17,7 +19,7 @@ export function SmallTankIcon({ id, size = HEIGHT }: SmallTankIconProps) {
     >
       <img
         alt={`Tank ${id}`}
-        src={`/api/tanks/${id}/icons/small.webp`}
+        src={alias("api", `/tanks/${id}/icons/small.webp`)}
         style={{
           transform: `scale(${(size / HEIGHT) * 100}%)`,
           transformOrigin: "top left",

@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { IconButton } from "@radix-ui/themes";
 import { useArmor } from "../../../../../../hooks/useArmor";
 import { Duel } from "../../../../../../stores/duel";
@@ -37,7 +38,7 @@ export function DynamicArmorSwitcher() {
     >
       <img
         alt="Dynamic Armor"
-        src={"/api/icons/consumables/73.webp"}
+        src={alias("api", "/icons/consumables/73.webp")}
         style={{
           width: "50%",
           height: "50%",

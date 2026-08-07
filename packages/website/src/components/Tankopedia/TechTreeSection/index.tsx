@@ -1,4 +1,4 @@
-import { TankType } from "@blitzkit/core";
+import { alias, TankType } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
@@ -105,7 +105,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="XP"
-                  src={"/api/icons/currencies/xp.webp"}
+                  src={alias("api", "/icons/currencies/xp.webp")}
                   style={{
                     width: "1em",
                     height: "1em",
@@ -121,7 +121,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
               <Flex gap="1" align="center">
                 <img
                   alt="Silver"
-                  src={"/api/icons/currencies/silver.webp"}
+                  src={alias("api", "/icons/currencies/silver.webp")}
                   style={{
                     width: "1em",
                     height: "1em",

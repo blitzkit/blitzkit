@@ -1,4 +1,4 @@
-import { permanentSkills, romanize } from "@blitzkit/core";
+import { alias, permanentSkills, romanize } from "@blitzkit/core";
 import { Flex } from "@radix-ui/themes";
 import { api } from "../core/blitzkit/api";
 import { GenericTankComponentButton } from "./ModuleButtons/GenericTankComponentButton";
@@ -27,7 +27,7 @@ export function CrewSkillManager({
                 special={!permanentSkills.includes(skill)}
                 selected={level > 0}
                 discriminator={level === 0 ? undefined : romanize(level)}
-                icon={`/api/icons/skills/${skill}.webp`}
+                icon={alias("api", `/icons/skills/${skill}.webp`)}
                 onClick={(event) => {
                   if (!onChange) return;
 

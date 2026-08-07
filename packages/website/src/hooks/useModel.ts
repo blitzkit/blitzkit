@@ -1,10 +1,11 @@
+import { alias } from "@blitzkit/core";
 import { useLoader } from "@react-three/fiber";
 import { Mesh, MeshStandardMaterial } from "three";
 import { GLTFLoader } from "three-stdlib";
 import { useDispose } from "./useDispose";
 
 export function useModel(id: number) {
-  const path = `/api/tanks/${id}/model.glb`;
+  const path = alias("api", `/tanks/${id}/model.glb`);
   const gltf = useLoader(GLTFLoader, path);
 
   useDispose(gltf, path);

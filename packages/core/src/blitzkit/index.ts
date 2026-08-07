@@ -1,3 +1,4 @@
+export * from "./alias";
 export * from "./assertSecret";
 export * from "./availableProvisions";
 export * from "./averageDefinitions";
@@ -7,6 +8,7 @@ export * from "./createDefaultSkills";
 export * from "./degressiveStat";
 export * from "./discoveredIdDefinitions";
 export * from "./emblemURL";
+export * from "./environment";
 export * from "./eventManager";
 export * from "./getTimeDaysAgo";
 export * from "./isExplosive";

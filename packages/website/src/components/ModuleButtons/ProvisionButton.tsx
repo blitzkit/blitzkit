@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
@@ -15,7 +16,7 @@ export function ProvisionButton({ provision, ...props }: ProvisionButtonProps) {
   return (
     <GenericTankComponentButton
       tooltip={unwrap(provisionDefinitions.provisions[provision].name!)}
-      icon={`/api/icons/provisions/${provision}.webp`}
+      icon={alias("api", `/icons/provisions/${provision}.webp`)}
       {...props}
     />
   );

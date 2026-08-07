@@ -1,4 +1,5 @@
 import {
+  alias,
   GunDefinition,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
@@ -110,7 +111,7 @@ function ModuleChooser({
                   height: "4em",
                   objectFit: "contain",
                 }}
-                src={`/api/tanks/${tank}/icons/big.webp`}
+                src={alias("api", `/tanks/${tank}/icons/big.webp`)}
               />
             )}
           </Button>

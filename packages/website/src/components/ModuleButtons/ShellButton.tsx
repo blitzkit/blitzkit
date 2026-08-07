@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
 import type { TankComponentButtonProps } from "./TankComponentButton";
 
@@ -8,7 +9,7 @@ interface ShellButtonProps extends TankComponentButtonProps {
 export function ShellButton({ shell, ...props }: ShellButtonProps) {
   return (
     <GenericTankComponentButton
-      icon={`/api/icons/shells/${shell}.webp`}
+      icon={alias("api", `/icons/shells/${shell}.webp`)}
       {...props}
     />
   );

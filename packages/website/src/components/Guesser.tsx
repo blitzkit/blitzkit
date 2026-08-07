@@ -1,4 +1,5 @@
 import {
+  alias,
   SEARCH_KEYS,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
@@ -149,7 +150,10 @@ export function Guesser() {
                       prefix={
                         <img
                           style={{ width: "1em", height: "1em" }}
-                          src={`/api/flags/circle/${result.nation}.webp`}
+                          src={alias(
+                            "api",
+                            `/flags/circle/${result.nation}.webp`,
+                          )}
                         />
                       }
                       discriminator={

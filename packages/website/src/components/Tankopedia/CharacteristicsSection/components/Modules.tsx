@@ -1,4 +1,5 @@
 import {
+  alias,
   EngineDefinition,
   formatCompact,
   GunDefinition,
@@ -110,7 +111,7 @@ function ModuleButton({
 
           <img
             alt={unlock.cost!.type}
-            src={`/api/icons/currencies/${unlock.cost!.type}.webp`}
+            src={alias("api", `/icons/currencies/${unlock.cost!.type}.webp`)}
             style={{
               width: 12,
               height: 12,
@@ -125,7 +126,10 @@ function ModuleButton({
         src={
           isTank
             ? tankIcon(unlock.id)
-            : `/api/icons/modules/${moduleTypeTypeIconName[unlock.type]}.webp`
+            : alias(
+                "api",
+                `/icons/modules/${moduleTypeTypeIconName[unlock.type]}.webp`,
+              )
         }
         style={{
           width: isTank ? 64 : 32,

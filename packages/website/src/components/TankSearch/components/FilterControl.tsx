@@ -1,4 +1,5 @@
 import {
+  alias,
   GunDefinition,
   ShellType,
   TANK_CLASSES,
@@ -309,7 +310,7 @@ function NationsFilter() {
                   width: "1.25em",
                   height: "1.25em",
                 }}
-                src={`/api/flags/circle/${nation}.webp`}
+                src={alias("api", `/flags/circle/${nation}.webp`)}
               />
             ))}
           </Flex>
@@ -346,7 +347,7 @@ function NationsFilter() {
                 right="0"
                 mr="-2"
                 style={{
-                  backgroundImage: `url(${`/api/flags/scratched/${nation}.webp`})`,
+                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
                   backgroundSize: "100%",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "5rem center",
@@ -679,9 +680,10 @@ function IndividualShellFilter({
           {shells[index] !== null && (
             <img
               style={{ width: "1em", height: "1em" }}
-              src={`/api/icons/shells/${shellTypeIcons[shells[index]]}${
-                premium ? "_premium" : ""
-              }.webp`}
+              src={alias(
+                "api",
+                `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
+              )}
             />
           )}
         </IconButton>
@@ -712,9 +714,12 @@ function IndividualShellFilter({
                 color={selected ? undefined : "gray"}
               >
                 <img
-                  src={`/api/icons/shells/${shellTypeIcons[shellType]}${
-                    premium ? "_premium" : ""
-                  }.webp`}
+                  src={alias(
+                    "api",
+                    `/icons/shells/${shellTypeIcons[shellType]}${
+                      premium ? "_premium" : ""
+                    }.webp`,
+                  )}
                   style={{ width: "1.25em", height: "1.25em" }}
                 />
 
@@ -883,7 +888,7 @@ function ConsumablesFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={`/api/icons/consumables/${consumable}.webp`}
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
             ))}
 
@@ -928,7 +933,7 @@ function ConsumablesFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={`/api/icons/consumables/${consumable}.webp`}
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
 
               {unwrap(consumableDefinition.name!)}
@@ -977,7 +982,7 @@ function ProvisionsFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={`/api/icons/provisions/${provision}.webp`}
+                src={alias("api", `/icons/provisions/${provision}.webp`)}
               />
             ))}
 
@@ -1022,7 +1027,7 @@ function ProvisionsFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={`/api/icons/provisions/${provision}.webp`}
+                src={alias("api", `/icons/provisions/${provision}.webp`)}
               />
 
               {unwrap(provisionDefinition.name!)}
@@ -1151,7 +1156,10 @@ function GameModeAbilitiesFilter() {
                           height: "1.25em",
                           objectFit: "contain",
                         }}
-                        src={`/api/icons/consumables/${consumable}.webp`}
+                        src={alias(
+                          "api",
+                          `/icons/consumables/${consumable}.webp`,
+                        )}
                       />
 
                       {unwrap(abilityDefinition.name!)}
@@ -1200,7 +1208,10 @@ function GameModeAbilitiesFilter() {
                           height: "1.25em",
                           objectFit: "contain",
                         }}
-                        src={`/api/icons/provisions/${provision}.webp`}
+                        src={alias(
+                          "api",
+                          `/icons/provisions/${provision}.webp`,
+                        )}
                       />
 
                       {unwrap(powerDefinition.name!)}

@@ -1,4 +1,4 @@
-import { availableProvisions, permanentSkills } from "@blitzkit/core";
+import { alias, availableProvisions, permanentSkills } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
 import {
@@ -231,7 +231,10 @@ export function CompareTable({ stats }: CompareTableProps) {
                                 alt={module}
                                 width={24}
                                 height={24}
-                                src={`/api/icons/modules/${module}.webp`}
+                                src={alias(
+                                  "api",
+                                  `/icons/modules/${module}.webp`,
+                                )}
                                 style={{
                                   marginLeft: index > 0 ? -8 : 0,
                                   objectFit: "contain",
@@ -320,7 +323,10 @@ export function CompareTable({ stats }: CompareTableProps) {
                                       .name!,
                                   )}
                                   key={provision}
-                                  src={`/api//icons/provisions/${provision}.webp`}
+                                  src={alias(
+                                    "api",
+                                    `//icons/provisions/${provision}.webp`,
+                                  )}
                                   style={{
                                     left: "50%",
                                     /**
@@ -525,7 +531,10 @@ export function CompareTable({ stats }: CompareTableProps) {
                                     ].name!,
                                   )}
                                   key={consumable}
-                                  src={`/api/icons/consumables/${consumable}.webp`}
+                                  src={alias(
+                                    "api",
+                                    `/icons/consumables/${consumable}.webp`,
+                                  )}
                                   style={{
                                     left: "50%",
                                     /**
@@ -617,7 +626,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                         variant={camouflage ? "solid" : "outline"}
                       >
                         <img
-                          src={`/api/icons/camo.webp`}
+                          src={alias("api", `/icons/camo.webp`)}
                           style={{
                             width: "1em",
                             height: "1em",

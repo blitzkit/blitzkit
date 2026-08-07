@@ -5,7 +5,7 @@
   },
   "nodes": {},
   "aliases": {
-    "api": "/api",
+    "api": "https://api.beta.blitzkit.app",
     "static": "https://static.blitzkit.app"
   }
 }
