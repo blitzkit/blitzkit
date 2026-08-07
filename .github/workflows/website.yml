@@ -2,20 +2,39 @@ name: Website
 
 on:
   push:
-  workflow_dispatch:
+    branches:
+      - production
 
   schedule:
     - cron: "0 4 * * *"
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+
+        required: true
+        # default: production
+        default: beta
+        type: choice
+
+        options:
+          - development
+          - beta
+          - production
+          - preview
+          - opentest
 
 permissions:
   contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  # cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
   cancel-in-progress: true
 
 env:
+  ENVIRONMENT: ${{ inputs.environment || 'production' }}
+
   # blitzkit
   PUBLIC_BRANCH: main
   PUBLIC_PROMOTE_OPENTEST: false
@@ -48,14 +67,7 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - chunk: default
-            node: blitzkit/blitzkit.github.io
-            path: dist/website
-
-          - chunk: api
-            node: blitzkit/api
-            path: dist/website/api
+        chunk: [default, api]
 
     steps:
       - name: Free disk space
@@ -118,24 +130,31 @@ jobs:
         run: bun run --bun build
         env:
           CHUNK: ${{ matrix.chunk }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
 
       - name: Upload artifact
         id: upload
         uses: actions/upload-artifact@v4
         with:
           name: chunk-${{ matrix.chunk }}
-          path: ${{ matrix.path }}
-
-      - name: Save artifact ID
-        run: |
-          echo "${{ steps.upload.outputs.artifact-id }}"
+          path: dist/website
 
       - name: Trigger deployment
+
+        if: github.ref_name == 'production' || github.ref_name == 'infrastructure'
+
         env:
           TOKEN: ${{ secrets.GH_NODE_DEPLOY_TOKEN }}
-          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
-          TARGET_REPO: ${{ matrix.node }}
+          CHUNK: ${{ matrix.chunk }}
+
         run: |
+          ENV_FILE="environments/${ENVIRONMENT}.json"
+          TARGET_REPO=$(jq -r ".nodes.\"$CHUNK\"" "$ENV_FILE")
+
+          if [ "$TARGET_REPO" == "null" ] || [ -z "$TARGET_REPO" ]; then
+            exit 1
+          fi
+
           curl \
             -X POST \
             -H "Accept: application/vnd.github+json" \
@@ -146,7 +165,7 @@ jobs:
                   \"client_payload\": {
                     \"source_repo\": \"${{ github.repository }}\",
                     \"run_id\": \"${{ github.run_id }}\",
-                    \"artifact_id\": \"$ARTIFACT_ID\",
-                    \"chunk\": \"${{ matrix.chunk }}\"
+                    \"artifact_id\": \"${{ steps.upload.outputs.artifact-id }}\",
+                    \"chunk\": \"$CHUNK\"
                   }
                 }"
