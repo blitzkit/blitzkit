@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cd packages/website && bun run dev",
     "build": "cd packages/website && bun run build",
-    "build:averages": "cd packages/scripts && bun run build:averages"
+    "build:averages": "cd packages/scripts && bun run build:averages",
+    "build:ids": "cd packages/scripts && bun run build:ids"
   },
   "type": "module",
   "workspaces": [
