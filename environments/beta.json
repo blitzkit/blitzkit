@@ -1,0 +1,14 @@
+{
+  "paths": {
+    "default": null,
+    "api": null
+  },
+  "nodes": {
+    "default": "blitzkit/deploy-node-beta.blitzkit.app",
+    "api": "blitzkit/deploy-node-api.beta.blitzkit.app"
+  },
+  "aliases": {
+    "api": "https://api.beta.blitzkit.app",
+    "static": "https://static.beta.blitzkit.app"
+  }
+}

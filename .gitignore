@@ -1,7 +1,7 @@
 node_modules
 _node_modules
 package-lock.json
-*.env
+.env
 /test-results/
 /playwright-report/
 /playwright/.cache/
