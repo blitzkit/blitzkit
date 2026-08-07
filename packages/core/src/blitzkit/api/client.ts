@@ -6,6 +6,7 @@ import {
   EquipmentDefinitions,
   Gallery,
   GameDefinitions,
+  MapDefinitions,
   ModelDefinitions,
   ProvisionDefinitions,
   SkillDefinitions,
@@ -60,5 +61,9 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   galleryDefinitions() {
     return fetchPB(alias("api", "/definitions/gallery.pb"), Gallery);
+  }
+
+  mapDefinitions() {
+    return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
   }
 }
