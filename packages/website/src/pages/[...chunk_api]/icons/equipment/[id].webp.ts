@@ -69,8 +69,6 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     }
   }
 
-  console.log(paths);
-
   return paths;
 });
 
