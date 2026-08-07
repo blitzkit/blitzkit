@@ -31,7 +31,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ENVIRONMENT: ${{ inputs.environment || 'production' }}
+  ENVIRONMENT: ${{ inputs.environment || 'beta' }}
 
   # blitzkit
   PUBLIC_BRANCH: main
