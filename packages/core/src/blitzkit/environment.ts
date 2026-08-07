@@ -23,7 +23,7 @@ for (const key in environments) {
 }
 
 export function environmentConfig() {
-  const environment = assertSecret(import.meta.env.ENVIRONMENT);
+  const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 
   if (!(environment in environments)) {
     throw new Error(`Invalid environment "${environment}"`);

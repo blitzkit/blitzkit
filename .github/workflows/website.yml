@@ -31,7 +31,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ENVIRONMENT: ${{ inputs.environment || 'beta' }}
+  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'beta' }}
 
   # blitzkit
   PUBLIC_BRANCH: main
@@ -128,7 +128,6 @@ jobs:
         run: bun run --bun build
         env:
           CHUNK: ${{ matrix.chunk }}
-          ENVIRONMENT: ${{ env.ENVIRONMENT }}
 
       - name: Upload artifact
         id: upload
@@ -146,7 +145,7 @@ jobs:
           CHUNK: ${{ matrix.chunk }}
 
         run: |
-          ENV_FILE="environments/${ENVIRONMENT}.json"
+          ENV_FILE="environments/${PUBLIC_ENVIRONMENT}.json"
           TARGET_REPO=$(jq -r ".nodes.\"$CHUNK\"" "$ENV_FILE")
 
           if [ "$TARGET_REPO" == "null" ] || [ -z "$TARGET_REPO" ]; then
