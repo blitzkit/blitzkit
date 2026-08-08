@@ -244,7 +244,7 @@ for (let i = 0; i < chunks.length; i++) {
 
 const git = $.cwd(WORKING_DIR);
 
-await git`git add .`;
+await git`git add .`.quiet();
 await git`git commit --amend -m "ids update ${new Date().toISOString()}"`;
 await git`git push --force-with-lease`;
 
