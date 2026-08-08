@@ -1,5 +1,5 @@
 import { $ } from "bun";
-import { compress, uncompress } from "lz4-napi";
+import { compress, decompress } from "lz4js";
 import { mkdir, rm } from "node:fs/promises";
 import { IdArray } from "./idArray";
 
@@ -25,6 +25,10 @@ console.log(
   `${chunkCount.toLocaleString()} will be needed for ${ACCOMMODATED_ID_COUNT.toLocaleString()} ids`,
 );
 
+const t0 = performance.now();
+const maxT = 5 * 60 * 60 * 1000;
+const t1 = t0 + maxT;
+
 await mkdir(TEMP, { recursive: true });
 await rm(WORKING_DIR, { recursive: true, force: true });
 
@@ -44,9 +48,9 @@ for (let i = 0; true; i++) {
   if (!(await file.exists())) break;
 
   const bytes = await file.bytes();
-  const uncompressed = await uncompress(bytes);
+  const uncompressed = decompress(bytes);
 
-  const ids = IdArray.fromBytes(new Uint8Array(uncompressed));
+  const ids = IdArray.fromBytes(uncompressed);
 
   discoveredChunks.push(ids);
 }
@@ -78,28 +82,55 @@ if (discoveredChunks.length === chunkCount) {
     discoveredChunks[i] = null;
   }
 
-  await rm(`${CHUNKS_DIR}/*`, { force: true });
+  console.log("Sorting chunks...");
+
+  for (let i = 0; i < chunks.length; i++) chunks[i].sort();
 }
 
-console.log("Sorting chunks...");
+const regions = [
+  { domain: "eu", seed: 5e8, max: 10e8 - 1 },
+  { domain: "com", seed: 10e8, max: 20e8 - 1 },
+  { domain: "asia", seed: 20e8, max: 31e8 - 1 },
+];
 
-for (let i = 0; i < chunks.length; i++) chunks[i].sort();
+console.log("Finding new seed ids...");
+
+for (let i = 0; i < chunkCount; i++) {
+  const chunk = chunks[i];
+  const size = chunk.size();
+
+  for (let j = 0; j < size; j++) {
+    const id = chunk.get(j);
+
+    for (const region of regions) {
+      if (id <= region.max && id >= region.seed) {
+        region.seed = id + 1;
+      }
+    }
+  }
+}
+
+console.log("Found seeds:");
+
+for (const region of regions) {
+  console.log(`  ${region.domain}: ${region.seed.toLocaleString()}`);
+}
 
 console.log("Saving chunks...");
+
+await rm(`${CHUNKS_DIR}/*`, { force: true });
 
 for (let i = 0; i < chunks.length; i++) {
   const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
   const chunk = chunks[i];
   const bytes = chunk.toBytes();
-  const compressed = await compress(bytes);
+  const compressed = compress(bytes);
 
   await Bun.write(path, compressed);
 }
 
 // const MAX_IDS = 100;
 // const API_RATE = 10;
-
-// const BYTES_PER_ID = 64 / 8;
 
 // const regions = ["eu", "com", "asia"];
 // const seeds = [5e8, 10e8, 20e8].map(BigInt);
@@ -110,10 +141,6 @@ for (let i = 0; i < chunks.length; i++) {
 // }
 
 // const ids: bigint[] = [];
-
-// const t0 = performance.now();
-// const maxT = 5 * 60 * 60 * 1000;
-// const t1 = t0 + maxT;
 
 // const unfilled = Array.from({ length: seeds.length });
 // const offsets = unfilled.map(() => 0n);
