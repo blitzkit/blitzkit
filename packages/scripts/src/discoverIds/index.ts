@@ -1,4 +1,5 @@
 import { $ } from "bun";
+import { range } from "lodash-es";
 import { compress, decompress } from "lz4js";
 import { mkdir, rm } from "node:fs/promises";
 import { IdArray } from "./idArray";
@@ -8,6 +9,11 @@ interface ManifestV1 {
   last_verified: number;
 }
 
+export interface QuickInfo {
+  status: string;
+  data: Record<string, {} | null>;
+}
+
 const TEMP = "../../temp";
 const WORKING_DIR = `${TEMP}/ids`;
 const CHUNKS_DIR = `${WORKING_DIR}/chunks`;
@@ -15,6 +21,9 @@ const REPO = "blitzkit/ids";
 
 const ACCOMMODATED_ID_COUNT = 10_000_000_000; // 10B ids
 const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
+
+const MAX_IDS_PER_CALL = 100;
+const API_RATE = 10; // 10Hz
 
 // const chunkCount = Math.ceil(
 //   (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
@@ -26,7 +35,8 @@ console.log(
 );
 
 const t0 = performance.now();
-const maxT = 5 * 60 * 60 * 1000;
+// const maxT = 5 * 60 * 60 * 1000; // 5hr
+const maxT = 5 * 1000; // 5s
 const t1 = t0 + maxT;
 
 await mkdir(TEMP, { recursive: true });
@@ -116,6 +126,80 @@ for (const region of regions) {
   console.log(`  ${region.domain}: ${region.seed.toLocaleString()}`);
 }
 
+console.log("Starting discovery loop...");
+
+const queue: string[] = [];
+const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
+const fields = "account_id%2C-account_id";
+let regionI = 0;
+
+function fillQueue() {
+  if (queue.length >= 1) return;
+
+  regionI = (regionI + 1) % regions.length;
+  const region = regions[regionI];
+
+  const id0 = region.seed;
+  const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
+  const idRange = range(id0, id1 + 1);
+
+  const accountIds = idRange.join(",");
+  const url = `https://api.wotblitz.${
+    region.domain
+  }/wotb/account/info/?application_id=${applicationId}&fields=${
+    fields
+  }&account_id=${accountIds}`;
+
+  queue.push(url);
+
+  if (idRange.length < MAX_IDS_PER_CALL) {
+    console.log(
+      `Removing region ${region.domain} removed due to ID range exhaustion...`,
+    );
+    regions.splice(regionI, 1);
+  }
+}
+
+function sleep() {
+  return new Promise((resolve) => setTimeout(resolve, 1000 / API_RATE));
+}
+
+while (performance.now() < t1 && regions.length > 0) {
+  await sleep();
+
+  fillQueue();
+
+  if (queue.length === 0) {
+    console.log("Queue empty, ending discovery loop...");
+    break;
+  }
+
+  const url = queue.shift()!;
+  const response = await fetch(url);
+  const data = (await response.json()) as QuickInfo;
+
+  if (data.status !== "ok") {
+    console.warn("Failed API call; pushing back into queue...");
+    queue.push(url);
+
+    continue;
+  }
+
+  for (const key in data.data) {
+    const value = data.data[key];
+
+    if (value === null) continue;
+
+    const id = Number(key);
+    const chunkIndex = id % chunkCount;
+    const chunk = chunks[chunkIndex];
+
+    console.log(`${id} -> ${chunkIndex}`);
+
+    chunk.push(id);
+  }
+}
+
 console.log("Saving chunks...");
 
 await rm(`${CHUNKS_DIR}/*`, { force: true });
@@ -129,79 +213,7 @@ for (let i = 0; i < chunks.length; i++) {
   await Bun.write(path, compressed);
 }
 
-// const MAX_IDS = 100;
-// const API_RATE = 10;
-
-// const regions = ["eu", "com", "asia"];
-// const seeds = [5e8, 10e8, 20e8].map(BigInt);
-
-// export interface QuickInfo {
-//   status: string;
-//   data: Record<string, {} | null>;
-// }
-
-// const ids: bigint[] = [];
-
-// const unfilled = Array.from({ length: seeds.length });
-// const offsets = unfilled.map(() => 0n);
-// const queues = unfilled.map(() => [] as bigint[]);
-
-// function mountIds() {
-//   for (let i = 0; i < regions.length; i++) {
-//     const queue = queues[i];
-
-//     if (queue.length >= MAX_IDS) continue;
-
-//     const availableSpace = MAX_IDS - queue.length;
-
-//     const seed = seeds[i];
-//     const offset = offsets[i]++;
-
-//     for (let j = 0n; j < availableSpace; j++) {
-//       const id = seed + offset + j;
-//       queue.push(id);
-//     }
-
-//     offsets[i] += BigInt(availableSpace);
-//   }
-// }
-
-// let i = 0;
-// while (performance.now() < t1) {
-//   mountIds();
-//   await sleep();
-
-//   const region = regions[i];
-//   const queue = queues[i];
-
-//   const accountIds = queue.join(",");
-//   const fields = "account_id%2C-account_id";
-//   const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
-
-//   const url = `https://api.wotblitz.${
-//     region
-//   }/wotb/account/info/?application_id=${applicationId}&fields=${
-//     fields
-//   }&account_id=${accountIds}`;
-//   const response = await fetch(url);
-//   const data = (await response.json()) as QuickInfo;
-
-//   if (data.status !== "ok") continue;
-
-//   for (const key in data.data) {
-//     const value = data.data[key];
-
-//     if (value === null) continue;
-
-//     const id = BigInt(key);
-
-//     ids.push(id);
-//   }
-
-//   queues[i] = [];
-//   i = (i + 1) % regions.length;
-// }
-
-// function sleep() {
-//   return new Promise((resolve) => setTimeout(resolve, 1000 / API_RATE));
-// }
+await $`cd ${WORKING_DIR}`;
+await $`git add .`;
+await $`git commit --amend -m "ids update ${new Date().toISOString()}"`;
+await $`git push --force-with-lease`;
