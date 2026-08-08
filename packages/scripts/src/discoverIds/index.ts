@@ -2,6 +2,7 @@ import { $ } from "bun";
 import { range } from "lodash-es";
 import { compress, decompress } from "lz4js";
 import { mkdir, rm } from "node:fs/promises";
+import { exit } from "node:process";
 import { IdArray } from "./idArray";
 
 interface ManifestV1 {
@@ -42,8 +43,7 @@ console.log(
 );
 
 const t0 = performance.now();
-// const maxT = 5 * 60 * 60 * 1000; // 5hr
-const maxT = 60 * 1000;
+const maxT = 5 * 60 * 60 * 1000; // 5hr
 const t1 = t0 + maxT;
 
 await mkdir(TEMP, { recursive: true });
@@ -133,10 +133,46 @@ for (const region of regions) {
   console.log(`  ${region.domain}: ${region.seed.toLocaleString()}`);
 }
 
-console.log("Starting discovery loop...");
+let isSaving = false;
+async function save() {
+  if (isSaving) return;
+
+  isSaving = true;
+
+  console.log("Saving chunks...");
+
+  await rm(`${CHUNKS_DIR}/*`, { force: true });
+
+  let totalFound = 0;
+
+  for (let i = 0; i < chunks.length; i++) {
+    const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
+    const chunk = chunks[i];
+    const bytes = chunk.toBytes();
+    const compressed = compress(bytes);
+
+    totalFound += chunk.size();
+
+    await Bun.write(path, compressed);
+  }
+
+  const git = $.cwd(WORKING_DIR);
+
+  await git`git add .`.quiet();
+  await git`git commit --amend -m "ids update ${new Date().toISOString()}"`.quiet();
+  await git`git push --force-with-lease`.quiet();
+
+  console.log(
+    `Committed ${totalFound.toLocaleString()} total ids across ${chunkCount} chunks`,
+  );
+
+  exit(0);
+}
 
 process.on("SIGINT", save);
 process.on("SIGTERM", save);
+
+console.log("Starting discovery loop...");
 
 const queue: { region: RegionDescriptor; url: string; size: number }[] = [];
 const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
@@ -226,40 +262,6 @@ while (performance.now() < t1 && regions.length > 0) {
   } else {
     // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
   }
-}
-
-let isSaving = false;
-async function save() {
-  if (isSaving) return;
-
-  isSaving = true;
-
-  console.log("Saving chunks...");
-
-  await rm(`${CHUNKS_DIR}/*`, { force: true });
-
-  let totalFound = 0;
-
-  for (let i = 0; i < chunks.length; i++) {
-    const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
-    const chunk = chunks[i];
-    const bytes = chunk.toBytes();
-    const compressed = compress(bytes);
-
-    totalFound += chunk.size();
-
-    await Bun.write(path, compressed);
-  }
-
-  const git = $.cwd(WORKING_DIR);
-
-  await git`git add .`.quiet();
-  await git`git commit --amend -m "ids update ${new Date().toISOString()}"`.quiet();
-  await git`git push --force-with-lease`.quiet();
-
-  console.log(
-    `Committed ${totalFound.toLocaleString()} total ids across ${chunkCount} chunks`,
-  );
 }
 
 await save();
