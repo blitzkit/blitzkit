@@ -43,7 +43,7 @@ console.log(
 
 const t0 = performance.now();
 // const maxT = 5 * 60 * 60 * 1000; // 5hr
-const maxT = 15 * 1000;
+const maxT = 60 * 1000;
 const t1 = t0 + maxT;
 
 await mkdir(TEMP, { recursive: true });
@@ -158,6 +158,8 @@ function fillQueue() {
   const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
   const idRange = range(id0, id1 + 1);
 
+  region.seed += idRange.length;
+
   const accountIds = idRange.join(",");
   const url = `https://api.wotblitz.${
     region.domain
@@ -200,26 +202,26 @@ while (performance.now() < t1 && regions.length > 0) {
     continue;
   }
 
-  let foundIds = false;
+  let foundIds = 0;
 
   for (const key in data.data) {
     const value = data.data[key];
 
     if (value === null) continue;
 
-    foundIds = true;
+    foundIds++;
 
     const id = Number(key);
     const chunkIndex = id % chunkCount;
     const chunk = chunks[chunkIndex];
 
-    // console.log(`${id} -> ${chunkIndex}`);
-
     chunk.push(id);
   }
 
-  if (!foundIds) {
+  if (foundIds === 0) {
     request.region.streak += request.size;
+  } else {
+    // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
   }
 }
 
@@ -227,11 +229,15 @@ console.log("Saving chunks...");
 
 await rm(`${CHUNKS_DIR}/*`, { force: true });
 
+let totalFound = 0;
+
 for (let i = 0; i < chunks.length; i++) {
   const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
   const chunk = chunks[i];
   const bytes = chunk.toBytes();
   const compressed = compress(bytes);
+
+  totalFound += chunk.size();
 
   await Bun.write(path, compressed);
 }
@@ -241,3 +247,7 @@ const git = $.cwd(WORKING_DIR);
 await git`git add .`;
 await git`git commit --amend -m "ids update ${new Date().toISOString()}"`;
 await git`git push --force-with-lease`;
+
+console.log(
+  `Committed ${totalFound.toLocaleString()} total ids across ${chunkCount} chunks`,
+);
