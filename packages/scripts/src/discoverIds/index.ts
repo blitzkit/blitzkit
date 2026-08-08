@@ -1,5 +1,5 @@
 import { $ } from "bun";
-import { uncompress } from "lz4-napi";
+import { compress, uncompress } from "lz4-napi";
 import { mkdir, rm } from "node:fs/promises";
 import { IdArray } from "./idArray";
 
@@ -16,9 +16,10 @@ const REPO = "blitzkit/ids";
 const ACCOMMODATED_ID_COUNT = 10_000_000_000; // 10B ids
 const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
 
-const chunkCount = Math.ceil(
-  (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
-);
+// const chunkCount = Math.ceil(
+//   (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
+// );
+const chunkCount = 2;
 
 console.log(
   `${chunkCount.toLocaleString()} will be needed for ${ACCOMMODATED_ID_COUNT.toLocaleString()} ids`,
@@ -27,11 +28,14 @@ console.log(
 await mkdir(TEMP, { recursive: true });
 await rm(WORKING_DIR, { recursive: true, force: true });
 
-await $`git clone https://github.com/${REPO} ${WORKING_DIR}`;
+console.log(`Cloning ${REPO} to ${WORKING_DIR}`);
 
+await $`git clone --depth 1 https://github.com/${REPO} ${WORKING_DIR}`;
 await mkdir(CHUNKS_DIR, { recursive: true });
 
-const discoveredChunks: IdArray[] = [];
+console.log(`Discovering pre-existing chunks...`);
+
+const discoveredChunks: (IdArray | null)[] = [];
 
 for (let i = 0; true; i++) {
   const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
@@ -42,22 +46,54 @@ for (let i = 0; true; i++) {
   const bytes = await file.bytes();
   const uncompressed = await uncompress(bytes);
 
-  const array = new Uint32Array(
-    uncompressed.buffer,
-    uncompressed.byteOffset,
-    uncompressed.byteLength / Uint32Array.BYTES_PER_ELEMENT,
-  );
-  const ids = new IdArray(array);
+  const ids = IdArray.fromBytes(new Uint8Array(uncompressed));
 
   discoveredChunks.push(ids);
 }
 
+console.log(`Found ${discoveredChunks.length} pre-existing chunks`);
+
 let chunks: IdArray[] = [];
 
 if (discoveredChunks.length === chunkCount) {
-  chunks = discoveredChunks;
+  console.log("Pre-existing chunking is consistent, passing as-is...");
+
+  chunks = discoveredChunks as IdArray[];
 } else {
+  console.log("Pre-existing chunking is not consistent, re-chunking...");
+
   chunks = Array.from({ length: chunkCount }).map(() => new IdArray());
+
+  for (let i = 0; i < discoveredChunks.length; i++) {
+    const ids = discoveredChunks[i];
+    const size = ids!.size();
+
+    for (let j = 0; j < size; j++) {
+      const id = ids!.get(j);
+      const chunk = chunks[id % chunkCount];
+
+      chunk.push(id);
+    }
+
+    discoveredChunks[i] = null;
+  }
+
+  await rm(`${CHUNKS_DIR}/*`, { force: true });
+}
+
+console.log("Sorting chunks...");
+
+for (let i = 0; i < chunks.length; i++) chunks[i].sort();
+
+console.log("Saving chunks...");
+
+for (let i = 0; i < chunks.length; i++) {
+  const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
+  const chunk = chunks[i];
+  const bytes = chunk.toBytes();
+  const compressed = await compress(bytes);
+
+  await Bun.write(path, compressed);
 }
 
 // const MAX_IDS = 100;
