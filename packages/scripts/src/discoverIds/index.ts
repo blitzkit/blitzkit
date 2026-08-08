@@ -31,7 +31,7 @@ const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
 
 const MAX_IDS_PER_CALL = 100;
 const API_RATE = 10; // 10Hz
-const MAX_DRY_STREAK = 2_000;
+const MAX_DRY_STREAK = 10_000;
 
 const chunkCount = Math.ceil(
   (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
