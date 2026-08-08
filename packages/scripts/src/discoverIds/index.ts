@@ -9,6 +9,13 @@ interface ManifestV1 {
   last_verified: number;
 }
 
+interface RegionDescriptor {
+  domain: string;
+  seed: number;
+  max: number;
+  streak: number;
+}
+
 export interface QuickInfo {
   status: string;
   data: Record<string, {} | null>;
@@ -24,11 +31,11 @@ const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
 
 const MAX_IDS_PER_CALL = 100;
 const API_RATE = 10; // 10Hz
+const MAX_DRY_STREAK = 2_000;
 
-// const chunkCount = Math.ceil(
-//   (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
-// );
-const chunkCount = 2;
+const chunkCount = Math.ceil(
+  (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
+);
 
 console.log(
   `${chunkCount.toLocaleString()} will be needed for ${ACCOMMODATED_ID_COUNT.toLocaleString()} ids`,
@@ -36,7 +43,7 @@ console.log(
 
 const t0 = performance.now();
 // const maxT = 5 * 60 * 60 * 1000; // 5hr
-const maxT = 5 * 1000; // 5s
+const maxT = 15 * 1000;
 const t1 = t0 + maxT;
 
 await mkdir(TEMP, { recursive: true });
@@ -97,10 +104,10 @@ if (discoveredChunks.length === chunkCount) {
   for (let i = 0; i < chunks.length; i++) chunks[i].sort();
 }
 
-const regions = [
-  { domain: "eu", seed: 5e8, max: 10e8 - 1 },
-  { domain: "com", seed: 10e8, max: 20e8 - 1 },
-  { domain: "asia", seed: 20e8, max: 31e8 - 1 },
+const regions: RegionDescriptor[] = [
+  { domain: "eu", seed: 5e8, max: 10e8 - 1, streak: 0 },
+  { domain: "com", seed: 10e8, max: 20e8 - 1, streak: 0 },
+  { domain: "asia", seed: 20e8, max: 31e8 - 1, streak: 0 },
 ];
 
 console.log("Finding new seed ids...");
@@ -128,7 +135,7 @@ for (const region of regions) {
 
 console.log("Starting discovery loop...");
 
-const queue: string[] = [];
+const queue: { region: RegionDescriptor; url: string; size: number }[] = [];
 const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
 const fields = "account_id%2C-account_id";
 let regionI = 0;
@@ -138,6 +145,14 @@ function fillQueue() {
 
   regionI = (regionI + 1) % regions.length;
   const region = regions[regionI];
+
+  if (region.streak >= MAX_DRY_STREAK) {
+    console.log(
+      `Removing region ${region.domain} removed due to ${region.streak} dry streak...`,
+    );
+    regions.splice(regionI, 1);
+    return;
+  }
 
   const id0 = region.seed;
   const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
@@ -150,7 +165,7 @@ function fillQueue() {
     fields
   }&account_id=${accountIds}`;
 
-  queue.push(url);
+  queue.push({ region, url, size: idRange.length });
 
   if (idRange.length < MAX_IDS_PER_CALL) {
     console.log(
@@ -174,29 +189,37 @@ while (performance.now() < t1 && regions.length > 0) {
     break;
   }
 
-  const url = queue.shift()!;
-  const response = await fetch(url);
+  const request = queue.shift()!;
+  const response = await fetch(request.url);
   const data = (await response.json()) as QuickInfo;
 
   if (data.status !== "ok") {
     console.warn("Failed API call; pushing back into queue...");
-    queue.push(url);
+    queue.push(request);
 
     continue;
   }
+
+  let foundIds = false;
 
   for (const key in data.data) {
     const value = data.data[key];
 
     if (value === null) continue;
 
+    foundIds = true;
+
     const id = Number(key);
     const chunkIndex = id % chunkCount;
     const chunk = chunks[chunkIndex];
 
-    console.log(`${id} -> ${chunkIndex}`);
+    // console.log(`${id} -> ${chunkIndex}`);
 
     chunk.push(id);
+  }
+
+  if (!foundIds) {
+    request.region.streak += request.size;
   }
 }
 
@@ -213,7 +236,8 @@ for (let i = 0; i < chunks.length; i++) {
   await Bun.write(path, compressed);
 }
 
-await $`cd ${WORKING_DIR}`;
-await $`git add .`;
-await $`git commit --amend -m "ids update ${new Date().toISOString()}"`;
-await $`git push --force-with-lease`;
+const git = $.cwd(WORKING_DIR);
+
+await git`git add .`;
+await git`git commit --amend -m "ids update ${new Date().toISOString()}"`;
+await git`git push --force-with-lease`;
