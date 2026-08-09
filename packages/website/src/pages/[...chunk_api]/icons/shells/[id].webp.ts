@@ -11,6 +11,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     .dir(`Data/Gfx/Shared/tank-supply/ammunition/big`)
     .then((files) => files.filter((file) => file.endsWith("_l.txt")));
 
+  console.log("Shell file paths", files);
+
   for (const file of files) {
     const id = file.match(/(.+)_l\.txt/)![1];
     const sizes = (
