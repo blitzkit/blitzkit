@@ -179,8 +179,6 @@ async function save() {
 process.on("SIGINT", save);
 process.on("SIGTERM", save);
 
-console.log("Starting discovery loop...");
-
 const queue: { region: RegionDescriptor; url: string; size: number }[] = [];
 const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
 const fields = "account_id%2C-account_id";
@@ -227,7 +225,13 @@ function sleep() {
   return new Promise((resolve) => setTimeout(resolve, 1000 / API_RATE));
 }
 
-while (performance.now() < t1 && regions.length > 0) {
+function withinTimeLimit() {
+  return performance.now() < t1;
+}
+
+console.log("Starting discovery loop...");
+
+while (withinTimeLimit() && regions.length > 0) {
   await sleep();
 
   fillQueue();
@@ -270,5 +274,24 @@ while (performance.now() < t1 && regions.length > 0) {
     // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
   }
 }
+
+// console.log("Starting verification loop...");
+
+// while (withinTimeLimit()) {
+//   const verificationIndex = (manifest.last_verified + 1) % manifest.chunks;
+//   manifest.last_verified = verificationIndex;
+//   const chunk = chunks[verificationIndex];
+//   const size = chunk.size();
+
+//   let i0 = 0;
+//   while (withinTimeLimit() && i0 < size) {
+//     await sleep();
+
+//     const i1 = Math.min(i0 + MAX_IDS_PER_CALL - 1, size - 1);
+//     const indices = range(i0, i1 + 1);
+//   }
+
+//   console.log(`Verification complete for chunk ${verificationIndex}`);
+// }
 
 await save();
