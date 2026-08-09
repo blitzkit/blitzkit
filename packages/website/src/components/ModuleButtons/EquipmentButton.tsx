@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
@@ -15,7 +16,7 @@ export function EquipmentButton({ equipment, ...props }: EquipmentButtonProps) {
   return (
     <GenericTankComponentButton
       tooltip={unwrap(equipmentDefinitions.equipments[equipment].name!)}
-      icon={`/api/icons/equipment/${equipment}.webp`}
+      icon={alias("api", `/icons/equipment/${equipment}.webp`)}
       {...props}
     />
   );

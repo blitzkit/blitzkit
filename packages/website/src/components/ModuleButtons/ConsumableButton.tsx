@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import { ClockIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Flex, Text } from "@radix-ui/themes";
 import { api } from "../../core/blitzkit/api";
@@ -28,7 +29,7 @@ export function ConsumableButton({
     <GenericTankComponentButton
       style={{ width: "6rem" }}
       tooltip={unwrap(consumableDefinitions.consumables[consumable].name!)}
-      icon={`/api/icons/consumables/${consumable}.webp`}
+      icon={alias("api", `/icons/consumables/${consumable}.webp`)}
       {...props}
     >
       {(cooldown || duration) && (

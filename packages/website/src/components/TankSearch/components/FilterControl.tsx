@@ -1070,8 +1070,10 @@ function GameModeAbilitiesFilter() {
       : rawPowers;
 
   const icons = [
-    ...abilities.map((ability) => `api/icons/consumables/${ability}.webp`),
-    ...powers.map((power) => `api/icons/provisions/${power}.webp`),
+    ...abilities.map((ability) =>
+      alias("api", `/icons/consumables/${ability}.webp`),
+    ),
+    ...powers.map((power) => alias("api", `/icons/provisions/${power}.webp`)),
   ];
 
   return (
