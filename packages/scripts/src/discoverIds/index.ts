@@ -8,6 +8,7 @@ import { IdArray } from "./idArray";
 interface ManifestV1 {
   version: 1;
   last_verified: number;
+  chunks: number;
 }
 
 interface RegionDescriptor {
@@ -34,14 +35,6 @@ const MAX_IDS_PER_CALL = 100;
 const API_RATE = 10; // 10Hz
 const MAX_DRY_STREAK = 10_000;
 
-const chunkCount = Math.ceil(
-  (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
-);
-
-console.log(
-  `${chunkCount.toLocaleString()} will be needed for ${ACCOMMODATED_ID_COUNT.toLocaleString()} ids`,
-);
-
 const t0 = performance.now();
 const maxT = 5 * 60 * 60 * 1000; // 5hr
 const t1 = t0 + maxT;
@@ -58,11 +51,13 @@ console.log(`Discovering pre-existing chunks...`);
 
 const discoveredChunks: (IdArray | null)[] = [];
 
-for (let i = 0; true; i++) {
+const manifest: ManifestV1 = await Bun.file(
+  `${WORKING_DIR}/manifest.json`,
+).json();
+
+for (let i = 0; i < manifest.chunks; i++) {
   const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
   const file = Bun.file(path);
-
-  if (!(await file.exists())) break;
 
   const bytes = await file.bytes();
   const uncompressed = decompress(bytes);
@@ -72,18 +67,22 @@ for (let i = 0; true; i++) {
   discoveredChunks.push(ids);
 }
 
-console.log(`Found ${discoveredChunks.length} pre-existing chunks`);
+console.log(`Found ${manifest.chunks} pre-existing chunks`);
+
+manifest.chunks = Math.ceil(
+  (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
+);
 
 let chunks: IdArray[] = [];
 
-if (discoveredChunks.length === chunkCount) {
+if (discoveredChunks.length === manifest.chunks) {
   console.log("Pre-existing chunking is consistent, passing as-is...");
 
   chunks = discoveredChunks as IdArray[];
 } else {
   console.log("Pre-existing chunking is not consistent, re-chunking...");
 
-  chunks = Array.from({ length: chunkCount }).map(() => new IdArray());
+  chunks = Array.from({ length: manifest.chunks }).map(() => new IdArray());
 
   for (let i = 0; i < discoveredChunks.length; i++) {
     const ids = discoveredChunks[i];
@@ -91,7 +90,7 @@ if (discoveredChunks.length === chunkCount) {
 
     for (let j = 0; j < size; j++) {
       const id = ids!.get(j);
-      const chunk = chunks[id % chunkCount];
+      const chunk = chunks[id % manifest.chunks];
 
       chunk.push(id);
     }
@@ -112,7 +111,7 @@ const regions: RegionDescriptor[] = [
 
 console.log("Finding new seed ids...");
 
-for (let i = 0; i < chunkCount; i++) {
+for (let i = 0; i < manifest.chunks; i++) {
   const chunk = chunks[i];
   const size = chunk.size();
 
@@ -156,6 +155,11 @@ async function save() {
     await Bun.write(path, compressed);
   }
 
+  await Bun.write(
+    `${WORKING_DIR}/manifest.json`,
+    JSON.stringify(manifest, null, 2),
+  );
+
   const git = $.cwd(WORKING_DIR);
 
   await git`git add .`.quiet();
@@ -163,7 +167,7 @@ async function save() {
   await git`git push --force-with-lease`.quiet();
 
   console.log(
-    `Committed ${totalFound.toLocaleString()} total ids across ${chunkCount} chunks`,
+    `Committed ${totalFound.toLocaleString()} total ids across ${manifest.chunks} chunks`,
   );
 
   exit(0);
@@ -251,7 +255,7 @@ while (performance.now() < t1 && regions.length > 0) {
     foundIds++;
 
     const id = Number(key);
-    const chunkIndex = id % chunkCount;
+    const chunkIndex = id % manifest.chunks;
     const chunk = chunks[chunkIndex];
 
     chunk.push(id);
