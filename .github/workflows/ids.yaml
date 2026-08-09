@@ -11,9 +11,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
-
 jobs:
   discover:
     name: Discover IDs
@@ -40,3 +37,6 @@ jobs:
 
       - name: Discover IDs
         run: bun run discover-ids
+        env:
+          PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
+          GH_TOKEN: ${{ secrets.IDS_TOKEN }}

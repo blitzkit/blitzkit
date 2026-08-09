@@ -46,7 +46,12 @@ await rm(WORKING_DIR, { recursive: true, force: true });
 
 console.log(`Cloning ${REPO} to ${WORKING_DIR}`);
 
-await $`git clone --depth 1 https://github.com/${REPO} ${WORKING_DIR}`;
+const token = process.env.GH_TOKEN;
+const repoUrl = token
+  ? `https://x-access-token:${token}@github.com/${REPO}.git`
+  : `https://github.com/${REPO}.git`;
+
+await $`git clone --depth 1 ${repoUrl} ${WORKING_DIR}`;
 await mkdir(CHUNKS_DIR, { recursive: true });
 
 console.log(`Discovering pre-existing chunks...`);
