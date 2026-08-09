@@ -37,8 +37,7 @@ const API_RATE = 10; // 10Hz
 const MAX_DRY_STREAK = 10_000;
 
 const t0 = performance.now();
-// const maxT = 5 * 60 * 60 * 1000; // 5hr
-const maxT = 60 * 1000; // 60s
+const maxT = 5.5 * 60 * 60 * 1000; // 5hr 30min
 const t1 = t0 + maxT;
 
 await mkdir(TEMP, { recursive: true });
