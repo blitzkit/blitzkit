@@ -26,6 +26,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     });
   }
 
+  console.log("Shell paths", paths);
+
   return paths;
 });
 
