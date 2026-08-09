@@ -31,10 +31,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'beta' }}
-
   # blitzkit
-  PUBLIC_BRANCH: main
+  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'beta' }}
   PUBLIC_PROMOTE_OPENTEST: false
   PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
   PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com

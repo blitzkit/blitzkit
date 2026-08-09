@@ -43,10 +43,11 @@
     },
 
     "branches": {
-      "local": "dev",
-      "dev": "beta",
-      "opentest": "opentest",
-      "preview": "preview"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "OpenTest",
+      "preview": "Preview",
+      "production": "Production"
     },
 
     "locales": {

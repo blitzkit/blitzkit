@@ -16,7 +16,7 @@ import { getStaticPaths as _getStaticPaths } from "../_index";
 
 const MAX_TOOLS_PER_ROW = 2;
 
-const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
+const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 const { locale } = Astro.props;
 const strings = getStrings(locale);
 const rows: Tool[][] = [];
@@ -88,7 +88,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   <Plugs client:idle />
 
   {
-    PUBLIC_ASSET_BRANCH === "preview" && (
+    environment === "preview" && (
       <Flex justify="center" my="8" px="4">
         <AesonPlug />
       </Flex>

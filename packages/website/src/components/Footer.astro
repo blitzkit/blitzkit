@@ -12,7 +12,7 @@ export interface Props {
 }
 
 const gameDefinitions = await api.gameDefinitions();
-const PUBLIC_ASSET_BRANCH = assertSecret(import.meta.env.PUBLIC_BRANCH);
+const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 const { locale } = Astro.props;
 const strings = getStrings(locale);
 ---
@@ -135,7 +135,7 @@ const strings = getStrings(locale);
     <Flex direction="column" gap="1" flexGrow="1" flexBasis="0" align="end">
       <Text size="2" color="gray">BlitzKit</Text>
       {
-        PUBLIC_ASSET_BRANCH !== "preview" && (
+        environment !== "preview" && (
           <Text size="2" color="gray">
             WoTB
           </Text>
@@ -149,14 +149,14 @@ const strings = getStrings(locale);
         {packageJson.version}
       </Code>
       {
-        PUBLIC_ASSET_BRANCH !== "preview" && (
+        environment !== "preview" && (
           <Code size="2" color="gray">
             {gameDefinitions.version}
           </Code>
         )
       }
       <Code size="2" color="gray">
-        {PUBLIC_ASSET_BRANCH}
+        {environment}
       </Code>
     </Flex>
   </Flex>
@@ -168,7 +168,7 @@ const strings = getStrings(locale);
     </Code>
 
     {
-      PUBLIC_ASSET_BRANCH !== "preview" && (
+      environment !== "preview" && (
         <>
           <Text size="2" color="gray">
             WoTB
@@ -182,7 +182,7 @@ const strings = getStrings(locale);
 
     <Text size="2" color="gray">CDN</Text>
     <Code size="2" color="gray">
-      {PUBLIC_ASSET_BRANCH}
+      {environment}
     </Code>
   </Flex>
 </Flex>
