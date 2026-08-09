@@ -9,6 +9,7 @@ interface ManifestV1 {
   version: 1;
   last_verified: number;
   chunks: number;
+  total_count: number;
 }
 
 interface RegionDescriptor {
@@ -154,6 +155,8 @@ async function save() {
 
     await Bun.write(path, compressed);
   }
+
+  manifest.total_count = totalFound;
 
   await Bun.write(
     `${WORKING_DIR}/manifest.json`,
