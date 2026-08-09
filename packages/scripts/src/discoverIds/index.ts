@@ -172,7 +172,7 @@ async function save() {
   const git = $.cwd(WORKING_DIR);
 
   await git`git add .`.quiet();
-  await git`git commit --amend -m "ids update ${new Date().toISOString()}"`.quiet();
+  await git`git commit --amend --reset-author -m "ids update ${new Date().toISOString()}"`.quiet();
   await git`git push --force-with-lease`.quiet();
 
   console.log(
