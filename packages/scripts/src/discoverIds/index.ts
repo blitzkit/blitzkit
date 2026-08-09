@@ -16,7 +16,7 @@ interface RegionDescriptor {
   domain: string;
   seed: number;
   max: number;
-  streak: number;
+  dry_streak: number;
 }
 
 export interface QuickInfo {
@@ -110,9 +110,9 @@ if (discoveredChunks.length === manifest.chunks) {
 }
 
 const regions: RegionDescriptor[] = [
-  { domain: "eu", seed: 5e8, max: 10e8 - 1, streak: 0 },
-  { domain: "com", seed: 10e8, max: 20e8 - 1, streak: 0 },
-  { domain: "asia", seed: 20e8, max: 31e8 - 1, streak: 0 },
+  { domain: "eu", seed: 5e8, max: 10e8 - 1, dry_streak: 0 },
+  { domain: "com", seed: 10e8, max: 20e8 - 1, dry_streak: 0 },
+  { domain: "asia", seed: 20e8, max: 31e8 - 1, dry_streak: 0 },
 ];
 
 console.log("Finding new seed ids...");
@@ -192,37 +192,41 @@ let regionI = 0;
 function fillQueue() {
   if (queue.length >= 1) return;
 
-  regionI = (regionI + 1) % regions.length;
-  const region = regions[regionI];
+  while (regions.length > 0) {
+    regionI = (regionI + 1) % regions.length;
+    const region = regions[regionI];
 
-  if (region.streak >= MAX_DRY_STREAK) {
-    console.log(
-      `Removing region ${region.domain} removed due to ${region.streak} dry streak...`,
-    );
-    regions.splice(regionI, 1);
+    if (region.dry_streak >= MAX_DRY_STREAK) {
+      console.log(
+        `Removing region ${region.domain} removed due to ${region.dry_streak} dry streak...`,
+      );
+      regions.splice(regionI, 1);
+      continue;
+    }
+
+    const id0 = region.seed;
+    const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
+    const idRange = range(id0, id1 + 1);
+
+    region.seed += idRange.length;
+
+    const accountIds = idRange.join(",");
+    const url = `https://api.wotblitz.${
+      region.domain
+    }/wotb/account/info/?application_id=${applicationId}&fields=${
+      fields
+    }&account_id=${accountIds}`;
+
+    queue.push({ region, url, size: idRange.length });
+
+    if (idRange.length < MAX_IDS_PER_CALL) {
+      console.log(
+        `Removing region ${region.domain} removed due to ID range exhaustion...`,
+      );
+      regions.splice(regionI, 1);
+    }
+
     return;
-  }
-
-  const id0 = region.seed;
-  const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
-  const idRange = range(id0, id1 + 1);
-
-  region.seed += idRange.length;
-
-  const accountIds = idRange.join(",");
-  const url = `https://api.wotblitz.${
-    region.domain
-  }/wotb/account/info/?application_id=${applicationId}&fields=${
-    fields
-  }&account_id=${accountIds}`;
-
-  queue.push({ region, url, size: idRange.length });
-
-  if (idRange.length < MAX_IDS_PER_CALL) {
-    console.log(
-      `Removing region ${region.domain} removed due to ID range exhaustion...`,
-    );
-    regions.splice(regionI, 1);
   }
 }
 
@@ -274,8 +278,9 @@ while (withinTimeLimit() && regions.length > 0) {
   }
 
   if (foundIds === 0) {
-    request.region.streak += request.size;
+    request.region.dry_streak += request.size;
   } else {
+    request.region.dry_streak = 0;
     // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
   }
 }
