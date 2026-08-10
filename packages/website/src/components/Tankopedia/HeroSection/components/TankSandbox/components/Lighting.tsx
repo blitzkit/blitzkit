@@ -14,18 +14,18 @@ import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 
-const ANGLE = degToRad(12);
+const ANGLE = degToRad(15);
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
 const LIGHTS_COUNT = 3;
 const THETA_OFFSET = degToRad(180 - 45);
 const LIGHT_DISTANCE = 20;
-const LIGHT_HEIGHT_0 = 4;
-const LIGHT_HEIGHT_1 = 6;
-const INTENSITY_0 = 2 ** 6.5;
-const INTENSITY_1 = 2 ** 3.5;
-const HEMISPHERE_INTENSITY = 2 ** 1.2;
+const LIGHT_HEIGHT_0 = 7;
+const LIGHT_HEIGHT_1 = 10;
+const INTENSITY_0 = 2 ** 6;
+const INTENSITY_1 = 2 ** 3;
+const HEMISPHERE_INTENSITY = 2 ** 0.7;
 
 export const transitionEvent = new Quicklime<number>(0);
 
