@@ -5,7 +5,6 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import { Fog } from "three";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
@@ -150,7 +149,6 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
       <SmartCanvas
         resize={{ debounce: 0 }}
         ref={canvas}
-        scene={{ fog: new Fog("black", 30, 50) }}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,

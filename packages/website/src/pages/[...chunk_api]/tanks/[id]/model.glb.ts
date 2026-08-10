@@ -380,7 +380,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
 
 async function readBaseColor(path: string) {
   const raw = await readTexture(path);
-  const image = await sharp(raw.data, { raw: raw }).webp().toBuffer();
+  const image = await sharp(raw.data, { raw }).webp().toBuffer();
 
   return image;
 }
@@ -388,13 +388,7 @@ async function readBaseColor(path: string) {
 async function readOcclusion(path: string) {
   const raw = await readTexture(path);
 
-  const image = await sharp(raw.data, {
-    raw: {
-      width: raw.width,
-      height: raw.height,
-      channels: raw.channels,
-    },
-  })
+  const image = await sharp(raw.data, { raw })
     .extractChannel(3)
     .webp()
     .toBuffer();
@@ -404,7 +398,7 @@ async function readOcclusion(path: string) {
 
 async function readRoughnessMetallic(path: string) {
   const raw = await readTexture(path);
-  const blitz = sharp(raw.data, { raw: raw });
+  const blitz = sharp(raw.data, { raw });
   const metallicness = await blitz?.extractChannel(1).raw().toBuffer();
   const roughness = await blitz?.extractChannel(3).raw().toBuffer();
 

@@ -1,3 +1,4 @@
+import { ContactShadows } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { clamp, times } from "lodash-es";
 import { Quicklime } from "quicklime";
@@ -12,25 +13,24 @@ import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
-import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
 
 const ANGLE = degToRad(12);
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
-const LIGHTS_COUNT = 4;
+const LIGHTS_COUNT = 3;
 const THETA_OFFSET = degToRad(180 - 45);
 const LIGHT_DISTANCE = 20;
 const LIGHT_HEIGHT_0 = 4;
 const LIGHT_HEIGHT_1 = 6;
-const INTENSITY_0 = 6 * 9;
-const INTENSITY_1 = 3 * 9;
-const HEMISPHERE_INTENSITY = 2;
+const INTENSITY_0 = 2 ** 6.5;
+const INTENSITY_1 = 2 ** 3.5;
+const HEMISPHERE_INTENSITY = 2 ** 1.2;
 
 export const transitionEvent = new Quicklime<number>(0);
 
 export function Lighting() {
-  const wrapper = useRef<Group>(null!);
+  const wrapper = useRef<Group>(null);
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
@@ -61,6 +61,8 @@ export function Lighting() {
 
   return (
     <>
+      <ContactShadows blur={2 ** 1} opacity={2 ** 1} />
+
       {animate && (
         <Animator
           t0={t0}
@@ -73,7 +75,7 @@ export function Lighting() {
       )}
 
       <group ref={wrapper}>
-        <hemisphereLight intensity={0} color="#ffffff" groundColor="#afafaf" />
+        <hemisphereLight intensity={0} color="#d2e9ff" groundColor="#85490c" />
 
         {times(LIGHTS_COUNT, (index) => {
           const x = index / (LIGHTS_COUNT - 1);
@@ -86,8 +88,7 @@ export function Lighting() {
           const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
 
           return (
-            <HelpingSpotLight
-              userData={{ index }}
+            <spotLight
               key={index}
               position={position}
               intensity={intensity}
@@ -109,13 +110,15 @@ interface AnimatorProps {
 
   t0: RefObject<number>;
   animationTime: RefObject<number>;
-  wrapper: RefObject<Group>;
+  wrapper: RefObject<Group | null>;
 }
 
 function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
 
   const apply = useCallback((t: number) => {
+    if (wrapper.current === null) return;
+
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
         child.angle = ANGLE * t;

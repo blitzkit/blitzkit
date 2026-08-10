@@ -3,7 +3,7 @@ import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { Mesh, MeshStandardMaterial } from "three";
 
-const SIZE = 2 ** 4;
+const SIZE = 2 ** 5;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
@@ -26,6 +26,7 @@ export function SceneProps() {
 
   return (
     <mesh
+      position={[0, -(2 ** -8), 0]}
       rotation={[-Math.PI / 2, 0, 0]}
       receiveShadow
       visible={!screenshotReadyEvent.last!}
@@ -36,7 +37,7 @@ export function SceneProps() {
         ref={material}
         color="black"
         roughness={1}
-        metalness={0}
+        metalness={1}
       />
     </mesh>
   );
