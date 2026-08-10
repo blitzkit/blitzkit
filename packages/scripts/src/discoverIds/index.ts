@@ -1,73 +1,40 @@
-import { $ } from "bun";
 import { range } from "lodash-es";
 import { compress, decompress } from "lz4js";
-import { mkdir, rm } from "node:fs/promises";
 import { exit } from "node:process";
-import { IdArray } from "./idArray";
+import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
+import { IdArray } from "../core/blitzkit/idArray";
+import {
+  ACCOMMODATED_ID_COUNT,
+  API_RATE,
+  MAX_BYTES_PER_CHUNK,
+  MAX_DRY_STREAK,
+  MAX_IDS_PER_CALL,
+  REPO,
+  WORKING_DIR,
+} from "./constants";
+import { ManifestV1, QuickInfo, RegionDescriptor } from "./types";
 
-interface ManifestV1 {
-  version: 1;
-  last_verified: number;
-  chunks: number;
-  total_count: number;
-}
-
-interface RegionDescriptor {
-  domain: string;
-  seed: number;
-  max: number;
-  dry_streak: number;
-}
-
-export interface QuickInfo {
-  status: string;
-  data: Record<string, {} | null>;
-}
-
-const TEMP = "../../temp";
-const WORKING_DIR = `${TEMP}/ids`;
-const CHUNKS_DIR = `${WORKING_DIR}/chunks`;
-const REPO = "blitzkit/ids";
-
-const ACCOMMODATED_ID_COUNT = 10_000_000_000; // 10B ids
-const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
-
-const MAX_IDS_PER_CALL = 100;
-const API_RATE = 10; // 10Hz
-const MAX_DRY_STREAK = 10_000;
+const storage = await new GitObjectStorage(
+  REPO,
+  WORKING_DIR,
+  import.meta.env.GH_TOKEN,
+).init();
 
 const t0 = performance.now();
 const maxT = 5.5 * 60 * 60 * 1000; // 5hr 30min
 const t1 = t0 + maxT;
 
-await mkdir(TEMP, { recursive: true });
-await rm(WORKING_DIR, { recursive: true, force: true });
-
-console.log(`Cloning ${REPO} to ${WORKING_DIR}`);
-
-const token = process.env.GH_TOKEN;
-const repoUrl = token
-  ? `https://x-access-token:${token}@github.com/${REPO}.git`
-  : `https://github.com/${REPO}.git`;
-
-await $`git clone --depth 1 ${repoUrl} ${WORKING_DIR}`;
-await mkdir(CHUNKS_DIR, { recursive: true });
+await storage.mkdir("chunks");
 
 console.log(`Discovering pre-existing chunks...`);
 
 const discoveredChunks: (IdArray | null)[] = [];
 
-const manifest: ManifestV1 = await Bun.file(
-  `${WORKING_DIR}/manifest.json`,
-).json();
+const manifest = await storage.json<ManifestV1>("manifest.json");
 
 for (let i = 0; i < manifest.chunks; i++) {
-  const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
-  const file = Bun.file(path);
-
-  const bytes = await file.bytes();
+  const bytes = await storage.bytes(`chunks/chunk-${i}.dat.lz4`);
   const uncompressed = decompress(bytes);
-
   const ids = IdArray.fromBytes(uncompressed);
 
   discoveredChunks.push(ids);
@@ -146,33 +113,25 @@ async function save() {
 
   console.log("Saving chunks...");
 
-  await rm(`${CHUNKS_DIR}/*`, { force: true });
+  await storage.rm("chunks/*");
 
   let totalFound = 0;
 
   for (let i = 0; i < chunks.length; i++) {
-    const path = `${CHUNKS_DIR}/chunk-${i}.dat.lz4`;
     const chunk = chunks[i];
     const bytes = chunk.toBytes();
     const compressed = compress(bytes);
 
     totalFound += chunk.size();
 
-    await Bun.write(path, compressed);
+    await storage.write(`chunks/chunk-${i}.dat.lz4`, compressed);
   }
 
   manifest.total_count = totalFound;
 
-  await Bun.write(
-    `${WORKING_DIR}/manifest.json`,
-    JSON.stringify(manifest, null, 2),
-  );
+  await storage.write("manifest.json", JSON.stringify(manifest, null, 2));
 
-  const git = $.cwd(WORKING_DIR);
-
-  await git`git add .`.quiet();
-  await git`git commit --amend --reset-author -m "ids update ${new Date().toISOString()}"`.quiet();
-  await git`git push --force-with-lease`.quiet();
+  await storage.commit();
 
   console.log(
     `Committed ${totalFound.toLocaleString()} total ids across ${manifest.chunks} chunks`,
