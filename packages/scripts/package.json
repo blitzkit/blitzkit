@@ -1,5 +1,10 @@
 {
   "name": "@blitzkit/scripts",
+  "private": true,
+  "scripts": {
+    "discover-ids": "bun src/discoverIds/index.ts",
+    "build-protos": "bun src/protos.ts"
+  },
   "dependencies": {
     "@blitzkit/closed": "workspace:*",
     "@blitzkit/core": "workspace:*",
@@ -33,10 +38,6 @@
     "ts-proto": "^2.7.7",
     "unzipit": "^1.4.3",
     "yaml": "^2.8.1"
-  },
-  "private": true,
-  "scripts": {
-    "discover-ids": "bun src/discoverIds/index.ts"
   },
   "type": "module"
 }
