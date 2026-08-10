@@ -21,7 +21,7 @@ const storage = await new GitObjectStorage(
 ).init();
 
 const t0 = performance.now();
-const maxT = 5.5 * 60 * 60 * 1000; // 5hr 30min
+const maxT = (5 * 60 + 55) * 60 * 1000; // 5hr 55min
 const t1 = t0 + maxT;
 
 await storage.mkdir("chunks");
