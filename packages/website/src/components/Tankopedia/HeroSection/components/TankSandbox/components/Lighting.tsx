@@ -81,7 +81,7 @@ export function Lighting() {
           const x = index / (LIGHTS_COUNT - 1);
           const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
           const position = [
-            LIGHT_DISTANCE * Math.sin(theta),
+            -LIGHT_DISTANCE * Math.sin(theta),
             lerp(LIGHT_HEIGHT_0, LIGHT_HEIGHT_1, x),
             LIGHT_DISTANCE * Math.cos(theta),
           ] as const;

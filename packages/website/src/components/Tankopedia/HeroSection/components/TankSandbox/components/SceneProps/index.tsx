@@ -37,7 +37,7 @@ export function SceneProps() {
         ref={material}
         color="black"
         roughness={1}
-        metalness={1}
+        metalness={0}
       />
     </mesh>
   );
