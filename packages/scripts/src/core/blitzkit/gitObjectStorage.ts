@@ -43,7 +43,7 @@ export class GitObjectStorage {
   }
 
   file(path: string) {
-    return Bun.file(path);
+    return Bun.file(`${this.base}/${path}`);
   }
 
   async bytes(path: string) {
