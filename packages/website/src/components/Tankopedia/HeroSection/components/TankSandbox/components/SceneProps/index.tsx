@@ -1,10 +1,8 @@
 import { mauveDark } from "@radix-ui/colors";
 import { invalidate } from "@react-three/fiber";
 import { Quicklime, type QuicklimeEvent } from "quicklime";
-import { useEffect, useRef } from "react";
-import { Color, Mesh } from "three";
-import fragmentShader from "./shaders/fragment.glsl?raw";
-import vertexShader from "./shaders/vertex.glsl?raw";
+import { useCallback, useEffect, useRef } from "react";
+import { Mesh, type WebGLProgramParametersWithUniforms } from "three";
 
 const SIZE = 2 ** 4;
 
@@ -26,22 +24,62 @@ export function SceneProps() {
     };
   }, []);
 
+  const handleBeforeCompile = useCallback(
+    (shader: WebGLProgramParametersWithUniforms) => {
+      shader.uniforms.size = { value: SIZE / 2 };
+
+      shader.vertexShader = `
+        varying vec3 vWorldPosition;
+
+        ${shader.vertexShader}
+      `.replace(
+        "#include <worldpos_vertex>",
+
+        `
+          #include <worldpos_vertex>
+          vWorldPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;
+        `,
+      );
+
+      shader.fragmentShader = `
+        varying vec3 vWorldPosition;
+        uniform float size;
+
+        ${shader.fragmentShader}
+      `.replace(
+        "#include <color_fragment>",
+
+        `
+          #include <color_fragment>
+
+          vec3 scaled = vWorldPosition / size;
+          float radius = length(scaled.xz);
+
+          if (radius >= 1.0) {
+            discard;
+          }
+
+          diffuseColor.a *= (1.0 - radius);
+        `,
+      );
+    },
+    [],
+  );
+
   return (
     <mesh
       position={[0, -(2 ** -8), 0]}
       rotation={[-Math.PI / 2, 0, 0]}
       visible={!screenshotReadyEvent.last!}
       ref={mesh}
+      receiveShadow
     >
       <planeGeometry args={[SIZE, SIZE]} />
-      <shaderMaterial
-        fragmentShader={fragmentShader}
-        vertexShader={vertexShader}
+      <meshStandardMaterial
+        color={mauveDark.mauve6}
+        roughness={1}
         transparent
-        uniforms={{
-          size: { value: SIZE / 2 },
-          color: { value: new Color(mauveDark.mauve8) },
-        }}
+        onBeforeCompile={handleBeforeCompile}
       />
     </mesh>
   );
