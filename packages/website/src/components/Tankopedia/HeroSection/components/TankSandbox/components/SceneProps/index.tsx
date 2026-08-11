@@ -1,7 +1,9 @@
 import { invalidate } from "@react-three/fiber";
 import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
-import { Mesh, MeshStandardMaterial } from "three";
+import { Mesh, MeshStandardMaterial, Vector3 } from "three";
+import fragmentShader from "./shaders/fragment.glsl?raw";
+import vertexShader from "./shaders/vertex.glsl?raw";
 
 const SIZE = 2 ** 5;
 
@@ -33,11 +35,15 @@ export function SceneProps() {
       ref={mesh}
     >
       <planeGeometry args={[SIZE, SIZE]} />
-      <meshStandardMaterial
-        ref={material}
-        color="black"
-        roughness={1}
-        metalness={0}
+      <shaderMaterial
+        fragmentShader={fragmentShader}
+        vertexShader={vertexShader}
+        transparent
+        lights
+        uniforms={{
+          size: { value: SIZE / 2 },
+          color: { value: new Vector3(1, 1, 1).multiplyScalar(2 ** -3) },
+        }}
       />
     </mesh>
   );
