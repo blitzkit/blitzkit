@@ -87,8 +87,13 @@ export function Lighting() {
           ] as const;
           const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
 
+          const light = useRef<SpotLight>(null!);
+
+          // useHelper(light, SpotLightHelper);
+
           return (
             <spotLight
+              ref={light}
               key={index}
               position={position}
               intensity={intensity}
@@ -97,6 +102,7 @@ export function Lighting() {
               decay={1}
               color="#ffffff"
               angle={0}
+              target-position={[0, 1.5, 0]}
             />
           );
         })}
