@@ -11,8 +11,11 @@ import {
 } from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
+import { useModel } from "../../../../../../hooks/useModel";
+import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
 
 const ANGLE = degToRad(15);
 const REVEAL_ANIMATION_TIME = 3;
@@ -26,6 +29,7 @@ const LIGHT_HEIGHT_1 = 10;
 const INTENSITY_0 = 2 ** 6;
 const INTENSITY_1 = 2 ** 3;
 const HEMISPHERE_INTENSITY = 2 ** 0.7;
+const NON_PBR_FACTOR = 2;
 
 export const transitionEvent = new Quicklime<number>(0);
 
@@ -122,14 +126,21 @@ interface AnimatorProps {
 function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
 
+  const id = Duel.use((state) => state.protagonist.tank.id);
+  const display = Tankopedia.use((state) => state.display);
+
+  const { hasPbr } = useModel(id);
+  const factor =
+    !hasPbr && display !== TankopediaDisplay.StaticArmor ? NON_PBR_FACTOR : 1;
+
   const apply = useCallback((t: number) => {
     if (wrapper.current === null) return;
 
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
-        child.angle = ANGLE * t;
+        child.angle = ANGLE * t * factor;
       } else if (child instanceof HemisphereLight) {
-        child.intensity = HEMISPHERE_INTENSITY * t;
+        child.intensity = HEMISPHERE_INTENSITY * t * factor;
       }
     }
 
