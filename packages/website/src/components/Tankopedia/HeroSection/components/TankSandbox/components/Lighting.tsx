@@ -1,4 +1,4 @@
-import { blueDark, tomatoDark } from "@radix-ui/colors";
+import { blueDark, orangeDark } from "@radix-ui/colors";
 import { ContactShadows } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { clamp, times } from "lodash-es";
@@ -88,7 +88,7 @@ export function Lighting() {
         <hemisphereLight
           intensity={0}
           color={blueDark.blue12}
-          groundColor={tomatoDark.tomato9}
+          groundColor={orangeDark.orange8}
         />
 
         {times(LIGHTS_COUNT, (index) => {
