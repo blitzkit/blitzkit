@@ -33,7 +33,7 @@ export class ZipVFS extends AbstractVFS {
     return new Uint8Array(arrayBuffer);
   }
 
-  async dir(path: string) {
+  async _dir(path: string) {
     const parentSegments = path.split("/").length;
     const children = new Set<string>();
 

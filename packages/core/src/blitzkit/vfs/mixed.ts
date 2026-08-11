@@ -35,7 +35,7 @@ export class MixedVFS extends AbstractVFS {
     throw new Error(`File not found: ${path}`);
   }
 
-  async dir(path: string) {
+  async _dir(path: string) {
     const files = new Set<string>();
 
     for (const vfs of this.vfses) {

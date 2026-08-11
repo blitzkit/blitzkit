@@ -46,7 +46,15 @@ export abstract class AbstractVFS {
     return buffer;
   }
 
-  abstract dir(path: string): Promise<string[]>;
+  protected abstract _dir(path: string): Promise<string[]>;
+
+  async dir(path: string) {
+    const files = await this._dir(path);
+
+    return files.map((file) =>
+      file.endsWith(".dvpl") ? file.slice(0, -5) : file,
+    );
+  }
 
   async text(path: string) {
     const file = await this.file(path);
@@ -63,7 +71,7 @@ export abstract class AbstractVFS {
     return this.xmlParser.parse(file) as Type;
   }
 
-  async _csv(text: string, options: Options = {}) {
+  protected async _csv(text: string, options: Options = {}) {
     const parsed = parseCSV(text, options);
     return parsed;
   }

@@ -89,7 +89,7 @@ export class SteamVFS extends AbstractVFS {
     return new Uint8Array(downloaded.file);
   }
 
-  async dir(path: string) {
+  async _dir(path: string) {
     const parentSegments = path.split("/").length;
     const children = new Set<string>();
 
