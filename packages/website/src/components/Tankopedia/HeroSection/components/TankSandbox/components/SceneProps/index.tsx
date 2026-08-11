@@ -39,7 +39,6 @@ export function SceneProps() {
         fragmentShader={fragmentShader}
         vertexShader={vertexShader}
         transparent
-        lights
         uniforms={{
           size: { value: SIZE / 2 },
           color: { value: new Vector3(1, 1, 1).multiplyScalar(2 ** -3) },
