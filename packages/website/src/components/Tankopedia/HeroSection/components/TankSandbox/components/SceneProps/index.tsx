@@ -1,11 +1,12 @@
+import { mauveDark } from "@radix-ui/colors";
 import { invalidate } from "@react-three/fiber";
 import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
-import { Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { Color, Mesh, MeshStandardMaterial } from "three";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 
-const SIZE = 2 ** 5;
+const SIZE = 2 ** 4;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
@@ -30,7 +31,6 @@ export function SceneProps() {
     <mesh
       position={[0, -(2 ** -8), 0]}
       rotation={[-Math.PI / 2, 0, 0]}
-      receiveShadow
       visible={!screenshotReadyEvent.last!}
       ref={mesh}
     >
@@ -41,7 +41,7 @@ export function SceneProps() {
         transparent
         uniforms={{
           size: { value: SIZE / 2 },
-          color: { value: new Vector3(1, 1, 1).multiplyScalar(2 ** -3) },
+          color: { value: new Color(mauveDark.mauve8) },
         }}
       />
     </mesh>
