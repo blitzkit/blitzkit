@@ -23,13 +23,18 @@ const TRANSITION_ANIMATION_TIME = 0.5;
 
 const LIGHTS_COUNT = 3;
 const THETA_OFFSET = degToRad(180 - 45);
+
 const LIGHT_DISTANCE = 20;
 const LIGHT_HEIGHT_0 = 7;
 const LIGHT_HEIGHT_1 = 10;
+
 const INTENSITY_0 = 2 ** 6;
 const INTENSITY_1 = 2 ** 3;
 const HEMISPHERE_INTENSITY = 2 ** 0.7;
 const NON_PBR_FACTOR = 2;
+
+const SHADOW_RESOLUTION = 2 ** 9;
+const SHADOW_FOCUS = 2 ** 0;
 
 export const transitionEvent = new Quicklime<number>(0);
 
@@ -107,6 +112,8 @@ export function Lighting() {
               color="#ffffff"
               angle={0}
               target-position={[0, 1.5, 0]}
+              shadow-mapSize={[SHADOW_RESOLUTION, SHADOW_RESOLUTION]}
+              shadow-focus={SHADOW_FOCUS}
             />
           );
         })}

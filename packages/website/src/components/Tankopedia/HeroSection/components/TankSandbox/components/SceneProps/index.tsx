@@ -2,7 +2,7 @@ import { mauveDark } from "@radix-ui/colors";
 import { invalidate } from "@react-three/fiber";
 import { Quicklime, type QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
-import { Color, Mesh, MeshStandardMaterial } from "three";
+import { Color, Mesh } from "three";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 
@@ -12,7 +12,6 @@ export const screenshotReadyEvent = new Quicklime(false);
 
 export function SceneProps() {
   const mesh = useRef<Mesh>(null!);
-  const material = useRef<MeshStandardMaterial>(null);
 
   useEffect(() => {
     function handleScreenshotReady(event: QuicklimeEvent<boolean>) {
