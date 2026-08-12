@@ -1,5 +1,5 @@
 export const WORKING_DIR = `../../temp/ids`;
-export const REPO = "blitzkit/ids";
+export const REPO = "blitzkit/data-ids";
 
 export const ACCOMMODATED_ID_COUNT = 10_000_000_000; // 10B ids
 export const MAX_BYTES_PER_CHUNK = 100 * 1_000_000; // 100MB
