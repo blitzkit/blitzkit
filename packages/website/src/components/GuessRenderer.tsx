@@ -1,3 +1,4 @@
+import { useModel } from "../hooks/useModel";
 import { Guess, GuessState } from "../stores/guess";
 import { SmartCanvas } from "./SmartCanvas";
 import { Controls } from "./Tankopedia/HeroSection/components/TankSandbox/components/Control";
@@ -12,6 +13,9 @@ export function GuessRenderer() {
   const helpingReveal = Guess.use((state) => state.helpingReveal);
   const isRevealed = helpingReveal || guessState !== GuessState.NotGuessed;
 
+  const id = Guess.use((state) => state.tank.id);
+  const { hasPbr } = useModel(id);
+
   return (
     <SmartCanvas
       style={{
@@ -24,7 +28,7 @@ export function GuessRenderer() {
       camera={{ position: [-5, 5, -5] }}
     >
       <Controls zoomable={false} />
-      <Lighting />
+      <Lighting hasPbr={hasPbr} />
       <TankModel />
     </SmartCanvas>
   );

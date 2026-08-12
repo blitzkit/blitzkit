@@ -9,6 +9,7 @@ import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimi
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
 import { useEquipment } from "../../../../../hooks/useEquipment";
+import { useModel } from "../../../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../../../hooks/useTankModelDefinition";
 import { Duel } from "../../../../../stores/duel";
 import { Tankopedia } from "../../../../../stores/tankopedia";
@@ -48,6 +49,9 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
     const hideTankModelUnderArmor = TankopediaPersistent.use(
       (state) => state.hideTankModelUnderArmor,
     );
+
+    const id = Duel.use((state) => state.protagonist.tank.id);
+    const { hasPbr } = useModel(id);
 
     useImperativeHandle(ref, () => canvas.current!, []);
 
@@ -169,7 +173,7 @@ export const TankSandbox = forwardRef<HTMLCanvasElement, TankSandboxProps>(
           outline: undefined,
         }}
       >
-        <Lighting />
+        <Lighting hasPbr={hasPbr} />
 
         <SceneProps />
         {(display === TankopediaDisplay.Model ||

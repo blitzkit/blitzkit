@@ -43,7 +43,7 @@ export const MixerScene = forwardRef<HTMLCanvasElement>((_, ref) => {
         target={[0, 0.5, 0]}
       />
 
-      <Lighting />
+      <Lighting hasPbr={false} />
       <SceneProps />
 
       <Suspense fallback={<MixerFallback />}>

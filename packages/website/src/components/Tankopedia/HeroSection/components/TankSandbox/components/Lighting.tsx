@@ -12,8 +12,6 @@ import {
 } from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
-import { useModel } from "../../../../../../hooks/useModel";
-import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
@@ -39,7 +37,11 @@ const SHADOW_FOCUS = 2 ** 0;
 
 export const transitionEvent = new Quicklime<number>(0);
 
-export function Lighting() {
+interface Props {
+  hasPbr: boolean;
+}
+
+export function Lighting({ hasPbr }: Props) {
   const wrapper = useRef<Group>(null);
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
@@ -84,6 +86,7 @@ export function Lighting() {
 
       {animate && (
         <Animator
+          hasPbr={hasPbr}
           t0={t0}
           animationTime={animationTime}
           wrapper={wrapper}
@@ -142,15 +145,13 @@ interface AnimatorProps {
   t0: RefObject<number>;
   animationTime: RefObject<number>;
   wrapper: RefObject<Group | null>;
+  hasPbr: boolean;
 }
 
-function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
+function Animator({ stop, t0, animationTime, wrapper, hasPbr }: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
-
-  const id = Duel.use((state) => state.protagonist.tank.id);
   const display = Tankopedia.use((state) => state.display);
 
-  const { hasPbr } = useModel(id);
   const factor =
     !hasPbr && display !== TankopediaDisplay.StaticArmor ? NON_PBR_FACTOR : 1;
 
