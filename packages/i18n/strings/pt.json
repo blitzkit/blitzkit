@@ -37,10 +37,11 @@
       "d_1": "Ontem"
     },
     "branches": {
-      "local": "dev",
-      "dev": "beta",
-      "opentest": "testeaberto",
-      "preview": "visualização"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "TesteAberto",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "Inglês",
