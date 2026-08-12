@@ -37,10 +37,11 @@
       "d_1": "昨日"
     },
     "branches": {
-      "local": "開発",
-      "dev": "ベータ版",
-      "opentest": "オープンテスト",
-      "preview": "プレビュー"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "OpenTest",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "英語",
