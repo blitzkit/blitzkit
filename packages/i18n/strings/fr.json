@@ -37,10 +37,11 @@
       "d_1": "Hier"
     },
     "branches": {
-      "local": "dev",
-      "dev": "beta",
-      "opentest": "test ouvert",
-      "preview": "aperçu"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "OpenTest",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "Anglais",
