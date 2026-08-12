@@ -5,24 +5,18 @@ import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
 import { IdArray } from "../core/blitzkit/idArray";
 import {
   ACCOMMODATED_ID_COUNT,
-  API_RATE,
   MAX_BYTES_PER_CHUNK,
   MAX_DRY_STREAK,
   MAX_IDS_PER_CALL,
-  REPO,
-  WORKING_DIR,
 } from "./constants";
-import { ManifestV1, QuickInfo, RegionDescriptor } from "./types";
+import { sleep, withinTimeLimit } from "./time";
+import { IdsManifest, QuickInfo, RegionDescriptor } from "./types";
 
 const storage = await new GitObjectStorage(
-  REPO,
-  WORKING_DIR,
+  "blitzkit/data-ids",
+  "../../temp/ids",
   import.meta.env.GH_TOKEN,
 ).init();
-
-const t0 = performance.now();
-const maxT = (5 * 60 + 55) * 60 * 1000; // 5hr 55min
-const t1 = t0 + maxT;
 
 await storage.mkdir("chunks");
 
@@ -30,7 +24,7 @@ console.log(`Discovering pre-existing chunks...`);
 
 const discoveredChunks: (IdArray | null)[] = [];
 
-const manifest = await storage.json<ManifestV1>("manifest.json");
+const manifest = await storage.json<IdsManifest>("manifest.json");
 
 for (let i = 0; i < manifest.chunks; i++) {
   const bytes = await storage.bytes(`chunks/chunk-${i}.dat.lz4`);
@@ -187,14 +181,6 @@ function fillQueue() {
 
     return;
   }
-}
-
-function sleep() {
-  return new Promise((resolve) => setTimeout(resolve, 1000 / API_RATE));
-}
-
-function withinTimeLimit() {
-  return performance.now() < t1;
 }
 
 console.log("Starting discovery loop...");

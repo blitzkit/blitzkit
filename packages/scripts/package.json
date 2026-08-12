@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "discover-ids": "bun src/discoverIds/index.ts",
-    "build-protos": "bun src/protos.ts"
+    "build-protos": "bun src/protos.ts",
+    "record-performance": "bun src/recordPerformance/index.ts"
   },
   "dependencies": {
     "@blitzkit/closed": "workspace:*",

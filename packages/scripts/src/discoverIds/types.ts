@@ -1,4 +1,6 @@
-export interface ManifestV1 {
+export type IdsManifest = IdsManifestV1;
+
+interface IdsManifestV1 {
   version: 1;
   last_verified: number;
   chunks: number;
