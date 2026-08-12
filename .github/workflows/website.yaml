@@ -2,19 +2,30 @@ name: Website
 
 on:
   push:
+    branches: production
 
   schedule:
     - cron: "0 4 * * *"
 
   workflow_dispatch:
     inputs:
+      branch:
+        description: Branch
+
+        type: choice
+        required: true
+        default: production
+
+        options:
+          - production
+          - main
+
       environment:
         description: Environment
 
-        required: true
-        # default: production
-        default: beta
         type: choice
+        required: true
+        default: production
 
         options:
           - development
@@ -32,7 +43,7 @@ concurrency:
 
 env:
   # blitzkit
-  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'beta' }}
+  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'production' }}
   PUBLIC_PROMOTE_OPENTEST: false
   PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
   PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com
@@ -73,6 +84,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: ${{ inputs.branch || 'production' }}
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
 
@@ -136,8 +148,6 @@ jobs:
           path: dist/website
 
       - name: Trigger deployment
-
-        if: github.ref_name == 'production' || github.ref_name == 'infrastructure'
 
         env:
           TOKEN: ${{ secrets.GH_NODE_DEPLOY_TOKEN }}

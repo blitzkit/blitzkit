@@ -2,7 +2,7 @@ name: Discover IDs
 
 on:
   push:
-    branches: infrastructure
+    branches: production
 
   schedule:
     - cron: 0 */6 * * *
@@ -23,6 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
+          ref: production
           submodules: recursive
           token: ${{ secrets.GH_TOKEN }}
 
