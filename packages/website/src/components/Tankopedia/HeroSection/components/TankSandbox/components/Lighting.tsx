@@ -71,7 +71,14 @@ export function Lighting() {
 
   return (
     <>
-      <ContactShadows blur={2 ** 1} opacity={2 ** 1} />
+      <ContactShadows
+        near={0}
+        far={2 ** 6}
+        width={1.5}
+        height={1.5}
+        blur={2 ** 0.5}
+        opacity={2 ** -0.4}
+      />
 
       {animate && (
         <Animator
