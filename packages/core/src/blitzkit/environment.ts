@@ -6,23 +6,35 @@ interface EnvironmentConfig {
   aliases: Record<string, string>;
 }
 
-export const environments = import.meta.glob(
-  "../../../../environments/*.json",
-  {
+let hasReadEnvironments = false;
+const environments: Record<string, EnvironmentConfig> = {};
+
+/**
+ * This is set up this way to avoid errors in runtimes where
+ * `import.meta.glob` does not exist.
+ */
+function readEnvironments() {
+  if (hasReadEnvironments) return;
+
+  hasReadEnvironments = true;
+
+  const glob = import.meta.glob("../../../../environments/*.json", {
     eager: true,
     import: "default",
-  },
-) as Record<string, EnvironmentConfig>;
-const root = "../../../../environments";
+  }) as Record<string, EnvironmentConfig>;
+  const root = "../../../../environments";
 
-for (const key in environments) {
-  const trimmed = key.slice(root.length + 1, -5);
+  for (const key in glob) {
+    const trimmed = key.slice(root.length + 1, -5);
 
-  environments[trimmed] = environments[key];
-  delete environments[key];
+    environments[trimmed] = glob[key];
+    delete environments[key];
+  }
 }
 
 export function environmentConfig() {
+  readEnvironments();
+
   const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 
   if (!(environment in environments)) {

@@ -1,10 +1,13 @@
+import { idToRegion } from "@blitzkit/core";
 import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
 import { IdArray } from "../core/blitzkit/idArray";
 import { API_RATE } from "../discoverIds/constants";
 import { sleep, withinTimeLimit } from "../discoverIds/time";
 import { IdsManifest } from "../discoverIds/types";
 import { IDS_API_BASE } from "./constants";
-import { PerformanceManifest } from "./types";
+import { PerformanceManifest, QuickStatistics } from "./types";
+
+const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
 
 const storage = await new GitObjectStorage(
   "blitzkit/data-performance",
@@ -35,6 +38,26 @@ while (withinTimeLimit()) {
 
   for (let i = 0; i < size; i++) {
     await sleep();
+
+    const id = ids.get(i);
+    const domain = idToRegion(id);
+
+    const url = `https://api.wotblitz.${
+      domain
+    }/wotb/tanks/stats/?application_id=${applicationId}&account_id=${id}`;
+    const response = await fetch(url);
+    const json = (await response.json()) as QuickStatistics;
+
+    const data = json.data[id];
+
+    if (json.status !== "ok" || data === null) {
+      console.log(`Failed player ${id}; skipping...`);
+      continue;
+    }
+
+    for (const tank of data) {
+      console.log(new Date(tank.battle_life_time * 1000));
+    }
   }
 }
 
