@@ -37,10 +37,11 @@
       "d_1": "Вчора"
     },
     "branches": {
-      "local": "розробник",
-      "dev": "бета",
-      "opentest": "відкритий тест",
-      "preview": "попередній перегляд"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "Відкритий тест",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "Англійська",
