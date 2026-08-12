@@ -7,10 +7,10 @@ import {
 import { App } from "../../stores/app";
 import { Playlist } from "../../stores/playlist";
 import { TankFilters } from "../../stores/tankFilters";
-import { awaitableTankDefinitions } from "../awaitables/tankDefinitions";
+import { api } from "./api";
 import { filterTanks } from "./filterTanks";
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 const tanks = Object.values(tankDefinitions.tanks);
 
 export async function generatePlaylist() {

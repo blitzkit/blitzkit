@@ -4,7 +4,7 @@ import { Flex, Text } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
-import { awaitableGallery } from "../../core/awaitables/gallery";
+import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { Gallery } from "../../stores/gallery";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
@@ -16,7 +16,7 @@ export interface Avatar {
   id: string;
 }
 
-const gallery = await awaitableGallery;
+const gallery = await api.galleryDefinitions();
 
 const DEFAULT_LOADED = 42;
 const PREVIEW_COUNT = 28;
@@ -35,7 +35,7 @@ export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
         .go(search, gallery.avatars, {
           keys: [
             ...locales.supported.map(
-              (supported) => `name.locales.${supported.locale}`
+              (supported) => `name.locales.${supported.locale}`,
             ),
             "id",
           ],
@@ -72,7 +72,7 @@ export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
               skeleton
               onIntersection={() => setLoadedCards((state) => state + 2)}
             />
-          )
+          ),
         )}
       </Flex>
     </>

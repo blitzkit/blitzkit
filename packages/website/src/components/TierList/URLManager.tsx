@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { awaitableTankDefinitions } from '../../core/awaitables/tankDefinitions';
-import { generateTierListParams } from '../../core/blitzkit/generateTierListParams';
-import { TierList } from '../../stores/tierList';
+import { useEffect } from "react";
+import { api } from "../../core/blitzkit/api";
+import { generateTierListParams } from "../../core/blitzkit/generateTierListParams";
+import { TierList } from "../../stores/tierList";
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function URLManager() {
   const rows = TierList.use((state) => state.rows);
@@ -12,10 +12,10 @@ export function URLManager() {
     const params = new URLSearchParams(window.location.search);
 
     params.forEach((value, key) => {
-      if (key.startsWith('row-')) {
+      if (key.startsWith("row-")) {
         const index = Number.parseInt(key.slice(4), 10);
         const values = value
-          .split(',')
+          .split(",")
           .map(Number)
           .filter((id) => id in tankDefinitions.tanks);
 
@@ -27,7 +27,7 @@ export function URLManager() {
   }, []);
 
   useEffect(() => {
-    window.history.replaceState(null, '', `?${generateTierListParams(rows)}`);
+    window.history.replaceState(null, "", `?${generateTierListParams(rows)}`);
   }, [rows]);
 
   return null;

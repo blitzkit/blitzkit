@@ -1,0 +1,17 @@
+---
+import { embedConfigurations } from "../../../../../../constants/embeds";
+import { mixStaticPaths } from "../../../../../../core/blitzkit/mixStaticPaths";
+import LegacyRedirect from "../../../../../../layouts/LegacyRedirect.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return Object.keys(embedConfigurations).map((embed) => ({
+    params: { embed },
+  }));
+});
+
+const { embed } = Astro.params;
+const { locale } = Astro.props;
+---
+
+<LegacyRedirect {locale} path={`embed/${embed}`} />

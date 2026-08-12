@@ -1,6 +1,6 @@
-import { asset } from '@blitzkit/core';
-import { GenericTankComponentButton } from './GenericTankComponentButton';
-import type { TankComponentButtonProps } from './TankComponentButton';
+import { alias } from "@blitzkit/core";
+import { GenericTankComponentButton } from "./GenericTankComponentButton";
+import type { TankComponentButtonProps } from "./TankComponentButton";
 
 interface ModuleProps extends TankComponentButtonProps {
   module: string;
@@ -9,11 +9,11 @@ interface ModuleProps extends TankComponentButtonProps {
 export function ModuleButton({ module, ...props }: ModuleProps) {
   return (
     <GenericTankComponentButton
-      icon={asset(`icons/modules/${module}.webp`)}
+      icon={alias("api", `/icons/modules/${module}.webp`)}
       iconStyles={{
-        top: '50%',
-        left: '50%',
-        transform: 'translate(calc(-50% + 2px), calc(-50% + 2px))',
+        top: "50%",
+        left: "50%",
+        transform: "translate(calc(-50% + 2px), calc(-50% + 2px))",
       }}
       {...props}
     />

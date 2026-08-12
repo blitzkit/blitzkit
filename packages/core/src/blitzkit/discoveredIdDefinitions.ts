@@ -1,4 +1,4 @@
-import { asset } from './asset';
+import { staticAsset } from "@blitzkit/core";
 
 export interface DiscoveredIdsDefinitions {
   time: number;
@@ -7,6 +7,6 @@ export interface DiscoveredIdsDefinitions {
 }
 
 export async function fetchDiscoveredIdsDefinitions() {
-  const response = await fetch(asset('ids/manifest.json'));
+  const response = await fetch(staticAsset("ids/manifest.json"));
   return response.json() as Promise<DiscoveredIdsDefinitions>;
 }

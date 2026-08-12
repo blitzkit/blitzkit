@@ -1,0 +1,21 @@
+---
+import { api } from "../../../../../../core/blitzkit/api";
+import { mixStaticPaths } from "../../../../../../core/blitzkit/mixStaticPaths";
+import LegacyRedirect from "../../../../../../layouts/LegacyRedirect.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const tankDefinitions = await api.tankDefinitions();
+
+  return Object.values(tankDefinitions.tanks).map(({ id }) => ({
+    params: { id },
+  }));
+});
+
+const { id } = Astro.params;
+const { locale } = Astro.props;
+const tankDefinitions = await api.tankDefinitions();
+const tank = tankDefinitions.tanks[id];
+---
+
+<LegacyRedirect {locale} path={`tanks/${tank.slug}`} />

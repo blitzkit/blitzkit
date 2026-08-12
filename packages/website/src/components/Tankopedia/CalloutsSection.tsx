@@ -1,20 +1,21 @@
-import { assertSecret, fetchTankDefinitions } from "@blitzkit/core";
+import { assertSecret } from "@blitzkit/core";
 import { MinusCircledIcon } from "@radix-ui/react-icons";
 import { Callout, Flex } from "@radix-ui/themes";
 import { uniq } from "lodash-es";
 import { useEffect } from "react";
+import { api } from "../../core/blitzkit/api";
 import { Duel } from "../../stores/duel";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { AesonPlug } from "../AesonPlug";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
 
-const tankDefinitions = await fetchTankDefinitions();
+const tankDefinitions = await api.tankDefinitions();
 
 export function CalloutsSection() {
   const tank = Duel.use((state) => state.protagonist.tank);
   const promoteAeson =
-    assertSecret(import.meta.env.PUBLIC_BRANCH) === "preview";
+    assertSecret(import.meta.env.PUBLIC_ENVIRONMENT) === "preview";
 
   useEffect(() => {
     TankopediaPersistent.mutate((draft) => {

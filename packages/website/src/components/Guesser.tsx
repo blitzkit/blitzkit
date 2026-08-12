@@ -1,5 +1,5 @@
 import {
-  asset,
+  alias,
   SEARCH_KEYS,
   TankDefinition,
   TIER_ROMAN_NUMERALS,
@@ -29,8 +29,8 @@ import {
 import fuzzysort from "fuzzysort";
 import { debounce, times } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
+import { api } from "../core/blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Guess, GuessState } from "../stores/guess";
 import { classIcons } from "./ClassIcon";
@@ -40,7 +40,7 @@ const { go } = fuzzysort;
 
 const [tankNames, tankDefinitions] = await Promise.all([
   awaitableTankNames,
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);
@@ -150,7 +150,10 @@ export function Guesser() {
                       prefix={
                         <img
                           style={{ width: "1em", height: "1em" }}
-                          src={asset(`flags/circle/${result.nation}.webp`)}
+                          src={alias(
+                            "api",
+                            `/flags/circle/${result.nation}.webp`,
+                          )}
                         />
                       }
                       discriminator={
@@ -322,7 +325,8 @@ export function Guesser() {
                   ? GuessState.Correct
                   : GuessState.Incorrect;
                 draft.totalGuesses++;
-                draft.correctGuesses += correct && draft.tiers.length === 10 ? 1 : 0;
+                draft.correctGuesses +=
+                  correct && draft.tiers.length === 10 ? 1 : 0;
                 draft.streak = correct ? draft.streak + 1 : 0;
               });
             } else {

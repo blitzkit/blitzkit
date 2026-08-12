@@ -1,4 +1,6 @@
-import { useFrame } from "@react-three/fiber";
+import { blueDark, orangeDark } from "@radix-ui/colors";
+import { ContactShadows } from "@react-three/drei";
+import { invalidate, useFrame } from "@react-three/fiber";
 import { clamp, times } from "lodash-es";
 import { Quicklime } from "quicklime";
 import {
@@ -10,27 +12,35 @@ import {
 } from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
+import { useModel } from "../../../../../../hooks/useModel";
+import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
-import { HelpingSpotLight } from "../../../../../HelpingSpotLight";
+import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
 
-const ANGLE = degToRad(12);
+const ANGLE = degToRad(15);
 const REVEAL_ANIMATION_TIME = 3;
 const TRANSITION_ANIMATION_TIME = 0.5;
 
-const LIGHTS_COUNT = 4;
+const LIGHTS_COUNT = 3;
 const THETA_OFFSET = degToRad(180 - 45);
+
 const LIGHT_DISTANCE = 20;
-const LIGHT_HEIGHT_0 = 4;
-const LIGHT_HEIGHT_1 = 6;
-const INTENSITY_0 = 6 * 9;
-const INTENSITY_1 = 3 * 9;
-const HEMISPHERE_INTENSITY = 2;
+const LIGHT_HEIGHT_0 = 7;
+const LIGHT_HEIGHT_1 = 10;
+
+const INTENSITY_0 = 2 ** 6;
+const INTENSITY_1 = 2 ** 3;
+const HEMISPHERE_INTENSITY = 2 ** 0.7;
+const NON_PBR_FACTOR = 2;
+
+const SHADOW_RESOLUTION = 2 ** 9;
+const SHADOW_FOCUS = 2 ** 0;
 
 export const transitionEvent = new Quicklime<number>(0);
 
 export function Lighting() {
-  const wrapper = useRef<Group>(null!);
+  const wrapper = useRef<Group>(null);
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
@@ -61,6 +71,17 @@ export function Lighting() {
 
   return (
     <>
+      <ContactShadows
+        near={0}
+        far={2 ** 6}
+        width={1.5}
+        height={1.5}
+        blur={2 ** 0.5}
+        opacity={2 ** -0.4}
+        resolution={2 ** 7}
+        depthWrite={false}
+      />
+
       {animate && (
         <Animator
           t0={t0}
@@ -73,21 +94,29 @@ export function Lighting() {
       )}
 
       <group ref={wrapper}>
-        <hemisphereLight intensity={0} color="#ffffff" groundColor="#afafaf" />
+        <hemisphereLight
+          intensity={0}
+          color={blueDark.blue12}
+          groundColor={orangeDark.orange8}
+        />
 
         {times(LIGHTS_COUNT, (index) => {
           const x = index / (LIGHTS_COUNT - 1);
           const theta = 2 * Math.PI * (index / LIGHTS_COUNT) + THETA_OFFSET;
           const position = [
-            LIGHT_DISTANCE * Math.sin(theta),
+            -LIGHT_DISTANCE * Math.sin(theta),
             lerp(LIGHT_HEIGHT_0, LIGHT_HEIGHT_1, x),
             LIGHT_DISTANCE * Math.cos(theta),
           ] as const;
           const intensity = lerp(INTENSITY_0, INTENSITY_1, x);
 
+          const light = useRef<SpotLight>(null!);
+
+          // useHelper(light, SpotLightHelper);
+
           return (
-            <HelpingSpotLight
-              userData={{ index }}
+            <spotLight
+              ref={light}
               key={index}
               position={position}
               intensity={intensity}
@@ -96,6 +125,9 @@ export function Lighting() {
               decay={1}
               color="#ffffff"
               angle={0}
+              target-position={[0, 1.5, 0]}
+              shadow-mapSize={[SHADOW_RESOLUTION, SHADOW_RESOLUTION]}
+              shadow-focus={SHADOW_FOCUS}
             />
           );
         })}
@@ -109,18 +141,31 @@ interface AnimatorProps {
 
   t0: RefObject<number>;
   animationTime: RefObject<number>;
-  wrapper: RefObject<Group>;
+  wrapper: RefObject<Group | null>;
 }
 
 function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
 
+  const id = Duel.use((state) => state.protagonist.tank.id);
+  const display = Tankopedia.use((state) => state.display);
+
+  const { hasPbr } = useModel(id);
+  const factor =
+    !hasPbr && display !== TankopediaDisplay.StaticArmor ? NON_PBR_FACTOR : 1;
+
+  useEffect(() => {
+    invalidate();
+  }, [requestedDisplay === display]);
+
   const apply = useCallback((t: number) => {
+    if (!wrapper.current) return;
+
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
-        child.angle = ANGLE * t;
+        child.angle = ANGLE * t * factor;
       } else if (child instanceof HemisphereLight) {
-        child.intensity = HEMISPHERE_INTENSITY * t;
+        child.intensity = HEMISPHERE_INTENSITY * t * factor;
       }
     }
 

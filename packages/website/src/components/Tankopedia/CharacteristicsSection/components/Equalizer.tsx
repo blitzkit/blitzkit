@@ -1,15 +1,5 @@
-import { asset } from "@blitzkit/core";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import {
-  Badge,
-  Box,
-  Flex,
-  Heading,
-  Link,
-  Popover,
-  Switch,
-  Text,
-} from "@radix-ui/themes";
+import { alias } from "@blitzkit/core";
+import { Badge, Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
@@ -44,7 +34,7 @@ export function Equalizer() {
         style={{
           cursor: "pointer",
           borderRadius: "var(--radius-3)",
-          backgroundImage: `url(${asset("icons/game_mode_banners/45.webp")})`,
+          backgroundImage: `url(${alias("api", `/gamemodes/45/banner.webp`)})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           overflow: "hidden",

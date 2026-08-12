@@ -1,4 +1,4 @@
-import { asset, isExplosive } from "@blitzkit/core";
+import { alias, isExplosive } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { Flex, Heading, IconButton, Tooltip } from "@radix-ui/themes";
 import { useLocale } from "../../../../../../hooks/useLocale";
@@ -62,7 +62,7 @@ export function Firepower({
                     alt={unwrap(thisShell.name!)}
                     width={16}
                     height={16}
-                    src={asset(`icons/shells/${thisShell.icon}.webp`)}
+                    src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
                   />
                 </IconButton>
               </Tooltip>

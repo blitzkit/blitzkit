@@ -1,0 +1,36 @@
+---
+import { Flex, Heading, Text } from "@radix-ui/themes";
+import { PageWrapper } from "../../../../../components/PageWrapper";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../../index.astro";
+import { AUTH_PROVIDER_NAMES, AUTH_PROVIDERS, Authorize } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return AUTH_PROVIDERS.map((provider) => ({
+    params: { provider },
+  }));
+});
+
+const { provider } = Astro.params;
+const { locale } = Astro.props;
+---
+
+<BaseLayout {locale}>
+  <PageWrapper>
+    <Flex
+      style={{ flex: 1 }}
+      align="center"
+      justify="center"
+      direction="column"
+      gap="2"
+    >
+      <Heading align="center"
+        >Authorizing you with {AUTH_PROVIDER_NAMES[provider]}...</Heading
+      >
+      <Text color="gray" align="center">You'll be on your way shortly.</Text>
+    </Flex>
+  </PageWrapper>
+
+  <Authorize client:only="react" {provider} />
+</BaseLayout>

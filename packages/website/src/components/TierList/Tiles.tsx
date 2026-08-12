@@ -2,8 +2,7 @@ import { metaSortTank } from "@blitzkit/core";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
-import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { TankFilters } from "../../stores/tankFilters";
 import { TierList } from "../../stores/tierList";
@@ -12,8 +11,8 @@ import { TankCardWrapper } from "../TankSearch/components/TankCardWrapper";
 import { TierListTile } from "./Tile";
 
 const [tankDefinitions, gameDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
-  awaitableGameDefinitions,
+  api.tankDefinitions(),
+  api.gameDefinitions(),
 ]);
 
 const tanks = Object.values(tankDefinitions.tanks);
@@ -27,14 +26,14 @@ export function TierListTiles() {
   const filteredTanks = usePromise(
     () =>
       filterTanks(filters, tanks).then((tanks) =>
-        tanks.filter(({ id }) => !placedTanks.has(id))
+        tanks.filter(({ id }) => !placedTanks.has(id)),
       ),
     // react-promise-suspense has awful type annotations
-    [filters, placedTanks] as any
+    [filters, placedTanks] as any,
   );
   const sorted = useMemo(
     () => metaSortTank(filteredTanks, gameDefinitions).reverse(),
-    [filters, placedTanks]
+    [filters, placedTanks],
   );
   const [loadedTiles, setLoadedTiles] = useState(DEFAULT_LOADED_CARDS);
 

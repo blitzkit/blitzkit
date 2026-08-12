@@ -1,4 +1,4 @@
-import { asset } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
 import { Flex, Heading } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
@@ -8,7 +8,7 @@ import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 export function Miscellaneous() {
   const camouflage = Duel.use((state) => state.protagonist.camouflage);
   const cooldownBooster = Duel.use(
-    (state) => state.protagonist.cooldownBooster
+    (state) => state.protagonist.cooldownBooster,
   );
   const { tank } = Duel.use((state) => state.protagonist);
   const { strings } = useLocale();
@@ -22,7 +22,7 @@ export function Miscellaneous() {
       <Flex gap="2" align="center">
         {!tank.fixed_camouflage && (
           <GenericTankComponentButton
-            icon={asset("icons/camo.webp")}
+            icon={alias("api", "/icons/camo.webp")}
             selected={camouflage}
             iconStyles={{
               top: "50%",
@@ -37,7 +37,7 @@ export function Miscellaneous() {
           />
         )}
         <GenericTankComponentButton
-          icon={asset("icons/boosters/equipment.webp")}
+          icon={alias("api", "/icons/boosters/equipment.webp")}
           selected={cooldownBooster > 0}
           banner={
             cooldownBooster === 0

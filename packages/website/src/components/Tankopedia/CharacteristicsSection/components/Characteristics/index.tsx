@@ -1,8 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 import { useEffect } from "react";
-import { awaitableEquipmentDefinitions } from "../../../../../core/awaitables/equipmentDefinitions";
-import { awaitableProvisionDefinitions } from "../../../../../core/awaitables/provisionDefinitions";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
+import { api } from "../../../../../core/blitzkit/api";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
 import { useEquipment } from "../../../../../hooks/useEquipment";
@@ -16,8 +15,8 @@ import { Maneuverability } from "./components/Maneuverability";
 import { Survivability } from "./components/Survivability";
 
 const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
-  awaitableEquipmentDefinitions,
-  awaitableProvisionDefinitions,
+  api.equipmentDefinitions(),
+  api.provisionDefinitions(),
 ]);
 
 export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {

@@ -1,0 +1,177 @@
+name: Website
+
+on:
+  push:
+    branches: production
+
+  schedule:
+    - cron: "0 4 * * *"
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch
+
+        type: choice
+        required: true
+        default: production
+
+        options:
+          - production
+          - main
+
+      environment:
+        description: Environment
+
+        type: choice
+        required: true
+        default: production
+
+        options:
+          - development
+          - beta
+          - production
+          - preview
+          - opentest
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # blitzkit
+  PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'production' }}
+  PUBLIC_PROMOTE_OPENTEST: false
+  PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
+  PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com
+
+  # blitz
+  WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
+  WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
+  WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
+  GAME_DIR: ../../temp/game
+
+  # google
+  PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
+
+  # wargaming
+  PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
+
+  # steam
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  STEAM_APP: 444200
+  STEAM_OS: windows
+
+jobs:
+  build:
+    name: Build website
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [default, api]
+
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.branch || 'production' }}
+          submodules: recursive
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
+
+      - name: Configure pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Setup DepotDownloader
+        run: |
+          REPO_USER="SteamRE"
+          REPO_NAME="DepotDownloader"
+          TEMP="temp"
+
+          OUT="$TEMP/$REPO_NAME"
+          ZIP="$TEMP/$REPO_NAME.zip"
+
+          URL=$(
+            curl -s "https://api.github.com/repos/$REPO_USER/$REPO_NAME/releases/latest" \
+              | jq -r '.assets[]
+                | select(.name | contains("linux-x64"))
+                | .browser_download_url' \
+              | head -n 1
+          )
+
+          mkdir -p "$TEMP"
+          curl -L "$URL" -o "$ZIP"
+          unzip -p "$ZIP" "$REPO_NAME" > "$OUT"
+          rm "$ZIP"
+
+          chmod +x "$OUT"
+
+      - name: Download game
+        run: |
+          TEMP="temp"
+
+          DEPOT_DOWNLOADER="$TEMP/DepotDownloader"
+          GAME="$TEMP/game"
+
+          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME -max-downloads 256
+
+      - name: Build
+        run: bun run --bun build
+        env:
+          CHUNK: ${{ matrix.chunk }}
+
+      - name: Upload artifact
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.chunk }}
+          path: dist/website
+
+      - name: Trigger deployment
+
+        env:
+          TOKEN: ${{ secrets.GH_NODE_DEPLOY_TOKEN }}
+          CHUNK: ${{ matrix.chunk }}
+
+        run: |
+          ENV_FILE="environments/${PUBLIC_ENVIRONMENT}.json"
+          TARGET_REPO=$(jq -r ".nodes.\"$CHUNK\"" "$ENV_FILE")
+
+          if [ "$TARGET_REPO" == "null" ] || [ -z "$TARGET_REPO" ]; then
+            exit 1
+          fi
+
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $TOKEN" \
+            "https://api.github.com/repos/$TARGET_REPO/dispatches" \
+            -d "{
+                  \"event_type\": \"deploy-pages\",
+                  \"client_payload\": {
+                    \"source_repo\": \"${{ github.repository }}\",
+                    \"run_id\": \"${{ github.run_id }}\",
+                    \"artifact_id\": \"${{ steps.upload.outputs.artifact-id }}\",
+                    \"chunk\": \"$CHUNK\"
+                  }
+                }"

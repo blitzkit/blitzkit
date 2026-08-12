@@ -1,6 +1,6 @@
 import { Select } from "@radix-ui/themes";
 import { useLocale } from "../../hooks/useLocale";
-import type { EmbedPreviewControllerProps } from "../../pages/[...locale]/embed/[embed]/_index";
+import type { EmbedPreviewControllerProps } from "../../pages/[...chunk_default]/[...locale]/embed/[embed]/_index";
 import { EmbedState } from "../../stores/embedState";
 import type {
   EmbedConfigItemType,

@@ -1,0 +1,51 @@
+---
+import { AstroSeo } from "@astrolib/seo";
+import { readFile } from "fs/promises";
+import { mixStaticPaths } from "../../../../../../core/blitzkit/mixStaticPaths";
+import BaseLayout from "../../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../../../index.astro";
+import { Page } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const ROOT = "../../../../../../../../../docs/";
+  const files = import.meta.glob("../../../../../../../../../docs/**/*.md", {
+    eager: true,
+  });
+
+  return await Promise.all(
+    Object.keys(files).map(async (file) => {
+      const couple = file.replace(ROOT, "").split("/");
+      couple[1] = couple[1].replace(".md", "");
+      const content = await readFile(
+        `../../docs/${couple[0]}/${couple[1]}.md`,
+      ).then((buffer) => buffer.toString());
+
+      return {
+        params: { directory: couple[0], document: couple[1] },
+        props: { content },
+      };
+    }),
+  );
+});
+
+const { content, locale } = Astro.props;
+
+const title = content.split("\n")[0].replace("# ", "");
+---
+
+<AstroSeo
+  title={title}
+  description={title}
+  canonical={Astro.url.href}
+  openGraph={{
+    url: Astro.url.href,
+    title,
+    description: title,
+    site_name: "BlitzKit",
+  }}
+  twitter={{ cardType: "summary_large_image" }}
+/>
+
+<BaseLayout {locale}>
+  <Page content={content} />
+</BaseLayout>

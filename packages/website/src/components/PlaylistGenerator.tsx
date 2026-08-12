@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { awaitableTankDefinitions } from "../core/awaitables/tankDefinitions";
+import { api } from "../core/blitzkit/api";
 import { filterTanks } from "../core/blitzkit/filterTanks";
 import { generatePlaylist } from "../core/blitzkit/generatePlaylist";
 import { useLocale } from "../hooks/useLocale";
@@ -22,7 +22,7 @@ import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponen
 import { LinkI18n } from "./LinkI18n";
 import { FilterControl } from "./TankSearch/components/FilterControl";
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 const POOL_HEIGHT = "16rem";
 
@@ -33,12 +33,12 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
   const filters = TankFilters.use();
   const randomTankList = useMemo(
     () => fisherYates(Object.values(tankDefinitions.tanks)),
-    [filters]
+    [filters],
   );
   const tanks = usePromise(
     () => filterTanks(filters, randomTankList, wargaming?.id),
     // react-promise-suspense has awful type annotations
-    [filters] as any
+    [filters] as any,
   );
   const tanksTrimmed = useMemo(() => tanks.slice(0, 65), [filters]);
 
@@ -58,7 +58,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
               {
                 count: tanks.length,
                 time: Math.round(tanks.length * ((2 * 4) / 60)),
-              }
+              },
             )}
           </AlertDialog.Description>
 
@@ -145,7 +145,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
                       backgroundRepeat: "no-repeat",
                     }}
                   />
-                )
+                ),
               )}
 
               <Box

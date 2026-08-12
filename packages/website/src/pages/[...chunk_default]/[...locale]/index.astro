@@ -1,0 +1,117 @@
+---
+import { AstroSeo } from "@astrolib/seo";
+import { assertSecret } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
+import { literals } from "@blitzkit/i18n/src/literals";
+import { Box, Flex, Link } from "@radix-ui/themes";
+import { AesonPlug } from "../../../components/AesonPlug";
+import HomeHero from "../../../components/HomeHero.astro";
+import { Plugs } from "../../../components/Plugs";
+import ToolCard from "../../../components/ToolCard.astro";
+import { tools, type Tool } from "../../../constants/tools";
+import { mixStaticPaths } from "../../../core/blitzkit/mixStaticPaths";
+import { getStrings } from "../../../core/i18n/getStrings";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../_index";
+
+const MAX_TOOLS_PER_ROW = 2;
+
+const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
+const { locale } = Astro.props;
+const strings = getStrings(locale);
+const rows: Tool[][] = [];
+
+for (const id in tools) {
+  const tool = tools[id];
+
+  if ("disabled" in tool && tool.disabled) continue;
+
+  const compatibleRow = rows.find(
+    (row) =>
+      row.length < MAX_TOOLS_PER_ROW &&
+      !("significant" in row[0] && row[0].significant),
+  );
+
+  if (compatibleRow) {
+    compatibleRow.push(tool);
+  } else {
+    rows.push([tool]);
+  }
+}
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
+  return [
+    ...locales.supported
+      .filter(({ locale }) => locale !== locales.default)
+      .map(({ locale }) => ({ params: { locale }, props: { locale } })),
+    { params: { locale: undefined }, props: { locale: locales.default } },
+  ];
+});
+---
+
+<AstroSeo
+  title="BlitzKit"
+  description={strings.website.home.seo_description}
+  canonical={Astro.url.href}
+  openGraph={{
+    url: Astro.url.href,
+    title: "BlitzKit",
+    description: strings.website.home.seo_description,
+    site_name: "BlitzKit",
+  }}
+  twitter={{ cardType: "summary_large_image" }}
+/>
+
+<BaseLayout {locale}>
+  <HomeHero />
+
+  {
+    locale !== locales.default && (
+      <Flex justify="center" mb="4">
+        <Link
+          href="https://crowdin.com/project/blitzkrieg"
+          target="_blank"
+          underline="always"
+        >
+          {literals(strings.website.home.help_translate, {
+            name: "BlitzKit",
+            language:
+              strings.common.locales[
+                locale as keyof typeof strings.common.locales
+              ],
+          })}
+        </Link>
+      </Flex>
+    )
+  }
+
+  <Plugs client:idle />
+
+  {
+    environment === "preview" && (
+      <Flex justify="center" my="8" px="4">
+        <AesonPlug />
+      </Flex>
+    )
+  }
+
+  <Flex p="4" justify="center" gap="4" mt="3">
+    <Flex maxWidth="80rem" flexGrow="1" gap="4" direction="column">
+      {
+        rows.map((row) => (
+          <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
+            {row.map((tool) => (
+              <ToolCard {locale} {tool} />
+            ))}
+            {row.length < MAX_TOOLS_PER_ROW &&
+              !("significant" in row[0] && row[0].significant) && (
+                <Box flexGrow="1" />
+              )}
+          </Flex>
+        ))
+      }
+    </Flex>
+  </Flex>
+
+  <div style={{ flex: 1 }}></div>
+</BaseLayout>

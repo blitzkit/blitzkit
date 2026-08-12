@@ -1,7 +1,7 @@
 node_modules
 _node_modules
 package-lock.json
-*.env
+.env
 /test-results/
 /playwright-report/
 /playwright/.cache/
@@ -27,7 +27,6 @@ target
 .astro
 .vercel
 /src
-/packages/bot/src/prisma
 dev-dist
 # Logs
 logs

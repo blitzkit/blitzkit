@@ -1,5 +1,5 @@
 import { Flex } from "@radix-ui/themes";
-import { awaitableProvisionDefinitions } from "../core/awaitables/provisionDefinitions";
+import { api } from "../core/blitzkit/api";
 import { ProvisionButton } from "./ModuleButtons/ProvisionButton";
 
 interface ProvisionsManagerProps {
@@ -9,7 +9,7 @@ interface ProvisionsManagerProps {
   onChange?: (provisions: number[]) => void;
 }
 
-const provisionDefinitions = await awaitableProvisionDefinitions;
+const provisionDefinitions = await api.provisionDefinitions();
 
 export function ProvisionsManager({
   provisions,

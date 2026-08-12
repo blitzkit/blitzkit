@@ -1,6 +1,6 @@
-import { fetchPB } from '../../protobuf';
-import { AverageDefinitions } from '../../protos';
-import { asset } from '../asset';
+import { staticAsset } from "@blitzkit/core";
+import { fetchPB } from "../../protobuf";
+import { AverageDefinitions } from "../../protos";
 
 export interface AverageDefinitionsManifest {
   version: 1;
@@ -11,13 +11,7 @@ export interface AverageDefinitionsManifest {
 }
 
 export async function fetchAverageDefinitions() {
-  const manifestResponse = await fetch(asset('averages/manifest.json'));
-  const manifestJson =
-    (await manifestResponse.json()) as AverageDefinitionsManifest;
-  return await fetchPB(
-    asset(`averages/${manifestJson.latest}.pb`),
-    AverageDefinitions,
-  );
+  return await fetchPB(staticAsset("averages.pb"), AverageDefinitions);
 }
 
-export * from './constants';
+export * from "./constants";

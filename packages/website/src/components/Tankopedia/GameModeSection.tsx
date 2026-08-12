@@ -1,16 +1,14 @@
-import { asset } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
-import { awaitableConsumableDefinitions } from "../../core/awaitables/consumableDefinitions";
-import { awaitableGameDefinitions } from "../../core/awaitables/gameDefinitions";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { Duel } from "../../stores/duel";
 
 const [gameDefinitions, consumableDefinitions, provisionDefinitions] =
   await Promise.all([
-    awaitableGameDefinitions,
-    awaitableConsumableDefinitions,
-    awaitableProvisionDefinitions,
+    api.gameDefinitions(),
+    api.consumableDefinitions(),
+    api.provisionDefinitions(),
   ]);
 
 export function GameModeSection() {
@@ -40,8 +38,9 @@ export function GameModeSection() {
               direction="column"
               style={{
                 borderRadius: "var(--radius-3)",
-                background: `url(${asset(
-                  `icons/game_mode_banners/${id}.webp`,
+                background: `url(${alias(
+                  "api",
+                  `/gamemodes/${id}/banner.webp`,
                 )})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -50,8 +49,9 @@ export function GameModeSection() {
               <Box
                 flexGrow="1"
                 style={{
-                  background: `url(${asset(
-                    `icons/game_mode_banners/${id}.webp`,
+                  background: `url(${alias(
+                    "api",
+                    `/gamemodes/${id}/banner.webp`,
                   )})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
@@ -87,7 +87,7 @@ export function GameModeSection() {
                               height: "1.5em",
                               objectFit: "contain",
                             }}
-                            src={asset(`icons/provisions/${id}.webp`)}
+                            src={alias("api", `/icons/provisions/${id}.webp`)}
                             alt={unwrap(provisions.name!)}
                           />
                           {unwrap(provisions.name!)}
@@ -108,7 +108,7 @@ export function GameModeSection() {
                               height: "1.5em",
                               objectFit: "contain",
                             }}
-                            src={asset(`icons/consumables/${id}.webp`)}
+                            src={alias("api", `/icons/consumables/${id}.webp`)}
                             alt={unwrap(consumable.name!)}
                           />
                           {unwrap(consumable.name!)}

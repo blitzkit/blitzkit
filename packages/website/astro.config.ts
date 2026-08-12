@@ -1,4 +1,3 @@
-import node from "@astrojs/node";
 import react from "@astrojs/react";
 import { wrapper } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
@@ -10,25 +9,20 @@ import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
 import { tools } from "./src/constants/tools";
 
-const POSSIBLE_TARGETS = ["app", "web"];
-
-const target = process.env.PUBLIC_TARGET ;
-
-if (!target || !POSSIBLE_TARGETS.includes(target)) {
-  throw new Error("Invalid target");
-}
-
 export default defineConfig({
   devToolbar: { enabled: false },
 
-  vite: { server: { allowedHosts: [] } },
-  output: target === "web" ? "static" : "server",
+  vite: {
+    server: { allowedHosts: [] },
+    esbuild: { target: "es2022" },
+  },
+
+  output: "static",
   site: "https://blitzkit.app",
   outDir: "../../dist/website",
   prefetch: { defaultStrategy: "hover", prefetchAll: true },
 
   build: { concurrency: 4 },
-  adapter: target === "app" ? node({ mode: "standalone" }) : undefined,
 
   integrations: [
     favicons({
@@ -50,15 +44,15 @@ export default defineConfig({
           return {
             name: strings.website.tools[stringId].name,
             name_localized: wrapper(
-              (strings) => strings.website.tools[stringId].name
+              (strings) => strings.website.tools[stringId].name,
             ),
             description: strings.website.tools[stringId].description,
             description_localized: wrapper(
-              (strings) => strings.website.tools[stringId].description
+              (strings) => strings.website.tools[stringId].description,
             ),
             short_name: strings.website.tools[stringId].name,
             short_name_localized: wrapper(
-              (strings) => strings.website.tools[stringId].name
+              (strings) => strings.website.tools[stringId].name,
             ),
             url: `/${tool.id}`,
             icon: `public/assets/images/tools/${tool.id}.webp`,
@@ -68,7 +62,7 @@ export default defineConfig({
       manifest: {
         description: strings.website.home.seo_description,
         description_localized: wrapper(
-          (strings) => strings.website.home.seo_description
+          (strings) => strings.website.home.seo_description,
         ),
 
         dir: "ltr",

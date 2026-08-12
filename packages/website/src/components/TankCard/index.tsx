@@ -1,12 +1,8 @@
-import {
-  asset,
-  fetchTankDefinitions,
-  TankType,
-  type TankDefinition,
-} from "@blitzkit/core";
+import { alias, TankType, type TankDefinition } from "@blitzkit/core";
 import { Flex, Text, type TextProps } from "@radix-ui/themes";
 import { uniq } from "lodash-es";
 import { forwardRef, type ReactNode } from "react";
+import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { classIcons } from "../ClassIcon";
@@ -21,7 +17,7 @@ type TankCardProps = TextProps & {
   noLink?: boolean;
 };
 
-const tankDefinitions = await fetchTankDefinitions();
+const tankDefinitions = await api.tankDefinitions();
 
 export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
   (
@@ -64,7 +60,10 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         className="tank-search-card"
         data-provide-link={provideLink}
         style={{
-          backgroundImage: `url(${asset(`flags/scratched/${tank.nation}.webp`)})`,
+          backgroundImage: `url(${alias(
+            "api",
+            `/flags/scratched/${tank.nation}.webp`,
+          )})`,
           ...style,
         }}
         {...props}
@@ -80,7 +79,7 @@ export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
         >
           <img
             alt={unwrap(tank.name!)}
-            src={asset(`icons/tanks/big/${tank.id}.webp`)}
+            src={alias("api", `/tanks/${tank.id}/icons/big.webp`)}
             className="image"
             draggable={false}
           />

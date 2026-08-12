@@ -5,7 +5,7 @@ import { Button, Code, Flex, Link, Text } from "@radix-ui/themes";
 export function Plugs() {
   const promoteOpentest =
     assertSecret(import.meta.env.PUBLIC_PROMOTE_OPENTEST) === "true" &&
-    assertSecret(import.meta.env.PUBLIC_BRANCH) !== "opentest";
+    assertSecret(import.meta.env.PUBLIC_ENVIRONMENT) !== "opentest";
   const promotions = [promoteOpentest];
 
   if (promotions.every((promotion) => !promotion)) return null;

@@ -1,4 +1,4 @@
-import { asset, Avatar } from "@blitzkit/core";
+import { alias, Avatar } from "@blitzkit/core";
 import { Cross1Icon, DownloadIcon } from "@radix-ui/react-icons";
 import {
   Dialog,
@@ -18,8 +18,9 @@ type GalleryCardProps = MaybeSkeletonComponentProps<{
 }>;
 
 export function GalleryCard(props: GalleryCardProps) {
-  const src = asset(
-    `gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
+  const src = alias(
+    "api",
+    `/gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
   );
   const card = useRef<HTMLDivElement>(null!);
   const { unwrap } = useLocale();

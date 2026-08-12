@@ -1,0 +1,14 @@
+{
+  "robots": false,
+  "canonical": "https://blitzkit.app",
+
+  "paths": {
+    "default": null,
+    "api": "api"
+  },
+  "nodes": {},
+  "aliases": {
+    "api": "/api",
+    "static": "https://static.blitzkit.app"
+  }
+}

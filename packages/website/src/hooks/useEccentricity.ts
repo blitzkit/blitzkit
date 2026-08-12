@@ -1,15 +1,15 @@
-import { TankDefinition } from '@blitzkit/core';
-import { sumBy } from 'lodash-es';
-import { useMemo } from 'react';
-import { awaitableTankDefinitions } from '../core/awaitables/tankDefinitions';
-import { Duel } from '../stores/duel';
+import { TankDefinition } from "@blitzkit/core";
+import { sumBy } from "lodash-es";
+import { useMemo } from "react";
+import { api } from "../core/blitzkit/api";
+import { Duel } from "../stores/duel";
 
 export enum UseEccentricityMode {
   Tier,
   Class,
 }
 
-const tankDefinitions = await awaitableTankDefinitions;
+const tankDefinitions = await api.tankDefinitions();
 
 export function useEccentricity(mode: UseEccentricityMode) {
   const tank = Duel.use((state) => state.protagonist.tank);

@@ -2,10 +2,10 @@
   "name": "@blitzkit/website",
   "type": "module",
   "scripts": {
-    "dev": "PUBLIC_TARGET=web astro dev",
-    "build": "PUBLIC_TARGET=web astro build",
-    "preview": "PUBLIC_TARGET=web astro preview",
-    "lint": "PUBLIC_TARGET=web astro check",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "astro check",
     "astro": "astro"
   },
   "dependencies": {
@@ -16,6 +16,8 @@
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@fontsource/inter": "^5.2.8",
+    "@gltf-transform/core": "^4.4.2",
+    "@gltf-transform/functions": "^4.4.2",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/themes": "^3.2.1",

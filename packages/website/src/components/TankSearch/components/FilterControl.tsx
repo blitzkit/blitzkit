@@ -1,5 +1,5 @@
 import {
-  asset,
+  alias,
   GunDefinition,
   ShellType,
   TANK_CLASSES,
@@ -27,10 +27,7 @@ import {
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
-import { awaitableConsumableDefinitions } from "../../../core/awaitables/consumableDefinitions";
-import { awaitableGameDefinitions } from "../../../core/awaitables/gameDefinitions";
-import { awaitableProvisionDefinitions } from "../../../core/awaitables/provisionDefinitions";
-import { awaitableTankDefinitions } from "../../../core/awaitables/tankDefinitions";
+import { api } from "../../../core/blitzkit/api";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
 import { TankFilters, type CaseType } from "../../../stores/tankFilters";
@@ -43,10 +40,10 @@ import { ResearchedIcon } from "../../ResearchedIcon";
 import { ScienceIcon } from "../../ScienceIcon";
 import { ScienceOffIcon } from "../../ScienceOffIcon";
 
-const gameDefinitions = await awaitableGameDefinitions;
-const consumableDefinitions = await awaitableConsumableDefinitions;
-const provisionDefinitions = await awaitableProvisionDefinitions;
-const tankDefinitions = await awaitableTankDefinitions;
+const gameDefinitions = await api.gameDefinitions();
+const consumableDefinitions = await api.consumableDefinitions();
+const provisionDefinitions = await api.provisionDefinitions();
+const tankDefinitions = await api.tankDefinitions();
 
 const gameModeRoleSets: Record<number, Set<number>> = {};
 
@@ -313,7 +310,7 @@ function NationsFilter() {
                   width: "1.25em",
                   height: "1.25em",
                 }}
-                src={asset(`flags/circle/${nation}.webp`)}
+                src={alias("api", `/flags/circle/${nation}.webp`)}
               />
             ))}
           </Flex>
@@ -350,9 +347,7 @@ function NationsFilter() {
                 right="0"
                 mr="-2"
                 style={{
-                  backgroundImage: `url(${asset(
-                    `flags/scratched/${nation}.webp`,
-                  )})`,
+                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
                   backgroundSize: "100%",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "5rem center",
@@ -685,10 +680,9 @@ function IndividualShellFilter({
           {shells[index] !== null && (
             <img
               style={{ width: "1em", height: "1em" }}
-              src={asset(
-                `icons/shells/${shellTypeIcons[shells[index]]}${
-                  premium ? "_premium" : ""
-                }.webp`,
+              src={alias(
+                "api",
+                `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
               )}
             />
           )}
@@ -720,8 +714,9 @@ function IndividualShellFilter({
                 color={selected ? undefined : "gray"}
               >
                 <img
-                  src={asset(
-                    `icons/shells/${shellTypeIcons[shellType]}${
+                  src={alias(
+                    "api",
+                    `/icons/shells/${shellTypeIcons[shellType]}${
                       premium ? "_premium" : ""
                     }.webp`,
                   )}
@@ -893,7 +888,7 @@ function ConsumablesFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/consumables/${consumable}.webp`)}
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
             ))}
 
@@ -938,7 +933,7 @@ function ConsumablesFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/consumables/${consumable}.webp`)}
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
 
               {unwrap(consumableDefinition.name!)}
@@ -987,7 +982,7 @@ function ProvisionsFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/provisions/${provision}.webp`)}
+                src={alias("api", `/icons/provisions/${provision}.webp`)}
               />
             ))}
 
@@ -1032,7 +1027,7 @@ function ProvisionsFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(`icons/provisions/${provision}.webp`)}
+                src={alias("api", `/icons/provisions/${provision}.webp`)}
               />
 
               {unwrap(provisionDefinition.name!)}
@@ -1075,8 +1070,10 @@ function GameModeAbilitiesFilter() {
       : rawPowers;
 
   const icons = [
-    ...abilities.map((ability) => `icons/consumables/${ability}.webp`),
-    ...powers.map((power) => `icons/provisions/${power}.webp`),
+    ...abilities.map((ability) =>
+      alias("api", `/icons/consumables/${ability}.webp`),
+    ),
+    ...powers.map((power) => alias("api", `/icons/provisions/${power}.webp`)),
   ];
 
   return (
@@ -1094,7 +1091,7 @@ function GameModeAbilitiesFilter() {
                   height: "1.25em",
                   objectFit: "contain",
                 }}
-                src={asset(icon)}
+                src={icon}
               />
             ))}
 
@@ -1161,7 +1158,10 @@ function GameModeAbilitiesFilter() {
                           height: "1.25em",
                           objectFit: "contain",
                         }}
-                        src={asset(`icons/consumables/${consumable}.webp`)}
+                        src={alias(
+                          "api",
+                          `/icons/consumables/${consumable}.webp`,
+                        )}
                       />
 
                       {unwrap(abilityDefinition.name!)}
@@ -1210,7 +1210,10 @@ function GameModeAbilitiesFilter() {
                           height: "1.25em",
                           objectFit: "contain",
                         }}
-                        src={asset(`icons/provisions/${provision}.webp`)}
+                        src={alias(
+                          "api",
+                          `/icons/provisions/${provision}.webp`,
+                        )}
                       />
 
                       {unwrap(powerDefinition.name!)}

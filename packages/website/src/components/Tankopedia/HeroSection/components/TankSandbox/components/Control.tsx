@@ -5,8 +5,8 @@ import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
-import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
+import { api } from "../../../../../../core/blitzkit/api";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { Pose, poseEvent } from "../../../../../../core/blitzkit/pose";
 import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
@@ -21,7 +21,7 @@ const poseDistances: Record<Pose, number> = {
 
 const inspectModeInitialPosition = new Vector3(-8, 2, -13);
 
-const modelDefinitions = await awaitableModelDefinitions;
+const modelDefinitions = await api.modelDefinitions();
 
 interface ControlsProps {
   autoRotate?: boolean;

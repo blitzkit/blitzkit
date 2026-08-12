@@ -1,7 +1,7 @@
 import { ExternalLinkIcon, LoopIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useState } from "react";
-import { awaitableProvisionDefinitions } from "../../core/awaitables/provisionDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
@@ -13,7 +13,7 @@ interface TankControlProps {
   slug: string;
 }
 
-const provisionDefinitions = await awaitableProvisionDefinitions;
+const provisionDefinitions = await api.provisionDefinitions();
 
 export function TankControl({ index, slug }: TankControlProps) {
   const { locale, strings } = useLocale();
@@ -61,7 +61,7 @@ export function TankControl({ index, slug }: TankControlProps) {
                   CompareEphemeral.mutate((draft) => {
                     draft.members[index] = tankToCompareMember(
                       tank,
-                      provisionDefinitions
+                      provisionDefinitions,
                     );
                     draft.sorting = undefined;
                   });

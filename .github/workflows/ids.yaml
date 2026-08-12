@@ -1,0 +1,45 @@
+name: Discover IDs
+
+on:
+  push:
+    branches: production
+
+  schedule:
+    - cron: 0 */6 * * *
+
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover IDs
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: production
+          submodules: recursive
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Discover IDs
+        run: bun run discover-ids
+        env:
+          PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
+          GH_TOKEN: ${{ secrets.IDS_TOKEN }}

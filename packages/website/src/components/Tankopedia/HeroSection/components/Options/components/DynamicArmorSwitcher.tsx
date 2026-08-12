@@ -1,4 +1,4 @@
-import { asset } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
 import { IconButton } from "@radix-ui/themes";
 import { useArmor } from "../../../../../../hooks/useArmor";
 import { Duel } from "../../../../../../stores/duel";
@@ -7,7 +7,7 @@ import { Tankopedia } from "../../../../../../stores/tankopedia";
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
   const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73)
+    state.protagonist.consumables.includes(73),
   );
   const { hasDynamicArmor } = useArmor(tank.id);
 
@@ -38,7 +38,7 @@ export function DynamicArmorSwitcher() {
     >
       <img
         alt="Dynamic Armor"
-        src={asset("icons/consumables/73.webp")}
+        src={alias("api", "/icons/consumables/73.webp")}
         style={{
           width: "50%",
           height: "50%",

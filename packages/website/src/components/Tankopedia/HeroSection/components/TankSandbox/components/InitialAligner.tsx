@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { awaitableModelDefinitions } from "../../../../../../core/awaitables/modelDefinitions";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
+import { api } from "../../../../../../core/blitzkit/api";
 import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
 import { Duel } from "../../../../../../stores/duel";
 
-const modelDefinitions = await awaitableModelDefinitions;
+const modelDefinitions = await api.modelDefinitions();
 
 export function InitialAligner() {
   const tank = Duel.use((state) => state.protagonist.tank);

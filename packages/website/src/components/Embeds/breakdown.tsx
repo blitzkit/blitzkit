@@ -14,7 +14,7 @@ import { ContextMenu } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
 import { breakdownConfig } from "../../constants/embeds";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
-import { awaitableTankDefinitions } from "../../core/awaitables/tankDefinitions";
+import { api } from "../../core/blitzkit/api";
 import { EmbedBreakdown } from "../../stores/embedBreakdown";
 import { useEmbedStateCurry } from "../../stores/embedState/utilities";
 import { BreakdownEmbedCard, BreakdownEmbedWrapper } from "../TanksEmbed";
@@ -30,7 +30,8 @@ export const compositeStatsKeysOptions = compositeStatsKeys.map((value) => ({
 }));
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
+
   awaitableAverageDefinitions,
 ]);
 

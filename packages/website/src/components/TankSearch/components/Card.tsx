@@ -5,7 +5,7 @@ import {
   type TankDefinition,
 } from "@blitzkit/core";
 import { useMemo } from "react";
-import { awaitableModelDefinitions } from "../../../core/awaitables/modelDefinitions";
+import { api } from "../../../core/blitzkit/api";
 import { resolveReload } from "../../../core/blitzkit/resolveReload";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";
@@ -15,7 +15,7 @@ interface TankSearchCardProps {
   onSelect?: (tank: TankDefinition) => void;
 }
 
-const modelDefinitions = await awaitableModelDefinitions;
+const modelDefinitions = await api.modelDefinitions();
 
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
   const by = TankSort.use((state) => state.by);

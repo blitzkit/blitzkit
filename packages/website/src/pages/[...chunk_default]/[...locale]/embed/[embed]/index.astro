@@ -1,0 +1,56 @@
+---
+import { AstroSeo } from "@astrolib/seo";
+import { capitalize } from "lodash-es";
+import { embedConfigurations } from "../../../../../constants/embeds";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
+import { Page } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return Object.keys(embedConfigurations).map((embed) => ({
+    params: { embed: embed as keyof typeof embedConfigurations },
+  }));
+});
+
+const name = capitalize(Astro.params.embed);
+const title = `BlitzKit - ${name} embed`;
+const description = `BlitzKit ${name} embeds for streaming World of Tanks Blitz with extreme customization`;
+const { locale } = Astro.props;
+---
+
+<AstroSeo
+  title={title}
+  description={description}
+  canonical={Astro.url.href}
+  openGraph={{
+    url: Astro.url.href,
+    title,
+    description,
+    site_name: "BlitzKit",
+  }}
+  twitter={{ cardType: "summary_large_image" }}
+/>
+
+<style is:global>
+  @keyframes fade-out-border {
+    from {
+      outline: 1rem solid #ff0000ff;
+    }
+    to {
+      outline: 0.75rem solid #ff000000;
+    }
+  }
+
+  .preview-container-animated {
+    animation: fade-out-border 0.5s linear;
+  }
+
+  .preview-container-animated:hover {
+    outline: 1rem solid #ff000080;
+  }
+</style>
+
+<BaseLayout {locale}>
+  <Page {locale} client:load embed={Astro.params.embed} />
+</BaseLayout>

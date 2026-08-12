@@ -1,6 +1,6 @@
-import { awaitableEquipmentDefinitions } from "../core/awaitables/equipmentDefinitions";
+import { api } from "../core/blitzkit/api";
 
-const equipmentDefinitions = await awaitableEquipmentDefinitions;
+const equipmentDefinitions = await api.equipmentDefinitions();
 
 export function useEquipmentPreset(preset: string) {
   return equipmentDefinitions.presets[preset];

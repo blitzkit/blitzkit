@@ -1,7 +1,7 @@
-import { fetchPB } from '../protobuf';
-import { Reviews } from '../protos';
-import { asset } from './asset';
+import { staticAsset } from "@blitzkit/core";
+import { fetchPB } from "../protobuf";
+import { Reviews } from "../protos";
 
 export function fetchReviews() {
-  return fetchPB(asset('definitions/reviews.pb'), Reviews);
+  return fetchPB(staticAsset("definitions/reviews.pb"), Reviews);
 }

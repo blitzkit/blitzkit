@@ -1,8 +1,8 @@
-import { asset, formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { alias, formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Skeleton, Text } from "@radix-ui/themes";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { awaitableTankDefinitions } from "../../../../core/awaitables/tankDefinitions";
+import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
@@ -15,7 +15,7 @@ type NodeProps = MaybeSkeletonComponentProps & {
 };
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  awaitableTankDefinitions,
+  api.tankDefinitions(),
   awaitableAverageDefinitions,
 ]);
 
@@ -58,7 +58,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         mx={highlight ? "2" : "0"}
         style={{
           background: highlight
-            ? `url(${asset(`flags/fade_small/${tank.nation}.webp`)})`
+            ? `url(${alias("api", `/flags/fade/${tank.nation}.webp`)})`
             : undefined,
           backgroundPosition: "center",
           backgroundSize: "cover",
@@ -79,7 +79,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         >
           <img
             alt={unwrap(tank.name!)}
-            src={asset(`icons/tanks/big/${id}.webp`)}
+            src={alias("api", `/tanks/${id}/icons/big.webp`)}
             width={64}
             height={64}
             style={{
@@ -99,7 +99,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                 <Flex gap="1" align="center">
                   <img
                     alt="XP"
-                    src={asset("icons/currencies/xp.webp")}
+                    src={alias("api", "/icons/currencies/xp.webp")}
                     style={{
                       width: "1em",
                       height: "1em",
@@ -114,7 +114,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
                 <Flex gap="1" align="center">
                   <img
                     alt="Silver"
-                    src={asset("icons/currencies/silver.webp")}
+                    src={alias("api", "/icons/currencies/silver.webp")}
                     style={{
                       width: "1em",
                       height: "1em",
