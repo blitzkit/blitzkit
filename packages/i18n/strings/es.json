@@ -37,10 +37,11 @@
       "d_1": "Ayer"
     },
     "branches": {
-      "local": "DEV",
-      "dev": "Beta",
-      "opentest": "Prueba Abierta",
-      "preview": "Avance"
+      "beta": "Beta",
+      "development": "Development",
+      "opentest": "Prueba abierta",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "Ingles",
