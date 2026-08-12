@@ -1,6 +1,6 @@
 import { blueDark, orangeDark } from "@radix-ui/colors";
 import { ContactShadows } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { invalidate, useFrame } from "@react-three/fiber";
 import { clamp, times } from "lodash-es";
 import { Quicklime } from "quicklime";
 import {
@@ -78,6 +78,8 @@ export function Lighting() {
         height={1.5}
         blur={2 ** 0.5}
         opacity={2 ** -0.4}
+        resolution={2 ** 7}
+        depthWrite={false}
       />
 
       {animate && (
@@ -152,8 +154,12 @@ function Animator({ stop, t0, animationTime, wrapper }: AnimatorProps) {
   const factor =
     !hasPbr && display !== TankopediaDisplay.StaticArmor ? NON_PBR_FACTOR : 1;
 
+  useEffect(() => {
+    invalidate();
+  }, [requestedDisplay === display]);
+
   const apply = useCallback((t: number) => {
-    if (wrapper.current === null) return;
+    if (!wrapper.current) return;
 
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
