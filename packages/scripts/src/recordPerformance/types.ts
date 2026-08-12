@@ -18,7 +18,7 @@ interface QuickStatisticsTank {
   all: Record<string, number>;
 }
 
-interface Observations {
+interface ChunkObservations {
   count: number;
   observations: Record<number, Observation>;
 }
