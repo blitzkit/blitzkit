@@ -37,10 +37,11 @@
       "d_1": "昨日"
     },
     "branches": {
-      "local": "开发者",
-      "dev": "测试版",
+      "beta": "测试版",
+      "development": "Development",
       "opentest": "开放测试",
-      "preview": "预览"
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "英语",
