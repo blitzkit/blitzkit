@@ -1,6 +1,8 @@
 import { assertSecret } from "@blitzkit/core";
 
 interface EnvironmentConfig {
+  robots: boolean;
+  canonical: string;
   paths: Record<string, string | null>;
   nodes: Record<string, string>;
   aliases: Record<string, string>;

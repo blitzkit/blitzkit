@@ -1,4 +1,7 @@
 {
+  "robots": false,
+  "canonical": "https://blitzkit.app",
+
   "paths": {
     "default": null,
     "api": "api"
