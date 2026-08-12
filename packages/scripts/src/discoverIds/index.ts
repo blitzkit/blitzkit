@@ -1,5 +1,5 @@
 import { range } from "lodash-es";
-import { compress, decompress } from "lz4js";
+import { compress } from "lz4js";
 import { exit } from "node:process";
 import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
 import { IdArray } from "../core/blitzkit/idArray";
@@ -28,8 +28,7 @@ const manifest = await storage.json<IdsManifest>("manifest.json");
 
 for (let i = 0; i < manifest.chunks; i++) {
   const bytes = await storage.bytes(`chunks/chunk-${i}.dat.lz4`);
-  const uncompressed = decompress(bytes);
-  const ids = IdArray.fromBytes(uncompressed);
+  const ids = IdArray.fromCompressed(bytes);
 
   discoveredChunks.push(ids);
 }

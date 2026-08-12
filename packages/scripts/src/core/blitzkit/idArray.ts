@@ -1,3 +1,5 @@
+import { decompress } from "lz4js";
+
 export class IdArray {
   constructor(
     private array: Uint32Array = new Uint32Array(),
@@ -55,6 +57,11 @@ export class IdArray {
     uintArray.set(values);
 
     return new IdArray(uintArray, size);
+  }
+
+  static fromCompressed(bytes: Uint8Array) {
+    const decompressed = decompress(bytes);
+    return this.fromBytes(decompressed);
   }
 
   static fromArray(array: number[]) {
