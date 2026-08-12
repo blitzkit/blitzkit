@@ -37,10 +37,11 @@
       "d_1": "Вчера"
     },
     "branches": {
-      "local": "dev",
-      "dev": "бета",
-      "opentest": "общий тест",
-      "preview": "превью"
+      "beta": "Бета",
+      "development": "Development",
+      "opentest": "Открытый тест",
+      "preview": "Preview",
+      "production": "Production"
     },
     "locales": {
       "en": "Английский",
