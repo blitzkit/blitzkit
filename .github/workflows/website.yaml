@@ -120,9 +120,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y aria2
 
-      - name: Configure pages
-        uses: actions/configure-pages@v6
-
       - name: Install dependencies
         run: bun install
 
