@@ -1,6 +1,6 @@
 import { assertSecret } from "@blitzkit/core";
 import { $ } from "bun";
-import { rm } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import {
   DEPOT_DOWNLOADER_EXECUTABLE,
   DEPOT_DOWNLOADER_MAX_DOWNLOADS,
@@ -11,6 +11,8 @@ import { QuickGitHubRelease } from "./types";
 const provider = assertSecret(import.meta.env.CLIENT_PROVIDER);
 const source = assertSecret(import.meta.env.CLIENT_SOURCE);
 const dir = assertSecret(import.meta.env.CLIENT_DIR);
+
+await rm(dir, { recursive: true, force: true });
 
 if (provider === "steam") {
   const [id, platform] = source.split("/");
@@ -28,7 +30,6 @@ if (provider === "steam") {
     throw new Error("No linux-x64 asset found for Steam DepotDownloader");
   }
 
-  await rm(dir, { recursive: true, force: true });
   await rm(DEPOT_DOWNLOADER_OUTPUT, { recursive: true, force: true });
 
   await $`curl -L "${asset.browser_download_url}" -o "${DEPOT_DOWNLOADER_OUTPUT}.zip"`;
@@ -45,6 +46,12 @@ if (provider === "steam") {
   } -app ${id} -username ${username} -password ${
     password
   } -dir ${dir} -max-downloads ${DEPOT_DOWNLOADER_MAX_DOWNLOADS}`;
+} else if (provider === "zip") {
+  const url = assertSecret(import.meta.env.CLIENT_SOURCE);
+
+  await mkdir(dir, { recursive: true });
+
+  await $`curl -L "${url}" | bsdtar -xf- --strip-components=1 -C ${dir}`;
 } else {
   throw new Error(`Unknown provider: ${provider}`);
 }
