@@ -74,4 +74,8 @@ export const tools: Record<string, Tool> = {
     href: "https://discord.gg/nDt7AjGJQH",
     button: "plum",
   },
+  studio: {
+    id: "studio",
+    button: "indigo",
+  },
 };
