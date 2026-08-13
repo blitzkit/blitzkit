@@ -56,7 +56,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.environment || 'production' }}
+  group: ${{ github.workflow }}-${{ inputs.environment || github.ref }}
   cancel-in-progress: true
 
 env:
