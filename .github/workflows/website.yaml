@@ -2,7 +2,6 @@ name: Website
 
 on:
   push:
-    branches: production
 
   schedule:
     - cron: "0 4 * * *"
@@ -57,7 +56,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.environment || 'production' }}
   cancel-in-progress: true
 
 env:
@@ -139,6 +138,8 @@ jobs:
           path: dist/website
 
       - name: Trigger deployment
+
+        if: ${{ github.ref == 'refs/heads/production' }}
 
         env:
           TOKEN: ${{ secrets.GH_NODE_DEPLOY_TOKEN }}
