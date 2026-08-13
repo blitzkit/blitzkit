@@ -4,7 +4,7 @@ import { exit } from "node:process";
 import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
 import { IdArray } from "../core/blitzkit/idArray";
 import { CHUNK_COUNT, MAX_DRY_STREAK, MAX_IDS_PER_CALL } from "./constants";
-import { sleep, withinTimeLimit } from "./time";
+import { atMaxRate } from "./time";
 import { IdsManifest, QuickInfo, RegionDescriptor } from "./types";
 
 const storage = await new GitObjectStorage(
@@ -30,18 +30,16 @@ for (let i = 0; i < manifest.chunks; i++) {
 
 console.log(`Found ${manifest.chunks} pre-existing chunks`);
 
-manifest.chunks = CHUNK_COUNT;
-
 let chunks: IdArray[] = [];
 
-if (discoveredChunks.length === manifest.chunks) {
+if (manifest.chunks === CHUNK_COUNT) {
   console.log("Pre-existing chunking is consistent, passing as-is...");
 
   chunks = discoveredChunks as IdArray[];
 } else {
   console.log("Pre-existing chunking is not consistent, re-chunking...");
 
-  chunks = Array.from({ length: manifest.chunks }).map(() => new IdArray());
+  chunks = Array.from({ length: CHUNK_COUNT }).map(() => new IdArray());
 
   for (let i = 0; i < discoveredChunks.length; i++) {
     const ids = discoveredChunks[i];
@@ -49,7 +47,7 @@ if (discoveredChunks.length === manifest.chunks) {
 
     for (let j = 0; j < size; j++) {
       const id = ids!.get(j);
-      const chunk = chunks[id % manifest.chunks];
+      const chunk = chunks[id % CHUNK_COUNT];
 
       chunk.push(id);
     }
@@ -60,6 +58,9 @@ if (discoveredChunks.length === manifest.chunks) {
   console.log("Sorting chunks...");
 
   for (let i = 0; i < chunks.length; i++) chunks[i].sort();
+
+  manifest.chunks = CHUNK_COUNT;
+  manifest.last_verified = manifest.last_verified % CHUNK_COUNT;
 }
 
 const regions: RegionDescriptor[] = [
@@ -116,7 +117,6 @@ async function save() {
   manifest.total_count = totalFound;
 
   await storage.write("manifest.json", JSON.stringify(manifest, null, 2));
-
   await storage.commit();
 
   console.log(
@@ -129,41 +129,44 @@ async function save() {
 process.on("SIGINT", save);
 process.on("SIGTERM", save);
 
-const queue: { region: RegionDescriptor; url: string; size: number }[] = [];
 const applicationId = import.meta.env.PUBLIC_WARGAMING_APPLICATION_ID;
 const fields = "account_id%2C-account_id";
 let regionI = 0;
 
-function fillQueue() {
-  if (queue.length >= 1) return;
+console.log("Starting discovery loop...");
 
-  while (regions.length > 0) {
-    regionI = (regionI + 1) % regions.length;
-    const region = regions[regionI];
+atMaxRate(async ({ _break: break1 }) => {
+  if (regions.length === 0) {
+    console.log("All regions exhausted, exiting discovery loop...");
+    return break1();
+  }
 
-    if (region.dry_streak >= MAX_DRY_STREAK) {
-      console.log(
-        `Removing region ${region.domain} removed due to ${region.dry_streak} dry streak...`,
-      );
-      regions.splice(regionI, 1);
-      continue;
-    }
+  regionI = (regionI + 1) % regions.length;
+  const region = regions[regionI];
 
-    const id0 = region.seed;
-    const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
-    const idRange = range(id0, id1 + 1);
+  if (region.dry_streak >= MAX_DRY_STREAK) {
+    console.log(
+      `Removing region ${region.domain} removed due to ${region.dry_streak} dry streak...`,
+    );
+    regions.splice(regionI, 1);
 
-    region.seed += idRange.length;
+    return;
+  }
 
-    const accountIds = idRange.join(",");
-    const url = `https://api.wotblitz.${
-      region.domain
-    }/wotb/account/info/?application_id=${applicationId}&fields=${
-      fields
-    }&account_id=${accountIds}`;
+  const id0 = region.seed;
+  const id1 = Math.min(id0 + MAX_IDS_PER_CALL - 1, region.max);
+  const idRange = range(id0, id1 + 1);
 
-    queue.push({ region, url, size: idRange.length });
+  region.seed += idRange.length;
 
+  const accountIds = idRange.join(",");
+  const url = `https://api.wotblitz.${
+    region.domain
+  }/wotb/account/info/?application_id=${applicationId}&fields=${
+    fields
+  }&account_id=${accountIds}`;
+
+  atMaxRate(async ({ _break: break2 }) => {
     if (idRange.length < MAX_IDS_PER_CALL) {
       console.log(
         `Removing region ${region.domain} removed due to ID range exhaustion...`,
@@ -171,74 +174,39 @@ function fillQueue() {
       regions.splice(regionI, 1);
     }
 
-    return;
-  }
-}
+    const response = await fetch(url);
+    const data = (await response.json()) as QuickInfo;
 
-console.log("Starting discovery loop...");
+    if (data.status !== "ok") {
+      console.warn("Failed API call; trying again...");
+      return;
+    }
 
-while (withinTimeLimit() && regions.length > 0) {
-  await sleep();
+    let foundIds = 0;
 
-  fillQueue();
+    for (const key in data.data) {
+      const value = data.data[key];
 
-  if (queue.length === 0) {
-    console.log("Queue empty, ending discovery loop...");
-    break;
-  }
+      if (value === null) continue;
 
-  const request = queue.shift()!;
-  const response = await fetch(request.url);
-  const data = (await response.json()) as QuickInfo;
+      foundIds++;
 
-  if (data.status !== "ok") {
-    console.warn("Failed API call; pushing back into queue...");
-    queue.push(request);
+      const id = Number(key);
+      const chunkIndex = id % manifest.chunks;
+      const chunk = chunks[chunkIndex];
 
-    continue;
-  }
+      chunk.push(id);
+    }
 
-  let foundIds = 0;
+    if (foundIds === 0) {
+      region.dry_streak += idRange.length;
+    } else {
+      region.dry_streak = 0;
+      // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
+    }
 
-  for (const key in data.data) {
-    const value = data.data[key];
-
-    if (value === null) continue;
-
-    foundIds++;
-
-    const id = Number(key);
-    const chunkIndex = id % manifest.chunks;
-    const chunk = chunks[chunkIndex];
-
-    chunk.push(id);
-  }
-
-  if (foundIds === 0) {
-    request.region.dry_streak += request.size;
-  } else {
-    request.region.dry_streak = 0;
-    // console.log(`Found ${foundIds} ids in ${request.region.domain}`);
-  }
-}
-
-// console.log("Starting verification loop...");
-
-// while (withinTimeLimit()) {
-//   const verificationIndex = (manifest.last_verified + 1) % manifest.chunks;
-//   manifest.last_verified = verificationIndex;
-//   const chunk = chunks[verificationIndex];
-//   const size = chunk.size();
-
-//   let i0 = 0;
-//   while (withinTimeLimit() && i0 < size) {
-//     await sleep();
-
-//     const i1 = Math.min(i0 + MAX_IDS_PER_CALL - 1, size - 1);
-//     const indices = range(i0, i1 + 1);
-//   }
-
-//   console.log(`Verification complete for chunk ${verificationIndex}`);
-// }
+    break2();
+  });
+});
 
 await save();
