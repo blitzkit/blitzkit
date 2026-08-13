@@ -115,6 +115,11 @@ jobs:
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
 
+      - name: Setup aria2
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y aria2
+
       - name: Configure pages
         uses: actions/configure-pages@v6
 
