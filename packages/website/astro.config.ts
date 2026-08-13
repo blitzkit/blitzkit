@@ -35,11 +35,11 @@ export default defineConfig({
 
       version: packageJSON.version,
 
-      shortcuts: Object.values(tools)
-        .filter((tool) => !tool.disabled && !tool.href)
-        .map((tool) => {
+      shortcuts: Object.entries(tools)
+        .filter(([, tool]) => !tool.href)
+        .map(([id, tool]) => {
           const stringId = (tool.strings ??
-            tool.id) as keyof typeof strings.website.tools;
+            id) as keyof typeof strings.website.tools;
 
           return {
             name: strings.website.tools[stringId].name,
@@ -54,8 +54,8 @@ export default defineConfig({
             short_name_localized: wrapper(
               (strings) => strings.website.tools[stringId].name,
             ),
-            url: `/${tool.id}`,
-            icon: `public/assets/images/tools/${tool.id}.webp`,
+            url: `/${tool.path ?? id}`,
+            icon: `public/assets/images/tools/${tool.path}.webp`,
           };
         }),
 
