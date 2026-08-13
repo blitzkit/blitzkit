@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         chunk: [default, api]
 
@@ -115,10 +115,10 @@ jobs:
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
 
-      - name: Setup aria2
+      - name: Setup CLIs
         run: |
           sudo apt-get update
-          sudo apt-get install -y aria2
+          sudo apt-get install -y aria2 libarchive-tools
 
       - name: Install dependencies
         run: bun install

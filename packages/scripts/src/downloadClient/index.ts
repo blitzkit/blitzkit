@@ -14,6 +14,7 @@ const source = assertSecret(import.meta.env.CLIENT_SOURCE);
 const dir = assertSecret(import.meta.env.CLIENT_DIR);
 
 await rm(dir, { recursive: true, force: true });
+await mkdir(dir, { recursive: true });
 
 if (provider === "steam") {
   const [id, platform] = source.split("/");
