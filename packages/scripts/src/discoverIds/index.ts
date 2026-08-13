@@ -3,12 +3,7 @@ import { compress } from "lz4js";
 import { exit } from "node:process";
 import { GitObjectStorage } from "../core/blitzkit/gitObjectStorage";
 import { IdArray } from "../core/blitzkit/idArray";
-import {
-  ACCOMMODATED_ID_COUNT,
-  MAX_BYTES_PER_CHUNK,
-  MAX_DRY_STREAK,
-  MAX_IDS_PER_CALL,
-} from "./constants";
+import { CHUNK_COUNT, MAX_DRY_STREAK, MAX_IDS_PER_CALL } from "./constants";
 import { sleep, withinTimeLimit } from "./time";
 import { IdsManifest, QuickInfo, RegionDescriptor } from "./types";
 
@@ -35,9 +30,7 @@ for (let i = 0; i < manifest.chunks; i++) {
 
 console.log(`Found ${manifest.chunks} pre-existing chunks`);
 
-manifest.chunks = Math.ceil(
-  (ACCOMMODATED_ID_COUNT * Uint32Array.BYTES_PER_ELEMENT) / MAX_BYTES_PER_CHUNK,
-);
+manifest.chunks = CHUNK_COUNT;
 
 let chunks: IdArray[] = [];
 
