@@ -8,7 +8,8 @@
     "build": "cd packages/website && bun run build",
     "discover-ids": "cd packages/scripts && bun run discover-ids",
     "build-protos": "cd packages/scripts && bun run build-protos",
-    "record-performance": "cd packages/scripts && bun run record-performance"
+    "record-performance": "cd packages/scripts && bun run record-performance",
+    "download-client": "cd packages/scripts && bun run download-client"
   },
   "type": "module",
   "workspaces": [

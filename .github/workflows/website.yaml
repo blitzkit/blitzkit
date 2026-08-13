@@ -34,6 +34,25 @@ on:
           - preview
           - opentest
 
+      client_provider:
+        description: Client provider
+
+        type: choice
+        required: true
+        default: steam
+
+        options:
+          - steam
+          - zip
+          - wgpkg
+
+      client_source:
+        description: Client source
+
+        type: string
+        required: true
+        default: 444200/windows
+
 permissions:
   contents: read
 
@@ -42,6 +61,13 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # client
+  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+  CLIENT_PROVIDER: ${{ inputs.client_provider || 'steam' }}
+  CLIENT_SOURCE: ${{ inputs.client_source || '444200/windows' }}
+  CLIENT_DIR: ../../temp/game
+
   # blitzkit
   PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'production' }}
   PUBLIC_PROMOTE_OPENTEST: false
@@ -52,19 +78,12 @@ env:
   WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
   WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
   WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
-  GAME_DIR: ../../temp/game
 
   # google
   PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
 
   # wargaming
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
-
-  # steam
-  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
-  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-  STEAM_APP: 444200
-  STEAM_OS: windows
 
 jobs:
   build:
@@ -102,38 +121,8 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Setup DepotDownloader
-        run: |
-          REPO_USER="SteamRE"
-          REPO_NAME="DepotDownloader"
-          TEMP="temp"
-
-          OUT="$TEMP/$REPO_NAME"
-          ZIP="$TEMP/$REPO_NAME.zip"
-
-          URL=$(
-            curl -s "https://api.github.com/repos/$REPO_USER/$REPO_NAME/releases/latest" \
-              | jq -r '.assets[]
-                | select(.name | contains("linux-x64"))
-                | .browser_download_url' \
-              | head -n 1
-          )
-
-          mkdir -p "$TEMP"
-          curl -L "$URL" -o "$ZIP"
-          unzip -p "$ZIP" "$REPO_NAME" > "$OUT"
-          rm "$ZIP"
-
-          chmod +x "$OUT"
-
-      - name: Download game
-        run: |
-          TEMP="temp"
-
-          DEPOT_DOWNLOADER="$TEMP/DepotDownloader"
-          GAME="$TEMP/game"
-
-          $DEPOT_DOWNLOADER -os $STEAM_OS -app $STEAM_APP -username $STEAM_USERNAME -password $STEAM_PASSWORD -dir $GAME -max-downloads 256
+      - name: Download Client
+        run: bun run download-client
 
       - name: Build
         run: bun run --bun build
