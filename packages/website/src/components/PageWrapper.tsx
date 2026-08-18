@@ -36,7 +36,7 @@ export function PageWrapper({
     >
       <Flex
         direction="column"
-        gap="4"
+        gap="9"
         p={padding}
         width="100%"
         maxWidth="80rem"

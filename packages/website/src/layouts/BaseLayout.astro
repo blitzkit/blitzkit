@@ -1,6 +1,5 @@
 ---
 import strings from "@blitzkit/i18n/strings/en.json";
-import "@fontsource/inter";
 import { Flex } from "@radix-ui/themes";
 import Analytics from "../components/Analytics.astro";
 import { BlitzKitTheme } from "../components/BlitzKitTheme";
@@ -9,7 +8,6 @@ import EasterEggs from "../components/EasterEggs.astro";
 import Footer from "../components/Footer.astro";
 import LocaleRedirector from "../components/LocaleRedirector.astro";
 import Meta from "../components/Meta.astro";
-import Navbar from "../components/Navbar.astro";
 import Servicing from "../components/Servicing.astro";
 import "./base.css";
 
@@ -39,8 +37,6 @@ const { noFooter, noNavbar, integrated, locale } = Astro.props;
   <body class={noNavbar ? "no-navbar" : ""}>
     <BlitzKitTheme>
       <Flex direction="column" minHeight="100vh">
-        <Navbar {locale} {integrated} />
-
         <Checks {locale} client:only="react" />
 
         {servicing ? <Servicing /> : <slot />}
