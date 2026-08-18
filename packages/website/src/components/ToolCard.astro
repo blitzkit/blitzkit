@@ -3,14 +3,14 @@ import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
 import { Heading } from "./Heading";
 import { LinkI18n } from "./LinkI18n";
-import { Text } from "./Text";
 
 interface Props {
   tool: Tool;
   locale: string;
+  minor?: boolean;
 }
 
-const { locale, tool } = Astro.props;
+const { locale, tool, minor } = Astro.props;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
@@ -20,12 +20,13 @@ const toolStrings =
 
 <style>
   .container {
+    flex: 1;
+
     display: flex;
 
-    border-radius: var(--radius-3);
+    border-radius: var(--space-3);
     background-size: cover;
     background-position: center;
-    height: 16rem;
 
     position: relative;
     overflow: hidden;
@@ -56,7 +57,15 @@ const toolStrings =
 
       width: 100%;
 
-      gap: var(--space-4);
+      padding: var(--space-5);
+      box-sizing: border-box;
+
+      backdrop-filter: blur(64px);
+      -webkit-backdrop-filter: blur(64px);
+
+      &[data-minor="true"] {
+        padding: var(--space-4);
+      }
 
       .wrapper {
         display: flex;
@@ -74,7 +83,7 @@ const toolStrings =
   <LinkI18n
     {locale}
     className="link"
-    underline="none"
+    underline="never"
     href={tool.href ?? `/${tool.id}`}
     target={tool.href ? "_blank" : undefined}
   >
@@ -84,22 +93,11 @@ const toolStrings =
     >
     </div>
 
-    <div
-      class="content"
-      style={{
-        backgroundColor: "var(--color-panel-translucent)",
-        backdropFilter: "blur(64px) brightness(50%)",
-        WebkitBackdropFilter: "blur(64px)",
-      }}
-    >
+    <div class="content" data-minor={minor}>
       <div class="wrapper">
-        <Heading weight="medium">
+        <Heading size={minor ? "3" : "2"} weight="medium">
           {toolStrings.name}
         </Heading>
-
-        <Text color="gray">
-          {toolStrings.description}
-        </Text>
       </div>
     </div>
   </LinkI18n>

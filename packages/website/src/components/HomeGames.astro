@@ -2,6 +2,7 @@
 import { tools } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
 import { Heading } from "./Heading";
+import { Section } from "./Section";
 import ToolCard from "./ToolCard.astro";
 import ToolCardLayoutColumn from "./ToolCardLayoutColumn.astro";
 import ToolCardLayoutRoot from "./ToolCardLayoutRoot.astro";
@@ -15,14 +16,16 @@ const { locale } = Astro.props;
 const strings = getStrings(locale);
 ---
 
-<Heading size="5" className="title">{strings.home.games}</Heading>
+<Section>
+  <Heading size="2" className="title">{strings.home.games}</Heading>
 
-<ToolCardLayoutRoot>
-  <ToolCardLayoutColumn major>
-    <ToolCard {locale} tool={tools.mixer} />
-  </ToolCardLayoutColumn>
+  <ToolCardLayoutRoot>
+    <ToolCardLayoutColumn major>
+      <ToolCard {locale} tool={tools.mixer} />
+    </ToolCardLayoutColumn>
 
-  <ToolCardLayoutColumn>
-    <ToolCard {locale} tool={tools.guesser} />
-  </ToolCardLayoutColumn>
-</ToolCardLayoutRoot>
+    <ToolCardLayoutColumn>
+      <ToolCard {locale} tool={tools.guesser} />
+    </ToolCardLayoutColumn>
+  </ToolCardLayoutRoot>
+</Section>

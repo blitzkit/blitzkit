@@ -1,0 +1,14 @@
+.section {
+  display: flex;
+  justify-content: center;
+
+  .content {
+    flex: 1;
+    max-width: var(--page-width);
+
+    gap: var(--space-4);
+
+    display: flex;
+    flex-direction: column;
+  }
+}

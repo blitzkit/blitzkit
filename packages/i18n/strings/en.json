@@ -402,7 +402,7 @@
       },
 
       "guesser": {
-        "name": "Guess",
+        "name": "Guesser",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {
