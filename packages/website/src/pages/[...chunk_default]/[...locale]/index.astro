@@ -6,12 +6,9 @@ import { AesonPlug } from "../../../components/AesonPlug";
 import HelpTranslate from "../../../components/HelpTranslate.astro";
 import HomeCosmetics from "../../../components/HomeCosmetics.astro";
 import HomeGames from "../../../components/HomeGames.astro";
-import HomeHero from "../../../components/HomeHero.astro";
 import HomePlayers from "../../../components/HomePlayers.astro";
 import HomeTanks from "../../../components/HomeTanks.astro";
 import HomeTechnical from "../../../components/HomeTechnical.astro";
-import { PageWrapper } from "../../../components/PageWrapper";
-import { Plugs } from "../../../components/Plugs";
 import { tools, type Tool } from "../../../constants/tools";
 import { mixStaticPaths } from "../../../core/blitzkit/mixStaticPaths";
 import { getStrings } from "../../../core/i18n/getStrings";
@@ -66,26 +63,16 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   twitter={{ cardType: "summary_large_image" }}
 />
 
-<BaseLayout {locale}>
-  <HomeHero {locale} />
+<BaseLayout accent="blue" {locale}>
+  <!-- <HomeHero {locale} /> -->
 
   <HelpTranslate {locale} />
 
-  <Plugs client:idle />
+  {environment === "preview" && <AesonPlug />}
 
-  {
-    environment === "preview" && (
-      <Flex justify="center" my="8" px="4">
-        <AesonPlug />
-      </Flex>
-    )
-  }
-
-  <PageWrapper>
-    <HomeTanks {locale} />
-    <HomePlayers {locale} />
-    <HomeGames {locale} />
-    <HomeCosmetics {locale} />
-    <HomeTechnical {locale} />
-  </PageWrapper>
+  <HomeTanks {locale} />
+  <HomePlayers {locale} />
+  <HomeGames {locale} />
+  <HomeCosmetics {locale} />
+  <HomeTechnical {locale} />
 </BaseLayout>

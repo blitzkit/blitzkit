@@ -1,16 +1,16 @@
 ---
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
+import { Heading } from "./Heading";
 import { LinkI18n } from "./LinkI18n";
+import { Text } from "./Text";
 
 interface Props {
   tool: Tool;
   locale: string;
-  significant?: boolean;
 }
 
-const { locale, tool, significant } = Astro.props;
+const { locale, tool } = Astro.props;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
@@ -20,18 +20,18 @@ const toolStrings =
 
 <style>
   .container {
+    display: flex;
+
     border-radius: var(--radius-3);
     background-size: cover;
     background-position: center;
     height: 16rem;
 
+    position: relative;
+    overflow: hidden;
+
     &[data-disabled="true"] {
       opacity: 0.25;
-    }
-
-    &[data-significant="true"] {
-      width: 100%;
-      height: min(20rem, 50vh);
     }
   }
 
@@ -41,19 +41,35 @@ const toolStrings =
     height: 100%;
     flex-direction: column;
     color: inherit;
+
+    .background {
+      flex: 1;
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      width: 100%;
+
+      gap: var(--space-4);
+
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
   }
 </style>
 
-<Flex
-  style={{
-    backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-  }}
-  data-significant={significant}
-  className="container"
-  position="relative"
-  overflow="hidden"
-  flexGrow={significant ? undefined : "1"}
-  flexBasis={significant ? undefined : { initial: undefined, sm: "0" }}
+<div
+  style={{ backgroundImage: `url(/assets/images/tools/${tool.id}.webp)` }}
+  class="container"
 >
   <LinkI18n
     {locale}
@@ -62,49 +78,29 @@ const toolStrings =
     href={tool.href ?? `/${tool.id}`}
     target={tool.href ? "_blank" : undefined}
   >
-    <Box
-      flexGrow="1"
-      style={{
-        backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    />
+    <div
+      class="background"
+      style={{ backgroundImage: `url(/assets/images/tools/${tool.id}.webp)` }}
+    >
+    </div>
 
-    <Flex
-      px={{ initial: "6", md: significant ? "8" : "6" }}
-      py={{ initial: "4", sm: significant ? "6" : "4" }}
-      gap="4"
-      align="center"
-      justify="between"
-      width="100%"
-      direction={{ initial: "column", xs: "row" }}
+    <div
+      class="content"
       style={{
         backgroundColor: "var(--color-panel-translucent)",
         backdropFilter: "blur(64px) brightness(50%)",
         WebkitBackdropFilter: "blur(64px)",
       }}
     >
-      <Flex
-        direction="column"
-        justify="center"
-        align={{ initial: "center", xs: "start" }}
-      >
-        <Heading
-          align={{ initial: "center", sm: "left" }}
-          size={{ initial: "6", sm: significant ? "7" : "5" }}
-          weight="medium"
-        >
+      <div class="wrapper">
+        <Heading weight="medium">
           {toolStrings.name}
         </Heading>
-        <Text
-          align={{ initial: "center", sm: "left" }}
-          size={{ initial: "3", sm: significant ? "4" : "3" }}
-          color="gray"
-        >
+
+        <Text color="gray">
           {toolStrings.description}
         </Text>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   </LinkI18n>
-</Flex>
+</div>

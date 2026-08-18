@@ -1,14 +1,15 @@
 import locales from "@blitzkit/i18n/locales.json";
-import { Link, type LinkProps } from "@radix-ui/themes";
-import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import { Link, type LinkProps } from "./Link";
 
-type LinkI18nProps = LinkProps & LocaleAcceptorProps;
+export interface LinkI18n extends LinkProps {
+  locale: string;
+}
 
-export function LinkI18n({ locale, href, ...props }: LinkI18nProps) {
-  const prefix =
-    locale === undefined || locale === locales.default ? "" : `/${locale}`;
-
+export function LinkI18n({ locale, href, ...props }: LinkI18n) {
   return (
-    <Link href={href?.startsWith("/") ? `${prefix}${href}` : href} {...props} />
+    <Link
+      href={`${locale === locales.default ? "" : `/${locale}`}${href}`}
+      {...props}
+    />
   );
 }
