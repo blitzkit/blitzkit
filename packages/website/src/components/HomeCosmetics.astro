@@ -1,0 +1,19 @@
+---
+import { Heading } from "@radix-ui/themes";
+import { tools } from "../constants/tools";
+import { getStrings } from "../core/i18n/getStrings";
+import ToolCard from "./ToolCard.astro";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await getStrings(locale);
+---
+
+<Heading size="8" className="title">{strings.home.cosmetics}</Heading>
+
+<ToolCard {locale} tool={tools.avatars} />
+<ToolCard {locale} tool={tools.backgrounds} />

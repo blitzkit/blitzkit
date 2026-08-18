@@ -3,11 +3,16 @@ import { AstroSeo } from "@astrolib/seo";
 import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { Box, Flex, Link } from "@radix-ui/themes";
+import { Flex, Link } from "@radix-ui/themes";
 import { AesonPlug } from "../../../components/AesonPlug";
+import HomeCosmetics from "../../../components/HomeCosmetics.astro";
+import HomeGames from "../../../components/HomeGames.astro";
 import HomeHero from "../../../components/HomeHero.astro";
+import HomePlayers from "../../../components/HomePlayers.astro";
+import HomeTanks from "../../../components/HomeTanks.astro";
+import HomeTechnical from "../../../components/HomeTechnical.astro";
+import { PageWrapper } from "../../../components/PageWrapper";
 import { Plugs } from "../../../components/Plugs";
-import ToolCard from "../../../components/ToolCard.astro";
 import { tools, type Tool } from "../../../constants/tools";
 import { mixStaticPaths } from "../../../core/blitzkit/mixStaticPaths";
 import { getStrings } from "../../../core/i18n/getStrings";
@@ -63,7 +68,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 />
 
 <BaseLayout {locale}>
-  <HomeHero />
+  <HomeHero {locale} />
 
   {
     locale !== locales.default && (
@@ -95,23 +100,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
     )
   }
 
-  <Flex p="4" justify="center" gap="4" mt="3">
-    <Flex maxWidth="80rem" flexGrow="1" gap="4" direction="column">
-      {
-        rows.map((row) => (
-          <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
-            {row.map((tool) => (
-              <ToolCard {locale} {tool} />
-            ))}
-            {row.length < MAX_TOOLS_PER_ROW &&
-              !("significant" in row[0] && row[0].significant) && (
-                <Box flexGrow="1" />
-              )}
-          </Flex>
-        ))
-      }
-    </Flex>
-  </Flex>
-
-  <div style={{ flex: 1 }}></div>
+  <PageWrapper>
+    <HomeTanks {locale} />
+    <HomePlayers {locale} />
+    <HomeGames {locale} />
+    <HomeCosmetics {locale} />
+    <HomeTechnical {locale} />
+  </PageWrapper>
 </BaseLayout>

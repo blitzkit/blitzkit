@@ -1,13 +1,5 @@
 ---
-import { CaretRightIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Text,
-  type ButtonProps,
-} from "@radix-ui/themes";
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
 import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
 import { LinkI18n } from "./LinkI18n";
@@ -15,9 +7,10 @@ import { LinkI18n } from "./LinkI18n";
 interface Props {
   tool: Tool;
   locale: string;
+  significant?: boolean;
 }
 
-const { locale, tool } = Astro.props;
+const { locale, tool, significant } = Astro.props;
 const strings = getStrings(locale);
 const toolStrings =
   strings.website.tools[
@@ -55,12 +48,12 @@ const toolStrings =
   style={{
     backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
   }}
-  data-significant={tool.significant}
+  data-significant={significant}
   className="container"
   position="relative"
   overflow="hidden"
-  flexGrow={tool.significant ? undefined : "1"}
-  flexBasis={tool.significant ? undefined : { initial: undefined, sm: "0" }}
+  flexGrow={significant ? undefined : "1"}
+  flexBasis={significant ? undefined : { initial: undefined, sm: "0" }}
 >
   <LinkI18n
     {locale}
@@ -79,8 +72,8 @@ const toolStrings =
     />
 
     <Flex
-      px={{ initial: "6", md: tool.significant ? "8" : "6" }}
-      py={{ initial: "4", sm: tool.significant ? "6" : "4" }}
+      px={{ initial: "6", md: significant ? "8" : "6" }}
+      py={{ initial: "4", sm: significant ? "6" : "4" }}
       gap="4"
       align="center"
       justify="between"
@@ -99,31 +92,19 @@ const toolStrings =
       >
         <Heading
           align={{ initial: "center", sm: "left" }}
-          size={{ initial: "6", sm: tool.significant ? "7" : "5" }}
+          size={{ initial: "6", sm: significant ? "7" : "5" }}
           weight="medium"
         >
           {toolStrings.name}
         </Heading>
         <Text
           align={{ initial: "center", sm: "left" }}
-          size={{ initial: "3", sm: tool.significant ? "4" : "3" }}
+          size={{ initial: "3", sm: significant ? "4" : "3" }}
           color="gray"
         >
           {toolStrings.description}
         </Text>
       </Flex>
-
-      <Button
-        size={{
-          initial: undefined,
-          sm: tool.significant ? "3" : undefined,
-        }}
-        color={tool.button as ButtonProps["color"]}
-        style={{ cursor: "inherit" }}
-      >
-        {toolStrings.button}
-        <CaretRightIcon />
-      </Button>
     </Flex>
   </LinkI18n>
 </Flex>

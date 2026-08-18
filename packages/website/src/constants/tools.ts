@@ -1,47 +1,59 @@
-import type { ButtonProps } from "@radix-ui/themes";
-
 export interface Tool {
+  id: string;
+
   path?: string;
   strings?: string;
 
-  button: ButtonProps["color"];
   href?: string;
 }
 
 export const tools: Record<string, Tool> = {
   tanks: {
+    id: "tanks",
     strings: "tankopedia",
-    button: "purple",
+  },
+  players: {
+    id: "players",
+    strings: "players",
   },
   compare: {
-    button: "crimson",
+    id: "compare",
   },
   performance: {
-    button: "jade",
+    id: "performance",
   },
   playlist: {
-    button: "tomato",
+    id: "playlist",
   },
   mixer: {
-    button: "gray",
+    id: "mixer",
   },
-  guess: {
-    button: "cyan",
+  guesser: {
+    id: "guesser",
   },
-  gallery: {
-    button: "gold",
+  avatars: {
+    id: "avatars",
+  },
+  backgrounds: {
+    id: "backgrounds",
   },
   session: {
-    button: "blue",
+    id: "session",
   },
   tier_list: {
-    button: "orange",
+    id: "tier_list",
   },
   embed: {
-    button: "red",
+    id: "embed",
   },
   more: {
+    id: "more",
     href: "https://discord.gg/nDt7AjGJQH",
-    button: "plum",
+  },
+  api: {
+    id: "api",
+  },
+  changelogs: {
+    id: "changelogs",
   },
 };
