@@ -1,6 +1,7 @@
 ---
+import ToolBanner from "../../../../components/ToolBanner.astro";
 import { tools } from "../../../../constants/tools";
-import ToolLayout from "../../../../layouts/ToolLayout.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
@@ -8,8 +9,10 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<ToolLayout {locale} tool={tools.tanks}>
+<BaseLayout {locale} accent="purple">
+  <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
+
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>
-</ToolLayout>
+</BaseLayout>

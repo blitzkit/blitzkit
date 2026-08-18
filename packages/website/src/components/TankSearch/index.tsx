@@ -7,10 +7,9 @@ import {
   type TankDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { Callout, Flex, Link, Text, type FlexProps } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
 import { times, uniq } from "lodash-es";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState, type ComponentProps } from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
 import { api } from "../../core/blitzkit/api";
@@ -23,18 +22,22 @@ import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { SORT_UNITS } from "../../stores/tankopediaPersistent/constants";
 import { TankSort } from "../../stores/tankopediaSort";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
+import { Link } from "../Link";
+import { Text } from "../Text";
 import { TankSearchCard } from "./components/Card";
 import { FilterControl } from "./components/FilterControl";
 import { NoResults } from "./components/NoResults";
 import { RecentlyViewed } from "./components/RecentlyViewed";
-import { SearchBar } from "./components/SearchBar";
+import { TankSearchBar } from "../TankSearchBar";
 import { SkeletonTankCard } from "./components/SkeletonTankCard";
 import { TankCardWrapper } from "./components/TankCardWrapper";
 import { MAX_RECENTLY_VIEWED } from "./constants";
+import styles from "./index.module.css";
 
 export type TankSearchProps = MaybeSkeletonComponentProps &
-  Omit<FlexProps, "onSelect"> & {
+  ComponentProps<"div"> & {
     compact?: boolean;
     onSelect?: (tank: TankDefinition) => void;
     onSelectAll?: (tanks: TankDefinition[]) => void;
@@ -427,8 +430,8 @@ export const TankSearch = memo<TankSearchProps>(
     }, [tankFilters, tankopediaSort]);
 
     return (
-      <Flex direction="column" gap="2" flexGrow="1" {...props}>
-        <SearchBar
+      <div className={styles.container} {...props}>
+        <TankSearchBar
           skeleton={skeleton}
           topResult={tanks?.[0]}
           onSelect={onSelect}
@@ -438,9 +441,9 @@ export const TankSearch = memo<TankSearchProps>(
 
         {!skeleton && !compact && <RecentlyViewed />}
 
-        <Flex mt="2" gap="1" align="center" justify="center" direction="column">
-          <Flex gap="2">
-            <Text color="gray">
+        <div className={styles.tanks}>
+          <div className={styles.count}>
+            <Text lowContrast>
               {sorted.length === 1
                 ? strings.website.common.tank_search.count_singular
                 : literals(strings.website.common.tank_search.count_plural, {
@@ -468,7 +471,7 @@ export const TankSearch = memo<TankSearchProps>(
                 {strings.website.common.tank_search.select_all}
               </Link>
             )}
-          </Flex>
+          </div>
 
           {tankopediaSort.by !== "meta.none" && (
             <Text color="gray">
@@ -483,19 +486,15 @@ export const TankSearch = memo<TankSearchProps>(
               , {tankopediaSort.direction}
             </Text>
           )}
-        </Flex>
+        </div>
 
         {tankFilters.showTesting && !tankFilters.showNonTesting && (
-          <Flex justify="center" mt="4">
-            <Callout.Root color="amber">
-              <Callout.Icon>
-                <ExperimentIcon style={{ width: "1em", height: "1em" }} />
-              </Callout.Icon>
-              <Callout.Text>
-                {strings.website.common.warnings.test}
-              </Callout.Text>
-            </Callout.Root>
-          </Flex>
+          <div className={styles["test-warning"]}>
+            <Callout color="amber">
+              <ExperimentIcon style={{ width: "1em", height: "1em" }} />
+              {strings.website.common.warnings.test}
+            </Callout>
+          </div>
         )}
 
         {!skeleton && !tankFilters.searching && (
@@ -544,7 +543,7 @@ export const TankSearch = memo<TankSearchProps>(
             )}
           </TankCardWrapper>
         )}
-      </Flex>
+      </div>
     );
   },
 );

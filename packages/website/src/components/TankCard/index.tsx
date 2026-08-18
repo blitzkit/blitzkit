@@ -1,5 +1,4 @@
 import { alias, TankType, type TankDefinition } from "@blitzkit/core";
-import { Flex, Text, type TextProps } from "@radix-ui/themes";
 import { uniq } from "lodash-es";
 import { forwardRef, type ReactNode } from "react";
 import { api } from "../../core/blitzkit/api";

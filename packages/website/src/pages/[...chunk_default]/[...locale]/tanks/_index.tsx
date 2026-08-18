@@ -1,4 +1,3 @@
-import { PageWrapper } from "../../../../components/PageWrapper";
 import { TankSearch } from "../../../../components/TankSearch";
 import {
   LocaleProvider,
@@ -12,9 +11,7 @@ export function Page({
 }: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
   return (
     <LocaleProvider locale={locale}>
-      <PageWrapper color="purple" maxWidth="80rem">
-        <TankSearch skeleton={skeleton} />
-      </PageWrapper>
+      <TankSearch skeleton={skeleton} />
     </LocaleProvider>
   );
 }

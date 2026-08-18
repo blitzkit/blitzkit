@@ -1,4 +1,3 @@
-import { Flex, Skeleton } from "@radix-ui/themes";
 import { memo, useRef } from "react";
 import { useIntersection } from "../../../hooks/useIntersection";
 
@@ -21,5 +20,5 @@ export const SkeletonTankCard = memo(
       </Flex>
     );
   },
-  () => true
+  () => true,
 );

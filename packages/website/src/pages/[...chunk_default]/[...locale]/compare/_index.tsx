@@ -1,10 +1,8 @@
 import { createDefaultSkills } from "@blitzkit/core";
-import { Flex, Heading, Text } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
 import { CompareTable } from "../../../../components/Compare/CompareTable";
 import { Controls } from "../../../../components/Compare/Controls";
 import { DamageWarning } from "../../../../components/DamageWarning";
-import { PageWrapper } from "../../../../components/PageWrapper";
 import { api } from "../../../../core/blitzkit/api";
 import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
 import { tankToCompareMember } from "../../../../core/blitzkit/tankToCompareMember";
@@ -118,7 +116,7 @@ function Content() {
   }, [members]);
 
   return (
-    <PageWrapper color="crimson" maxWidth="100%" px="0" pb="0">
+    <>
       <Flex justify="center" gap="4" align="center" direction="column">
         <DamageWarning />
         <Controls
@@ -148,6 +146,6 @@ function Content() {
           </Text>
         </Flex>
       )}
-    </PageWrapper>
+    </>
   );
 }

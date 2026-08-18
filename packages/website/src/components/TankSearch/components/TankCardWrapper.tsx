@@ -1,5 +1,3 @@
-import { Grid, type GridProps } from "@radix-ui/themes";
-
 export function TankCardWrapper(props: GridProps) {
   return (
     <Grid

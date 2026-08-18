@@ -1,20 +1,25 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Flex, Spinner, TextField } from "@radix-ui/themes";
 import { debounce } from "lodash-es";
 import { type KeyboardEventHandler, useCallback, useRef } from "react";
-import { useLocale } from "../../../hooks/useLocale";
-import { TankFilters } from "../../../stores/tankFilters";
-import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
-import { QuickLink } from "./QuickLink";
-import { Sort } from "./Sort";
+import { useLocale } from "../../hooks/useLocale";
+import { TankFilters } from "../../stores/tankFilters";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { Spinner } from "../Spinner";
+import { Sort } from "../TankSearch/components/Sort";
+import { TextField } from "../TextField";
+import styles from "./index.module.css";
 
 type SearchBarProps = MaybeSkeletonComponentProps & {
   topResult?: TankDefinition;
   onSelect?: (tank: TankDefinition) => void;
 };
 
-export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
+export function TankSearchBar({
+  topResult,
+  skeleton,
+  onSelect,
+}: SearchBarProps) {
   const { strings } = useLocale();
   const search = TankFilters.use((state) => state.search);
   const searching = TankFilters.use((state) => state.searching);
@@ -33,7 +38,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         draft.search = sanitized.length === 0 ? null : sanitized;
       });
     }, 500),
-    []
+    [],
   );
   const handleChange = useCallback(() => {
     if (!searching) {
@@ -56,14 +61,13 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         window.location.href = `/tanks/${topResult.slug}`;
       }
     },
-    [topResult]
+    [topResult],
   );
 
   return (
-    <Flex justify="center">
-      <Flex gap="2" flexGrow="1">
-        <TextField.Root
-          variant="classic"
+    <div className={styles["search-bar"]}>
+      <div className={styles.wrapper}>
+        <TextField
           disabled={skeleton}
           defaultValue={search ?? undefined}
           style={{ flex: 1 }}
@@ -72,15 +76,11 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         >
-          <TextField.Slot>
-            {searching ? <Spinner /> : <MagnifyingGlassIcon />}
-          </TextField.Slot>
-
-          <QuickLink topResult={topResult} />
-        </TextField.Root>
+          {searching ? <Spinner /> : <MagnifyingGlassIcon />}
+        </TextField>
 
         <Sort />
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 }
