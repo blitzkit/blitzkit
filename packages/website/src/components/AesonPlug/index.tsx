@@ -1,5 +1,8 @@
-import { Flex, Heading, Link, Text } from '@radix-ui/themes';
-import { Var } from '../core/radix/var';
+import { Var } from "../../core/radix/var";
+import { Heading } from "../Heading";
+import { Link } from "../Link";
+import { Text } from "../Text";
+import styles from "./index.module.css";
 
 export function AesonPlug() {
   return (
@@ -9,25 +12,26 @@ export function AesonPlug() {
       href="https://discord.gg/WHdER7ZPAD"
       underline="hover"
     >
-      <Flex
+      <div
+        className={styles.plug}
         style={{
-          backgroundColor: Var('green-3'),
-          borderRadius: Var('radius-3'),
-          overflow: 'hidden',
+          backgroundColor: Var("green-3"),
+          borderRadius: Var("radius-3"),
+          overflow: "hidden",
         }}
       >
         <img
           src="/assets/images/third-party/wotb-news.png"
-          style={{ width: '6rem', height: '6rem', objectFit: 'cover' }}
+          style={{ width: "6rem", height: "6rem", objectFit: "cover" }}
         />
 
-        <Flex py="3" px="5" direction="column" justify="center">
+        <div className={styles.content}>
           <Heading size="5">Preview brought to you by WoT Blitz News</Heading>
           <Text color="gray">
             Join the Discord for the absolute latest news
           </Text>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </Link>
   );
 }

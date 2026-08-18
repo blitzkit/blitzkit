@@ -1,0 +1,23 @@
+.link {
+  text-decoration-color: currentColor;
+  cursor: pointer;
+
+  display: inline;
+  align-items: center;
+  gap: var(--space-3);
+
+  &[data-underline="hover"],
+  &[data-underline="never"] {
+    text-decoration: none;
+  }
+
+  &[data-underline="hover"]:hover,
+  &[data-underline="hover"]:focus {
+    text-decoration: underline;
+  }
+
+  svg {
+    width: 1.25em;
+    height: 1.25em;
+  }
+}

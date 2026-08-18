@@ -2,9 +2,8 @@
 import { AstroSeo } from "@astrolib/seo";
 import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
-import { literals } from "@blitzkit/i18n/src/literals";
-import { Flex, Link } from "@radix-ui/themes";
 import { AesonPlug } from "../../../components/AesonPlug";
+import HelpTranslate from "../../../components/HelpTranslate.astro";
 import HomeCosmetics from "../../../components/HomeCosmetics.astro";
 import HomeGames from "../../../components/HomeGames.astro";
 import HomeHero from "../../../components/HomeHero.astro";
@@ -70,25 +69,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 <BaseLayout {locale}>
   <HomeHero {locale} />
 
-  {
-    locale !== locales.default && (
-      <Flex justify="center" mb="4">
-        <Link
-          href="https://crowdin.com/project/blitzkrieg"
-          target="_blank"
-          underline="always"
-        >
-          {literals(strings.website.home.help_translate, {
-            name: "BlitzKit",
-            language:
-              strings.common.locales[
-                locale as keyof typeof strings.common.locales
-              ],
-          })}
-        </Link>
-      </Flex>
-    )
-  }
+  <HelpTranslate {locale} />
 
   <Plugs client:idle />
 

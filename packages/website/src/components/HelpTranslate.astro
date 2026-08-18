@@ -1,0 +1,41 @@
+---
+import { literals } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
+import { getStrings } from "../core/i18n/getStrings";
+import { Link } from "./Link";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = getStrings(locale)
+---
+
+<style>
+  .center {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+
+{
+  locale !== locales.default && (
+    <div class="center">
+      <Link
+        href="https://crowdin.com/project/blitzkrieg"
+        target="_blank"
+        underline="always"
+      >
+        {literals(strings.website.home.help_translate, {
+          name: "BlitzKit",
+          language:
+            strings.common.locales[
+              locale as keyof typeof strings.common.locales
+            ],
+        })}
+      </Link>
+    </div>
+  )
+}
