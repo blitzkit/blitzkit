@@ -74,13 +74,13 @@ export function Lighting({ hasPbr }: Props) {
   return (
     <>
       <ContactShadows
-        near={0}
-        far={2 ** 6}
         width={1.5}
         height={1.5}
-        blur={2 ** 0.5}
-        opacity={2 ** -0.4}
-        resolution={2 ** 7}
+        near={0}
+        far={1}
+        opacity={2 ** 1}
+        blur={2 ** 1}
+        resolution={2 ** 9}
         depthWrite={false}
       />
 
