@@ -20,7 +20,7 @@ import { App } from "../stores/app";
 import { TankFilters } from "../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { LinkI18n } from "./LinkI18n";
-import { FilterControl } from "./TankSearch/components/FilterControl";
+import { TankSearchFilters } from "./TankSearchFilters";
 
 const tankDefinitions = await api.tankDefinitions();
 
@@ -87,7 +87,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
           direction={{ initial: "column-reverse", md: "row" }}
         >
           <Flex direction="column" gap="4" align="center">
-            <FilterControl />
+            <TankSearchFilters />
 
             <Button
               onClick={() => {

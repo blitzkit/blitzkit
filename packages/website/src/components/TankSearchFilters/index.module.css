@@ -1,0 +1,25 @@
+.nation-option {
+  /* width="calc(100% + calc(4 * var(--space-2)))"
+                height="100%"
+                position="absolute"
+                right="0"
+                mr="-2"
+                style={{
+                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
+                  backgroundSize: "100%",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "5rem center",
+                }} */
+
+  .overlay {
+    /* width="100%"
+                  height="100%"
+                  style={{
+                    background: `linear-gradient(90deg, var(--gray-2) 50%, transparent)`,
+                  }} */
+  }
+}
+
+.overflow-plus {
+  /* ml="1" */
+}

@@ -10,6 +10,7 @@ export interface ButtonProps extends ComponentProps<"button"> {
   size?: "regular" | "minor";
   array?: boolean;
   parentArray?: boolean;
+  highContrast?: boolean; // TODO: add high contrast
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([

@@ -17,18 +17,25 @@ import {
 } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
-import { api } from "../../../core/blitzkit/api";
-import { useLocale } from "../../../hooks/useLocale";
-import { App } from "../../../stores/app";
-import { TankFilters, type CaseType } from "../../../stores/tankFilters";
-import { classIcons } from "../../ClassIcon";
-import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
-import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
-import { GunRegularIcon } from "../../GunRegularIcon";
-import { MissingShellIcon } from "../../MissingShellIcon";
-import { ResearchedIcon } from "../../ResearchedIcon";
-import { ScienceIcon } from "../../ScienceIcon";
-import { ScienceOffIcon } from "../../ScienceOffIcon";
+import { api } from "../../core/blitzkit/api";
+import { useLocale } from "../../hooks/useLocale";
+import { App } from "../../stores/app";
+import { TankFilters, type CaseType } from "../../stores/tankFilters";
+import { Button } from "../Button";
+import { classIcons } from "../ClassIcon";
+import { DropdownMenu } from "../DropdownMenu";
+import { Flex } from "../Flex";
+import { GunAutoloaderIcon } from "../GunAutoloaderIcon";
+import { GunAutoreloaderIcon } from "../GunAutoreloaderIcon";
+import { GunRegularIcon } from "../GunRegularIcon";
+import { IconButton } from "../IconButton";
+import { MissingShellIcon } from "../MissingShellIcon";
+import { ResearchedIcon } from "../ResearchedIcon";
+import { ScienceIcon } from "../ScienceIcon";
+import { ScienceOffIcon } from "../ScienceOffIcon";
+import { Text } from "../Text";
+import { Tooltip } from "../Tooltip";
+import styles from "./index.module.css";
 
 const gameDefinitions = await api.gameDefinitions();
 const consumableDefinitions = await api.consumableDefinitions();
@@ -165,14 +172,9 @@ const MAX_ICONS = 4;
 
 const TIERS = times(10, (i) => 10 - i);
 
-export function FilterControl() {
+export function TankSearchFilters() {
   return (
-    <Flex
-      align="center"
-      justify={{ initial: "start", md: "center" }}
-      gap="2"
-      wrap="wrap"
-    >
+    <div className={styles.container}>
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
@@ -188,7 +190,7 @@ export function FilterControl() {
       <GameModeAbilitiesFilter />
 
       <ResetButton />
-    </Flex>
+    </div>
   );
 }
 
@@ -217,13 +219,13 @@ function TiersFilter() {
         <Button color="gray" variant="surface">
           <Flex gap="1">
             {tiers.slice(0, MAX_ICONS).map((tier) => (
-              <Text size="1" key={tier}>
+              <Text size="minor" key={tier}>
                 {TIER_ROMAN_NUMERALS[tier]}
               </Text>
             ))}
 
             {tiers.length > MAX_ICONS && (
-              <Text size="1">
+              <Text size="minor">
                 {literals(strings.common.units.plus, {
                   value: tiers.length - MAX_ICONS,
                 })}
@@ -330,27 +332,9 @@ function NationsFilter() {
                 position: "relative",
               }}
             >
-              <Box
-                width="calc(100% + calc(4 * var(--space-2)))"
-                height="100%"
-                position="absolute"
-                right="0"
-                mr="-2"
-                style={{
-                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
-                  backgroundSize: "100%",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "5rem center",
-                }}
-              >
-                <Box
-                  width="100%"
-                  height="100%"
-                  style={{
-                    background: `linear-gradient(90deg, var(--gray-2) 50%, transparent)`,
-                  }}
-                />
-              </Box>
+              <div className={styles["nation-option"]}>
+                <div className={styles.overlay} />
+              </div>
 
               <Text style={{ zIndex: 1 }}>
                 {
@@ -651,7 +635,6 @@ function IndividualShellFilter({
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
         <IconButton
-          ml="-0.5px"
           variant="surface"
           style={{
             borderTopLeftRadius: index === 0 ? undefined : 0,
@@ -756,19 +739,19 @@ function OwnershipFilter() {
   return wargaming ? (
     <OwnershipFilterInternal />
   ) : (
-    <Tooltip content={strings.website.common.tank_search.login}>
+    <Tooltip tooltip={strings.website.common.tank_search.login}>
       <OwnershipFilterInternal />
     </Tooltip>
   );
 }
 
-function OwnershipFilterInternal(props: FlexProps) {
+function OwnershipFilterInternal() {
   const wargaming = App.use((state) => state.logins.wargaming);
   const showOwned = TankFilters.use((state) => state.showOwned);
   const showUnowned = TankFilters.use((state) => state.showUnowned);
 
   return (
-    <Flex {...props}>
+    <Flex>
       <IconButton
         style={{
           borderTopRightRadius: 0,
@@ -883,7 +866,7 @@ function ConsumablesFilter() {
             ))}
 
             {consumables.length > MAX_ICONS && (
-              <Text size="1" ml="1">
+              <Text size="minor" className={styles["overflow-plus"]}>
                 {literals(strings.common.units.plus, {
                   value: consumables.length - MAX_ICONS,
                 })}
@@ -977,7 +960,7 @@ function ProvisionsFilter() {
             ))}
 
             {provisions.length > MAX_ICONS && (
-              <Text size="1" ml="1">
+              <Text size="minor" className={styles["overflow-plus"]}>
                 {literals(strings.common.units.plus, {
                   value: provisions.length - MAX_ICONS,
                 })}
@@ -1086,7 +1069,7 @@ function GameModeAbilitiesFilter() {
             ))}
 
             {icons.length > MAX_ICONS && (
-              <Text size="1" ml="1">
+              <Text size="minor" className={styles["overflow-plus"]}>
                 {literals(strings.common.units.plus, {
                   value: icons.length - MAX_ICONS,
                 })}

@@ -1,5 +1,5 @@
 import { PageWrapper } from "../../../../components/PageWrapper";
-import { FilterControl } from "../../../../components/TankSearch/components/FilterControl";
+import { TankSearchFilters } from "../../../../components/TankSearchFilters";
 import { TierListControls } from "../../../../components/TierList/Controls";
 import { TierListTable } from "../../../../components/TierList/Table";
 import { TierListTiles } from "../../../../components/TierList/Tiles";
@@ -23,7 +23,7 @@ function Content() {
       <URLManager />
       <TierListControls />
       <TierListTable />
-      <FilterControl />
+      <TankSearchFilters />
       <TierListTiles />
     </PageWrapper>
   );
