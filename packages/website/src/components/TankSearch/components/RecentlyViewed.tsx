@@ -6,7 +6,7 @@ import { TankFilters } from "../../../stores/tankFilters";
 import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";
-import { TankCardWrapper } from "./TankCardWrapper";
+import { TankCardWrapper } from "../../TankCardWrapper";
 
 const tankDefinitions = await api.tankDefinitions();
 

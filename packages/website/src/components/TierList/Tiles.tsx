@@ -6,8 +6,8 @@ import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { TankFilters } from "../../stores/tankFilters";
 import { TierList } from "../../stores/tierList";
-import { SkeletonTankCard } from "../TankSearch/components/SkeletonTankCard";
-import { TankCardWrapper } from "../TankSearch/components/TankCardWrapper";
+import { TankCardWrapper } from "../TankCardWrapper";
+import { TankCardSkeleton } from "../TankCardSkeleton";
 import { TierListTile } from "./Tile";
 
 const [tankDefinitions, gameDefinitions] = await Promise.all([
@@ -45,7 +45,7 @@ export function TierListTiles() {
 
       {times(Math.min(PREVIEW_COUNT, sorted.length - loadedTiles), (index) => {
         return (
-          <SkeletonTankCard
+          <TankCardSkeleton
             key={index}
             onIntersection={() => {
               setLoadedTiles((state) => Math.min(state + 2, sorted.length));

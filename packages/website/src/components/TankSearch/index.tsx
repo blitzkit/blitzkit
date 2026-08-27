@@ -25,14 +25,14 @@ import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonCompo
 import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { Link } from "../Link";
+import { TankCardWrapper } from "../TankCardWrapper";
 import { TankSearchBar } from "../TankSearchBar";
 import { TankSearchFilters } from "../TankSearchFilters";
 import { Text } from "../Text";
 import { TankSearchCard } from "./components/Card";
 import { NoResults } from "./components/NoResults";
 import { RecentlyViewed } from "./components/RecentlyViewed";
-import { SkeletonTankCard } from "./components/SkeletonTankCard";
-import { TankCardWrapper } from "./components/TankCardWrapper";
+import { TankCardSkeleton } from "../TankCardSkeleton";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 import styles from "./index.module.css";
 
@@ -513,7 +513,7 @@ export const TankSearch = memo<TankSearchProps>(
                   Math.min(PREVIEW_COUNT, sorted.length - loadedCards),
                   (index) => {
                     return (
-                      <SkeletonTankCard
+                      <TankCardSkeleton
                         key={index}
                         onIntersection={() => {
                           setLoadedCards((state) =>
@@ -538,7 +538,7 @@ export const TankSearch = memo<TankSearchProps>(
                 skeleton ? DEFAULT_LOADED_CARDS : 10 + 10 * Math.random(),
               ),
               (index) => (
-                <SkeletonTankCard key={index} />
+                <TankCardSkeleton key={index} />
               ),
             )}
           </TankCardWrapper>

@@ -1,11 +1,14 @@
 import { memo, useRef } from "react";
-import { useIntersection } from "../../../hooks/useIntersection";
+import { useIntersection } from "../../hooks/useIntersection";
+import { Flex } from "../Flex";
+import { Skeleton } from "../Skeleton";
+import styles from "./index.module.css";
 
 interface SkeletonTankCardProps {
   onIntersection?: () => void;
 }
 
-export const SkeletonTankCard = memo(
+export const TankCardSkeleton = memo(
   ({ onIntersection }: SkeletonTankCardProps) => {
     const card = useRef<HTMLDivElement>(null!);
 
@@ -14,9 +17,9 @@ export const SkeletonTankCard = memo(
     });
 
     return (
-      <Flex direction="column" gap="2" ref={card}>
-        <Skeleton height="5rem" />
-        <Skeleton height="1em" />
+      <Flex column gap="2" ref={card}>
+        <Skeleton className={styles.icon} />
+        <Skeleton className={styles.name} />
       </Flex>
     );
   },
