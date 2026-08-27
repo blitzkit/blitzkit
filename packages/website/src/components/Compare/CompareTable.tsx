@@ -18,6 +18,7 @@ import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
 import type { EquipmentMatrix } from "../../stores/duel";
 import { BlitzkitButtonGrayIcon } from "../BlitzkitButtonGrayIcon";
+import { CompareTankCard } from "../CompareTankCard";
 import { ConsumablesManager } from "../ConsumablesManager";
 import { CrewSkillManager } from "../CrewSkillManager";
 import { EquipmentManager } from "../EquipmentManager";
@@ -27,7 +28,6 @@ import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 import { StickyTableRoot } from "../StickyTableRoot";
 import { Body } from "./Body";
 import { InsertionMarker } from "./IntersectionMarker";
-import { TankCard } from "./TankCard";
 
 interface CompareTableProps {
   stats: TankCharacteristics[];
@@ -77,7 +77,7 @@ export function CompareTable({ stats }: CompareTableProps) {
           </StickyColumnHeaderCell>
 
           {members.map(({ tank, key }, index) => {
-            return <TankCard index={index} key={key} tank={tank} />;
+            return <CompareTankCard index={index} key={key} tank={tank} />;
           })}
         </Table.Row>
       </Table.Header>

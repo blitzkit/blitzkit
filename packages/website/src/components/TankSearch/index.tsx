@@ -25,14 +25,14 @@ import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonCompo
 import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { Link } from "../Link";
+import { RecentlyViewedTanks } from "../RecentlyViewedTanks";
+import { TankCardSkeleton } from "../TankCardSkeleton";
 import { TankCardWrapper } from "../TankCardWrapper";
 import { TankSearchBar } from "../TankSearchBar";
 import { TankSearchFilters } from "../TankSearchFilters";
 import { Text } from "../Text";
 import { TankSearchCard } from "./components/Card";
 import { NoResults } from "./components/NoResults";
-import { RecentlyViewed } from "./components/RecentlyViewed";
-import { TankCardSkeleton } from "../TankCardSkeleton";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 import styles from "./index.module.css";
 
@@ -439,7 +439,7 @@ export const TankSearch = memo<TankSearchProps>(
 
         {!tankFilters.search && !tankFilters.searching && <TankSearchFilters />}
 
-        {!skeleton && !compact && <RecentlyViewed />}
+        {!skeleton && !compact && <RecentlyViewedTanks />}
 
         <div className={styles.tanks}>
           <div className={styles.count}>

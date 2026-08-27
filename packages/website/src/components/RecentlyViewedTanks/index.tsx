@@ -1,16 +1,20 @@
 import { isEqual } from "lodash-es";
 import { useMemo } from "react";
-import { api } from "../../../core/blitzkit/api";
-import { useLocale } from "../../../hooks/useLocale";
-import { TankFilters } from "../../../stores/tankFilters";
-import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
-import { TankSort } from "../../../stores/tankopediaSort";
-import { TankCard } from "../../TankCard";
-import { TankCardWrapper } from "../../TankCardWrapper";
+import { api } from "../../core/blitzkit/api";
+import { useLocale } from "../../hooks/useLocale";
+import { TankFilters } from "../../stores/tankFilters";
+import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
+import { TankSort } from "../../stores/tankopediaSort";
+import { Flex } from "../Flex";
+import { Separator } from "../Separator";
+import { TankCard } from "../TankCard";
+import { TankCardWrapper } from "../TankCardWrapper";
+import { Text } from "../Text";
+import styles from "./index.module.css";
 
 const tankDefinitions = await api.tankDefinitions();
 
-export function RecentlyViewed() {
+export function RecentlyViewedTanks() {
   const filters = TankFilters.use();
   // non-reactive because it is a little weird that it updates instantly even before the page loads
   const recentlyViewed = TankopediaPersistent.state.recentlyViewed.filter(
@@ -34,7 +38,7 @@ export function RecentlyViewed() {
   }
 
   return (
-    <Flex direction="column" gap="2" mt="2" mb="6">
+    <Flex column gap="2" className={styles.recent}>
       <Text color="gray" align="center">
         {strings.website.common.tank_search.recent}
       </Text>
@@ -44,7 +48,7 @@ export function RecentlyViewed() {
         ))}
       </TankCardWrapper>
 
-      <Separator size="4" />
+      <Separator />
     </Flex>
   );
 }

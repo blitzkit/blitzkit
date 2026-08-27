@@ -1,20 +1,22 @@
 import { type TankDefinition, tankIcon } from "@blitzkit/core";
-import { Flex, Text } from "@radix-ui/themes";
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { InsertionMarker } from "../Compare/IntersectionMarker";
+import { insertionMarkers } from "../Compare/IntersectionMarker/constants";
+import { TankControl } from "../Compare/TankControl";
+import { Flex } from "../Flex";
 import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
-import { InsertionMarker } from "./IntersectionMarker";
-import { insertionMarkers } from "./IntersectionMarker/constants";
-import { TankControl } from "./TankControl";
+import { Text } from "../Text";
+import styles from "./index.module.css";
 
 interface TankCardProps {
   index: number;
   tank: TankDefinition;
 }
 
-export function TankCard({ index, tank }: TankCardProps) {
+export function CompareTankCard({ index, tank }: TankCardProps) {
   const draggable = useRef<HTMLDivElement>(null);
   const { unwrap } = useLocale();
 
@@ -103,12 +105,12 @@ export function TankCard({ index, tank }: TankCardProps) {
 
   return (
     <StickyColumnHeaderCell width="0">
-      <Flex direction="column" align="center" justify="between" gap="2">
+      <Flex column align="center" justify="between" gap="2">
         <TankControl index={index} key={tank.id} slug={tank.slug} />
 
         <Flex
           ref={draggable}
-          direction="column"
+          column
           align="center"
           justify="between"
           gap="2"
@@ -129,14 +131,7 @@ export function TankCard({ index, tank }: TankCardProps) {
             }}
           />
 
-          <Text
-            style={{
-              whiteSpace: "nowrap",
-              maxWidth: 128,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
+          <Text className={styles.name} nowrap overflow="ellipsis">
             {unwrap(tank.name!)}
           </Text>
         </Flex>

@@ -5,8 +5,10 @@ import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { classIcons } from "../ClassIcon";
+import { Flex } from "../Flex";
 import { LinkI18n } from "../LinkI18n";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
+import { Text, type TextProps } from "../Text";
 import "./index.css";
 
 type TankCardProps = TextProps & {

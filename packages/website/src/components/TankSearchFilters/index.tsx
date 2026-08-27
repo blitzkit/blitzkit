@@ -21,7 +21,6 @@ import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { App } from "../../stores/app";
 import { TankFilters, type CaseType } from "../../stores/tankFilters";
-import { Button } from "../Button";
 import { classIcons } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { Flex } from "../Flex";
@@ -216,23 +215,21 @@ function TiersFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex gap="1">
-            {tiers.slice(0, MAX_ICONS).map((tier) => (
-              <Text size="minor" key={tier}>
-                {TIER_ROMAN_NUMERALS[tier]}
-              </Text>
-            ))}
+        <Flex gap="1">
+          {tiers.slice(0, MAX_ICONS).map((tier) => (
+            <Text size="minor" key={tier}>
+              {TIER_ROMAN_NUMERALS[tier]}
+            </Text>
+          ))}
 
-            {tiers.length > MAX_ICONS && (
-              <Text size="minor">
-                {literals(strings.common.units.plus, {
-                  value: tiers.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
-        </Button>
+          {tiers.length > MAX_ICONS && (
+            <Text size="minor">
+              {literals(strings.common.units.plus, {
+                value: tiers.length - MAX_ICONS,
+              })}
+            </Text>
+          )}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -291,22 +288,20 @@ function NationsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {nations.map((nation, index) => (
-              <img
-                key={nation}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                }}
-                src={alias("api", `/flags/circle/${nation}.webp`)}
-              />
-            ))}
-          </Flex>
-        </Button>
+        <Flex>
+          {nations.map((nation, index) => (
+            <img
+              key={nation}
+              style={{
+                filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                marginLeft: index > 0 ? "-0.5em" : undefined,
+                width: "1.25em",
+                height: "1.25em",
+              }}
+              src={alias("api", `/flags/circle/${nation}.webp`)}
+            />
+          ))}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -375,26 +370,24 @@ function ClassFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {classes.map((tankClass, index) => {
-              const Icon = classIcons[tankClass];
-              return (
-                <Icon
-                  key={tankClass}
-                  style={{
-                    color: "var(--gray-12)",
-                    opacity: 1,
-                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                    marginLeft: index > 0 ? "-0.5em" : undefined,
-                    width: "1.25em",
-                    height: "1.25em",
-                  }}
-                />
-              );
-            })}
-          </Flex>
-        </Button>
+        <Flex>
+          {classes.map((tankClass, index) => {
+            const Icon = classIcons[tankClass];
+            return (
+              <Icon
+                key={tankClass}
+                style={{
+                  color: "var(--gray-12)",
+                  opacity: 1,
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  marginLeft: index > 0 ? "-0.5em" : undefined,
+                  width: "1.25em",
+                  height: "1.25em",
+                }}
+              />
+            );
+          })}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -455,26 +448,24 @@ function GunTypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {gunTypes.map((gunType) => {
-              const Icon = GUN_TYPE_ICONS[gunType];
+        <Flex>
+          {gunTypes.map((gunType) => {
+            const Icon = GUN_TYPE_ICONS[gunType];
 
-              return (
-                <Icon
-                  key={gunType}
-                  style={{
-                    margin: gunType === "regular" ? "0 -0.125em" : undefined,
-                    opacity: 1,
-                    color: "var(--gray-12)",
-                    width: "1.25em",
-                    height: "1.25em",
-                  }}
-                />
-              );
-            })}
-          </Flex>
-        </Button>
+            return (
+              <Icon
+                key={gunType}
+                style={{
+                  margin: gunType === "regular" ? "0 -0.125em" : undefined,
+                  opacity: 1,
+                  color: "var(--gray-12)",
+                  width: "1.25em",
+                  height: "1.25em",
+                }}
+              />
+            );
+          })}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -533,26 +524,24 @@ function TypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex gap="1">
-            {types.map((tankType) => {
-              return (
-                <ResearchedIcon
-                  style={{
-                    color: `var(--${TANK_TYPE_COLORS[tankType]}-${
-                      tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
-                    })`,
-                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                    opacity: 1,
-                    width: "1.25em",
-                    height: "1.25em",
-                  }}
-                  key={tankType}
-                />
-              );
-            })}
-          </Flex>
-        </Button>
+        <Flex gap="1">
+          {types.map((tankType) => {
+            return (
+              <ResearchedIcon
+                style={{
+                  color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                    tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
+                  })`,
+                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                  opacity: 1,
+                  width: "1.25em",
+                  height: "1.25em",
+                }}
+                key={tankType}
+              />
+            );
+          })}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -634,32 +623,20 @@ function IndividualShellFilter({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <IconButton
-          variant="surface"
-          style={{
-            borderTopLeftRadius: index === 0 ? undefined : 0,
-            borderBottomLeftRadius: index === 0 ? undefined : 0,
-            borderTopRightRadius: index === 2 ? undefined : 0,
-            borderBottomRightRadius: index === 2 ? undefined : 0,
-          }}
-          color="gray"
-          highContrast
-        >
-          {shells[index] === null && (
-            <Text color="gray" style={{ display: "contents" }}>
-              <MissingShellIcon width="1em" height="1em" />
-            </Text>
-          )}
-          {shells[index] !== null && (
-            <img
-              style={{ width: "1em", height: "1em" }}
-              src={alias(
-                "api",
-                `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
-              )}
-            />
-          )}
-        </IconButton>
+        {shells[index] === null && (
+          <Text color="gray" style={{ display: "contents" }}>
+            <MissingShellIcon width="1em" height="1em" />
+          </Text>
+        )}
+        {shells[index] !== null && (
+          <img
+            style={{ width: "1em", height: "1em" }}
+            src={alias(
+              "api",
+              `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
+            )}
+          />
+        )}
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -849,31 +826,29 @@ function ConsumablesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
-              <img
-                key={consumable}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={alias("api", `/icons/consumables/${consumable}.webp`)}
-              />
-            ))}
+        <Flex>
+          {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
+            <img
+              key={consumable}
+              style={{
+                filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                marginLeft: index > 0 ? "-0.5em" : undefined,
+                width: "1.25em",
+                height: "1.25em",
+                objectFit: "contain",
+              }}
+              src={alias("api", `/icons/consumables/${consumable}.webp`)}
+            />
+          ))}
 
-            {consumables.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
-                {literals(strings.common.units.plus, {
-                  value: consumables.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
-        </Button>
+          {consumables.length > MAX_ICONS && (
+            <Text size="minor" className={styles["overflow-plus"]}>
+              {literals(strings.common.units.plus, {
+                value: consumables.length - MAX_ICONS,
+              })}
+            </Text>
+          )}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -943,31 +918,29 @@ function ProvisionsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {provisions.slice(0, MAX_ICONS).map((provision, index) => (
-              <img
-                key={provision}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={alias("api", `/icons/provisions/${provision}.webp`)}
-              />
-            ))}
+        <Flex>
+          {provisions.slice(0, MAX_ICONS).map((provision, index) => (
+            <img
+              key={provision}
+              style={{
+                filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                marginLeft: index > 0 ? "-0.5em" : undefined,
+                width: "1.25em",
+                height: "1.25em",
+                objectFit: "contain",
+              }}
+              src={alias("api", `/icons/provisions/${provision}.webp`)}
+            />
+          ))}
 
-            {provisions.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
-                {literals(strings.common.units.plus, {
-                  value: provisions.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
-        </Button>
+          {provisions.length > MAX_ICONS && (
+            <Text size="minor" className={styles["overflow-plus"]}>
+              {literals(strings.common.units.plus, {
+                value: provisions.length - MAX_ICONS,
+              })}
+            </Text>
+          )}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -1052,31 +1025,29 @@ function GameModeAbilitiesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {icons.slice(0, MAX_ICONS).map((icon, index) => (
-              <img
-                key={icon}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={icon}
-              />
-            ))}
+        <Flex>
+          {icons.slice(0, MAX_ICONS).map((icon, index) => (
+            <img
+              key={icon}
+              style={{
+                filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
+                marginLeft: index > 0 ? "-0.5em" : undefined,
+                width: "1.25em",
+                height: "1.25em",
+                objectFit: "contain",
+              }}
+              src={icon}
+            />
+          ))}
 
-            {icons.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
-                {literals(strings.common.units.plus, {
-                  value: icons.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
-        </Button>
+          {icons.length > MAX_ICONS && (
+            <Text size="minor" className={styles["overflow-plus"]}>
+              {literals(strings.common.units.plus, {
+                value: icons.length - MAX_ICONS,
+              })}
+            </Text>
+          )}
+        </Flex>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
