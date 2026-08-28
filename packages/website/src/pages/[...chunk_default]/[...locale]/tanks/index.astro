@@ -1,4 +1,5 @@
 ---
+import ColorScale from "../../../../components/ColorScale.astro";
 import { Section } from "../../../../components/Section";
 import ToolBanner from "../../../../components/ToolBanner.astro";
 import { tools } from "../../../../constants/tools";
@@ -11,6 +12,9 @@ const { locale } = Astro.props;
 ---
 
 <BaseLayout {locale} accent="purple">
+  <ColorScale color="blue" />
+  <ColorScale color="amber" />
+
   <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
 
   <Section>

@@ -10,14 +10,15 @@
   border: none;
 
   font-family: var(--font-family-regular);
-  font-size: 0.75rem;
+  font-size: 0.75em;
   color: var(--gray-1);
   font-weight: var(--weight-medium);
 
   cursor: pointer;
 
   &[data-size="minor"] {
-    font-size: 0.75rem;
+    font-size: 0.75em;
+    padding: var(--space-2) var(--space-3);
   }
 
   &[data-array="true"] {

@@ -5,10 +5,10 @@ import { type KeyboardEventHandler, useCallback, useRef } from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { Flex } from "../Flex";
 import { Spinner } from "../Spinner";
 import { Sort } from "../TankSearch/components/Sort";
 import { TextField } from "../TextField";
-import styles from "./index.module.css";
 
 type SearchBarProps = MaybeSkeletonComponentProps & {
   topResult?: TankDefinition;
@@ -65,22 +65,20 @@ export function TankSearchBar({
   );
 
   return (
-    <div className={styles["search-bar"]}>
-      <div className={styles.wrapper}>
-        <TextField
-          disabled={skeleton}
-          defaultValue={search ?? undefined}
-          style={{ flex: 1 }}
-          ref={input}
-          placeholder={strings.website.common.tank_search.search_bar_hint}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-        >
-          {searching ? <Spinner /> : <MagnifyingGlassIcon />}
-        </TextField>
+    <Flex gap="3">
+      <TextField
+        disabled={skeleton}
+        defaultValue={search ?? undefined}
+        style={{ flex: 1 }}
+        ref={input}
+        placeholder={strings.website.common.tank_search.search_bar_hint}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+      >
+        {searching ? <Spinner /> : <MagnifyingGlassIcon />}
+      </TextField>
 
-        <Sort />
-      </div>
-    </div>
+      <Sort />
+    </Flex>
   );
 }

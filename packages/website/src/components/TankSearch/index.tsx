@@ -9,7 +9,7 @@ import {
 import { literals } from "@blitzkit/i18n/src/literals";
 import fuzzysort from "fuzzysort";
 import { times, uniq } from "lodash-es";
-import { memo, useEffect, useMemo, useState, type ComponentProps } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
 import { api } from "../../core/blitzkit/api";
@@ -24,6 +24,7 @@ import { TankSort } from "../../stores/tankopediaSort";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
+import { Flex } from "../Flex";
 import { Link } from "../Link";
 import { RecentlyViewedTanks } from "../RecentlyViewedTanks";
 import { TankCardSkeleton } from "../TankCardSkeleton";
@@ -36,12 +37,11 @@ import { NoResults } from "./components/NoResults";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 import styles from "./index.module.css";
 
-export type TankSearchProps = MaybeSkeletonComponentProps &
-  ComponentProps<"div"> & {
-    compact?: boolean;
-    onSelect?: (tank: TankDefinition) => void;
-    onSelectAll?: (tanks: TankDefinition[]) => void;
-  };
+export type TankSearchProps = MaybeSkeletonComponentProps & {
+  compact?: boolean;
+  onSelect?: (tank: TankDefinition) => void;
+  onSelectAll?: (tanks: TankDefinition[]) => void;
+};
 
 const PREVIEW_COUNT = 20;
 const DEFAULT_LOADED_CARDS = 64;
@@ -55,7 +55,7 @@ const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   ]);
 
 export const TankSearch = memo<TankSearchProps>(
-  ({ compact, onSelect, onSelectAll, skeleton, ...props }) => {
+  ({ compact, onSelect, onSelectAll, skeleton }) => {
     const { strings, locale } = useLocale();
     const wargaming = App.use((state) => state.logins.wargaming);
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
@@ -430,7 +430,7 @@ export const TankSearch = memo<TankSearchProps>(
     }, [tankFilters, tankopediaSort]);
 
     return (
-      <div className={styles.container} {...props}>
+      <Flex column gap="4">
         <TankSearchBar
           skeleton={skeleton}
           topResult={tanks?.[0]}
@@ -543,7 +543,7 @@ export const TankSearch = memo<TankSearchProps>(
             )}
           </TankCardWrapper>
         )}
-      </div>
+      </Flex>
     );
   },
 );

@@ -5,6 +5,7 @@ import type {
   TankopediaSortDirection,
 } from "../../../stores/tankopediaPersistent";
 import { TankSort } from "../../../stores/tankopediaSort";
+import { Button } from "../../Button";
 import { DropdownMenu } from "../../DropdownMenu";
 
 interface ItemProps {
@@ -39,9 +40,11 @@ export function Sort() {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger>
-        {strings.website.common.tank_search.sort_dropdown.label}
-        <CaretDownIcon />
+      <DropdownMenu.Trigger asChild>
+        <Button variant="surface" color="gray">
+          {strings.website.common.tank_search.sort_dropdown.label}
+          <CaretDownIcon />
+        </Button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content align="end">

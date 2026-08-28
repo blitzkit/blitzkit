@@ -1,0 +1,15 @@
+.image-wrapper {
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+
+  height: 6rem;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+}

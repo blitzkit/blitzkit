@@ -1,15 +1,15 @@
 import { alias, TankType, type TankDefinition } from "@blitzkit/core";
 import { uniq } from "lodash-es";
-import { forwardRef, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { classIcons } from "../ClassIcon";
 import { Flex } from "../Flex";
-import { LinkI18n } from "../LinkI18n";
+import { LinkI18nWrapper } from "../LinkI18nWrapper";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
 import { Text, type TextProps } from "../Text";
-import "./index.css";
+import styles from "./index.module.css";
 
 type TankCardProps = TextProps & {
   tank: TankDefinition;
@@ -20,100 +20,80 @@ type TankCardProps = TextProps & {
 
 const tankDefinitions = await api.tankDefinitions();
 
-export const TankCard = forwardRef<HTMLSpanElement, TankCardProps>(
-  (
-    {
-      tank,
-      discriminator,
-      onTankSelect: onSelect,
-      noLink,
-      style,
-      ...props
-    }: TankCardProps,
-    ref,
-  ) => {
-    const { unwrap, locale } = useLocale();
-    const provideLink = !noLink && onSelect === undefined;
+export const TankCard = ({
+  tank,
+  discriminator,
+  onTankSelect: onSelect,
+  noLink,
+  style,
+  ...props
+}: TankCardProps) => {
+  const { unwrap, locale } = useLocale();
 
-    const Icon = classIcons[tank.class];
+  const provideLink = !noLink && onSelect === undefined;
+  const name = unwrap(tank.name!);
 
-    return (
-      <Text
-        ref={ref}
-        tabIndex={onSelect ? 0 : undefined}
-        size="2"
-        color={
-          tank.type === TankType.TANK_TYPE_COLLECTOR
-            ? "blue"
-            : tank.type === TankType.TANK_TYPE_PREMIUM
-              ? "amber"
-              : "gray"
-        }
-        highContrast={tank.type === TankType.TANK_TYPE_RESEARCHABLE}
-        onClick={() => {
-          onSelect?.(tank);
-          TankopediaPersistent.mutate((draft) => {
-            draft.recentlyViewed = uniq([tank.id, ...draft.recentlyViewed])
-              .filter((id) => id in tankDefinitions.tanks)
-              .slice(0, MAX_RECENTLY_VIEWED);
-          });
-        }}
-        className="tank-search-card"
-        data-provide-link={provideLink}
+  const color: TextProps["color"] =
+    tank.type === TankType.TANK_TYPE_COLLECTOR
+      ? "blue"
+      : tank.type === TankType.TANK_TYPE_PREMIUM
+        ? "amber"
+        : "gray";
+  const lowContrast = tank.type !== TankType.TANK_TYPE_RESEARCHABLE;
+
+  const Icon = classIcons[tank.class];
+
+  const content = (
+    <Flex
+      column
+      gap="3"
+      onClick={() => {
+        onSelect?.(tank);
+        TankopediaPersistent.mutate((draft) => {
+          draft.recentlyViewed = uniq([tank.id, ...draft.recentlyViewed])
+            .filter((id) => id in tankDefinitions.tanks)
+            .slice(0, MAX_RECENTLY_VIEWED);
+        });
+      }}
+    >
+      <Flex
+        justify="end"
+        className={styles["image-wrapper"]}
         style={{
           backgroundImage: `url(${alias(
             "api",
             `/flags/scratched/${tank.nation}.webp`,
           )})`,
-          ...style,
         }}
-        {...props}
       >
-        <LinkI18n
-          locale={locale}
-          className="link"
-          underline="hover"
-          href={provideLink ? `/tanks/${tank.slug}` : "#"}
-          onClick={(event) => {
-            if (!provideLink) event.preventDefault();
-          }}
-        >
-          <img
-            alt={unwrap(tank.name!)}
-            src={alias("api", `/tanks/${tank.id}/icons/big.webp`)}
-            className="image"
-            draggable={false}
-          />
+        <img
+          alt={name}
+          src={alias("api", `/tanks/${tank.id}/icons/big.webp`)}
+        />
+      </Flex>
 
-          <Flex
-            justify="center"
-            gap="1"
-            align="center"
-            overflow="hidden"
-            width="100%"
-            mt="1"
-          >
-            <Icon className="class-icon" />
-            <Text align="center" className="name">
-              {unwrap(tank.name!)}
-            </Text>
-          </Flex>
-
-          {discriminator && (
-            <Text
-              color="gray"
-              align="center"
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {discriminator}
-            </Text>
-          )}
-        </LinkI18n>
+      <Text color={color} lowContrast={lowContrast}>
+        <Flex align="center" gap="2" justify="center">
+          <Icon className={styles.icon} />
+          {name}
+        </Flex>
       </Text>
+
+      {discriminator && (
+        <Text lowContrast align="center">
+          {discriminator}
+        </Text>
+      )}
+    </Flex>
+  );
+
+  if (provideLink) {
+    return (
+      <LinkI18nWrapper locale={locale} href={`/tanks/${tank.slug}`}>
+        {content}
+      </LinkI18nWrapper>
     );
-  },
-);
+  }
+
+  return content;
+};

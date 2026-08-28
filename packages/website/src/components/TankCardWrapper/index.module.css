@@ -1,7 +1,8 @@
 .wrapper {
-  /* py="4"
-      columns="repeat(auto-fill, minmax(7rem, 1fr))"
-      flow="dense"
-      gap="4"
-      gapY="8" */
+  display: grid;
+
+  gap: var(--space-4);
+  row-gap: var(--space-5);
+
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 }
