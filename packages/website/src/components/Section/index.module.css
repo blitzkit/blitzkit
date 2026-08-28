@@ -2,6 +2,10 @@
   display: flex;
   justify-content: center;
 
+  &:last-child {
+    flex: 1;
+  }
+
   .content {
     flex: 1;
     max-width: var(--page-width);

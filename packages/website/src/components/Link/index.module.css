@@ -6,6 +6,10 @@
   align-items: center;
   gap: var(--space-3);
 
+  &[data-underline="always"] {
+    text-decoration: underline;
+  }
+
   &[data-underline="hover"],
   &[data-underline="never"] {
     text-decoration: none;

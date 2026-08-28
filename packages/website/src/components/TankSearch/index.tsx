@@ -31,9 +31,9 @@ import { TankCardSkeleton } from "../TankCardSkeleton";
 import { TankCardWrapper } from "../TankCardWrapper";
 import { TankSearchBar } from "../TankSearchBar";
 import { TankSearchFilters } from "../TankSearchFilters";
+import { TankSearchNoResults } from "../TankSearchNoResults";
 import { Text } from "../Text";
 import { TankSearchCard } from "./components/Card";
-import { NoResults } from "./components/NoResults";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 import styles from "./index.module.css";
 
@@ -428,7 +428,7 @@ export const TankSearch = memo<TankSearchProps>(
     }, [tankFilters, tankopediaSort]);
 
     return (
-      <Flex column gap="4">
+      <Flex className={styles.container} column gap="4">
         <TankSearchBar
           skeleton={skeleton}
           topResult={tanks?.[0]}
@@ -439,52 +439,54 @@ export const TankSearch = memo<TankSearchProps>(
 
         {!skeleton && !compact && <RecentlyViewedTanks />}
 
-        <Flex justify="center" className={styles.label}>
-          <div className={styles.count}>
-            <Text lowContrast>
-              {sorted.length === 1
-                ? strings.website.common.tank_search.count_singular
-                : literals(strings.website.common.tank_search.count_plural, {
-                    count: sorted.length.toLocaleString(locale),
-                  })}
-            </Text>
+        {tanks.length > 0 && (
+          <Flex justify="center" className={styles.label}>
+            <div className={styles.count}>
+              <Text lowContrast>
+                {sorted.length === 1
+                  ? strings.website.common.tank_search.count_singular
+                  : literals(strings.website.common.tank_search.count_plural, {
+                      count: sorted.length.toLocaleString(locale),
+                    })}
+              </Text>
 
-            {onSelectAll && (
-              <Link
-                underline="always"
-                href="#"
-                onClick={(event) => {
-                  event.preventDefault();
-                  onSelectAll(sorted);
-                  TankopediaPersistent.mutate((draft) => {
-                    draft.recentlyViewed = uniq([
-                      ...sorted.map(({ id }) => id),
-                      ...draft.recentlyViewed,
-                    ])
-                      .filter((id) => id in tankDefinitions.tanks)
-                      .slice(0, MAX_RECENTLY_VIEWED);
-                  });
-                }}
-              >
-                {strings.website.common.tank_search.select_all}
-              </Link>
+              {onSelectAll && (
+                <Link
+                  underline="always"
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onSelectAll(sorted);
+                    TankopediaPersistent.mutate((draft) => {
+                      draft.recentlyViewed = uniq([
+                        ...sorted.map(({ id }) => id),
+                        ...draft.recentlyViewed,
+                      ])
+                        .filter((id) => id in tankDefinitions.tanks)
+                        .slice(0, MAX_RECENTLY_VIEWED);
+                    });
+                  }}
+                >
+                  {strings.website.common.tank_search.select_all}
+                </Link>
+              )}
+            </div>
+
+            {tankopediaSort.by !== "meta.none" && (
+              <Text color="gray">
+                {literals(strings.website.common.tank_search.sorting_by, {
+                  name: strings.website.common.tank_search.sort[
+                    tankopediaSort.by
+                  ],
+                })}
+                {SORT_UNITS[tankopediaSort.by] === undefined
+                  ? ""
+                  : ` (${SORT_UNITS[tankopediaSort.by]})`}
+                , {tankopediaSort.direction}
+              </Text>
             )}
-          </div>
-
-          {tankopediaSort.by !== "meta.none" && (
-            <Text color="gray">
-              {literals(strings.website.common.tank_search.sorting_by, {
-                name: strings.website.common.tank_search.sort[
-                  tankopediaSort.by
-                ],
-              })}
-              {SORT_UNITS[tankopediaSort.by] === undefined
-                ? ""
-                : ` (${SORT_UNITS[tankopediaSort.by]})`}
-              , {tankopediaSort.direction}
-            </Text>
-          )}
-        </Flex>
+          </Flex>
+        )}
 
         {tankFilters.showTesting && !tankFilters.showNonTesting && (
           <div className={styles["test-warning"]}>
@@ -525,7 +527,7 @@ export const TankSearch = memo<TankSearchProps>(
               </TankCardWrapper>
             )}
 
-            {tanks.length === 0 && <NoResults type="search" />}
+            {tanks.length === 0 && <TankSearchNoResults type="search" />}
           </>
         )}
       </Flex>

@@ -1,13 +1,17 @@
-.label {
-  margin: var(--space-4) 0;
+.container {
+  flex: 1;
 
-  /* mt="2" gap="1" align="center" justify="center" direction="column" */
+  .label {
+    margin: var(--space-4) 0;
 
-  .count {
-    /* gap="2" */
+    /* mt="2" gap="1" align="center" justify="center" direction="column" */
+
+    .count {
+      /* gap="2" */
+    }
   }
-}
 
-.test-warning {
-  /* justify="center" mt="4" */
+  .test-warning {
+    /* justify="center" mt="4" */
+  }
 }
