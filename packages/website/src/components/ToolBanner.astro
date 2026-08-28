@@ -1,7 +1,11 @@
 ---
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
+import { Back } from "./Back";
+import { Flex } from "./Flex";
 import { Heading } from "./Heading";
+import { IconButton } from "./IconButton";
 
 interface Props {
   locale: string;
@@ -16,6 +20,8 @@ const toolStrings =
 
 <style>
   .tool-banner {
+    --tool-banner-overlap: 8rem;
+
     background-size: cover;
 
     .content {
@@ -40,11 +46,18 @@ const toolStrings =
       }
 
       .centered {
+        position: relative;
+
         flex: 1;
         max-width: var(--page-width);
 
         display: flex;
         flex-direction: column;
+
+        .return {
+          width: 0.75em;
+          height: 0.75em;
+        }
       }
 
       .pattern {
@@ -87,7 +100,15 @@ const toolStrings =
 
     <div class="centered">
       <Heading weight="bold" size="2">
-        {toolStrings.name}
+        <Flex align="center" gap="4">
+          <Back client:load>
+            <IconButton variant="soft" color="gray" highContrast>
+              <ArrowLeftIcon className="return" />
+            </IconButton>
+          </Back>
+
+          {toolStrings.name}
+        </Flex>
       </Heading>
     </div>
   </div>

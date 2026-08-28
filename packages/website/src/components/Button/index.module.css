@@ -10,14 +10,14 @@
   border: none;
 
   font-family: var(--font-family-regular);
-  font-size: 0.75em;
+  font-size: 0.8em;
   color: var(--gray-1);
   font-weight: var(--weight-medium);
 
   cursor: pointer;
 
   &[data-size="minor"] {
-    font-size: 0.75em;
+    font-size: 0.7em;
     padding: var(--space-2) var(--space-3);
   }
 
@@ -61,7 +61,7 @@
 
   &[data-variant="surface"],
   &[data-variant="soft"] {
-    background-color: var(--accent-3);
+    background-color: var(--accent-a3);
     color: var(--gray-12);
   }
 
