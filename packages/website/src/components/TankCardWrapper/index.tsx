@@ -2,9 +2,16 @@ import type { ComponentProps } from "react";
 import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
-export function TankCardWrapper({
-  className,
-  ...props
-}: ComponentProps<"div">) {
-  return <div className={classNames(styles.wrapper, className)} {...props} />;
+interface Props extends ComponentProps<"div"> {
+  compact?: boolean;
+}
+
+export function TankCardWrapper({ className, compact, ...props }: Props) {
+  return (
+    <div
+      className={classNames(styles.wrapper, className)}
+      data-compact={compact}
+      {...props}
+    />
+  );
 }

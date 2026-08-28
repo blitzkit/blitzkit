@@ -1,8 +1,13 @@
 .wrapper {
+  --min-size: 12rem;
+
   display: grid;
+  gap: var(--space-5) var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(var(--min-size), 1fr));
 
-  gap: var(--space-4);
-  row-gap: var(--space-5);
+  &[data-compact="true"] {
+    --min-size: 7rem;
 
-  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--space-4);
+  }
 }

@@ -441,7 +441,7 @@ export const TankSearch = memo<TankSearchProps>(
 
         {!skeleton && !compact && <RecentlyViewedTanks />}
 
-        <div className={styles.tanks}>
+        <Flex justify="center" className={styles.label}>
           <div className={styles.count}>
             <Text lowContrast>
               {sorted.length === 1
@@ -486,7 +486,7 @@ export const TankSearch = memo<TankSearchProps>(
               , {tankopediaSort.direction}
             </Text>
           )}
-        </div>
+        </Flex>
 
         {tankFilters.showTesting && !tankFilters.showNonTesting && (
           <div className={styles["test-warning"]}>

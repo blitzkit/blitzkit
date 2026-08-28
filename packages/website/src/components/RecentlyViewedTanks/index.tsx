@@ -6,7 +6,6 @@ import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankSort } from "../../stores/tankopediaSort";
 import { Flex } from "../Flex";
-import { Separator } from "../Separator";
 import { TankCard } from "../TankCard";
 import { TankCardWrapper } from "../TankCardWrapper";
 import { Text } from "../Text";
@@ -38,17 +37,16 @@ export function RecentlyViewedTanks() {
   }
 
   return (
-    <Flex column gap="2" className={styles.recent}>
-      <Text color="gray" align="center">
+    <Flex column gap="4" className={styles.recent}>
+      <Text color="gray" lowContrast>
         {strings.website.common.tank_search.recent}
       </Text>
-      <TankCardWrapper>
+
+      <TankCardWrapper compact>
         {recentlyViewed.map((id) => (
-          <TankCard tank={tankDefinitions.tanks[id]} key={id} />
+          <TankCard compact tank={tankDefinitions.tanks[id]} key={id} />
         ))}
       </TankCardWrapper>
-
-      <Separator />
     </Flex>
   );
 }

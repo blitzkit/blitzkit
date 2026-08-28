@@ -1,15 +1,43 @@
-.image-wrapper {
-  overflow: hidden;
+.wrapper {
+  --image-height: 6rem;
 
-  box-sizing: border-box;
+  &[data-compact="true"] {
+    --image-height: 4rem;
 
-  background-size: auto 100%;
-  background-repeat: no-repeat;
+    .image-wrapper {
+      background-size: auto 75%;
+    }
+  }
 
-  height: 6rem;
-}
+  .image-wrapper {
+    overflow: hidden;
 
-.icon {
-  width: 1em;
-  height: 1em;
+    box-sizing: border-box;
+
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+
+    height: var(--image-height);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      min-width: 1em;
+      min-height: 1em;
+    }
+
+    .text {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 }

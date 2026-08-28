@@ -11,11 +11,12 @@ import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
 import { Text, type TextProps } from "../Text";
 import styles from "./index.module.css";
 
-type TankCardProps = TextProps & {
+type TankCardProps = {
   tank: TankDefinition;
   onTankSelect?: (tank: TankDefinition) => void;
   discriminator?: ReactNode;
   noLink?: boolean;
+  compact?: boolean;
 };
 
 const tankDefinitions = await api.tankDefinitions();
@@ -25,8 +26,7 @@ export const TankCard = ({
   discriminator,
   onTankSelect: onSelect,
   noLink,
-  style,
-  ...props
+  compact,
 }: TankCardProps) => {
   const { unwrap, locale } = useLocale();
 
@@ -45,6 +45,8 @@ export const TankCard = ({
 
   const content = (
     <Flex
+      className={styles.wrapper}
+      data-compact={compact}
       column
       gap="3"
       onClick={() => {
@@ -72,11 +74,9 @@ export const TankCard = ({
         />
       </Flex>
 
-      <Text color={color} lowContrast={lowContrast}>
-        <Flex align="center" gap="2" justify="center">
-          <Icon className={styles.icon} />
-          {name}
-        </Flex>
+      <Text className={styles.name} color={color} lowContrast={lowContrast}>
+        <Icon className={styles.icon} />
+        <span className={styles.text}>{name}</span>
       </Text>
 
       {discriminator && (
