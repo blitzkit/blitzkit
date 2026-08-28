@@ -1,5 +1,8 @@
 import { useLocale } from "../../../hooks/useLocale";
 import { TankFilters } from "../../../stores/tankFilters";
+import { Flex } from "../../Flex";
+import { Link } from "../../Link";
+import { Text } from "../../Text";
 
 interface NoResultsProps {
   type?: "filters" | "search";
@@ -9,8 +12,8 @@ export function NoResults({ type = "filters" }: NoResultsProps) {
   const { strings } = useLocale();
 
   return (
-    <Flex flexGrow="1" align="center" justify="center">
-      <Text color="gray">
+    <Flex align="center" justify="center">
+      <Text lowContrast>
         {strings.website.common.tank_search.no_tanks_found.body}{" "}
         <Link
           href="#"

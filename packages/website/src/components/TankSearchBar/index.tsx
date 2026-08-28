@@ -1,12 +1,10 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { debounce } from "lodash-es";
 import { type KeyboardEventHandler, useCallback, useRef } from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { Flex } from "../Flex";
-import { Spinner } from "../Spinner";
 import { Sort } from "../TankSearch/components/Sort";
 import { TextField } from "../TextField";
 
@@ -22,36 +20,19 @@ export function TankSearchBar({
 }: SearchBarProps) {
   const { strings } = useLocale();
   const search = TankFilters.use((state) => state.search);
-  const searching = TankFilters.use((state) => state.searching);
   const input = useRef<HTMLInputElement>(null);
-  const performSearch = useCallback(
-    debounce(() => {
-      TankFilters.mutate((draft) => {
-        draft.searching = false;
-      });
-
-      if (!input.current) return;
-
-      const sanitized = input.current.value.trim();
-
-      TankFilters.mutate((draft) => {
-        draft.search = sanitized.length === 0 ? null : sanitized;
-      });
-    }, 500),
-    [],
-  );
   const handleChange = useCallback(() => {
-    if (!searching) {
-      TankFilters.mutate((draft) => {
-        draft.searching = true;
-      });
-    }
+    if (!input.current) return;
 
-    performSearch();
-  }, [searching]);
+    const sanitized = input.current.value.trim();
+
+    TankFilters.mutate((draft) => {
+      draft.search = sanitized.length === 0 ? null : sanitized;
+    });
+  }, []);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
-      if (event.key !== "Enter" || !topResult || searching) return;
+      if (event.key !== "Enter" || !topResult) return;
 
       event.preventDefault();
 
@@ -75,7 +56,7 @@ export function TankSearchBar({
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       >
-        {searching ? <Spinner /> : <MagnifyingGlassIcon />}
+        <MagnifyingGlassIcon />
       </TextField>
 
       <Sort />

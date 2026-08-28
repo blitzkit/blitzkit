@@ -73,9 +73,7 @@ export const TankSearch = memo<TankSearchProps>(
         } else {
           return Promise.resolve(
             fuzzysort
-              .go(tankFilters.search, tankNames, {
-                keys: SEARCH_KEYS,
-              })
+              .go(tankFilters.search, tankNames, { keys: SEARCH_KEYS })
               .map((result) => tankDefinitions.tanks[result.obj.id]),
           );
         }
@@ -437,7 +435,7 @@ export const TankSearch = memo<TankSearchProps>(
           onSelect={onSelect}
         />
 
-        {!tankFilters.search && !tankFilters.searching && <TankSearchFilters />}
+        {!tankFilters.search && <TankSearchFilters />}
 
         {!skeleton && !compact && <RecentlyViewedTanks />}
 
@@ -497,7 +495,7 @@ export const TankSearch = memo<TankSearchProps>(
           </div>
         )}
 
-        {!skeleton && !tankFilters.searching && (
+        {!skeleton && (
           <>
             {tanks.length > 0 && (
               <TankCardWrapper>
@@ -529,19 +527,6 @@ export const TankSearch = memo<TankSearchProps>(
 
             {tanks.length === 0 && <NoResults type="search" />}
           </>
-        )}
-
-        {(skeleton || tankFilters.searching) && (
-          <TankCardWrapper>
-            {times(
-              Math.round(
-                skeleton ? DEFAULT_LOADED_CARDS : 10 + 10 * Math.random(),
-              ),
-              (index) => (
-                <TankCardSkeleton key={index} />
-              ),
-            )}
-          </TankCardWrapper>
         )}
       </Flex>
     );
