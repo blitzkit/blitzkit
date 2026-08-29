@@ -8,8 +8,8 @@ import {
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import fuzzysort from "fuzzysort";
-import { times, uniq } from "lodash-es";
-import { memo, useEffect, useMemo, useState } from "react";
+import { uniq } from "lodash-es";
+import { memo, useMemo } from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
 import { api } from "../../core/blitzkit/api";
@@ -25,15 +25,15 @@ import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonCompo
 import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { Flex } from "../Flex";
+import { IncrementalLoader } from "../IncrementalLoader";
 import { Link } from "../Link";
 import { RecentlyViewedTanks } from "../RecentlyViewedTanks";
-import { TankCardSkeleton } from "../TankCardSkeleton";
+import { TankCard } from "../TankCard";
 import { TankCardWrapper } from "../TankCardWrapper";
 import { TankSearchBar } from "../TankSearchBar";
 import { TankSearchFilters } from "../TankSearchFilters";
 import { TankSearchNoResults } from "../TankSearchNoResults";
 import { Text } from "../Text";
-import { TankSearchCard } from "./components/Card";
 import { MAX_RECENTLY_VIEWED } from "./constants";
 import styles from "./index.module.css";
 
@@ -42,9 +42,6 @@ export type TankSearchProps = MaybeSkeletonComponentProps & {
   onSelect?: (tank: TankDefinition) => void;
   onSelectAll?: (tanks: TankDefinition[]) => void;
 };
-
-const PREVIEW_COUNT = 20;
-const DEFAULT_LOADED_CARDS = 64;
 
 const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   await Promise.all([
@@ -420,18 +417,17 @@ export const TankSearch = memo<TankSearchProps>(
       }
     }, [tankFilters, tankopediaSort]);
 
-    const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED_CARDS);
-    const tanks = sorted.slice(0, loadedCards);
-
-    useEffect(() => {
-      setLoadedCards(DEFAULT_LOADED_CARDS);
-    }, [tankFilters, tankopediaSort]);
+    const data = sorted.map((tank) => ({
+      key: `${tank.id}`,
+      tank,
+      onTankSelect: onSelect,
+    }));
 
     return (
       <Flex className={styles.container} column gap="4">
         <TankSearchBar
           skeleton={skeleton}
-          topResult={tanks?.[0]}
+          topResult={sorted[0]}
           onSelect={onSelect}
         />
 
@@ -439,7 +435,7 @@ export const TankSearch = memo<TankSearchProps>(
 
         {!skeleton && !compact && <RecentlyViewedTanks />}
 
-        {tanks.length > 0 && (
+        {sorted.length > 0 && (
           <Flex justify="center" className={styles.label}>
             <div className={styles.count}>
               <Text lowContrast>
@@ -497,38 +493,18 @@ export const TankSearch = memo<TankSearchProps>(
           </div>
         )}
 
-        {!skeleton && (
-          <>
-            {tanks.length > 0 && (
-              <TankCardWrapper>
-                {tanks.map((tank) => (
-                  <TankSearchCard
-                    tank={tank}
-                    key={tank.id}
-                    onSelect={onSelect}
-                  />
-                ))}
+        <TankCardWrapper>
+          <IncrementalLoader
+            skeleton={skeleton}
+            initial={5 * 5}
+            intermediate={5 * 2}
+            data={data}
+            Component={TankCard}
+          />
+        </TankCardWrapper>
 
-                {times(
-                  Math.min(PREVIEW_COUNT, sorted.length - loadedCards),
-                  (index) => {
-                    return (
-                      <TankCardSkeleton
-                        key={index}
-                        onIntersection={() => {
-                          setLoadedCards((state) =>
-                            Math.min(state + 2, sorted.length),
-                          );
-                        }}
-                      />
-                    );
-                  },
-                )}
-              </TankCardWrapper>
-            )}
-
-            {tanks.length === 0 && <TankSearchNoResults type="search" />}
-          </>
+        {!skeleton && sorted.length === 0 && (
+          <TankSearchNoResults type="search" />
         )}
       </Flex>
     );

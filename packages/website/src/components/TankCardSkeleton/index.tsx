@@ -1,27 +1,17 @@
-import { memo, useRef } from "react";
-import { useIntersection } from "../../hooks/useIntersection";
 import { Flex } from "../Flex";
+import { InlineSkeleton } from "../InlineSkeleton";
 import { Skeleton } from "../Skeleton";
 import styles from "./index.module.css";
 
-interface SkeletonTankCardProps {
-  onIntersection?: () => void;
-}
+type TankCardProps = {
+  compact?: boolean;
+};
 
-export const TankCardSkeleton = memo(
-  ({ onIntersection }: SkeletonTankCardProps) => {
-    const card = useRef<HTMLDivElement>(null!);
-
-    useIntersection(() => onIntersection?.(), card, {
-      disabled: onIntersection === undefined,
-    });
-
-    return (
-      <Flex column gap="2" ref={card}>
-        <Skeleton className={styles.icon} />
-        <Skeleton className={styles.name} />
-      </Flex>
-    );
-  },
-  () => true,
-);
+export const TankCardSkeleton = ({ compact }: TankCardProps) => {
+  return (
+    <Flex className={styles.wrapper} data-compact={compact} column gap="3">
+      <Skeleton className={styles["image-wrapper"]} />
+      <InlineSkeleton className={styles.name} />
+    </Flex>
+  );
+};

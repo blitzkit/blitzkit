@@ -8,8 +8,7 @@ export interface ButtonProps extends ComponentProps<"button"> {
   radius?: `${1 | 2 | 3}` | "max";
   variant?: "solid" | "surface" | "soft" | "inverted" | "ghost" | "outline";
   size?: "regular" | "minor";
-  array?: boolean;
-  parentArray?: boolean;
+  listChild?: boolean;
   highContrast?: boolean; // TODO: add high contrast
 }
 
@@ -35,8 +34,7 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
-  array = false,
-  parentArray = false,
+  listChild,
   ...props
 }: ButtonProps) {
   return (
@@ -47,8 +45,7 @@ export function Button({
       data-light-text={variant === "solid"}
       data-radius={radius}
       data-size={size}
-      data-array={array}
-      data-parent-array={parentArray}
+      data-list-child={listChild}
       {...props}
     />
   );

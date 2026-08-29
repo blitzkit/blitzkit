@@ -613,7 +613,7 @@ function TypeFilter() {
 
 function ShellFilter() {
   return (
-    <Flex style={{}}>
+    <Flex>
       <IndividualShellFilter index={0} />
       <IndividualShellFilter index={1} premium />
       <IndividualShellFilter index={2} />
@@ -635,19 +635,14 @@ function IndividualShellFilter({
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <IconButton
+          listChild
           size="minor"
           variant="surface"
-          style={{
-            borderTopLeftRadius: index === 0 ? undefined : 0,
-            borderBottomLeftRadius: index === 0 ? undefined : 0,
-            borderTopRightRadius: index === 2 ? undefined : 0,
-            borderBottomRightRadius: index === 2 ? undefined : 0,
-          }}
           color="gray"
           highContrast
         >
           {shells[index] === null && (
-            <Text color="gray" style={{ display: "contents" }}>
+            <Text lowContrast className={styles["shell-icon"]}>
               <MissingShellIcon width="1em" height="1em" />
             </Text>
           )}

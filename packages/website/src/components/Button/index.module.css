@@ -21,27 +21,19 @@
     padding: var(--space-2) var(--space-3);
   }
 
-  &[data-array="true"] {
-    &:first-child {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &:last-child {
+  &[data-list-child="true"] {
+    &:not(:first-child) {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-    }
-  }
 
-  &[data-parent-array="true"] {
-    *:first-child > & {
+      border-left-width: var(--space-0);
+    }
+
+    &:not(:last-child) {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-    }
 
-    *:last-child > & {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      border-right-width: var(--space-0);
     }
   }
 
@@ -82,6 +74,6 @@
 
   &[data-variant="surface"],
   &[data-variant="outline"] {
-    outline: var(--space-1) solid var(--accent-6);
+    border: var(--space-1) solid var(--accent-6);
   }
 }

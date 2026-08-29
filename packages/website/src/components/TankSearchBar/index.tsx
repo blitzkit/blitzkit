@@ -1,6 +1,11 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { type KeyboardEventHandler, useCallback, useRef } from "react";
+import {
+    type KeyboardEventHandler,
+    useCallback,
+    useEffect,
+    useRef,
+} from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
@@ -19,8 +24,16 @@ export function TankSearchBar({
   onSelect,
 }: SearchBarProps) {
   const { strings } = useLocale();
+
   const search = TankFilters.use((state) => state.search);
+
   const input = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (search !== null) return;
+    input.current!.value = "";
+  }, [search]);
+
   const handleChange = useCallback(() => {
     if (!input.current) return;
 

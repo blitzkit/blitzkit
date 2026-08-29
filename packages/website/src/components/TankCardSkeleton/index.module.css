@@ -1,7 +1,43 @@
-.icon {
-  /* height="5rem" */
-}
+.wrapper {
+  --image-height: 6rem;
 
-.name {
-  /* height="1em" */
+  &[data-compact="true"] {
+    --image-height: 4rem;
+
+    .image-wrapper {
+      background-size: auto 75%;
+    }
+  }
+
+  .image-wrapper {
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+
+    height: var(--image-height);
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      min-width: 1em;
+      min-height: 1em;
+    }
+
+    .text {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 }

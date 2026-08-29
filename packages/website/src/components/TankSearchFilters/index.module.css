@@ -23,3 +23,7 @@
 .overflow-plus {
   /* ml="1" */
 }
+
+.shell-icon {
+  display: contents;
+}

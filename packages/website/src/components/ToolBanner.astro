@@ -2,6 +2,7 @@
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import type { Tool } from "../constants/tools";
 import { getStrings } from "../core/i18n/getStrings";
+import { Logo } from "../icons/Logo";
 import { Back } from "./Back";
 import { Flex } from "./Flex";
 import { Heading } from "./Heading";
@@ -37,6 +38,8 @@ const toolStrings =
 
       backdrop-filter: var(--blur-tint);
 
+      overflow: hidden;
+
       :root.light & {
         backdrop-filter: var(--blur-tint) invert(1) hue-rotate(180deg);
       }
@@ -51,12 +54,22 @@ const toolStrings =
         flex: 1;
         max-width: var(--page-width);
 
-        display: flex;
-        flex-direction: column;
-
         .return {
           width: 0.75em;
           height: 0.75em;
+        }
+
+        .logo {
+          position: absolute;
+
+          pointer-events: none;
+
+          right: 0;
+          top: 50%;
+          height: 100%;
+
+          transform: translateY(-50%) scale(10);
+          color: var(--black-a4);
         }
       }
 
@@ -110,6 +123,8 @@ const toolStrings =
           {toolStrings.name}
         </Flex>
       </Heading>
+
+      <Logo className="logo" />
     </div>
   </div>
 </div>
