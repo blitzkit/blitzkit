@@ -43,7 +43,7 @@ export class SteamVFS extends AbstractVFS {
     super();
   }
 
-  async init() {
+  async _init() {
     this.steam.logOn({
       accountName: this.username,
       password: this.password,
@@ -57,7 +57,6 @@ export class SteamVFS extends AbstractVFS {
       this.steam.getManifest(
         this.app,
         this.depot,
-        // @ts-expect-error
         productInfo.apps[this.app].appinfo.depots[this.depot].manifests.public
           .gid,
         "public",

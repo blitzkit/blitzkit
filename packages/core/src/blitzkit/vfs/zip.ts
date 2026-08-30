@@ -12,7 +12,7 @@ export class ZipVFS extends AbstractVFS {
     super();
   }
 
-  async init() {
+  async _init() {
     const reader = new HTTPRangeReader(this.url);
     const { entries } = await unzip(reader);
 

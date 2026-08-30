@@ -1,14 +1,23 @@
 import { readDVPL } from "@blitzkit/core";
-import { Options, parse as parseCSV } from "csv-parse/sync";
+import { Options, parse as parseCSV } from "csv-parse/browser/esm/sync";
 import { XMLParser } from "fast-xml-parser";
-import { normalize } from "path/posix";
+import type { normalize } from "node:path/posix";
 import { parse as parseYaml } from "yaml";
 
 export abstract class AbstractVFS {
   textDecoder = new TextDecoder();
   private xmlParser = new XMLParser();
 
-  abstract init(): Promise<typeof this>;
+  protected normalizePath?: typeof normalize;
+
+  async init() {
+    const path = await import("node:path/posix");
+    this.normalizePath = path.normalize;
+
+    await this._init();
+  }
+
+  protected abstract _init(): Promise<typeof this>;
 
   abstract dispose(): void;
 
@@ -17,7 +26,7 @@ export abstract class AbstractVFS {
   abstract raw(path: string): Promise<Uint8Array<ArrayBuffer>>;
 
   async resolve(path: string) {
-    const normalized = normalize(path);
+    const normalized = this.normalizePath!(path);
     if (await this.has(normalized)) return normalized;
 
     const dvplPath = `${normalized}.dvpl`;
