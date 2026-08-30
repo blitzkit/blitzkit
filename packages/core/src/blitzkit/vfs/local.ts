@@ -10,7 +10,10 @@ export class LocalVFS extends AbstractVFS {
 
   async _init() {
     const path = await import("node:path/posix");
+    const fs = await import("node:fs/promises");
+
     this.normalizePath = path.normalize;
+    this.readdir = fs.readdir;
 
     return this;
   }
