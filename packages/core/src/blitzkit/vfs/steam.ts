@@ -1,4 +1,4 @@
-import SteamUser, { EConnectionProtocol } from "steam-user";
+import type SteamUser from "steam-user";
 import { AbstractVFS } from "./abstract";
 
 interface SteamManifestFile {
@@ -31,7 +31,7 @@ interface SteamManifest {
 }
 
 export class SteamVFS extends AbstractVFS {
-  private steam = new SteamUser({ protocol: EConnectionProtocol.TCP });
+  private steam?: SteamUser;
   private manifest: Map<string, SteamManifestFile> = new Map();
 
   constructor(
@@ -44,12 +44,17 @@ export class SteamVFS extends AbstractVFS {
   }
 
   async _init() {
+    const steamUser = await import("steam-user");
+
+    this.steam = new steamUser.default({
+      protocol: steamUser.EConnectionProtocol.TCP,
+    });
     this.steam.logOn({
       accountName: this.username,
       password: this.password,
     });
 
-    await new Promise((resolve) => this.steam.once("loggedOn", resolve));
+    await new Promise((resolve) => this.steam!.once("loggedOn", resolve));
 
     const productInfo = await this.steam.getProductInfo([this.app], []);
     const manifest: SteamManifest = await new Promise((resolve) => {
@@ -105,6 +110,6 @@ export class SteamVFS extends AbstractVFS {
   }
 
   dispose() {
-    this.steam.logOff();
+    this.steam!.logOff();
   }
 }

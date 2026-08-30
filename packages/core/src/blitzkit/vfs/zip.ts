@@ -1,4 +1,3 @@
-import { normalize } from "path/posix";
 import { HTTPRangeReader, unzip, ZipEntry } from "unzipit";
 import { AbstractVFS } from "./abstract";
 
@@ -17,7 +16,9 @@ export class ZipVFS extends AbstractVFS {
     const { entries } = await unzip(reader);
 
     for (const entry of Object.values(entries)) {
-      const normalized = normalize(entry.name.slice(this.root.length));
+      const normalized = this.normalizePath!(
+        entry.name.slice(this.root.length),
+      );
       this.entries.set(normalized, entry);
     }
 
