@@ -12,7 +12,7 @@ import { controlsEnabledEvent } from "../../../core/controlsEnabled";
 import { useModel } from "../../../hooks/useModel";
 import { Mixer } from "../../../stores/mixer";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function Model() {
   const canvas = useThree((state) => state.gl.domElement);

@@ -10,7 +10,7 @@ interface TierListRowProps {
   index: number;
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function TierListRow({ index }: TierListRowProps) {
   const tanks = TierList.use((state) => state.rows[index].tanks);

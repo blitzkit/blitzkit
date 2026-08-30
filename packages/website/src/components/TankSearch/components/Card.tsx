@@ -15,7 +15,7 @@ interface TankSearchCardProps {
   onSelect?: (tank: TankDefinition) => void;
 }
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
   const by = TankSort.use((state) => state.by);

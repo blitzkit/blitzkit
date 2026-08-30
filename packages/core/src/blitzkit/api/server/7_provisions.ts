@@ -1,30 +1,28 @@
 import {
   BlitzTankFilterDefinitionCategory,
-  Consumable,
-  ConsumableDefinitions,
+  Provision,
+  ProvisionDefinitions,
 } from "@blitzkit/core";
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI5 } from "./5_equipmentDefinitions";
+import { ServerBlitzKitAPI6 } from "./6_consumables";
 
-export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
+export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
   @Cache()
-  async consumableDefinitions() {
-    const consumableDefinitions = ConsumableDefinitions.create();
+  async provisions() {
+    const provisionDefinitions = ProvisionDefinitions.create();
 
-    Object.entries(this.consumablesCommon).forEach(([key, consumable]) => {
-      const entry: Consumable = {
-        id: consumable.id,
-        game_mode_exclusive: "gameModeFilter" in consumable,
-        cooldown: consumable.script.cooldown,
-        duration: consumable.script.duration,
-        name: this.getString(consumable.userString),
+    Object.entries(this.provisionsCommon).forEach(([, provision]) => {
+      const entry: Provision = {
+        id: provision.id,
         exclude: [],
         include: [],
+        game_mode_exclusive: "gameModeFilter" in provision,
+        name: this.getString(provision.userString),
       };
-      consumableDefinitions.consumables[consumable.id] = entry;
+      provisionDefinitions.provisions[provision.id] = entry;
 
-      const includeRaw = consumable.vehicleFilter?.include.vehicle;
-      const excludeRaw = consumable.vehicleFilter?.exclude?.vehicle;
+      const includeRaw = provision.vehicleFilter?.include.vehicle;
+      const excludeRaw = provision.vehicleFilter?.exclude?.vehicle;
 
       if (includeRaw) {
         entry.include = [];
@@ -52,12 +50,12 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
           });
         } else throw new SyntaxError("Unhandled include type");
 
-        if (consumable.vehicleFilter?.include.nations) {
+        if (provision.vehicleFilter?.include.nations) {
           entry.include.push({
             filter_type: {
               $case: "nations",
               value: {
-                nations: consumable.vehicleFilter.include.nations.split(" "),
+                nations: provision.vehicleFilter.include.nations.split(" "),
               },
             },
           });
@@ -72,9 +70,9 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
             filter_type: {
               $case: "ids",
               value: {
-                ids: excludeRaw.name.split(/ +/).map((key) => {
-                  return this.tankStringIdMap[key];
-                }),
+                ids: excludeRaw.name
+                  .split(/ +/)
+                  .map((key) => this.tankStringIdMap[key]),
               },
             },
           });
@@ -96,19 +94,24 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
           });
         } else throw new SyntaxError("Unhandled exclude type");
 
-        if (consumable.vehicleFilter?.exclude?.nations) {
+        if (provision.vehicleFilter?.exclude?.nations) {
           entry.exclude!.push({
             filter_type: {
               $case: "nations",
               value: {
-                nations: consumable.vehicleFilter.exclude.nations.split(" "),
+                nations: provision.vehicleFilter.exclude.nations.split(" "),
               },
             },
           });
         }
       }
+
+      if (provision.script.bonusValues?.crewLevelIncrease !== undefined) {
+        provisionDefinitions.provisions[provision.id].crew =
+          provision.script.bonusValues?.crewLevelIncrease;
+      }
     });
 
-    return consumableDefinitions;
+    return provisionDefinitions;
   }
 }

@@ -1,10 +1,4 @@
-import {
-  asset,
-  fetchTankDefinitions,
-  Reviews,
-  Video,
-  youtubers,
-} from "@blitzkit/core";
+import { asset, Reviews, Video, youtubers } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import { google } from "googleapis";
 import { cloneDeep, uniqBy } from "lodash-es";
@@ -22,7 +16,7 @@ const auth = await google.auth.getClient({
 });
 const youtube = google.youtube({ version: "v3", auth });
 
-const tankDefinitions = await fetchTankDefinitions();
+const tankDefinitions = await fetchTank();
 const tanks = Object.values(tankDefinitions.tanks);
 
 const tanksSanitized = tanks

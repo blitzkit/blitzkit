@@ -1,55 +1,45 @@
-import { TankType } from "@blitzkit/core";
-import { PageWrapper } from "../../../../../components/PageWrapper";
-import { CalloutsSection } from "../../../../../components/Tankopedia/CalloutsSection";
-import { CharacteristicsSection } from "../../../../../components/Tankopedia/CharacteristicsSection";
-import { GameModeSection } from "../../../../../components/Tankopedia/GameModeSection";
-import { GuideSection } from "../../../../../components/Tankopedia/GuideSection";
-import { HeroSection } from "../../../../../components/Tankopedia/HeroSection";
-import { MetaSection } from "../../../../../components/Tankopedia/MetaSection";
-import { TechTreeSection } from "../../../../../components/Tankopedia/TechTreeSection";
-import { VideoSection } from "../../../../../components/Tankopedia/VideoSection";
+import { useMemo } from "react";
 import { api } from "../../../../../core/blitzkit/api";
-import {
-  LocaleProvider,
-  type LocaleAcceptorProps,
-} from "../../../../../hooks/useLocale";
-import { Duel } from "../../../../../stores/duel";
+import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../../hocs/withLocale";
+import { useAwait } from "../../../../../hooks/useAwait";
 import { Tankopedia } from "../../../../../stores/tankopedia";
-import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import type { TankGuide } from "../../../../../types/tankGuide";
+import styles from "./_index.module.css";
 
-type PageProps = MaybeSkeletonComponentProps &
-  LocaleAcceptorProps & {
-    id: number;
-    guide?: TankGuide;
-  };
-
-const [tankDefinitions, modelDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.modelDefinitions(),
-]);
-
-export function Page({ id, skeleton, locale, guide }: PageProps) {
-  const tank = tankDefinitions.tanks[id];
-  const model = modelDefinitions.models[id];
-
-  Tankopedia.useInitialization(model);
-  Duel.useInitialization({ tank, model });
-
-  return (
-    <LocaleProvider locale={locale}>
-      <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
-        <HeroSection skeleton={skeleton} />
-        <MetaSection />
-        <CalloutsSection />
-        {tank.type === TankType.TANK_TYPE_RESEARCHABLE && !tank.deprecated && (
-          <TechTreeSection skeleton={skeleton} />
-        )}
-        <CharacteristicsSection skeleton={skeleton} />
-        <GameModeSection />
-        {guide && <GuideSection guide={guide} />}
-        <VideoSection skeleton={skeleton} />
-      </PageWrapper>
-    </LocaleProvider>
-  );
+interface PageProps {
+  id: number;
 }
+
+export const Page = withErrorWrapper(
+  withLocale<PageProps>(({ id }) => {
+    const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
+
+    Tankopedia.useInitialization(protagonistTank);
+
+    const protagonist = Tankopedia.use((state) => state.protagonist);
+    const protagonistEquipment = useEquipment(protagonistTank.tank!);
+
+    const { characteristics, parameters } = useMemo(
+      () =>
+        computeCharacteristics(
+          protagonistTank,
+          protagonistEquipment,
+          protagonist,
+        ),
+      [protagonist],
+    );
+
+    return (
+      <div className={styles.page}>
+        <div className={styles.loadout}>
+          <TankopediaLoadout characteristics={characteristics} />
+        </div>
+
+        <div className={styles.sandbox}>
+          <TankopediaSandbox parameters={parameters} />
+          <TankopediaCharacteristics characteristics={characteristics} />
+        </div>
+      </div>
+    );
+  }),
+);

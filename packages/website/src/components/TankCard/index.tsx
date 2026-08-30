@@ -21,7 +21,7 @@ type TankCardProps = {
   compact?: boolean;
 };
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
   if (props.skeleton) {

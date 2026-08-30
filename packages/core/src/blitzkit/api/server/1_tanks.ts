@@ -47,7 +47,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   }
 
   @Cache()
-  async tankDefinitions() {
+  async tanks() {
     const tankDefinitions = TankDefinitions.create();
 
     const gameModeNativeNames: Record<string, number> = {};

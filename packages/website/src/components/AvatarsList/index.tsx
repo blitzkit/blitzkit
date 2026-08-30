@@ -1,6 +1,5 @@
 import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { Flex, Text } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
@@ -8,20 +7,22 @@ import { api } from "../../core/blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { Gallery } from "../../stores/gallery";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { AvatarCard } from "../AvatarCard";
+import { Flex } from "../Flex";
 import { InlineSkeleton } from "../InlineSkeleton";
-import { GalleryCard } from "./Card";
+import { Text } from "../Text";
 
 export interface Avatar {
   name: string;
   id: string;
 }
 
-const gallery = await api.galleryDefinitions();
+const gallery = await api.gallery();
 
 const DEFAULT_LOADED = 42;
 const PREVIEW_COUNT = 28;
 
-export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
+export function AvatarsList({ skeleton }: MaybeSkeletonComponentProps) {
   const search = Gallery.use((state) => state.search);
   const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED);
   const { locale, strings } = useLocale();
@@ -48,9 +49,9 @@ export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
     <>
       <Text align="center" color="gray">
         {skeleton ? (
-          <InlineSkeleton width="7rem" />
+          <InlineSkeleton />
         ) : (
-          literals(strings.website.tools.gallery.search.results, {
+          literals(strings.website.tools.avatars.search.results, {
             count: filtered.length.toLocaleString(locale),
           })
         )}
@@ -60,14 +61,14 @@ export function GalleryList({ skeleton }: MaybeSkeletonComponentProps) {
         {!skeleton &&
           filtered
             .slice(0, loadedCards)
-            .map((avatar) => <GalleryCard key={avatar.id} avatar={avatar} />)}
+            .map((avatar) => <AvatarCard key={avatar.id} avatar={avatar} />)}
 
         {times(
           skeleton
             ? DEFAULT_LOADED + PREVIEW_COUNT
             : Math.min(PREVIEW_COUNT, filtered.length - loadedCards),
           (index) => (
-            <GalleryCard
+            <AvatarCard
               key={index}
               skeleton
               onIntersection={() => setLoadedCards((state) => state + 2)}

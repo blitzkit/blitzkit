@@ -35,10 +35,8 @@ import { Mixer } from "../../../../stores/mixer";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
-const modelDefinition = await api
-  .modelDefinitions()
-  .then(({ models }) => models[1]);
-const tankDefinitions = await api.tankDefinitions();
+const modelDefinition = await api.models().then(({ models }) => models[1]);
+const tankDefinitions = await api.tanks();
 
 export function Page({
   locale,

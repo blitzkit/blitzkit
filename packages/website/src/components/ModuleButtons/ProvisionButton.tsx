@@ -8,7 +8,7 @@ interface ProvisionButtonProps extends TankComponentButtonProps {
   provision: number;
 }
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function ProvisionButton({ provision, ...props }: ProvisionButtonProps) {
   const { unwrap } = useLocale();

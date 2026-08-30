@@ -5,11 +5,7 @@ import { useLocale } from "../../hooks/useLocale";
 import { Duel } from "../../stores/duel";
 
 const [gameDefinitions, consumableDefinitions, provisionDefinitions] =
-  await Promise.all([
-    api.gameDefinitions(),
-    api.consumableDefinitions(),
-    api.provisionDefinitions(),
-  ]);
+  await Promise.all([api.game(), api.consumables(), api.provisions()]);
 
 export function GameModeSection() {
   const { unwrap, strings } = useLocale();

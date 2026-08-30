@@ -8,7 +8,7 @@ interface EquipmentButtonProps extends TankComponentButtonProps {
   equipment: number;
 }
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function EquipmentButton({ equipment, ...props }: EquipmentButtonProps) {
   const { unwrap } = useLocale();

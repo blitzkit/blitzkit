@@ -13,7 +13,7 @@ interface TankControlProps {
   slug: string;
 }
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function TankControl({ index, slug }: TankControlProps) {
   const { locale, strings } = useLocale();

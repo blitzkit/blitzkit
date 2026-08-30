@@ -37,11 +37,11 @@ const [
   modelDefinitions,
   skillDefinitions,
 ] = await Promise.all([
-  api.tankDefinitions(),
-  api.provisionDefinitions(),
-  api.equipmentDefinitions(),
-  api.modelDefinitions(),
-  api.skillDefinitions(),
+  api.tanks(),
+  api.provisions(),
+  api.equipment(),
+  api.models(),
+  api.skill(),
 ]);
 
 export const InfoWithDelta = memo<InfoWithDeltaProps>(

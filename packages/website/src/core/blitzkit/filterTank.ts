@@ -6,9 +6,9 @@ import { api } from "./api";
 
 const SHELLS = times(3, (index) => index);
 
-const consumableDefinitions = await api.consumableDefinitions();
-const provisionDefinitions = await api.provisionDefinitions();
-const gameDefinitions = await api.gameDefinitions();
+const consumableDefinitions = await api.consumables();
+const provisionDefinitions = await api.provisions();
+const gameDefinitions = await api.game();
 
 export async function filterTank(
   filters: TankFilters,

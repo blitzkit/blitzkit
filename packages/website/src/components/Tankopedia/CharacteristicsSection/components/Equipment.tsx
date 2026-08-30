@@ -5,7 +5,7 @@ import { Duel } from "../../../../stores/duel";
 import { EquipmentManager } from "../../../EquipmentManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function Equipment() {
   const protagonist = Duel.use((state) => state.protagonist);

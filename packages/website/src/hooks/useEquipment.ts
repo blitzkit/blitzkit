@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { api } from "../core/blitzkit/api";
 import { Duel } from "../stores/duel";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function useEquipment(id: number, antagonist = false) {
   const member = Duel.use(

@@ -9,8 +9,8 @@ import { Tankopedia } from "../../stores/tankopedia";
 import "./index.css";
 
 const [modelDefinitions, provisionDefinitions] = await Promise.all([
-  api.modelDefinitions(),
-  api.provisionDefinitions(),
+  api.models(),
+  api.provisions(),
 ]);
 
 export function GuessBackground() {

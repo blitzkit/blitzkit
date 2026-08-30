@@ -1,4 +1,5 @@
 export * from "./alias";
+export * from "./api";
 export * from "./assertSecret";
 export * from "./availableProvisions";
 export * from "./averageDefinitions";
@@ -30,5 +31,6 @@ export * from "./tankNames";
 export * from "./unionBoundingBox";
 export * from "./uniqueGuns";
 export * from "./unwrapBlitzkitResponse";
+export * from "./vfs";
 export * from "./votes";
 export * from "./youtubers";

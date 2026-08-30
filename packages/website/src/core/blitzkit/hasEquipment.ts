@@ -1,7 +1,7 @@
 import type { EquipmentMatrix } from "../../stores/duel";
 import { api } from "./api";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function hasEquipment(
   id: number,

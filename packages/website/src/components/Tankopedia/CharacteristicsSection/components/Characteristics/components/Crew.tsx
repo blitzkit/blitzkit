@@ -11,7 +11,7 @@ import { InfoWithDelta } from "./InfoWithDelta";
 import { StatsTableWrapper } from "./StatsTableWrapper";
 import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function Crew({ stats }: StatsAcceptorProps) {
   const tank = Duel.use((state) => state.protagonist.tank);

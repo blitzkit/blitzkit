@@ -10,7 +10,7 @@ import { TankFilters } from "../../stores/tankFilters";
 import { api } from "./api";
 import { filterTanks } from "./filterTanks";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 const tanks = Object.values(tankDefinitions.tanks);
 
 export async function generatePlaylist() {

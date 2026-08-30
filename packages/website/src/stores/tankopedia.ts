@@ -105,7 +105,7 @@ interface Tankopedia {
   statSearch?: string;
 }
 
-const skillDefinitions = await api.skillDefinitions();
+const skillDefinitions = await api.skill();
 
 export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,

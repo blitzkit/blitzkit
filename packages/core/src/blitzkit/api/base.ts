@@ -12,14 +12,19 @@ import {
 } from "@blitzkit/core";
 
 export abstract class BlitzKitAPI {
-  abstract skillDefinitions(): Promise<SkillDefinitions>;
-  abstract provisionDefinitions(): Promise<ProvisionDefinitions>;
-  abstract consumableDefinitions(): Promise<ConsumableDefinitions>;
-  abstract equipmentDefinitions(): Promise<EquipmentDefinitions>;
-  abstract mapDefinitions(): Promise<MapDefinitions>;
-  abstract modelDefinitions(): Promise<ModelDefinitions>;
-  abstract camouflageDefinitions(): Promise<CamouflageDefinitions>;
-  abstract tankDefinitions(): Promise<TankDefinitions>;
-  abstract gameDefinitions(): Promise<GameDefinitions>;
-  abstract galleryDefinitions(): Promise<Gallery>;
+  abstract skills(): Promise<SkillDefinitions>;
+  abstract provisions(): Promise<ProvisionDefinitions>;
+  abstract consumables(): Promise<ConsumableDefinitions>;
+  abstract equipments(): Promise<EquipmentDefinitions>;
+  abstract maps(): Promise<MapDefinitions>;
+  abstract models(): Promise<ModelDefinitions>;
+  abstract camouflages(): Promise<CamouflageDefinitions>;
+  abstract tanks(): Promise<TankDefinitions>;
+  abstract game(): Promise<GameDefinitions>;
+  abstract gallery(): Promise<Gallery>;
+
+  async tank(id: number) {
+    const tanks = await this.tanks();
+    return tanks.tanks[id];
+  }
 }

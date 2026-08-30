@@ -156,7 +156,7 @@ function ModuleButton({
   return <Tooltip content={tooltip}>{node}</Tooltip>;
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function Modules() {
   const tank = Duel.use((state) => state.protagonist.tank);

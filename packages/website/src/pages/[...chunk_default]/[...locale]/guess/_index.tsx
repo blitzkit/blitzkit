@@ -17,8 +17,8 @@ import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.modelDefinitions(),
+  api.tanks(),
+  api.models(),
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);

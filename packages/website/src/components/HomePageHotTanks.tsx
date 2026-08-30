@@ -11,7 +11,7 @@ import {
 import { TankCard } from "./TankCard";
 
 const [tankDefinitions, popularTanks] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitablePopularTanks,
 ]);
 

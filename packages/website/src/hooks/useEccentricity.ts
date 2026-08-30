@@ -9,7 +9,7 @@ export enum UseEccentricityMode {
   Class,
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function useEccentricity(mode: UseEccentricityMode) {
   const tank = Duel.use((state) => state.protagonist.tank);

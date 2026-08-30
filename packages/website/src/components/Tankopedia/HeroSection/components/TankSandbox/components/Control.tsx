@@ -21,7 +21,7 @@ const poseDistances: Record<Pose, number> = {
 
 const inspectModeInitialPosition = new Vector3(-8, 2, -13);
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 interface ControlsProps {
   autoRotate?: boolean;

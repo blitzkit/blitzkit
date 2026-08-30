@@ -45,9 +45,9 @@ export type TankSearchProps = MaybeSkeletonComponentProps & {
 
 const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   await Promise.all([
-    api.gameDefinitions(),
-    api.modelDefinitions(),
-    api.tankDefinitions(),
+    api.game(),
+    api.models(),
+    api.tanks(),
     awaitableTankNames,
   ]);
 

@@ -40,7 +40,7 @@ const { go } = fuzzysort;
 
 const [tankNames, tankDefinitions] = await Promise.all([
   awaitableTankNames,
-  api.tankDefinitions(),
+  api.tanks(),
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);

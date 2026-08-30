@@ -20,7 +20,7 @@ import { FlexibilityCanvas } from "./components/FlexibilityCanvas";
 
 const ANGLE_COEFFICIENT = 1 / 10;
 
-const modelDefinition = await api.modelDefinitions();
+const modelDefinition = await api.models();
 
 function mag(x: number) {
   return (1 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1 / 2;

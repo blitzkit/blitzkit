@@ -47,7 +47,7 @@ import {
 import { Session, type SessionTracking } from "../../../../stores/session";
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 

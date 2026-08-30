@@ -10,7 +10,7 @@ import { AesonPlug } from "../AesonPlug";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function CalloutsSection() {
   const tank = Duel.use((state) => state.protagonist.tank);

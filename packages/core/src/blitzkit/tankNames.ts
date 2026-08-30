@@ -5,8 +5,8 @@ import { I18nString } from "../protos";
 
 export async function fetchTankNames(api: BlitzKitAPI) {
   const [tankDefinitions, camouflageDefinitions] = await Promise.all([
-    api.tankDefinitions(),
-    api.camouflageDefinitions(),
+    api.tanks(),
+    api.camouflages(),
   ]);
   const tankDefinitionsArray = Object.values(tankDefinitions.tanks);
 

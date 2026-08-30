@@ -1,10 +1,10 @@
 import { CamouflageDefinitions } from "@blitzkit/core";
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI1 } from "./1_tankDefinitions";
+import { ServerBlitzKitAPI1 } from "./1_tanks";
 
 export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
   @Cache()
-  async camouflageDefinitions() {
+  async camouflages() {
     const camouflageDefinitions = CamouflageDefinitions.create();
 
     for (const camoKey in this.camouflagesXml!.root.camouflages) {

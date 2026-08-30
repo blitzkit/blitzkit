@@ -1,23 +1,18 @@
 import { alias, Avatar } from "@blitzkit/core";
 import { Cross1Icon, DownloadIcon } from "@radix-ui/react-icons";
-import {
-  Dialog,
-  Flex,
-  IconButton,
-  Link,
-  Skeleton,
-  Text,
-} from "@radix-ui/themes";
 import { useRef } from "react";
-import { useIntersection } from "../../hooks/useIntersection";
-import { useLocale } from "../../hooks/useLocale";
-import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { useIntersection } from "../hooks/useIntersection";
+import { useLocale } from "../hooks/useLocale";
+import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
+import { Flex } from "./Flex";
+import { Skeleton } from "./Skeleton";
+import { Text } from "./Text";
 
 type GalleryCardProps = MaybeSkeletonComponentProps<{
   avatar: Avatar;
 }>;
 
-export function GalleryCard(props: GalleryCardProps) {
+export function AvatarCard(props: GalleryCardProps) {
   const src = alias(
     "api",
     `/gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
@@ -31,17 +26,16 @@ export function GalleryCard(props: GalleryCardProps) {
 
   const content = (
     <Flex
-      direction="column"
+      column
       align="center"
-      width="6rem"
       gap="1"
       ref={card}
       style={{ cursor: "pointer" }}
     >
       {props.skeleton && (
         <>
-          <Skeleton width="100%" height="4.57rem" />
-          <Skeleton width="100%" height="1em" />
+          <Skeleton />
+          <Skeleton />
         </>
       )}
 
@@ -58,7 +52,7 @@ export function GalleryCard(props: GalleryCardProps) {
             alt={unwrap(props.avatar.name!)}
           />
 
-          <Text size="1" align="center" style={{ maxWidth: "100%" }}>
+          <Text size="minor" align="center" style={{ maxWidth: "100%" }}>
             {unwrap(props.avatar.name!)}
           </Text>
         </>

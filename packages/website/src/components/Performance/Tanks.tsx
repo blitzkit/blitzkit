@@ -27,7 +27,7 @@ const PREVIEW_COUNT = 10;
 const DEFAULT_LOADED_ROWS = 25;
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 

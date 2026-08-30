@@ -1,11 +1,11 @@
 import { AvailableNationsYaml, GameDefinitions } from "@blitzkit/core";
 
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI8 } from "./8_skillDefinitions";
+import { ServerBlitzKitAPI8 } from "./8_skills";
 
 export abstract class ServerBlitzKitAPI9 extends ServerBlitzKitAPI8 {
   @Cache()
-  async gameDefinitions() {
+  async game() {
     const gameDefinitions = GameDefinitions.create();
 
     const consumableNativeNames: Record<string, number> = {};

@@ -14,7 +14,7 @@ interface Props extends PlaylistEntry {
   index: number;
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export const PlaylistTankEntry = memo<Props>(
   ({ id, checked, then, now, index }) => {

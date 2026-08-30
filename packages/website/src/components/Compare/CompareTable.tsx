@@ -39,10 +39,10 @@ const [
   consumableDefinitions,
   provisionDefinitions,
 ] = await Promise.all([
-  api.skillDefinitions(),
-  api.equipmentDefinitions(),
-  api.consumableDefinitions(),
-  api.provisionDefinitions(),
+  api.skill(),
+  api.equipment(),
+  api.consumables(),
+  api.provisions(),
 ]);
 
 export function CompareTable({ stats }: CompareTableProps) {

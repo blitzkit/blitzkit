@@ -15,8 +15,8 @@ import { Maneuverability } from "./components/Maneuverability";
 import { Survivability } from "./components/Survivability";
 
 const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
-  api.equipmentDefinitions(),
-  api.provisionDefinitions(),
+  api.equipment(),
+  api.provisions(),
 ]);
 
 export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {

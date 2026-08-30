@@ -6,7 +6,6 @@ import {
   EngineDefinitionsList,
   GunDefinitionsList,
   ModelDefinitions,
-  ResearchCost,
   TankParameters,
   toUniqueId,
   TurretDefinitionsList,
@@ -15,10 +14,9 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
-import { Cache } from "./0_base";
-import { ServerBlitzKitAPI2 } from "./2_camouflageDefinitions";
-import { parse as parsePath } from "path";
 import { Vector3Tuple } from "three";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI2 } from "./2_camouflages";
 
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
@@ -42,7 +40,7 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   }
 
   @Cache()
-  async modelDefinitions() {
+  async models() {
     const modelDefinitions = ModelDefinitions.create();
 
     for (const nation of this.nationsDir!) {
@@ -65,10 +63,6 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
       for (const tankKey in tankList.root) {
         if (this.botPattern.test(tankKey)) continue;
 
-        const gunXps = new Map<number, ResearchCost>();
-        const turretXps = new Map<number, ResearchCost>();
-        const engineXps = new Map<number, ResearchCost>();
-        const trackXps = new Map<number, ResearchCost>();
         const tank = tankList.root[tankKey];
         const tankDefinition = await this.vfs.xml<{ root: VehicleDefinitions }>(
           `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
@@ -181,7 +175,7 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
         Object.keys(tankDefinition.root.turrets0).forEach((turretKey) => {
           const turret = tankDefinition.root.turrets0[turretKey];
           const turretModel = Number(
-            parsePath(turret.models.undamaged).name.split("_")[1],
+            this.parsePath!(turret.models.undamaged).name.split("_")[1],
           );
           const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
           const turretYaw = (
@@ -229,12 +223,16 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
             bounding_box: {
               min: this.vector3TupleToBlitzkit(
                 tankParameters.collision[
-                  parsePath(turret.hitTester.collisionModel).name.toLowerCase()
+                  this.parsePath!(
+                    turret.hitTester.collisionModel,
+                  ).name.toLowerCase()
                 ].bbox.min,
               ),
               max: this.vector3TupleToBlitzkit(
                 tankParameters.collision[
-                  parsePath(turret.hitTester.collisionModel).name.toLowerCase()
+                  this.parsePath!(
+                    turret.hitTester.collisionModel,
+                  ).name.toLowerCase()
                 ].bbox.max,
               ),
             },
@@ -253,7 +251,7 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
               .split(" ")
               .map(Number) as [number, number];
             const gunModel = Number(
-              parsePath(gun.models.undamaged).name.split("_")[1],
+              this.parsePath!(gun.models.undamaged).name.split("_")[1],
             );
             const front = gun.extraPitchLimits?.front
               ? gun.extraPitchLimits.front.split(" ").map(Number)

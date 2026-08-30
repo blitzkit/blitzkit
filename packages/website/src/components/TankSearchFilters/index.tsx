@@ -1,19 +1,19 @@
 import {
-  alias,
-  GunDefinition,
-  ShellType,
-  TANK_CLASSES,
-  TANK_TYPES,
-  TankType,
-  TIER_ROMAN_NUMERALS,
+    alias,
+    GunDefinition,
+    ShellType,
+    TANK_CLASSES,
+    TANK_TYPES,
+    TankType,
+    TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import {
-  LockClosedIcon,
-  LockOpen2Icon,
-  ResetIcon,
-  TrashIcon,
+    LockClosedIcon,
+    LockOpen2Icon,
+    ResetIcon,
+    TrashIcon,
 } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
@@ -37,10 +37,10 @@ import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
-const gameDefinitions = await api.gameDefinitions();
-const consumableDefinitions = await api.consumableDefinitions();
-const provisionDefinitions = await api.provisionDefinitions();
-const tankDefinitions = await api.tankDefinitions();
+const gameDefinitions = await api.game();
+const consumableDefinitions = await api.consumables();
+const provisionDefinitions = await api.provisions();
+const tankDefinitions = await api.tanks();
 
 const gameModeRoleSets: Record<number, Set<number>> = {};
 

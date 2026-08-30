@@ -5,7 +5,7 @@ import { api } from "../../../../../../core/blitzkit/api";
 import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
 import { Duel } from "../../../../../../stores/duel";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function InitialAligner() {
   const tank = Duel.use((state) => state.protagonist.tank);

@@ -44,7 +44,7 @@ export interface DuelStore {
   equalize: boolean;
 }
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export const Duel = new Varuna<
   DuelStore,

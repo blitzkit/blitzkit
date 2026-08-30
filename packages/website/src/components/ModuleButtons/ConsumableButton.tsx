@@ -13,7 +13,7 @@ interface ConsumableButtonProps extends TankComponentButtonProps {
   cooldown?: number;
 }
 
-const consumableDefinitions = await api.consumableDefinitions();
+const consumableDefinitions = await api.consumables();
 
 export function ConsumableButton({
   consumable,

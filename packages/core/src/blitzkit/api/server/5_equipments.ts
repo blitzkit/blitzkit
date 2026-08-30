@@ -1,10 +1,10 @@
 import { EquipmentDefinitions, EquipmentSlot } from "@blitzkit/core";
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI4 } from "./4_mapDefinitions";
+import { ServerBlitzKitAPI4 } from "./4_maps";
 
 export abstract class ServerBlitzKitAPI5 extends ServerBlitzKitAPI4 {
   @Cache()
-  async equipmentDefinitions() {
+  async equipments() {
     const equipmentDefinitions = EquipmentDefinitions.create();
 
     Object.entries(this.optionalDevices!.root).forEach(

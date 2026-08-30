@@ -22,7 +22,7 @@ import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponen
 import { LinkI18n } from "./LinkI18n";
 import { TankSearchFilters } from "./TankSearchFilters";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 const POOL_HEIGHT = "16rem";
 

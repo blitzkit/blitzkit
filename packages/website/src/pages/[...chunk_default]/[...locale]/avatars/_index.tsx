@@ -1,6 +1,5 @@
-import { GalleryList } from "../../../../components/Gallery/List";
-import { GallerySearch } from "../../../../components/Gallery/Search";
-import { PageWrapper } from "../../../../components/PageWrapper";
+import { AvatarsSearch } from "../../../../components/Avatars/Search";
+import { AvatarsList } from "../../../../components/AvatarsList";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
@@ -20,9 +19,9 @@ export function Page({
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
   return (
-    <PageWrapper maxWidth="80rem" color="gold">
-      <GallerySearch skeleton={skeleton} />
-      <GalleryList skeleton={skeleton} />
-    </PageWrapper>
+    <>
+      <AvatarsSearch skeleton={skeleton} />
+      <AvatarsList skeleton={skeleton} />
+    </>
   );
 }

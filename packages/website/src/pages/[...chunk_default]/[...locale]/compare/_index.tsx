@@ -20,11 +20,11 @@ const [
   skillDefinitions,
   tankDefinitions,
 ] = await Promise.all([
-  api.modelDefinitions(),
-  api.equipmentDefinitions(),
-  api.provisionDefinitions(),
-  api.skillDefinitions(),
-  api.tankDefinitions(),
+  api.models(),
+  api.equipment(),
+  api.provisions(),
+  api.skill(),
+  api.tanks(),
 ]);
 
 export function Page({ locale }: LocaleAcceptorProps) {

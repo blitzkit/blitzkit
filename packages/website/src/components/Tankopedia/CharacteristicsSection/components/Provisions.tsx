@@ -6,7 +6,7 @@ import { Duel } from "../../../../stores/duel";
 import { ProvisionsManager } from "../../../ProvisionsManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function Provisions() {
   const { tank, gun } = Duel.use((state) => state.protagonist);

@@ -1,10 +1,10 @@
 import { MapDefinitions } from "@blitzkit/core";
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI3 } from "./3_modelDefinitions";
+import { ServerBlitzKitAPI3 } from "./3_models";
 
 export abstract class ServerBlitzKitAPI4 extends ServerBlitzKitAPI3 {
   @Cache()
-  async mapDefinitions() {
+  async maps() {
     const mapDefinitions = MapDefinitions.create();
 
     for (const key in this.mapsYaml!.maps) {

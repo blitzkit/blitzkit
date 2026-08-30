@@ -13,7 +13,7 @@ import { Node } from "./components/Node";
 
 type Line = number[];
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export const XP_MULTIPLIERS = [1, 2, 3, 4, 5, 10];
 

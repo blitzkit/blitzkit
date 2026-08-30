@@ -6,13 +6,13 @@ import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { TankFilters } from "../../stores/tankFilters";
 import { TierList } from "../../stores/tierList";
-import { TankCardWrapper } from "../TankCardWrapper";
 import { TankCardSkeleton } from "../TankCardSkeleton";
+import { TankCardWrapper } from "../TankCardWrapper";
 import { TierListTile } from "./Tile";
 
 const [tankDefinitions, gameDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.gameDefinitions(),
+  api.tanks(),
+  api.game(),
 ]);
 
 const tanks = Object.values(tankDefinitions.tanks);

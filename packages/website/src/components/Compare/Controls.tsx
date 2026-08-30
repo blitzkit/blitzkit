@@ -15,7 +15,7 @@ interface ControlsProps {
   onAddTankDialogOpenChange: (open: boolean) => void;
 }
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function Controls({
   addTankDialogOpen,

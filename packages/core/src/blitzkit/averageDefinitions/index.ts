@@ -10,7 +10,7 @@ export interface AverageDefinitionsManifest {
   latest: number;
 }
 
-export async function fetchAverageDefinitions() {
+export async function fetchAverage() {
   return await fetchPB(staticAsset("averages.pb"), AverageDefinitions);
 }
 

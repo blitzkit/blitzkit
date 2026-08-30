@@ -15,7 +15,7 @@ import { Duel } from "../../../../stores/duel";
 import { ConsumablesManager } from "../../../ConsumablesManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const consumableDefinitions = await api.consumableDefinitions();
+const consumableDefinitions = await api.consumables();
 
 export function Consumables() {
   const protagonist = Duel.use((state) => state.protagonist);

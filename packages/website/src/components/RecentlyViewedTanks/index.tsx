@@ -11,7 +11,7 @@ import { TankCardWrapper } from "../TankCardWrapper";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function RecentlyViewedTanks() {
   const filters = TankFilters.use();

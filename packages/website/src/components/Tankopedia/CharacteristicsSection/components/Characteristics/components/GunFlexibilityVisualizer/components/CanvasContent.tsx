@@ -9,7 +9,7 @@ import {
 import { Duel } from "../../../../../../../../stores/duel";
 import { ModelChunk } from "./ModelChunk";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function CanvasContent() {
   const hullWrapper = useRef<Group>(null);

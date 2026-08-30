@@ -27,11 +27,14 @@ import {
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import type { extname, parse } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { BlitzKitAPI } from "../base";
 
 export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
   protected vfs: AbstractVFS;
+  protected parsePath?: typeof parse;
+  protected extname?: typeof extname;
 
   protected nationSlugDiscriminators = {
     china: "cn",
@@ -109,11 +112,18 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
   constructor(vfs: AbstractVFS) {
     super();
+
     this.vfs = vfs;
   }
 
   async init() {
     console.log("Initializing virtual file system...");
+
+    const path = await import("node:path");
+
+    this.extname = path.extname;
+    this.parsePath = path.parse;
+
     await this.vfs.init();
 
     console.log("Fetching game data...");

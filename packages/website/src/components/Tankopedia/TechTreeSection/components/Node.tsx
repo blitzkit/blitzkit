@@ -15,7 +15,7 @@ type NodeProps = MaybeSkeletonComponentProps & {
 };
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 

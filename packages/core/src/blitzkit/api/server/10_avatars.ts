@@ -1,12 +1,11 @@
 import { Avatar, fetchGlossary, Gallery } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
-import { extname } from "path";
 import { Cache } from "./0_base";
-import { ServerBlitzKitAPI9 } from "./9_gameDefinitions";
+import { ServerBlitzKitAPI9 } from "./9_game";
 
 export abstract class ServerBlitzKitAPI10 extends ServerBlitzKitAPI9 {
   @Cache()
-  async galleryDefinitions() {
+  async gallery() {
     const avatars: Record<string, { avatar: Avatar; url: string }> = {};
 
     await Promise.all(
@@ -34,7 +33,7 @@ export abstract class ServerBlitzKitAPI10 extends ServerBlitzKitAPI9 {
             avatars[key].avatar.name!.locales[supported.locale] =
               glossaryEntry.title;
           } else {
-            const extension = extname(glossaryEntry.image_url);
+            const extension = this.extname!(glossaryEntry.image_url);
 
             avatars[key] = {
               url: glossaryEntry.image_url,

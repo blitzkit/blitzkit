@@ -9,7 +9,7 @@ interface ProvisionsManagerProps {
   onChange?: (provisions: number[]) => void;
 }
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function ProvisionsManager({
   provisions,

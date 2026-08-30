@@ -8,7 +8,7 @@ interface CrewSkillManagerProps {
   onChange?: (skillLevels: Record<string, number>) => void;
 }
 
-const skillDefinitions = await api.skillDefinitions();
+const skillDefinitions = await api.skill();
 
 export function CrewSkillManager({
   skillLevels,

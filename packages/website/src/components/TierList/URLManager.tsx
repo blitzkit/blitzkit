@@ -3,7 +3,7 @@ import { api } from "../../core/blitzkit/api";
 import { generateTierListParams } from "../../core/blitzkit/generateTierListParams";
 import { TierList } from "../../stores/tierList";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function URLManager() {
   const rows = TierList.use((state) => state.rows);

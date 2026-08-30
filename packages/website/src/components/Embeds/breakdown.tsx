@@ -30,7 +30,7 @@ export const compositeStatsKeysOptions = compositeStatsKeys.map((value) => ({
 }));
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
 
   awaitableAverageDefinitions,
 ]);
