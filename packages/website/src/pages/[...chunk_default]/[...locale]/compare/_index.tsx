@@ -1,9 +1,9 @@
 import { createDefaultSkills } from "@blitzkit/core";
 import { useEffect, useMemo, useState } from "react";
+import { api } from "../../../../blitzkit/api";
 import { CompareTable } from "../../../../components/Compare/CompareTable";
 import { Controls } from "../../../../components/Compare/Controls";
 import { DamageWarning } from "../../../../components/DamageWarning";
-import { api } from "../../../../core/blitzkit/api";
 import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
 import { tankToCompareMember } from "../../../../core/blitzkit/tankToCompareMember";
 import {
@@ -23,7 +23,7 @@ const [
   api.models(),
   api.equipment(),
   api.provisions(),
-  api.skill(),
+  api.skills(),
   api.tanks(),
 ]);
 

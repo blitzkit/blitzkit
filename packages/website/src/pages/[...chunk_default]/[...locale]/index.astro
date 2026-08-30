@@ -2,6 +2,7 @@
 import { AstroSeo } from "@astrolib/seo";
 import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { AesonPlug } from "../../../components/AesonPlug";
 import HelpTranslate from "../../../components/HelpTranslate.astro";
 import HomeCosmetics from "../../../components/HomeCosmetics.astro";
@@ -10,7 +11,6 @@ import HomePlayers from "../../../components/HomePlayers.astro";
 import HomeTanks from "../../../components/HomeTanks.astro";
 import HomeTechnical from "../../../components/HomeTechnical.astro";
 import { tools, type Tool } from "../../../constants/tools";
-import { mixStaticPaths } from "../../../core/blitzkit/mixStaticPaths";
 import { getStrings } from "../../../core/i18n/getStrings";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../_index";
@@ -41,12 +41,10 @@ for (const id in tools) {
 }
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
-  return [
-    ...locales.supported
-      .filter(({ locale }) => locale !== locales.default)
-      .map(({ locale }) => ({ params: { locale }, props: { locale } })),
-    { params: { locale: undefined }, props: { locale: locales.default } },
-  ];
+  return locales.supported.map(({ locale }) => ({
+    props: { locale },
+    params: { locale: locale === locales.default ? undefined : locale },
+  }));
 });
 ---
 

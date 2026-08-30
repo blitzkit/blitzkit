@@ -1,6 +1,6 @@
 import { Flex, Table } from "@radix-ui/themes";
 import { useEffect, useRef } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 import { TierList } from "../../../stores/tierList";
 import { tierListRowElements } from "../Table/constants";
 import { TierListTile } from "../Tile";

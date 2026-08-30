@@ -1,5 +1,5 @@
 import { EquipmentDefinitions } from "@blitzkit/core";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 
 export { getStaticPaths } from "../_index";
 

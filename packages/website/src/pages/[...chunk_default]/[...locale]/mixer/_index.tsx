@@ -24,7 +24,7 @@ import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton"
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../../components/ScreenshotButton";
 import { TankSearch } from "../../../../components/TankSearch";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../blitzkit/api";
 import { curateMixer } from "../../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,

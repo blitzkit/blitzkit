@@ -12,7 +12,7 @@ import { uniq } from "lodash-es";
 import { memo, useMemo } from "react";
 import usePromise from "react-promise-suspense";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";

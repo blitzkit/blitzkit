@@ -1,6 +1,6 @@
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 

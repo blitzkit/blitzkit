@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../blitzkit/api";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { Pose, poseEvent } from "../../../../../../core/blitzkit/pose";
 import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";

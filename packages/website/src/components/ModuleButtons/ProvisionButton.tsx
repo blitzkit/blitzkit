@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
 import type { TankComponentButtonProps } from "./TankComponentButton";

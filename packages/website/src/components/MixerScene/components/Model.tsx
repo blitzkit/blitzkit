@@ -2,7 +2,7 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { useCallback, useEffect, useRef } from "react";
 import { Group, Vector2 } from "three";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,

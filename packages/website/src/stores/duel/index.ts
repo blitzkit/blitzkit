@@ -8,7 +8,7 @@ import {
   type TurretDefinition,
 } from "@blitzkit/core";
 import { Varuna } from "varuna";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 
 type EquipmentMatrixItem = -1 | 0 | 1;

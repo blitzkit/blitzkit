@@ -1,7 +1,7 @@
 import { ExternalLinkIcon, LoopIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useState } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { api } from "../../../../../core/blitzkit/api";
+import { api } from "../../../../../blitzkit/api";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";

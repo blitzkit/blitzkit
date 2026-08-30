@@ -1,7 +1,7 @@
 import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
 import { useEffect, useMemo, useRef } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";

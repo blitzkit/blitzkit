@@ -7,7 +7,7 @@ import {
   DEFAULT_PITCH_TRANSITION,
   applyPitchYawLimits,
 } from "../../../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../../blitzkit/api";
 import { hasEquipment } from "../../../../../../../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../../../../../../../core/blitzkit/modelTransform";
 import { Var } from "../../../../../../../core/radix/var";

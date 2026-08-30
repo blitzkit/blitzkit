@@ -1,16 +1,16 @@
 ---
 import "@radix-ui/colors/violet-dark.css";
-import { api } from "../../../../api/dynamic";
-import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
-import ColorScale from "../../../../components/ColorScale.astro";
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
+import { api } from "../../../../../blitzkit/api";
+import ColorScale from "../../../../../components/ColorScale.astro";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
-  const { list } = await api.tankList();
+  const tanks = await api.tanks();
 
-  return list.map((tank) => ({
+  return Object.values(tanks.tanks).map((tank) => ({
     params: { slug: tank.slug },
     props: { id: tank.id },
   }));

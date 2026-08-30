@@ -2,7 +2,7 @@ import { metaSortTank } from "@blitzkit/core";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { TankFilters } from "../../stores/tankFilters";
 import { TierList } from "../../stores/tierList";

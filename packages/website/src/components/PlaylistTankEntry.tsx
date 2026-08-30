@@ -5,7 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Checkbox, Flex, IconButton, Table, Text } from "@radix-ui/themes";
 import { memo } from "react";
-import { api } from "../core/blitzkit/api";
+import { api } from "../blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Playlist, type PlaylistEntry } from "../stores/playlist";
 import { TankRowHeaderCell } from "./TankRowHeaderCell";

@@ -3,7 +3,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 import { useLocale } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";

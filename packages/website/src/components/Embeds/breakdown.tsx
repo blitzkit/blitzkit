@@ -14,7 +14,7 @@ import { ContextMenu } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
 import { breakdownConfig } from "../../constants/embeds";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { EmbedBreakdown } from "../../stores/embedBreakdown";
 import { useEmbedStateCurry } from "../../stores/embedState/utilities";
 import { BreakdownEmbedCard, BreakdownEmbedWrapper } from "../TanksEmbed";

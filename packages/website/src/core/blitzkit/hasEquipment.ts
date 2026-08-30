@@ -1,5 +1,5 @@
 import type { EquipmentMatrix } from "../../stores/duel";
-import { api } from "./api";
+import { api } from "../../blitzkit/api";
 
 const equipmentDefinitions = await api.equipment();
 

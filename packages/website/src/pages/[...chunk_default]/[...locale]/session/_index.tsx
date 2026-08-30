@@ -38,7 +38,7 @@ import { StickyRowHeaderCell } from "../../../../components/StickyRowHeaderCell"
 import { StickyTableRoot } from "../../../../components/StickyTableRoot";
 import { TankRowHeaderCell } from "../../../../components/TankRowHeaderCell";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,

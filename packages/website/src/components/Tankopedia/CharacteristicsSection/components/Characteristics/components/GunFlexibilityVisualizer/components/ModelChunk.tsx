@@ -1,6 +1,6 @@
 import { mauveDark } from "@radix-ui/colors";
 import { LineBasicMaterial, MeshBasicMaterial } from "three";
-import { api } from "../../../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../../../blitzkit/api";
 import { jsxTree } from "../../../../../../../../core/blitzkit/jsxTree";
 import { useModel } from "../../../../../../../../hooks/useModel";
 import { Duel } from "../../../../../../../../stores/duel";

@@ -1,6 +1,6 @@
 import { Box } from "@radix-ui/themes";
 import { useEffect } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 import { Var } from "../../core/radix/var";
 import { Duel } from "../../stores/duel";

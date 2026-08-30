@@ -17,7 +17,7 @@ import {
 } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { App } from "../../stores/app";
 import { TankFilters, type CaseType } from "../../stores/tankFilters";

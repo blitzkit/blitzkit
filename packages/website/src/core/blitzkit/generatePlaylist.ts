@@ -7,7 +7,7 @@ import {
 import { App } from "../../stores/app";
 import { Playlist } from "../../stores/playlist";
 import { TankFilters } from "../../stores/tankFilters";
-import { api } from "./api";
+import { api } from "../../blitzkit/api";
 import { filterTanks } from "./filterTanks";
 
 const tankDefinitions = await api.tanks();

@@ -1,6 +1,6 @@
 import { isEqual } from "lodash-es";
 import { useMemo } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";

@@ -1,6 +1,6 @@
 import { alias } from "@blitzkit/core";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { Duel } from "../../stores/duel";
 

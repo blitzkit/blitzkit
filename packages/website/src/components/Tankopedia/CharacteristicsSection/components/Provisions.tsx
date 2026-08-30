@@ -1,6 +1,6 @@
 import { availableProvisions } from "@blitzkit/core";
 import { Button, Flex, Heading } from "@radix-ui/themes";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { ProvisionsManager } from "../../../ProvisionsManager";

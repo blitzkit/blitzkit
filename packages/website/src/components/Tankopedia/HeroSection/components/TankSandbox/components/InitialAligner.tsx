@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../blitzkit/api";
 import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
 import { Duel } from "../../../../../../stores/duel";
 

@@ -1,7 +1,7 @@
 import { alias, TankType, type TankDefinition } from "@blitzkit/core";
 import { uniq } from "lodash-es";
 import { type ReactNode } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useLocale } from "../../hooks/useLocale";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";

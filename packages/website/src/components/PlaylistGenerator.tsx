@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { api } from "../core/blitzkit/api";
+import { api } from "../blitzkit/api";
 import { filterTanks } from "../core/blitzkit/filterTanks";
 import { generatePlaylist } from "../core/blitzkit/generatePlaylist";
 import { useLocale } from "../hooks/useLocale";

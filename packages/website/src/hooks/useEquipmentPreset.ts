@@ -1,4 +1,4 @@
-import { api } from "../core/blitzkit/api";
+import { api } from "../blitzkit/api";
 
 const equipmentDefinitions = await api.equipment();
 

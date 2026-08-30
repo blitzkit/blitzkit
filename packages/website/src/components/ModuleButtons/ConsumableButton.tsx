@@ -1,7 +1,7 @@
 import { alias } from "@blitzkit/core";
 import { ClockIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Flex, Text } from "@radix-ui/themes";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { useDelta } from "../../hooks/useDelta";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";

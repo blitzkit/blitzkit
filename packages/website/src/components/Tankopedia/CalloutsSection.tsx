@@ -3,7 +3,7 @@ import { MinusCircledIcon } from "@radix-ui/react-icons";
 import { Callout, Flex } from "@radix-ui/themes";
 import { uniq } from "lodash-es";
 import { useEffect } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import { Duel } from "../../stores/duel";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { AesonPlug } from "../AesonPlug";

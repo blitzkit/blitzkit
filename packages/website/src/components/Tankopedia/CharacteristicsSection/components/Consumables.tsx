@@ -8,7 +8,7 @@ import {
   Popover,
   Text,
 } from "@radix-ui/themes";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../blitzkit/api";
 import { useEquipment } from "../../../../hooks/useEquipment";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";

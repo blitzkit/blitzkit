@@ -3,7 +3,7 @@ import { literals } from "@blitzkit/i18n";
 import { AccessibilityIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, Popover, Text } from "@radix-ui/themes";
 import { Fragment } from "react/jsx-runtime";
-import { api } from "../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../blitzkit/api";
 import { useEquipment } from "../../../../../../hooks/useEquipment";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";

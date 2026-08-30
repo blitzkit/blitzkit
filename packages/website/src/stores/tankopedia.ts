@@ -5,10 +5,10 @@ import {
 } from "@blitzkit/core";
 import type { Vector3 } from "three";
 import { Varuna } from "varuna";
+import { api } from "../blitzkit/api";
 import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
-import { api } from "../core/blitzkit/api";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -105,7 +105,7 @@ interface Tankopedia {
   statSearch?: string;
 }
 
-const skillDefinitions = await api.skill();
+const skillDefinitions = await api.skills();
 
 export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,

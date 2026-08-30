@@ -11,7 +11,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../blitzkit/api";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { Var } from "../../core/radix/var";
 import { useLocale } from "../../hooks/useLocale";
@@ -39,7 +39,7 @@ const [
   consumableDefinitions,
   provisionDefinitions,
 ] = await Promise.all([
-  api.skill(),
+  api.skills(),
   api.equipment(),
   api.consumables(),
   api.provisions(),

@@ -5,7 +5,7 @@ import {
   type TankDefinition,
 } from "@blitzkit/core";
 import { useMemo } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../blitzkit/api";
 import { resolveReload } from "../../../core/blitzkit/resolveReload";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";

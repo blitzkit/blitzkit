@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "../../blitzkit/api";
 
 const tankDefinitions = await api.tanks();
 const modelDefinitions = await api.models();
