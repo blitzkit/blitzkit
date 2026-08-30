@@ -4,7 +4,7 @@ import { api } from "../../../core/blitzkit/api";
 export { getStaticPaths } from "../_index";
 
 export async function GET() {
-  const definitions = await api.camouflage();
+  const definitions = await api.camouflages();
   const bytes = CamouflageDefinitions.encode(definitions).finish();
 
   return new Response(bytes);
