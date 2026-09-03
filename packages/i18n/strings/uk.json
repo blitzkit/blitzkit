@@ -572,6 +572,8 @@
             "shellRicochet": "Рикошет",
             "dpm": "DPM",
             "dpmEffective": "Effective at 60s",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) \u2014 at least 10 seconds between shots.",
             "shells": "Снаряди",
             "mostOptimalShellIndex": "Most optimal shell",
             "shellReloads": "Reloads",
