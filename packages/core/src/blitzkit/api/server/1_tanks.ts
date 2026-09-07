@@ -339,6 +339,17 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
           equalizer = { health, penetration, module_health, damage, armor };
         }
 
+        const blitzTankClass = tankTags.find(
+          (tag) => tag in this.blitzTankClassToBlitzkit,
+        );
+
+        if (blitzTankClass === undefined) {
+          throw new Error(`Unknown tank class for ${nation}:${tankKey}`);
+        }
+
+        const tankClass =
+          this.blitzTankClassToBlitzkit[blitzTankClass as BlitzTankClass];
+
         tankDefinitions.tanks[tankId] = {
           ancestors: [],
           successors: [],
@@ -368,7 +379,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
               ? TankType.TANK_TYPE_PREMIUM
               : TankType.TANK_TYPE_RESEARCHABLE,
           tier: tank.level,
-          class: this.blitzTankClassToBlitzkit[tankTags[0] as BlitzTankClass],
+          class: tankClass,
           testing: tankTags.includes("testTank"),
           deprecated: tankTags.includes("deprecated"),
           price: tankPrice,
