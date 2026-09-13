@@ -52,6 +52,9 @@
         "ts-deepmerge": "^7.0.3",
       },
     },
+    "packages/protos": {
+      "name": "@blitzkit/protos",
+    },
     "packages/scripts": {
       "name": "@blitzkit/scripts",
       "dependencies": {
@@ -399,6 +402,8 @@
     "@blitzkit/core": ["@blitzkit/core@workspace:packages/core"],
 
     "@blitzkit/i18n": ["@blitzkit/i18n@workspace:packages/i18n"],
+
+    "@blitzkit/protos": ["@blitzkit/protos@workspace:packages/protos"],
 
     "@blitzkit/scripts": ["@blitzkit/scripts@workspace:packages/scripts"],
 
