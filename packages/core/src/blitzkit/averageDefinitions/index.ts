@@ -1,6 +1,6 @@
 import { staticAsset } from "@blitzkit/core";
 import { fetchPB } from "../../protobuf";
-import { AverageDefinitions } from "../../protos";
+import { AverageDefinitions } from "../../../../protos/src/blitzkit";
 
 export interface AverageDefinitionsManifest {
   version: 1;

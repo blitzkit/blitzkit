@@ -1,4 +1,4 @@
-import { GunDefinition, ProvisionDefinitions, TankDefinition } from "../protos";
+import { GunDefinition, ProvisionDefinitions, TankDefinition } from "../../../protos/src/blitzkit";
 import { checkConsumableProvisionInclusivity } from "./checkConsumableProvisionInclusivity";
 
 export function availableProvisions(

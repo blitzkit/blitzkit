@@ -1,5 +1,5 @@
 import { forEachRight } from 'lodash-es';
-import { GunDefinition, TurretDefinition } from '../protos';
+import { GunDefinition, TurretDefinition } from '../../../protos/src/blitzkit';
 
 export function uniqueGuns(turrets: TurretDefinition[]) {
   const gunIds = new Set<number>();

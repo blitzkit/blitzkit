@@ -1,77 +1,43 @@
-import { exec as execSync } from "child_process";
-import { existsSync } from "fs";
-import { readdir, rm } from "fs/promises";
-import { promisify } from "util";
+import { execFile } from "child_process";
+import { mkdir, readdir, rm, writeFile } from "fs/promises";
 
-const MAX_COMMAND_LENGTH = 2 ** 11;
-const TS_PROTO_EXECUTABLE_LOCATIONS = [
-  "./node_modules/.bin/protoc-gen-ts_proto",
-  "../../node_modules/.bin/protoc-gen-ts_proto",
-];
+const TEMP = "../../temp";
+const TS_PROTO_EXECUTABLE = "./node_modules/.bin/protoc-gen-ts_proto";
+const ROOTS = ["../protos/src/blitzkit"];
 
-const roots = [
-  "../../packages/core/src/protos",
-  "../../packages/closed/protos",
-];
+for (const root of ROOTS) {
+  await mkdir(TEMP, { recursive: true });
 
-const exec = promisify(execSync);
+  let args = "";
 
-let tsProtoExecutableLocation: string | undefined = undefined;
+  args += `--plugin=${TS_PROTO_EXECUTABLE}\n`;
+  args += "--ts_proto_opt=esModuleInterop=true\n";
+  args += "--ts_proto_opt=oneof=unions-value\n";
+  args += "--ts_proto_opt=unrecognizedEnum=false\n";
+  args += "--ts_proto_opt=snakeToCamel=false\n";
+  args += `--ts_proto_out=${root}\n`;
 
-for (const location of TS_PROTO_EXECUTABLE_LOCATIONS) {
-  if (existsSync(location)) {
-    tsProtoExecutableLocation = location;
-    break;
-  } else if (existsSync(`${location}.exe`)) {
-    tsProtoExecutableLocation = `${location}.exe`;
-    break;
+  for (const dir of await readdir(root)) {
+    args += `-I=${root}/${dir}\n`;
   }
-}
 
-if (!tsProtoExecutableLocation) {
-  throw new Error(
-    `Could not find ts-proto executable. Checked locations: ${TS_PROTO_EXECUTABLE_LOCATIONS.join(
-      ", ",
-    )}`,
-  );
-}
-
-for (const root of roots) {
-  const filesRaw = await readdir(`${root}`);
+  const filesRaw = await readdir(`${root}`, { recursive: true });
   const files: string[] = [];
 
   for (const file of filesRaw) {
-    if (file.endsWith(".proto")) files.push(file);
+    if (file.endsWith(".proto")) {
+      files.push(file);
+      args += `${root}/${file}\n`;
+    }
+
     if (file.endsWith(".ts")) await rm(`${root}/${file}`);
   }
 
-  while (files.length > 0) {
-    let command = [
-      "protoc",
-      `--plugin=${tsProtoExecutableLocation}`,
-      "--ts_proto_opt=esModuleInterop=true",
-      "--ts_proto_opt=oneof=unions-value",
-      // "--ts_proto_opt=removeEnumPrefix=true",
-      "--ts_proto_opt=unrecognizedEnum=false",
-      "--ts_proto_opt=snakeToCamel=false",
-      `--ts_proto_out=${root}`,
-      `-I=${root}`,
-    ].join(" ");
+  await writeFile(`${TEMP}/protoc.txt`, args);
 
-    while (true) {
-      if (files.length === 0) break;
-
-      const file = files.at(-1);
-      const newLine = ` ${root}/${file}`;
-
-      if (command.length + newLine.length < MAX_COMMAND_LENGTH) {
-        command += newLine;
-        files.pop();
-      } else {
-        break;
-      }
-    }
-
-    await exec(command);
-  }
+  execFile("protoc", [`@${TEMP}/protoc.txt`], (error, stdout, stderr) => {
+    if (error) throw new Error(error.message);
+    if (stderr) console.error(stderr);
+    if (stdout) console.log(stdout);
+  });
 }
