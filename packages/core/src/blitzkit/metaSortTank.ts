@@ -1,5 +1,5 @@
+import { GameDefinitions, TankDefinition, TankType } from "@blitzkit/protos";
 import { TANK_CLASSES } from "../blitz/constants";
-import { GameDefinitions, TankDefinition, TankType } from "../protos";
 
 const treeTypeOrder = [
   TankType.TANK_TYPE_RESEARCHABLE,

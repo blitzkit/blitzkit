@@ -1,5 +1,5 @@
+import { CrewType, ShellType, TankClass, TankType } from "@blitzkit/protos";
 import { times } from "lodash-es";
-import { CrewType, ShellType, TankClass, TankType } from "../../protos";
 
 export const SHELL_NAMES: Record<ShellType, string> = {
   [ShellType.SHELL_TYPE_AP]: "AP",

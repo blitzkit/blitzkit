@@ -1,3 +1,4 @@
+import { ProvisionConsumableScript } from "@blitzkit/core/src/types/provisionConsumableScript";
 import { ConsumablesVehicleFilter } from "./consumablesVehicleFilter";
 
 export interface ConsumablesCommon {
@@ -12,13 +13,6 @@ export interface ConsumablesCommon {
       include: { vehicle: ConsumablesVehicleFilter; nations?: string };
       exclude?: { vehicle: ConsumablesVehicleFilter; nations?: string };
     };
-    script: {
-      "#text": string;
-      automatic?: boolean;
-      cooldown: number;
-      duration?: number;
-      shotEffect?: string;
-      bonusValues?: { [key: string]: number };
-    } & Record<string, string>;
+    script: ProvisionConsumableScript;
   };
 }

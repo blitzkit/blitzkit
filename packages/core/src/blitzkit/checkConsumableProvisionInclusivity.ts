@@ -4,7 +4,7 @@ import {
   GunDefinition,
   Provision,
   TankDefinition,
-} from "../protos";
+} from "@blitzkit/protos";
 
 export function checkConsumableProvisionInclusivity(
   consumableProvision: Consumable | Provision,

@@ -1,7 +1,7 @@
 import { BlitzKitAPI } from "@blitzkit/core/src/blitzkit/api/base";
 import locales from "@blitzkit/i18n/locales.json";
+import { I18nString } from "@blitzkit/protos";
 import { deburr, times } from "lodash-es";
-import { I18nString } from "../protos";
 
 export async function fetchTankNames(api: BlitzKitAPI) {
   const [tankDefinitions, camouflageDefinitions] = await Promise.all([

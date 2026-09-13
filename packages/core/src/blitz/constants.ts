@@ -1,4 +1,4 @@
-import { TankClass, TankType } from "../protos";
+import { TankClass, TankType } from "@blitzkit/protos";
 import type { BlitzStats } from "../statistics";
 
 export const TANK_TYPES = [

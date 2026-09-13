@@ -1,5 +1,4 @@
 import { alias } from "@blitzkit/core";
-import { fetchPB } from "../../protobuf";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
@@ -11,7 +10,8 @@ import {
   ProvisionDefinitions,
   SkillDefinitions,
   TankDefinitions,
-} from "../../protos";
+} from "@blitzkit/protos";
+import { fetchPB } from "../../protobuf";
 import { BlitzKitAPI } from "./base";
 
 export class ClientBlitzKitAPI extends BlitzKitAPI {
