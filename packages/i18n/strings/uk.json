@@ -501,7 +501,7 @@
         "tech_tree": {
           "title": "Звичайний",
           "battle": "1 бій",
-          "battles": "{count} battles",
+          "battles": "{count} битви",
           "route": "Route {index} of {count}"
         },
         "game_modes": {
