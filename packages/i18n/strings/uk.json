@@ -13,7 +13,7 @@
       "hp": "{value}од",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}град/c",
+      "deg_s": "{value}°/c",
       "plus": "+{value}"
     },
     "gun_types": {
@@ -740,7 +740,7 @@
         }
       },
       "gallery": {
-        "name": "Gallery",
+        "name": "Галерея",
         "button": "Browse all",
         "description": "Blitz player avatars",
         "seo_description": "Усі World of Tanks Blitz аватари гравців",
