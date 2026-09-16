@@ -5,6 +5,6 @@ export type ProvisionConsumableScript = {
   automatic?: boolean;
 
   bonusValues?: Record<string, number>;
-  attributes?: Record<string, string>;
+  attributes?: Record<string, number>;
   shotEffect?: string;
 } & Record<string, number>;

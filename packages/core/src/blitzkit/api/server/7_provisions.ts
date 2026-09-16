@@ -106,41 +106,222 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
         }
       }
 
-      function applyBonuses(map: Record<string, string>) {
+      function applyCanonicalBonuses(map: Record<string, string>) {
         for (const key in map) {
           entry.bonuses[key] = provision.script.bonusValues![map[key]];
         }
       }
 
+      function applyRootBonuses(map: Record<string, string>) {
+        for (const key in map) {
+          entry.bonuses[key] = provision.script[map[key]];
+        }
+      }
+
+      function applyAttributeBonuses(map: Record<string, string>) {
+        for (const key in map) {
+          if (!(map[key] in provision.script.attributes!)) continue;
+          entry.bonuses[key] = provision.script.attributes![map[key]];
+        }
+      }
+
       switch (provision.script["#text"]) {
         case "Stimulator":
-          applyBonuses({ crew_level_increase: "crewLevelIncrease" });
+          applyCanonicalBonuses({ crew_level_increase: "crewLevelIncrease" });
           break;
 
         case "AntiHighExplosive":
-          applyBonuses({ anti_high_explosive_factor: "factor" });
+          applyCanonicalBonuses({ anti_high_explosive_factor: "factor" });
           break;
 
         case "Fuel":
-          applyBonuses({
+          applyCanonicalBonuses({
             engine_power_increase: "enginePowerIncrease",
             turret_rotation_speed_increase: "turretRotationSpeedIncrease",
           });
           break;
 
         case "SafetySet":
-          applyBonuses({
+          applyCanonicalBonuses({
             crew_chance_to_hit_factor: "crewChanceToHitFactor",
             repair_speed_increase: "repairSpeedIncrease",
             fire_protection_increase: "fireProtectionIncrease",
           });
           break;
 
-        default:
-          const message = `Unhandled script type ${provision.script["#text"]}`;
+        case "SmallHPStock":
+          applyRootBonuses({ hp_stock_percent: "hpStockPercent" });
+          break;
 
-          console.log(message, provision.script);
-          throw new Error(message);
+        case "GearOil":
+          applyCanonicalBonuses({
+            forward_speed_limit_bias: "fwdSpeedLimitBias",
+            backward_speed_limit_bias: "bkwdSpeedLimitBias",
+            engine_power_increase: "enginePowerIncrease",
+          });
+          break;
+
+        case "GunPowder":
+          applyCanonicalBonuses({
+            projectile_speed_factor: "projectileSpeedFactor",
+          });
+          break;
+
+        case "AttributesModifier":
+          applyAttributeBonuses({
+            firm_ground_passability_increase: "firmGroundPassabilityIncrease",
+            medium_ground_passability_increase:
+              "mediumGroundPassabilityIncrease",
+            repair_speed_factor: "repairSpeedFactor",
+
+            common_damage_factor: "commonDamageFactor",
+            gun_reload_factor: "gunReloadFactor",
+            pump_gun_reload_factor: "pumpGunReloadFactor",
+            gun_aiming_factor: "gunAimingFactor",
+
+            engine_power_factor: "enginePowerFactor",
+            speed_limits_factor: "speedLimitsFactor",
+            chassis_health_factor: "chassisHealthFactor",
+          });
+          break;
+
+        case "LifestealHeal":
+          applyCanonicalBonuses({
+            life_steal_factor: "lifestealFactor",
+            life_steal_random_factor: "lifestealRandomFactor",
+            kill_heal_factor: "killHealFactor",
+            heal_factor: "healFactor",
+            heal_random_factor: "healRandomFactor",
+          });
+          break;
+
+        case "RammingDamage":
+          applyCanonicalBonuses({
+            ramming_damage_factor: "rammingDamageFactor",
+            dealing_ramming_damage_factor: "dealingRammingDamageFactor",
+          });
+          break;
+
+        case "AllyBuff":
+          applyCanonicalBonuses({
+            gun_reloading_bonus: "gunReloadingBonus",
+            gun_aiming_time_bonus: "gunAimingTimeBonus",
+            vision_radius_bonus: "visionRadiusBonus",
+          });
+
+          applyRootBonuses({
+            range: "range",
+            max_bonus_sources: "maxBonusSources",
+          });
+          break;
+
+        case "Stealth":
+          applyRootBonuses({
+            sixth_sense_delay: "sixthSenseDelay",
+            stop_observing_delay_factor: "stopObservingDelayFactor",
+          });
+          break;
+
+        case "Revenge":
+          applyRootBonuses({
+            revenge_damage_percentage: "revengeDamagePercentage",
+            effect_duration: "effectDuration",
+          });
+          break;
+
+        case "ComeBackKit":
+          applyRootBonuses({
+            time_for_come_back: "timeForComeBack",
+            simple_mode: "simpleMode",
+          });
+          break;
+
+        case "EngineAndSpeedBoost":
+          applyCanonicalBonuses({
+            engine_power_ability_factor: "enginePowerAbilityFactor",
+            speed_limit_ability_bonus: "speedLimitAbilityBonus",
+          });
+          break;
+
+        case "EnemyReloadTime":
+          break;
+
+        case "Duplet":
+          applyCanonicalBonuses({
+            shot_dispersion_angle_factor: "shotDispersionAngleFactor",
+            aiming_time_factor: "aimingTimeFactor",
+            time_between_shots: "timeBetweenShots",
+          });
+          break;
+
+        case "Fortune":
+          applyCanonicalBonuses({
+            increased_damage_chance: "increasedDamageChance",
+            increase_damage_factor: "increaseDamageFactor",
+          });
+          break;
+
+        case "VampiricCurse":
+          applyRootBonuses({
+            curse_strength: "curseStrength",
+            curse_reduction: "curseReduction",
+            curse_heal: "curseHeal",
+          });
+          break;
+
+        case "VampiricDeath":
+          applyRootBonuses({
+            explode_damage_percent: "explodeDamagePercent",
+            range: "range",
+          });
+          break;
+
+        case "PermanentDamageShield":
+          applyRootBonuses({
+            damage_reduction_percent: "damageReductionPercent",
+          });
+          break;
+
+        case "EngineAndSpeedBoost":
+          applyCanonicalBonuses({
+            engine_power_ability_factor: "enginePowerAbilityFactor",
+            speed_limit_ability_bonus: "speedLimitAbilityBonus",
+          });
+          break;
+
+        case "BigBoss":
+          applyCanonicalBonuses({
+            gun_reload_factor: "gunReloadFactor",
+            common_damage_factor: "commonDamageFactor",
+            engine_power_factor: "enginePowerFactor",
+            speed_limits_factor: "speedLimitsFactor",
+            max_health_percent_bonus: "maxHealthPercentBonus",
+            max_statics_damage_percent: "maxStaticsDamagePercent",
+          });
+
+          // These are nested structures and need their own handling
+          // rather than a simple key -> key mapping.
+          break;
+
+        case "VampiricBoost":
+          // Nested `respawns` structure; needs dedicated handling.
+          break;
+
+        case "ZombieMark":
+          applyAttributeBonuses({
+            dealing_ramming_damage_factor: "dealingRammingDamageFactor",
+            ramming_damage_factor: "rammingDamageFactor",
+            engine_power_factor: "enginePowerFactor",
+            speed_limits_factor: "speedLimitsFactor",
+            common_damage_factor: "commonDamageFactor",
+          });
+
+          // Nested respawnBoost structure.
+          break;
+
+        default:
+          console.warn(`Unhandled script type ${provision.script["#text"]}`);
+          console.dir(provision.script, { depth: null, colors: true });
       }
     });
 
