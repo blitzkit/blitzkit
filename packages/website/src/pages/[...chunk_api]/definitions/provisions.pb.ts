@@ -5,6 +5,9 @@ export { getStaticPaths } from "../_index";
 
 export async function GET() {
   const definitions = await api.provisions();
+
+  return Response.json(definitions);
+
   const bytes = ProvisionDefinitions.encode(definitions).finish();
 
   return new Response(bytes);

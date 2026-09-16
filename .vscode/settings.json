@@ -254,5 +254,8 @@
     "youtubers",
     "zoomable"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.enabledFileTypes": {
+    "proto": true
+  }
 }

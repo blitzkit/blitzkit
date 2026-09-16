@@ -12,13 +12,13 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
     const provisionDefinitions = ProvisionDefinitions.create();
 
     Object.entries(this.provisionsCommon).forEach(([, provision]) => {
-      const entry: Provision = {
+      const entry = Provision.create({
         id: provision.id,
         exclude: [],
         include: [],
         game_mode_exclusive: "gameModeFilter" in provision,
         name: this.getString(provision.userString),
-      };
+      });
       provisionDefinitions.provisions[provision.id] = entry;
 
       const includeRaw = provision.vehicleFilter?.include.vehicle;
@@ -106,9 +106,41 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
         }
       }
 
-      if (provision.script.bonusValues?.crewLevelIncrease !== undefined) {
-        provisionDefinitions.provisions[provision.id].crew =
-          provision.script.bonusValues?.crewLevelIncrease;
+      function applyBonuses(map: Record<string, string>) {
+        for (const key in map) {
+          entry.bonuses[key] = provision.script.bonusValues![map[key]];
+        }
+      }
+
+      switch (provision.script["#text"]) {
+        case "Stimulator":
+          applyBonuses({ crew_level_increase: "crewLevelIncrease" });
+          break;
+
+        case "AntiHighExplosive":
+          applyBonuses({ anti_high_explosive_factor: "factor" });
+          break;
+
+        case "Fuel":
+          applyBonuses({
+            engine_power_increase: "enginePowerIncrease",
+            turret_rotation_speed_increase: "turretRotationSpeedIncrease",
+          });
+          break;
+
+        case "SafetySet":
+          applyBonuses({
+            crew_chance_to_hit_factor: "crewChanceToHitFactor",
+            repair_speed_increase: "repairSpeedIncrease",
+            fire_protection_increase: "fireProtectionIncrease",
+          });
+          break;
+
+        default:
+          const message = `Unhandled script type ${provision.script["#text"]}`;
+
+          console.log(message, provision.script);
+          throw new Error(message);
       }
     });
 

@@ -10,10 +10,14 @@ message ProvisionDefinitions {
 }
 
 message Provision {
+  reserved 3; // crew
+
   required uint32               id                  = 1;
   required I18nString           name                = 2;
-  optional float                crew                = 3;
   required bool                 game_mode_exclusive = 5;
   repeated ConsumableTankFilter include             = 6;
   repeated ConsumableTankFilter exclude             = 7;
+
+  map<string, float>  bonuses = 8;
+  map<string, string> effects = 9;
 }
