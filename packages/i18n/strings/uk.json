@@ -37,8 +37,8 @@
       "d_1": "Вчора"
     },
     "branches": {
-      "beta": "Beta",
-      "development": "Development",
+      "beta": "Бета",
+      "development": "Розробка",
       "opentest": "Відкритий тест",
       "preview": "Preview",
       "production": "Production"
@@ -505,7 +505,7 @@
           "route": "Route {index} of {count}"
         },
         "game_modes": {
-          "title": "Game mode abilities"
+          "title": "Здібності ігрового режиму"
         },
         "review": {
           "title": "Review videos",
@@ -626,7 +626,7 @@
             "camouflageShootingStill": "Нерухомо",
             "camouflageShootingMoving": "У русі",
             "camouflageCaughtOnFire": "Caught on fire",
-            "width": "Width",
+            "width": "Ширина",
             "height": "Height",
             "length": "Length",
             "volume": "Volume",
@@ -843,7 +843,7 @@
           "breakdown": {
             "name": "Breakdown",
             "options": {
-              "width": "Width",
+              "width": "Ширина",
               "height": "Height",
               "showTotal": "Show total",
               "listGap": "List gap",
