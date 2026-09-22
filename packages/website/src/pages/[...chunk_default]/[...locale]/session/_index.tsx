@@ -90,15 +90,19 @@ function Content() {
       session.tracking && tankStatsB
         ? deltaTankStats(session.player.stats, tankStatsB)
             .sort((a, b) => b.last_battle_time - a.last_battle_time)
-            .map((entry) => {
+            .flatMap((entry) => {
               const tank = tankDefinitions.tanks[entry.tank_id];
+              if (!tank) return [];
+
               const average = averageDefinitions.averages[tank.id];
+              if (!average?.mu) return [];
+
               const composite = compositeStats(
                 { ...entry.all, battle_life_time: entry.battle_life_time },
-                average?.mu!,
+                average.mu,
               );
 
-              return { tank, composite };
+              return [{ tank, composite }];
             })
         : undefined,
     [session.tracking && session.player, tankStatsB],
