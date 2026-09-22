@@ -1,11 +1,7 @@
 import {
   createDefaultSkills,
-  EngineDefinition,
-  GunDefinition,
   ShellDefinition,
   TankDefinition,
-  TrackDefinition,
-  TurretDefinition,
   type ModelDefinition,
 } from "@blitzkit/core";
 import type { Vector3 } from "three";
@@ -14,8 +10,10 @@ import { api } from "../blitzkit/api";
 import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
-import { createTankState } from "../tankopedia/createTankState";
-import type { EquipmentMatrix } from "./duel";
+import {
+  createTankState,
+  type EquipmentMatrix,
+} from "../tankopedia/createTankState";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -84,14 +82,15 @@ export enum TankopediaRelativeAgainst {
 }
 
 export interface TankState {
-  tank: TankDefinition;
-  model: ModelDefinition;
+  tank: number;
 
-  engine: EngineDefinition;
-  turret: TurretDefinition;
-  gun: GunDefinition;
-  shell: ShellDefinition;
-  track: TrackDefinition;
+  engine: number;
+  turret: number;
+  gun: number;
+  shell: number;
+  track: number;
+
+  model: ModelDefinition;
 
   equipment_matrix: EquipmentMatrix;
 

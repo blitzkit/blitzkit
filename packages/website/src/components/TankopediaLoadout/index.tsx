@@ -1,3 +1,4 @@
+import { useProtagonist } from "../../hooks/useProtagonist";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 
 interface TankopediaLoadoutProps {
