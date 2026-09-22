@@ -1,4 +1,6 @@
 import { useProtagonist } from "../../hooks/useProtagonist";
+import { useStrings } from "../../hooks/useStrings";
+import { Tankopedia } from "../../stores/tankopedia";
 import { hasUpgrades } from "../../tankopedia/hasUpgrades";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 

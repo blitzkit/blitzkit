@@ -1,4 +1,5 @@
 import { alias } from "@blitzkit/core";
+import { BlitzKitStrings } from "@blitzkit/i18n";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
@@ -11,11 +12,12 @@ import {
   SkillDefinitions,
   TankDefinitions,
 } from "@blitzkit/protos";
-import { fetchPB } from "../../protobuf";
+import { fetchPB } from "../../api";
+import { fetchJSON } from "../../api/fetchJSON";
 import { BlitzScripts } from "../../types/blitzScripts";
-import { BlitzKitAPI } from "./base";
+import { AbstractBlitzKitAPI } from "./abstract";
 
-export class ClientBlitzKitAPI extends BlitzKitAPI {
+export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
   game() {
     return fetchPB(alias("api", "/definitions/game.pb"), GameDefinitions);
   }
@@ -68,9 +70,11 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
     return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
   }
 
-  async scripts() {
-    const response = await fetch(alias("api", "/definitions/scripts.json"));
-    const json = await response.json();
-    return json as BlitzScripts;
+  scripts() {
+    return fetchJSON<BlitzScripts>(alias("api", "/definitions/scripts.json"));
+  }
+
+  strings(locale: string) {
+    return fetchJSON<BlitzKitStrings>(alias("api", `/strings/${locale}.json`));
   }
 }

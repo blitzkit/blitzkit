@@ -25,13 +25,12 @@ import {
   VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
-import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import type { extname, parse } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { BlitzKitAPI } from "../base";
+import { AbstractBlitzKitAPI } from "../abstract";
 
-export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
+export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
   protected vfs: AbstractVFS;
   protected parsePath?: typeof parse;
   protected extname?: typeof extname;
@@ -171,8 +170,8 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
     let fetchedLocalizations = 0;
     await Promise.all(
-      locales.supported.map(async ({ locale }) => {
-        const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
+      locales.supported.map(async (locale) => {
+        const blitzLocale = locale.variant_blitz_cdn ?? locale.locale;
         const cache = await fetch(
           `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
         )
@@ -182,7 +181,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
           `Data/Strings/${blitzLocale}.yaml`,
         );
 
-        this.stringsI18n[locale] = {
+        this.stringsI18n[locale.locale] = {
           ...cache,
           ...preInstalled,
         };

@@ -1,4 +1,4 @@
-import type { MessageFns } from '../../../protos/src/blitzkit';
+import type { MessageFns } from "@blitzkit/protos/src/blitzkit";
 
 export async function fetchPB<Type>(url: string, message: MessageFns<Type>) {
   const response = await fetch(url);

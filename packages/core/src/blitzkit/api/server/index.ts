@@ -1,3 +1,3 @@
-import { ServerBlitzKitAPI11 } from "./11_scripts";
+import { ServerBlitzKitAPI12 } from "./12_strings";
 
-export class ServerBlitzKitAPI extends ServerBlitzKitAPI11 {}
+export class ServerBlitzKitAPI extends ServerBlitzKitAPI12 {}

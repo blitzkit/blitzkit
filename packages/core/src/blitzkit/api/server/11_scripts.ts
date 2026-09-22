@@ -1,9 +1,11 @@
 import { ConsumablesCommon, OptionalDevices } from "../../../types";
 import { BlitzScripts } from "../../../types/blitzScripts";
 import { AbstractVFS } from "../../vfs";
+import { Cache } from "./0_base";
 import { ServerBlitzKitAPI10 } from "./10_avatars";
 
 export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
+  @Cache()
   async scripts() {
     const scripts: BlitzScripts = {
       consumables: {},

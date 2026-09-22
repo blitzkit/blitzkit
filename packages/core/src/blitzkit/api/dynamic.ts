@@ -1,7 +1,7 @@
-import { AbstractVFS, BlitzKitAPI } from "@blitzkit/core";
+import { AbstractBlitzKitAPI, AbstractVFS } from "@blitzkit/core";
 
 export async function createDynamicAPI(vfs: () => Promise<AbstractVFS>) {
-  let _api: BlitzKitAPI;
+  let _api: AbstractBlitzKitAPI;
 
   if (import.meta.env.SSR) {
     const { ServerBlitzKitAPI } = await import(
