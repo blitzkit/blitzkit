@@ -17,7 +17,4 @@ message Provision {
   required bool                 game_mode_exclusive = 5;
   repeated ConsumableTankFilter include             = 6;
   repeated ConsumableTankFilter exclude             = 7;
-
-  map<string, float>  bonuses = 8;
-  map<string, string> effects = 9;
 }

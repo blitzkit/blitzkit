@@ -4,7 +4,7 @@ import { ServerBlitzKitAPI4 } from "./4_maps";
 
 export abstract class ServerBlitzKitAPI5 extends ServerBlitzKitAPI4 {
   @Cache()
-  async equipments() {
+  async equipment() {
     const equipmentDefinitions = EquipmentDefinitions.create();
 
     Object.entries(this.optionalDevices!.root).forEach(

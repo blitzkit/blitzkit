@@ -1,5 +1,10 @@
-import { GunDefinition, ProvisionDefinitions, TankDefinition } from '../protos';
-import { availableProvisions } from './availableProvisions';
+import {
+  GunDefinition,
+  ProvisionDefinitions,
+  TankDefinition,
+} from "@blitzkit/protos";
+import { BlitzScripts } from "../types/blitzScripts";
+import { availableProvisions } from "./availableProvisions";
 
 const PROVISION_PREFERENCES = [
   19, // improved fuel
@@ -14,9 +19,10 @@ function infinityFallback(value: number) {
 export function createDefaultProvisions(
   tank: TankDefinition,
   gun: GunDefinition,
-  provisionDefinitions: ProvisionDefinitions,
+  provisions: ProvisionDefinitions,
+  scripts: BlitzScripts,
 ) {
-  const provisionsList = availableProvisions(tank, gun, provisionDefinitions);
+  const provisionsList = availableProvisions(tank, gun, provisions);
 
   return provisionsList
     .sort(
@@ -24,7 +30,11 @@ export function createDefaultProvisions(
         infinityFallback(PROVISION_PREFERENCES.indexOf(a.id)) -
         infinityFallback(PROVISION_PREFERENCES.indexOf(b.id)),
     )
-    .sort((a, b) => (b.crew ?? 0) - (a.crew ?? 0))
+    .sort(
+      (a, b) =>
+        (scripts.provisions[b.id].bonusValues?.crewLevelIncrease ?? 0) -
+        (scripts.provisions[a.id].bonusValues?.crewLevelIncrease ?? 0),
+    )
     .slice(0, tank.max_provisions)
     .map(({ id }) => id);
 }

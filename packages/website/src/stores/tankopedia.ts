@@ -1,6 +1,11 @@
 import {
   createDefaultSkills,
+  EngineDefinition,
+  GunDefinition,
   ShellDefinition,
+  TankDefinition,
+  TrackDefinition,
+  TurretDefinition,
   type ModelDefinition,
 } from "@blitzkit/core";
 import type { Vector3 } from "three";
@@ -9,6 +14,8 @@ import { api } from "../blitzkit/api";
 import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
+import { createTankState } from "../tankopedia/createTankState";
+import type { EquipmentMatrix } from "./duel";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -76,13 +83,34 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
+export interface TankState {
+  tank: TankDefinition;
+  model: ModelDefinition;
+
+  engine: EngineDefinition;
+  turret: TurretDefinition;
+  gun: GunDefinition;
+  shell: ShellDefinition;
+  track: TrackDefinition;
+
+  equipment_matrix: EquipmentMatrix;
+
+  consumables: number[];
+  provisions: number[];
+  camouflage: boolean;
+  cooldown_booster: number;
+  assault_distance: number;
+}
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
+
+  protagonist: TankState;
+
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
-  model: ModelDefinition;
   editStatic: boolean;
   highlightArmor?: {
     editingPlate: boolean;
@@ -105,15 +133,19 @@ interface Tankopedia {
   statSearch?: string;
 }
 
-const skillDefinitions = await api.skills();
+const skills = await api.skills();
+const models = await api.models();
 
-export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
+export const Tankopedia = new Varuna<Tankopedia, TankDefinition>((tank) => ({
   disturbed: false,
   revealed: false,
+
+  protagonist: createTankState(tank),
+  model: models.models[tank.id],
+
   relativeAgainst: TankopediaRelativeAgainst.Class,
   editStatic: false,
-  skills: createDefaultSkills(skillDefinitions),
-  model,
+  skills: createDefaultSkills(skills),
   xpMultiplier: 1,
   requestedDisplay: TankopediaDisplay.Model,
   display: TankopediaDisplay.Model,

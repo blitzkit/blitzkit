@@ -4,7 +4,6 @@ import { computeCharacteristics } from "../../../../../blitzkit/computeCharacter
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
-import { useEquipment } from "../../../../../hooks/useEquipment";
 import { Tankopedia } from "../../../../../stores/tankopedia";
 import styles from "./_index.module.css";
 
@@ -19,7 +18,7 @@ export const Page = withErrorWrapper(
     Tankopedia.useInitialization(protagonistTank);
 
     const protagonist = Tankopedia.use((state) => state.protagonist);
-    const protagonistEquipment = useEquipment(protagonistTank.tank!);
+    // const protagonistEquipment = useEquipment(protagonistTank.tank!);
 
     const characteristics = useMemo(
       () => computeCharacteristics(),

@@ -11,8 +11,6 @@ message ConsumableDefinitions {
 message Consumable {
   required uint32               id                  = 1;
   required I18nString           name                = 2;
-  required uint32               cooldown            = 3;
-  optional float                duration            = 4;
   required bool                 game_mode_exclusive = 5;
   repeated ConsumableTankFilter include             = 6;
   repeated ConsumableTankFilter exclude             = 7;

@@ -53,7 +53,7 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
     return fetchPB(alias("api", "/definitions/skills.pb"), SkillDefinitions);
   }
 
-  equipments() {
+  equipment() {
     return fetchPB(
       alias("api", "/definitions/equipment.pb"),
       EquipmentDefinitions,

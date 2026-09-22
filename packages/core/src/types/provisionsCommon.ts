@@ -1,4 +1,4 @@
-import { ProvisionConsumableScript } from "@blitzkit/core/src/types/provisionConsumableScript";
+import { BlitzEffectScript } from "./blitzEffectScript";
 import { ConsumablesVehicleFilter } from "./consumablesVehicleFilter";
 
 export interface ProvisionsCommon {
@@ -13,6 +13,6 @@ export interface ProvisionsCommon {
       include: { vehicle: ConsumablesVehicleFilter; nations?: string };
       exclude?: { vehicle: ConsumablesVehicleFilter; nations?: string };
     };
-    script: ProvisionConsumableScript;
+    script: BlitzEffectScript;
   };
 }
