@@ -1,4 +1,5 @@
 import { useProtagonist } from "../../hooks/useProtagonist";
+import { hasUpgrades } from "../../tankopedia/hasUpgrades";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 
 interface TankopediaLoadoutProps {
@@ -7,10 +8,7 @@ interface TankopediaLoadoutProps {
 
 export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
   const tank = useProtagonist();
-
-  const showModules = tank.tank!.upgrade_lines.some(
-    (line) => line.stages.length > 1 || isAlternativeLine(line.name),
-  );
+  const showModules = hasUpgrades(tank);
 
   return (
     <>
