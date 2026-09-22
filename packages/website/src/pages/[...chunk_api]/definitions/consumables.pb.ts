@@ -47,7 +47,7 @@ export async function GET() {
     }
   }
 
-  return Response.json(samples);
+  return Response.json(Object.values(samples));
 
   const definitions = await api.consumables();
   const bytes = ConsumableDefinitions.encode(definitions).finish();
