@@ -23,7 +23,7 @@ interface CharacteristicContext {
   assault_distance: number;
 
   characteristic(
-    name: keyof typeof characteristics,
+    name: CharacteristicName,
   ): ReturnType<Characteristic["compute"]>;
 }
 
@@ -31,3 +31,11 @@ export enum CharacteristicType {
   Enum,
   Number,
 }
+
+type CharacteristicName = keyof typeof characteristics;
+type CharacteristicReturnType = ReturnType<Characteristic["compute"]>;
+
+export type ComputedCharacteristics = Record<
+  CharacteristicName,
+  CharacteristicReturnType
+>;

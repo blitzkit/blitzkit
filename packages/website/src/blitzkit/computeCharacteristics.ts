@@ -1,5 +1,7 @@
-export function computeCharacteristics() {
-  const characteristics = {};
+import type { ComputedCharacteristics } from "../types/characteristics";
 
-  return characteristics;
+export function computeCharacteristics() {
+  const characteristics: Partial<ComputedCharacteristics> = {};
+
+  return characteristics as ComputedCharacteristics;
 }
