@@ -90,6 +90,9 @@ export interface TankState {
   shell: number;
   track: number;
 
+  assault_distance: number;
+  speed: number;
+
   model: ModelDefinition;
 
   equipment_matrix: EquipmentMatrix;
@@ -98,7 +101,6 @@ export interface TankState {
   provisions: number[];
   camouflage: boolean;
   cooldown_booster: number;
-  assault_distance: number;
 }
 
 interface Tankopedia {

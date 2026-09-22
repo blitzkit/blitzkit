@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { BlitzKitStrings } from "@blitzkit/i18n";
+import { Strings } from "@blitzkit/i18n";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
@@ -75,6 +75,6 @@ export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
   }
 
   strings(locale: string) {
-    return fetchJSON<BlitzKitStrings>(alias("api", `/strings/${locale}.json`));
+    return fetchJSON<Strings>(alias("api", `/strings/${locale}.json`));
   }
 }

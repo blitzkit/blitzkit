@@ -32,12 +32,14 @@ export function createTankState(tank: TankDefinition) {
     shell: gun.shells[0].id,
     track: tank.tracks.at(-1)!.id,
 
+    assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
+    speed: 0,
+
     equipment_matrix: genericDefaultEquipmentMatrix,
 
     consumables: [],
     provisions: createDefaultProvisions(tank, gun, provisions, scripts),
     camouflage: true,
     cooldown_booster: 0,
-    assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
   } satisfies TankState;
 }
