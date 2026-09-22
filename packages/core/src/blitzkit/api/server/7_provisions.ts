@@ -127,11 +127,15 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
 
       switch (provision.script["#text"]) {
         case "Stimulator":
-          applyCanonicalBonuses({ crew_level_increase: "crewLevelIncrease" });
+          applyCanonicalBonuses({
+            crew_level_increase: "crewLevelIncrease",
+          });
           break;
 
         case "AntiHighExplosive":
-          applyCanonicalBonuses({ anti_high_explosive_factor: "factor" });
+          applyCanonicalBonuses({
+            anti_high_explosive_factor: "factor",
+          });
           break;
 
         case "Fuel":
@@ -150,7 +154,9 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
           break;
 
         case "SmallHPStock":
-          applyRootBonuses({ hp_stock_percent: "hpStockPercent" });
+          applyRootBonuses({
+            hp_stock_percent: "hpStockPercent",
+          });
           break;
 
         case "GearOil":
@@ -244,6 +250,7 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
           break;
 
         case "EnemyReloadTime":
+          // bonusValues is empty in the observed data.
           break;
 
         case "Duplet":
@@ -282,13 +289,6 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
           });
           break;
 
-        case "EngineAndSpeedBoost":
-          applyCanonicalBonuses({
-            engine_power_ability_factor: "enginePowerAbilityFactor",
-            speed_limit_ability_bonus: "speedLimitAbilityBonus",
-          });
-          break;
-
         case "BigBoss":
           applyCanonicalBonuses({
             gun_reload_factor: "gunReloadFactor",
@@ -298,13 +298,9 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
             max_health_percent_bonus: "maxHealthPercentBonus",
             max_statics_damage_percent: "maxStaticsDamagePercent",
           });
-
-          // These are nested structures and need their own handling
-          // rather than a simple key -> key mapping.
           break;
 
         case "VampiricBoost":
-          // Nested `respawns` structure; needs dedicated handling.
           break;
 
         case "ZombieMark":
@@ -315,8 +311,16 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
             speed_limits_factor: "speedLimitsFactor",
             common_damage_factor: "commonDamageFactor",
           });
+          break;
 
-          // Nested respawnBoost structure.
+        case "HumanMark":
+          applyRootBonuses({
+            opt_device_ramming_damage_override:
+              "optDeviceRammingDamageOverride",
+          });
+
+          // `bonusValues.item` is a nested array and therefore isn't
+          // appropriate for applyCanonicalBonuses().
           break;
 
         default:

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "tank_definitions.proto";
+
+/**
+ * Wargaming's script system for provisions, consumables, and equipment is
+ * genuinely the most repulsive and inconsistent XML schema I have ever seen.
+ * Here are my notes on how I normalize the data into BlitzKit. I can totally
+ * see why they want to move to Unreal Engine. This is unhealthy.
+ */
+message Script {
+  /**
+   * If #text is "StaticFactorDevice", type will be script.attribute, otherwise
+   * type will assume the value of #text.
+   */
+  string type = 1;
+
+  /**
+   * Bonus values enjoys Record<string, number> entries from
+   * script.bonusValues.
+   *
+   * I also augment Record<string, number | ""> values from the root of the
+   * script object. That is, if an entry on the root script object isn't
+   * "attribute", "bonusValues", "#text", etc., it goes in here. Empty strings
+   * values get omitted.
+   */
+  map<string, float> bonus_values = 2;
+
+  /**
+   * I thought piercing_factors distinct enough from bonus_values to separate
+   * them since the keys here are no longer properties of the tank, but
+   * specific shell types. The keys will be mapped to BlitzKit's ShellType.
+   */
+  map<int32, float> piercing_factors = 3;
+
+  /**
+   * Same story here, the keys are different. But this time, the values are
+   * stored deep in script.modulesHealthFactors.modules. Also, all keys end
+   * with "Health" for no reason like "leftTrackHealth". That will be trimmed.
+   */
+  map<string, float> module_health_factors = 4;
+
+  /**
+   *
+   */
+  map<string, float> chances_to_hit = 5;
+}
