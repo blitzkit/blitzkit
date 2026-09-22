@@ -1,4 +1,4 @@
-type BlitzEffectScript = RSN & {
+export type BlitzEffectScript = RSN & {
   "#text": string;
   attribute?: string;
 

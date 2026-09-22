@@ -12,6 +12,7 @@ import {
   TankDefinitions,
 } from "@blitzkit/protos";
 import { fetchPB } from "../../protobuf";
+import { BlitzScripts } from "../../types/blitzScripts";
 import { BlitzKitAPI } from "./base";
 
 export class ClientBlitzKitAPI extends BlitzKitAPI {
@@ -65,5 +66,11 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   maps() {
     return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
+  }
+
+  async scripts() {
+    const response = await fetch(alias("api", "/definitions/scripts.json"));
+    const json = await response.json();
+    return json as BlitzScripts;
   }
 }
