@@ -10,6 +10,7 @@ import {
   SkillDefinitions,
   TankDefinitions,
 } from "@blitzkit/core";
+import { BlitzScripts } from "../../types/blitzScripts";
 
 export abstract class BlitzKitAPI {
   abstract skills(): Promise<SkillDefinitions>;
@@ -22,6 +23,7 @@ export abstract class BlitzKitAPI {
   abstract tanks(): Promise<TankDefinitions>;
   abstract game(): Promise<GameDefinitions>;
   abstract gallery(): Promise<Gallery>;
+  abstract scripts(): Promise<BlitzScripts>;
 
   async tank(id: number) {
     const tanks = await this.tanks();

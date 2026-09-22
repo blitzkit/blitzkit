@@ -1,9 +1,9 @@
 import type { ConsumablesCommon } from "@blitzkit/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { extractPackedIcon } from "../../../../core/blitz/extractPackedIcon";
 import { parsePackedSpriteRect } from "../../../../core/blitz/parsePackedSpriteRect";
-import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -46,6 +46,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
           selector.includes(`${consumable.icon} `),
         ),
       );
+
+      console.log(consumable);
 
       if (!styleSheet) {
         console.warn(
