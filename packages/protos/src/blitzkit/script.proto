@@ -43,7 +43,14 @@ message Script {
   map<string, float> module_health_factors = 4;
 
   /**
-   *
+   * There's chancesToHit.crew and then there's the mapped chancesToHit.modules
+   * which I plan to merge under this one, flat object. And, once again, all
+   * keys end with "health" like "driverHealth" so I will sanitize them.
    */
   map<string, float> chances_to_hit = 5;
+
+  /**
+   * Most sane entry?
+   */
+  map<int32, float> vision_radius_percentage_bonus = 6;
 }
