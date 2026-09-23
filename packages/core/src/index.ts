@@ -1,6 +1,7 @@
 export * from "./api";
 export * from "./blitz";
 export * from "./blitzkit";
+export * from "./config";
 export * from "./imgur";
 export * from "./math";
 export * from "./patreon";

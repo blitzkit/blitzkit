@@ -1,7 +1,8 @@
-import { alias, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { alias, gunTypeOrder, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { tankClassOrder } from "@blitzkit/core/src/config/tankClassOrder";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
-import { ShellType, TankType, type GunDefinition } from "@blitzkit/protos";
+import { ShellType, TankType } from "@blitzkit/protos";
 import {
   LockClosedIcon,
   LockOpen2Icon,
@@ -9,18 +10,16 @@ import {
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
-import { Fragment, type ComponentProps, type ReactNode } from "react";
+import { Fragment } from "react";
 import { api } from "../../api/dynamic";
 import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { App } from "../../stores/app";
-import { TankFilters, type CaseType } from "../../stores/tankFilters";
+import { TankFilters } from "../../stores/tankFilters";
 import { Button } from "../Button";
-import { classIcons } from "../ClassIcon";
+import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { Flex } from "../Flex";
-import { GunAutoloaderIcon } from "../GunAutoloaderIcon";
-import { GunAutoreloaderIcon } from "../GunAutoreloaderIcon";
-import { GunRegularIcon } from "../GunRegularIcon";
 import { IconButton } from "../IconButton";
 import { MissingShellIcon } from "../MissingShellIcon";
 import { ResearchedIcon } from "../ResearchedIcon";
@@ -140,24 +139,11 @@ const shellTypeIcons: Record<ShellType, string> = {
   [ShellType.SHELL_TYPE_HEAT]: "hc",
 };
 
-const GUN_TYPE_ICONS: Record<
-  CaseType<GunDefinition>,
-  (props: ComponentProps<"svg">) => ReactNode
-> = {
-  regular: GunRegularIcon,
-  auto_loader: GunAutoloaderIcon,
-  auto_reloader: GunAutoreloaderIcon,
-};
-
 const TANK_TYPE_COLORS: Record<TankType, string> = {
   [TankType.TANK_TYPE_RESEARCHABLE]: "gray",
   [TankType.TANK_TYPE_PREMIUM]: "amber",
   [TankType.TANK_TYPE_COLLECTOR]: "blue",
 };
-
-const GUN_TYPES = Object.keys(
-  GUN_TYPE_ICONS,
-) as (keyof typeof GUN_TYPE_ICONS)[];
 
 const MAX_ICONS = 4;
 
@@ -200,7 +186,7 @@ function ResetButton() {
 }
 
 function TiersFilter() {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const tiersRaw = TankFilters.use((state) => state.tiers);
   const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
 
@@ -277,7 +263,7 @@ function NationsFilter() {
   const rawNations = TankFilters.use((state) => state.nations);
   const nations =
     rawNations.length === 0 ? gameDefinitions.nations : rawNations;
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -359,9 +345,9 @@ function NationsFilter() {
 }
 
 function ClassFilter() {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const rawClasses = TankFilters.use((state) => state.classes);
-  const classes = rawClasses.length === 0 ? TANK_CLASSES : rawClasses;
+  const classes = rawClasses.length === 0 ? tankClassOrder : rawClasses;
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -369,10 +355,10 @@ function ClassFilter() {
         <Button size="minor" color="gray" variant="surface">
           <Flex>
             {classes.map((tankClass, index) => {
-              const Icon = classIcons[tankClass];
               return (
-                <Icon
+                <ClassIcon
                   key={tankClass}
+                  class={tankClass}
                   style={{
                     color: "var(--gray-12)",
                     opacity: 1,
@@ -389,9 +375,8 @@ function ClassFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {TANK_CLASSES.map((tankClass) => {
+        {tankClassOrder.map((tankClass) => {
           const selected = rawClasses.includes(tankClass);
-          const Icon = classIcons[tankClass];
 
           return (
             <DropdownMenu.CheckboxItem
@@ -411,7 +396,10 @@ function ClassFilter() {
               }}
               checked={selected}
             >
-              <Icon style={{ width: "1.25em", height: "1.25em" }} />
+              <ClassIcon
+                class={tankClass}
+                style={{ width: "1.25em", height: "1.25em" }}
+              />
 
               {strings.common.tank_class_medium[tankClass]}
             </DropdownMenu.CheckboxItem>
@@ -440,8 +428,8 @@ function ClassFilter() {
 
 function GunTypeFilter() {
   const rawGunTypes = TankFilters.use((state) => state.gunType);
-  const gunTypes = rawGunTypes.length === 0 ? GUN_TYPES : rawGunTypes;
-  const { strings } = useLocale();
+  const gunTypes = rawGunTypes.length === 0 ? gunTypeOrder : rawGunTypes;
+  const strings = useStrings();
 
   return (
     <DropdownMenu.Root modal={false}>

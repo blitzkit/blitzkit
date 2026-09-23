@@ -1,16 +1,11 @@
+import type { CaseType } from "@blitzkit/core";
 import type {
   GunDefinition,
   ShellType,
   TankClass,
   TankType,
-} from "@blitzkit/core";
+} from "@blitzkit/protos";
 import { Varuna } from "varuna";
-
-export type CaseType<T> = T extends {
-  gun_type?: { $case: infer U; value: any };
-}
-  ? U
-  : never;
 
 export interface TankFilters {
   tiers: number[];

@@ -5,7 +5,11 @@ import { ClassLight } from "./components/ClassLight";
 import { ClassMedium } from "./components/ClassMedium";
 import { ClassTankDestroyer } from "./components/ClassTankDestroyer";
 
-export const classIcons: Record<
+interface ClassIconProps extends ComponentProps<"svg"> {
+  class: TankClass;
+}
+
+const classIcons: Record<
   TankClass,
   (props: ComponentProps<"svg">) => ReactNode
 > = {
@@ -14,3 +18,8 @@ export const classIcons: Record<
   [TankClass.TANK_CLASS_LIGHT]: ClassLight,
   [TankClass.TANK_CLASS_MEDIUM]: ClassMedium,
 };
+
+export function ClassIcon({ class: tankClass, ...props }: ClassIconProps) {
+  const Icon = classIcons[tankClass];
+  return <Icon {...props} />;
+}
