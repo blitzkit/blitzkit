@@ -1,17 +1,26 @@
 import {
-  Consumable,
   ConsumableTankCategoryFilterCategory,
-  GunDefinition,
-  Provision,
-  TankDefinition,
-} from "@blitzkit/protos";
+  type GunDefinition,
+  type TankDefinition,
+  type TankInclusivityFilter,
+} from "@blitzkit/core";
 
-export function checkConsumableProvisionInclusivity(
-  consumableProvision: Consumable | Provision,
+export function useCompatibility(tank: TankDefinition, gun: GunDefinition) {
+  return function (
+    include?: TankInclusivityFilter[],
+    exclude?: TankInclusivityFilter[],
+  ) {
+    return tankCompatibility(tank, gun, include, exclude);
+  };
+}
+
+function tankCompatibility(
   tank: TankDefinition,
   gun: GunDefinition,
+  include?: TankInclusivityFilter[],
+  exclude?: TankInclusivityFilter[],
 ) {
-  const included = consumableProvision.include?.every((rule) => {
+  const included = include?.every((rule) => {
     switch (rule.filter_type!.$case) {
       case "tiers":
         return (
@@ -29,7 +38,7 @@ export function checkConsumableProvisionInclusivity(
         throw new SyntaxError("Category filtering found in include rule");
     }
   });
-  const excluded = consumableProvision.exclude?.some((rule) => {
+  const excluded = exclude?.some((rule) => {
     switch (rule.filter_type!.$case) {
       case "tiers":
         return (
@@ -53,5 +62,5 @@ export function checkConsumableProvisionInclusivity(
     }
   });
 
-  return consumableProvision.include?.length > 0 && included && !excluded;
+  return include !== undefined && include?.length > 0 && included && !excluded;
 }

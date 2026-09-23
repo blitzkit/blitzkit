@@ -1,5 +1,9 @@
+import type { Consumable } from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
+import { useCompatibility } from "../../hooks/useCompatibility";
+import { useConsumables } from "../../hooks/useConsumables";
 import { useProtagonist } from "../../hooks/useProtagonist";
+import { useProtagonistGun } from "../../hooks/useProtagonistGun";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { hasUpgrades } from "../../tankopedia/hasUpgrades";
@@ -116,7 +120,8 @@ function Consumables({ characteristics }: ConsumablesProps) {
   const strings = useStrings();
   const consumables = useConsumables();
   const tank = useProtagonist();
-  const isCompatible = useCompatibility(tank, characteristics);
+  const gun = useProtagonistGun();
+  const isCompatible = useCompatibility(tank, gun);
 
   return (
     <div className={styles.section}>
@@ -136,20 +141,13 @@ function Consumables({ characteristics }: ConsumablesProps) {
       </div>
 
       <div className={styles.consumables}>
-        {Object.entries(consumables.consumables).map(
-          ([id, { compatibility, consumable, purchase }]) => {
-            if (!isCompatible(compatibility!)) return null;
+        {Object.entries(consumables.consumables).map(([id, consumable]) => {
+          if (!isCompatible(consumable.include, consumable.exclude)) {
+            return null;
+          }
 
-            return (
-              <Consumable
-                key={id}
-                id={id}
-                consumable={consumable!}
-                purchase={purchase!}
-              />
-            );
-          },
-        )}
+          return <Consumable key={id} id={id} consumable={consumable} />;
+        })}
       </div>
     </div>
   );
@@ -157,8 +155,7 @@ function Consumables({ characteristics }: ConsumablesProps) {
 
 interface ConsumableProps {
   id: string;
-  consumable: ConsumableComponent;
-  purchase: BlitzStaticPurchaseComponent;
+  consumable: Consumable;
 }
 
 function Consumable({ id, consumable, purchase }: ConsumableProps) {

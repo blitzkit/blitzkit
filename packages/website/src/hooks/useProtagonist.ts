@@ -5,6 +5,5 @@ import { useAwait } from "./useAwait";
 export function useProtagonist() {
   const id = Tankopedia.use((state) => state.protagonist.tank);
   const tank = useAwait(() => api.tank(id), `tank-${id}`);
-
   return tank;
 }

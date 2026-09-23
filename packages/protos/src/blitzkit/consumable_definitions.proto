@@ -9,14 +9,14 @@ message ConsumableDefinitions {
 }
 
 message Consumable {
-  required uint32               id                  = 1;
-  required I18nString           name                = 2;
-  required bool                 game_mode_exclusive = 5;
-  repeated ConsumableTankFilter include             = 6;
-  repeated ConsumableTankFilter exclude             = 7;
+  required uint32                id                  = 1;
+  required I18nString            name                = 2;
+  required bool                  game_mode_exclusive = 5;
+  repeated TankInclusivityFilter include             = 6;
+  repeated TankInclusivityFilter exclude             = 7;
 }
 
-message ConsumableTankFilter {
+message TankInclusivityFilter {
   oneof filter_type {
     ConsumableTankTierFilter     tiers      = 1;
     ConsumableTankIdsFilter      ids        = 2;
