@@ -11,7 +11,7 @@ message TankDefinitions {
 message TankDefinition {
   required uint32           id                 = 1;
   required string           slug               = 2;
-  map<uint32, uint32>       roles              = 3;
+  map<string, uint32>       roles              = 3;
   required bool             fixed_camouflage   = 5;
   repeated int32            camouflages        = 6;
   repeated int32            ancestors          = 7;

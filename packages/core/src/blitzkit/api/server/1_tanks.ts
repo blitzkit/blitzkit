@@ -50,10 +50,11 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   async tanks() {
     const tankDefinitions = TankDefinitions.create();
 
-    const gameModeNativeNames: Record<string, number> = {};
+    const gameModeNativeNames: Record<string, string> = {};
+
     const squadBattleTypeGameModeNativeNameMatches =
       this.squadBattleTypeStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-        /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
+        /eGameMode\.(\w+) -> "(battleType\/([a-zA-Z]+))"/g,
       );
     const gameTypeGameModeNativeNameMatches =
       this.gameTypeSelectorStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
@@ -61,8 +62,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
       );
 
     for (const match of squadBattleTypeGameModeNativeNameMatches) {
-      const id = Number(match[1]);
-      gameModeNativeNames[match[3]] = id;
+      gameModeNativeNames[match[3]] = match[1];
     }
 
     for (const match of gameTypeGameModeNativeNameMatches) {

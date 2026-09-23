@@ -42,14 +42,13 @@ const consumableDefinitions = await api.consumables();
 const provisionDefinitions = await api.provisions();
 const tankDefinitions = await api.tanks();
 
-const gameModeRoleSets: Record<number, Set<number>> = {};
+const gameModeRoleSets: Record<string, Set<number>> = {};
 
 for (const tankIdString in tankDefinitions.tanks) {
   const gameMode = tankDefinitions.tanks[tankIdString];
 
-  for (const gameModeIdString in gameMode.roles) {
-    const role = gameMode.roles[gameModeIdString];
-    const gameModeId = Number(gameModeIdString);
+  for (const gameModeId in gameMode.roles) {
+    const role = gameMode.roles[gameModeId];
 
     if (gameModeId in gameModeRoleSets) {
       gameModeRoleSets[gameModeId].add(role);
@@ -60,7 +59,7 @@ for (const tankIdString in tankDefinitions.tanks) {
 }
 
 const gameModeRoles: {
-  gameModeId: number;
+  gameModeId: string;
   consumables: number[];
   provisions: number[];
 }[] = [];
@@ -69,8 +68,7 @@ const allGameModeConsumables = new Set<number>();
 const allGameModeProvisions = new Set<number>();
 
 for (const gameModeIdString in gameModeRoleSets) {
-  const gameModeId = Number(gameModeIdString);
-  const roles = gameModeRoleSets[gameModeId];
+  const roles = gameModeRoleSets[gameModeIdString];
   const consumables = new Set<number>();
   const provisions = new Set<number>();
 
@@ -113,7 +111,7 @@ for (const gameModeIdString in gameModeRoleSets) {
   }
 
   gameModeRoles.push({
-    gameModeId: gameModeId,
+    gameModeId: gameModeIdString,
     consumables: Array.from(consumables.values()),
     provisions: Array.from(provisions.values()),
   });
