@@ -18,7 +18,7 @@ interface Props extends ComponentProps<"svg"> {
   type: CaseType<GunDefinition>;
 }
 
-export function GunIcon({ type, ...props }: Props) {
+export function GunTypeIcon({ type, ...props }: Props) {
   const Icon = typeIcons[type];
   return <Icon {...props} />;
 }

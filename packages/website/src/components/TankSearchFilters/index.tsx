@@ -1,4 +1,9 @@
-import { alias, gunTypeOrder, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import {
+  alias,
+  gunTypeOrder,
+  TIER_ROMAN_NUMERALS,
+  treeTypeOrder,
+} from "@blitzkit/core";
 import { tankClassOrder } from "@blitzkit/core/src/config/tankClassOrder";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
@@ -12,14 +17,15 @@ import {
 import { times } from "lodash-es";
 import { Fragment } from "react";
 import { api } from "../../api/dynamic";
-import { useLocale } from "../../hooks/useLocale";
 import { useStrings } from "../../hooks/useStrings";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { App } from "../../stores/app";
 import { TankFilters } from "../../stores/tankFilters";
 import { Button } from "../Button";
 import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { Flex } from "../Flex";
+import { GunTypeIcon } from "../GunTypeIcon";
 import { IconButton } from "../IconButton";
 import { MissingShellIcon } from "../MissingShellIcon";
 import { ResearchedIcon } from "../ResearchedIcon";
@@ -437,11 +443,10 @@ function GunTypeFilter() {
         <Button size="minor" color="gray" variant="surface">
           <Flex>
             {gunTypes.map((gunType) => {
-              const Icon = GUN_TYPE_ICONS[gunType];
-
               return (
-                <Icon
+                <GunTypeIcon
                   key={gunType}
+                  type={gunType}
                   style={{
                     margin: gunType === "regular" ? "0 -0.125em" : undefined,
                     opacity: 1,
@@ -457,9 +462,8 @@ function GunTypeFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {GUN_TYPES.map((gunType) => {
+        {gunTypeOrder.map((gunType) => {
           const selected = rawGunTypes.includes(gunType);
-          const Icon = GUN_TYPE_ICONS[gunType];
 
           return (
             <DropdownMenu.CheckboxItem
@@ -477,7 +481,10 @@ function GunTypeFilter() {
               checked={selected}
               key={gunType}
             >
-              <Icon style={{ width: "1.25em", height: "1.25em" }} />
+              <GunTypeIcon
+                type={gunType}
+                style={{ width: "1.25em", height: "1.25em" }}
+              />
 
               {strings.common.gun_types[gunType]}
             </DropdownMenu.CheckboxItem>
@@ -505,9 +512,9 @@ function GunTypeFilter() {
 }
 
 function TypeFilter() {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const rawTypes = TankFilters.use((state) => state.types);
-  const types = rawTypes.length === 0 ? TANK_TYPES : rawTypes;
+  const types = rawTypes.length === 0 ? treeTypeOrder : rawTypes;
 
   return (
     <DropdownMenu.Root modal={false}>
@@ -535,7 +542,7 @@ function TypeFilter() {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
-        {TANK_TYPES.map((tankType) => {
+        {treeTypeOrder.map((tankType) => {
           const selected = rawTypes.includes(tankType);
 
           return (
@@ -607,7 +614,7 @@ function IndividualShellFilter({
   index: number;
   premium?: boolean;
 }) {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const shells = TankFilters.use((state) => state.shells);
 
   return (
@@ -709,7 +716,7 @@ function IndividualShellFilter({
 
 function OwnershipFilter() {
   const wargaming = App.use((state) => state.logins.wargaming);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return wargaming ? (
     <OwnershipFilterInternal />
@@ -816,7 +823,8 @@ function TestFilter() {
 }
 
 function ConsumablesFilter() {
-  const { unwrap, strings } = useLocale();
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
   const rawConsumables = TankFilters.use((state) => state.consumables);
   const consumables =
     rawConsumables.length === 0 ? consumablesArray : rawConsumables;
@@ -910,7 +918,8 @@ function ConsumablesFilter() {
 }
 
 function ProvisionsFilter() {
-  const { unwrap, strings } = useLocale();
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
   const rawProvisions = TankFilters.use((state) => state.provisions);
   const provisions =
     rawProvisions.length === 0 ? provisionsArray : rawProvisions;
@@ -1004,7 +1013,8 @@ function ProvisionsFilter() {
 }
 
 function GameModeAbilitiesFilter() {
-  const { unwrap, strings } = useLocale();
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
   const rawAbilities = TankFilters.use((state) => state.abilities);
   const rawPowers = TankFilters.use((state) => state.powers);
 
