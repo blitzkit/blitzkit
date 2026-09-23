@@ -7,4 +7,5 @@ export * from "./math";
 export * from "./patreon";
 export * from "./statistics";
 export * from "./streams";
+export * from "./tankopedia";
 export * from "./types";

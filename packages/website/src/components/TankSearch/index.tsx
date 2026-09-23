@@ -4,9 +4,9 @@ import {
   resolveDpm,
   SEARCH_KEYS,
   unionBoundingBox,
-  type TankDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
+import type { TankDefinition } from "@blitzkit/protos";
 import fuzzysort from "fuzzysort";
 import { uniq } from "lodash-es";
 import { memo, useMemo } from "react";
@@ -16,6 +16,7 @@ import { awaitableTankNames } from "../../core/awaitables/tankNames";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { App } from "../../stores/app";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
@@ -53,7 +54,8 @@ const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
 
 export const TankSearch = memo<TankSearchProps>(
   ({ compact, onSelect, onSelectAll, skeleton }) => {
-    const { strings, locale } = useLocale();
+    const strings = useStrings();
+    const locale = useLocale();
     const wargaming = App.use((state) => state.logins.wargaming);
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankopediaSort = TankSort.use();

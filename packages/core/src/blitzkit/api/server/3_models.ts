@@ -1,19 +1,16 @@
 import {
-  Armor,
   BlitzCrewType,
   ChassisDefinitionsList,
-  Crew,
   EngineDefinitionsList,
   GunDefinitionsList,
-  ModelDefinitions,
   TankParameters,
   toUniqueId,
   TurretDefinitionsList,
-  Vector3,
   VehicleDefinitionArmor,
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
+import { Armor, Crew, ModelDefinitions, Vector3 } from "@blitzkit/protos";
 import { Vector3Tuple } from "three";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI2 } from "./2_camouflages";

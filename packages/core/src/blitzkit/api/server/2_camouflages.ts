@@ -1,4 +1,4 @@
-import { CamouflageDefinitions } from "@blitzkit/core";
+import { CamouflageDefinitions } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI1 } from "./1_tanks";
 

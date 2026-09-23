@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { api } from "../../../../../api/dynamic";
-import { computeCharacteristics } from "../../../../../tankopedia/computeCharacteristics";
+import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
 import { Tankopedia } from "../../../../../stores/tankopedia";
+import { computeCharacteristics } from "../../../../../tankopedia/computeCharacteristics";
 import styles from "./_index.module.css";
 
 interface PageProps {
