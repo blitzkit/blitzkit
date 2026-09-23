@@ -3,7 +3,6 @@ import {
   ProvisionDefinitions,
   TankDefinition,
 } from "../../../protos/src/blitzkit";
-import { checkConsumableProvisionInclusivity } from "./checkConsumableProvisionInclusivity";
 
 export function availableProvisions(
   tank: TankDefinition,

@@ -1,6 +1,6 @@
 ---
+import { api } from "../api/dynamic";
 import type { Tool } from "../constants/tools";
-import { getStrings } from "../core/i18n/getStrings";
 import { Heading } from "./Heading";
 import { LinkI18n } from "./LinkI18n";
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { locale, tool, minor } = Astro.props;
-const strings = getStrings(locale);
+const strings = await api.strings(locale);
 const toolStrings =
   strings.website.tools[
     (tool.strings ?? tool.id) as keyof typeof strings.website.tools

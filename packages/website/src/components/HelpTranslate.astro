@@ -1,7 +1,7 @@
 ---
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
-import { getStrings } from "../core/i18n/getStrings";
+import { api } from "../api/dynamic";
 import { Link } from "./Link";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 
-const strings = getStrings(locale)
+const strings = await api.strings(locale);
 ---
 
 <style>

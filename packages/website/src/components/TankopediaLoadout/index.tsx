@@ -11,6 +11,7 @@ import { vehicleStatusKeys } from "../../tankopedia/tankState";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
+import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
 interface TankopediaLoadoutProps {
@@ -146,7 +147,9 @@ function Consumables({ characteristics }: ConsumablesProps) {
             return null;
           }
 
-          return <Consumable key={id} id={id} consumable={consumable} />;
+          return (
+            <Consumable key={id} id={Number(id)} consumable={consumable} />
+          );
         })}
       </div>
     </div>
@@ -154,35 +157,20 @@ function Consumables({ characteristics }: ConsumablesProps) {
 }
 
 interface ConsumableProps {
-  id: string;
+  id: number;
   consumable: Consumable;
 }
 
-function Consumable({ id, consumable, purchase }: ConsumableProps) {
-  const gameStrings = useGameStrings("ConsumableEntity");
+function Consumable({ id, consumable }: ConsumableProps) {
   const isSelected = Tankopedia.use((state) =>
     state.protagonist.consumables.includes(id),
   );
   const tank = useProtagonist();
-  const tierPrices = useTierPrices();
-
-  const price = useMemo(() => {
-    const { prices } = tierPrices.prices[purchase.price_per_tier_catalog_id];
-
-    for (const { tier_catalog_id, unlock_price } of prices) {
-      if (tier_catalog_id === tank.tank!.tier_catalog_id) {
-        return unlock_price;
-      }
-    }
-
-    throw new Error(
-      `No price found for tier catalog id ${tank.tank!.tier_catalog_id}`,
-    );
-  }, [tank.id, purchase.price_per_tier_catalog_id]);
+  const unwrap = useUnwrap();
 
   return (
     <div className={styles["consumable-wrapper"]}>
-      <Tooltip tooltip={gameStrings[consumable!.name_key]}>
+      <Tooltip tooltip={unwrap(consumable.name)}>
         <Button
           radius="1"
           variant={isSelected ? "surface" : "soft"}

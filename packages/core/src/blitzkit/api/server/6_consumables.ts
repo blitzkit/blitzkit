@@ -11,12 +11,10 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
   async consumables() {
     const consumableDefinitions = ConsumableDefinitions.create();
 
-    Object.entries(this.consumablesCommon).forEach(([key, consumable]) => {
+    Object.entries(this.consumablesCommon).forEach(([, consumable]) => {
       const entry: Consumable = {
         id: consumable.id,
         game_mode_exclusive: "gameModeFilter" in consumable,
-        cooldown: consumable.script.cooldown,
-        duration: consumable.script.duration,
         name: this.getString(consumable.userString),
         exclude: [],
         include: [],
