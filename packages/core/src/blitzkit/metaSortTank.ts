@@ -1,6 +1,6 @@
 import { GameDefinitions, TankDefinition } from "@blitzkit/protos";
 import { tankClassOrder } from "../config/tankClassOrder";
-import { treeTypeOrder } from "../config/treeTypeOrder";
+import { treeTypeOrder } from "./treeTypeOrder";
 
 export function metaSortTank(
   tanks: TankDefinition[],

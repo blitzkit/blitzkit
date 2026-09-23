@@ -13,9 +13,7 @@ interface Props {
 const { locale, tool, minor } = Astro.props;
 const strings = await api.strings(locale);
 const toolStrings =
-  strings.website.tools[
-    (tool.strings ?? tool.id) as keyof typeof strings.website.tools
-  ];
+  strings.website.tools[tool.id as keyof typeof strings.website.tools];
 ---
 
 <style>
