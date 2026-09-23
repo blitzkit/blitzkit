@@ -2,7 +2,6 @@ export * from "./alias";
 export * from "./api";
 export * from "./assertSecret";
 export * from "./availableProvisions";
-export * from "./averageDefinitions";
 export * from "./coefficient";
 export * from "./createDefaultProvisions";
 export * from "./createDefaultSkills";

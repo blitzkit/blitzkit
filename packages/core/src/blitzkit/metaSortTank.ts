@@ -1,11 +1,6 @@
-import { GameDefinitions, TankDefinition, TankType } from "@blitzkit/protos";
-import { TANK_CLASSES } from "../blitz/constants";
-
-const treeTypeOrder = [
-  TankType.TANK_TYPE_RESEARCHABLE,
-  TankType.TANK_TYPE_PREMIUM,
-  TankType.TANK_TYPE_COLLECTOR,
-];
+import { GameDefinitions, TankDefinition } from "@blitzkit/protos";
+import { tankClassOrder } from "../config/tankClassOrder";
+import { treeTypeOrder } from "../config/treeTypeOrder";
 
 export function metaSortTank(
   tanks: TankDefinition[],
@@ -17,7 +12,8 @@ export function metaSortTank(
       (a, b) => treeTypeOrder.indexOf(b.type) - treeTypeOrder.indexOf(a.type),
     )
     .sort(
-      (a, b) => TANK_CLASSES.indexOf(b.class) - TANK_CLASSES.indexOf(a.class),
+      (a, b) =>
+        tankClassOrder.indexOf(b.class) - tankClassOrder.indexOf(a.class),
     )
     .sort(
       (a, b) =>
