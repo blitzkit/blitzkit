@@ -1,4 +1,4 @@
-import { EquipmentDefinitions, EquipmentSlot } from "@blitzkit/core";
+import { EquipmentDefinitions, EquipmentSlot } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI4 } from "./4_maps";
 

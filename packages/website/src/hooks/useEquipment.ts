@@ -1,18 +1,20 @@
 import { useMemo } from "react";
 import { api } from "../api/dynamic";
-import { Duel } from "../stores/duel";
+import { Tankopedia } from "../stores/tankopedia";
 
-const equipmentDefinitions = await api.equipment();
+const equipment = await api.equipment();
+const tanks = await api.tanks();
 
-export function useEquipment(id: number, antagonist = false) {
-  const member = Duel.use(
-    (state) => state[antagonist ? "antagonist" : "protagonist"]!,
+export type DuelSide = "protagonist" | "antagonist";
+
+export function useEquipment(id: number, side: DuelSide) {
+  const member = Tankopedia.use((state) => state[side]);
+  const tank = tanks.tanks[member.tank];
+  const preset = equipment.presets[tank.equipment_preset];
+  const equipmentMatrix = Tankopedia.use(
+    (state) => state[side].equipment_matrix,
   );
-  const preset = equipmentDefinitions.presets[member.tank.equipment_preset];
-  const equipmentMatrix = Duel.use(
-    (state) =>
-      state[antagonist ? "antagonist" : "protagonist"]!.equipmentMatrix,
-  );
+
   const value = useMemo(() => {
     return preset.slots.some((slot, index) => {
       const row = Math.floor(index / 3);

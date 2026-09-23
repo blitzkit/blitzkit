@@ -4,9 +4,7 @@ import { correctZYTuple } from "../../../core/blitz/correctZYTuple";
 import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../../../core/blitzkit/resolveThickness";
 import { useArmor } from "../../../hooks/useArmor";
-import { useTankModelDefinition } from "../../../hooks/useTankModelDefinition";
-import { useTankTransform } from "../../../hooks/useTankTransform";
-import { Duel } from "../../../stores/duel";
+import { DuelModule, useDuel } from "../../../hooks/useDuel";
 import { ModelTankWrapper } from "./ModelTankWrapper";
 import { PrimaryArmorSceneComponent } from "./PrimaryArmorSceneComponent";
 
@@ -14,10 +12,10 @@ export const PrimaryArmorScene = memo(() => {
   const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
-  const tank = Duel.use((state) => state.protagonist.tank);
-  const track = Duel.use((state) => state.protagonist.track);
-  const turret = Duel.use((state) => state.protagonist.turret);
-  const gun = Duel.use((state) => state.protagonist.gun);
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const track = useDuel("protagonist", DuelModule.Track);
+  const turret = useDuel("protagonist", DuelModule.Turret);
+  const gun = useDuel("protagonist", DuelModule.Gun);
   const armorGltf = useArmor(tank.id).gltf;
   const armorNodes = Object.values(armorGltf.nodes);
   const tankModelDefinition = useTankModelDefinition();

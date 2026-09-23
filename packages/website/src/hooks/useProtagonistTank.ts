@@ -1,9 +1,0 @@
-import { api } from "../api/dynamic";
-import { Tankopedia } from "../stores/tankopedia";
-import { useAwait } from "./useAwait";
-
-export function useProtagonistTank() {
-  const id = Tankopedia.use((state) => state.protagonist.tank);
-  const tank = useAwait(() => api.tank(id), `tank-${id}`);
-  return tank;
-}
