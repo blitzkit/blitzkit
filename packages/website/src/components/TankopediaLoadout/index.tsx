@@ -1,10 +1,10 @@
 import type { Consumable } from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useConsumables } from "../../hooks/useConsumables";
-import { useProtagonist } from "../../hooks/useProtagonist";
 import { useProtagonistGun } from "../../hooks/useProtagonistGun";
+import { useProtagonistTank } from "../../hooks/useProtagonistTank";
 import { useStrings } from "../../hooks/useStrings";
+import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { Tankopedia } from "../../stores/tankopedia";
 import { hasUpgrades } from "../../tankopedia/hasUpgrades";
 import { vehicleStatusKeys } from "../../tankopedia/tankState";
@@ -19,7 +19,7 @@ interface TankopediaLoadoutProps {
 }
 
 export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const showModules = hasUpgrades(tank);
 
   return (
@@ -120,7 +120,7 @@ interface ConsumablesProps {
 function Consumables({ characteristics }: ConsumablesProps) {
   const strings = useStrings();
   const consumables = useConsumables();
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const gun = useProtagonistGun();
   const isCompatible = useTankCompatibility(tank, gun);
 
@@ -165,7 +165,7 @@ function Consumable({ id, consumable }: ConsumableProps) {
   const isSelected = Tankopedia.use((state) =>
     state.protagonist.consumables.includes(id),
   );
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const unwrap = useUnwrap();
 
   return (
@@ -214,7 +214,7 @@ function Consumable({ id, consumable }: ConsumableProps) {
 
 function Equipment() {
   const strings = useStrings();
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const equipment = useEquipment(tank.tank!);
 
   return (
@@ -273,7 +273,7 @@ interface EquipmentSlotProps {
 
 function EquipmentSlot({ slot, rowIndex, columnIndex }: EquipmentSlotProps) {
   const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const equipment = useEquipment(tank.tank!);
   const { price } = equipment.price.unlock_slot_prices[equipmentIndex];
 
@@ -307,7 +307,7 @@ function EquipmentOption({
   columnIndex,
 }: EquipmentOptionProps) {
   const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const equipment = useEquipment(tank.tank!);
   const slot = equipment.preset.slots[equipmentIndex];
   const id = slot.options_catalog_i_ds[optionIndex];
@@ -346,7 +346,7 @@ function EquipmentOption({
 
 function Modules() {
   const strings = useStrings();
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
   const alternates = Tankopedia.use((state) => state.protagonist.alternates);
   const isStock = useMemo(() => {
@@ -496,7 +496,7 @@ interface LineElementProps {
 function LineElement({ index, lineName, stage }: LineElementProps) {
   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
   const alternates = Tankopedia.use((state) => state.protagonist.alternates);
-  const tank = useProtagonist();
+  const tank = useProtagonistTank();
   const strings = useStrings();
   const gameStrings = useGameStrings("TankEntity");
   const upgradePreset = useUpgradePreset(tank.tank!.tank_upgrade_preset);

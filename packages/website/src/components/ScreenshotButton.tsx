@@ -9,7 +9,7 @@ import {
 import { Jimp } from "jimp";
 import { useCallback, type RefObject } from "react";
 import { useLocale } from "../hooks/useLocale";
-import { screenshotReadyEvent } from "./Tankopedia/HeroSection/components/TankSandbox/components/SceneProps";
+import { screenshotReadyEvent } from "./SceneProps";
 
 interface Props extends ButtonProps {
   canvas: RefObject<HTMLCanvasElement>;

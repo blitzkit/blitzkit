@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { api } from "../../../../../api/dynamic";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
+import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";

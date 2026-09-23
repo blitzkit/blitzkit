@@ -5,13 +5,13 @@ import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
-import { api } from "../../../../../../api/dynamic";
-import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
-import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
-import { Pose, poseEvent } from "../../../../../../core/blitzkit/pose";
-import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
 import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { api } from "../api/dynamic";
+import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
+import { hasEquipment } from "../core/blitzkit/hasEquipment";
+import { Pose, poseEvent } from "../core/blitzkit/pose";
+import { controlsEnabledEvent } from "../core/controlsEnabled";
+import { Tankopedia } from "../stores/tankopedia";
 
 const poseDistances: Record<Pose, number> = {
   [Pose.HullDown]: 15,
@@ -29,7 +29,7 @@ interface ControlsProps {
   enableRotate?: boolean;
 }
 
-export function Controls({
+export function CanvasControl({
   autoRotate = true,
   zoomable = true,
   enableRotate = true,

@@ -1,18 +1,18 @@
 import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useRef } from "react";
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
-import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
-import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
-import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
-import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
-import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
-import { useModel } from "../../../../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
-import { useTankTransform } from "../../../../../../hooks/useTankTransform";
 import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
-import { ModelTankWrapper } from "../../../../../Armor/components/ModelTankWrapper";
+import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
+import { hasEquipment } from "../core/blitzkit/hasEquipment";
+import { jsxTree } from "../core/blitzkit/jsxTree";
+import { modelTransformEvent } from "../core/blitzkit/modelTransform";
+import { controlsEnabledEvent } from "../core/controlsEnabled";
+import { useModel } from "../hooks/useModel";
+import { useTankTransform } from "../hooks/useTankTransform";
+import { Tankopedia } from "../stores/tankopedia";
+import { TankopediaDisplay } from "../stores/tankopediaPersistent/constants";
+import { ModelTankWrapper } from "./Armor/components/ModelTankWrapper";
 
 export function TankModel() {
   const protagonist = Duel.use((draft) => draft.protagonist);

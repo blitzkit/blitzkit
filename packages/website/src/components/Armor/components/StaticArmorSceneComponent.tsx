@@ -27,7 +27,7 @@ import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
 import { useEquipment } from "../../../hooks/useEquipment";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
-import { transitionEvent } from "../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
+import { transitionEvent } from "../../Lighting";
 import { ArmorType } from "./SpacedArmorScene";
 import type {
   ArmorUserData,

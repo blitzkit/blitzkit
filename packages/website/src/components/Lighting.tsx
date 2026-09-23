@@ -12,9 +12,9 @@ import {
 } from "react";
 import { HemisphereLight, SpotLight, type Group } from "three";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
-import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
+import { Tankopedia } from "../stores/tankopedia";
+import { TankopediaPersistent } from "../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../stores/tankopediaPersistent/constants";
 
 const ANGLE = degToRad(15);
 const REVEAL_ANIMATION_TIME = 3;

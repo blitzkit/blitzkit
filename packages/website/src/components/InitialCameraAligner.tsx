@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { api } from "../../../../../../api/dynamic";
-import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
-import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
 import { Duel } from "../../../../../../stores/duel";
+import { api } from "../api/dynamic";
+import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
+import { modelTransformEvent } from "../core/blitzkit/modelTransform";
 
 const modelDefinitions = await api.models();
 
-export function InitialAligner() {
+export function InitialCameraAligner() {
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);

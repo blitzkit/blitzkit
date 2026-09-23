@@ -22,7 +22,7 @@ import { jsxTree } from "../../../../core/blitzkit/jsxTree";
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
-import { transitionEvent } from "../../../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
+import { transitionEvent } from "../../../Lighting";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 import { spacedArmorRenderTarget } from "./target";
