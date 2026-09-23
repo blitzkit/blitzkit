@@ -1,23 +1,23 @@
 import {
-    alias,
-    GunDefinition,
-    ShellType,
-    TANK_CLASSES,
-    TANK_TYPES,
-    TankType,
-    TIER_ROMAN_NUMERALS,
+  alias,
+  GunDefinition,
+  ShellType,
+  TANK_CLASSES,
+  TANK_TYPES,
+  TankType,
+  TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import {
-    LockClosedIcon,
-    LockOpen2Icon,
-    ResetIcon,
-    TrashIcon,
+  LockClosedIcon,
+  LockOpen2Icon,
+  ResetIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
-import { api } from "../../blitzkit/api";
+import { api } from "../../api/dynamic";
 import { useLocale } from "../../hooks/useLocale";
 import { App } from "../../stores/app";
 import { TankFilters, type CaseType } from "../../stores/tankFilters";

@@ -5,7 +5,7 @@ import {
 } from "@blitzkit/core";
 import type { Vector3 } from "three";
 import { Varuna } from "varuna";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";

@@ -3,7 +3,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import fuzzysort from "fuzzysort";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
-import { api } from "../../blitzkit/api";
+import { api } from "../../api/dynamic";
 import { useLocale } from "../../hooks/useLocale";
 import { Gallery } from "../../stores/gallery";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";

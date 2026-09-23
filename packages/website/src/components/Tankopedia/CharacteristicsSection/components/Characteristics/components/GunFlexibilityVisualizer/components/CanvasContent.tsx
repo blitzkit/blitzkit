@@ -1,7 +1,7 @@
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import type { Group } from "three";
-import { api } from "../../../../../../../../blitzkit/api";
+import { api } from "../../../../../../../../api/dynamic";
 import {
   modelTransformEvent,
   type ModelTransformEventData,

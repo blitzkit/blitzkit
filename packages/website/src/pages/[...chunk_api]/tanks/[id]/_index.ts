@@ -1,4 +1,4 @@
-import { api } from "../../../../blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 

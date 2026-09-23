@@ -33,12 +33,12 @@ import {
 } from "@radix-ui/themes";
 import { debounce } from "lodash-es";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { api } from "../../../../api/dynamic";
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { StickyRowHeaderCell } from "../../../../components/StickyRowHeaderCell";
 import { StickyTableRoot } from "../../../../components/StickyTableRoot";
 import { TankRowHeaderCell } from "../../../../components/TankRowHeaderCell";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { api } from "../../../../blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,

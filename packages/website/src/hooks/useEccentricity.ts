@@ -1,7 +1,7 @@
 import { TankDefinition } from "@blitzkit/core";
 import { sumBy } from "lodash-es";
 import { useMemo } from "react";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { Duel } from "../stores/duel";
 
 export enum UseEccentricityMode {

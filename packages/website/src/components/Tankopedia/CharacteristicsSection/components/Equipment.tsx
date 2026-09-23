@@ -1,5 +1,5 @@
 import { Button, Flex, Heading } from "@radix-ui/themes";
-import { api } from "../../../../blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { EquipmentManager } from "../../../EquipmentManager";

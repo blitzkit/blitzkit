@@ -1,4 +1,4 @@
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { useAwait } from "./useAwait";
 import { useLocale } from "./useLocale";
 

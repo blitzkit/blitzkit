@@ -1,8 +1,8 @@
 import { literals } from "@blitzkit/i18n/src/literals";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { api } from "../api/dynamic";
 import { awaitablePopularTanks } from "../core/awaitables/popularTanks";
-import { api } from "../blitzkit/api";
 import {
   LocaleProvider,
   useLocale,

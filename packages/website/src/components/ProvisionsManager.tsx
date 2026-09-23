@@ -1,5 +1,5 @@
 import { Flex } from "@radix-ui/themes";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { ProvisionButton } from "./ModuleButtons/ProvisionButton";
 
 interface ProvisionsManagerProps {

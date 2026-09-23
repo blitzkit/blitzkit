@@ -10,8 +10,8 @@ import {
   useState,
 } from "react";
 import usePromise from "react-promise-suspense";
+import { api } from "../../api/dynamic";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
-import { api } from "../../blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { useAveragesExclusionRatio } from "../../hooks/useAveragesExclusionRatio";
 import { useLocale } from "../../hooks/useLocale";

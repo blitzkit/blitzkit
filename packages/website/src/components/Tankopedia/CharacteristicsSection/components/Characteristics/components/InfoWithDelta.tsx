@@ -2,7 +2,7 @@ import { createDefaultSkills } from "@blitzkit/core";
 import { Flex, Progress, Text } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
-import { api } from "../../../../../../blitzkit/api";
+import { api } from "../../../../../../api/dynamic";
 import {
   tankCharacteristics,
   type TankCharacteristics,

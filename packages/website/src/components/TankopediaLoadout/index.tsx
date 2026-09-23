@@ -3,6 +3,7 @@ import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { hasUpgrades } from "../../tankopedia/hasUpgrades";
+import { vehicleStatusKeys } from "../../tankopedia/tankState";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";

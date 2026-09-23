@@ -1,4 +1,4 @@
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { Tankopedia } from "../stores/tankopedia";
 import { useAwait } from "./useAwait";
 

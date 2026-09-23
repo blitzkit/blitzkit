@@ -1,6 +1,6 @@
 import { alias, permanentSkills, romanize } from "@blitzkit/core";
 import { Flex } from "@radix-ui/themes";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { GenericTankComponentButton } from "./ModuleButtons/GenericTankComponentButton";
 
 interface CrewSkillManagerProps {

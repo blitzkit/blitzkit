@@ -1,8 +1,8 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { times } from "lodash-es";
+import { api } from "../../api/dynamic";
 import type { TankFilters } from "../../stores/tankFilters";
-import { api } from "../../blitzkit/api";
 
 const SHELLS = times(3, (index) => index);
 

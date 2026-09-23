@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { api } from "../../../../../blitzkit/api";
-import { computeCharacteristics } from "../../../../../blitzkit/computeCharacteristics";
+import { api } from "../../../../../api/dynamic";
+import { computeCharacteristics } from "../../../../../tankopedia/computeCharacteristics";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";

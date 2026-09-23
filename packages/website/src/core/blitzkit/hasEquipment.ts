@@ -1,5 +1,5 @@
+import { api } from "../../api/dynamic";
 import type { EquipmentMatrix } from "../../stores/duel";
-import { api } from "../../blitzkit/api";
 
 const equipmentDefinitions = await api.equipment();
 

@@ -1,5 +1,5 @@
 import { createDefaultProvisions, type TankDefinition } from "@blitzkit/core";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { createTankStatus } from "./createTankStatus";
 import type { TankState } from "./tankState";
 

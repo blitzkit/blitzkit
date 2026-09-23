@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { api } from "../../blitzkit/api";
+import { api } from "../../api/dynamic";
 import { generateTierListParams } from "../../core/blitzkit/generateTierListParams";
 import { TierList } from "../../stores/tierList";
 

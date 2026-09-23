@@ -3,11 +3,11 @@ import { Box, Card, Flex } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { useRef, useState } from "react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { api } from "../../../../../../../api/dynamic";
 import {
   DEFAULT_PITCH_TRANSITION,
   applyPitchYawLimits,
 } from "../../../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../../../blitzkit/api";
 import { hasEquipment } from "../../../../../../../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../../../../../../../core/blitzkit/modelTransform";
 import { Var } from "../../../../../../../core/radix/var";

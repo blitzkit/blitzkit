@@ -11,7 +11,7 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { api } from "../../blitzkit/api";
+import { api } from "../../api/dynamic";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { Var } from "../../core/radix/var";
 import { useLocale } from "../../hooks/useLocale";

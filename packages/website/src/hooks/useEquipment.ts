@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { api } from "../blitzkit/api";
+import { api } from "../api/dynamic";
 import { Duel } from "../stores/duel";
 
 const equipmentDefinitions = await api.equipment();

@@ -1,7 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 import { useEffect } from "react";
+import { api } from "../../../../../api/dynamic";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../blitzkit/api";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
 import { useEquipment } from "../../../../../hooks/useEquipment";

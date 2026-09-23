@@ -1,4 +1,4 @@
-import { api } from "../../../blitzkit/api";
+import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";
 

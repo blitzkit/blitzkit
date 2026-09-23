@@ -29,8 +29,8 @@ import {
 import fuzzysort from "fuzzysort";
 import { debounce, times } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "../api/dynamic";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
-import { api } from "../blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Guess, GuessState } from "../stores/guess";
 import { classIcons } from "./ClassIcon";

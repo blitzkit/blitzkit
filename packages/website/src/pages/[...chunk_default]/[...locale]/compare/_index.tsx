@@ -1,6 +1,6 @@
 import { createDefaultSkills } from "@blitzkit/core";
 import { useEffect, useMemo, useState } from "react";
-import { api } from "../../../../blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { CompareTable } from "../../../../components/Compare/CompareTable";
 import { Controls } from "../../../../components/Compare/Controls";
 import { DamageWarning } from "../../../../components/DamageWarning";

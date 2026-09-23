@@ -1,11 +1,11 @@
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import { Suspense, useEffect } from "react";
+import { api } from "../../../../api/dynamic";
 import { GuessBackground } from "../../../../components/GuessBackground";
 import { Guesser } from "../../../../components/Guesser";
 import { GuessRenderer } from "../../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../../components/GuessRendererLoader";
 import { PageWrapper } from "../../../../components/PageWrapper";
-import { api } from "../../../../blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,

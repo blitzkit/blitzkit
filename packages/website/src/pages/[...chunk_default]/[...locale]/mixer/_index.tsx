@@ -19,12 +19,12 @@ import {
   type ButtonProps,
 } from "@radix-ui/themes";
 import { useRef, useState } from "react";
+import { api } from "../../../../api/dynamic";
 import { MixerScene } from "../../../../components/MixerScene";
 import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton";
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../../components/ScreenshotButton";
 import { TankSearch } from "../../../../components/TankSearch";
-import { api } from "../../../../blitzkit/api";
 import { curateMixer } from "../../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,
