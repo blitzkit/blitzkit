@@ -1,4 +1,3 @@
-export * from "../../protos/src/blitzkit";
 export * from "./api";
 export * from "./blitz";
 export * from "./blitzkit";

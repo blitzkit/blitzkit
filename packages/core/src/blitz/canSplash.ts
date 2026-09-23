@@ -1,5 +1,3 @@
-import { ShellDefinition, ShellType } from "../../../protos/src/blitzkit";
-
 export function canSplash(
   type: ShellDefinition["type"],
 ): type is ShellType.SHELL_TYPE_HE {

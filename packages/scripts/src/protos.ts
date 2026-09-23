@@ -29,15 +29,15 @@ for (const root of ROOTS) {
 
   for (const file of filesRaw) {
     if (file.endsWith(".proto")) {
-      files.push(file);
+      const name = file.slice(0, -6);
+
+      index += `export * from "./${name}";\n`;
       args += `${root}/${file}\n`;
+
+      files.push(file);
     }
 
     if (file.endsWith(".ts")) {
-      const name = file.slice(0, -3);
-
-      index += `export * from "./${name}";\n`;
-
       await rm(`${root}/${file}`);
     }
   }
