@@ -1,7 +1,7 @@
 ---
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
 import type { Tool } from "../constants/tools";
-import { getStrings } from "../core/i18n/getStrings";
 import { Logo } from "../icons/Logo";
 import { Back } from "./Back";
 import { Flex } from "./Flex";
@@ -14,9 +14,8 @@ interface Props {
 }
 
 const { tool, locale } = Astro.props;
-const strings = getStrings(locale);
-const toolStrings =
-  strings.website.tools[tool.id as keyof typeof strings.website.tools];
+const strings = await api.strings(locale);
+const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>

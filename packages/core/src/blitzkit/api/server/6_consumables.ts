@@ -1,8 +1,5 @@
-import {
-  BlitzTankFilterDefinitionCategory,
-  Consumable,
-  ConsumableDefinitions,
-} from "@blitzkit/core";
+import { BlitzTankFilterDefinitionCategory } from "@blitzkit/core";
+import { Consumable, ConsumableDefinitions } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI5 } from "./5_equipments";
 

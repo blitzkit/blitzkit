@@ -1,20 +1,20 @@
 import {
   ConsumableTankCategoryFilterCategory,
-  type GunDefinition,
-  type TankDefinition,
-  type TankInclusivityFilter,
-} from "@blitzkit/core";
+  GunDefinition,
+  TankDefinition,
+  TankInclusivityFilter,
+} from "@blitzkit/protos";
 
-export function useCompatibility(tank: TankDefinition, gun: GunDefinition) {
+export function useTankCompatibility(tank: TankDefinition, gun: GunDefinition) {
   return function (
     include?: TankInclusivityFilter[],
     exclude?: TankInclusivityFilter[],
   ) {
-    return tankCompatibility(tank, gun, include, exclude);
+    return isTankCompatible(tank, gun, include, exclude);
   };
 }
 
-function tankCompatibility(
+export function isTankCompatible(
   tank: TankDefinition,
   gun: GunDefinition,
   include?: TankInclusivityFilter[],

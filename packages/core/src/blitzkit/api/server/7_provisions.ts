@@ -1,8 +1,5 @@
-import {
-  BlitzTankFilterDefinitionCategory,
-  Provision,
-  ProvisionDefinitions,
-} from "@blitzkit/core";
+import { BlitzTankFilterDefinitionCategory } from "@blitzkit/core";
+import { Provision, ProvisionDefinitions } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI6 } from "./6_consumables";
 

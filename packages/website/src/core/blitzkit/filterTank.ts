@@ -1,7 +1,7 @@
-import type { TankDefinition } from "@blitzkit/core";
-import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
+import type { TankDefinition } from "@blitzkit/protos";
 import { times } from "lodash-es";
 import { api } from "../../api/dynamic";
+import { isTankCompatible } from "../../hooks/useTankCompatibility";
 import type { TankFilters } from "../../stores/tankFilters";
 
 const SHELLS = times(3, (index) => index);
@@ -51,10 +51,11 @@ export async function filterTank(
       filters.consumables.every((consumable) =>
         tank.turrets.some((turret) =>
           turret.guns.some((gun) =>
-            checkConsumableProvisionInclusivity(
-              consumableDefinitions.consumables[consumable],
+            isTankCompatible(
               tank,
               gun,
+              consumableDefinitions.consumables[consumable].include,
+              consumableDefinitions.consumables[consumable].exclude,
             ),
           ),
         ),
@@ -63,10 +64,11 @@ export async function filterTank(
       filters.provisions.every((provision) =>
         tank.turrets.some((turret) =>
           turret.guns.some((gun) =>
-            checkConsumableProvisionInclusivity(
-              provisionDefinitions.provisions[provision],
+            isTankCompatible(
               tank,
               gun,
+              provisionDefinitions.provisions[provision].include,
+              provisionDefinitions.provisions[provision].exclude,
             ),
           ),
         ),

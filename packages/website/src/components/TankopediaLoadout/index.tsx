@@ -1,6 +1,6 @@
 import type { Consumable } from "@blitzkit/core";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { useCompatibility } from "../../hooks/useCompatibility";
+import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useConsumables } from "../../hooks/useConsumables";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useProtagonistGun } from "../../hooks/useProtagonistGun";
@@ -122,7 +122,7 @@ function Consumables({ characteristics }: ConsumablesProps) {
   const consumables = useConsumables();
   const tank = useProtagonist();
   const gun = useProtagonistGun();
-  const isCompatible = useCompatibility(tank, gun);
+  const isCompatible = useTankCompatibility(tank, gun);
 
   return (
     <div className={styles.section}>

@@ -1,30 +1,32 @@
 import {
-  AssaultRanges,
   BlitzCrewType,
   BlitzModuleType,
   BlitzTankClass,
   ChassisDefinitionsList,
-  Crew,
   EngineDefinitionsList,
-  Equalizer,
-  GunDefinition,
   GunDefinitionsList,
-  ModuleType,
-  ResearchCost,
   ShellDefinitionsList,
   ShellKind,
   sluggify,
-  TankDefinitions,
-  TankPrice,
-  TankPriceType,
-  TankType,
   toUniqueId,
   TurretDefinitionsList,
-  Unlock,
   UnlocksListing,
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
+import {
+  AssaultRanges,
+  Crew,
+  Equalizer,
+  GunDefinition,
+  ModuleType,
+  ResearchCost,
+  TankDefinitions,
+  TankPrice,
+  TankPriceType,
+  TankType,
+  Unlock,
+} from "@blitzkit/protos";
 import { Cache, ServerBlitzKitAPI0 } from "./0_base";
 
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {

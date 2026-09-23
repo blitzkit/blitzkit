@@ -1,3 +1,4 @@
+import { Strings } from "@blitzkit/i18n";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
@@ -9,8 +10,7 @@ import {
   ProvisionDefinitions,
   SkillDefinitions,
   TankDefinitions,
-} from "@blitzkit/core";
-import { Strings } from "@blitzkit/i18n";
+} from "@blitzkit/protos";
 import { BlitzScripts } from "../../types/blitzScripts";
 
 export abstract class AbstractBlitzKitAPI {

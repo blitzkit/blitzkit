@@ -1,5 +1,6 @@
-import { Avatar, fetchGlossary, Gallery } from "@blitzkit/core";
+import { fetchGlossary } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
+import { Avatar, Gallery } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI9 } from "./9_game";
 
@@ -11,7 +12,7 @@ export abstract class ServerBlitzKitAPI10 extends ServerBlitzKitAPI9 {
     await Promise.all(
       locales.supported.map(async (supported) => {
         const glossary = await fetchGlossary(
-          supported.blitz ?? supported.locale,
+          supported.variant_blitz_local ?? supported.locale,
         );
 
         console.log(

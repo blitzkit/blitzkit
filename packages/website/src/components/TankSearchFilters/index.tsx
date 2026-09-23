@@ -1,14 +1,7 @@
-import {
-  alias,
-  GunDefinition,
-  ShellType,
-  TANK_CLASSES,
-  TANK_TYPES,
-  TankType,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import { ShellType, TankType, type GunDefinition } from "@blitzkit/protos";
 import {
   LockClosedIcon,
   LockOpen2Icon,
