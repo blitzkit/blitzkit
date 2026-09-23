@@ -1,6 +1,7 @@
 import { createDefaultProvisions, type TankDefinition } from "@blitzkit/core";
 import { api } from "../blitzkit/api";
-import type { TankState } from "../stores/tankopedia";
+import { createTankStatus } from "./createTankStatus";
+import type { TankState } from "./tankState";
 
 export type EquipmentMatrix = [
   [number, number, number],
@@ -24,7 +25,6 @@ export function createTankState(tank: TankDefinition) {
 
   return {
     tank: tank.id,
-    model: models.models[turret.id],
 
     engine: tank.engines.at(-1)!.id,
     turret: turret.id,
@@ -36,6 +36,9 @@ export function createTankState(tank: TankDefinition) {
     speed: 0,
 
     equipment_matrix: genericDefaultEquipmentMatrix,
+    status: createTankStatus(),
+
+    model: models.models[turret.id],
 
     consumables: [],
     provisions: createDefaultProvisions(tank, gun, provisions, scripts),

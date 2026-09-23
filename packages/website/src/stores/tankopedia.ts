@@ -2,7 +2,6 @@ import {
   createDefaultSkills,
   ShellDefinition,
   TankDefinition,
-  type ModelDefinition,
 } from "@blitzkit/core";
 import type { Vector3 } from "three";
 import { Varuna } from "varuna";
@@ -10,10 +9,8 @@ import { api } from "../blitzkit/api";
 import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
-import {
-  createTankState,
-  type EquipmentMatrix,
-} from "../tankopedia/createTankState";
+import { createTankState } from "../tankopedia/createTankState";
+import type { TankState } from "../tankopedia/tankState";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -79,28 +76,6 @@ export enum TankopediaRelativeAgainst {
   Class,
   Tier,
   All,
-}
-
-export interface TankState {
-  tank: number;
-
-  engine: number;
-  turret: number;
-  gun: number;
-  shell: number;
-  track: number;
-
-  assault_distance: number;
-  speed: number;
-
-  model: ModelDefinition;
-
-  equipment_matrix: EquipmentMatrix;
-
-  consumables: number[];
-  provisions: number[];
-  camouflage: boolean;
-  cooldown_booster: number;
 }
 
 interface Tankopedia {

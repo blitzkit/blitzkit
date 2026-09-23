@@ -1,8 +1,12 @@
+import { TrashIcon } from "@radix-ui/react-icons";
 import { useProtagonist } from "../../hooks/useProtagonist";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { hasUpgrades } from "../../tankopedia/hasUpgrades";
 import type { ComputedCharacteristics } from "../../types/characteristics";
+import { Heading } from "../Heading";
+import { IconButton } from "../IconButton";
+import styles from "./index.module.css";
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
