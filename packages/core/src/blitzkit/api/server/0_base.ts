@@ -8,24 +8,26 @@ import {
   CamouflagesYaml,
   CombatRolesYaml,
   ConsumablesCommon,
-  ConsumableTankCategoryFilterCategory,
-  CrewType,
-  I18nString,
   MapsYaml,
-  ModuleType,
   OptionalDevices,
   OptionalDeviceSlots,
   ProvisionsCommon,
   ShellKind,
-  ShellType,
   SquadBattleTypeStylesYaml,
-  TankClass,
   TankmenAvatar,
   toUniqueId,
   VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import locales from "@blitzkit/i18n/locales.json";
+import {
+  ConsumableTankCategoryFilterCategory,
+  CrewType,
+  I18nString,
+  ModuleType,
+  ShellType,
+  TankClass,
+} from "@blitzkit/protos";
 import type { extname, parse } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { AbstractBlitzKitAPI } from "../abstract";

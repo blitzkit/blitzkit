@@ -82,6 +82,74 @@
     }
   },
 
+  "tools": {
+    "tanks": {
+      "name": "Tankopedia",
+      "slogan": "Blitz tank encyclopedia",
+      "action": "Find tanks"
+    },
+    "avatars": {
+      "name": "Avatars",
+      "slogan": "Blitz player avatars",
+      "action": "Browse all"
+    },
+    "backgrounds": {
+      "name": "Backgrounds",
+      "slogan": "Blitz player backgrounds",
+      "action": "View all"
+    },
+    "api": {
+      "name": "API",
+      "action": "To docs",
+      "slogan": "BlitzKit hosted API"
+    },
+    "players": {
+      "name": "Players",
+      "slogan": "Player statistics",
+      "action": "Stalk player"
+    },
+    "compare": {
+      "name": "Compare",
+      "slogan": "Compare tanks characteristics",
+      "action": "Compare now"
+    },
+    "performance": {
+      "name": "Performance",
+      "slogan": "Tank performance statistics",
+      "action": "View tanks"
+    },
+    "playlist": {
+      "name": "Playlist",
+      "slogan": "Tank playlist generator",
+      "action": "Generate"
+    },
+    "mixer": {
+      "name": "Mixer",
+      "slogan": "Tank module mixer",
+      "action": "Mix and match"
+    },
+    "session": {
+      "name": "Session",
+      "slogan": "Live player statistics",
+      "action": "Track"
+    },
+    "guesser": {
+      "name": "Guesser",
+      "slogan": "Silhouette mini-game",
+      "action": "Play"
+    },
+    "changelogs": {
+      "name": "Changelogs",
+      "slogan": "BlitzKit patch notes",
+      "action": "Read up"
+    },
+    "settings": {
+      "name": "Settings",
+      "slogan": "",
+      "action": ""
+    }
+  },
+
   "home": {
     "tanks": "Tanks",
     "players": "Players",
@@ -424,325 +492,6 @@
       "patches": {
         "name": "BlitzKit Changelogs",
         "seo_description": "Changelogs for BlitzKit Discord bot and website"
-      }
-    },
-
-    "tools": {
-      "backgrounds": {
-        "name": "Backgrounds",
-        "description": "Profile backgrounds",
-        "seo_description": "World of Tanks Blitz player profile backgrounds"
-      },
-
-      "players": {
-        "name": "Players",
-        "description": "Player statistics",
-        "seo_description": "Player statistics in World of Tanks Blitz"
-      },
-
-      "playlist": {
-        "reset": "Reset",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your battles",
-
-        "sort": {
-          "button": "Sort by",
-          "last_played": "Last played",
-          "least_played": "Least played"
-        },
-
-        "table": {
-          "index": "#",
-          "never": "Never",
-          "tank": "Tank",
-          "last_played": "Last played",
-          "battles": "Career battles",
-          "unrecorded": "--",
-          "wins": "Wins"
-        },
-
-        "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
-          "cancel": "Cancel",
-          "proceed": "Proceed"
-        },
-
-        "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
-        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "pool_size": "{count} possible tanks"
-      },
-
-      "mixer": {
-        "name": "Mixer",
-        "description": "Mix tank modules",
-        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
-      },
-
-      "guesser": {
-        "name": "Guesser",
-        "description": "Silhouette mini-game",
-        "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
-        "search": {
-          "placeholder": "Type to guess...",
-          "skip": "Skip",
-          "guess": "Guess",
-          "next": "Next",
-          "no_results": "No results"
-        },
-        "stats": "{correct} / {total} correct, {streak} streak",
-        "help": {
-          "title": "Partially reveal tank?",
-          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
-          "cancel": "Cancel",
-          "reveal": "Reveal"
-        },
-        "clear": "Clear",
-        "select_all": "Select all",
-        "tier": "Tier {tier}"
-      },
-
-      "compare": {
-        "name": "Compare",
-        "description": "Compare tank statistics",
-        "seo_description": "Compare tanks statistics and loadouts in World of Tanks Blitz",
-
-        "actions": {
-          "add": {
-            "button": "Add",
-            "title": "Add tanks",
-            "description": "Select tanks to add to comparison"
-          },
-          "clear": "Clear",
-          "deltas": {
-            "none": "No deltas",
-            "percentage": "Percentage",
-            "absolute": "Absolute"
-          }
-        },
-
-        "no_tanks": {
-          "title": "No tanks selected",
-          "body": "Press the Add button to get started"
-        },
-
-        "table": {
-          "equipment": {
-            "clear": "Clear",
-            "apply_to_all": "Apply to all"
-          },
-          "skills": {
-            "clear": "Clear",
-            "maximize": "Maximize",
-            "equalize": "Equalize"
-          },
-          "modules": {
-            "stock": "Stock",
-            "upgrade": "Upgrade"
-          },
-          "provisions": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
-          },
-          "consumables": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
-          }
-        }
-      },
-
-      "performance": {
-        "name": "Performance",
-        "description": "Tank performance statistics",
-        "seo_description": "Best tanks and their performances in World of Tanks Blitz",
-        "estimation": {
-          "body": "Estimated stats based on {count} players. Updated {age} ago.",
-          "hours": "{count} hours",
-          "minutes": "{count} minutes"
-        },
-        "player_count": {
-          "label": "Player count"
-        },
-        "table": {
-          "tanks": {
-            "header": "Tank",
-            "total": "Total"
-          },
-          "stats": {
-            "winrate": "Winrate",
-            "players": "Players",
-            "damage": "Damage",
-            "survival": "Survival",
-            "xp": "XP",
-            "kills": "Kills",
-            "spots": "Spots",
-            "accuracy": "Accuracy",
-            "shots": "Shots",
-            "hits": "Hits",
-            "damage_ratio": "Dmg. ratio",
-            "damage_taken": "Dmg. taken",
-            "capture_points": "Cap points"
-          }
-        }
-      },
-
-      "avatars": {
-        "name": "Avatars",
-        "description": "Blitz player avatars",
-        "seo_description": "All World of Tanks Blitz player avatars",
-        "last_updated": "Last updated on {time}",
-        "search": {
-          "hint": "Search avatars...",
-          "results": "{count} avatars"
-        }
-      },
-
-      "session": {
-        "name": "Session",
-        "description": "Live session stats",
-        "seo_description": "Track your stats in real time as you play World of Tanks Blitz",
-        "search": {
-          "lookup": "Look up a player to get started",
-          "hint": "Search players...",
-          "searching": "Searching...",
-          "no_results": "No players found"
-        },
-        "controls": {
-          "title": "Tracking {name}",
-          "subtitle": "Since {time}",
-          "reset": "Reset",
-          "change": "Change"
-        },
-        "no_cc": {
-          "title": "You're attempting to track a CC account",
-          "body": "CC (community contributor) accounts do not have public tank statistics. We are in the process of adding embeds for CC accounts, stay tuned.",
-          "alright": "Alright"
-        },
-        "no_battles": {
-          "title": "No battles",
-          "hint": "Go ahead and play a game"
-        },
-        "table": {
-          "tank": "Tank",
-          "total": "Total",
-          "remove": "Remove"
-        }
-      },
-
-      "tier_list": {
-        "name": "Tier list",
-        "description": "Rank Blitz tanks",
-        "seo_description": "Explore tier lists ranking tanks from best to worst, based on player ratings and statistical performance in World of Tanks Blitz",
-        "buttons": {
-          "reset": "Reset",
-          "share": "Share"
-        }
-      },
-
-      "embed": {
-        "name": "Embed",
-        "description": "Embeds for streaming",
-        "seo_description": "Create embeds for streaming World of Tanks Blitz with extreme customization",
-        "coming_soon": "More embeds coming soon.",
-        "suggest": "Suggest ideas.",
-
-        "preview": {
-          "title": "Example preview",
-          "upload": "Upload test background"
-        },
-
-        "configuration": {
-          "import": {
-            "title": "Import",
-            "description": "Paste your current URL if you have one already to import your settings",
-            "hint": "Paste URL...",
-            "apply": "Apply",
-            "idiot_title": "Invalid URL",
-            "idiot_description": "Try pasting the URL that BlitzKit previously generated, you silly goose!",
-            "idiot_button": "Okay, my bad"
-          },
-
-          "export": {
-            "title": "Export",
-            "description": "Copy all properties for you streaming software",
-            "generate": {
-              "button": "Generate URL",
-              "title": "Generate URL",
-              "subtitle": "Search an account to track",
-              "cancel": "Cancel",
-              "success": {
-                "title": "Copy URL",
-                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
-                "back": "Back",
-                "copy": "Copy URL"
-              }
-            },
-            "css": "Copy CSS",
-            "width": "Copy Width",
-            "height": "Copy Height",
-            "framerate": "Copy Framerate"
-          },
-
-          "customize": {
-            "title": "Customize",
-            "reset": "Reset",
-            "description": "Bells and whistles of your embed"
-          }
-        },
-
-        "types": {
-          "breakdown": {
-            "name": "Breakdown",
-            "options": {
-              "width": "Width",
-              "height": "Height",
-              "showTotal": "Show total",
-              "listGap": "List gap",
-              "listMaxTanks": "Max tanks",
-              "cardRadius": "Card radius",
-              "cardHeaderBackgroundColor": "Card header background color",
-              "cardHeaderPadding": "Card header padding",
-              "cardTitle": "Card title",
-              "cardTitleTypeColor": "Card title type color",
-              "cardTitleClassIcon": "Card title class icon",
-              "cardBodyBackgroundColor": "Card body background color",
-              "cardBodyPadding": "Card body padding",
-              "columnGap": "Column gap",
-              "columnValue": "Column value",
-              "columnLabel": "Column label",
-              "column1": "Column 1",
-              "column2": "Column 2",
-              "column3": "Column 3",
-              "column4": "Column 4",
-              "column1CustomLabel": "Column 1 label",
-              "column2CustomLabel": "Column 2 label",
-              "column3CustomLabel": "Column 3 label"
-            }
-          }
-        }
-      },
-
-      "more": {
-        "name": "More coming soon",
-        "description": "What we're making",
-        "seo_description": "What we're making with BlitzKit"
-      },
-
-      "api": {
-        "name": "API",
-        "description": "BlitzKit hosted API",
-        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
-      },
-
-      "changelogs": {
-        "name": "Changelogs",
-        "description": "BlitzKit changelogs",
-        "seo_description": "Changelogs and patch notes for BlitzKit"
       }
     },
 
