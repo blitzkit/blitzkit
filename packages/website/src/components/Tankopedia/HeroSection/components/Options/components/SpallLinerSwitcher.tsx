@@ -1,17 +1,17 @@
 import { alias, availableProvisions } from "@blitzkit/core";
-import { Flex, IconButton, Popover, Text } from "@radix-ui/themes";
+import { ShuffleIcon } from "@radix-ui/react-icons";
+import { Flex, IconButton, Popover } from "@radix-ui/themes";
 import { api } from "../../../../../../core/blitzkit/api";
 import { SPALL_LINER_PROVISION_ID } from "../../../../../../core/blitzkit/spallLiner";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { ProvisionButton } from "../../../../../ModuleButtons/ProvisionButton";
 
 const provisionDefinitions = await api.provisionDefinitions();
 
 export function SpallLinerSwitcher() {
   const { tank, gun, provisions } = Duel.use((state) => state.protagonist);
-  const { strings, unwrap } = useLocale();
+  const { unwrap } = useLocale();
   const isSpallLinerActive = provisions.includes(SPALL_LINER_PROVISION_ID);
   const hasSlotAvailable = provisions.length < tank.max_provisions;
 
@@ -80,19 +80,44 @@ export function SpallLinerSwitcher() {
       <Popover.Trigger>{button}</Popover.Trigger>
 
       <Popover.Content>
-        <Flex direction="column" gap="2" maxWidth="240px">
-          <Text size="2" color="gray">
-            {strings.website.tools.tankopedia.sandbox.spall_liner.swap_prompt}
-          </Text>
+        <Flex gap="2" align="center">
+          <IconButton color="gray" variant="soft" size="3" radius="none" disabled>
+            <img
+              alt={unwrap(
+                provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
+              )}
+              src={alias(
+                "api",
+                `/icons/provisions/${SPALL_LINER_PROVISION_ID}.webp`,
+              )}
+              style={{
+                width: "50%",
+                height: "50%",
+              }}
+            />
+          </IconButton>
 
-          <Flex gap="2" wrap="wrap">
+          <ShuffleIcon color="var(--gray-9)" />
+
+          <Flex gap="2">
             {provisions.map((id) => (
               <Popover.Close key={id}>
-                <ProvisionButton
-                  provision={id}
-                  selected={false}
+                <IconButton
+                  color="gray"
+                  variant="soft"
+                  size="3"
+                  radius="none"
                   onClick={() => equip(id)}
-                />
+                >
+                  <img
+                    alt={unwrap(provisionDefinitions.provisions[id].name!)}
+                    src={alias("api", `/icons/provisions/${id}.webp`)}
+                    style={{
+                      width: "50%",
+                      height: "50%",
+                    }}
+                  />
+                </IconButton>
               </Popover.Close>
             ))}
           </Flex>
