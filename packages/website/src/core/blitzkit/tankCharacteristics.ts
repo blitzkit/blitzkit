@@ -22,6 +22,7 @@ import {
 } from "@blitzkit/core";
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
 import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
@@ -170,7 +171,10 @@ export function tankCharacteristics(
     coefficient(
       [applyReactiveArmor && shell.type !== ShellType.SHELL_TYPE_HE, -0.27],
       [applyDynamicArmor, -0.1],
-      [applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE, -0.2],
+      [
+        applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE,
+        SPALL_LINER_HE_DAMAGE_DELTA,
+      ],
     );
   const assaultDamageCoefficient =
     gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
