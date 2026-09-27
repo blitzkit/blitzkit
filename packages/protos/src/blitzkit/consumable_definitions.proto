@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package blitzkit;
 
@@ -9,9 +9,9 @@ message ConsumableDefinitions {
 }
 
 message Consumable {
-  required uint32                id                  = 1;
-  required I18nString            name                = 2;
-  required bool                  game_mode_exclusive = 5;
+  uint32                         id                  = 1;
+  I18nString                     name                = 2;
+  bool                           game_mode_exclusive = 5;
   repeated TankInclusivityFilter include             = 6;
   repeated TankInclusivityFilter exclude             = 7;
 }
@@ -26,8 +26,8 @@ message TankInclusivityFilter {
 }
 
 message ConsumableTankTierFilter {
-  required uint32 min = 1;
-  required uint32 max = 2;
+  uint32 min = 1;
+  uint32 max = 2;
 }
 
 message ConsumableTankIdsFilter {

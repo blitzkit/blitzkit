@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package blitzkit;
 
@@ -10,11 +10,10 @@ message ProvisionDefinitions {
 }
 
 message Provision {
-  reserved 3; // crew
 
-  required uint32                id                  = 1;
-  required I18nString            name                = 2;
-  required bool                  game_mode_exclusive = 5;
-  repeated TankInclusivityFilter include             = 6;
-  repeated TankInclusivityFilter exclude             = 7;
+  uint32                         id                  = 1;
+  I18nString                     name                = 2;
+  bool                           game_mode_exclusive = 3;
+  repeated TankInclusivityFilter include             = 4;
+  repeated TankInclusivityFilter exclude             = 5;
 }

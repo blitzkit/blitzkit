@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package blitzkit;
 
@@ -14,8 +14,8 @@ message RatingLeaderboardV1 {
 }
 
 message RatingLeaderboardEntryV1 {
-  required uint32 id    = 1;
-  required uint32 score = 2;
+  uint32 id    = 1;
+  uint32 score = 2;
 }
 
 message RatingLeaderboardV2 {
@@ -23,11 +23,11 @@ message RatingLeaderboardV2 {
 }
 
 message RatingLeaderboardEntryV2 {
-  required uint32 id       = 1;
-  required uint32 score    = 2;
-  required uint32 battles  = 3;
-  required uint32 wins     = 4;
-  required uint32 survived = 5;
-  required uint32 damage   = 6;
-  required uint32 kills    = 7;
+  uint32 id       = 1;
+  uint32 score    = 2;
+  uint32 battles  = 3;
+  uint32 wins     = 4;
+  uint32 survived = 5;
+  uint32 damage   = 6;
+  uint32 kills    = 7;
 }

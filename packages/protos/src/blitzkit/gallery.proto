@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package blitzkit;
 
@@ -9,7 +9,7 @@ message Gallery {
 }
 
 message Avatar {
-  required string     id        = 1;
-  required I18nString name      = 2;
-  required string     extension = 3;
+  string     id        = 1;
+  I18nString name      = 2;
+  string     extension = 3;
 }
