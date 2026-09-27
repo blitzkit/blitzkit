@@ -1,4 +1,4 @@
-import { CamouflageDefinitions } from "@blitzkit/core";
+import { CamouflageDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

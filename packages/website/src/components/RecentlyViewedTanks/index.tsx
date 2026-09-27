@@ -1,7 +1,7 @@
 import { isEqual } from "lodash-es";
 import { useMemo } from "react";
 import { api } from "../../api/dynamic";
-import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankSort } from "../../stores/tankopediaSort";
@@ -29,7 +29,8 @@ export function RecentlyViewedTanks() {
       }),
     [filters],
   );
-  const { strings } = useLocale();
+
+  const strings = useStrings();
   const by = TankSort.use((state) => state.by);
 
   if (recentlyViewed.length === 0 || by !== "meta.none" || hasFilters) {

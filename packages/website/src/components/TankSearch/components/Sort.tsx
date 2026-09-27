@@ -1,5 +1,5 @@
 import { CaretDownIcon } from "@radix-ui/react-icons";
-import { useLocale } from "../../../hooks/useLocale";
+import { useStrings } from "../../../hooks/useStrings";
 import type {
   TankopediaSortBy,
   TankopediaSortDirection,
@@ -17,7 +17,7 @@ interface ItemProps {
 }
 
 function Item({ by }: ItemProps) {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const _by = TankSort.use((state) => state.by);
 
   return (
@@ -36,7 +36,7 @@ function Item({ by }: ItemProps) {
 
 export function Sort() {
   const direction = TankSort.use((state) => state.direction);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
     <DropdownMenu.Root>

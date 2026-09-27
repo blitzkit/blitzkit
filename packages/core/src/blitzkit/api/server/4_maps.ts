@@ -1,4 +1,4 @@
-import { MapDefinitions } from "@blitzkit/core";
+import { MapDefinitions } from "@blitzkit/protos";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI3 } from "./3_models";
 

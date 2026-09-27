@@ -1,4 +1,4 @@
-import { ModelDefinitions } from "@blitzkit/core";
+import { ModelDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

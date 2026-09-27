@@ -1,7 +1,7 @@
+import { isTankCompatible } from "@blitzkit/core";
 import type { TankDefinition } from "@blitzkit/protos";
 import { times } from "lodash-es";
 import { api } from "../../api/dynamic";
-import { isTankCompatible } from "../../hooks/useTankCompatibility";
 import type { TankFilters } from "../../stores/tankFilters";
 
 const SHELLS = times(3, (index) => index);

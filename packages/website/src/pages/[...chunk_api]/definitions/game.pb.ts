@@ -1,4 +1,4 @@
-import { GameDefinitions } from "@blitzkit/core";
+import { GameDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

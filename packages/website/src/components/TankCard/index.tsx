@@ -1,11 +1,13 @@
-import { alias, TankType, type TankDefinition } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
+import { TankType, type TankDefinition } from "@blitzkit/protos";
 import { uniq } from "lodash-es";
 import { type ReactNode } from "react";
 import { api } from "../../api/dynamic";
 import { useLocale } from "../../hooks/useLocale";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
-import { classIcons } from "../ClassIcon";
+import { ClassIcon } from "../ClassIcon";
 import { Flex } from "../Flex";
 import { LinkI18nWrapper } from "../LinkI18nWrapper";
 import { TankCardSkeleton } from "../TankCardSkeleton";
@@ -28,7 +30,8 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
     return <TankCardSkeleton />;
   }
 
-  const { unwrap, locale } = useLocale();
+  const unwrap = useUnwrapper();
+  const locale = useLocale();
 
   const provideLink = !props.noLink && props.onTankSelect === undefined;
   const name = unwrap(props.tank.name!);
@@ -40,8 +43,6 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
         ? "amber"
         : "gray";
   const lowContrast = props.tank.type !== TankType.TANK_TYPE_RESEARCHABLE;
-
-  const Icon = classIcons[props.tank.class];
 
   const content = (
     <Flex
@@ -75,7 +76,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
       </Flex>
 
       <Text className={styles.name} color={color} lowContrast={lowContrast}>
-        <Icon className={styles.icon} />
+        <ClassIcon class={props.tank.class} className={styles.icon} />
         <span className={styles.text}>{name}</span>
       </Text>
 

@@ -1,4 +1,4 @@
-import { TankDefinitions } from "@blitzkit/core";
+import { TankDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

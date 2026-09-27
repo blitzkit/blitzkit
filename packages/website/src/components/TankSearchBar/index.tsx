@@ -1,12 +1,12 @@
-import type { TankDefinition } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
-    type KeyboardEventHandler,
-    useCallback,
-    useEffect,
-    useRef,
+  type KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
 } from "react";
-import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { Flex } from "../Flex";
@@ -23,7 +23,7 @@ export function TankSearchBar({
   skeleton,
   onSelect,
 }: SearchBarProps) {
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   const search = TankFilters.use((state) => state.search);
 

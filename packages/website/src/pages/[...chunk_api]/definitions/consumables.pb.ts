@@ -1,4 +1,4 @@
-import { ConsumableDefinitions } from "@blitzkit/core";
+import { ConsumableDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

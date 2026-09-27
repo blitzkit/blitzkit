@@ -1,4 +1,4 @@
-import { ProvisionDefinitions } from "@blitzkit/core";
+import { ProvisionDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";
