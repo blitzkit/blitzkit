@@ -17,9 +17,9 @@ import {
   Vector2,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
-import { Duel } from "../../../../stores/duel";
+import { DuelModule, getDuel } from "../../../../hooks/useDuel";
+import { hasEquipment } from "../../../../hooks/useEquipment";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
 import { transitionEvent } from "../../../Lighting";
@@ -82,9 +82,8 @@ export function PrimaryArmorSceneComponent({
 
   useEffect(() => {
     function handleShellChange() {
-      const tankopediaEphemeral = Tankopedia.state;
       const shell =
-        tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
+        Tankopedia.state.customShell ?? getDuel("antagonist", DuelModule.Shell);
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
@@ -117,15 +116,16 @@ export function PrimaryArmorSceneComponent({
       material.wireframe = wireframe;
     }
     function handleProtagonistEquipmentChange(noInvalidate = false) {
-      const equipment = Duel.state.protagonist.equipmentMatrix;
+      const equipment = Tankopedia.state.protagonist.equipment;
+      const protagonist = getDuel("protagonist", DuelModule.Tank);
       const hasEnhancedArmor = hasEquipment(
         110,
-        Duel.state.protagonist.tank.equipment_preset,
+        protagonist.equipment_preset,
         equipment,
       );
       const equalizer =
-        (Duel.state.equalize
-          ? Duel.state.protagonist.tank.equalizer?.armor
+        (Tankopedia.state.equalize
+          ? protagonist.equalizer?.armor
           : undefined) ?? 1;
 
       material.uniforms.thickness.value =
@@ -134,10 +134,11 @@ export function PrimaryArmorSceneComponent({
       if (!noInvalidate) invalidate();
     }
     function handleAntagonistEquipmentChange(noInvalidate = false) {
-      const equipment = Duel.state.antagonist.equipmentMatrix;
+      const equipment = Tankopedia.state.antagonist.equipment;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
-        tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
+        tankopediaEphemeral.customShell ??
+        getDuel("antagonist", DuelModule.Shell);
       const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,

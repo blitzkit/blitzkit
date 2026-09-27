@@ -32,8 +32,8 @@ export function Consumables() {
   const cooldownBooster = Duel.use(
     (state) => state.protagonist.cooldownBooster,
   );
-  const hasConsumableDeliverySystem = useEquipment(118);
-  const hasHighEndConsumables = useEquipment(101);
+  const hasConsumableDeliverySystem = useEquipment("protagonist", 118);
+  const hasHighEndConsumables = useEquipment("protagonist", 101);
   const { strings } = useLocale();
 
   return (

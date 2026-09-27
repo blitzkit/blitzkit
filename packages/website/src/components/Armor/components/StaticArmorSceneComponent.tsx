@@ -74,7 +74,7 @@ export function StaticArmorSceneComponent({
   ...props
 }: StaticArmorSceneComponentProps) {
   const camera = useThree((state) => state.camera);
-  const hasEnhancedArmor = useEquipment(110);
+  const hasEnhancedArmor = useEquipment("protagonist", 110);
   const tank = Duel.use((state) => state.protagonist.tank);
   const equalize = Duel.use((state) => state.equalize);
   const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;

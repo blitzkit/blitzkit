@@ -72,3 +72,55 @@ export function useDuel(side: DuelSide, module: DuelModule) {
   const shellId = Tankopedia.use((state) => state[side].shell);
   return gun.shells.find((shell) => shell.id === shellId)!;
 }
+
+export function getDuel(
+  side: DuelSide,
+  module: DuelModule.Tank,
+): TankDefinition;
+export function getDuel(
+  side: DuelSide,
+  module: DuelModule.Track,
+): TrackDefinition;
+export function getDuel(
+  side: DuelSide,
+  module: DuelModule.Engine,
+): EngineDefinition;
+export function getDuel(
+  side: DuelSide,
+  module: DuelModule.Turret,
+): TurretDefinition;
+export function getDuel(side: DuelSide, module: DuelModule.Gun): GunDefinition;
+export function getDuel(
+  side: DuelSide,
+  module: DuelModule.Shell,
+): ShellDefinition;
+
+export function getDuel(side: DuelSide, module: DuelModule) {
+  const tank = tanks.tanks[Tankopedia.state[side].tank];
+
+  if (module === DuelModule.Tank) return tank;
+
+  if (module === DuelModule.Track) {
+    return tank.tracks.find(
+      (track) => track.id === Tankopedia.state[side].track,
+    )!;
+  }
+
+  if (module === DuelModule.Engine) {
+    return tank.engines.find(
+      (engine) => engine.id === Tankopedia.state[side].engine,
+    )!;
+  }
+
+  const turret = tank.turrets.find(
+    (turret) => turret.id === Tankopedia.state[side].turret,
+  )!;
+
+  if (module === DuelModule.Turret) return turret;
+
+  const gun = turret.guns.find((gun) => gun.id === Tankopedia.state[side].gun)!;
+
+  if (module === DuelModule.Gun) return gun;
+
+  return gun.shells.find((shell) => shell.id === Tankopedia.state[side].shell)!;
+}

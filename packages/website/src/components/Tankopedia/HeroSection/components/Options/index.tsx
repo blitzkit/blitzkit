@@ -68,9 +68,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const antagonistShell = Duel.use((state) => state.antagonist.shell);
   const [antagonistSelectorOpen, setAntagonistSelectorOpen] = useState(false);
   const antagonistTank = Duel.use((state) => state.antagonist.tank);
-  const hasCalibratedShells = useEquipment(103, true);
+  const hasCalibratedShells = useEquipment("protagonist", 103, true);
   const [tab, setTab] = useState("search");
-  const hasEnhancedArmor = useEquipment(110);
+  const hasEnhancedArmor = useEquipment("protagonist", 110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
   const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);

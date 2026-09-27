@@ -71,8 +71,8 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
     },
   );
 
-  const hasImprovedVerticalStabilizer = useEquipment(122);
-  const hasDownImprovedVerticalStabilizer = useEquipment(124);
+  const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
+  const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
   useEffect(() => {
     const [pitch, yaw] = applyPitchYawLimits(

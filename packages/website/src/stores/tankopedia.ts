@@ -1,5 +1,9 @@
 import { createDefaultSkills } from "@blitzkit/core";
-import type { ShellDefinition, TankDefinition } from "@blitzkit/protos";
+import type {
+  ModelDefinition,
+  ShellDefinition,
+  TankDefinition,
+} from "@blitzkit/protos";
 import type { Vector3 } from "three";
 import { Varuna } from "varuna";
 import { api } from "../api/dynamic";
@@ -81,6 +85,9 @@ interface Tankopedia {
 
   protagonist: TankState;
   antagonist: TankState;
+  model: ModelDefinition;
+
+  equalize: boolean;
 
   shot?: Shot;
   skills: Record<string, number>;
@@ -117,6 +124,8 @@ export const Tankopedia = new Varuna<Tankopedia, TankDefinition>((tank) => ({
   protagonist: createTankState(tank),
   antagonist: createTankState(tank),
   model: models.models[tank.id],
+
+  equalize: false,
 
   relativeAgainst: TankopediaRelativeAgainst.Class,
   editStatic: false,

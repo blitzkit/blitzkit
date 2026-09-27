@@ -20,7 +20,7 @@ export const Page = withErrorWrapper(
     Tankopedia.useInitialization(protagonistTank);
 
     const protagonist = Tankopedia.use((state) => state.protagonist);
-    // const protagonistEquipment = useEquipment(protagonistTank.tank!);
+    // const protagonistEquipment = useEquipment("protagonist", protagonistTank.tank!);
 
     const characteristics = useMemo(
       () => computeCharacteristics(),

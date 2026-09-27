@@ -8,9 +8,9 @@ import {
 import { applyPitchYawLimits } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../core/blitzkit/pose";
+import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useModel } from "../../hooks/useModel";
-import { useProtagonistTurret } from "../../hooks/useProtagonistTurret";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
@@ -39,12 +39,12 @@ export const TankopediaSandbox = forwardRef<
   TankSandboxProps
 >(({ thicknessRange }, ref) => {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const hasImprovedVerticalStabilizer = useEquipment(122);
-  const hasDownImprovedVerticalStabilizer = useEquipment(124);
+  const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
+  const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
   const tank = useDuel("protagonist", DuelModule.Tank);
   const gun = useDuel("protagonist", DuelModule.Gun);
-  const turret = useProtagonistTurret();
+  const turret = useDuel("protagonist", DuelModule.Turret);
 
   const model = Tankopedia.use((state) => state.protagonist.model);
   const turretModelDefinition = model.turrets[turret.id];

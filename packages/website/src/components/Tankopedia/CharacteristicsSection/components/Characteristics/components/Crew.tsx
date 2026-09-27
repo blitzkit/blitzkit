@@ -17,7 +17,7 @@ export function Crew({ stats }: StatsAcceptorProps) {
   const tank = Duel.use((state) => state.protagonist.tank);
   const { strings } = useLocale();
   const provisions = Duel.use((state) => state.protagonist.provisions);
-  const hasImprovedVentilation = useEquipment(102);
+  const hasImprovedVentilation = useEquipment("protagonist", 102);
   const provisionCrewBonus =
     provisions.reduce(
       (total, provision) =>
