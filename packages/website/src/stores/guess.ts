@@ -1,6 +1,6 @@
 import type { TankDefinition } from "@blitzkit/core";
 import { times } from "lodash-es";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export enum GuessState {
   Correct,
@@ -18,7 +18,7 @@ export interface Guess {
   tiers: number[];
 }
 
-export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
+export const Guess = new Soapstone<Guess, [TankDefinition]>((tank) => ({
   tank,
   guessState: GuessState.NotGuessed,
   totalGuesses: 0,

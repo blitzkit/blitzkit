@@ -1,0 +1,3 @@
+interface:
+  display_name: "Repo Boundaries"
+  short_description: "Respect repository editing boundaries"

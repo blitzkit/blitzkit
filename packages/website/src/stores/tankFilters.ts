@@ -5,7 +5,7 @@ import type {
   TankClass,
   TankType,
 } from "@blitzkit/protos";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export interface TankFilters {
   tiers: number[];
@@ -26,7 +26,7 @@ export interface TankFilters {
   showUnowned: boolean;
 }
 
-export const TankFilters = new Varuna<TankFilters>({
+export const TankFilters = new Soapstone<TankFilters>({
   tiers: [],
   nations: [],
   classes: [],

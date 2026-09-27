@@ -3,7 +3,7 @@ import type {
   IndividualTankStats,
   Region,
 } from "@blitzkit/core";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 interface SessionBase {
   columns: CompositeStatsKey[];
@@ -25,7 +25,7 @@ interface SessionNotTracking extends SessionBase {
 
 type Session = SessionTracking | SessionNotTracking;
 
-export const Session = new Varuna<Session>(
+export const Session = new Soapstone<Session>(
   {
     columns: [
       "cumulative_battles",

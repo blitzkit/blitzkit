@@ -1,4 +1,4 @@
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export interface WargamingLogin {
   token: string;
@@ -14,7 +14,7 @@ export interface App {
   };
 }
 
-export const App = new Varuna<App>(
+export const App = new Soapstone<App>(
   {
     developerMode: false,
     policiesAgreementIndex: -1,

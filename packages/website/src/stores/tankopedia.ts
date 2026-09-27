@@ -5,7 +5,7 @@ import type {
   TankDefinition,
 } from "@blitzkit/protos";
 import type { Vector3 } from "three";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 import { api } from "../api/dynamic";
 import type { ArmorType } from "../components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
@@ -117,7 +117,7 @@ interface Tankopedia {
 const skills = await api.skills();
 const models = await api.models();
 
-export const Tankopedia = new Varuna<Tankopedia, TankDefinition>((tank) => ({
+export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>((tank) => ({
   disturbed: false,
   revealed: false,
 

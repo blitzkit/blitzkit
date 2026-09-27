@@ -13,7 +13,6 @@ If you intend to contribute to the code, note that you may need to check out sen
 | [packages/core](packages/core)       |          |                                                   | Mutual internal code shared between all other packages.                                                                  |
 | [packages/i18n](packages/i18n)       |          | [Crowdin](https://crowdin.com/project/blitzkrieg) | Translations served as JSON shared across all other packages, including some utility code.                               |
 | [packages/scripts](packages/scripts) |          |                                                   | CLI utilities for the development and deployment of BlitzKit services.                                                   |
-| [packages/varuna](packages/varuna)   | Varuna   | [NPM](https://www.npmjs.com/package/varuna)       | React and Astro-oriented state management library, awaiting separation from BlitzKit. Unavailable from NPM at this time. |
 | [packages/website](packages/website) | BlitzKit | https://blitzkit.app                              | The BlitzKit website provides a wide range of tools, APIs, and interconnects all other services.                         |
 
 ## Submodules

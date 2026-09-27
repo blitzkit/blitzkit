@@ -1,5 +1,5 @@
 import { enableMapSet } from "immer";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 import { tierListRows } from "../components/TierList/Table/constants";
 
 export interface TierList {
@@ -8,7 +8,7 @@ export interface TierList {
   placedTanks: Set<number>;
 }
 
-export const TierList = new Varuna<TierList>({
+export const TierList = new Soapstone<TierList>({
   dragging: false,
   rows: tierListRows.map((row) => ({ name: row.name, tanks: [] })),
   placedTanks: new Set(),

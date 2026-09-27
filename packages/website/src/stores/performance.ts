@@ -1,5 +1,5 @@
 import type { Samples } from "@blitzkit/core";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export interface Performance {
   playerCountPeriod: PlayerCountPeriod;
@@ -7,6 +7,6 @@ export interface Performance {
 
 export type PlayerCountPeriod = keyof Samples;
 
-export const Performance = new Varuna<Performance>({
+export const Performance = new Soapstone<Performance>({
   playerCountPeriod: "total",
 });
