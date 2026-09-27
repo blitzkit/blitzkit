@@ -37,7 +37,7 @@ import { Tankopedia } from "../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
+import type { ThicknessRange } from "../../../../StaticArmor";
 import { EqualIcon } from "../../../../EqualIcon";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";

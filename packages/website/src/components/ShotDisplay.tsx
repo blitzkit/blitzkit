@@ -16,13 +16,13 @@ import {
   Path,
   Quaternion,
 } from "three";
-import { isHalloween } from "../../../core/blitzkit/isHalloween";
-import { LocaleProvider, useLocale } from "../../../hooks/useLocale";
+import { isHalloween } from "../core/blitzkit/isHalloween";
+import { LocaleProvider, useLocale } from "../hooks/useLocale";
 import {
   Tankopedia,
   type ShotLayerNonExternal,
   type ShotStatus,
-} from "../../../stores/tankopedia";
+} from "../stores/tankopedia";
 import { ShotDisplayCard } from "./ShotDisplayCard";
 
 export const shotStatusColors: Record<

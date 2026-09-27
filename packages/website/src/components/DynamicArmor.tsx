@@ -1,11 +1,11 @@
 import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import { memo, useState } from "react";
 import { DepthTexture, Scene, Vector2 } from "three";
-import { PrimaryArmorScene } from "./components/PrimaryArmorScene";
-import { spacedArmorRenderTarget } from "./components/PrimaryArmorSceneComponent/target";
-import { SpacedArmorScene } from "./components/SpacedArmorScene";
+import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
+import { PrimaryArmorScene } from "./PrimaryArmorScene";
+import { SpacedArmorScene } from "./SpacedArmorScene";
 
-export const Armor = memo(() => {
+export const DynamicArmor = memo(() => {
   const rootScene = useThree((state) => state.scene);
   const [spacedArmorScene] = useState(() => new Scene());
   const [primaryArmorScene] = useState(() => {

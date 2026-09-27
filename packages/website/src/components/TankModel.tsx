@@ -12,7 +12,7 @@ import { useModel } from "../hooks/useModel";
 import { useTankTransform } from "../hooks/useTankTransform";
 import { Tankopedia } from "../stores/tankopedia";
 import { TankopediaDisplay } from "../stores/tankopediaPersistent/constants";
-import { ModelTankWrapper } from "./Armor/components/ModelTankWrapper";
+import { ModelTankWrapper } from "./ModelTankWrapper";
 
 export function TankModel() {
   const protagonist = Duel.use((draft) => draft.protagonist);

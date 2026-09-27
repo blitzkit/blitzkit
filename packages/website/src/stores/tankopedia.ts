@@ -7,8 +7,8 @@ import type {
 import type { Vector3 } from "three";
 import { Varuna } from "varuna";
 import { api } from "../api/dynamic";
-import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
-import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
+import type { ArmorType } from "../components/SpacedArmorScene";
+import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
 import { createTankState } from "../tankopedia/createTankState";
 import type { TankState } from "../tankopedia/tankState";

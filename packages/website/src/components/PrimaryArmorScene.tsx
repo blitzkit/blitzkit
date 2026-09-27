@@ -1,10 +1,10 @@
 import { memo, useRef } from "react";
 import { Group } from "three";
-import { correctZYTuple } from "../../../core/blitz/correctZYTuple";
-import { nameToArmorId } from "../../../core/blitzkit/nameToArmorId";
-import { resolveArmor } from "../../../core/blitzkit/resolveThickness";
-import { useArmor } from "../../../hooks/useArmor";
-import { DuelModule, useDuel } from "../../../hooks/useDuel";
+import { correctZYTuple } from "../core/blitz/correctZYTuple";
+import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
+import { resolveArmor } from "../core/blitzkit/resolveThickness";
+import { useArmor } from "../hooks/useArmor";
+import { DuelModule, useDuel } from "../hooks/useDuel";
 import { ModelTankWrapper } from "./ModelTankWrapper";
 import { PrimaryArmorSceneComponent } from "./PrimaryArmorSceneComponent";
 

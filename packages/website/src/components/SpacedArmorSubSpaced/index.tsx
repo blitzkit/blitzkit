@@ -1,34 +1,35 @@
-import { resolvePenetrationCoefficient } from "@blitzkit/core";
+import { isExplosive, resolvePenetrationCoefficient } from "@blitzkit/core";
 import { useEffect } from "react";
 import {
   AdditiveBlending,
   MeshBasicMaterial,
-  Object3D,
-  Plane,
   ShaderMaterial,
+  type Object3D,
 } from "three";
-import type { ArmorUserData, ExternalModuleVariant } from "../..";
-import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
-import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
-import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { ArmorType } from "../../../SpacedArmorScene";
+import { degToRad } from "three/src/math/MathUtils.js";
+import type { ArmorUserData } from "../SpacedArmorSceneComponent";
+import { hasEquipment } from "../../core/blitzkit/hasEquipment";
+import { jsxTree } from "../../core/blitzkit/jsxTree";
+import { Duel } from "../../stores/duel";
+import { Tankopedia } from "../../stores/tankopedia";
+import { ArmorType } from "./SpacedArmorScene";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 
-interface SpacedArmorSubExternalProps {
+interface SpacedArmorSubSpacedProps {
   node: Object3D;
   thickness: number;
-  variant: ExternalModuleVariant;
-  clip?: Plane;
 }
 
-export function SpacedArmorSubExternal({
+const depthWriteMaterial = new MeshBasicMaterial({
+  depthWrite: true,
+  colorWrite: false,
+});
+
+export function SpacedArmorSubSpaced({
   node,
   thickness,
-  variant,
-  clip,
-}: SpacedArmorSubExternalProps) {
+}: SpacedArmorSubSpacedProps) {
   const material = new ShaderMaterial({
     fragmentShader,
     vertexShader,
@@ -36,12 +37,13 @@ export function SpacedArmorSubExternal({
     depthTest: true,
     depthWrite: false,
     blending: AdditiveBlending,
-    clipping: clip !== undefined,
-    ...(clip ? { clippingPlanes: [clip] } : {}),
 
     uniforms: {
       thickness: { value: null },
       penetration: { value: null },
+      caliber: { value: null },
+      ricochet: { value: null },
+      normalization: { value: null },
     },
   });
 
@@ -50,7 +52,15 @@ export function SpacedArmorSubExternal({
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
         tankopediaEphemeral.customShell ?? Duel.state.antagonist.shell;
+
       material.uniforms.penetration.value = shell.penetration!.near;
+      material.uniforms.caliber.value = shell.caliber;
+      material.uniforms.ricochet.value = degToRad(
+        isExplosive(shell.type) ? 90 : shell.ricochet!,
+      );
+      material.uniforms.normalization.value = degToRad(
+        shell.normalization ?? 0,
+      );
     }
     function handleProtagonistEquipmentChange() {
       const equipment = Duel.state.protagonist.equipmentMatrix;
@@ -127,31 +137,21 @@ export function SpacedArmorSubExternal({
     <>
       {jsxTree(node, {
         group(_, props, key) {
-          return (
-            <group {...props} key={`${key}-spaced-sub-external-exclude`} />
-          );
+          return <group {...props} key={`${key}-spaced-sub-spaced-exclude`} />;
         },
 
         mesh(_, props, key) {
           return (
             <mesh
               {...props}
+              key={`${key}-spaced-sub-spaced-exclude`}
+              renderOrder={2}
+              material={material}
               onClick={() => {}}
-              key={`${key}-spaced-sub-external-exclude`}
-              renderOrder={3}
-              material={
-                new MeshBasicMaterial({
-                  colorWrite: false,
-                  depthTest: true,
-                  depthWrite: true,
-                  ...(clip ? { clippingPlanes: [clip] } : {}),
-                })
-              }
               userData={
                 {
-                  type: ArmorType.External,
+                  type: ArmorType.Spaced,
                   thickness,
-                  variant,
                 } satisfies ArmorUserData
               }
             />
@@ -161,18 +161,16 @@ export function SpacedArmorSubExternal({
 
       {jsxTree(node, {
         group(_, props, key) {
-          return (
-            <group {...props} key={`${key}-spaced-sub-external-include`} />
-          );
+          return <group {...props} key={`${key}-spaced-sub-spaced-include`} />;
         },
 
         mesh(_, props, key) {
           return (
             <mesh
               {...props}
-              key={`${key}-spaced-sub-external-include`}
-              renderOrder={4}
-              material={material}
+              key={`${key}-spaced-sub-spaced-include`}
+              renderOrder={5}
+              material={depthWriteMaterial}
             />
           );
         },

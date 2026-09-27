@@ -14,19 +14,16 @@ import { useModel } from "../../hooks/useModel";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import { Armor } from "../Armor";
-import { ArmorPlateDisplay } from "../Armor/components/ArmorPlateDisplay";
-import { ShotDisplay } from "../Armor/components/ShotDisplay";
-import {
-  StaticArmor,
-  type ThicknessRange,
-} from "../Armor/components/StaticArmor";
+import { ArmorPlateDisplay } from "../ArmorPlateDisplay";
 import { CanvasAutoClear } from "../CanvasAutoClear";
 import { CanvasControl } from "../CanvasControl";
+import { DynamicArmor } from "../DynamicArmor";
 import { InitialCameraAligner } from "../InitialCameraAligner";
 import { Lighting } from "../Lighting";
 import { SceneProps } from "../SceneProps";
+import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
+import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
 import styles from "./index.module.css";
 
@@ -187,7 +184,7 @@ export const TankopediaSandbox = forwardRef<
           {/* Controls within Suspense to allow for frame-perfect start of camera auto-rotate */}
           <CanvasControl />
 
-          {display === TankopediaDisplay.DynamicArmor && <Armor />}
+          {display === TankopediaDisplay.DynamicArmor && <DynamicArmor />}
           {display === TankopediaDisplay.StaticArmor && (
             <StaticArmor thicknessRange={thicknessRange} />
           )}

@@ -7,7 +7,7 @@ import { useModel } from "../../../../../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
 import { useTankTransform } from "../../../../../../../hooks/useTankTransform";
 import { Duel } from "../../../../../../../stores/duel";
-import { ModelTankWrapper } from "../../../../../../Armor/components/ModelTankWrapper";
+import { ModelTankWrapper } from "../../../../../../ModelTankWrapper";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 

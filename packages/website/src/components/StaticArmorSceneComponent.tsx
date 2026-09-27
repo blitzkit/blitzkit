@@ -16,18 +16,18 @@ import {
   Quaternion,
   Vector3,
 } from "three";
-import { unrotateDavaVector } from "../../../core/blitz/unrotateDavaVector";
-import { jsxTree } from "../../../core/blitzkit/jsxTree";
+import { unrotateDavaVector } from "../core/blitz/unrotateDavaVector";
+import { jsxTree } from "../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
-} from "../../../core/blitzkit/modelTransform";
-import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
-import { discardClippingPlane } from "../../../core/three/discardClippingPlane";
-import { useEquipment } from "../../../hooks/useEquipment";
-import { Duel } from "../../../stores/duel";
-import { Tankopedia } from "../../../stores/tankopedia";
-import { transitionEvent } from "../../Lighting";
+} from "../core/blitzkit/modelTransform";
+import { defaultEqualizer } from "../core/blitzkit/tankToDuelMember";
+import { discardClippingPlane } from "../core/three/discardClippingPlane";
+import { useEquipment } from "../hooks/useEquipment";
+import { Duel } from "../stores/duel";
+import { Tankopedia } from "../stores/tankopedia";
+import { transitionEvent } from "./Lighting";
 import { ArmorType } from "./SpacedArmorScene";
 import type {
   ArmorUserData,

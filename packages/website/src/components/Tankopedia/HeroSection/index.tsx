@@ -7,7 +7,7 @@ import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../Armor/components/StaticArmor";
+import type { ThicknessRange } from "../../StaticArmor";
 import { Options } from "./components/Options";
 import { TankSandbox } from "./components/TankSandbox";
 import { Title } from "./components/TankSandbox/Title";

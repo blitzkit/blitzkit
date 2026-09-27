@@ -9,8 +9,8 @@ import {
 } from "@radix-ui/themes";
 import type { ComponentProps } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
-import { useLocale } from "../../../hooks/useLocale";
-import type { Shot, ShotLayer } from "../../../stores/tankopedia";
+import { useLocale } from "../hooks/useLocale";
+import type { Shot, ShotLayer } from "../stores/tankopedia";
 import { shotStatusColors } from "./ShotDisplay";
 import { ArmorType } from "./SpacedArmorScene";
 

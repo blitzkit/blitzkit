@@ -10,11 +10,11 @@ import {
 import { Html } from "@react-three/drei";
 import { useRef } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
-import { resolveArmorIndex } from "../../../core/blitzkit/resolveArmorIndex";
-import { LocaleProvider, useLocale } from "../../../hooks/useLocale";
-import { App } from "../../../stores/app";
-import { Duel } from "../../../stores/duel";
-import { Tankopedia } from "../../../stores/tankopedia";
+import { resolveArmorIndex } from "../core/blitzkit/resolveArmorIndex";
+import { LocaleProvider, useLocale } from "../hooks/useLocale";
+import { App } from "../stores/app";
+import { Duel } from "../stores/duel";
+import { Tankopedia } from "../stores/tankopedia";
 import { layerTypeNames } from "./ShotDisplayCard";
 import { ArmorType } from "./SpacedArmorScene";
 

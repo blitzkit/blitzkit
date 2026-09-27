@@ -17,15 +17,15 @@ import {
   Vector2,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { jsxTree } from "../../../../core/blitzkit/jsxTree";
-import { DuelModule, getDuel } from "../../../../hooks/useDuel";
-import { hasEquipment } from "../../../../hooks/useEquipment";
-import { Tankopedia } from "../../../../stores/tankopedia";
-import { TankopediaPersistent } from "../../../../stores/tankopediaPersistent";
-import { transitionEvent } from "../../../Lighting";
+import { jsxTree } from "../../core/blitzkit/jsxTree";
+import { DuelModule, getDuel } from "../../hooks/useDuel";
+import { hasEquipment } from "../../hooks/useEquipment";
+import { Tankopedia } from "../../stores/tankopedia";
+import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
+import { transitionEvent } from "../Lighting";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
-import { spacedArmorRenderTarget } from "./target";
+import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
 
 interface PrimaryArmorSceneComponentProps {
   thickness: number;

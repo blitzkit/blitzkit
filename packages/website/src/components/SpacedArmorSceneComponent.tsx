@@ -16,20 +16,20 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
-import { jsxTree } from "../../../../core/blitzkit/jsxTree";
-import { defaultEqualizer } from "../../../../core/blitzkit/tankToDuelMember";
-import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
-import { Duel } from "../../../../stores/duel";
+import { hasEquipment } from "../core/blitzkit/hasEquipment";
+import { jsxTree } from "../core/blitzkit/jsxTree";
+import { defaultEqualizer } from "../core/blitzkit/tankToDuelMember";
+import { discardClippingPlane } from "../core/three/discardClippingPlane";
+import { Duel } from "../stores/duel";
 import {
   type Shot,
   type ShotLayerBase,
   type ShotLayerNonExternal,
   Tankopedia,
-} from "../../../../stores/tankopedia";
-import { ArmorType } from "../SpacedArmorScene";
-import { SpacedArmorSubExternal } from "./components/SpacedArmorSubExternal";
-import { SpacedArmorSubSpaced } from "./components/SpacedArmorSubSpaced";
+} from "../stores/tankopedia";
+import { ArmorType } from "./SpacedArmorScene";
+import { SpacedArmorSubExternal } from "./SpacedArmorSubExternal";
+import { SpacedArmorSubSpaced } from "./SpacedArmorSubSpaced";
 
 type SpacedArmorSceneComponentProps = {
   node: Object3D;
