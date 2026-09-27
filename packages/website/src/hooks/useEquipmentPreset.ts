@@ -1,7 +1,7 @@
 import { api } from "../api/dynamic";
 
-const equipmentDefinitions = await api.equipment();
+const equipment = await api.equipment();
 
 export function useEquipmentPreset(preset: string) {
-  return equipmentDefinitions.presets[preset];
+  return equipment.presets[preset];
 }

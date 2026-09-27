@@ -1,5 +1,4 @@
-import type { ModelDefinition } from "@blitzkit/core";
-import type { EquipmentMatrix } from "./createTankState";
+import type { ModelDefinition } from "@blitzkit/protos";
 
 export interface TankState {
   tank: number;
@@ -13,7 +12,7 @@ export interface TankState {
   assault_distance: number;
   speed: number;
 
-  equipment_matrix: EquipmentMatrix;
+  equipment: Record<number, number>;
   status: Record<VehicleStatusKey, boolean>;
 
   model: ModelDefinition;

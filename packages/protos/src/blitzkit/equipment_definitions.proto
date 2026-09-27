@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package blitzkit;
 
@@ -10,8 +10,8 @@ message EquipmentDefinitions {
 }
 
 message Equipment {
-  required I18nString name        = 1;
-  required I18nString description = 2;
+  I18nString name        = 1;
+  I18nString description = 2;
 }
 
 message EquipmentPreset {
@@ -19,6 +19,5 @@ message EquipmentPreset {
 }
 
 message EquipmentSlot {
-  required uint32 left  = 1;
-  required uint32 right = 2;
+  repeated uint32 options = 1;
 }

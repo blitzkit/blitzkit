@@ -10,8 +10,6 @@ import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../core/blitzkit/pose";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useModel } from "../../hooks/useModel";
-import { useProtagonistGun } from "../../hooks/useProtagonistGun";
-import { useProtagonistTank } from "../../hooks/useProtagonistTank";
 import { useProtagonistTurret } from "../../hooks/useProtagonistTurret";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
@@ -44,8 +42,8 @@ export const TankopediaSandbox = forwardRef<
   const hasImprovedVerticalStabilizer = useEquipment(122);
   const hasDownImprovedVerticalStabilizer = useEquipment(124);
 
-  const tank = useProtagonistTank();
-  const gun = useProtagonistGun();
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const gun = useDuel("protagonist", DuelModule.Gun);
   const turret = useProtagonistTurret();
 
   const model = Tankopedia.use((state) => state.protagonist.model);

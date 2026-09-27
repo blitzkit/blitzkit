@@ -13,12 +13,6 @@ const models = await api.models();
 const provisions = await api.provisions();
 const scripts = await api.scripts();
 
-export const genericDefaultEquipmentMatrix: EquipmentMatrix = [
-  [-1, 1, -1],
-  [0, 0, 0],
-  [0, 0, 0],
-];
-
 export function createTankState(tank: TankDefinition) {
   const turret = tank.turrets.at(-1)!;
   const gun = turret.guns.at(-1)!;
@@ -35,7 +29,7 @@ export function createTankState(tank: TankDefinition) {
     assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
     speed: 0,
 
-    equipment_matrix: genericDefaultEquipmentMatrix,
+    equipment: {},
     status: createTankStatus(),
 
     model: models.models[turret.id],
