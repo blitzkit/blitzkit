@@ -1,4 +1,4 @@
-import type { TankDefinition } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 
 export function hasUpgrades(tank: TankDefinition) {
   return (

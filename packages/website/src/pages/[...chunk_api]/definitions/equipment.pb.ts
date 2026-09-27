@@ -1,4 +1,4 @@
-import { EquipmentDefinitions } from "@blitzkit/core";
+import { EquipmentDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

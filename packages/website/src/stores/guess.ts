@@ -1,4 +1,4 @@
-import type { TankDefinition } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { times } from "lodash-es";
 import { Soapstone } from "soapstone";
 

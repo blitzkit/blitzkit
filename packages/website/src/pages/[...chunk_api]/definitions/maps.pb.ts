@@ -1,4 +1,4 @@
-import { MapDefinitions } from "@blitzkit/core";
+import { MapDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

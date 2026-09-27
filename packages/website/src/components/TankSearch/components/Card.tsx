@@ -2,8 +2,8 @@ import {
   normalizeBoundingBox,
   resolveDpm,
   unionBoundingBox,
-  type TankDefinition,
 } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { useMemo } from "react";
 import { api } from "../../../api/dynamic";
 import { resolveReload } from "../../../core/blitzkit/resolveReload";

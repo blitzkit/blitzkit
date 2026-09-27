@@ -1,4 +1,5 @@
-import { type TankDefinition, tankIcon } from "@blitzkit/core";
+import { tankIcon } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
 import { useLocale } from "../../hooks/useLocale";

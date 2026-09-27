@@ -1,15 +1,18 @@
 import {
-  CrewType,
   degressiveStat,
   isExplosive,
   normalizeBoundingBox,
   progressiveStat,
   resolveDpm,
   resolvePenetrationCoefficient,
-  ShellType,
   sum,
-  TankClass,
   unionBoundingBox,
+} from "@blitzkit/core";
+import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
+import {
+  CrewType,
+  ShellType,
+  TankClass,
   type EngineDefinition,
   type EquipmentDefinitions,
   type GunDefinition,
@@ -19,8 +22,7 @@ import {
   type TankDefinition,
   type TrackDefinition,
   type TurretDefinition,
-} from "@blitzkit/core";
-import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
+} from "@blitzkit/protos";
 import type { EquipmentMatrix } from "../../stores/duel";
 import { defaultEqualizer } from "./tankToDuelMember";
 

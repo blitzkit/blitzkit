@@ -1,16 +1,18 @@
 import {
   alias,
-  EngineDefinition,
   formatCompact,
-  GunDefinition,
-  ModuleType,
   tankIcon,
   TIER_ROMAN_NUMERALS,
+} from "@blitzkit/core";
+import {
+  EngineDefinition,
+  GunDefinition,
+  ModuleType,
   TrackDefinition,
   TurretDefinition,
   type TankDefinition,
   type Unlock,
-} from "@blitzkit/core";
+} from "@blitzkit/protos";
 import {
   Button,
   ChevronDownIcon,

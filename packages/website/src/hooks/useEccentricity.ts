@@ -1,4 +1,4 @@
-import { TankDefinition } from "@blitzkit/core";
+import { TankDefinition } from "@blitzkit/protos";
 import { sumBy } from "lodash-es";
 import { useMemo } from "react";
 import { api } from "../api/dynamic";

@@ -1,4 +1,4 @@
-import type { Samples } from "@blitzkit/core";
+import type { Samples } from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
 
 export interface Performance {

@@ -1,4 +1,4 @@
-import { Gallery } from "@blitzkit/core";
+import { Gallery } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

@@ -1,5 +1,6 @@
-import { alias, TankType } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
+import { TankType } from "@blitzkit/protos";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";

@@ -1,5 +1,5 @@
-import { ShellType } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
+import { ShellType } from "@blitzkit/protos";
 import {
   Button,
   Flex,

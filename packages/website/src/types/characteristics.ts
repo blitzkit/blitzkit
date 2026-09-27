@@ -1,4 +1,8 @@
-import type { Equalizer, GunDefinition, ShellDefinition } from "@blitzkit/core";
+import type {
+  Equalizer,
+  GunDefinition,
+  ShellDefinition,
+} from "@blitzkit/protos";
 import { characteristics } from "../config/characteristics";
 
 export type Characteristic = {

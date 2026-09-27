@@ -2,7 +2,7 @@ import type {
   GunDefinition,
   TankDefinition,
   TurretDefinition,
-} from "@blitzkit/core";
+} from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
 
 export interface Mixer {

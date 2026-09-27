@@ -1,4 +1,4 @@
-import { SkillDefinitions } from "@blitzkit/core";
+import { SkillDefinitions } from "@blitzkit/protos";
 import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";

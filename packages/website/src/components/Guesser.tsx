@@ -1,10 +1,6 @@
-import {
-  alias,
-  SEARCH_KEYS,
-  TankDefinition,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, SEARCH_KEYS, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import { TankDefinition } from "@blitzkit/protos";
 import {
   ArrowRightIcon,
   EyeOpenIcon,

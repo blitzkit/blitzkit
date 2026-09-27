@@ -1,8 +1,5 @@
-import {
-  ShellType,
-  isExplosive,
-  resolvePenetrationCoefficient,
-} from "@blitzkit/core";
+import { isExplosive, resolvePenetrationCoefficient } from "@blitzkit/core";
+import { ShellType } from "@blitzkit/protos";
 import { useThree } from "@react-three/fiber";
 import { useCallback } from "react";
 import {

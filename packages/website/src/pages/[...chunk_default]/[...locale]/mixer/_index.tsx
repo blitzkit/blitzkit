@@ -1,11 +1,13 @@
 import {
   alias,
-  GunDefinition,
-  TankDefinition,
   TIER_ROMAN_NUMERALS,
-  TurretDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import {
+  GunDefinition,
+  TankDefinition,
+  TurretDefinition,
+} from "@blitzkit/protos";
 import { CaretRightIcon, CaretUpIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
   Box,

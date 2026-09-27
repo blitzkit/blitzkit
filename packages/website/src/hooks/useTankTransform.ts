@@ -1,10 +1,5 @@
-import {
-  I_HAT,
-  J_HAT,
-  K_HAT,
-  TrackDefinition,
-  TurretDefinition,
-} from "@blitzkit/core";
+import { I_HAT, J_HAT, K_HAT } from "@blitzkit/core";
+import { TrackDefinition, TurretDefinition } from "@blitzkit/protos";
 import { invalidate } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { type RefObject, useEffect } from "react";

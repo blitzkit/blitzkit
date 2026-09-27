@@ -1,5 +1,6 @@
-import { CREW_MEMBER_NAMES, CrewType } from "@blitzkit/core";
+import { CREW_MEMBER_NAMES } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import { CrewType } from "@blitzkit/protos";
 import { AccessibilityIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, Popover, Text } from "@radix-ui/themes";
 import { Fragment } from "react/jsx-runtime";

@@ -1,5 +1,6 @@
-import { fetchGlossary, type Avatar } from "@blitzkit/core";
+import { fetchGlossary } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
+import type { Avatar } from "@blitzkit/protos";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import { extname } from "path";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";

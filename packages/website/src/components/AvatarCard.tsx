@@ -1,4 +1,5 @@
-import { alias, Avatar } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
+import { Avatar } from "@blitzkit/protos";
 import { Cross1Icon, DownloadIcon } from "@radix-ui/react-icons";
 import { useRef } from "react";
 import { useIntersection } from "../hooks/useIntersection";
