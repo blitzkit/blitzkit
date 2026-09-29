@@ -16,6 +16,7 @@
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/noto-sans-sc": "^5.3.0",
     "@gltf-transform/core": "^4.4.2",
     "@gltf-transform/functions": "^4.4.2",
     "@radix-ui/colors": "^3.0.0",
@@ -23,6 +24,7 @@
     "@radix-ui/themes": "^3.2.1",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -30,6 +32,7 @@
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.14.4",
     "astro-favicons": "^3.1.5",
+    "bun-webgpu": "^0.1.7",
     "cheerio": "^1.1.2",
     "compare-versions": "^6.1.1",
     "fuzzysort": "^3.1.0",
@@ -42,6 +45,8 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-promise-suspense": "^0.3.4",
+    "satori": "^0.18.4",
+    "sharp": "^0.34.5",
     "three": "^0.180.0",
     "three-stdlib": "^2.36.0",
     "transliteration": "^2.6.1",
@@ -49,5 +54,8 @@
     "urlon": "^3.1.0",
     "varuna": "workspace:*",
     "vite": "^7.1.9"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.74"
   }
 }

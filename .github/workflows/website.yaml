@@ -117,7 +117,8 @@ jobs:
       - name: Setup CLIs
         run: |
           sudo apt-get update
-          sudo apt-get install -y aria2 libarchive-tools
+          # mesa-vulkan-drivers: software Vulkan (lavapipe), since runners have no GPU for the WebGPU armor poster renderer
+          sudo apt-get install -y aria2 libarchive-tools mesa-vulkan-drivers
 
       - name: Install dependencies
         run: bun install

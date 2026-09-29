@@ -8,6 +8,7 @@ import favicons from "astro-favicons";
 import { defineConfig } from "astro/config";
 import packageJSON from "../../package.json";
 import { tools } from "./src/constants/tools";
+import { armorPosterRendererIntegration } from "./src/integrations/armorPosterRenderer";
 
 export default defineConfig({
   devToolbar: { enabled: false },
@@ -15,6 +16,8 @@ export default defineConfig({
   vite: {
     server: { allowedHosts: [] },
     esbuild: { target: "es2022" },
+    // Native WebGPU bindings (loaded through Bun's FFI) must not be bundled.
+    ssr: { external: ["bun-webgpu"] },
   },
 
   output: "static",
@@ -87,6 +90,8 @@ export default defineConfig({
         yandex: true,
       },
     }),
+
+    armorPosterRendererIntegration(),
 
     AstroPWA({
       manifest: false,
