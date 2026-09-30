@@ -6,9 +6,9 @@ import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { useArmor } from "../hooks/useArmor";
 import { useConsumable } from "../hooks/useConsumable";
 import { DuelModule, useDuel } from "../hooks/useDuel";
+import { useDuelModel } from "../hooks/useDuelModel";
 import { useModel } from "../hooks/useModel";
 import { useTankTransform } from "../hooks/useTankTransform";
-import { Tankopedia } from "../stores/tankopedia";
 import { SpacedArmorSceneComponent } from "./SpacedArmorSceneComponent";
 
 export enum ArmorType {
@@ -32,9 +32,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const { gltf: modelGltf } = useModel(tank.id);
   const armorNodes = Object.values(armorGltf.nodes);
   const modelNodes = Object.values(modelGltf.nodes);
-  const tankModelDefinition = Tankopedia.use(
-    (state) => state.protagonist.model,
-  );
+  const tankModelDefinition = useDuelModel("protagonist");
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
