@@ -4,12 +4,13 @@ import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { useArmor } from "../hooks/useArmor";
+import { useConsumable } from "../hooks/useConsumable";
 import { DuelModule, useDuel } from "../hooks/useDuel";
-import { ModelTankWrapper } from "./ModelTankWrapper";
+import { useDuelModel } from "../hooks/useDuelModel";
+import { useTankTransform } from "../hooks/useTankTransform";
 import { PrimaryArmorSceneComponent } from "./PrimaryArmorSceneComponent";
 
 export const PrimaryArmorScene = memo(() => {
-  const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tank = useDuel("protagonist", DuelModule.Tank);
@@ -18,21 +19,19 @@ export const PrimaryArmorScene = memo(() => {
   const gun = useDuel("protagonist", DuelModule.Gun);
   const armorGltf = useArmor(tank.id).gltf;
   const armorNodes = Object.values(armorGltf.nodes);
-  const tankModelDefinition = useTankModelDefinition();
+  const tankModelDefinition = useDuelModel("protagonist");
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
   const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
   const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
   const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
-  const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73),
-  );
+  const isDynamicArmorActive = useConsumable("protagonist", 73);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
   return (
-    <ModelTankWrapper ref={wrapper}>
+    <>
       <group position={hullOrigin}>
         {armorNodes.map((node) => {
           const isHull = node.name.startsWith("hull_");
@@ -132,6 +131,6 @@ export const PrimaryArmorScene = memo(() => {
           })}
         </group>
       </group>
-    </ModelTankWrapper>
+    </>
   );
 });

@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { Duel } from "../../../../../../stores/duel";
 import { api } from "../api/dynamic";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
+import { DuelModule, useDuel } from "../hooks/useDuel";
 
 const modelDefinitions = await api.models();
 
 export function InitialCameraAligner() {
-  const tank = Duel.use((state) => state.protagonist.tank);
-  const turret = Duel.use((state) => state.protagonist.turret);
-  const gun = Duel.use((state) => state.protagonist.gun);
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const turret = useDuel("protagonist", DuelModule.Turret);
+  const gun = useDuel("protagonist", DuelModule.Gun);
 
   const tankModel = modelDefinitions.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];

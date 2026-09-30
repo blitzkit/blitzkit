@@ -16,16 +16,16 @@ import {
   Quaternion,
   Vector3,
 } from "three";
+import { defaultEqualizer } from "../config/equalizer";
 import { unrotateDavaVector } from "../core/blitz/unrotateDavaVector";
 import { jsxTree } from "../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../core/blitzkit/modelTransform";
-import { defaultEqualizer } from "../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../core/three/discardClippingPlane";
+import { DuelModule, useDuel } from "../hooks/useDuel";
 import { useEquipment } from "../hooks/useEquipment";
-import { Duel } from "../stores/duel";
 import { Tankopedia } from "../stores/tankopedia";
 import { transitionEvent } from "./Lighting";
 import { ArmorType } from "./SpacedArmorScene";
@@ -75,8 +75,8 @@ export function StaticArmorSceneComponent({
 }: StaticArmorSceneComponentProps) {
   const camera = useThree((state) => state.camera);
   const hasEnhancedArmor = useEquipment("protagonist", 110);
-  const tank = Duel.use((state) => state.protagonist.tank);
-  const equalize = Duel.use((state) => state.equalize);
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const equalize = Tankopedia.use((state) => state.equalize);
   const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
   const thicknessCoefficient = (hasEnhancedArmor ? 1.04 : 1) * equalizer.armor;
   const thickness = thicknessRaw * thicknessCoefficient;

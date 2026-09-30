@@ -3,19 +3,19 @@ import { memo, useRef } from "react";
 import { Group, Plane, Vector2, Vector3 } from "three";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { correctZYTuple } from "../core/blitz/correctZYTuple";
-import { hasEquipment } from "../core/blitzkit/hasEquipment";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
 import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
 import { useArmor } from "../hooks/useArmor";
+import { useConsumable } from "../hooks/useConsumable";
+import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
+import { useDuelModel } from "../hooks/useDuelModel";
+import { hasEquipment } from "../hooks/useEquipment";
 import { useModel } from "../hooks/useModel";
-import { useTankModelDefinition } from "../hooks/useTankModelDefinition";
 import { useTankTransform } from "../hooks/useTankTransform";
-import { Duel } from "../stores/duel";
 import { Tankopedia } from "../stores/tankopedia";
 import { TankopediaPersistent } from "../stores/tankopediaPersistent";
-import { ModelTankWrapper } from "./ModelTankWrapper";
 import { ArmorType } from "./SpacedArmorScene";
 import { StaticArmorSceneComponent } from "./StaticArmorSceneComponent";
 
@@ -28,18 +28,19 @@ export interface ThicknessRange {
 }
 
 export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
-  const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
-  const tank = Duel.use((state) => state.protagonist.tank);
-  const track = Duel.use((state) => state.protagonist.track);
-  const turret = Duel.use((state) => state.protagonist.turret);
-  const gun = Duel.use((state) => state.protagonist.gun);
+
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const track = useDuel("protagonist", DuelModule.Track);
+  const turret = useDuel("protagonist", DuelModule.Turret);
+  const gun = useDuel("protagonist", DuelModule.Gun);
+
   const { gltf: armorGltf } = useArmor(tank.id);
   const { gltf: modelGltf } = useModel(tank.id);
   const armorNodes = Object.values(armorGltf.nodes);
   const modelNodes = Object.values(modelGltf.nodes);
-  const tankModelDefinition = useTankModelDefinition();
+  const tankModelDefinition = useDuelModel("protagonist");
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
@@ -61,14 +62,12 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const showExternalModules = TankopediaPersistent.use(
     (state) => state.showExternalModules,
   );
-  const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73),
-  );
+  const isDynamicArmorActive = useConsumable("protagonist", 73);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
   return (
-    <ModelTankWrapper ref={wrapper}>
+    <>
       <group position={hullOrigin}>
         {armorNodes.map((node) => {
           const isHull = node.name.startsWith("hull_");
@@ -165,15 +164,17 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
             window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
+            const protagonist = getDuel("protagonist", DuelModule.Tank);
+
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
-              Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix,
+              protagonist.equipment_preset,
+              Tankopedia.state.protagonist.equipment,
             );
             const hasDownImprovedVerticalStabilizer = hasEquipment(
               124,
-              Duel.state.protagonist.tank.equipment_preset,
-              Duel.state.protagonist.equipmentMatrix,
+              protagonist.equipment_preset,
+              Tankopedia.state.protagonist.equipment,
             );
             const boundingRect = canvas.getBoundingClientRect();
 
@@ -253,15 +254,17 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
+              const protagonist = getDuel("protagonist", DuelModule.Tank);
+
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
-                Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix,
+                protagonist.equipment_preset,
+                Tankopedia.state.protagonist.equipment,
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
-                Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix,
+                protagonist.equipment_preset,
+                Tankopedia.state.protagonist.equipment,
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -329,15 +332,17 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
+              const protagonist = getDuel("protagonist", DuelModule.Tank);
+
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
-                Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix,
+                protagonist.equipment_preset,
+                Tankopedia.state.protagonist.equipment,
               );
               const hasDownImprovedVerticalStabilizer = hasEquipment(
                 124,
-                Duel.state.protagonist.tank.equipment_preset,
-                Duel.state.protagonist.equipmentMatrix,
+                protagonist.equipment_preset,
+                Tankopedia.state.protagonist.equipment,
               );
               const boundingRect = canvas.getBoundingClientRect();
               delta.set(event.clientX, event.clientY).sub(position);
@@ -385,6 +390,6 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
           })}
         </group>
       </group>
-    </ModelTankWrapper>
+    </>
   );
 });

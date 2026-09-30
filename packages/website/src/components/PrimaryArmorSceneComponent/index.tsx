@@ -23,7 +23,7 @@ import { hasEquipment } from "../../hooks/useEquipment";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { transitionEvent } from "../Lighting";
-import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
+import { spacedArmorRenderTarget } from "../PrimaryArmorRenderTarget";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
 
@@ -134,6 +134,8 @@ export function PrimaryArmorSceneComponent({
       if (!noInvalidate) invalidate();
     }
     function handleAntagonistEquipmentChange(noInvalidate = false) {
+      const antagonist = getDuel("antagonist", DuelModule.Tank);
+
       const equipment = Tankopedia.state.antagonist.equipment;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
@@ -142,7 +144,7 @@ export function PrimaryArmorSceneComponent({
       const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,
-        Duel.state.antagonist.tank.equipment_preset,
+        antagonist.equipment_preset,
         equipment,
       );
 
@@ -150,9 +152,9 @@ export function PrimaryArmorSceneComponent({
         penetration *
         resolvePenetrationCoefficient(
           hasCalibratedShells,
-          Duel.state.equalize,
+          Tankopedia.state.equalize,
           shell.type,
-          Duel.state.antagonist.tank.equalizer,
+          antagonist.equalizer,
         );
 
       if (!noInvalidate) invalidate();
@@ -175,7 +177,7 @@ export function PrimaryArmorSceneComponent({
     transitionEvent.on(handleTransitionEvent);
 
     const unsubscribes = [
-      Duel.on((state) => state.antagonist.shell, handleShellChange),
+      Tankopedia.on((state) => state.antagonist.shell, handleShellChange),
       Tankopedia.on((state) => state.customShell, handleShellChange),
       TankopediaPersistent.on(
         (state) => state.greenPenetration,
@@ -186,15 +188,15 @@ export function PrimaryArmorSceneComponent({
         handleAdvancedHighlightingChange,
       ),
       TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
-      Duel.on(
-        (state) => state.protagonist.equipmentMatrix,
+      Tankopedia.on(
+        (state) => state.protagonist.equipment,
         () => handleProtagonistEquipmentChange(),
       ),
-      Duel.on(
-        (state) => state.antagonist.equipmentMatrix,
+      Tankopedia.on(
+        (state) => state.antagonist.equipment,
         () => handleAntagonistEquipmentChange(),
       ),
-      Duel.on(
+      Tankopedia.on(
         (state) => state.equalize,
         () => {
           handleProtagonistEquipmentChange();
