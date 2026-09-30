@@ -78,7 +78,8 @@ if (provider === "steam") {
 
   console.log(`Downloading ${urls.length} packages...`);
 
-  await rm(WGPKG_DIR, { recursive: true });
+  await rm(WGPKG_DIR, { recursive: true, force: true });
+  await mkdir(WGPKG_DIR, { recursive: true });
 
   const inputContent = urls
     .map((url) => {
