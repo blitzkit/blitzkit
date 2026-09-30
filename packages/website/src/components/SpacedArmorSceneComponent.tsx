@@ -13,11 +13,11 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { hasEquipment } from "../core/blitzkit/hasEquipment";
+import { defaultEqualizer } from "../config/equalizer";
 import { jsxTree } from "../core/blitzkit/jsxTree";
-import { defaultEqualizer } from "../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../core/three/discardClippingPlane";
-import { Duel } from "../stores/duel";
+import { DuelModule, getDuel } from "../hooks/useDuel";
+import { hasEquipment } from "../hooks/useEquipment";
 import {
   type Shot,
   type ShotLayerBase,
@@ -83,15 +83,16 @@ export function SpacedArmorSceneComponent({
       allowRicochet: boolean,
       remainingPenetrationInput?: number,
     ) => {
+      const protagonist = getDuel("protagonist", DuelModule.Tank);
+      const antagonist = getDuel("antagonist", DuelModule.Tank);
+
       const { customShell } = Tankopedia.state;
-      const shell = customShell ?? Duel.state.antagonist.shell;
-      const { equalize } = Duel.state;
+      const shell = customShell ?? getDuel("protagonist", DuelModule.Shell);
+      const { equalize } = Tankopedia.state;
       const protagonistEqualizer =
-        (equalize ? Duel.state.protagonist.tank.equalizer : undefined) ??
-        defaultEqualizer;
+        (equalize ? protagonist.equalizer : undefined) ?? defaultEqualizer;
       const antagonistEqualizer =
-        (equalize ? Duel.state.antagonist.tank.equalizer : undefined) ??
-        defaultEqualizer;
+        (equalize ? antagonist.equalizer : undefined) ?? defaultEqualizer;
       const cameraNormal = camera.position.clone().sub(point).normalize();
       const shot: Shot = {
         splashRadius:
@@ -109,13 +110,13 @@ export function SpacedArmorSceneComponent({
 
       const hasCalibratedShells = hasEquipment(
         103,
-        Duel.state.antagonist.tank.equipment_preset,
-        Duel.state.antagonist.equipmentMatrix,
+        antagonist.equipment_preset,
+        Tankopedia.state.antagonist.equipment,
       );
       const hasEnhancedArmor = hasEquipment(
         110,
-        Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix,
+        protagonist.equipment_preset,
+        Tankopedia.state.protagonist.equipment,
       );
       const penetration =
         shell.penetration!.near *
