@@ -12,8 +12,8 @@ import { useRef } from "react";
 import { radToDeg } from "three/src/math/MathUtils.js";
 import { resolveArmorIndex } from "../core/blitzkit/resolveArmorIndex";
 import { LocaleProvider, useLocale } from "../hooks/useLocale";
+import { useStrings } from "../hooks/useStrings";
 import { App } from "../stores/app";
-import { Duel } from "../stores/duel";
 import { Tankopedia } from "../stores/tankopedia";
 import { layerTypeNames } from "./ShotDisplayCard";
 import { ArmorType } from "./SpacedArmorScene";
@@ -22,7 +22,8 @@ export function ArmorPlateDisplay() {
   const highlightArmor = Tankopedia.use((state) => state.highlightArmor);
   const developerMode = App.useDeferred((state) => state.developerMode, false);
   const input = useRef<HTMLInputElement>(null);
-  const { locale, strings } = useLocale();
+  const locale = useLocale();
+  const strings = useStrings();
 
   if (highlightArmor === undefined) return null;
 

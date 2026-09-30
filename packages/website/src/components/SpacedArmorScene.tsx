@@ -4,11 +4,11 @@ import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { useArmor } from "../hooks/useArmor";
+import { useConsumable } from "../hooks/useConsumable";
+import { DuelModule, useDuel } from "../hooks/useDuel";
 import { useModel } from "../hooks/useModel";
-import { useTankModelDefinition } from "../hooks/useTankModelDefinition";
 import { useTankTransform } from "../hooks/useTankTransform";
-import { Duel } from "../stores/duel";
-import { ModelTankWrapper } from "./ModelTankWrapper";
+import { Tankopedia } from "../stores/tankopedia";
 import { SpacedArmorSceneComponent } from "./SpacedArmorSceneComponent";
 
 export enum ArmorType {
@@ -22,18 +22,19 @@ interface SpacedArmorSceneProps {
 }
 
 export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
-  const wrapper = useRef<Group>(null);
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
-  const tank = Duel.use((state) => state.protagonist.tank);
-  const track = Duel.use((state) => state.protagonist.track);
-  const turret = Duel.use((state) => state.protagonist.turret);
-  const gun = Duel.use((state) => state.protagonist.gun);
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const track = useDuel("protagonist", DuelModule.Track);
+  const turret = useDuel("protagonist", DuelModule.Turret);
+  const gun = useDuel("protagonist", DuelModule.Gun);
   const { gltf: armorGltf } = useArmor(tank.id);
   const { gltf: modelGltf } = useModel(tank.id);
   const armorNodes = Object.values(armorGltf.nodes);
   const modelNodes = Object.values(modelGltf.nodes);
-  const tankModelDefinition = useTankModelDefinition();
+  const tankModelDefinition = Tankopedia.use(
+    (state) => state.protagonist.model,
+  );
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
@@ -44,14 +45,12 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
     gunModelDefinition.mask === undefined
       ? undefined
       : gunModelDefinition.mask + hullOrigin.y + turretOrigin.y + gunOrigin.y;
-  const isDynamicArmorActive = Duel.use((state) =>
-    state.protagonist.consumables.includes(73),
-  );
+  const isDynamicArmorActive = useConsumable("protagonist", 73);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
   return (
-    <ModelTankWrapper ref={wrapper}>
+    <>
       <group position={hullOrigin}>
         {armorNodes.map((node) => {
           const isHull = node.name.startsWith("hull_");
@@ -199,6 +198,6 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
           })}
         </group>
       </group>
-    </ModelTankWrapper>
+    </>
   );
 });

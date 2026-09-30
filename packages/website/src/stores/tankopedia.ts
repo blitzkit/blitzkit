@@ -1,11 +1,7 @@
 import { createDefaultSkills } from "@blitzkit/core";
-import type {
-  ModelDefinition,
-  ShellDefinition,
-  TankDefinition,
-} from "@blitzkit/protos";
-import type { Vector3 } from "three";
+import type { ShellDefinition, TankDefinition } from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
+import type { Vector3 } from "three";
 import { api } from "../api/dynamic";
 import type { ArmorType } from "../components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
@@ -85,7 +81,6 @@ interface Tankopedia {
 
   protagonist: TankState;
   antagonist: TankState;
-  model: ModelDefinition;
 
   equalize: boolean;
 
@@ -117,20 +112,22 @@ interface Tankopedia {
 const skills = await api.skills();
 const models = await api.models();
 
-export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>((tank) => ({
-  disturbed: false,
-  revealed: false,
+export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
+  (tank) => ({
+    disturbed: false,
+    revealed: false,
 
-  protagonist: createTankState(tank),
-  antagonist: createTankState(tank),
-  model: models.models[tank.id],
+    protagonist: createTankState(tank),
+    antagonist: createTankState(tank),
+    model: models.models[tank.id],
 
-  equalize: false,
+    equalize: false,
 
-  relativeAgainst: TankopediaRelativeAgainst.Class,
-  editStatic: false,
-  skills: createDefaultSkills(skills),
-  xpMultiplier: 1,
-  requestedDisplay: TankopediaDisplay.Model,
-  display: TankopediaDisplay.Model,
-}));
+    relativeAgainst: TankopediaRelativeAgainst.Class,
+    editStatic: false,
+    skills: createDefaultSkills(skills),
+    xpMultiplier: 1,
+    requestedDisplay: TankopediaDisplay.Model,
+    display: TankopediaDisplay.Model,
+  }),
+);
