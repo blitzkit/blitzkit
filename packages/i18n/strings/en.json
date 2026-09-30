@@ -1,4 +1,15 @@
 {
+  "units": {
+    "m": "{value}m",
+    "mm": "{value}mm",
+    "deg": "{value}°",
+    "hp": "{value}hp",
+    "x": "x{value}",
+    "percentage": "{value}%",
+    "deg_s": "{value}°/s",
+    "plus": "+{value}"
+  },
+
   "tanks": {
     "characteristics": {
       "titles": {

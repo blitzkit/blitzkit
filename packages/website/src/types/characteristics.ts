@@ -1,8 +1,10 @@
+import type { Strings } from "@blitzkit/i18n";
 import type {
   Equalizer,
   GunDefinition,
   ShellDefinition,
 } from "@blitzkit/protos";
+import type { ReactNode } from "react";
 import { characteristics } from "../config/characteristics";
 
 export type Characteristic = {
@@ -36,10 +38,32 @@ export enum CharacteristicType {
   Number,
 }
 
-type CharacteristicName = keyof typeof characteristics;
-type CharacteristicReturnType = ReturnType<Characteristic["compute"]>;
+export type CharacteristicName = keyof typeof characteristics;
+export type CharacteristicReturnType = ReturnType<Characteristic["compute"]>;
 
-export type ComputedCharacteristics = Record<
-  CharacteristicName,
-  CharacteristicReturnType
+export type ComputedCharacteristics = Partial<
+  Record<CharacteristicName, CharacteristicReturnType>
 >;
+
+export interface CharacteristicRenderConfig {
+  name: CharacteristicName;
+
+  decimals?: number;
+  units?: keyof Strings["units"];
+  localize?: boolean;
+  strings?: string;
+
+  render?: (data: {
+    output: CharacteristicReturnType;
+    strings: Strings;
+  }) => ReactNode;
+}
+
+export interface ToyRenderConfig {
+  toy: string;
+}
+
+export type CharacteristicsGroup = {
+  name: string;
+  order: (CharacteristicRenderConfig | ToyRenderConfig)[];
+};
