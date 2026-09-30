@@ -62,9 +62,7 @@ export const Page = withErrorWrapper(
 
         <div className={styles.sandbox}>
           {!skeleton && <TankopediaSandbox thicknessRange={thicknessRange} />}
-          <TankopediaCharacteristics
-            computedCharacteristics={characteristics}
-          />
+          <TankopediaCharacteristics characteristics={characteristics} />
         </div>
       </div>
     );

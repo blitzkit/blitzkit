@@ -23,7 +23,7 @@ export function TankopediaCharacteristics({
       <div className={styles.characteristics}>
         {characteristicsGroups.map((group) => {
           const items = group.order.filter(
-            (item) => "name" in item && characteristics[item.name] !== null,
+            (item) => "name" in item && item.name in characteristics,
           ).length;
           const shouldRender = items > 0;
 
