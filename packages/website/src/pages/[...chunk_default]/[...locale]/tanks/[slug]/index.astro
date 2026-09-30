@@ -27,5 +27,7 @@ const { id, locale } = Astro.props;
   <ColorScale color="amber" />
   <ColorScale color="jade" />
 
-  <Page {locale} {id} client:load />
+  <Page {id} {locale} client:only="react">
+    <Page slot="fallback" {id} {locale} skeleton />
+  </Page>
 </BaseLayout>

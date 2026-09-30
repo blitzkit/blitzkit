@@ -10,16 +10,17 @@ import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
 import { Tankopedia } from "../../../../../stores/tankopedia";
 import { computeCharacteristics } from "../../../../../tankopedia/computeCharacteristics";
+import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import styles from "./_index.module.css";
 
-interface PageProps {
+type PageProps = MaybeSkeletonComponentProps & {
   id: number;
-}
+};
 
 const tanks = await api.tanks();
 
 export const Page = withErrorWrapper(
-  withLocale<PageProps>(({ id }) => {
+  withLocale<PageProps>(({ skeleton, id }) => {
     const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
     Tankopedia.useInitialization(protagonistTank);
@@ -60,7 +61,7 @@ export const Page = withErrorWrapper(
         </div>
 
         <div className={styles.sandbox}>
-          <TankopediaSandbox thicknessRange={thicknessRange} />
+          {!skeleton && <TankopediaSandbox thicknessRange={thicknessRange} />}
           <TankopediaCharacteristics
             computedCharacteristics={characteristics}
           />

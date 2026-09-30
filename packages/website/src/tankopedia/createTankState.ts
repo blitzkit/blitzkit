@@ -33,7 +33,7 @@ export function createTankState(tank: TankDefinition) {
     equipment: {},
     status: createTankStatus(),
 
-    model: models.models[turret.id],
+    model: models.models[tank.id],
 
     consumables: [],
     provisions: createDefaultProvisions(tank, gun, provisions, scripts),

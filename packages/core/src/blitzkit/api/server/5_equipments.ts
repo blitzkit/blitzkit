@@ -27,8 +27,10 @@ export abstract class ServerBlitzKitAPI5 extends ServerBlitzKitAPI4 {
             .map((level) => {
               return Object.values(level).map((options) => {
                 return {
-                  left: this.optionalDevices!.root[options.device0].id,
-                  right: this.optionalDevices!.root[options.device1].id,
+                  options: [
+                    this.optionalDevices!.root[options.device0].id,
+                    this.optionalDevices!.root[options.device1].id,
+                  ],
                 } satisfies EquipmentSlot;
               });
             })
