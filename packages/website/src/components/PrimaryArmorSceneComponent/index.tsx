@@ -23,9 +23,9 @@ import { hasEquipment } from "../../hooks/useEquipment";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { transitionEvent } from "../Lighting";
+import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
-import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
 
 interface PrimaryArmorSceneComponentProps {
   thickness: number;
