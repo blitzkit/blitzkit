@@ -5,12 +5,12 @@ import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
-import { Duel } from "../../../../../../stores/duel";
 import { api } from "../api/dynamic";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
-import { hasEquipment } from "../core/blitzkit/hasEquipment";
 import { Pose, poseEvent } from "../core/blitzkit/pose";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
+import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
+import { hasEquipment } from "../hooks/useEquipment";
 import { Tankopedia } from "../stores/tankopedia";
 
 const poseDistances: Record<Pose, number> = {
@@ -37,12 +37,12 @@ export function CanvasControl({
   const camera = useThree((state) => state.camera as PerspectiveCamera);
   const canvas = useThree((state) => state.gl.domElement);
   const orbitControls = useRef<OrbitControlsClass>(null);
-  const protagonistTurret = Duel.use((state) => state.protagonist.turret);
-  const antagonistTurret = Duel.use((state) => state.antagonist.turret);
-  const protagonistTrack = Duel.use((state) => state.protagonist.track);
-  const protagonistTank = Duel.use((state) => state.protagonist.tank);
-  const antagonistTank = Duel.use((state) => state.antagonist.tank);
-  const protagonistGun = Duel.use((state) => state.protagonist.gun);
+  const protagonistTurret = useDuel("protagonist", DuelModule.Turret);
+  const antagonistTurret = useDuel("antagonist", DuelModule.Turret);
+  const protagonistTrack = useDuel("protagonist", DuelModule.Track);
+  const protagonistTank = useDuel("protagonist", DuelModule.Tank);
+  const antagonistTank = useDuel("antagonist", DuelModule.Tank);
+  const protagonistGun = useDuel("protagonist", DuelModule.Gun);
   const protagonistModelDefinition =
     modelDefinitions.models[protagonistTank.id];
   const protagonistTrackModelDefinition =
@@ -89,15 +89,17 @@ export function CanvasControl({
     controlsEnabledEvent.on(handleControlsEnabled);
 
     function handlePoseEvent(event: Pose) {
+      const protagonist = getDuel("protagonist", DuelModule.Tank);
+
       const hasImprovedVerticalStabilizer = hasEquipment(
         122,
-        Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix,
+        protagonist.equipment_preset,
+        Tankopedia.state.protagonist.equipment,
       );
       const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
-        Duel.state.protagonist.tank.equipment_preset,
-        Duel.state.protagonist.equipmentMatrix,
+        protagonist.equipment_preset,
+        Tankopedia.state.protagonist.equipment,
       );
 
       switch (event) {
