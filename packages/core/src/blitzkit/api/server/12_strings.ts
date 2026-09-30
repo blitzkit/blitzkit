@@ -5,17 +5,18 @@ import { merge } from "lodash-es";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI11 } from "./11_scripts";
 
-const globbedStrings = import.meta.glob("../../../../../i18n/strings/*.json", {
-  import: "default",
-});
-
 export abstract class ServerBlitzKitAPI12 extends ServerBlitzKitAPI11 {
+  private globbedStrings = import.meta.glob(
+    "../../../../../i18n/strings/*.json",
+    { import: "default" },
+  );
+
   @Cache()
   async strings(locale: string) {
-    const localized = (await globbedStrings[
+    const localized = (await this.globbedStrings[
       `../../../../../i18n/strings/${locale}.json`
     ]()) as DeepPartial<Strings>;
-    const defaults = (await globbedStrings[
+    const defaults = (await this.globbedStrings[
       `../../../../../i18n/strings/${locales.default}.json`
     ]()) as Strings;
     const strings = merge({}, defaults, localized);

@@ -33,6 +33,8 @@ import { parse as parseYaml } from "yaml";
 import { AbstractBlitzKitAPI } from "../abstract";
 
 export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
+  // TODO: move most of these to their respective constructors
+
   protected vfs: AbstractVFS;
   protected parsePath?: typeof parse;
   protected extname?: typeof extname;
