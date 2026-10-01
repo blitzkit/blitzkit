@@ -5,11 +5,11 @@ import type { QuicklimeEvent } from "quicklime";
 import { type RefObject, useEffect } from "react";
 import { Euler, Group, Vector3 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../core/blitzkit/modelTransform";
+import { toThreeVector } from "../three/toThreeVector";
 import { useDuelModel } from "./useDuelModel";
 
 export function useTankTransform(
@@ -23,9 +23,9 @@ export function useTankTransform(
   useEffect(() => {
     const trackModelDefinition = tankModelDefinition.tracks[track.id];
     const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-    const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
-    const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
-    const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
+    const hullOrigin = toThreeVector(trackModelDefinition.origin);
+    const turretOrigin = toThreeVector(tankModelDefinition.turret_origin);
+    const gunOrigin = toThreeVector(turretModelDefinition.gun_origin);
     const turretPosition = new Vector3();
     const turretRotation = new Euler();
     const gunPosition = new Vector3();
@@ -54,14 +54,12 @@ export function useTankTransform(
       gunContainer.current?.position.copy(gunPosition);
       gunContainer.current?.rotation.copy(gunRotation);
 
-      if (yaw === undefined) return;
-
       turretPosition
         .set(0, 0, 0)
         .sub(hullOrigin)
         .sub(turretOrigin)
-        .applyAxisAngle(new Vector3(0, 0, 1), yaw);
-      turretRotation.set(0, 0, yaw);
+        .applyAxisAngle(J_HAT, yaw);
+      turretRotation.set(0, yaw, 0);
 
       if (tankModelDefinition.initial_turret_rotation) {
         const initialPitch = -degToRad(
@@ -76,11 +74,11 @@ export function useTankTransform(
 
         turretPosition
           .applyAxisAngle(I_HAT, initialPitch)
-          .applyAxisAngle(J_HAT, initialRoll)
-          .applyAxisAngle(K_HAT, initialYaw);
+          .applyAxisAngle(J_HAT, initialYaw)
+          .applyAxisAngle(K_HAT, initialRoll);
         turretRotation.x += initialPitch;
-        turretRotation.y += initialRoll;
-        turretRotation.z += initialYaw;
+        turretRotation.y += initialYaw;
+        turretRotation.z += initialRoll;
       }
 
       turretPosition.add(turretOrigin).add(hullOrigin);

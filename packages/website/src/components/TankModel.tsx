@@ -22,6 +22,7 @@ export function TankModel() {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tankModelDefinition = useDuelModel("protagonist");
+  const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[protagonist.turret];
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun];
   const { gltf } = useModel(protagonist.tank);
@@ -31,6 +32,18 @@ export function TankModel() {
 
   return (
     <>
+      {/* <mesh
+        scale={0.1}
+        position={[
+          trackModelDefinition.origin!.x + tankModelDefinition.turret_origin!.x,
+          trackModelDefinition.origin!.y + tankModelDefinition.turret_origin!.y,
+          trackModelDefinition.origin!.z + tankModelDefinition.turret_origin!.z,
+        ]}
+      >
+        <sphereGeometry />
+        <meshBasicMaterial color="red" depthTest={false} />
+      </mesh> */}
+
       {nodes.map((node) => {
         const isHull = node.name === "hull";
         const isWheel = node.name.startsWith("chassis_wheel_");
@@ -129,7 +142,7 @@ export function TankModel() {
             window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
-            const protagonist = useDuel("protagonist", DuelModule.Tank);
+            const protagonist = getDuel("protagonist", DuelModule.Tank);
 
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,

@@ -1,7 +1,6 @@
 import {
   BlitzCrewType,
   ChassisDefinitionsList,
-  EngineDefinitionsList,
   GunDefinitionsList,
   TankParameters,
   toUniqueId,
@@ -17,7 +16,7 @@ import { ServerBlitzKitAPI2 } from "./2_camouflages";
 
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
-    return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
+    return { x: tuple[0], y: tuple[1], z: -tuple[2] } satisfies Vector3;
   }
 
   private assignArmor(
@@ -50,9 +49,6 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
       const gunList = await this.vfs.xml<{
         root: GunDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/guns.xml`);
-      const enginesList = await this.vfs.xml<{
-        root: EngineDefinitionsList;
-      }>(`Data/XML/item_defs/vehicles/${nation}/components/engines.xml`);
       const chassisList = await this.vfs.xml<{
         root: ChassisDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/chassis.xml`);

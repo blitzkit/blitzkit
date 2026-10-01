@@ -1,6 +1,5 @@
 import { memo, useRef } from "react";
 import { Group, Plane, Scene, Vector3 } from "three";
-import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { useArmor } from "../hooks/useArmor";
@@ -9,6 +8,7 @@ import { DuelModule, useDuel } from "../hooks/useDuel";
 import { useDuelModel } from "../hooks/useDuelModel";
 import { useModel } from "../hooks/useModel";
 import { useTankTransform } from "../hooks/useTankTransform";
+import { toThreeVector } from "../three/toThreeVector";
 import { SpacedArmorSceneComponent } from "./SpacedArmorSceneComponent";
 
 export enum ArmorType {
@@ -36,9 +36,9 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
-  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
-  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
+  const hullOrigin = toThreeVector(trackModelDefinition.origin);
+  const turretOrigin = toThreeVector(tankModelDefinition.turret_origin);
+  const gunOrigin = toThreeVector(turretModelDefinition.gun_origin);
   const maskOrigin =
     gunModelDefinition.mask === undefined
       ? undefined

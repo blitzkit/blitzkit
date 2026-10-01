@@ -2,7 +2,6 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { memo, useRef } from "react";
 import { Group, Plane, Vector2, Vector3 } from "three";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
-import { correctZYTuple } from "../core/blitz/correctZYTuple";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
 import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
@@ -16,6 +15,7 @@ import { useModel } from "../hooks/useModel";
 import { useTankTransform } from "../hooks/useTankTransform";
 import { Tankopedia } from "../stores/tankopedia";
 import { TankopediaPersistent } from "../stores/tankopediaPersistent";
+import { toThreeVector } from "../three/toThreeVector";
 import { ArmorType } from "./SpacedArmorScene";
 import { StaticArmorSceneComponent } from "./StaticArmorSceneComponent";
 
@@ -44,9 +44,9 @@ export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
-  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
-  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
+  const hullOrigin = toThreeVector(trackModelDefinition.origin);
+  const turretOrigin = toThreeVector(tankModelDefinition.turret_origin);
+  const gunOrigin = toThreeVector(turretModelDefinition.gun_origin);
   const canvas = useThree((state) => state.gl.domElement);
 
   const maskOrigin =

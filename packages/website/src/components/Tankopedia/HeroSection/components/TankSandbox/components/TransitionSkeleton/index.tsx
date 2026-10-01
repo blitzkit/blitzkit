@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { Group, ShaderMaterial, UniformsLib, UniformsUtils } from "three";
-import { correctZYTuple } from "../../../../../../../core/blitz/correctZYTuple";
 import { jsxTree } from "../../../../../../../core/blitzkit/jsxTree";
 import { useArmor } from "../../../../../../../hooks/useArmor";
 import { useModel } from "../../../../../../../hooks/useModel";
 import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
 import { useTankTransform } from "../../../../../../../hooks/useTankTransform";
 import { Duel } from "../../../../../../../stores/duel";
+import { toThreeVector } from "../../../../../../../three/toThreeVector";
 import { ModelTankWrapper } from "../../../../../../ModelTankWrapper";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 import vertexShader from "./shaders/vertex.glsl?raw";
@@ -37,9 +37,9 @@ export function TransitionSkeleton() {
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
   const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const wrapper = useRef<Group>(null);
-  const hullOrigin = correctZYTuple(trackModelDefinition.origin!);
-  const turretOrigin = correctZYTuple(tankModelDefinition.turret_origin!);
-  const gunOrigin = correctZYTuple(turretModelDefinition.gun_origin!);
+  const hullOrigin = toThreeVector(trackModelDefinition.origin);
+  const turretOrigin = toThreeVector(tankModelDefinition.turret_origin);
+  const gunOrigin = toThreeVector(turretModelDefinition.gun_origin);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
