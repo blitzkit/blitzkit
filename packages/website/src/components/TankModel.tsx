@@ -5,7 +5,7 @@ import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { jsxTree } from "../core/blitzkit/jsxTree";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
-import { DuelModule, useDuel } from "../hooks/useDuel";
+import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
 import { useDuelModel } from "../hooks/useDuelModel";
 import { hasEquipment } from "../hooks/useEquipment";
 import { useModel } from "../hooks/useModel";
@@ -214,7 +214,7 @@ export function TankModel() {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
-              const protagonist = useDuel("protagonist", DuelModule.Tank);
+              const protagonist = getDuel("protagonist", DuelModule.Tank);
 
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,
