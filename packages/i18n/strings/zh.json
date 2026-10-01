@@ -61,7 +61,7 @@
       "3": "平均",
       "4": "高于平均",
       "5": "好",
-      "6": "好",
+      "6": "非常好",
       "7": "很好",
       "8": "非常好",
       "9": "极品"
@@ -71,7 +71,7 @@
       "1": "非常差",
       "2": "很差",
       "3": "差",
-      "4": "低于平均",
+      "4": "较差",
       "5": "平均",
       "6": "较好",
       "7": "好",
@@ -105,7 +105,7 @@
       "-1": "未知",
       "0": "轻型坦克",
       "1": "中型坦克",
-      "2": "重型战车",
+      "2": "重型坦克",
       "3": "坦克歼击车"
     },
     "tank_class_short_plural_lowercase": {
@@ -131,7 +131,7 @@
       "normal": {
         "com": "北美",
         "eu": "欧洲",
-        "asia": "亚太地区"
+        "asia": "亚太服务器"
       },
       "short": {
         "com": "北美",
@@ -216,8 +216,8 @@
         "count_singular": "1 辆坦克",
         "count_plural": "{count} 辆坦克",
         "sorting_by": "按 {name} 排序",
-        "clear": "清除",
-        "tier": "{tier} 阶",
+        "clear": "清空",
+        "tier": "{tier} 级",
         "passive": "{name} (被动)",
         "active": "{name} (主动)",
         "no_tanks_found": {
@@ -239,22 +239,22 @@
           "fire.reload": "装填时间",
           "fire.caliber": "口径",
           "fire.standardPenetration": "标准炮弹穿透力",
-          "fire.premiumPenetration": "金币炮弹穿透力",
+          "fire.premiumPenetration": "金币弹穿深",
           "fire.tertiaryPenetration": "第三种炮弹穿透力",
           "fire.damage": "炮弹伤害值",
           "fire.moduleDamage": "模组伤害值",
           "fire.shellVelocity": "炮弹飞行速度",
           "fire.shellRange": "最大射程",
-          "fire.shellCapacity": "携弹量",
+          "fire.shellCapacity": "载弹量",
           "fire.aimTime": "瞄准时间",
-          "fire.dispersionStill": "一百米处扩散度",
+          "fire.dispersionStill": "百米散步",
           "fire.dispersionMoving": "移动时扩散度",
           "fire.gunDepression": "俯角",
           "fire.gunElevation": "仰角",
-          "maneuverability.forwardsSpeed": "最高前进速度",
+          "maneuverability.forwardsSpeed": "前进极速",
           "maneuverability.backwardsSpeed": "最高后退速度",
           "maneuverability.power": "引擎功率",
-          "maneuverability.powerToWeight": "功重比",
+          "maneuverability.powerToWeight": "推重比",
           "maneuverability.weight": "重量",
           "maneuverability.traverseSpeed": "转速"
         },
