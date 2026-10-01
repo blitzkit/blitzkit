@@ -1,3 +1,4 @@
+import { alias } from "@blitzkit/core";
 import type { Consumable, EquipmentSlot } from "@blitzkit/protos";
 import { ClockIcon, ResetIcon, TrashIcon } from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
@@ -196,7 +197,7 @@ function ConsumableEntry({ id, consumable }: ConsumableProps) {
             });
           }}
         >
-          <img src={`/media/consumables/${id}.webp`} />
+          <img src={alias("api", `/icons/consumables/${consumable.id}.webp`)} />
           <div className={styles.info}>
             <Text lowContrast size="minor">
               <div className={styles.entry}>
@@ -336,12 +337,12 @@ function EquipmentOption({
 
   return (
     <Tooltip tooltip={unwrap(specificEquipment.name)}>
-      <Button
+      <IconButton
         color={isSelected ? undefined : "gray"}
         variant={isSelected ? "surface" : "soft"}
         data-selected={isSelected}
         radius="1"
-        listChild
+        parentListChild
         className={styles.slot}
         onClick={() => {
           Tankopedia.mutate((draft) => {
@@ -353,8 +354,12 @@ function EquipmentOption({
           });
         }}
       >
-        <img src={`/media/equipment/${id}.webp`} />
-      </Button>
+        <img
+          className={styles.icon}
+          alt={unwrap(specificEquipment.name)}
+          src={alias("api", `/icons/equipment/${id}.webp`)}
+        />
+      </IconButton>
     </Tooltip>
   );
 }

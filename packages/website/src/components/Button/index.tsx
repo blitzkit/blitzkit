@@ -8,8 +8,10 @@ export interface ButtonProps extends ComponentProps<"button"> {
   radius?: `${1 | 2 | 3}` | "max";
   variant?: "solid" | "surface" | "soft" | "inverted" | "ghost" | "outline";
   size?: "regular" | "minor";
-  listChild?: boolean;
   highContrast?: boolean; // TODO: add high contrast
+
+  listChild?: boolean;
+  parentListChild?: boolean;
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([
@@ -34,7 +36,9 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
+
   listChild,
+  parentListChild,
   ...props
 }: ButtonProps) {
   return (
@@ -46,6 +50,7 @@ export function Button({
       data-radius={radius}
       data-size={size}
       data-list-child={listChild}
+      data-parent-list-child={parentListChild}
       {...props}
     />
   );

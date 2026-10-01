@@ -2,4 +2,10 @@
   padding: var(--space-3);
 
   aspect-ratio: 1 / 1;
+
+  img,
+  svg {
+    width: 0.75em;
+    height: 0.75em;
+  }
 }
