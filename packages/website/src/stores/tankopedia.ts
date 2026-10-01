@@ -75,14 +75,18 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
+export interface TankEnvironment {
+  equalize: boolean;
+  assault_distance: number;
+}
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
 
   protagonist: TankState;
   antagonist: TankState;
-
-  equalize: boolean;
+  environment: TankEnvironment;
 
   shot?: Shot;
   skills: Record<string, number>;
@@ -121,7 +125,7 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
     antagonist: createTankState(tank),
     model: models.models[tank.id],
 
-    equalize: false,
+    environment: { equalize: false, assault_distance: 0 },
 
     relativeAgainst: TankopediaRelativeAgainst.Class,
     editStatic: false,

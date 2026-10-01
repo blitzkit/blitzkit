@@ -9,7 +9,6 @@ export interface TankState {
   shell: number;
   track: number;
 
-  assault_distance: number;
   speed: number;
 
   equipment: Record<number, number>;

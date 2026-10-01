@@ -27,7 +27,10 @@ export function createTankState(tank: TankDefinition) {
     shell: gun.shells[0].id,
     track: tank.tracks.at(-1)!.id,
 
-    assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
+    environment: {
+      assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
+    },
+
     speed: 0,
 
     equipment: {},

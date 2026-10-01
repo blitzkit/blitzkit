@@ -1,11 +1,16 @@
 import type { Strings } from "@blitzkit/i18n";
 import type {
-  Equalizer,
+  EngineDefinition,
   GunDefinition,
   ShellDefinition,
+  TankDefinition,
+  TrackDefinition,
+  TurretDefinition,
 } from "@blitzkit/protos";
 import type { ReactNode } from "react";
 import { characteristics } from "../config/characteristics";
+import type { TankEnvironment } from "../stores/tankopedia";
+import type { TankState } from "../tankopedia/tankState";
 
 export type Characteristic = {
   should_render?(context: CharacteristicContext): boolean;
@@ -20,13 +25,16 @@ export type Characteristic = {
     }
 );
 
-interface CharacteristicContext {
+export interface CharacteristicContext {
+  state: TankState;
+  environment: TankEnvironment;
+
+  tank: TankDefinition;
+  engine: EngineDefinition;
+  track: TrackDefinition;
+  turret: TurretDefinition;
   gun: GunDefinition;
   shell: ShellDefinition;
-
-  equalizer: Equalizer;
-
-  assault_distance: number;
 
   characteristic(
     name: CharacteristicName,
@@ -41,8 +49,9 @@ export enum CharacteristicType {
 export type CharacteristicName = keyof typeof characteristics;
 export type CharacteristicReturnType = ReturnType<Characteristic["compute"]>;
 
-export type ComputedCharacteristics = Partial<
-  Record<CharacteristicName, CharacteristicReturnType>
+export type ComputedCharacteristics = Map<
+  CharacteristicName,
+  CharacteristicReturnType
 >;
 
 export interface CharacteristicRenderConfig {

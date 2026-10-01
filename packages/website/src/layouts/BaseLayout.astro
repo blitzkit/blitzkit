@@ -43,14 +43,14 @@ const { accent, locale } = Astro.props;
         color: var(--gray-12);
         font-family: var(--font-family-regular);
 
-        .app {
+        main {
           display: flex;
           flex: 1;
           flex-direction: column;
 
           background-color: var(--gray-1);
 
-          padding: var(--space-4);
+          /* padding: var(--space-4); */
           gap: var(--space-6);
         }
       }
@@ -75,9 +75,9 @@ const { accent, locale } = Astro.props;
   <body>
     <slot name="pre-app" />
 
-    <div class="app">
+    <main>
       <slot />
-    </div>
+    </main>
 
     <!-- <Footer {locale} /> -->
   </body>

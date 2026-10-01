@@ -23,7 +23,7 @@ export function TankopediaCharacteristics({
       <div className={styles.characteristics}>
         {characteristicsGroups.map((group) => {
           const items = group.order.filter(
-            (item) => "name" in item && item.name in characteristics,
+            (item) => "name" in item && characteristics.has(item.name),
           ).length;
           const shouldRender = items > 0;
 
@@ -51,7 +51,7 @@ function Group({ group, characteristics }: GroupProps) {
   const strings = useStrings();
   const toys = group.order.filter((item) => "toy" in item).length;
   const items = group.order.filter(
-    (item) => "name" in item && characteristics[item.name] !== null,
+    (item) => "name" in item && characteristics.has(item.name),
   ).length;
   const groupSpan = `calc(${toys} * var(--group-span) + ${items} + 2)`;
   const contentSpan = `calc(${toys} * var(--group-span) + ${items})`;
@@ -88,8 +88,8 @@ function Group({ group, characteristics }: GroupProps) {
         {group.order.map((item) => (
           <>
             {"toy" in item && <Toy {...item} />}
-            {"name" in item && characteristics[item.name] !== null && (
-              <Item config={item} value={characteristics[item.name]!} />
+            {"name" in item && characteristics.get(item.name) && (
+              <Item config={item} value={characteristics.get(item.name)!} />
             )}
           </>
         ))}

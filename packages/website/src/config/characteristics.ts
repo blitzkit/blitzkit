@@ -26,12 +26,12 @@ export const characteristics = {
 
   damage: {
     type: CharacteristicType.Number,
-    compute({ characteristic, gun, shell, equalizer, assault_distance }) {
+    compute({ characteristic, gun, shell, environment }) {
       let coefficient = 1;
 
       if (gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)) {
         const match = gun.assault_ranges.ranges.find(
-          ({ distance }) => distance >= assault_distance,
+          ({ distance }) => distance >= environment.assault_distance,
         );
 
         if (match !== undefined) {
@@ -39,7 +39,7 @@ export const characteristics = {
         }
       }
 
-      coefficient *= equalizer.damage;
+      // coefficient *= equalizer.damage;
 
       return coefficient * shell.armor_damage;
     },

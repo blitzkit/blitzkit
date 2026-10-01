@@ -8,8 +8,8 @@ import { defaultEqualizer } from "../../../../../config/equalizer";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
+import { useCharacteristics } from "../../../../../hooks/useCharacteristics";
 import { Tankopedia } from "../../../../../stores/tankopedia";
-import { computeCharacteristics } from "../../../../../tankopedia/computeCharacteristics";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import styles from "./_index.module.css";
 
@@ -26,14 +26,10 @@ export const Page = withErrorWrapper(
     Tankopedia.useInitialization(protagonistTank);
 
     const protagonist = Tankopedia.use((state) => state.protagonist);
-    // const protagonistEquipment = useEquipment("protagonist", protagonistTank.tank!);
+    const equalize = Tankopedia.use((state) => state.environment.equalize);
 
-    const characteristics = useMemo(
-      () => computeCharacteristics(),
-      [protagonist],
-    );
+    const characteristics = useCharacteristics("protagonist");
 
-    const equalize = Tankopedia.use((state) => state.equalize);
     const thicknessRange = useMemo(() => {
       const entries = Object.values(tanks.tanks);
       const filtered = entries.filter(
