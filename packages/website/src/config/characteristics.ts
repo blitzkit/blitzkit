@@ -26,22 +26,15 @@ export const characteristics = {
 
   damage: {
     type: CharacteristicType.Number,
-    compute({ characteristic, gun, shell, environment }) {
-      let coefficient = 1;
+    compute({ shell }) {
+      return shell.armor_damage;
+    },
+  },
 
-      if (gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)) {
-        const match = gun.assault_ranges.ranges.find(
-          ({ distance }) => distance >= environment.assault_distance,
-        );
-
-        if (match !== undefined) {
-          coefficient *= match.factor;
-        }
-      }
-
-      // coefficient *= equalizer.damage;
-
-      return coefficient * shell.armor_damage;
+  module_damage: {
+    type: CharacteristicType.Number,
+    compute({ shell }) {
+      return shell.module_damage;
     },
   },
 } satisfies Record<string, Characteristic>;
