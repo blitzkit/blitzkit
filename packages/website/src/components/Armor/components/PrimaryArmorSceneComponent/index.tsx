@@ -5,7 +5,7 @@ import {
 } from "@blitzkit/core";
 import { invalidate, useFrame } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   MeshBasicMaterial,
   NormalBlending,
@@ -43,42 +43,45 @@ export function PrimaryArmorSceneComponent({
   node,
   thickness,
 }: PrimaryArmorSceneComponentProps) {
-  const material = new ShaderMaterial({
-    fragmentShader,
-    vertexShader,
+  const [material] = useState(
+    () =>
+      new ShaderMaterial({
+        fragmentShader,
+        vertexShader,
 
-    fog: true,
-    transparent: true,
+        fog: true,
+        transparent: true,
 
-    blending: isHalloween ? SubtractiveBlending : NormalBlending,
+        blending: isHalloween ? SubtractiveBlending : NormalBlending,
 
-    uniforms: UniformsUtils.merge([
-      UniformsLib.common,
-      UniformsLib.fog,
+        uniforms: UniformsUtils.merge([
+          UniformsLib.common,
+          UniformsLib.fog,
 
-      {
-        thickness: { value: null },
-        penetration: { value: null },
-        caliber: { value: null },
-        ricochet: { value: null },
-        normalization: { value: null },
-        isExplosive: { value: null },
-        canSplash: { value: null },
-        damage: { value: null },
-        explosionRadius: { value: null },
-        greenPenetration: { value: null },
-        advancedHighlighting: { value: null },
-        opaque: { value: null },
+          {
+            thickness: { value: null },
+            penetration: { value: null },
+            caliber: { value: null },
+            ricochet: { value: null },
+            normalization: { value: null },
+            isExplosive: { value: null },
+            canSplash: { value: null },
+            damage: { value: null },
+            explosionRadius: { value: null },
+            greenPenetration: { value: null },
+            advancedHighlighting: { value: null },
+            opaque: { value: null },
 
-        inverseProjectionMatrix: { value: null },
-        resolution: { value: new Vector2() },
-        spacedArmorBuffer: { value: null },
-        spacedArmorDepth: { value: null },
+            inverseProjectionMatrix: { value: null },
+            resolution: { value: new Vector2() },
+            spacedArmorBuffer: { value: null },
+            spacedArmorDepth: { value: null },
 
-        opacity: { value: 0 },
-      },
-    ]),
-  });
+            opacity: { value: 0 },
+          },
+        ]),
+      })
+  );
 
   useEffect(() => {
     function handleShellChange() {
@@ -88,10 +91,10 @@ export function PrimaryArmorSceneComponent({
 
       material.uniforms.caliber.value = shell.caliber;
       material.uniforms.ricochet.value = degToRad(
-        isExplosive(shell.type) ? 90 : shell.ricochet!,
+        isExplosive(shell.type) ? 90 : shell.ricochet!
       );
       material.uniforms.normalization.value = degToRad(
-        shell.normalization ?? 0,
+        shell.normalization ?? 0
       );
       material.uniforms.isExplosive.value = isExplosive(shell.type);
       material.uniforms.canSplash.value = canSplash(shell.type);
@@ -121,7 +124,7 @@ export function PrimaryArmorSceneComponent({
       const hasEnhancedArmor = hasEquipment(
         110,
         Duel.state.protagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
       const equalizer =
         (Duel.state.equalize
@@ -142,7 +145,7 @@ export function PrimaryArmorSceneComponent({
       const hasCalibratedShells = hasEquipment(
         103,
         Duel.state.antagonist.tank.equipment_preset,
-        equipment,
+        equipment
       );
 
       material.uniforms.penetration.value =
@@ -151,7 +154,7 @@ export function PrimaryArmorSceneComponent({
           hasCalibratedShells,
           Duel.state.equalize,
           shell.type,
-          Duel.state.antagonist.tank.equalizer,
+          Duel.state.antagonist.tank.equalizer
         );
 
       if (!noInvalidate) invalidate();
@@ -164,7 +167,7 @@ export function PrimaryArmorSceneComponent({
     handleShellChange();
     handleGreenPenetrationChange(TankopediaPersistent.state.greenPenetration);
     handleAdvancedHighlightingChange(
-      TankopediaPersistent.state.advancedHighlighting,
+      TankopediaPersistent.state.advancedHighlighting
     );
     handleOpaqueChange(TankopediaPersistent.state.opaque);
     handleWireframeChange(TankopediaPersistent.state.wireframe);
@@ -178,27 +181,27 @@ export function PrimaryArmorSceneComponent({
       Tankopedia.on((state) => state.customShell, handleShellChange),
       TankopediaPersistent.on(
         (state) => state.greenPenetration,
-        handleGreenPenetrationChange,
+        handleGreenPenetrationChange
       ),
       TankopediaPersistent.on(
         (state) => state.advancedHighlighting,
-        handleAdvancedHighlightingChange,
+        handleAdvancedHighlightingChange
       ),
       TankopediaPersistent.on((state) => state.opaque, handleOpaqueChange),
       Duel.on(
         (state) => state.protagonist.equipmentMatrix,
-        () => handleProtagonistEquipmentChange(),
+        () => handleProtagonistEquipmentChange()
       ),
       Duel.on(
         (state) => state.antagonist.equipmentMatrix,
-        () => handleAntagonistEquipmentChange(),
+        () => handleAntagonistEquipmentChange()
       ),
       Duel.on(
         (state) => state.equalize,
         () => {
           handleProtagonistEquipmentChange();
           handleAntagonistEquipmentChange();
-        },
+        }
       ),
       () => transitionEvent.off(handleTransitionEvent),
     ];
@@ -210,7 +213,7 @@ export function PrimaryArmorSceneComponent({
 
   useFrame(({ gl, camera }) => {
     gl.getSize(material.uniforms.resolution.value).multiplyScalar(
-      gl.getPixelRatio(),
+      gl.getPixelRatio()
     );
     material.uniforms.spacedArmorBuffer.value = spacedArmorRenderTarget.texture;
     material.uniforms.spacedArmorDepth.value =
