@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { Badge, Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
@@ -12,12 +12,7 @@ export function Equalizer() {
   return (
     <ConfigurationChildWrapper>
       <Heading size="4">
-        <Flex gap="2" align="center">
-          {strings.website.tools.tankopedia.configuration.equalizer.title}{" "}
-          <Badge variant="outline">
-            {strings.website.tools.tankopedia.configuration.equalizer.beta}
-          </Badge>
-        </Flex>
+        {strings.website.tools.tankopedia.configuration.equalizer.title}
       </Heading>
 
       <Box
