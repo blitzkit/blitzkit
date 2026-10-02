@@ -573,8 +573,7 @@
 
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "Modules",
