@@ -33,7 +33,7 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
     if (typeof raw === "number") {
       armor.thickness[id] = raw;
     } else if (Array.isArray(raw)) {
-      armor.thickness[id] = raw.at(-1)!;
+      armor.thickness[id] = raw.reduce((sum, thickness) => sum + thickness, 0);
     } else {
       if (!armor.spaced) armor.spaced = [];
       armor.thickness[id] = raw["#text"];
