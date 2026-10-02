@@ -29,9 +29,9 @@ export function Equalizer() {
         style={{
           cursor: "pointer",
           borderRadius: "var(--radius-3)",
-          backgroundImage: `url(${alias("api", `/gamemodes/45/banner.webp`)})`,
+          backgroundImage: `url(${alias("api", `/gamemodes/Insanity/banner.webp`)})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "50% 25%",
           overflow: "hidden",
         }}
       >
