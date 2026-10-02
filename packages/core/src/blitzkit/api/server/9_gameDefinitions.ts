@@ -27,9 +27,9 @@ export abstract class ServerBlitzKitAPI9 extends ServerBlitzKitAPI8 {
     ).available_nations;
 
     for (const match of this.squadBattleTypeStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-      /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
+      /eGameMode\.(\w+) -> "(battleType\/([a-zA-Z]+))"/g,
     )) {
-      const id = Number(match[1]);
+      const id = match[1];
       const name = this.getString(match[2]);
 
       gameDefinitions.gameModes[id] = {

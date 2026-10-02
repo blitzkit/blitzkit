@@ -25,8 +25,7 @@ export function GameModeSection() {
       </Heading>
 
       <Flex justify="center" gap="4" wrap="wrap" px="4">
-        {roles.map(([key, value]) => {
-          const id = Number(key);
+        {roles.map(([id, value]) => {
           const gameMode = gameDefinitions.gameModes[id];
 
           return (

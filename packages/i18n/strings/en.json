@@ -573,8 +573,7 @@
 
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "Modules",
@@ -684,8 +683,8 @@
             "viewRange": "View range",
             "camouflageStill": "Camouflage still",
             "camouflageMoving": "Moving",
-            "camouflageShootingStill": "Still",
-            "camouflageShootingMoving": "Moving",
+            "camouflageShootingStill": "Shooting while still",
+            "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "Caught on fire",
             "width": "Width",
             "height": "Height",

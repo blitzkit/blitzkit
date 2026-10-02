@@ -3,10 +3,8 @@ import {
   BlitzCrewType,
   ChassisDefinitionsList,
   Crew,
-  EngineDefinitionsList,
   GunDefinitionsList,
   ModelDefinitions,
-  ResearchCost,
   TankParameters,
   toUniqueId,
   TurretDefinitionsList,
@@ -15,10 +13,10 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
-import { Cache } from "./0_base";
-import { ServerBlitzKitAPI2 } from "./2_camouflageDefinitions";
 import { parse as parsePath } from "path";
 import { Vector3Tuple } from "three";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI2 } from "./2_camouflageDefinitions";
 
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
@@ -55,9 +53,6 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
       const gunList = await this.vfs.xml<{
         root: GunDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/guns.xml`);
-      const enginesList = await this.vfs.xml<{
-        root: EngineDefinitionsList;
-      }>(`Data/XML/item_defs/vehicles/${nation}/components/engines.xml`);
       const chassisList = await this.vfs.xml<{
         root: ChassisDefinitionsList;
       }>(`Data/XML/item_defs/vehicles/${nation}/components/chassis.xml`);
@@ -65,10 +60,6 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
       for (const tankKey in tankList.root) {
         if (this.botPattern.test(tankKey)) continue;
 
-        const gunXps = new Map<number, ResearchCost>();
-        const turretXps = new Map<number, ResearchCost>();
-        const engineXps = new Map<number, ResearchCost>();
-        const trackXps = new Map<number, ResearchCost>();
         const tank = tankList.root[tankKey];
         const tankDefinition = await this.vfs.xml<{ root: VehicleDefinitions }>(
           `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
