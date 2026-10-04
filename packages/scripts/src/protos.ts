@@ -6,7 +6,9 @@ import { promisify } from "util";
 const MAX_COMMAND_LENGTH = 2 ** 11;
 const TS_PROTO_EXECUTABLE_LOCATIONS = [
   "./node_modules/.bin/protoc-gen-ts_proto",
+  "./node_modules/.bin/protoc-gen-ts_proto.exe",
   "../../node_modules/.bin/protoc-gen-ts_proto",
+  "../../node_modules/.bin/protoc-gen-ts_proto.exe",
 ];
 
 const roots = [
