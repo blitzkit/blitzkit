@@ -33,7 +33,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         draft.search = sanitized.length === 0 ? null : sanitized;
       });
     }, 500),
-    []
+    [],
   );
   const handleChange = useCallback(() => {
     if (!searching) {
@@ -46,7 +46,14 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
   }, [searching]);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
-      if (event.key !== "Enter" || !topResult || searching) return;
+      if (
+        event.key !== "Enter" ||
+        !topResult ||
+        !TankFilters.state.search ||
+        TankFilters.state.searching
+      ) {
+        return;
+      }
 
       event.preventDefault();
 
@@ -56,7 +63,7 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
         window.location.href = `/tanks/${topResult.slug}`;
       }
     },
-    [topResult]
+    [topResult],
   );
 
   return (

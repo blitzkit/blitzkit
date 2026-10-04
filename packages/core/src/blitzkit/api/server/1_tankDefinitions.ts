@@ -350,6 +350,15 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
         const tankClass =
           this.blitzTankClassToBlitzkit[blitzTankClass as BlitzTankClass];
 
+        const canonicalFullName = this.getString(tank.userString);
+        const name =
+          (tank.shortUserString
+            ? this.getString(tank.shortUserString)
+            : undefined) ?? canonicalFullName;
+        // only supply full name if it's different from the displayed short name to save some bytes
+        const name_full =
+          name === canonicalFullName ? undefined : canonicalFullName;
+
         tankDefinitions.tanks[tankId] = {
           ancestors: [],
           successors: [],
@@ -367,10 +376,8 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             typeof equipment === "string" ? equipment : equipment.at(-1)!,
           max_consumables: tankDefinition.root.consumableSlots,
           max_provisions: tankDefinition.root.provisionSlots,
-          name:
-            (tank.shortUserString
-              ? this.getString(tank.shortUserString)
-              : undefined) ?? this.getString(tank.userString),
+          name,
+          name_full,
           slug,
           nation,
           type: tankTags.includes("collectible")
