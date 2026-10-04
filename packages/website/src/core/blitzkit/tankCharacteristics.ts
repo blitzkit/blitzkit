@@ -166,12 +166,6 @@ export function tankCharacteristics(
   const intraClipCoefficient = coefficient([hasShellReloadBoost, -0.3]);
   const burstShells = gun.burst?.count ?? 1;
   const burstInterShell = gun.burst?.interval;
-  const assaultDamageCoefficient =
-    gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
-      ? (gun.assault_ranges.ranges.find(
-          ({ distance }) => distance >= assaultDistance,
-        )?.factor ?? 0)
-      : 1;
   const moduleDamageCoefficient = coefficient([hasTungsten, 0.15]);
   const reloadCoefficient =
     (coefficient([hasGunRammer, -0.05]) *
@@ -340,10 +334,6 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
-  const damageCoefficientWithoutAssault =
-    armorDamageCoefficient * equalizer.damage;
-  const damageCoefficient =
-    damageCoefficientWithoutAssault * assaultDamageCoefficient;
   const dpm = resolveDpm(
     gun,
     shell,
