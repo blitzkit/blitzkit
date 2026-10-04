@@ -16,6 +16,7 @@ export interface InfoProps {
   delta?: number;
   decimals?: number;
   prefix?: string;
+  rank?: ReactNode;
   deltaType?: "higherIsBetter" | "lowerIsBetter";
 }
 
@@ -26,6 +27,7 @@ export function Info({
   delta,
   decimals,
   prefix,
+  rank,
   deltaType = "higherIsBetter",
 }: InfoProps) {
   const statSearch = Tankopedia.use((state) => state.statSearch);
@@ -64,15 +66,21 @@ export function Info({
       align="center"
       pl={indent ? "2" : "0"}
       width="100%"
-      gap="4"
+      gap="2"
       ref={container}
     >
       <Text color="gray">{label}</Text>
 
       <Box flexGrow="1" />
 
+      {rank !== undefined && (
+        <Text color="gray" size="1" wrap="nowrap">
+          {rank}
+        </Text>
+      )}
+
       {children !== undefined && (
-        <Flex align="center" gap="1">
+        <Flex align="center" gap="1" flexShrink="0">
           {delta !== undefined && delta !== 0 && !isNaN(delta) && (
             <>
               <Text
@@ -98,7 +106,7 @@ export function Info({
             </>
           )}
 
-          <Text>
+          <Text wrap="nowrap">
             {prefix !== undefined && (
               <Text color="gray" size="1">
                 {prefix}
