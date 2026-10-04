@@ -55,6 +55,10 @@ export const characteristics = {
         coefficient *= 1 - effect.shieldCoef;
       });
 
+      script("antagonist", "ArmorMover", (effect) => {
+        coefficient *= 1 - effect.bonusValues!.damageReductionPercent / 100;
+      });
+
       return coefficient * shell.module_damage;
     },
   },
