@@ -45,7 +45,9 @@ export function TankSearchBar({
   }, []);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
-      if (event.key !== "Enter" || !topResult) return;
+      if (event.key !== "Enter" || !topResult || !TankFilters.state.search) {
+        return;
+      }
 
       event.preventDefault();
 

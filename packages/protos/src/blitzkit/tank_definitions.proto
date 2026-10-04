@@ -41,6 +41,7 @@ message TankDefinition {
   uint32                    weight             = 31;
   string                    dev_name           = 32;
   optional Equalizer        equalizer          = 33;
+  optional I18nString       name_full          = 34;
 }
 
 message Equalizer {
