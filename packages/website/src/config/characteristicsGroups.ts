@@ -76,8 +76,10 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         },
       },
       { name: "dpm", decimals: 0, units: "hp", localize: true },
-      { name: "damage", units: "hp", localize: true },
-      { name: "module_damage", units: "hp", localize: true },
+      { name: "damage", decimals: 0, units: "hp", localize: true },
+      { name: "damage_range", decimals: 0, units: "hp", localize: true },
+      { name: "module_damage", decimals: 0, units: "hp", localize: true },
+      { name: "module_damage_range", decimals: 0, units: "hp", localize: true },
       { name: "reload", decimals: 1, units: "s" },
       { name: "reloads", decimals: 1, units: "s" },
 

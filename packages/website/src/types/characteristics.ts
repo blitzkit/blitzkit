@@ -1,3 +1,4 @@
+import type { BlitzEffectScript } from "@blitzkit/core/src/types/blitzEffectScript";
 import type { Strings } from "@blitzkit/i18n";
 import type {
   EngineDefinition,
@@ -42,6 +43,8 @@ export interface CharacteristicContext {
   characteristic(
     name: CharacteristicName,
   ): ReturnType<Characteristic["compute"]>;
+
+  script(name: string, effect: (effect: BlitzEffectScript) => void): void;
 }
 
 export enum CharacteristicType {

@@ -12,7 +12,6 @@ import {
   OptionalDevices,
   OptionalDeviceSlots,
   ProvisionsCommon,
-  ShellKind,
   SquadBattleTypeStylesYaml,
   TankmenAvatar,
   toUniqueId,
@@ -25,7 +24,6 @@ import {
   CrewType,
   I18nString,
   ModuleType,
-  ShellType,
   TankClass,
 } from "@blitzkit/protos";
 import type { extname, parse } from "node:path";
@@ -79,12 +77,6 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
     "AT-SPG": TankClass.TANK_CLASS_TANK_DESTROYER,
     heavyTank: TankClass.TANK_CLASS_HEAVY,
     mediumTank: TankClass.TANK_CLASS_MEDIUM,
-  };
-  protected blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
-    ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
-    ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
-    HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
-    HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
   };
   protected blitzTankFilterDefinitionCategoryToBlitzkit: Record<
     BlitzTankFilterDefinitionCategory,

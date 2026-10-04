@@ -1,6 +1,7 @@
 import {
   BlitzCrewType,
   BlitzModuleType,
+  blitzShellKindToBlitzkit,
   BlitzTankClass,
   ChassisDefinitionsList,
   EngineDefinitionsList,
@@ -509,8 +510,8 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
                 .map((string) => {
                   const trimmed = string.trim();
 
-                  if (trimmed in this.blitzShellKindToBlitzkit) {
-                    return this.blitzShellKindToBlitzkit[trimmed as ShellKind];
+                  if (trimmed in blitzShellKindToBlitzkit) {
+                    return blitzShellKindToBlitzkit[trimmed as ShellKind];
                   }
 
                   throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
@@ -614,7 +615,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
                 caliber: shell.caliber,
                 normalization: shell.normalizationAngle,
                 ricochet: shell.ricochetAngle,
-                type: this.blitzShellKindToBlitzkit[shell.kind],
+                type: blitzShellKindToBlitzkit[shell.kind],
                 explosion_radius:
                   shell.kind === "HIGH_EXPLOSIVE"
                     ? (shell.explosionRadius ?? 0)

@@ -1,3 +1,4 @@
+import { blitzkitToBlitzShellKind } from "@blitzkit/core";
 import {
   CharacteristicType,
   type Characteristic,
@@ -31,8 +32,8 @@ export const characteristics = {
 
       if (environment.equalize) coefficient *= equalizer.damage;
 
-      script("", (script) => {
-        coefficient *= script.something;
+      script("TungstenTip", (effect) => {
+        coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
       });
 
       return coefficient * shell.armor_damage;
@@ -41,8 +42,29 @@ export const characteristics = {
 
   module_damage: {
     type: CharacteristicType.Number,
-    compute({ shell }) {
-      return shell.module_damage;
+    compute({ shell, script }) {
+      let coefficient = 1;
+
+      script("TungstenTip", (effect) => {
+        coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
+      });
+
+      return coefficient * shell.module_damage;
+    },
+  },
+
+  penetration: {
+    type: CharacteristicType.Number,
+    compute({ shell, script }) {
+      let coefficient = 1;
+
+      script("CalibratedShells", (effect) => {
+        coefficient *=
+          1 +
+          effect.piercingFactors![blitzkitToBlitzShellKind[shell.type]] / 100;
+      });
+
+      return coefficient * shell.penetration!.near;
     },
   },
 } satisfies Record<string, Characteristic>;

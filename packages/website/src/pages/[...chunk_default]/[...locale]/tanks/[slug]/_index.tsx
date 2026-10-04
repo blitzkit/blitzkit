@@ -3,7 +3,6 @@ import { api } from "../../../../../api/dynamic";
 import type { ThicknessRange } from "../../../../../components/StaticArmor";
 import { TankopediaCharacteristics } from "../../../../../components/TankopediaCharacteristics";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
-import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
 import { defaultEqualizer } from "../../../../../config/equalizer";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
@@ -57,7 +56,7 @@ export const Page = withErrorWrapper(
         </div>
 
         <div className={styles.sandbox}>
-          {!skeleton && <TankopediaSandbox thicknessRange={thicknessRange} />}
+          {/* {!skeleton && <TankopediaSandbox thicknessRange={thicknessRange} />} */}
           <TankopediaCharacteristics characteristics={characteristics} />
         </div>
       </div>

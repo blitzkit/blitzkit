@@ -1,3 +1,4 @@
+export * from "./blitzShellKindToBlitzkit";
 export * from "./canSplash";
 export * from "./clans";
 export * from "./classes";
