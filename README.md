@@ -56,6 +56,10 @@ Finally, compile the proto files into TypeScript.
 build build-protos
 ```
 
+## Developing: Environment
+
+Go through the different packages in the `packages` directory and clone their respective `template.env`'s to `.env` files. Follow the instructions in the `.env` files to fill them out as much as you can.
+
 ## Developing: Running
 
 ```bash
