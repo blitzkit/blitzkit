@@ -16,13 +16,15 @@ export async function filterTank(
   owned: number[] = [],
 ) {
   return (
-    ((filters.showOwned && owned.includes(tank.id)) ||
+    ((!filters.showOwned && !filters.showUnowned) ||
+      (filters.showOwned && owned.includes(tank.id)) ||
       (filters.showUnowned && !owned.includes(tank.id))) &&
     (filters.tiers.length === 0 || filters.tiers.includes(tank.tier)) &&
     (filters.nations.length === 0 || filters.nations.includes(tank.nation)) &&
     (filters.classes.length === 0 || filters.classes.includes(tank.class)) &&
     (filters.types.length === 0 || filters.types.includes(tank.type)) &&
-    ((filters.showTesting && tank.testing) ||
+    ((!filters.showTesting && !filters.showNonTesting) ||
+      (filters.showTesting && tank.testing) ||
       (filters.showNonTesting && !tank.testing)) &&
     (filters.gunType.length === 0 ||
       (filters.gunType.includes("regular") &&
