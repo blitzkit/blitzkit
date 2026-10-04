@@ -11,7 +11,7 @@ import { Shell } from './components/Shell';
 import { Target } from './components/Target';
 import './index.css';
 
-const PRECISION = 2;
+export const RELOAD_PRECISION = 1;
 
 export interface ReloadUpdateData {
   reload: number;
@@ -82,9 +82,9 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           );
         }
 
-        totalTime.current.innerHTML = shellReload.toFixed(PRECISION);
+        totalTime.current.innerHTML = shellReload.toFixed(RELOAD_PRECISION);
         progressTime.current.innerHTML = ((1 - reload) * shellReload).toFixed(
-          PRECISION,
+          RELOAD_PRECISION,
         );
 
         if (state.current >= reloadThreshold) shoot();
@@ -117,9 +117,9 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           shells = times(stats.shells, (index) => index > state.current - 1);
         }
 
-        totalTime.current.innerHTML = interval.toFixed(PRECISION);
+        totalTime.current.innerHTML = interval.toFixed(RELOAD_PRECISION);
         progressTime.current.innerHTML = ((1 - reload) * interval).toFixed(
-          PRECISION,
+          RELOAD_PRECISION,
         );
 
         if (lastState % 1 > state.current % 1) shoot();
@@ -262,7 +262,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           transform: 'translate(50%, -50%)',
         }}
       >
-        0.00
+        {(0).toFixed(RELOAD_PRECISION)}
       </Code>
       <Code
         ref={totalTime}
@@ -277,7 +277,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
           transform: 'translate(-50%, -50%)',
         }}
       >
-        0.00
+        {(0).toFixed(RELOAD_PRECISION)}
       </Code>
 
       {stats.shells > 1 &&
