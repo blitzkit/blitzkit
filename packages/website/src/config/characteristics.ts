@@ -33,8 +33,26 @@ export const characteristics = {
 
       if (environment.equalize) coefficient *= equalizer.damage;
 
+      // tungsten shells
       script("protagonist", "TungstenTip", (effect) => {
         coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
+      });
+
+      // reactive armor
+      script("antagonist", "ShieldKit", (effect) => {
+        if (shell.type === ShellType.SHELL_TYPE_HE) return;
+        coefficient *= 1 - effect.shieldCoef;
+      });
+
+      // dynamic armour system
+      script("antagonist", "ArmorMover", (effect) => {
+        coefficient *= 1 - effect.bonusValues!.damageReductionPercent / 100;
+      });
+
+      // spall liner
+      script("antagonist", "AntiHighExplosive", (effect) => {
+        if (shell.type !== ShellType.SHELL_TYPE_HE) return;
+        coefficient *= effect.bonusValues!.factor;
       });
 
       return coefficient * shell.armor_damage;
@@ -46,17 +64,9 @@ export const characteristics = {
     compute({ shell, script }) {
       let coefficient = 1;
 
+      // tungsten shells
       script("protagonist", "TungstenTip", (effect) => {
         coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
-      });
-
-      script("antagonist", "ShieldKit", (effect) => {
-        if (shell.type === ShellType.SHELL_TYPE_HE) return;
-        coefficient *= 1 - effect.shieldCoef;
-      });
-
-      script("antagonist", "ArmorMover", (effect) => {
-        coefficient *= 1 - effect.bonusValues!.damageReductionPercent / 100;
       });
 
       return coefficient * shell.module_damage;

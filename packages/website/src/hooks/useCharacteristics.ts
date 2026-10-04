@@ -59,6 +59,13 @@ export function computeCharacteristics(
       scriptsMap.protagonist.set(script["#text"], script);
     }
 
+    for (const id of states[side].provisions) {
+      if (!(id in scripts.provisions)) continue;
+
+      const script = scripts.provisions[id];
+      scriptsMap.protagonist.set(script["#text"], script);
+    }
+
     for (const index in states[side].equipment) {
       const choice = states[side].equipment[index];
       const id = equipmentPreset.slots[index].options[choice];

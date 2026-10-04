@@ -7,7 +7,7 @@ export interface ButtonProps extends ComponentProps<"button"> {
   color?: Color;
   radius?: `${1 | 2 | 3}` | "max";
   variant?: "solid" | "surface" | "soft" | "inverted" | "ghost" | "outline";
-  size?: "regular" | "minor";
+  size?: "regular" | "minor" | "major";
   highContrast?: boolean; // TODO: add high contrast
 
   listChild?: boolean;

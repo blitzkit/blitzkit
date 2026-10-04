@@ -21,6 +21,10 @@
     padding: var(--space-2) var(--space-3);
   }
 
+  &[data-size="major"] {
+    font-size: 2em;
+  }
+
   &[data-list-child="true"]:not(:first-child),
   *:not(:first-child) > &[data-parent-list-child="true"] {
     border-top-left-radius: 0;

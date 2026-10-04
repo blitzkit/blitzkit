@@ -1,12 +1,12 @@
 import { alias } from "@blitzkit/core";
-import type { Consumable, EquipmentSlot } from "@blitzkit/protos";
+import type { Consumable, EquipmentSlot, Provision } from "@blitzkit/protos";
 import { ClockIcon, ResetIcon, TrashIcon } from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
 import { api } from "../../api/dynamic";
 import { equipmentColumns } from "../../config/equipment";
-import { useConsumables } from "../../hooks/useConsumables";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipmentPreset } from "../../hooks/useEquipmentPreset";
+import { useProvision } from "../../hooks/useProvision";
 import { useStrings } from "../../hooks/useStrings";
 import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
@@ -22,6 +22,8 @@ import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
 const equipment = await api.equipment();
+const provisions = await api.provisions();
+const consumables = await api.consumables();
 
 interface TankopediaLoadoutProps {
   characteristics: ComputedCharacteristics;
@@ -35,6 +37,7 @@ export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
     <>
       {/* {showModules && <Modules />} */}
       <Equipment />
+      <Provisions />
       <Consumables characteristics={characteristics} />
       <State />
       <Status />
@@ -122,13 +125,88 @@ function Status() {
   );
 }
 
+function Provisions() {
+  const strings = useStrings();
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const gun = useDuel("protagonist", DuelModule.Gun);
+  const isCompatible = useTankCompatibility(tank, gun);
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.provisions}</Heading>
+
+        <IconButton
+          color="red"
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              draft.protagonist.provisions = [];
+            });
+          }}
+        >
+          <TrashIcon />
+        </IconButton>
+      </div>
+
+      <div className={styles.provisions}>
+        {Object.entries(provisions.provisions).map(([id, provision]) => {
+          if (
+            provision.game_mode_exclusive ||
+            !isCompatible(provision.include, provision.exclude)
+          ) {
+            return null;
+          }
+
+          return (
+            <ProvisionEntry key={id} id={Number(id)} provision={provision} />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+interface ProvisionEntryProps {
+  id: number;
+  provision: Provision;
+}
+
+function ProvisionEntry({ id, provision }: ProvisionEntryProps) {
+  const isSelected = useProvision("protagonist", id);
+  const unwrap = useUnwrapper();
+
+  return (
+    <Tooltip tooltip={unwrap(provision.name)}>
+      <IconButton
+        size="major"
+        radius="1"
+        variant={isSelected ? "surface" : "soft"}
+        color={isSelected ? undefined : "gray"}
+        className={styles.consumable}
+        onClick={() => {
+          Tankopedia.mutate((draft) => {
+            const index = draft.protagonist.provisions.indexOf(id);
+
+            if (index === -1) {
+              draft.protagonist.provisions.push(id);
+            } else {
+              draft.protagonist.provisions.splice(index, 1);
+            }
+          });
+        }}
+      >
+        <img src={alias("api", `/icons/provisions/${provision.id}.webp`)} />
+      </IconButton>
+    </Tooltip>
+  );
+}
+
 interface ConsumablesProps {
   characteristics: ComputedCharacteristics;
 }
 
 function Consumables({ characteristics }: ConsumablesProps) {
   const strings = useStrings();
-  const consumables = useConsumables();
   const tank = useDuel("protagonist", DuelModule.Tank);
   const gun = useDuel("protagonist", DuelModule.Gun);
   const isCompatible = useTankCompatibility(tank, gun);
@@ -152,7 +230,10 @@ function Consumables({ characteristics }: ConsumablesProps) {
 
       <div className={styles.consumables}>
         {Object.entries(consumables.consumables).map(([id, consumable]) => {
-          if (!isCompatible(consumable.include, consumable.exclude)) {
+          if (
+            consumable.game_mode_exclusive ||
+            !isCompatible(consumable.include, consumable.exclude)
+          ) {
             return null;
           }
 
@@ -174,7 +255,6 @@ function ConsumableEntry({ id, consumable }: ConsumableProps) {
   const isSelected = Tankopedia.use((state) =>
     state.protagonist.consumables.includes(id),
   );
-  const tank = useDuel("protagonist", DuelModule.Tank);
   const unwrap = useUnwrapper();
 
   return (
@@ -338,6 +418,7 @@ function EquipmentOption({
   return (
     <Tooltip tooltip={unwrap(specificEquipment.name)}>
       <IconButton
+        size="major"
         color={isSelected ? undefined : "gray"}
         variant={isSelected ? "surface" : "soft"}
         data-selected={isSelected}

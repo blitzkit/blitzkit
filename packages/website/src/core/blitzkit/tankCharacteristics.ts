@@ -11,7 +11,6 @@ import {
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import {
   CrewType,
-  ShellType,
   TankClass,
   type EngineDefinition,
   type EquipmentDefinitions,
@@ -24,7 +23,6 @@ import {
   type TurretDefinition,
 } from "@blitzkit/protos";
 import type { EquipmentMatrix } from "../../stores/duel";
-import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
 import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
@@ -168,10 +166,6 @@ export function tankCharacteristics(
   const intraClipCoefficient = coefficient([hasShellReloadBoost, -0.3]);
   const burstShells = gun.burst?.count ?? 1;
   const burstInterShell = gun.burst?.interval;
-  const armorDamageCoefficient = coefficient([
-    applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE,
-    SPALL_LINER_HE_DAMAGE_DELTA,
-  ]);
   const assaultDamageCoefficient =
     gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
       ? (gun.assault_ranges.ranges.find(

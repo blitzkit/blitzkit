@@ -1,6 +1,9 @@
 .section {
+  max-width: 21rem;
+
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-4);
 
   .header {
@@ -41,9 +44,15 @@
     }
   }
 
+  .provisions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
   .consumables {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-3);
 
     .consumable-wrapper {
@@ -99,8 +108,6 @@
           .slot {
             aspect-ratio: 1 / 1;
             padding: var(--space-3);
-
-            font-size: var(--space-5);
 
             &[data-selected="true"] {
               z-index: 1;
