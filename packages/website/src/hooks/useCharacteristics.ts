@@ -9,51 +9,65 @@ import type {
   CharacteristicName,
   ComputedCharacteristics,
 } from "../types/characteristics";
-import type { DuelSide } from "./useEquipment";
+import { duelSides, type DuelSide } from "./useEquipment";
 
 const tanks = await api.tanks();
 const scripts = await api.scripts();
 const equipment = await api.equipment();
 
-export function useCharacteristics(side: DuelSide) {
-  const state = Tankopedia.use((state) => state[side]);
+export function useCharacteristics() {
+  const protagonist = Tankopedia.use((state) => state.protagonist);
+  const antagonist = Tankopedia.use((state) => state.antagonist);
   const environment = Tankopedia.use((state) => state.environment);
 
-  return computeCharacteristics(state, environment);
+  return computeCharacteristics({ protagonist, antagonist }, environment);
 }
 
 export function computeCharacteristics(
-  state: TankState,
+  states: Record<DuelSide, TankState>,
   environment: TankEnvironment,
 ) {
   const computed: ComputedCharacteristics = new Map();
 
-  const tank = tanks.tanks[state.tank];
-  const engine = tank.engines.find((engine) => engine.id === state.engine)!;
-  const track = tank.tracks.find((track) => track.id === state.track)!;
-  const turret = tank.turrets.find((turret) => turret.id === state.turret)!;
-  const gun = turret.guns.find((gun) => gun.id === state.gun)!;
-  const shell = gun.shells.find((shell) => shell.id === state.shell)!;
+  const tank = tanks.tanks[states.protagonist.tank];
+  const engine = tank.engines.find(
+    (engine) => engine.id === states.protagonist.engine,
+  )!;
+  const track = tank.tracks.find(
+    (track) => track.id === states.protagonist.track,
+  )!;
+  const turret = tank.turrets.find(
+    (turret) => turret.id === states.protagonist.turret,
+  )!;
+  const gun = turret.guns.find((gun) => gun.id === states.protagonist.gun)!;
+  const shell = gun.shells.find(
+    (shell) => shell.id === states.protagonist.shell,
+  )!;
 
   const equipmentPreset = equipment.presets[tank.equipment_preset];
 
-  const scriptsMap = new Map<string, BlitzEffectScript>();
+  const scriptsMap: Record<DuelSide, Map<string, BlitzEffectScript>> = {
+    protagonist: new Map(),
+    antagonist: new Map(),
+  };
 
-  for (const id of state.consumables) {
-    if (!(id in scripts.consumables)) continue;
+  for (const side of duelSides) {
+    for (const id of states[side].consumables) {
+      if (!(id in scripts.consumables)) continue;
 
-    const script = scripts.consumables[id];
-    scriptsMap.set(script["#text"], script);
-  }
+      const script = scripts.consumables[id];
+      scriptsMap.protagonist.set(script["#text"], script);
+    }
 
-  for (const index in state.equipment) {
-    const choice = state.equipment[index];
-    const id = equipmentPreset.slots[index].options[choice];
+    for (const index in states[side].equipment) {
+      const choice = states[side].equipment[index];
+      const id = equipmentPreset.slots[index].options[choice];
 
-    if (!(id in scripts.equipment)) continue;
+      if (!(id in scripts.equipment)) continue;
 
-    const script = scripts.equipment[id];
-    scriptsMap.set(script["#text"], script);
+      const script = scripts.equipment[id];
+      scriptsMap.protagonist.set(script["#text"], script);
+    }
   }
 
   function characteristic(name: CharacteristicName) {
@@ -66,13 +80,17 @@ export function computeCharacteristics(
 
   console.log(scriptsMap);
 
-  function script(name: string, callback: (effect: BlitzEffectScript) => void) {
-    if (!scriptsMap.has(name)) return;
-    callback(scriptsMap.get(name)!);
+  function script(
+    side: DuelSide,
+    name: string,
+    callback: (effect: BlitzEffectScript) => void,
+  ) {
+    if (!scriptsMap[side].has(name)) return;
+    callback(scriptsMap[side].get(name)!);
   }
 
   const context = {
-    state,
+    state: states.protagonist,
     environment,
 
     equalizer: tank.equalizer ?? defaultEqualizer,

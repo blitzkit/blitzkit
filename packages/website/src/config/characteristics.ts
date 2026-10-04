@@ -1,4 +1,5 @@
 import { blitzkitToBlitzShellKind } from "@blitzkit/core";
+import { ShellType } from "@blitzkit/protos";
 import {
   CharacteristicType,
   type Characteristic,
@@ -32,7 +33,7 @@ export const characteristics = {
 
       if (environment.equalize) coefficient *= equalizer.damage;
 
-      script("TungstenTip", (effect) => {
+      script("protagonist", "TungstenTip", (effect) => {
         coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
       });
 
@@ -45,8 +46,13 @@ export const characteristics = {
     compute({ shell, script }) {
       let coefficient = 1;
 
-      script("TungstenTip", (effect) => {
+      script("protagonist", "TungstenTip", (effect) => {
         coefficient *= (effect.minDamageFactor + effect.maxDamageFactor) / 2;
+      });
+
+      script("antagonist", "ShieldKit", (effect) => {
+        if (shell.type === ShellType.SHELL_TYPE_HE) return;
+        coefficient *= 1 - effect.shieldCoef;
       });
 
       return coefficient * shell.module_damage;
@@ -58,7 +64,7 @@ export const characteristics = {
     compute({ shell, script }) {
       let coefficient = 1;
 
-      script("CalibratedShells", (effect) => {
+      script("protagonist", "CalibratedShells", (effect) => {
         coefficient *=
           1 +
           effect.piercingFactors![blitzkitToBlitzShellKind[shell.type]] / 100;

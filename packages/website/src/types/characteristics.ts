@@ -11,6 +11,7 @@ import type {
 } from "@blitzkit/protos";
 import type { ReactNode } from "react";
 import { characteristics } from "../config/characteristics";
+import type { DuelSide } from "../hooks/useEquipment";
 import type { TankEnvironment } from "../stores/tankopedia";
 import type { TankState } from "../tankopedia/tankState";
 
@@ -44,7 +45,11 @@ export interface CharacteristicContext {
     name: CharacteristicName,
   ): ReturnType<Characteristic["compute"]>;
 
-  script(name: string, effect: (effect: BlitzEffectScript) => void): void;
+  script(
+    side: DuelSide,
+    name: string,
+    effect: (effect: BlitzEffectScript) => void,
+  ): void;
 }
 
 export enum CharacteristicType {

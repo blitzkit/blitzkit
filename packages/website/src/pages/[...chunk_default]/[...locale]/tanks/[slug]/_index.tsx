@@ -27,7 +27,7 @@ export const Page = withErrorWrapper(
     const protagonist = Tankopedia.use((state) => state.protagonist);
     const equalize = Tankopedia.use((state) => state.environment.equalize);
 
-    const characteristics = useCharacteristics("protagonist");
+    const characteristics = useCharacteristics();
 
     const thicknessRange = useMemo(() => {
       const entries = Object.values(tanks.tanks);

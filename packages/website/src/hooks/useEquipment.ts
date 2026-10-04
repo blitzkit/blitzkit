@@ -5,7 +5,9 @@ import { Tankopedia } from "../stores/tankopedia";
 const equipment = await api.equipment();
 const tanks = await api.tanks();
 
-export type DuelSide = "protagonist" | "antagonist";
+export const duelSides = ["protagonist", "antagonist"] as const;
+
+export type DuelSide = (typeof duelSides)[number];
 
 export function useEquipment(side: DuelSide, id: number) {
   const member = Tankopedia.use((state) => state[side]);
