@@ -63,7 +63,9 @@ export function SpallLinerSwitcher() {
       }}
     >
       <img
-        alt={unwrap(provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!)}
+        alt={unwrap(
+          provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
+        )}
         src={alias("api", `/icons/provisions/${SPALL_LINER_PROVISION_ID}.webp`)}
         style={{
           width: "50%",
@@ -81,21 +83,19 @@ export function SpallLinerSwitcher() {
 
       <Popover.Content>
         <Flex gap="2" align="center">
-          <IconButton color="gray" variant="soft" size="3" radius="medium" disabled>
-            <img
-              alt={unwrap(
-                provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
-              )}
-              src={alias(
-                "api",
-                `/icons/provisions/${SPALL_LINER_PROVISION_ID}.webp`,
-              )}
-              style={{
-                width: "50%",
-                height: "50%",
-              }}
-            />
-          </IconButton>
+          <img
+            alt={unwrap(
+              provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
+            )}
+            src={alias(
+              "api",
+              `/icons/provisions/${SPALL_LINER_PROVISION_ID}.webp`,
+            )}
+            style={{
+              width: "1.25em",
+              height: "1.25em",
+            }}
+          />
 
           <ShuffleIcon color="var(--gray-9)" />
 
