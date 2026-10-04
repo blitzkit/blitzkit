@@ -1,7 +1,7 @@
 import { createDefaultSkills } from "@blitzkit/core";
-import { Flex, Progress, Text } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
-import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
+import { memo, useMemo, type ReactNode } from "react";
 import { api } from "../../../../../../core/blitzkit/api";
 import {
   tankCharacteristics,
@@ -16,6 +16,7 @@ import {
   TankopediaRelativeAgainst,
 } from "../../../../../../stores/tankopedia";
 import { Info, type InfoProps } from "./Info";
+import { StatScale, type StatScaleColor } from "./StatScale";
 
 type InfoWithDeltaProps = Omit<InfoProps, "name"> & {
   stats: TankCharacteristics;
@@ -122,6 +123,15 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
           return othersValue !== undefined;
         }) as TankCharacteristics[];
     }, [relativeAgainst, shellIndex, equipmentMatrix, equalize]);
+    const values = useMemo(
+      () =>
+        others.map((tank) =>
+          typeof props.value === "function"
+            ? props.value(tank)!
+            : (tank[props.value] as number),
+        ),
+      [others],
+    );
     const betterTanks = others.filter((tank) => {
       const othersValue =
         typeof props.value === "function"
@@ -134,7 +144,7 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
         : othersValue > uhWhatDoICallThisVariable;
     });
     const goodness = (others.length - betterTanks.length) / others.length;
-    let color: ComponentProps<typeof Progress>["color"];
+    let color: StatScaleColor;
 
     if (goodness <= 0.25) color = "red";
     else if (goodness <= 0.5) color = "orange";
@@ -154,25 +164,24 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
                 ]
           }
           delta={delta}
+          rank={
+            noRanking
+              ? undefined
+              : `${clamp(betterTanks.length + 1, 1, others.length)} / ${others.length}`
+          }
           {...props}
         >
           {uhWhatDoICallThisVariable}
         </Info>
 
-        {!noRanking && (
-          <Flex pl={indent ? "2" : "0"} align="center" gap="2">
-            <Progress
-              variant="soft"
-              size="1"
-              value={goodness * 100}
+        {!noRanking && others.length > 0 && (
+          <Flex pl={indent ? "2" : "0"}>
+            <StatScale
+              values={values}
+              value={uhWhatDoICallThisVariable}
+              lowerIsBetter={deltaType === "lowerIsBetter"}
               color={color}
-              style={{ height: "0.125rem", opacity: 0.5 }}
             />
-
-            <Text color="gray" size="1">
-              {clamp(betterTanks.length + 1, 1, others.length)} /{" "}
-              {others.length}
-            </Text>
           </Flex>
         )}
       </Flex>
