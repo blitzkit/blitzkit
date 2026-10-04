@@ -60,8 +60,9 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
           background: highlight
             ? `url(${alias("api", `/flags/fade/${tank.nation}.webp`)})`
             : undefined,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
+          backgroundPosition: "calc(50% + 3.45rem) top",
+          backgroundSize: "16rem auto",
+          backgroundRepeat: "no-repeat",
           boxShadow: highlight ? "var(--shadow-4)" : undefined,
           borderRadius: "var(--radius-4)",
           overflow: "hidden",
