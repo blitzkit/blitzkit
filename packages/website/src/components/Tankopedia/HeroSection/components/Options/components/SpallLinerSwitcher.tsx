@@ -53,7 +53,7 @@ export function SpallLinerSwitcher() {
       color={isSpallLinerActive ? undefined : "gray"}
       variant="soft"
       size={{ initial: "2", sm: "3" }}
-      radius="none"
+      radius="medium"
       onClick={() => {
         if (isSpallLinerActive) {
           unequip();
@@ -81,7 +81,7 @@ export function SpallLinerSwitcher() {
 
       <Popover.Content>
         <Flex gap="2" align="center">
-          <IconButton color="gray" variant="soft" size="3" radius="none" disabled>
+          <IconButton color="gray" variant="soft" size="3" radius="medium" disabled>
             <img
               alt={unwrap(
                 provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
@@ -106,7 +106,7 @@ export function SpallLinerSwitcher() {
                   color="gray"
                   variant="soft"
                   size="3"
-                  radius="none"
+                  radius="medium"
                   onClick={() => equip(id)}
                 >
                   <img

@@ -515,8 +515,7 @@
           "title": "配置设定",
           "equalizer": {
             "title": "平衡器",
-            "equalize": "平衡",
-            "beta": "测试"
+            "equalize": "平衡"
           },
           "modules": {
             "title": "坦克模块",
@@ -572,6 +571,8 @@
             "shellRicochet": "跳弹",
             "dpm": "每分钟伤害",
             "dpmEffective": "60秒内实际输出",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "炮弹 ",
             "mostOptimalShellIndex": "最优炮弹",
             "shellReloads": "装填时间",
