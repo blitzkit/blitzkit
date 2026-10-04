@@ -62,6 +62,14 @@ Go through the different packages in the `packages` directory and clone their re
 
 ## Developing: Running
 
+Launching the website is as easy as running the `dev` script.
+
 ```bash
 bun dev
+```
+
+If you ever make a change to any proto file, make sure to rebuild them.
+
+```bash
+build build-protos
 ```
