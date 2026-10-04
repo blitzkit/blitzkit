@@ -6,9 +6,7 @@ type: bug
 body:
   - type: markdown
     attributes:
-      value: |
-        Thank you so much for reporting an issue! Please fill out the form
-        below in its entirety and we'll address your issue as soon as possible.
+      value: Thank you so much for reporting an issue! Please fill out the form below in its entirety and we'll address your issue as soon as possible.
 
   - type: textarea
     validations:
@@ -40,3 +38,8 @@ body:
       default: 0
     validations:
       required: true
+
+  - type: input
+    attributes:
+      label: Discord username
+      description: Do you have a Discord account that we can reach out to for further information?

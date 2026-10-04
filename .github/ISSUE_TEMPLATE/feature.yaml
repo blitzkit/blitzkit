@@ -1,0 +1,16 @@
+name: 💡 Feature Request
+description: BlitzKit could use a new idea.
+labels: ["enhancement"]
+type: feature
+
+body:
+  - type: markdown
+    attributes:
+      value: Thank you so much for pitching in an idea!
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: What's your idea?
+      description: Please be descriptive and feel free to add drawings/screenshots if needed.
