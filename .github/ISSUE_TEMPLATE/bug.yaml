@@ -1,0 +1,42 @@
+name: 🐞 Bug Report
+description: BlitzKit is not behaving as expected.
+labels: ["bug"]
+type: bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you so much for reporting an issue! Please fill out the form
+        below in its entirety and we'll address your issue as soon as possible.
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: What happened?
+      description: What about BlitzKit's behavior did you find unexpected?
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: What should've happened?
+      description: What did you expect BlitzKit to do instead of what you observed?
+
+  - type: textarea
+    attributes:
+      label: How do you reproduce the issue?
+      description: What steps one must follow to recreate your issue?
+
+  - type: dropdown
+    attributes:
+      label: Branch
+      description: What branch of BlitzKit were you using? Please see the "Branch" section of the footer at the very bottom of any page.
+      options:
+        - Production
+        - Preview
+        - OpenTest
+      default: 0
+    validations:
+      required: true
