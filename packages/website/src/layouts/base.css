@@ -7,3 +7,17 @@
 body {
   margin: 0;
 }
+
+.rt-BaseDialogScrollPadding {
+  --dialog-padding-top: calc(var(--space-6) + 2rem);
+  --dialog-padding-bottom: max(var(--space-6), 6vh);
+
+  padding-top: var(--dialog-padding-top);
+  padding-bottom: var(--dialog-padding-bottom);
+}
+
+.rt-BaseDialogContent {
+  max-height: calc(
+    100dvh - var(--dialog-padding-top) - var(--dialog-padding-bottom)
+  );
+}

@@ -40,7 +40,7 @@ export function Controls({
           <Dialog.Title align="center">
             {strings.website.tools.compare.actions.add.title}
           </Dialog.Title>
-          <Dialog.Description align="center">
+          <Dialog.Description align="center" mb="4">
             {strings.website.tools.compare.actions.add.description}
           </Dialog.Description>
 
