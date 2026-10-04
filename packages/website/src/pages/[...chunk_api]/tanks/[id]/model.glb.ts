@@ -69,7 +69,20 @@ const omitMeshNames = {
   end: ["_POINT"],
 };
 
-async function extractModel(vfs: AbstractVFS, path: string) {
+export async function extractModel(
+  vfs: AbstractVFS,
+  path: string,
+  /**
+   * The armor poster only ever reads POSITION/indices off these meshes
+   * (see buildTankPosterPayload.ts) - materials/textures are decoded
+   * (DDS/PVR decompress + several `sharp` re-encodes per tank) and then
+   * immediately discarded by the `prune()` call below. Skipping texture
+   * decoding here cuts that entirely wasted work for the poster path
+   * without touching the real `model.glb` download route, which still
+   * needs real textures.
+   */
+  { skipTextures = false }: { skipTextures?: boolean } = {},
+) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
@@ -105,15 +118,17 @@ async function extractModel(vfs: AbstractVFS, path: string) {
     }
 
     if (textures) {
-      const baseColor = await readBaseColor(
-        `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
-      );
-      material.setBaseColorTexture(
-        document
-          .createTexture(node.materialName)
-          .setMimeType("image/webp")
-          .setImage(baseColor),
-      );
+      if (!skipTextures) {
+        const baseColor = await readBaseColor(
+          `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+        );
+        material.setBaseColorTexture(
+          document
+            .createTexture(node.materialName)
+            .setMimeType("image/webp")
+            .setImage(baseColor),
+        );
+      }
 
       let defaultConfigArchive: ConfigArchive | undefined = undefined;
 
@@ -177,7 +192,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         }
       }
 
-      if (textures.miscMap) {
+      if (!skipTextures && textures.miscMap) {
         material.setOcclusionTexture(
           document
             .createTexture(node.materialName)
@@ -190,7 +205,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         );
       }
 
-      if (textures.baseRMMap) {
+      if (!skipTextures && textures.baseRMMap) {
         material.setMetallicRoughnessTexture(
           document
             .createTexture(node.materialName)
@@ -203,7 +218,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         );
       }
 
-      if (textures.baseNormalMap ?? textures.normalmap) {
+      if (!skipTextures && (textures.baseNormalMap ?? textures.normalmap)) {
         const isBase = textures.baseNormalMap !== undefined;
 
         material.setNormalTexture(
