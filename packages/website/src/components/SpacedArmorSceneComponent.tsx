@@ -88,7 +88,7 @@ export function SpacedArmorSceneComponent({
 
       const { customShell } = Tankopedia.state;
       const shell = customShell ?? getDuel("protagonist", DuelModule.Shell);
-      const { equalize } = Tankopedia.state;
+      const { equalize } = Tankopedia.state.environment;
       const protagonistEqualizer =
         (equalize ? protagonist.equalizer : undefined) ?? defaultEqualizer;
       const antagonistEqualizer =
@@ -381,6 +381,13 @@ export function SpacedArmorSceneComponent({
       }
 
       shot.damage *= antagonistEqualizer.damage;
+
+      const hasSpallLiner = Duel.state.protagonist.provisions.includes(
+        SPALL_LINER_PROVISION_ID,
+      );
+      if (hasSpallLiner && shell.type === ShellType.SHELL_TYPE_HE) {
+        shot.damage *= 1 + SPALL_LINER_HE_DAMAGE_DELTA;
+      }
 
       return shot;
     },

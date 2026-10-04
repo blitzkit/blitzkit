@@ -27,8 +27,6 @@ export const DynamicArmor = memo(() => {
   const newRenderSize = new Vector2();
 
   useFrame(({ gl, camera, scene }) => {
-    gl.autoClear = true;
-
     gl.getSize(newRenderSize).multiplyScalar(gl.getPixelRatio());
 
     if (!newRenderSize.equals(renderSize)) {
@@ -50,6 +48,8 @@ export const DynamicArmor = memo(() => {
 
     gl.clearDepth();
     gl.render(primaryArmorScene, camera);
+
+    gl.autoClear = true;
   }, 1);
 
   return (

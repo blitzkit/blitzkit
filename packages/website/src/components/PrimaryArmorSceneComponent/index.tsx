@@ -5,7 +5,7 @@ import {
 } from "@blitzkit/core";
 import { invalidate, useFrame } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   MeshBasicMaterial,
   NormalBlending,
@@ -43,59 +43,61 @@ export function PrimaryArmorSceneComponent({
   node,
   thickness,
 }: PrimaryArmorSceneComponentProps) {
-  const material = new ShaderMaterial({
-    fragmentShader,
-    vertexShader,
+  const material = useRef(
+    new ShaderMaterial({
+      fragmentShader,
+      vertexShader,
 
-    fog: true,
-    transparent: true,
+      fog: true,
+      transparent: true,
 
-    blending: isHalloween ? SubtractiveBlending : NormalBlending,
+      blending: isHalloween ? SubtractiveBlending : NormalBlending,
 
-    uniforms: UniformsUtils.merge([
-      UniformsLib.common,
-      UniformsLib.fog,
+      uniforms: UniformsUtils.merge([
+        UniformsLib.common,
+        UniformsLib.fog,
 
-      {
-        thickness: { value: null },
-        penetration: { value: null },
-        caliber: { value: null },
-        ricochet: { value: null },
-        normalization: { value: null },
-        isExplosive: { value: null },
-        canSplash: { value: null },
-        damage: { value: null },
-        explosionRadius: { value: null },
-        greenPenetration: { value: null },
-        advancedHighlighting: { value: null },
-        opaque: { value: null },
+        {
+          thickness: { value: null },
+          penetration: { value: null },
+          caliber: { value: null },
+          ricochet: { value: null },
+          normalization: { value: null },
+          isExplosive: { value: null },
+          canSplash: { value: null },
+          damage: { value: null },
+          explosionRadius: { value: null },
+          greenPenetration: { value: null },
+          advancedHighlighting: { value: null },
+          opaque: { value: null },
 
-        inverseProjectionMatrix: { value: null },
-        resolution: { value: new Vector2() },
-        spacedArmorBuffer: { value: null },
-        spacedArmorDepth: { value: null },
+          inverseProjectionMatrix: { value: null },
+          resolution: { value: new Vector2() },
+          spacedArmorBuffer: { value: null },
+          spacedArmorDepth: { value: null },
 
-        opacity: { value: 0 },
-      },
-    ]),
-  });
+          opacity: { value: 0 },
+        },
+      ]),
+    }),
+  );
 
   useEffect(() => {
     function handleShellChange() {
       const shell =
         Tankopedia.state.customShell ?? getDuel("antagonist", DuelModule.Shell);
 
-      material.uniforms.caliber.value = shell.caliber;
-      material.uniforms.ricochet.value = degToRad(
+      material.current.uniforms.caliber.value = shell.caliber;
+      material.current.uniforms.ricochet.value = degToRad(
         isExplosive(shell.type) ? 90 : shell.ricochet!,
       );
-      material.uniforms.normalization.value = degToRad(
+      material.current.uniforms.normalization.value = degToRad(
         shell.normalization ?? 0,
       );
-      material.uniforms.isExplosive.value = isExplosive(shell.type);
-      material.uniforms.canSplash.value = canSplash(shell.type);
-      material.uniforms.damage.value = shell.armor_damage;
-      material.uniforms.explosionRadius.value = shell.explosion_radius;
+      material.current.uniforms.isExplosive.value = isExplosive(shell.type);
+      material.current.uniforms.canSplash.value = canSplash(shell.type);
+      material.current.uniforms.damage.value = shell.armor_damage;
+      material.current.uniforms.explosionRadius.value = shell.explosion_radius;
 
       handleProtagonistEquipmentChange(true);
       handleAntagonistEquipmentChange(true);
@@ -103,17 +105,18 @@ export function PrimaryArmorSceneComponent({
       invalidate();
     }
     function handleGreenPenetrationChange(greenPenetration: boolean) {
-      material.uniforms.greenPenetration.value = greenPenetration;
+      material.current.uniforms.greenPenetration.value = greenPenetration;
     }
     function handleAdvancedHighlightingChange(advancedHighlighting: boolean) {
-      material.uniforms.advancedHighlighting.value = advancedHighlighting;
+      material.current.uniforms.advancedHighlighting.value =
+        advancedHighlighting;
       invalidate();
     }
     function handleOpaqueChange(opaque: boolean) {
-      material.uniforms.opaque.value = opaque;
+      material.current.uniforms.opaque.value = opaque;
     }
     function handleWireframeChange(wireframe: boolean) {
-      material.wireframe = wireframe;
+      material.current.wireframe = wireframe;
     }
     function handleProtagonistEquipmentChange(noInvalidate = false) {
       const equipment = Tankopedia.state.protagonist.equipment;
@@ -128,7 +131,7 @@ export function PrimaryArmorSceneComponent({
           ? protagonist.equalizer?.armor
           : undefined) ?? 1;
 
-      material.uniforms.thickness.value =
+      material.current.uniforms.thickness.value =
         thickness * (hasEnhancedArmor ? 1.04 : 1) * equalizer;
 
       if (!noInvalidate) invalidate();
@@ -148,7 +151,7 @@ export function PrimaryArmorSceneComponent({
         equipment,
       );
 
-      material.uniforms.penetration.value =
+      material.current.uniforms.penetration.value =
         penetration *
         resolvePenetrationCoefficient(
           hasCalibratedShells,
@@ -161,7 +164,7 @@ export function PrimaryArmorSceneComponent({
     }
 
     function handleTransitionEvent(event: QuicklimeEvent<number>) {
-      material.uniforms.opacity.value = event.data;
+      material.current.uniforms.opacity.value = event.data;
     }
 
     handleShellChange();
@@ -212,13 +215,14 @@ export function PrimaryArmorSceneComponent({
   }, []);
 
   useFrame(({ gl, camera }) => {
-    gl.getSize(material.uniforms.resolution.value).multiplyScalar(
+    gl.getSize(material.current.uniforms.resolution.value).multiplyScalar(
       gl.getPixelRatio(),
     );
-    material.uniforms.spacedArmorBuffer.value = spacedArmorRenderTarget.texture;
-    material.uniforms.spacedArmorDepth.value =
+    material.current.uniforms.spacedArmorBuffer.value =
+      spacedArmorRenderTarget.texture;
+    material.current.uniforms.spacedArmorDepth.value =
       spacedArmorRenderTarget.depthTexture;
-    material.uniforms.inverseProjectionMatrix.value =
+    material.current.uniforms.inverseProjectionMatrix.value =
       camera.projectionMatrixInverse;
   });
 
@@ -243,7 +247,7 @@ export function PrimaryArmorSceneComponent({
               {...props}
               key={`${key}-include`}
               renderOrder={1}
-              material={material}
+              material={material.current}
             />
           );
         },

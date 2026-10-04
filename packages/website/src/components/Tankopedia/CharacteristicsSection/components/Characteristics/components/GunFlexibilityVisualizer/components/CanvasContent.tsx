@@ -6,7 +6,6 @@ import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../../../../../../../../core/blitzkit/modelTransform";
-import { Duel } from "../../../../../../../../stores/duel";
 import { ModelChunk } from "./ModelChunk";
 
 const modelDefinitions = await api.models();
@@ -20,6 +19,13 @@ export function CanvasContent() {
 
   const tankModel = modelDefinitions.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];
+
+  // baked-in turret mount tilt (e.g. Minotauro sits pitched 3deg forward);
+  // applied as a static base rotation so the live gun pitch composes on top
+  // of it, mirroring useTankTransform.ts's turretContainer/gunContainer nesting
+  const initialTurretPitch = -degToRad(
+    tankModel.initial_turret_rotation?.pitch ?? 0,
+  );
 
   useEffect(() => {
     function handleModelTransformEvent(
@@ -45,10 +51,19 @@ export function CanvasContent() {
         </group>
       </group>
 
-      <ModelChunk only="turret" />
+      <group
+        position={[0, turretModel.gun_origin!.y, turretModel.gun_origin!.z]}
+        rotation={[initialTurretPitch, 0, 0]}
+      >
+        <group
+          position={[0, -turretModel.gun_origin!.y, -turretModel.gun_origin!.z]}
+        >
+          <ModelChunk only="turret" />
 
-      <group ref={gunWrapper}>
-        <ModelChunk only="gun" />
+          <group ref={gunWrapper}>
+            <ModelChunk only="gun" />
+          </group>
+        </group>
       </group>
     </>
   );

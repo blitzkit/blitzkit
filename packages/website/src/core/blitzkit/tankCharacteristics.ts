@@ -24,6 +24,7 @@ import {
   type TurretDefinition,
 } from "@blitzkit/protos";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
 import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
@@ -172,7 +173,10 @@ export function tankCharacteristics(
     coefficient(
       [applyReactiveArmor && shell.type !== ShellType.SHELL_TYPE_HE, -0.27],
       [applyDynamicArmor, -0.1],
-      [applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE, -0.2],
+      [
+        applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE,
+        SPALL_LINER_HE_DAMAGE_DELTA,
+      ],
     );
   const assaultDamageCoefficient =
     gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
@@ -420,6 +424,10 @@ export function tankCharacteristics(
       : (gun.gun_type!.$case === "regular"
           ? gun.gun_type!.value.reload
           : gun.gun_type!.value.clip_reload) * reloadCoefficient;
+  const peekabooDpm =
+    gun.gun_type!.$case === "regular"
+      ? Math.round(damage * (60 / Math.max(shellReload!, 10)))
+      : undefined;
   const caliber = shell.caliber;
   const penetration = shell.penetration!.near * penetrationCoefficient;
   const clipDamage =
@@ -547,6 +555,7 @@ export function tankCharacteristics(
     shellRicochet,
     dpm,
     dpmEffective,
+    peekabooDpm,
     shells,
     mostOptimalShellIndex,
     shellReloads,

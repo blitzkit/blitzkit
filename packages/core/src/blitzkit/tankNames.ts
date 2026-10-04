@@ -1,9 +1,9 @@
-import { BlitzKitAPI } from "@blitzkit/core/src/blitzkit/api/base";
 import locales from "@blitzkit/i18n/locales.json";
 import { I18nString } from "@blitzkit/protos";
 import { deburr, times } from "lodash-es";
+import { AbstractBlitzKitAPI } from "./api";
 
-export async function fetchTankNames(api: BlitzKitAPI) {
+export async function fetchTankNames(api: AbstractBlitzKitAPI) {
   const [tankDefinitions, camouflageDefinitions] = await Promise.all([
     api.tanks(),
     api.camouflages(),
@@ -28,6 +28,15 @@ export async function fetchTankNames(api: BlitzKitAPI) {
         Object.entries(camouflage).forEach(([key, value]) => {
           camouflages_deburr[index].locales[key] = deburr(value);
         });
+      });
+
+      const searchableNameFull: I18nString = {
+        locales: { ...(tank.name_full?.locales ?? tank.name!.locales) },
+      };
+      const searchableNameFullDeburr: I18nString = { locales: {} };
+
+      Object.entries(searchableNameFull.locales).forEach(([key, value]) => {
+        searchableNameFullDeburr.locales[key] = deburr(value);
       });
 
       return {

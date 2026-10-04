@@ -746,6 +746,7 @@ function OwnershipFilterInternal() {
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showOwned = !draft.showOwned;
+            if (draft.showOwned) draft.showUnowned = false;
           });
         }}
       >
@@ -765,6 +766,7 @@ function OwnershipFilterInternal() {
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showUnowned = !draft.showUnowned;
+            if (draft.showUnowned) draft.showOwned = false;
           });
         }}
       >
@@ -791,6 +793,7 @@ function TestFilter() {
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showNonTesting = !draft.showNonTesting;
+            if (draft.showNonTesting) draft.showTesting = false;
           });
         }}
       >
@@ -811,6 +814,7 @@ function TestFilter() {
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showTesting = !draft.showTesting;
+            if (draft.showTesting) draft.showNonTesting = false;
           });
         }}
       >
