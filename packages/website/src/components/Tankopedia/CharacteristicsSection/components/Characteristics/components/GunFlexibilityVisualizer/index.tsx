@@ -48,13 +48,27 @@ export function GunFlexibilityVisualizer({
   const turretModel = tankModel.turrets[turret.id];
   const gunModel = turretModel.guns[gun.id];
 
+  // turret's own baked-in mount tilt (e.g. Minotauro's turret sits pitched
+  // 3deg forward on the hull); must be folded into displayed pitch values
+  // the same way tankCharacteristics.ts and QuickInputs do
+  const initialTurretPitch = degToRad(
+    tankModel.initial_turret_rotation?.pitch ?? 0,
+  );
+
+  // radial map is in the tilt-compensated frame so the neutrality circle sits
+  // at the displayed 0deg
+  const tiltDeg = radToDeg(initialTurretPitch);
+  const magTilted = (deg: number) => mag(deg + tiltDeg);
+
   const [yaw, setYaw] = useState(0);
   const [pitch, setPitch] = useState(0);
   const [minPitch, setMinPitch] = useState(
-    -degToRad(gunModel.pitch!.front?.max ?? gunModel.pitch!.max),
+    -degToRad(gunModel.pitch!.front?.max ?? gunModel.pitch!.max) -
+      initialTurretPitch,
   );
   const [maxPitch, setMaxPitch] = useState(
-    -degToRad(gunModel.pitch!.front?.min ?? gunModel.pitch!.min),
+    -degToRad(gunModel.pitch!.front?.min ?? gunModel.pitch!.min) -
+      initialTurretPitch,
   );
 
   const container = useRef<HTMLDivElement>(null);
@@ -70,7 +84,7 @@ export function GunFlexibilityVisualizer({
   let d = "";
 
   // right
-  const mo = mag(p.max);
+  const mo = magTilted(p.max);
   if (y) {
     d += `M 0 0`;
     d += `L ${c(90 - y.max, mo)}`;
@@ -87,7 +101,7 @@ export function GunFlexibilityVisualizer({
 
   // front
   if (f) {
-    const m = mag(f.max);
+    const m = magTilted(f.max);
     d += `L ${c(90 - f.range / 2, m)}`;
     d += `A ${m} ${m} 0 0 0 ${c(90 + f.range / 2, m)}`;
   }
@@ -108,7 +122,7 @@ export function GunFlexibilityVisualizer({
 
   // back
   if (!y && b) {
-    const m = mag(b.max);
+    const m = magTilted(b.max);
     d += `L ${c(-90 - b.range / 2, m)}`;
     d += `A ${m} ${m} 0 0 0 ${c(-90 + b.range / 2, m)}`;
   }
@@ -116,7 +130,7 @@ export function GunFlexibilityVisualizer({
   d += `Z`;
 
   // right
-  const mi = mag(p.min);
+  const mi = magTilted(p.min);
   if (y) {
     d += `M 0 0`;
     d += `L ${c(90 - y.max, mi)}`;
@@ -133,7 +147,7 @@ export function GunFlexibilityVisualizer({
 
   // front
   if (f) {
-    const m = mag(f.min);
+    const m = magTilted(f.min);
     d += `L ${c(90 - f.range / 2, m)}`;
     d += `A ${m} ${m} 0 0 0 ${c(90 + f.range / 2, m)}`;
   }
@@ -154,14 +168,14 @@ export function GunFlexibilityVisualizer({
 
   // back
   if (!y && b) {
-    const m = mag(b.min);
+    const m = magTilted(b.min);
     d += `L ${c(-90 - b.range / 2, m)}`;
     d += `A ${m} ${m} 0 0 0 ${c(-90 + b.range / 2, m)}`;
   }
 
   d += `Z`;
 
-  const r = mag(radToDeg(-pitch));
+  const r = mag(radToDeg(-(pitch - initialTurretPitch)));
   const dotX = r * Math.sin(yaw);
   const dotY = r * Math.cos(yaw);
 
@@ -251,13 +265,13 @@ export function GunFlexibilityVisualizer({
           yaw = min[1];
           let t = 2 * Math.sqrt((u / rect.width) ** 2 + (v / rect.height) ** 2);
           t = clamp(t, 0, 1);
-          let pitch = degToRad(magInverse(-t));
+          let pitch = degToRad(magInverse(-t)) + initialTurretPitch;
           pitch = clamp(pitch, min[0], max[0]);
 
           setPitch(pitch);
           setYaw(yaw);
-          setMinPitch(min[0]);
-          setMaxPitch(max[0]);
+          setMinPitch(min[0] - initialTurretPitch);
+          setMaxPitch(max[0] - initialTurretPitch);
 
           modelTransformEvent.dispatch({ pitch, yaw });
         }}
@@ -376,7 +390,7 @@ export function GunFlexibilityVisualizer({
         <VisualizerCornerStat
           label={strings.website.tools.tankopedia.visualizers.flexibility.pitch}
           value={literals(strings.common.units.deg, {
-            value: radToDeg(pitch).toFixed(0),
+            value: radToDeg(pitch - initialTurretPitch).toFixed(0),
           })}
           side="top-left"
         />
