@@ -94,7 +94,7 @@ function ModuleChooser({
         <Dialog.Trigger>
           <Button
             variant="surface"
-            size={{ initial: "3", md: "4" }}
+            size={{ initial: "2", xs: "3", md: "4" }}
             style={{
               overflow: "clip",
               borderTopRightRadius: subSelector ? 0 : undefined,
@@ -103,12 +103,12 @@ function ModuleChooser({
             {...props}
           >
             {skeleton ? (
-              <Skeleton width="4em" height="2em" />
+              <Skeleton width="clamp(2rem, 11vw, 4em)" height="2em" />
             ) : (
               <img
                 style={{
-                  width: "4em",
-                  height: "4em",
+                  width: "clamp(2rem, 11vw, 4em)",
+                  height: "clamp(2rem, 11vw, 4em)",
                   objectFit: "contain",
                 }}
                 src={alias("api", `/tanks/${tank}/icons/big.webp`)}
@@ -137,7 +137,7 @@ function ModuleChooser({
           <Popover.Trigger>
             <IconButton
               variant="surface"
-              size={{ initial: "3", md: "4" }}
+              size={{ initial: "2", xs: "3", md: "4" }}
               style={{
                 overflow: "clip",
                 borderTopLeftRadius: 0,
@@ -204,7 +204,7 @@ function ModuleChooser({
 
 function ModuleSeparator() {
   return (
-    <Text size="5" color="gray" trim="end">
+    <Text size={{ initial: "3", xs: "5" }} color="gray" trim="end">
       <CaretRightIcon width="1em" height="1em" />
     </Text>
   );
@@ -260,7 +260,7 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
           </Button>
         </Flex>
 
-        <Flex gap="2" align="center">
+        <Flex gap={{ initial: "1", xs: "2" }} align="center">
           <ModuleChooser
             skeleton={skeleton}
             tank={hullTankId.id}
