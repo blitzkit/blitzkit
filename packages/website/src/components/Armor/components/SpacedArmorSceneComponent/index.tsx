@@ -18,6 +18,10 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
+import {
+  SPALL_LINER_HE_DAMAGE_DELTA,
+  SPALL_LINER_PROVISION_ID,
+} from "../../../../core/blitzkit/spallLiner";
 import { defaultEqualizer } from "../../../../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
 import { Duel } from "../../../../stores/duel";
@@ -383,6 +387,13 @@ export function SpacedArmorSceneComponent({
       }
 
       shot.damage *= antagonistEqualizer.damage;
+
+      const hasSpallLiner = Duel.state.protagonist.provisions.includes(
+        SPALL_LINER_PROVISION_ID,
+      );
+      if (hasSpallLiner && shell.type === ShellType.SHELL_TYPE_HE) {
+        shot.damage *= 1 + SPALL_LINER_HE_DAMAGE_DELTA;
+      }
 
       return shot;
     },
