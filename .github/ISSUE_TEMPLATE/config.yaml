@@ -1,0 +1,10 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Discord Server
+    about: Got questions? We answer better on Discord!
+    url: https://discord.gg/nDt7AjGJQH
+
+  - name: Formal Email
+    about: Reach out to BlitzKit formally through email.
+    url: mailto:support@blitzkit.app
