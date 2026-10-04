@@ -46,7 +46,8 @@ export function SearchBar({ topResult, skeleton, onSelect }: SearchBarProps) {
   }, [searching]);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
-      if (event.key !== "Enter" || !topResult || searching) return;
+      if (event.key !== "Enter" || !topResult) return;
+      if (!TankFilters.state.search || TankFilters.state.searching) return;
 
       event.preventDefault();
 

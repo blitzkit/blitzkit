@@ -371,6 +371,9 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             (tank.shortUserString
               ? this.getString(tank.shortUserString)
               : undefined) ?? this.getString(tank.userString),
+          name_full: tank.shortUserString
+            ? this.getString(tank.userString)
+            : undefined,
           slug,
           nation,
           type: tankTags.includes("collectible")
