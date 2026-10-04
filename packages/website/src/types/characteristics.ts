@@ -1,6 +1,7 @@
 import type { Strings } from "@blitzkit/i18n";
 import type {
   EngineDefinition,
+  Equalizer,
   GunDefinition,
   ShellDefinition,
   TankDefinition,
@@ -28,6 +29,8 @@ export type Characteristic = {
 export interface CharacteristicContext {
   state: TankState;
   environment: TankEnvironment;
+
+  equalizer: Equalizer;
 
   tank: TankDefinition;
   engine: EngineDefinition;

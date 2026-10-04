@@ -26,8 +26,16 @@ export const characteristics = {
 
   damage: {
     type: CharacteristicType.Number,
-    compute({ shell }) {
-      return shell.armor_damage;
+    compute({ shell, environment, equalizer, script }) {
+      let coefficient = 1;
+
+      if (environment.equalize) coefficient *= equalizer.damage;
+
+      script("", (script) => {
+        coefficient *= script.something;
+      });
+
+      return coefficient * shell.armor_damage;
     },
   },
 

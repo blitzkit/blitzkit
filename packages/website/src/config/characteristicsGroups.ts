@@ -1,3 +1,5 @@
+import type { CaseType } from "@blitzkit/core";
+import type { GunDefinition } from "@blitzkit/protos";
 import type { CharacteristicsGroup } from "../types/characteristics";
 
 export const characteristicsGroups: CharacteristicsGroup[] = [
@@ -67,8 +69,10 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     order: [
       {
         name: "gun_type",
-        render({ output }) {
-          return GunType[output as GunType];
+        render({ output, strings }) {
+          return strings.common.gun_types[
+            output as CaseType<GunDefinition["gun_type"]>
+          ];
         },
       },
       { name: "dpm", decimals: 0, units: "hp", localize: true },
