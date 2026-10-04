@@ -16,13 +16,6 @@ body:
       description: What about BlitzKit's behavior did you find unexpected?
 
   - type: textarea
-    validations:
-      required: true
-    attributes:
-      label: What should've happened?
-      description: What did you expect BlitzKit to do instead of what you observed?
-
-  - type: textarea
     attributes:
       label: How do you reproduce the issue?
       description: What steps one must follow to recreate your issue?
