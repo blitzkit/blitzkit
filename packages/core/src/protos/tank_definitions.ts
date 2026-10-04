@@ -292,6 +292,7 @@ export interface TankDefinition {
   weight: number;
   dev_name: string;
   equalizer?: Equalizer | undefined;
+  name_full?: I18nString | undefined;
 }
 
 export interface TankDefinition_RolesEntry {
@@ -651,6 +652,7 @@ function createBaseTankDefinition(): TankDefinition {
     weight: 0,
     dev_name: "",
     equalizer: undefined,
+    name_full: undefined,
   };
 }
 
@@ -751,6 +753,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     }
     if (message.equalizer !== undefined) {
       Equalizer.encode(message.equalizer, writer.uint32(266).fork()).join();
+    }
+    if (message.name_full !== undefined) {
+      I18nString.encode(message.name_full, writer.uint32(274).fork()).join();
     }
     return writer;
   },
@@ -1051,6 +1056,14 @@ export const TankDefinition: MessageFns<TankDefinition> = {
           message.equalizer = Equalizer.decode(reader, reader.uint32());
           continue;
         }
+        case 34: {
+          if (tag !== 274) {
+            break;
+          }
+
+          message.name_full = I18nString.decode(reader, reader.uint32());
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1111,6 +1124,7 @@ export const TankDefinition: MessageFns<TankDefinition> = {
       weight: isSet(object.weight) ? globalThis.Number(object.weight) : 0,
       dev_name: isSet(object.dev_name) ? globalThis.String(object.dev_name) : "",
       equalizer: isSet(object.equalizer) ? Equalizer.fromJSON(object.equalizer) : undefined,
+      name_full: isSet(object.name_full) ? I18nString.fromJSON(object.name_full) : undefined,
     };
   },
 
@@ -1218,6 +1232,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     if (message.equalizer !== undefined) {
       obj.equalizer = Equalizer.toJSON(message.equalizer);
     }
+    if (message.name_full !== undefined) {
+      obj.name_full = I18nString.toJSON(message.name_full);
+    }
     return obj;
   },
 
@@ -1270,6 +1287,9 @@ export const TankDefinition: MessageFns<TankDefinition> = {
     message.dev_name = object.dev_name ?? "";
     message.equalizer = (object.equalizer !== undefined && object.equalizer !== null)
       ? Equalizer.fromPartial(object.equalizer)
+      : undefined;
+    message.name_full = (object.name_full !== undefined && object.name_full !== null)
+      ? I18nString.fromPartial(object.name_full)
       : undefined;
     return message;
   },
