@@ -5,6 +5,7 @@
     "deg": "{value}°",
     "hp": "{value}hp",
     "x": "x{value}",
+    "s": "{value}s",
     "percentage": "{value}%",
     "deg_s": "{value}°/s",
     "plus": "+{value}"

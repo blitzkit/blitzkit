@@ -87,12 +87,36 @@ export const characteristics = {
       let coefficient = 1;
 
       script("protagonist", "CalibratedShells", (effect) => {
-        coefficient *=
-          1 +
+        coefficient +=
           effect.piercingFactors![blitzkitToBlitzShellKind[shell.type]] / 100;
       });
 
       return coefficient * shell.penetration!.near;
+    },
+  },
+
+  reload: {
+    type: CharacteristicType.Number,
+
+    should_render({ gun }) {
+      return gun.gun_type!.$case !== "auto_reloader";
+    },
+
+    compute({ gun, script }) {
+      // should never happen! just for typescript
+      if (gun.gun_type!.$case === "auto_reloader") return -Infinity;
+
+      let coefficient = 1;
+
+      script("protagonist", "miscAttrs/gunReloadTimeFactor", (effect) => {
+        coefficient += effect.bonusValues!.percent / 100;
+      });
+
+      if (gun.gun_type!.$case === "regular") {
+        return coefficient * gun.gun_type!.value.reload;
+      }
+
+      return gun.gun_type!.value.clip_reload;
     },
   },
 } satisfies Record<string, Characteristic>;

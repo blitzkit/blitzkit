@@ -362,7 +362,6 @@ export function tankCharacteristics(
       : undefined;
   const damageWithoutAssault =
     shell.armor_damage * damageCoefficientWithoutAssault;
-  const damage = shell.armor_damage * damageCoefficient;
   const dpmEffective =
     gun.gun_type!.$case === "auto_reloader"
       ? gun.gun_type!.value.shell_reloads[0] >

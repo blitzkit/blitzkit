@@ -1,7 +1,6 @@
 import { literalsArray } from "@blitzkit/i18n/src/literals";
-import { useMemo, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Text } from "../components/Text";
-import { characteristicsGroups } from "../config/characteristicsGroups";
 import type {
   CharacteristicRenderConfig,
   CharacteristicReturnType,
@@ -10,20 +9,6 @@ import { useLocale } from "./useLocale";
 import { useStrings } from "./useStrings";
 
 export function useCharacteristicRenderer() {
-  const groups = useMemo(() => {
-    const groups: string[] = [];
-
-    for (const group of characteristicsGroups) {
-      for (const item of group.order) {
-        if ("strings" in item && item.strings) {
-          groups.push(item.strings);
-        }
-      }
-    }
-
-    return groups;
-  }, []);
-
   const locale = useLocale();
   const strings = useStrings();
 

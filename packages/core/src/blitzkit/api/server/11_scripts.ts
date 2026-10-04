@@ -1,8 +1,23 @@
 import { ConsumablesCommon, OptionalDevices } from "../../../types";
+import { BlitzEffectScript } from "../../../types/blitzEffectScript";
 import { BlitzScripts } from "../../../types/blitzScripts";
 import { AbstractVFS } from "../../vfs";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI10 } from "./10_avatars";
+
+function assignNormalizedScript(
+  target: Record<string, BlitzEffectScript>,
+  key: number,
+  script?: BlitzEffectScript,
+) {
+  if (script === undefined) return;
+
+  if (script["#text"] === "StaticFactorDevice") {
+    script["#text"] = script.attribute!;
+  }
+
+  target[key] = script;
+}
 
 export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
   @Cache()
@@ -19,7 +34,8 @@ export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
 
     for (const key in optionalDevices.root) {
       const equipment = optionalDevices.root[key];
-      scripts.equipment[equipment.id] = equipment.script;
+
+      assignNormalizedScript(scripts.equipment, equipment.id, equipment.script);
     }
 
     async function assign(
@@ -38,7 +54,12 @@ export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
 
         for (const key in things.root) {
           const thing = things.root[key];
-          scripts[target][thing.id] = things.root[key].script;
+
+          assignNormalizedScript(
+            scripts[target],
+            thing.id,
+            things.root[key].script,
+          );
         }
       }
     }
