@@ -25,8 +25,8 @@ import {
   Tooltip,
   type FlexProps,
 } from "@radix-ui/themes";
-import { times } from "lodash-es";
 import { Fragment, type ComponentProps, type ReactNode } from "react";
+import { awaitableTiers } from "../../../core/awaitables/tiers";
 import { api } from "../../../core/blitzkit/api";
 import { useLocale } from "../../../hooks/useLocale";
 import { App } from "../../../stores/app";
@@ -171,7 +171,7 @@ const GUN_TYPES = Object.keys(
 
 const MAX_ICONS = 4;
 
-const TIERS = times(10, (i) => 10 - i);
+const TIERS = await awaitableTiers;
 
 export function FilterControl() {
   return (

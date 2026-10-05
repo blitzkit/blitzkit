@@ -191,7 +191,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
             );
           })}
 
-          {master.tier < 10 && (
+          {master.successors.length > 0 && (
             <>
               <Arrow />
               {master.successors!.map((id, index) => (
