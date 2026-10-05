@@ -25,8 +25,8 @@ import {
   VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
-import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
+import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n/src/strings";
 import { parse as parseYaml } from "yaml";
 import { BlitzKitAPI } from "../base";
 
@@ -113,6 +113,9 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
   }
 
   async init() {
+    const { existsSync } = await import("fs");
+    const { readFile, writeFile, mkdir } = await import("fs/promises");
+
     console.log("Initializing virtual file system...");
     await this.vfs.init();
 
@@ -155,31 +158,37 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
     console.log("Fetching game localizations...");
 
-    if (import.meta.env.DEV) {
-      locales.supported = [locales.supported[0]];
-    }
-
-    let fetchedLocalizations = 0;
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
+        const root = "../../temp/strings";
+        const cachePath = `${root}/${locale}.json`;
+
+        if (existsSync(cachePath)) {
+          console.log(`  Cache hit for ${locale}`);
+
+          const content = await readFile(cachePath, "utf-8");
+          this.stringsI18n[locale] = JSON.parse(content) as BlitzStrings;
+
+          return;
+        }
+
+        console.log(`  Cache miss for ${locale} (this will take a while...)`);
+
         const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
-        const cache = await fetch(
+        const networkStrings = (await fetch(
           `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
         )
           .then((response) => response.text())
-          .then((string) => parseYaml(string) as BlitzStrings);
-        const preInstalled = await this.vfs.yaml<BlitzStrings>(
+          .then(parseYaml)) as BlitzStrings;
+        const localStrings = await this.vfs.yaml<BlitzStrings>(
           `Data/Strings/${blitzLocale}.yaml`,
         );
+        const combined = { ...networkStrings, ...localStrings };
 
-        this.stringsI18n[locale] = {
-          ...cache,
-          ...preInstalled,
-        };
+        await mkdir(root, { recursive: true });
+        await writeFile(cachePath, JSON.stringify(combined));
 
-        console.log(
-          `Fetched localizations for ${locale} (${++fetchedLocalizations}/${locales.supported.length})`,
-        );
+        this.stringsI18n[locale] = combined;
       }),
     );
 
