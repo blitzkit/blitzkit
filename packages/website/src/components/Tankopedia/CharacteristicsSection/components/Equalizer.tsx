@@ -29,22 +29,16 @@ export function Equalizer() {
         style={{
           cursor: "pointer",
           borderRadius: "var(--radius-3)",
-          backgroundImage: `url(${alias("api", `/gamemodes/Insanity/banner.webp`)})`,
+          backgroundImage: `
+            linear-gradient(90deg, var(--black-a3), var(--gray-1)),
+            url(${alias("api", `/gamemodes/Insanity/banner.webp`)})
+          `,
           backgroundSize: "cover",
           backgroundPosition: "50% 25%",
           overflow: "hidden",
         }}
       >
-        <Flex
-          align="center"
-          width="100%"
-          justify="between"
-          p="4"
-          style={{
-            background:
-              "linear-gradient(90deg, var(--black-a3), var(--gray-1))",
-          }}
-        >
+        <Flex align="center" width="100%" justify="between" p="4">
           <Text
             style={{
               textShadow: "0 0 var(--space-1) var(--black-a12)",
