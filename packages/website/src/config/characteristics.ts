@@ -102,21 +102,23 @@ export const characteristics = {
       return gun.gun_type!.$case !== "auto_reloader";
     },
 
-    compute({ gun, script }) {
+    compute({ gun, script, degressive }) {
       // should never happen! just for typescript
       if (gun.gun_type!.$case === "auto_reloader") return -Infinity;
 
-      let coefficient = 1;
+      let c0 = 1;
 
       script("protagonist", "miscAttrs/gunReloadTimeFactor", (effect) => {
-        coefficient += effect.bonusValues!.percent / 100;
+        c0 += effect.bonusValues!.percent / 100;
       });
 
+      const c = c0 * degressive;
+
       if (gun.gun_type!.$case === "regular") {
-        return coefficient * gun.gun_type!.value.reload;
+        return c * gun.gun_type!.value.reload;
       }
 
-      return gun.gun_type!.value.clip_reload;
+      return c * gun.gun_type!.value.clip_reload;
     },
   },
 } satisfies Record<string, Characteristic>;

@@ -1,17 +1,15 @@
 import {
+  CrewType,
   degressiveStat,
   isExplosive,
   normalizeBoundingBox,
   progressiveStat,
   resolveDpm,
   resolvePenetrationCoefficient,
+  ShellType,
   sum,
-  unionBoundingBox,
-} from "@blitzkit/core";
-import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
-import {
-  CrewType,
   TankClass,
+  unionBoundingBox,
   type EngineDefinition,
   type EquipmentDefinitions,
   type GunDefinition,
@@ -21,8 +19,10 @@ import {
   type TankDefinition,
   type TrackDefinition,
   type TurretDefinition,
-} from "@blitzkit/protos";
+} from "@blitzkit/core";
+import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
 import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
@@ -166,6 +166,22 @@ export function tankCharacteristics(
   const intraClipCoefficient = coefficient([hasShellReloadBoost, -0.3]);
   const burstShells = gun.burst?.count ?? 1;
   const burstInterShell = gun.burst?.interval;
+  const armorDamageCoefficient =
+    coefficient([hasTungsten, 0.15]) *
+    coefficient(
+      [applyReactiveArmor && shell.type !== ShellType.SHELL_TYPE_HE, -0.27],
+      [applyDynamicArmor, -0.1],
+      [
+        applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE,
+        SPALL_LINER_HE_DAMAGE_DELTA,
+      ],
+    );
+  const assaultDamageCoefficient =
+    gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
+      ? (gun.assault_ranges.ranges.find(
+          ({ distance }) => distance >= assaultDistance,
+        )?.factor ?? 0)
+      : 1;
   const moduleDamageCoefficient = coefficient([hasTungsten, 0.15]);
   const reloadCoefficient =
     (coefficient([hasGunRammer, -0.05]) *
@@ -334,6 +350,10 @@ export function tankCharacteristics(
     stockTurret.weight +
     stockGun.weight;
   const resolvedEnginePower = engine.power * enginePowerCoefficient;
+  const damageCoefficientWithoutAssault =
+    armorDamageCoefficient * equalizer.damage;
+  const damageCoefficient =
+    damageCoefficientWithoutAssault * assaultDamageCoefficient;
   const dpm = resolveDpm(
     gun,
     shell,
@@ -362,6 +382,7 @@ export function tankCharacteristics(
       : undefined;
   const damageWithoutAssault =
     shell.armor_damage * damageCoefficientWithoutAssault;
+  const damage = shell.armor_damage * damageCoefficient;
   const dpmEffective =
     gun.gun_type!.$case === "auto_reloader"
       ? gun.gun_type!.value.shell_reloads[0] >
@@ -599,3 +620,56 @@ export function tankCharacteristics(
     burstInterShell,
   };
 }
+
+export enum TankCharacteristicsCondition {
+  Regular,
+  AutoLoader,
+  AutoReloader,
+}
+
+export const characteristicsOrder: {
+  name: string;
+  items: TankCharacteristicsKey[];
+}[] = [
+  {
+    name: "Firepower",
+    items: [
+      "gunType",
+      "dpm",
+      "shells",
+      "shellReload",
+      "shellReloads",
+      "intraClip",
+      "penetration",
+      "penetrationAt250m",
+      "damage",
+      "clipDamage",
+      "moduleDamage",
+      "caliber",
+      "shellNormalization",
+      "shellRicochet",
+      "shellVelocity",
+      "shellRange",
+      "shellCapacity",
+      "aimTime",
+      "dispersion",
+      "dispersionMoving",
+      "dispersionHullTraversing",
+      "dispersionTurretTraversing",
+      "dispersionShooting",
+      "dispersionGunDamaged",
+      "gunDepression",
+      "gunElevation",
+      "gunFrontalDepression",
+      "gunFrontalElevation",
+      "gunRearDepression",
+      "gunRearElevation",
+      "azimuthLeft",
+      "azimuthRight",
+    ],
+  },
+  {
+    name: "Crew",
+    items: ["crewCount"],
+  },
+];

@@ -34,6 +34,9 @@ export interface CharacteristicContext {
 
   equalizer: Equalizer;
 
+  progressive: number;
+  degressive: number;
+
   tank: TankDefinition;
   engine: EngineDefinition;
   track: TrackDefinition;

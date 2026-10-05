@@ -102,6 +102,9 @@ export function computeCharacteristics(
 
     equalizer: tank.equalizer ?? defaultEqualizer,
 
+    progressive,
+    degressive,
+
     tank,
     engine,
     track,
