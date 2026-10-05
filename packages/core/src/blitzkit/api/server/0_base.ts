@@ -112,6 +112,9 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
   }
 
   async init() {
+    const { existsSync } = await import("fs");
+    const { readFile, writeFile, mkdir } = await import("fs/promises");
+
     console.log("Initializing virtual file system...");
 
     const path = await import("node:path");
@@ -160,31 +163,39 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
 
     console.log("Fetching game localizations...");
 
-    if (import.meta.env.DEV) {
-      locales.supported = [locales.supported[0]];
-    }
-
-    let fetchedLocalizations = 0;
     await Promise.all(
-      locales.supported.map(async (locale) => {
-        const blitzLocale = locale.variant_blitz_cdn ?? locale.locale;
-        const cache = await fetch(
+      locales.supported.map(async ({ locale }) => {
+        const root = "../../temp/game-strings";
+        const cachePath = `${root}/${locale}.json`;
+
+        if (existsSync(cachePath)) {
+          console.log(`  Cache hit for ${locale}`);
+
+          const content = await readFile(cachePath, "utf-8");
+          this.stringsI18n[locale] = JSON.parse(content) as BlitzStrings;
+
+          return;
+        }
+
+        console.log(`  Cache miss for ${locale} (this will take a while...)`);
+
+        const blitzLocale = locales.supported.find(
+          (l) => l.locale === locale,
+        )!.variant_blitz_local;
+        const networkStrings = (await fetch(
           `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
         )
           .then((response) => response.text())
-          .then((string) => parseYaml(string) as BlitzStrings);
-        const preInstalled = await this.vfs.yaml<BlitzStrings>(
+          .then(parseYaml)) as BlitzStrings;
+        const localStrings = await this.vfs.yaml<BlitzStrings>(
           `Data/Strings/${blitzLocale}.yaml`,
         );
+        const combined = { ...networkStrings, ...localStrings };
 
-        this.stringsI18n[locale.locale] = {
-          ...cache,
-          ...preInstalled,
-        };
+        await mkdir(root, { recursive: true });
+        await writeFile(cachePath, JSON.stringify(combined));
 
-        console.log(
-          `Fetched localizations for ${locale} (${++fetchedLocalizations}/${locales.supported.length})`,
-        );
+        this.stringsI18n[locale] = combined;
       }),
     );
 
