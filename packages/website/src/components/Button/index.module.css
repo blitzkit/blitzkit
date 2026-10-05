@@ -45,6 +45,8 @@
   img {
     width: 1em;
     height: 1em;
+
+    object-fit: contain;
   }
 
   &[data-light-text="true"] {
