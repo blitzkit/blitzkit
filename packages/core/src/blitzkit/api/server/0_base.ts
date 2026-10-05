@@ -160,7 +160,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
-        const root = "../../temp/strings";
+        const root = "../../temp/game-strings";
         const cachePath = `${root}/${locale}.json`;
 
         if (existsSync(cachePath)) {
