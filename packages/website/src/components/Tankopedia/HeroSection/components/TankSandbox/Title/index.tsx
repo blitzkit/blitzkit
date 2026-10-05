@@ -1,11 +1,14 @@
-import { Flex, Heading } from "@radix-ui/themes";
+import { DownloadIcon } from "@radix-ui/react-icons";
+import { Button, Flex, Heading } from "@radix-ui/themes";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
+import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
 import { Tracker } from "./components/Tracker";
 
-export function Title() {
-  const { unwrap } = useLocale();
+export function Title({ skeleton }: MaybeSkeletonComponentProps) {
+  const { unwrap, strings } = useLocale();
+  const modelRequested = Tankopedia.use((state) => state.modelRequested);
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
@@ -20,6 +23,8 @@ export function Title() {
     <Flex
       onPointerDown={(event) => {
         event.preventDefault();
+
+        if (!modelRequested) return;
 
         Tankopedia.mutate((draft) => {
           draft.revealed = true;
@@ -60,7 +65,37 @@ export function Title() {
         {name}
       </Heading>
 
-      {!revealed && <Tracker fontSize={fontSize} />}
+      {!skeleton && !revealed && modelRequested && (
+        <Tracker fontSize={fontSize} />
+      )}
+
+      {!skeleton && !modelRequested && (
+        <Flex
+          position="absolute"
+          left="50%"
+          top="50%"
+          width="min(100%, 16rem)"
+          justify="center"
+          style={{
+            transform: `translate(-50%, calc(${fontSize} * 0.75 + var(--space-4) - 50%))`,
+          }}
+        >
+          <Button
+            variant="surface"
+            color="gray"
+            highContrast
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.modelRequested = true;
+              });
+            }}
+          >
+            <DownloadIcon />
+            {strings.website.tools.tankopedia.sandbox.load_model}
+          </Button>
+        </Flex>
+      )}
     </Flex>
   );
 }
