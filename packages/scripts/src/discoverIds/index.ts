@@ -135,7 +135,7 @@ let regionI = 0;
 
 console.log("Starting discovery loop...");
 
-atMaxRate(async ({ _break: break1 }) => {
+await atMaxRate(async ({ _break: break1 }) => {
   if (regions.length === 0) {
     console.log("All regions exhausted, exiting discovery loop...");
     return break1();
@@ -166,18 +166,19 @@ atMaxRate(async ({ _break: break1 }) => {
     fields
   }&account_id=${accountIds}`;
 
-  atMaxRate(async ({ _break: break2 }) => {
-    if (idRange.length < MAX_IDS_PER_CALL) {
-      console.log(
-        `Removing region ${region.domain} removed due to ID range exhaustion...`,
-      );
-      regions.splice(regionI, 1);
-    }
+  if (idRange.length < MAX_IDS_PER_CALL) {
+    console.log(
+      `Removing region ${region.domain} removed due to ID range exhaustion...`,
+    );
+    regions.splice(regionI, 1);
+  }
 
-    const response = await fetch(url);
-    const data = (await response.json()) as QuickInfo;
+  await atMaxRate(async ({ _break: break2 }) => {
+    const data = await fetch(url)
+      .then((response) => response.json() as Promise<QuickInfo>)
+      .catch(() => null);
 
-    if (data.status !== "ok") {
+    if (data === null || data.status !== "ok") {
       console.warn("Failed API call; trying again...");
       return;
     }

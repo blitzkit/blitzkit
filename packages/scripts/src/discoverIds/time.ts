@@ -20,7 +20,9 @@ interface MethodContext {
 let lastT = 0;
 const maxDelta = 1000 / API_RATE;
 const DELTA_BUFFER = 0;
-export async function atMaxRate(method: (context: MethodContext) => void) {
+export async function atMaxRate(
+  method: (context: MethodContext) => void | Promise<void>,
+) {
   let isBroken = false;
 
   const context: MethodContext = {
@@ -39,7 +41,7 @@ export async function atMaxRate(method: (context: MethodContext) => void) {
       await sleep(maxDelta - delta + DELTA_BUFFER);
     }
 
-    method(context);
+    await method(context);
     lastT = t;
   }
 }
