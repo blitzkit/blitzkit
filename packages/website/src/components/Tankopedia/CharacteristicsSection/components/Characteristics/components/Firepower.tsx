@@ -17,7 +17,7 @@ import { AssaultRangesVisualizer } from "./AssaultRangesVisualizer";
 import { GunFlexibilityVisualizer } from "./GunFlexibilityVisualizer";
 import { Info } from "./Info";
 import { InfoWithDelta } from "./InfoWithDelta";
-import { ReloadVisualizer } from "./ReloadVisualizer";
+import { RELOAD_PRECISION, ReloadVisualizer } from "./ReloadVisualizer";
 import { RicochetVisualizer } from "./RicochetVisualizer";
 import { StatsTableWrapper } from "./StatsTableWrapper";
 import type { StatsAcceptorProps } from "./TraverseVisualizer";
@@ -163,7 +163,7 @@ export function Firepower({
                   .shell_index,
                 { index: index + 1 },
               )}
-              decimals={2}
+              decimals={RELOAD_PRECISION}
               deltaType="lowerIsBetter"
               noRanking
               value={() => reload}
@@ -173,7 +173,7 @@ export function Firepower({
       ) : (
         <InfoWithDelta
           stats={stats}
-          decimals={2}
+          decimals={RELOAD_PRECISION}
           deltaType="lowerIsBetter"
           value="shellReload"
         />
@@ -183,7 +183,7 @@ export function Firepower({
         <InfoWithDelta
           stats={stats}
           indent
-          decimals={2}
+          decimals={RELOAD_PRECISION}
           deltaType="lowerIsBetter"
           value="intraClip"
         />

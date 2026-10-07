@@ -54,6 +54,7 @@ export const TIER_ROMAN_NUMERALS: Record<number, string> = {
   8: "VIII",
   9: "IX",
   10: "X",
+  11: "XI",
 };
 
 export const flags: Record<string, string> = {

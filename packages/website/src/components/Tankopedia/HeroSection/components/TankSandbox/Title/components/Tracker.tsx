@@ -15,7 +15,7 @@ export function Tracker({ fontSize }: Props) {
       top="50%"
       width="min(100%, 16rem)"
       style={{
-        transform: `translate(-50%, calc(${fontSize} / 2 + var(--space-4)))`,
+        transform: `translate(-50%, calc(${fontSize} * 0.75 + var(--space-4)))`,
       }}
     >
       <Progress color="gray" value={progress} />

@@ -12,6 +12,7 @@ export interface Props {
 }
 
 const gameDefinitions = await api.gameDefinitions();
+const gameVersion = gameDefinitions.version.split("_")[0];
 const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 const { locale } = Astro.props;
 const strings = getStrings(locale);
@@ -141,7 +142,7 @@ const strings = getStrings(locale);
           </Text>
         )
       }
-      <Text size="2" color="gray">CDN</Text>
+      <Text size="2" color="gray">Branch</Text>
     </Flex>
 
     <Flex direction="column" gap="1" flexGrow="1" flexBasis="0" align="start">
@@ -151,7 +152,7 @@ const strings = getStrings(locale);
       {
         environment !== "preview" && (
           <Code size="2" color="gray">
-            {gameDefinitions.version}
+            {gameVersion}
           </Code>
         )
       }
@@ -174,13 +175,13 @@ const strings = getStrings(locale);
             WoTB
           </Text>
           <Code size="2" color="gray">
-            {gameDefinitions.version}
+            {gameVersion}
           </Code>
         </>
       )
     }
 
-    <Text size="2" color="gray">CDN</Text>
+    <Text size="2" color="gray">Branch</Text>
     <Code size="2" color="gray">
       {environment}
     </Code>
