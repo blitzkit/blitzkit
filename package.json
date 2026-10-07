@@ -9,7 +9,8 @@
     "discover-ids": "cd packages/scripts && bun run discover-ids",
     "build-protos": "cd packages/scripts && bun run build-protos",
     "record-performance": "cd packages/scripts && bun run record-performance",
-    "download-client": "cd packages/scripts && bun run download-client"
+    "download-client": "cd packages/scripts && bun run download-client",
+    "clean-astro": "rm -rf packages/website/.astro packages/website/node_modules/.astro packages/website/node_modules/.vite"
   },
   "type": "module",
   "workspaces": [
