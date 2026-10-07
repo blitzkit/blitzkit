@@ -8,8 +8,7 @@
   const currentLocale =
     locales.supported.find(
       ({ locale }) =>
-        locale !== locales.default &&
-        (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)),
+        pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
     )?.locale ?? locales.default;
 
   if (
