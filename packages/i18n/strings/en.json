@@ -215,7 +215,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "Development mode",
-      "auto_load_models": "Automatically load 3D models",
+      "auto_load_models": "Auto-load models",
       "language": "Language"
     },
 
@@ -459,7 +459,7 @@
         },
 
         "sandbox": {
-          "load_model": "Load 3D model",
+          "load_model": "Load model",
 
           "poses": {
             "hull_down": "Hull down",
