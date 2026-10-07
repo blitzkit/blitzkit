@@ -46,8 +46,8 @@ export const TankFilters = new Varuna<TankFilters>({
   abilities: [],
   powers: [],
 
-  showTesting: true,
-  showNonTesting: true,
-  showOwned: true,
-  showUnowned: true,
+  showTesting: false,
+  showNonTesting: false,
+  showOwned: false,
+  showUnowned: false,
 });

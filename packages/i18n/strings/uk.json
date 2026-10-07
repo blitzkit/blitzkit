@@ -194,6 +194,7 @@
       "title": "Налаштування",
       "description": "Змінити налаштування BlitzKit ",
       "dev_mode": "Режим розробника",
+      "auto_load_models": "Auto-load models",
       "language": "Мова"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Від башти",
             "face_hug": "Клінч",
