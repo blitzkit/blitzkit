@@ -81,8 +81,7 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
           }}
         >
           <Button
-            variant="surface"
-            color="gray"
+            variant="solid"
             highContrast
             onPointerDown={(event) => event.stopPropagation()}
             onClick={() => {
