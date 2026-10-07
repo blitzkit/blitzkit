@@ -1,6 +1,5 @@
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Button, Dialog, Flex, SegmentedControl } from "@radix-ui/themes";
-import { useMemo } from "react";
 import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
@@ -23,11 +22,6 @@ export function Controls({
   onAddTankDialogOpenChange,
 }: ControlsProps) {
   const deltaMode = ComparePersistent.use((state) => state.deltaMode);
-  const members = CompareEphemeral.use((state) => state.members);
-  const memberIds = useMemo(
-    () => members.map((member) => member.tank.id),
-    [members],
-  );
   const { strings } = useLocale();
 
   return (
@@ -59,7 +53,6 @@ export function Controls({
             >
               <TankSearch
                 compact
-                exclude={memberIds}
                 onSelect={(tank) => {
                   CompareEphemeral.mutate((draft) => {
                     draft.members.push(

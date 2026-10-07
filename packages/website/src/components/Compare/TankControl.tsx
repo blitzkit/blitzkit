@@ -1,6 +1,6 @@
 import { ExternalLinkIcon, LoopIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Dialog, Flex, IconButton } from "@radix-ui/themes";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
@@ -18,14 +18,6 @@ const provisionDefinitions = await api.provisionDefinitions();
 export function TankControl({ index, slug }: TankControlProps) {
   const { locale, strings } = useLocale();
   const [switchTankDialogOpen, setSwitchTankDialogOpen] = useState(false);
-  const members = CompareEphemeral.use((state) => state.members);
-  const otherMemberIds = useMemo(
-    () =>
-      members
-        .filter((_, memberIndex) => memberIndex !== index)
-        .map((member) => member.tank.id),
-    [members, index],
-  );
 
   return (
     <Flex gap="3" justify="center" style={{ width: "100%" }}>
@@ -65,7 +57,6 @@ export function TankControl({ index, slug }: TankControlProps) {
             >
               <TankSearch
                 compact
-                exclude={otherMemberIds}
                 onSelect={(tank) => {
                   CompareEphemeral.mutate((draft) => {
                     draft.members[index] = tankToCompareMember(

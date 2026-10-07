@@ -38,7 +38,6 @@ export type TankSearchProps = MaybeSkeletonComponentProps &
     compact?: boolean;
     onSelect?: (tank: TankDefinition) => void;
     onSelectAll?: (tanks: TankDefinition[]) => void;
-    exclude?: number[];
   };
 
 const PREVIEW_COUNT = 20;
@@ -53,14 +52,14 @@ const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   ]);
 
 export const TankSearch = memo<TankSearchProps>(
-  ({ compact, onSelect, onSelectAll, exclude, skeleton, ...props }) => {
+  ({ compact, onSelect, onSelectAll, skeleton, ...props }) => {
     const { strings, locale } = useLocale();
     const wargaming = App.use((state) => state.logins.wargaming);
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankopediaSort = TankSort.use();
     const tankFilters = TankFilters.use();
 
-    const allFiltered = usePromise(
+    const filtered = usePromise(
       () => {
         if (tankFilters.search === null) {
           return filterTanks(
@@ -82,14 +81,8 @@ export const TankSearch = memo<TankSearchProps>(
       [tankFilters] as any,
     );
     const sorted = useMemo(() => {
-      const filtered = allFiltered.filter(
-        (tank) => !exclude?.includes(tank.id),
-      );
-
       if (tankFilters.search === null) {
         let sorted: TankDefinition[];
-
-        filtered.sort((a, b) => a.id - b.id);
 
         switch (tankopediaSort.by) {
           case "meta.none":
@@ -424,7 +417,7 @@ export const TankSearch = memo<TankSearchProps>(
       } else {
         return filtered;
       }
-    }, [tankFilters, tankopediaSort, exclude]);
+    }, [tankFilters, tankopediaSort]);
 
     const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED_CARDS);
     const tanks = sorted.slice(0, loadedCards);
