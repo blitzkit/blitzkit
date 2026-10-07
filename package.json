@@ -4,7 +4,7 @@
   "license": "BlitzKit License",
   "private": true,
   "scripts": {
-    "dev": "cd packages/website && bun run dev",
+    "dev": "cd packages/website && bun --bun run dev",
     "build": "cd packages/website && bun run build",
     "discover-ids": "cd packages/scripts && bun run discover-ids",
     "build-protos": "cd packages/scripts && bun run build-protos",
