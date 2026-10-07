@@ -127,7 +127,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
               </Text>
             </Flex>
 
-            {averages && nextTanks && nextTanks.length > 0 && (
+            {averages && nextTanks && (
               <Text color="gray" size="1" mt="2">
                 {skeleton && <Skeleton height="1em" width="4em" />}
                 {!skeleton &&
