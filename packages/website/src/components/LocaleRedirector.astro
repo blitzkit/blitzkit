@@ -3,7 +3,6 @@
   import { getBestLocale } from "../core/i18n/getBestLocale";
 
   const pathname = window.location.pathname;
-  const isAPI = pathname.startsWith("/api");
   const hasPreference = localStorage.getItem("preferred-locale") !== null;
   const bestLocale = getBestLocale();
   const currentLocale =
@@ -14,7 +13,6 @@
     )?.locale ?? locales.default;
 
   if (
-    !isAPI &&
     bestLocale !== currentLocale &&
     (hasPreference || currentLocale === locales.default)
   ) {
