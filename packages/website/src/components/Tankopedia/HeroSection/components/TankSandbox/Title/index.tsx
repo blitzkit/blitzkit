@@ -1,4 +1,4 @@
-import { DownloadIcon } from "@radix-ui/react-icons";
+import { UpdateIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Heading } from "@radix-ui/themes";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
@@ -90,7 +90,7 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
               });
             }}
           >
-            <DownloadIcon />
+            <UpdateIcon />
             {strings.website.tools.tankopedia.sandbox.load_model}
           </Button>
         </Flex>
