@@ -84,6 +84,8 @@ export async function filterTank(
         gameDefinitions.roles[id as unknown as number].provisions.some(
           (consumable) => filters.powers.includes(consumable),
         ),
-      ))
+      )) &&
+    (filters.mechanics.length === 0 ||
+      filters.mechanics.every((mechanic) => tank.mechanics.includes(mechanic)))
   );
 }

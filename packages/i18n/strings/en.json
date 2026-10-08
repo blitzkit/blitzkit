@@ -306,6 +306,56 @@
 
       "warnings": {
         "test": "Tanks in testing are subject to change and may not represent the final product."
+      },
+      "tank_mechanics": {
+        "MovableArmor": {
+          "name": "Dynamic Armor",
+          "description": "Moves armor to cover weak spots in the hull and turret, creating additional protection."
+        },
+        "ShotDispersionStabilizator": {
+          "name": "Combat Stabilization",
+          "description": "At forward or reverse speeds of no more than 15 km/h, the aiming circle stays small, allowing for more accurate aiming."
+        },
+        "ReducedSpotDuration": {
+          "name": "Adaptive Concealment",
+          "description": "After leaving enemy spotting range, the tank becomes invisible in 7 seconds instead of the standard 10."
+        },
+        "LTCamo": {
+          "name": "Concealment in Movement",
+          "description": "Concealment does not decrease while moving. Ineffective when shooting."
+        },
+        "InternalTrack": {
+          "name": "Emergency Track",
+          "description": "Allows the tank to move backward at 7 km/h if the main track is destroyed."
+        },
+        "DesertPower": {
+          "name": "Desert Force",
+          "description": "+50% module repair speed on desert maps."
+        },
+        "ImprovedDetection": {
+          "name": "Tracer Shells",
+          "description": "Hitting an enemy tank keeps it visible to all allies for 20 seconds instead of the standard 10."
+        },
+        "TrayShell": {
+          "name": "Assault Shells",
+          "description": "Shells are stronger at close range and weaker at long range."
+        },
+        "ReserveAmmo": {
+          "name": "Reserve Shell",
+          "description": "All shells except the last reload quickly, but the magazine takes a long time to reload after the last one is fired."
+        },
+        "DoubleShot": {
+          "name": "Double Shot",
+          "description": "Fires two shells in one shot in quick succession."
+        },
+        "TripleShot": {
+          "name": "Triple Shot",
+          "description": "Fires three shells in one shot in quick succession."
+        },
+        "ATGM": {
+          "name": "ATGM",
+          "description": "The fired shell can be steered by moving the camera or reticle."
+        }
       }
     },
 
@@ -564,6 +614,9 @@
 
         "game_modes": {
           "title": "Game mode abilities"
+        },
+        "mechanics": {
+          "title": "Mechanics"
         },
 
         "review": {

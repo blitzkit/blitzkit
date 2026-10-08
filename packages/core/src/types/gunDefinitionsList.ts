@@ -24,6 +24,7 @@ export interface GunDefinitionsList {
           speed: number;
           piercingPower: string;
           maxDistance: number;
+          isATGM?: boolean;
         };
       };
     };

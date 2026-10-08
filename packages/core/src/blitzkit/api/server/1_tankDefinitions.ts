@@ -25,9 +25,73 @@ import {
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
+import { TANK_MECHANICS, TankMechanic } from "../../tankMechanics";
 import { Cache, ServerBlitzKitAPI0 } from "./0_base";
 
+const MECHANIC_MIN_CALIBER = 60;
+
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
+  private resolveMechanics(
+    tankDefinition: VehicleDefinitions,
+    tankTags: string[],
+    gunList: { root: GunDefinitionsList },
+    shellList: { root: ShellDefinitionsList },
+  ) {
+    const mechanics = new Set<TankMechanic>();
+    const extras = tankDefinition.extras ?? {};
+
+    if (extras.armorsStatesController !== undefined) {
+      mechanics.add("MovableArmor");
+    }
+    if (extras.shotDispersionStabilizator !== undefined) {
+      mechanics.add("ShotDispersionStabilizator");
+    }
+    if (extras.alteredSpotDuration !== undefined) {
+      mechanics.add("ReducedSpotDuration");
+    }
+    if (extras.desertPower !== undefined) mechanics.add("DesertPower");
+    if (tankTags.includes("lightTank")) mechanics.add("LTCamo");
+
+    for (const chassis of Object.values(tankDefinition.chassis)) {
+      if (chassis.internalTrack !== undefined) mechanics.add("InternalTrack");
+    }
+
+    for (const turret of Object.values(tankDefinition.turrets0)) {
+      for (const gunKey in turret.guns) {
+        const gun = turret.guns[gunKey];
+        const gunListEntry = gunList.root.shared[gunKey];
+
+        if (gun.extras?.improvedDetection !== undefined) {
+          mechanics.add("ImprovedDetection");
+        }
+        if (gun.extras?.trayShell !== undefined) mechanics.add("TrayShell");
+        if (
+          gun.reloadingSounds?.RELOAD_CLICK_PENULTIMATE_SHELL !== undefined
+        ) {
+          mechanics.add("ReserveAmmo");
+        }
+        if (Object.values(gunListEntry.shots).some((shot) => shot.isATGM)) {
+          mechanics.add("ATGM");
+        }
+
+        if (gun.burst) {
+          const caliber = Math.max(
+            ...Object.keys(gunListEntry.shots).map(
+              (shellKey) => shellList.root[shellKey].caliber,
+            ),
+          );
+
+          if (caliber >= MECHANIC_MIN_CALIBER) {
+            if (gun.burst.count === 2) mechanics.add("DoubleShot");
+            if (gun.burst.count === 3) mechanics.add("TripleShot");
+          }
+        }
+      }
+    }
+
+    return TANK_MECHANICS.filter((mechanic) => mechanics.has(mechanic));
+  }
+
   private parseResearchCost(raw: number | string) {
     if (typeof raw === "number") {
       return {
@@ -378,6 +442,12 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
           max_provisions: tankDefinition.root.provisionSlots,
           name,
           name_full,
+          mechanics: this.resolveMechanics(
+            tankDefinition.root,
+            tankTags,
+            gunList,
+            shellList,
+          ),
           slug,
           nation,
           type: tankTags.includes("collectible")

@@ -7,6 +7,10 @@ import {
   TankType,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
+import {
+  TANK_MECHANICS,
+  type TankMechanic,
+} from "@blitzkit/core/src/blitzkit/tankMechanics";
 import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import {
@@ -35,6 +39,7 @@ import { classIcons } from "../../ClassIcon";
 import { GunAutoloaderIcon } from "../../GunAutoloaderIcon";
 import { GunAutoreloaderIcon } from "../../GunAutoreloaderIcon";
 import { GunRegularIcon } from "../../GunRegularIcon";
+import { MechanicIcon } from "../../MechanicIcon";
 import { MissingShellIcon } from "../../MissingShellIcon";
 import { ResearchedIcon } from "../../ResearchedIcon";
 import { ScienceIcon } from "../../ScienceIcon";
@@ -194,6 +199,7 @@ export function FilterControl() {
       <ConsumablesFilter />
       <ProvisionsFilter />
       <GameModeAbilitiesFilter />
+      <MechanicsFilter />
 
       <ResetButton />
     </Flex>
@@ -1237,6 +1243,83 @@ function GameModeAbilitiesFilter() {
             TankFilters.mutate((draft) => {
               draft.abilities = [];
               draft.powers = [];
+            });
+          }}
+        >
+          <TrashIcon />
+          {strings.website.common.tank_search.clear}
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function MechanicsFilter() {
+  const { strings } = useLocale();
+  const rawMechanics = TankFilters.use(
+    (state) => state.mechanics,
+  ) as TankMechanic[];
+  const mechanics = rawMechanics.length === 0 ? TANK_MECHANICS : rawMechanics;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger>
+        <Button color="gray" variant="surface">
+          <Flex align="center">
+            <Flex style={{ color: "var(--gray-12)" }}>
+              {mechanics.slice(0, MAX_ICONS).map((mechanic) => (
+                <MechanicIcon key={mechanic} mechanic={mechanic} />
+              ))}
+            </Flex>
+
+            {mechanics.length > MAX_ICONS && (
+              <Text size="1" ml="1">
+                {literals(strings.common.units.plus, {
+                  value: mechanics.length - MAX_ICONS,
+                })}
+              </Text>
+            )}
+          </Flex>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {TANK_MECHANICS.map((mechanic) => {
+          const selected = rawMechanics.includes(mechanic);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.mechanics = draft.mechanics.filter(
+                      (m) => m !== mechanic,
+                    );
+                  } else {
+                    draft.mechanics = [...draft.mechanics, mechanic];
+                  }
+                });
+              }}
+              checked={selected}
+              key={mechanic}
+            >
+              <MechanicIcon mechanic={mechanic} />
+              {strings.website.common.tank_mechanics[mechanic].name}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.mechanics = [];
             });
           }}
         >

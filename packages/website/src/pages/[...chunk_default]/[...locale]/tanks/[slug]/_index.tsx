@@ -5,6 +5,7 @@ import { CharacteristicsSection } from "../../../../../components/Tankopedia/Cha
 import { GameModeSection } from "../../../../../components/Tankopedia/GameModeSection";
 import { GuideSection } from "../../../../../components/Tankopedia/GuideSection";
 import { HeroSection } from "../../../../../components/Tankopedia/HeroSection";
+import { MechanicsSection } from "../../../../../components/Tankopedia/MechanicsSection";
 import { MetaSection } from "../../../../../components/Tankopedia/MetaSection";
 import { TechTreeSection } from "../../../../../components/Tankopedia/TechTreeSection";
 import { VideoSection } from "../../../../../components/Tankopedia/VideoSection";
@@ -42,6 +43,7 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
         <HeroSection skeleton={skeleton} />
         <MetaSection />
         <CalloutsSection />
+        <MechanicsSection />
         {tank.type === TankType.TANK_TYPE_RESEARCHABLE && !tank.deprecated && (
           <TechTreeSection skeleton={skeleton} />
         )}
