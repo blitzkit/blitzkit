@@ -133,7 +133,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
                 left="0"
               >
                 {!skeleton && modelRequested && (
-                  <Suspense>
+                  <Suspense key={protagonist.id}>
                     <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
                   </Suspense>
                 )}
