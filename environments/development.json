@@ -8,7 +8,7 @@
     "api": "api",
 
     "models_tanks": "models/tanks",
-    "models_legendary_tanks": "models/legendary",
+    "models_legendary": "models/legendary",
     "models_maps": "models/maps"
   },
 
@@ -20,7 +20,7 @@
     "api": "/api",
 
     "models_tanks": "/models/tanks",
-    "models_legendary_tanks": "/models/legendary",
+    "models_legendary": "/models/legendary",
     "models_maps": "/models/maps",
 
     "static": "https://static.blitzkit.app"

@@ -93,7 +93,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        chunk: [default, api]
+        chunk: [default, api, models_tanks, models_legendary, models_maps]
 
     steps:
       - name: Free disk space
