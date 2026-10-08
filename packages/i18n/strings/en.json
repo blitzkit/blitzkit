@@ -480,6 +480,10 @@
             "copy": "Copy"
           },
 
+          "model_download": {
+            "name": "Download model"
+          },
+
           "model": {
             "name": "Model"
           },
