@@ -102,6 +102,8 @@ interface Tankopedia {
   );
   xpMultiplier: (typeof XP_MULTIPLIERS)[number];
   customShell?: ShellDefinition;
+  skin?: number;
+  skinLoading: boolean;
   requestedDisplay: TankopediaDisplay;
   display: TankopediaDisplay;
   statSearch?: string;
@@ -112,6 +114,7 @@ const skillDefinitions = await api.skillDefinitions();
 export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,
   revealed: false,
+  skinLoading: false,
   modelRequested: App.state.autoLoadModels,
   relativeAgainst: TankopediaRelativeAgainst.Class,
   editStatic: false,
