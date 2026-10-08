@@ -14,7 +14,10 @@ import {
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
-import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
+import {
+  ALL_EXTENSIONS,
+  KHRMaterialsEmissiveStrength,
+} from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import { times } from "lodash-es";
@@ -221,6 +224,37 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         );
       }
 
+      const emissiveAlbedoFactor = (
+        defaultConfigArchive?.properties ?? node.properties
+      )?.emissiveAlbedoFactor;
+
+      if (textures.miscMap && emissiveAlbedoFactor) {
+        const view = new DataView(emissiveAlbedoFactor);
+        const emissiveStrength = view.getFloat32(view.byteLength - 4, true);
+        const emissiveStrengthExtension = document
+          .createExtension(KHRMaterialsEmissiveStrength)
+          .createEmissiveStrength()
+          .setEmissiveStrength(emissiveStrength);
+
+        material
+          .setEmissiveTexture(
+            document
+              .createTexture(node.materialName)
+              .setMimeType("image/webp")
+              .setImage(
+                await readEmissive(
+                  `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+                  `Data/3d/${dirname(path)}/${textures.miscMap}`,
+                ),
+              ),
+          )
+          .setEmissiveFactor([1, 1, 1])
+          .setExtension(
+            "KHR_materials_emissive_strength",
+            emissiveStrengthExtension,
+          );
+      }
+
       materials.set(id, material);
     }
   }
@@ -394,6 +428,31 @@ async function readOcclusion(path: string) {
     .toBuffer();
 
   return image;
+}
+
+async function readEmissive(baseColorPath: string, miscPath: string) {
+  const baseColor = await readTexture(baseColorPath);
+  const misc = await readTexture(miscPath);
+  const mask = await sharp(misc.data, { raw: misc })
+    .extractChannel(1)
+    .resize(baseColor.width, baseColor.height)
+    .raw()
+    .toBuffer();
+  const combined = Buffer.alloc(baseColor.width * baseColor.height * 3);
+
+  for (let i = 0; i < baseColor.width * baseColor.height; i++) {
+    const factor = mask[i] / 255;
+
+    combined[i * 3] = baseColor.data[i * baseColor.channels] * factor;
+    combined[i * 3 + 1] = baseColor.data[i * baseColor.channels + 1] * factor;
+    combined[i * 3 + 2] = baseColor.data[i * baseColor.channels + 2] * factor;
+  }
+
+  return await sharp(combined, {
+    raw: { width: baseColor.width, height: baseColor.height, channels: 3 },
+  })
+    .webp()
+    .toBuffer();
 }
 
 async function readRoughnessMetallic(path: string) {
