@@ -1,14 +1,8 @@
-import {
-  alias,
-  SEARCH_KEYS,
-  TankDefinition,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import {
   ArrowRightIcon,
   EyeOpenIcon,
-  MagnifyingGlassIcon,
   MixerVerticalIcon,
   PaperPlaneIcon,
   StarFilledIcon,
@@ -18,29 +12,23 @@ import {
   AlertDialog,
   Box,
   Button,
-  Card,
   DropdownMenu,
   Flex,
   IconButton,
-  Spinner,
   Text,
-  TextField,
 } from "@radix-ui/themes";
-import fuzzysort from "fuzzysort";
-import { debounce } from "lodash-es";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { awaitableTankNames } from "../core/awaitables/tankNames";
+import { useEffect, useRef } from "react";
 import { awaitableTiers } from "../core/awaitables/tiers";
 import { api } from "../core/blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Guess, GuessState } from "../stores/guess";
-import { classIcons } from "./ClassIcon";
-import { SearchResults } from "./SearchResults";
+import {
+  GuessSearchField,
+  GuessSearchResults,
+  useGuessSearch,
+} from "./GuessSearch";
 
-const { go } = fuzzysort;
-
-const [tankNames, tankDefinitions, TIERS] = await Promise.all([
-  awaitableTankNames,
+const [tankDefinitions, TIERS] = await Promise.all([
   api.tankDefinitions(),
   awaitableTiers,
 ]);
@@ -54,46 +42,13 @@ export function Guesser() {
   const totalGuesses = Guess.use((state) => state.totalGuesses);
   const helpingReveal = Guess.use((state) => state.helpingReveal);
   const streak = Guess.use((state) => state.streak);
-  const { strings, unwrap } = useLocale();
-  const input = useRef<HTMLInputElement>(null);
-  const [searching, setSearching] = useState(false);
-  const [results, setResults] = useState<TankDefinition[] | null>(null);
-  const [selected, setSelected] = useState<TankDefinition | null>(null);
+  const { strings } = useLocale();
+  const search = useGuessSearch();
   const tiers = Guess.use((state) => state.tiers);
   const status = useRef<HTMLSpanElement>(null);
 
-  const requestSearch = useCallback(() => {
-    setSelected(null);
-    setSearching(true);
-    search();
-  }, []);
-
-  const search = useCallback(
-    debounce(() => {
-      if (!input.current) return;
-
-      setSearching(false);
-      const trimmed = input.current.value.trim();
-
-      if (trimmed.length === 0) {
-        setResults(null);
-        return;
-      }
-
-      const searchResults = go(trimmed, tankNames, {
-        keys: SEARCH_KEYS,
-        limit: 6,
-      });
-
-      setResults(
-        searchResults.map((result) => tankDefinitions.tanks[result.obj.id]),
-      );
-    }, 500),
-    [],
-  );
-
   useEffect(() => {
-    if (guessState !== GuessState.NotGuessed) setSelected(null);
+    if (guessState !== GuessState.NotGuessed) search.setSelected(null);
   }, [guessState]);
 
   useEffect(() => {
@@ -123,59 +78,7 @@ export function Guesser() {
       gap="3"
     >
       <Box position="relative">
-        {results !== null && (
-          <Card variant="classic">
-            <Box py="2" px="3">
-              {results.length === 0 && (
-                <Flex justify="center">
-                  <Text color="gray">
-                    {strings.website.tools.guess.search.no_results}
-                  </Text>
-                </Flex>
-              )}
-
-              <SearchResults.Root>
-                {results.map((result) => {
-                  const Icon = classIcons[result.class];
-
-                  return (
-                    <SearchResults.Item
-                      key={result.id}
-                      onClick={() => {
-                        if (!input.current) return;
-
-                        input.current.value = unwrap(result.name!);
-                        setSelected(result);
-                        setResults(null);
-                      }}
-                      text={unwrap(result.name!)}
-                      prefix={
-                        <img
-                          style={{ width: "1em", height: "1em" }}
-                          src={alias(
-                            "api",
-                            `/flags/circle/${result.nation}.webp`,
-                          )}
-                        />
-                      }
-                      discriminator={
-                        <Flex
-                          align="center"
-                          gap="1"
-                          width="38px"
-                          justify="center"
-                        >
-                          <Icon width="1em" height="1em" />
-                          {TIER_ROMAN_NUMERALS[result.tier]}
-                        </Flex>
-                      }
-                    />
-                  );
-                })}
-              </SearchResults.Root>
-            </Box>
-          </Card>
-        )}
+        <GuessSearchResults search={search} />
       </Box>
 
       <Flex justify="center" style={{ userSelect: "none" }}>
@@ -253,19 +156,10 @@ export function Guesser() {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
 
-        <TextField.Root
+        <GuessSearchField
+          search={search}
           disabled={guessState !== GuessState.NotGuessed}
-          ref={input}
-          onChange={requestSearch}
-          style={{ flex: 1, maxWidth: "14rem" }}
-          placeholder={strings.website.tools.guess.search.placeholder}
-          size={{ initial: "2", sm: "3" }}
-          variant="classic"
-        >
-          <TextField.Slot>
-            {searching ? <Spinner /> : <MagnifyingGlassIcon />}
-          </TextField.Slot>
-        </TextField.Root>
+        />
 
         <AlertDialog.Root>
           <AlertDialog.Trigger>
@@ -312,14 +206,16 @@ export function Guesser() {
         <Button
           size={{ initial: "2", sm: "3" }}
           color={
-            guessState === GuessState.NotGuessed && selected === null
+            guessState === GuessState.NotGuessed && search.selected === null
               ? "red"
               : undefined
           }
           onClick={() => {
             if (guessState === GuessState.NotGuessed) {
               const correct =
-                selected !== null && selected.id === tank.id && !helpingReveal;
+                search.selected !== null &&
+                search.selected.id === tank.id &&
+                !helpingReveal;
 
               Guess.mutate((draft) => {
                 draft.guessState = correct
@@ -341,14 +237,12 @@ export function Guesser() {
               const tank = tankDefinitions.tanks[id];
 
               Guess.mutate((draft) => {
-                if (!input.current) return;
-
                 draft.tank = tank;
                 draft.guessState = GuessState.NotGuessed;
                 draft.helpingReveal = false;
-
-                input.current.value = "";
               });
+
+              search.clear();
             }
           }}
         >
@@ -356,10 +250,14 @@ export function Guesser() {
             <>
               {
                 strings.website.tools.guess.search[
-                  selected === null ? "skip" : "guess"
+                  search.selected === null ? "skip" : "guess"
                 ]
               }
-              {selected === null ? <ArrowRightIcon /> : <PaperPlaneIcon />}
+              {search.selected === null ? (
+                <ArrowRightIcon />
+              ) : (
+                <PaperPlaneIcon />
+              )}
             </>
           ) : (
             <>

@@ -1,18 +1,58 @@
 ---
+import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import GuessModeCard from "../../../../components/GuessModeCard.astro";
 import ToolOpenGraph from "../../../../components/ToolOpenGraph.astro";
+import { guessModes, type GuessMode } from "../../../../constants/guessModes";
 import { tools } from "../../../../constants/tools";
+import { getStrings } from "../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
+const MAX_MODES_PER_ROW = 2;
+
 const { locale } = Astro.props;
+const strings = getStrings(locale);
+const rows: GuessMode[][] = [];
+
+for (const id in guessModes) {
+  const mode = guessModes[id];
+  const compatibleRow = rows.find((row) => row.length < MAX_MODES_PER_ROW);
+
+  if (compatibleRow) {
+    compatibleRow.push(mode);
+  } else {
+    rows.push([mode]);
+  }
+}
 ---
 
 <ToolOpenGraph {locale} tool={tools.guess} />
 
-<BaseLayout {locale} noFooter>
-  <Page {locale} client:only="react">
-    <Page {locale} skeleton slot="fallback" />
-  </Page>
+<BaseLayout {locale}>
+  <Flex p="4" justify="center" mt="3">
+    <Flex maxWidth="80rem" flexGrow="1" gap="4" direction="column">
+      <Flex direction="column" align="center" gap="1" my="4">
+        <Heading size="8" weight="bold">
+          {strings.website.tools.guess.name}
+        </Heading>
+        <Text color="gray" align="center">
+          {strings.website.tools.guess.modes_description}
+        </Text>
+      </Flex>
+
+      {
+        rows.map((row) => (
+          <Flex gap="4" direction={{ initial: "column", sm: "row" }}>
+            {row.map((mode) => (
+              <GuessModeCard {locale} {mode} />
+            ))}
+            {row.length < MAX_MODES_PER_ROW && <Box flexGrow="1" />}
+          </Flex>
+        ))
+      }
+    </Flex>
+  </Flex>
+
+  <div style={{ flex: 1 }}></div>
 </BaseLayout>
