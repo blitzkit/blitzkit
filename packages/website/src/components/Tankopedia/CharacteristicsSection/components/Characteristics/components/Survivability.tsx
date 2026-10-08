@@ -24,6 +24,14 @@ export function Survivability({ stats }: StatsAcceptorProps) {
         decimals={0}
         value={(stats) => stats.fireChance * 100}
       />
+      {stats.trackRepairTime !== undefined && (
+        <InfoWithDelta
+          value="trackRepairTime"
+          stats={stats}
+          deltaType="lowerIsBetter"
+          decimals={2}
+        />
+      )}
       <InfoWithDelta value="viewRange" stats={stats} decimals={0} />
       <ViewRangeVisualizer stats={stats} />
       <Info

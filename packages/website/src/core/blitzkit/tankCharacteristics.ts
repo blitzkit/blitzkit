@@ -119,6 +119,7 @@ export function tankCharacteristics(
   const hasImprovedVerticalStabilizer = equipment(122);
   const hasDownImprovedVerticalStabilizer = equipment(124);
   const hasImprovedSuspension = equipment(123);
+  const hasToolbox = equipment(113);
 
   const hasTungsten = consumable(45);
   const hasAdrenaline = consumable(18);
@@ -518,6 +519,12 @@ export function tankCharacteristics(
   }
 
   const fireChance = engine.fire_chance * fireChanceCoefficient;
+  const trackRepairTime = track.repair_time
+    ? track.repair_time /
+      ((hasToolbox ? 1.2 : 1) *
+        (1 + (crewSkills.repair ?? 0) * 0.04) *
+        (hasProtectiveKit ? 1.1 : 1))
+    : undefined;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
   const camouflageMoving =
@@ -602,6 +609,7 @@ export function tankCharacteristics(
     hullTraverseSoftTerrain,
     health,
     fireChance,
+    trackRepairTime,
     viewRange,
     camouflageStill,
     camouflageMoving,
