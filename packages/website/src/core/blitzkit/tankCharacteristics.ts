@@ -8,8 +8,8 @@ import {
   resolvePenetrationCoefficient,
   ShellType,
   sum,
+  tankBoundingBox,
   TankClass,
-  unionBoundingBox,
   type EngineDefinition,
   type EquipmentDefinitions,
   type GunDefinition,
@@ -335,10 +335,7 @@ export function tankCharacteristics(
   );
 
   const size = normalizeBoundingBox(
-    unionBoundingBox(
-      tankModelDefinition.bounding_box!,
-      turretModelDefinition.bounding_box!,
-    ),
+    tankBoundingBox(tankModelDefinition, turretModelDefinition),
   );
   const weightKg =
     tank.weight + engine.weight + track.weight + turret.weight + gun.weight;

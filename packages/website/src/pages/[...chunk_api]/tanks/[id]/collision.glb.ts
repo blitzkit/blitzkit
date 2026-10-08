@@ -1,16 +1,15 @@
 import {
+  parseHierarchies,
   Sc2ReadStream,
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
   vertexAttributeVectorSizes,
-  type Hierarchy,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { Accessor, Document, Node, NodeIO, Scene } from "@gltf-transform/core";
 import type { APIContext } from "astro";
-import { times } from "lodash-es";
 import { vfs } from "../../../../core/blitzkit/vfs";
 
 export { getStaticPaths } from "./_index";
@@ -56,13 +55,10 @@ async function extractArmor(vfs: AbstractVFS, fileName: string) {
   const scene = document.createScene();
   const buffer = document.createBuffer();
 
-  function parseHierarchies(hierarchies: Hierarchy[], parent: Scene | Node) {
-    hierarchies.forEach((hierarchy) => {
-      const components = times(
-        hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, "0")],
-      );
-
+  parseHierarchies<Scene | Node>(
+    sc2["#hierarchy"],
+    scene,
+    (hierarchy, components, parent) => {
       components.forEach((component) => {
         switch (component["comp.typename"]) {
           case "TransformComponent":
@@ -163,13 +159,9 @@ async function extractArmor(vfs: AbstractVFS, fileName: string) {
         }
       });
 
-      if (hierarchy["#hierarchy"]) {
-        parseHierarchies(hierarchy["#hierarchy"], parent);
-      }
-    });
-  }
-
-  parseHierarchies(sc2["#hierarchy"], scene);
+      return parent;
+    },
+  );
 
   return document;
 }
