@@ -5,10 +5,21 @@ package blitzkit;
 import "i18n.proto";
 
 message MapDefinitions {
-  map<int32, MapDefinition> maps = 1;
+  map<int32, MapDefinition> maps  = 1;
+  map<uint32, MapMode>      modes = 2;
 }
 
 message MapDefinition {
-  required uint32     id   = 1;
-  required I18nString name = 2;
+  required uint32     id               = 1;
+  required I18nString name             = 2;
+  required uint32     model_id         = 3;
+  required string     slug             = 4;
+  repeated uint32     modes            = 5;
+  optional uint32     supremacy_points = 6;
+  required bool       training_room    = 7;
+}
+
+message MapMode {
+  required I18nString name        = 1;
+  optional I18nString description = 2;
 }

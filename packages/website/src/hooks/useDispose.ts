@@ -1,6 +1,14 @@
 import { useLoader, type ObjectMap } from "@react-three/fiber";
 import { useEffect } from "react";
-import { Cache, Group, Mesh, MeshStandardMaterial, Object3D } from "three";
+import {
+  Cache,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+  ShaderMaterial,
+  Texture,
+} from "three";
 import { GLTFLoader, type GLTF } from "three-stdlib";
 
 const users: Record<string, number> = {};
@@ -35,6 +43,22 @@ export function useDispose(gltf: GLTF & ObjectMap, path: string) {
 
             for (const map of maps) {
               if (!map) continue;
+
+              if (map.source.data instanceof ImageBitmap) {
+                map.source.data.close();
+              }
+
+              map.dispose();
+            }
+
+            object.material.dispose();
+          } else if (object.material instanceof ShaderMaterial) {
+            for (const uniform of Object.values(object.material.uniforms)) {
+              const map = uniform.value;
+
+              if (!(map instanceof Texture) || map.isRenderTargetTexture) {
+                continue;
+              }
 
               if (map.source.data instanceof ImageBitmap) {
                 map.source.data.close();

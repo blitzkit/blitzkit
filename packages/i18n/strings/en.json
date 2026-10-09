@@ -809,6 +809,16 @@
           }
         }
       },
+      "maps": {
+        "name": "Maps",
+        "button": "Explore",
+        "description": "Explore maps in 3D",
+        "seo_description": "Explore World of Tanks Blitz maps in 3D",
+        "search": "Search maps...",
+        "recent": "Recently viewed",
+        "reset_view": "Reset view",
+        "minimap": "Minimap"
+      },
       "gallery": {
         "name": "Gallery",
         "button": "Browse all",
