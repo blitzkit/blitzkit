@@ -27,6 +27,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { Suspense, useState, type RefObject } from "react";
+import { DIALOG_MAX_HEIGHT } from "../../../../../constants/dialog";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
 import { useEquipment } from "../../../../../hooks/useEquipment";
 import { useFullScreen } from "../../../../../hooks/useFullScreen";
@@ -485,7 +486,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 </Button>
               </Dialog.Trigger>
 
-              <Dialog.Content>
+              <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
                 <Dialog.Title align="center">
                   {strings.website.common.tank_search.select_dialog_title}
                 </Dialog.Title>
