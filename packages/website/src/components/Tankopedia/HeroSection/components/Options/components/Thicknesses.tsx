@@ -31,11 +31,11 @@ export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
   return (
     <Flex
       position="absolute"
-      right={display === TankopediaDisplay.StaticArmor ? "0" : "-6rem"}
+      right="0"
       top="50%"
       mr="4"
       style={{
-        transform: "translateY(-50%)",
+        transform: `translate(${display === TankopediaDisplay.StaticArmor ? "0" : "calc(100% + var(--space-4))"}, -50%)`,
         userSelect: "none",
         transitionDuration: "200ms",
       }}
