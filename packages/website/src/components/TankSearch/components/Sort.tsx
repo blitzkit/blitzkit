@@ -35,6 +35,7 @@ function Item({ by }: ItemProps) {
 
 export function Sort() {
   const direction = TankSort.use((state) => state.direction);
+  const equalize = TankSort.use((state) => state.equalize);
   const { strings } = useLocale();
 
   return (
@@ -112,6 +113,27 @@ export function Sort() {
             <Item by="survivability.length" />
           </DropdownMenu.SubContent>
         </DropdownMenu.Sub>
+
+        <DropdownMenu.Label>
+          {
+            strings.website.common.tank_search.sort_dropdown.groups.equalizer
+              .label
+          }
+        </DropdownMenu.Label>
+        <DropdownMenu.CheckboxItem
+          checked={equalize}
+          onSelect={(event) => event.preventDefault()}
+          onCheckedChange={(checked) => {
+            TankSort.mutate((draft) => {
+              draft.equalize = checked;
+            });
+          }}
+        >
+          {
+            strings.website.common.tank_search.sort_dropdown.groups.equalizer
+              .equalize
+          }
+        </DropdownMenu.CheckboxItem>
 
         <DropdownMenu.Label>
           {
