@@ -25,7 +25,7 @@ import { FilterControl } from "./TankSearch/components/FilterControl";
 const tankDefinitions = await api.tankDefinitions();
 
 const POOL_HEIGHT = "16rem";
-const FILTERS_WIDTH = "22rem";
+const FILTERS_WIDTH = "32rem";
 
 export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
   const [largeWarningOpen, setLargeWarningOpen] = useState(false);
@@ -90,7 +90,7 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
           <Flex
             direction="column"
             gap="4"
-            align="stretch"
+            align="center"
             flexShrink="0"
             width={{ initial: "100%", md: FILTERS_WIDTH }}
           >
