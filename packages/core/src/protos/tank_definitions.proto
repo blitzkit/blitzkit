@@ -42,6 +42,7 @@ message TankDefinition {
   required string           dev_name           = 32;
   optional Equalizer        equalizer          = 33;
   optional I18nString       name_full          = 34;
+  repeated string           mechanics          = 35;
 }
 
 message Equalizer {
