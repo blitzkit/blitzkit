@@ -103,12 +103,12 @@ function ModuleChooser({
             {...props}
           >
             {skeleton ? (
-              <Skeleton width="clamp(2rem, 11vw, 4em)" height="2em" />
+              <Skeleton width="4em" height="2em" />
             ) : (
               <img
                 style={{
-                  width: "clamp(2rem, 11vw, 4em)",
-                  height: "clamp(2rem, 11vw, 4em)",
+                  width: "4em",
+                  height: "4em",
                   objectFit: "contain",
                 }}
                 src={alias("api", `/tanks/${tank}/icons/big.webp`)}
