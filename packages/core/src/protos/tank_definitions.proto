@@ -87,6 +87,7 @@ message TrackDefinition {
   required float        resistance_medium   = 10;
   required float        resistance_soft     = 11;
   repeated Unlock       unlocks             = 12;
+  required float        repair_time         = 13;
 }
 
 message EngineDefinition {
