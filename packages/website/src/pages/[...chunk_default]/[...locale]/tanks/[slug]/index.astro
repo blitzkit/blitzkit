@@ -36,9 +36,11 @@ const skillDefinitions = await api.skillDefinitions();
 const provisionDefinitions = await api.provisionDefinitions();
 const equipmentDefinitions = await api.equipmentDefinitions();
 const tankModelDefinitions = await api.modelDefinitions();
+const descriptionDefinitions = await api.descriptionDefinitions();
 
 const tank = tankDefinitions.tanks[id];
 const tankModelDefinition = tankModelDefinitions.models[tank.id];
+const tankDescription = descriptionDefinitions.descriptions[tank.id];
 const unwrap = unwrapper(locale);
 const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
   name: unwrap(tank.name!),
@@ -124,7 +126,20 @@ if (guideResponse.ok) {
 <meta name="twitter:image:src" content={icon} />
 
 <BaseLayout {locale} integrated>
-  <Page {locale} id={id} {guide} client:only="react">
-    <Page {locale} id={id} {guide} skeleton slot="fallback" />
+  <Page
+    {locale}
+    id={id}
+    {guide}
+    description={tankDescription}
+    client:only="react"
+  >
+    <Page
+      {locale}
+      id={id}
+      {guide}
+      description={tankDescription}
+      skeleton
+      slot="fallback"
+    />
   </Page>
 </BaseLayout>
