@@ -683,6 +683,7 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Camouflage still",
             "camouflageMoving": "Moving",

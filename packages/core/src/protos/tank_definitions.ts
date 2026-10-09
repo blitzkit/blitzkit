@@ -338,6 +338,7 @@ export interface TrackDefinition {
   resistance_medium: number;
   resistance_soft: number;
   unlocks: Unlock[];
+  repair_time: number;
 }
 
 export interface EngineDefinition {
@@ -1759,6 +1760,7 @@ function createBaseTrackDefinition(): TrackDefinition {
     resistance_medium: 0,
     resistance_soft: 0,
     unlocks: [],
+    repair_time: 0,
   };
 }
 
@@ -1799,6 +1801,9 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
     }
     for (const v of message.unlocks) {
       Unlock.encode(v!, writer.uint32(98).fork()).join();
+    }
+    if (message.repair_time !== 0) {
+      writer.uint32(109).float(message.repair_time);
     }
     return writer;
   },
@@ -1906,6 +1911,14 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
           message.unlocks.push(Unlock.decode(reader, reader.uint32()));
           continue;
         }
+        case 13: {
+          if (tag !== 109) {
+            break;
+          }
+
+          message.repair_time = reader.float();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1929,6 +1942,7 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
       resistance_medium: isSet(object.resistance_medium) ? globalThis.Number(object.resistance_medium) : 0,
       resistance_soft: isSet(object.resistance_soft) ? globalThis.Number(object.resistance_soft) : 0,
       unlocks: globalThis.Array.isArray(object?.unlocks) ? object.unlocks.map((e: any) => Unlock.fromJSON(e)) : [],
+      repair_time: isSet(object.repair_time) ? globalThis.Number(object.repair_time) : 0,
     };
   },
 
@@ -1970,6 +1984,9 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
     if (message.unlocks?.length) {
       obj.unlocks = message.unlocks.map((e) => Unlock.toJSON(e));
     }
+    if (message.repair_time !== 0) {
+      obj.repair_time = message.repair_time;
+    }
     return obj;
   },
 
@@ -1994,6 +2011,7 @@ export const TrackDefinition: MessageFns<TrackDefinition> = {
     message.resistance_medium = object.resistance_medium ?? 0;
     message.resistance_soft = object.resistance_soft ?? 0;
     message.unlocks = object.unlocks?.map((e) => Unlock.fromPartial(e)) || [];
+    message.repair_time = object.repair_time ?? 0;
     return message;
   },
 };
