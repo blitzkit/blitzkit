@@ -1,13 +1,20 @@
 import { Link, Table } from '@radix-ui/themes';
 import MarkdownToJSX from 'markdown-to-jsx';
 import type { ComponentProps } from 'react';
+import { docImageUrl, isExternalImage } from '../core/blitzkit/docImages';
 
 interface MarkdownProps {
   children: string;
 }
 
-function Image(props: ComponentProps<'img'>) {
-  return <img style={{ maxWidth: '100%' }} {...props} />;
+function Image({ src, ...props }: ComponentProps<'img'>) {
+  return (
+    <img
+      style={{ maxWidth: '100%' }}
+      src={src && isExternalImage(src) ? docImageUrl(src) : src}
+      {...props}
+    />
+  );
 }
 
 export function Markdown({ children }: MarkdownProps) {
