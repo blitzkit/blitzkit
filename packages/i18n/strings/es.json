@@ -623,6 +623,7 @@
             "hullTraverseSoftTerrain": "Suave",
             "health": "Salud",
             "fireChance": "Probabilidad de incendio",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Rango de visión",
             "camouflageStill": "Quieto",
             "camouflageMoving": "En movimiento",

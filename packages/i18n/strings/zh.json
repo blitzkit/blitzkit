@@ -623,6 +623,7 @@
             "hullTraverseSoftTerrain": "水面上车转速率",
             "health": "血量",
             "fireChance": "发动机受击时着火概率",
+            "trackRepairTime": "Track repair time",
             "viewRange": "视野范围",
             "camouflageStill": "静止隐蔽",
             "camouflageMoving": "移动时",

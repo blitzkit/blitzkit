@@ -623,6 +623,7 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Здоров'я",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Нерухомо",
             "camouflageMoving": "У русі",
