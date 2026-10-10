@@ -1,5 +1,5 @@
 ---
-import { Heading, Text } from "@radix-ui/themes";
+import { Grid, Heading, Text } from "@radix-ui/themes";
 import { credits } from "../config/credits";
 import { getStrings } from "../core/i18n/getStrings";
 
@@ -28,30 +28,38 @@ const strings = getStrings(locale);
       width: 100%;
       max-width: 80rem;
 
-      .group {
-        display: flex;
-        flex-direction: column;
-
+      .list {
         gap: var(--space-5);
 
-        .person {
-          display: flex;
-          align-items: center;
+        .link {
+          display: contents;
 
-          gap: var(--space-2);
+          .person {
+            --profile-size: 5rem;
 
-          .profile {
             display: flex;
             flex-direction: column;
 
+            background-color: var(--gray-3);
+
+            padding: var(--space-4);
+            padding-top: 0;
+            margin-top: calc(var(--profile-size) / 2);
             gap: var(--space-1);
+
+            box-shadow: var(--shadow-2);
+            border-radius: var(--radius-3);
 
             img {
               border-radius: 50%;
 
+              margin-top: calc(var(--profile-size) / -2);
+
               object-fit: cover;
-              width: 5rem;
-              height: 5rem;
+              width: var(--profile-size);
+              height: var(--profile-size);
+
+              margin-bottom: var(--space-2);
             }
           }
         }
@@ -62,23 +70,30 @@ const strings = getStrings(locale);
 
 <div class="credits">
   <div class="inner">
-    <Heading>{strings.credits.title}</Heading>
+    <Heading align="center">{strings.credits.title}</Heading>
 
-    {
-      credits.map((group) => (
-        <div data-type={group.type} class="group">
-          {group.people.map((person) => (
+    <Grid
+      className="list"
+      py="4"
+      columns="repeat(auto-fill, minmax(12rem, 1fr))"
+      flow="dense"
+      gap="4"
+      gapY="8"
+    >
+      {
+        credits.map((person) => (
+          <a href={person.url} class="link">
             <div class="person">
-              <div class="profile">
-                <img src={person.image} />
-                <Text>{person.name}</Text>
-              </div>
+              <img src={person.image} />
 
-              <Text>{person.description}</Text>
+              <Text color="gray" highContrast>
+                {person.name}
+              </Text>
+              <Text color="gray">{person.description}</Text>
             </div>
-          ))}
-        </div>
-      ))
-    }
+          </a>
+        ))
+      }</Grid
+    >
   </div>
 </div>
