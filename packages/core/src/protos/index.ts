@@ -2,6 +2,7 @@
 export * from "./average_definitions.ts";
 export * from "./camouflage_definitions.ts";
 export * from "./consumable_definitions.ts";
+export * from "./description_definitions.ts";
 export * from "./equipment_definitions.ts";
 export * from "./gallery.ts";
 export * from "./game_definitions.ts";

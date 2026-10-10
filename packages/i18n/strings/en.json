@@ -555,6 +555,14 @@
           "research": "Research XP"
         },
 
+        "description_section": {
+          "title": "History",
+          "games": {
+            "blitz": "World of Tanks Blitz",
+            "wot": "World of Tanks"
+          },
+          "copyright": "© Wargaming.net"
+        },
         "tech_tree": {
           "title": "Tech tree",
           "battle": "1 battle",
