@@ -623,6 +623,7 @@
             "hullTraverseSoftTerrain": "На мягком грунте",
             "health": "Прочность",
             "fireChance": "Вероятность возгорания",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Радиус обзора",
             "camouflageStill": "Когда неподвижен",
             "camouflageMoving": "В движении",
