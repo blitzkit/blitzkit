@@ -45,6 +45,7 @@ import { SmallTankIcon } from "../../../../SmallTankIcon";
 import { TankSearch } from "../../../../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
+import { ModelDownloadButton } from "./components/ModelDownloadButton";
 import { QuickInputs } from "./components/QuickInputs";
 import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 import { Thicknesses } from "./components/Thicknesses";
@@ -390,6 +391,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               >
                 <SunIcon />
               </IconButton>
+
+              <ModelDownloadButton />
 
               <ScreenshotButton
                 color="gray"
