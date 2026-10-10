@@ -90,6 +90,36 @@ export const credits: CreditGroup[] = [
         image: "/media/users/s0ap.webp",
       },
       {
+        name: "xkdkw",
+        description: "Former advisor on bot and website",
+        url: "https://www.xkdkw.com/",
+        image: "/media/users/xkdkw.webp",
+      },
+      {
+        name: "Synx",
+        description: "Former advisor on bot and website",
+        url: "https://www.youtube.com/@Synx_Blitz",
+        image: "/media/users/synx.webp",
+      },
+      {
+        name: "34wotb",
+        description: "Former advisor on bot",
+        url: "https://www.twitch.tv/34wotb/",
+        image: "/media/users/34wotb.jpg",
+      },
+      {
+        name: "HisRoyalFatness",
+        description: "Former advisor on website",
+        url: "https://www.youtube.com/@hisroyalfatness",
+        image: "/media/users/hisroyalfatness.jpg",
+      },
+      {
+        name: "Droodles Blitz",
+        description: "Former advisor on website",
+        url: "https://www.youtube.com/@DroodlesBlitz",
+        image: "/media/users/droodles-blitz.jpg",
+      },
+      {
         name: "Minitelrose",
         description: "Former advisor on game mechanics",
         url: "https://wotinspector.com/",
