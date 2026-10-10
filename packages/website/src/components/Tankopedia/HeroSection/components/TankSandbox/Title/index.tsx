@@ -1,10 +1,15 @@
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Heading } from "@radix-ui/themes";
+import { SKIN_NUMBER } from "../../../../../../constants/skinNumber";
+import { api } from "../../../../../../core/blitzkit/api";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
+import { SkinTracker } from "./components/SkinTracker";
 import { Tracker } from "./components/Tracker";
+
+const camouflageDefinitions = await api.camouflageDefinitions();
 
 export function Title({ skeleton }: MaybeSkeletonComponentProps) {
   const { unwrap, strings } = useLocale();
@@ -12,7 +17,13 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const name = unwrap(protagonist.name!);
+  const skin = Tankopedia.use((state) => state.skin);
+  const camouflage =
+    skin === undefined ? undefined : camouflageDefinitions.camouflages[skin];
+  const tankName = unwrap(protagonist.name!);
+  const name = camouflage
+    ? `${tankName} ${unwrap(camouflage.name!).replace("%(camo_num)", SKIN_NUMBER)}`
+    : tankName;
   const fontSize = revealed
     ? disturbed
       ? "1.5rem"
@@ -68,6 +79,8 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
       {!skeleton && !revealed && modelRequested && (
         <Tracker fontSize={fontSize} />
       )}
+
+      {!skeleton && revealed && <SkinTracker fontSize={fontSize} />}
 
       {!skeleton && !modelRequested && (
         <Flex

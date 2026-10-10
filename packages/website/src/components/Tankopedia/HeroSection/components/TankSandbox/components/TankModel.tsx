@@ -1,12 +1,20 @@
 import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useRef } from "react";
-import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
+import {
+  Group,
+  Material,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+  Vector2,
+} from "three";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../../../core/blitzkit/jsxTree";
 import { modelTransformEvent } from "../../../../../../core/blitzkit/modelTransform";
 import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
 import { useModel } from "../../../../../../hooks/useModel";
+import { useSkin } from "../../../../../../hooks/useSkin";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
 import { useTankTransform } from "../../../../../../hooks/useTankTransform";
 import { Duel } from "../../../../../../stores/duel";
@@ -28,8 +36,49 @@ export function TankModel() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
+  const skin = Tankopedia.use((state) => state.skin);
+  const skinGltf = useSkin(protagonist.tank.id, skin);
+  const skinNodes = new Map(
+    skinGltf?.scene.children.map((node) => [node.name, node]),
+  );
 
   useTankTransform(track, turret, turretContainer, gunContainer);
+
+  function skinTree(node: Object3D, mergers: Parameters<typeof jsxTree>[1]) {
+    const skinMergers: Parameters<typeof jsxTree>[1] = {
+      mesh(mesh, props, key) {
+        const material = skinGltf?.materials.get(
+          (mesh.material as Material).name,
+        );
+
+        return mergers!.mesh!(
+          mesh,
+          material ? { ...props, material } : props,
+          key,
+        );
+      },
+      group(object3d, props, key) {
+        const skinNode = skinNodes.get(object3d.name);
+        const isSwitch = object3d.userData.state !== undefined;
+        const state = skinGltf
+          ? skinGltf.scene.userData.states[object3d.name]
+          : object3d.userData.state;
+
+        return (
+          <group key={key} {...props}>
+            {isSwitch
+              ? object3d.children
+                  .filter((child) => child.name === state)
+                  .map((child) => jsxTree(child, skinMergers))
+              : props.children}
+            {skinNode?.children.map((child) => jsxTree(child, mergers))}
+          </group>
+        );
+      },
+    };
+
+    return jsxTree(node, skinMergers);
+  }
 
   return (
     <ModelTankWrapper ref={hullContainer}>
@@ -92,7 +141,7 @@ export function TankModel() {
           window.removeEventListener("pointerup", handlePointerUp);
         }
 
-        return jsxTree(node, {
+        return skinTree(node, {
           mesh(_, props, key) {
             return (
               <mesh
@@ -169,7 +218,7 @@ export function TankModel() {
             window.removeEventListener("pointerup", handlePointerUp);
           }
 
-          return jsxTree(node, {
+          return skinTree(node, {
             mesh(_, props, key) {
               return (
                 <mesh
@@ -250,7 +299,7 @@ export function TankModel() {
               window.removeEventListener("pointerup", handlePointerUp);
             }
 
-            return jsxTree(node, {
+            return skinTree(node, {
               mesh(_, props, key) {
                 return (
                   <mesh
