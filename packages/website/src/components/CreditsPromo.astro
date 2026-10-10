@@ -1,0 +1,73 @@
+---
+import { Heading, Text } from "@radix-ui/themes";
+import { credits } from "../config/credits";
+import { getStrings } from "../core/i18n/getStrings";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = getStrings(locale);
+---
+
+<style>
+  .credits {
+    display: flex;
+    justify-content: center;
+
+    padding: var(--space-6) 0;
+    margin-bottom: var(--space-4);
+
+    .inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+
+      width: 100%;
+      max-width: 80rem;
+
+      .group {
+        display: flex;
+        flex-direction: column;
+
+        gap: var(--space-4);
+
+        .person {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          gap: var(--space-2);
+
+          .group[data-type="primary"] & {
+            img {
+              width: 7rem;
+              height: 7rem;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<div class="credits">
+  <div class="inner">
+    <Heading>{strings.credits.title}</Heading>
+
+    {
+      credits.map((group) => (
+        <div data-type={group.type} class="group">
+          {group.people.map((person) => (
+            <div class="person">
+              <img src={person.image} />
+              <Text>{person.name}</Text>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

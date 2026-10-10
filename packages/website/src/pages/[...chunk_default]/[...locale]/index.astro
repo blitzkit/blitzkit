@@ -5,6 +5,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import { AesonPlug } from "../../../components/AesonPlug";
+import CreditsPromo from "../../../components/CreditsPromo.astro";
 import HomeHero from "../../../components/HomeHero.astro";
 import { Plugs } from "../../../components/Plugs";
 import ToolCard from "../../../components/ToolCard.astro";
@@ -112,6 +113,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
       }
     </Flex>
   </Flex>
+
+  <CreditsPromo />
 
   <div style={{ flex: 1 }}></div>
 </BaseLayout>
