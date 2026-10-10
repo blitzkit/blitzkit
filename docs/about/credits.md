@@ -42,6 +42,6 @@ Tankopedia pre-release testing.
 
 Redacted by request.
 
-### Mark Greene
+### HitJack
 
 GitHub contributor on bug fixes and feature additions.
