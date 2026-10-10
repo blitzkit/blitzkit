@@ -12,6 +12,7 @@ export const protobufPackage = "blitzkit";
 
 export interface MapDefinitions {
   maps: { [key: number]: MapDefinition };
+  modes: { [key: number]: MapMode };
 }
 
 export interface MapDefinitions_MapsEntry {
@@ -19,19 +20,37 @@ export interface MapDefinitions_MapsEntry {
   value: MapDefinition | undefined;
 }
 
+export interface MapDefinitions_ModesEntry {
+  key: number;
+  value: MapMode | undefined;
+}
+
 export interface MapDefinition {
   id: number;
   name: I18nString | undefined;
+  model_id: number;
+  slug: string;
+  modes: number[];
+  supremacy_points?: number | undefined;
+  training_room: boolean;
+}
+
+export interface MapMode {
+  name: I18nString | undefined;
+  description?: I18nString | undefined;
 }
 
 function createBaseMapDefinitions(): MapDefinitions {
-  return { maps: {} };
+  return { maps: {}, modes: {} };
 }
 
 export const MapDefinitions: MessageFns<MapDefinitions> = {
   encode(message: MapDefinitions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.maps).forEach(([key, value]) => {
       MapDefinitions_MapsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
+    });
+    Object.entries(message.modes).forEach(([key, value]) => {
+      MapDefinitions_ModesEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     return writer;
   },
@@ -54,6 +73,17 @@ export const MapDefinitions: MessageFns<MapDefinitions> = {
           }
           continue;
         }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          const entry2 = MapDefinitions_ModesEntry.decode(reader, reader.uint32());
+          if (entry2.value !== undefined) {
+            message.modes[entry2.key] = entry2.value;
+          }
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -71,6 +101,12 @@ export const MapDefinitions: MessageFns<MapDefinitions> = {
           return acc;
         }, {})
         : {},
+      modes: isObject(object.modes)
+        ? Object.entries(object.modes).reduce<{ [key: number]: MapMode }>((acc, [key, value]) => {
+          acc[globalThis.Number(key)] = MapMode.fromJSON(value);
+          return acc;
+        }, {})
+        : {},
     };
   },
 
@@ -85,6 +121,15 @@ export const MapDefinitions: MessageFns<MapDefinitions> = {
         });
       }
     }
+    if (message.modes) {
+      const entries = Object.entries(message.modes);
+      if (entries.length > 0) {
+        obj.modes = {};
+        entries.forEach(([k, v]) => {
+          obj.modes[k] = MapMode.toJSON(v);
+        });
+      }
+    }
     return obj;
   },
 
@@ -96,6 +141,12 @@ export const MapDefinitions: MessageFns<MapDefinitions> = {
     message.maps = Object.entries(object.maps ?? {}).reduce<{ [key: number]: MapDefinition }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[globalThis.Number(key)] = MapDefinition.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.modes = Object.entries(object.modes ?? {}).reduce<{ [key: number]: MapMode }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[globalThis.Number(key)] = MapMode.fromPartial(value);
       }
       return acc;
     }, {});
@@ -181,8 +232,86 @@ export const MapDefinitions_MapsEntry: MessageFns<MapDefinitions_MapsEntry> = {
   },
 };
 
+function createBaseMapDefinitions_ModesEntry(): MapDefinitions_ModesEntry {
+  return { key: 0, value: undefined };
+}
+
+export const MapDefinitions_ModesEntry: MessageFns<MapDefinitions_ModesEntry> = {
+  encode(message: MapDefinitions_ModesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.key !== 0) {
+      writer.uint32(8).uint32(message.key);
+    }
+    if (message.value !== undefined) {
+      MapMode.encode(message.value, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MapDefinitions_ModesEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMapDefinitions_ModesEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.key = reader.uint32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = MapMode.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MapDefinitions_ModesEntry {
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? MapMode.fromJSON(object.value) : undefined,
+    };
+  },
+
+  toJSON(message: MapDefinitions_ModesEntry): unknown {
+    const obj: any = {};
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== undefined) {
+      obj.value = MapMode.toJSON(message.value);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MapDefinitions_ModesEntry>, I>>(base?: I): MapDefinitions_ModesEntry {
+    return MapDefinitions_ModesEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MapDefinitions_ModesEntry>, I>>(object: I): MapDefinitions_ModesEntry {
+    const message = createBaseMapDefinitions_ModesEntry();
+    message.key = object.key ?? 0;
+    message.value = (object.value !== undefined && object.value !== null)
+      ? MapMode.fromPartial(object.value)
+      : undefined;
+    return message;
+  },
+};
+
 function createBaseMapDefinition(): MapDefinition {
-  return { id: 0, name: undefined };
+  return { id: 0, name: undefined, model_id: 0, slug: "", modes: [], supremacy_points: 0, training_room: false };
 }
 
 export const MapDefinition: MessageFns<MapDefinition> = {
@@ -192,6 +321,21 @@ export const MapDefinition: MessageFns<MapDefinition> = {
     }
     if (message.name !== undefined) {
       I18nString.encode(message.name, writer.uint32(18).fork()).join();
+    }
+    if (message.model_id !== 0) {
+      writer.uint32(24).uint32(message.model_id);
+    }
+    if (message.slug !== "") {
+      writer.uint32(34).string(message.slug);
+    }
+    for (const v of message.modes) {
+      writer.uint32(40).uint32(v!);
+    }
+    if (message.supremacy_points !== undefined && message.supremacy_points !== 0) {
+      writer.uint32(48).uint32(message.supremacy_points);
+    }
+    if (message.training_room !== false) {
+      writer.uint32(56).bool(message.training_room);
     }
     return writer;
   },
@@ -219,6 +363,56 @@ export const MapDefinition: MessageFns<MapDefinition> = {
           message.name = I18nString.decode(reader, reader.uint32());
           continue;
         }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.model_id = reader.uint32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.slug = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag === 40) {
+            message.modes.push(reader.uint32());
+
+            continue;
+          }
+
+          if (tag === 42) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.modes.push(reader.uint32());
+            }
+
+            continue;
+          }
+
+          break;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.supremacy_points = reader.uint32();
+          continue;
+        }
+        case 7: {
+          if (tag !== 56) {
+            break;
+          }
+
+          message.training_room = reader.bool();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -232,6 +426,11 @@ export const MapDefinition: MessageFns<MapDefinition> = {
     return {
       id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      model_id: isSet(object.model_id) ? globalThis.Number(object.model_id) : 0,
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
+      modes: globalThis.Array.isArray(object?.modes) ? object.modes.map((e: any) => globalThis.Number(e)) : [],
+      supremacy_points: isSet(object.supremacy_points) ? globalThis.Number(object.supremacy_points) : 0,
+      training_room: isSet(object.training_room) ? globalThis.Boolean(object.training_room) : false,
     };
   },
 
@@ -242,6 +441,21 @@ export const MapDefinition: MessageFns<MapDefinition> = {
     }
     if (message.name !== undefined) {
       obj.name = I18nString.toJSON(message.name);
+    }
+    if (message.model_id !== 0) {
+      obj.model_id = Math.round(message.model_id);
+    }
+    if (message.slug !== "") {
+      obj.slug = message.slug;
+    }
+    if (message.modes?.length) {
+      obj.modes = message.modes.map((e) => Math.round(e));
+    }
+    if (message.supremacy_points !== undefined && message.supremacy_points !== 0) {
+      obj.supremacy_points = Math.round(message.supremacy_points);
+    }
+    if (message.training_room !== false) {
+      obj.training_room = message.training_room;
     }
     return obj;
   },
@@ -254,6 +468,91 @@ export const MapDefinition: MessageFns<MapDefinition> = {
     message.id = object.id ?? 0;
     message.name = (object.name !== undefined && object.name !== null)
       ? I18nString.fromPartial(object.name)
+      : undefined;
+    message.model_id = object.model_id ?? 0;
+    message.slug = object.slug ?? "";
+    message.modes = object.modes?.map((e) => e) || [];
+    message.supremacy_points = object.supremacy_points ?? 0;
+    message.training_room = object.training_room ?? false;
+    return message;
+  },
+};
+
+function createBaseMapMode(): MapMode {
+  return { name: undefined, description: undefined };
+}
+
+export const MapMode: MessageFns<MapMode> = {
+  encode(message: MapMode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== undefined) {
+      I18nString.encode(message.name, writer.uint32(10).fork()).join();
+    }
+    if (message.description !== undefined) {
+      I18nString.encode(message.description, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): MapMode {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMapMode();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = I18nString.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.description = I18nString.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MapMode {
+    return {
+      name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
+      description: isSet(object.description) ? I18nString.fromJSON(object.description) : undefined,
+    };
+  },
+
+  toJSON(message: MapMode): unknown {
+    const obj: any = {};
+    if (message.name !== undefined) {
+      obj.name = I18nString.toJSON(message.name);
+    }
+    if (message.description !== undefined) {
+      obj.description = I18nString.toJSON(message.description);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MapMode>, I>>(base?: I): MapMode {
+    return MapMode.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MapMode>, I>>(object: I): MapMode {
+    const message = createBaseMapMode();
+    message.name = (object.name !== undefined && object.name !== null)
+      ? I18nString.fromPartial(object.name)
+      : undefined;
+    message.description = (object.description !== undefined && object.description !== null)
+      ? I18nString.fromPartial(object.description)
       : undefined;
     return message;
   },

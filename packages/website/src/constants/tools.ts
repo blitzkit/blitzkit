@@ -47,6 +47,10 @@ export const tools: Record<string, Tool> = {
     id: "guess",
     button: "cyan",
   },
+  maps: {
+    id: "maps",
+    button: "green",
+  },
   gallery: {
     id: "gallery",
     button: "gold",

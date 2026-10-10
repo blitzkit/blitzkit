@@ -378,7 +378,7 @@ async function extractModel(vfs: AbstractVFS, path: string) {
   return document;
 }
 
-async function readBaseColor(path: string) {
+export async function readBaseColor(path: string) {
   const raw = await readTexture(path);
   const image = await sharp(raw.data, { raw }).webp().toBuffer();
 
@@ -445,7 +445,7 @@ async function readNormal(path: string, isBase: boolean) {
   return await sharp(raw.data, { raw }).webp().toBuffer();
 }
 
-async function readTexture(path: string) {
+export async function readTexture(path: string) {
   const ddsTexturePath = path.replace(".tex", ".dx11.dds");
   const isDds = await vfs.resolve(ddsTexturePath);
   const resolvedTexturePath = isDds
