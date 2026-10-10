@@ -1,5 +1,6 @@
 import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useRef } from "react";
+import type { QuicklimeEvent } from "quicklime";
+import { useEffect, useRef } from "react";
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
@@ -13,6 +14,7 @@ import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
 import { ModelTankWrapper } from "../../../../../Armor/components/ModelTankWrapper";
+import { transitionEvent } from "./Lighting";
 
 export function TankModel() {
   const protagonist = Duel.use((draft) => draft.protagonist);
@@ -30,6 +32,32 @@ export function TankModel() {
   const nodes = Object.values(gltf.nodes);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
+
+  useEffect(() => {
+    const emissiveMaterials = Object.values(gltf.materials).filter(
+      (material): material is MeshStandardMaterial =>
+        material instanceof MeshStandardMaterial &&
+        material.emissiveMap !== null,
+    );
+    const intensities = emissiveMaterials.map(
+      (material) => material.emissiveIntensity,
+    );
+
+    function handleTransitionEvent(event: QuicklimeEvent<number>) {
+      emissiveMaterials.forEach((material, index) => {
+        material.emissiveIntensity = intensities[index] * event.data;
+      });
+    }
+
+    transitionEvent.on(handleTransitionEvent);
+
+    return () => {
+      transitionEvent.off(handleTransitionEvent);
+      emissiveMaterials.forEach((material, index) => {
+        material.emissiveIntensity = intensities[index];
+      });
+    };
+  }, [gltf]);
 
   return (
     <ModelTankWrapper ref={hullContainer}>
@@ -57,6 +85,7 @@ export function TankModel() {
             material.normalMap,
             material.roughnessMap,
             material.metalnessMap,
+            material.emissiveMap,
           ]);
 
           for (const texture of textures) {

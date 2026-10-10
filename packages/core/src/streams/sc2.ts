@@ -53,6 +53,7 @@ interface Properties {
   attenuationBoxSmoothness: ArrayBuffer;
   baseColorFactor?: ArrayBuffer;
   decalTileCoordScale?: ArrayBuffer;
+  emissiveAlbedoFactor?: ArrayBuffer;
   inGlossiness: ArrayBuffer;
   inSpecularity: ArrayBuffer;
   metalFresnelReflectance: ArrayBuffer;
