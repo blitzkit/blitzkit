@@ -7,9 +7,11 @@ import {
 export interface TankSort {
   by: TankopediaSortBy;
   direction: TankopediaSortDirection;
+  equalize: boolean;
 }
 
 export const TankSort = new Varuna<TankSort>({
   by: 'meta.none',
   direction: 'descending',
+  equalize: false,
 });

@@ -253,7 +253,7 @@
         },
 
         "sort": {
-          "meta.none": "none",
+          "meta.none": "None",
           "survivability.health": "health",
           "survivability.viewRange": "view range",
           "survivability.camouflageStill": "camouflage still",
@@ -294,6 +294,10 @@
               "fire": "Fire",
               "maneuverability": "Maneuverability",
               "survivability": "Survivability"
+            },
+            "equalizer": {
+              "label": "Equalizer",
+              "equalize": "Equalize"
             },
             "direction": {
               "label": "Direction",

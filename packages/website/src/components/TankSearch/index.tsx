@@ -1,7 +1,6 @@
 import {
   metaSortTank,
   normalizeBoundingBox,
-  resolveDpm,
   SEARCH_KEYS,
   unionBoundingBox,
   type TankDefinition,
@@ -15,6 +14,12 @@ import usePromise from "react-promise-suspense";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
 import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
+import {
+  resolveEqualizedDamage,
+  resolveEqualizedDpm,
+  resolveEqualizedHealth,
+  resolveEqualizedPenetration,
+} from "../../core/blitzkit/resolveEqualized";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";
 import { App } from "../../stores/app";
@@ -83,21 +88,20 @@ export const TankSearch = memo<TankSearchProps>(
     const sorted = useMemo(() => {
       if (tankFilters.search === null) {
         let sorted: TankDefinition[];
+        const { equalize } = tankopediaSort;
 
         switch (tankopediaSort.by) {
           case "meta.none":
             sorted = metaSortTank(filtered, gameDefinitions);
             break;
 
-          case "survivability.health": {
-            sorted = filtered.sort((a, b) => {
-              const aHealth = a.health + a.turrets.at(-1)!.health;
-              const bHealth = b.health + b.turrets.at(-1)!.health;
-
-              return aHealth - bHealth;
-            });
+          case "survivability.health":
+            sorted = filtered.sort(
+              (a, b) =>
+                resolveEqualizedHealth(a, equalize) -
+                resolveEqualizedHealth(b, equalize),
+            );
             break;
-          }
 
           case "survivability.viewRange":
             sorted = filtered.sort(
@@ -185,13 +189,17 @@ export const TankSearch = memo<TankSearchProps>(
           case "fire.dpm":
             sorted = filtered.sort(
               (a, b) =>
-                resolveDpm(
+                resolveEqualizedDpm(
+                  a,
                   a.turrets.at(-1)!.guns.at(-1)!,
                   a.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
                 ) -
-                resolveDpm(
+                resolveEqualizedDpm(
+                  b,
                   b.turrets.at(-1)!.guns.at(-1)!,
                   b.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
                 ),
             );
             break;
@@ -200,15 +208,19 @@ export const TankSearch = memo<TankSearchProps>(
             sorted = filtered.sort(
               (a, b) =>
                 (a.turrets.at(-1)!.guns.at(-1)!.shells[1]
-                  ? resolveDpm(
+                  ? resolveEqualizedDpm(
+                      a,
                       a.turrets.at(-1)!.guns.at(-1)!,
                       a.turrets.at(-1)!.guns.at(-1)!.shells[1],
+                      equalize,
                     )
                   : 0) -
                 (b.turrets.at(-1)!.guns.at(-1)!.shells[1]
-                  ? resolveDpm(
+                  ? resolveEqualizedDpm(
+                      b,
                       b.turrets.at(-1)!.guns.at(-1)!,
                       b.turrets.at(-1)!.guns.at(-1)!.shells[1],
+                      equalize,
                     )
                   : 0),
             );
@@ -233,36 +245,72 @@ export const TankSearch = memo<TankSearchProps>(
           case "fire.standardPenetration":
             sorted = filtered.sort(
               (a, b) =>
-                a.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near -
-                b.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near,
+                resolveEqualizedPenetration(
+                  a,
+                  a.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
+                ) -
+                resolveEqualizedPenetration(
+                  b,
+                  b.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
+                ),
             );
             break;
 
           case "fire.premiumPenetration":
             sorted = filtered.sort(
               (a, b) =>
-                (a.turrets.at(-1)!.guns.at(-1)!.shells[1]?.penetration!.near ??
-                  0) -
-                (b.turrets.at(-1)!.guns.at(-1)!.shells[1]?.penetration!.near ??
-                  0),
+                (a.turrets.at(-1)!.guns.at(-1)!.shells[1]
+                  ? resolveEqualizedPenetration(
+                      a,
+                      a.turrets.at(-1)!.guns.at(-1)!.shells[1],
+                      equalize,
+                    )
+                  : 0) -
+                (b.turrets.at(-1)!.guns.at(-1)!.shells[1]
+                  ? resolveEqualizedPenetration(
+                      b,
+                      b.turrets.at(-1)!.guns.at(-1)!.shells[1],
+                      equalize,
+                    )
+                  : 0),
             );
             break;
 
           case "fire.tertiaryPenetration":
             sorted = filtered.sort(
               (a, b) =>
-                (a.turrets.at(-1)!.guns.at(-1)!.shells[2]?.penetration!.near ??
-                  0) -
-                (b.turrets.at(-1)!.guns.at(-1)!.shells[2]?.penetration!.near ??
-                  0),
+                (a.turrets.at(-1)!.guns.at(-1)!.shells[2]
+                  ? resolveEqualizedPenetration(
+                      a,
+                      a.turrets.at(-1)!.guns.at(-1)!.shells[2],
+                      equalize,
+                    )
+                  : 0) -
+                (b.turrets.at(-1)!.guns.at(-1)!.shells[2]
+                  ? resolveEqualizedPenetration(
+                      b,
+                      b.turrets.at(-1)!.guns.at(-1)!.shells[2],
+                      equalize,
+                    )
+                  : 0),
             );
             break;
 
           case "fire.damage":
             sorted = filtered.sort(
               (a, b) =>
-                a.turrets.at(-1)!.guns.at(-1)!.shells[0].armor_damage -
-                b.turrets.at(-1)!.guns.at(-1)!.shells[0].armor_damage,
+                resolveEqualizedDamage(
+                  a,
+                  a.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
+                ) -
+                resolveEqualizedDamage(
+                  b,
+                  b.turrets.at(-1)!.guns.at(-1)!.shells[0],
+                  equalize,
+                ),
             );
             break;
 

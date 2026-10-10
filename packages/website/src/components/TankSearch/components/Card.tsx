@@ -1,11 +1,16 @@
 import {
   normalizeBoundingBox,
-  resolveDpm,
   unionBoundingBox,
   type TankDefinition,
 } from "@blitzkit/core";
 import { useMemo } from "react";
 import { api } from "../../../core/blitzkit/api";
+import {
+  resolveEqualizedDamage,
+  resolveEqualizedDpm,
+  resolveEqualizedHealth,
+  resolveEqualizedPenetration,
+} from "../../../core/blitzkit/resolveEqualized";
 import { resolveReload } from "../../../core/blitzkit/resolveReload";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";
@@ -19,6 +24,7 @@ const modelDefinitions = await api.modelDefinitions();
 
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
   const by = TankSort.use((state) => state.by);
+  const equalize = TankSort.use((state) => state.equalize);
   const discriminator = useMemo(() => {
     if (by.startsWith("meta")) return undefined;
 
@@ -39,7 +45,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "fire.caliber":
         return shell0.caliber.toFixed(0);
       case "fire.damage":
-        return shell0.armor_damage.toFixed(0);
+        return resolveEqualizedDamage(tank, shell0, equalize).toFixed(0);
       case "fire.moduleDamage":
         return shell0.module_damage.toFixed(0);
       case "fire.dispersionMoving":
@@ -47,17 +53,23 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "fire.dispersionStill":
         return gun.dispersion_base.toFixed(3);
       case "fire.dpm":
-        return resolveDpm(gun, shell0).toFixed(0);
+        return resolveEqualizedDpm(tank, gun, shell0, equalize).toFixed(0);
       case "fire.dpmPremium":
-        return shell1 ? resolveDpm(gun, shell1).toFixed(0) : "--";
+        return shell1
+          ? resolveEqualizedDpm(tank, gun, shell1, equalize).toFixed(0)
+          : "--";
       case "fire.reload":
         return resolveReload(gun).toFixed(2);
       case "fire.standardPenetration":
-        return shell0?.penetration!.near.toFixed(0);
+        return resolveEqualizedPenetration(tank, shell0, equalize).toFixed(0);
       case "fire.premiumPenetration":
-        return shell1 ? shell1?.penetration!.near.toFixed(0) : "--";
+        return shell1
+          ? resolveEqualizedPenetration(tank, shell1, equalize).toFixed(0)
+          : "--";
       case "fire.tertiaryPenetration":
-        return shell1 ? shell2?.penetration!.near.toFixed(0) : "--";
+        return shell2
+          ? resolveEqualizedPenetration(tank, shell2, equalize).toFixed(0)
+          : "--";
       case "fire.shellVelocity":
         return shell0.velocity.toFixed(0);
       case "fire.shellCapacity":
@@ -101,7 +113,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
       case "maneuverability.traverseSpeed":
         return tracks.traverse_speed.toFixed(1);
       case "survivability.health":
-        return (tank.health + turret.health).toFixed(0);
+        return resolveEqualizedHealth(tank, equalize).toFixed(0);
       case "survivability.viewRange":
         return turret.view_range.toFixed(0);
       case "survivability.camouflageStill":
@@ -132,7 +144,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return Math.max(bounds.x, bounds.y, bounds.z).toFixed(0);
       }
     }
-  }, [by]);
+  }, [by, equalize]);
 
   return (
     <TankCard

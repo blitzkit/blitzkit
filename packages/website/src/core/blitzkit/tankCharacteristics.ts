@@ -22,13 +22,11 @@ import {
 } from "@blitzkit/core";
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { resolveEqualizer, roundEqualizedHealth } from "./resolveEqualized";
 import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
-import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
 export type TankCharacteristicsKey = keyof TankCharacteristics;
-
-const EQUALIZER_HEALTH_EPSILON = 50;
 
 export function tankCharacteristics(
   {
@@ -87,7 +85,7 @@ export function tankCharacteristics(
   const preset = equipmentDefinitions.presets[tank.equipment_preset];
   const turretModelDefinition = tankModelDefinition.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
+  const equalizer = resolveEqualizer(tank, equalize);
 
   function equipment(id: number) {
     return preset.slots.some((slot, index) => {
@@ -513,10 +511,7 @@ export function tankCharacteristics(
     (stockWeight / weightKg);
   let health = (tank.health + turret.health) * healthCoefficient;
 
-  if (equalize) {
-    health =
-      EQUALIZER_HEALTH_EPSILON * Math.round(health / EQUALIZER_HEALTH_EPSILON);
-  }
+  if (equalize) health = roundEqualizedHealth(health);
 
   const fireChance = engine.fire_chance * fireChanceCoefficient;
   const trackRepairTime = track.repair_time
