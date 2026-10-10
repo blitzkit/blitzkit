@@ -752,6 +752,7 @@
         },
 
         "table": {
+          "average": "Average",
           "equipment": {
             "clear": "Clear",
             "apply_to_all": "Apply to all"
