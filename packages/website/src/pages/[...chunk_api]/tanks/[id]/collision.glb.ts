@@ -43,7 +43,7 @@ export async function GET({ props }: APIContext<{ id: number }>) {
   }
 }
 
-async function extractArmor(vfs: AbstractVFS, fileName: string) {
+export async function extractArmor(vfs: AbstractVFS, fileName: string) {
   const sc2Path = `Data/3d/Tanks/CollisionMeshes/${fileName}.sc2`;
   const scgPath = `Data/3d/Tanks/CollisionMeshes/${fileName}.scg`;
   const sc2 = new Sc2ReadStream(
