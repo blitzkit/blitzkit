@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { Badge, Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
+import { Box, Flex, Heading, Switch, Text } from "@radix-ui/themes";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { Tankopedia } from "../../../../stores/tankopedia";
@@ -12,12 +12,7 @@ export function Equalizer() {
   return (
     <ConfigurationChildWrapper>
       <Heading size="4">
-        <Flex gap="2" align="center">
-          {strings.website.tools.tankopedia.configuration.equalizer.title}{" "}
-          <Badge variant="outline">
-            {strings.website.tools.tankopedia.configuration.equalizer.beta}
-          </Badge>
-        </Flex>
+        {strings.website.tools.tankopedia.configuration.equalizer.title}
       </Heading>
 
       <Box
@@ -33,23 +28,17 @@ export function Equalizer() {
         width="100%"
         style={{
           cursor: "pointer",
-          borderRadius: "var(--radius-3)",
-          backgroundImage: `url(${alias("api", `/gamemodes/45/banner.webp`)})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          borderRadius: "var(--radius-3) 0 0  var(--radius-3)",
+          backgroundImage: `
+            linear-gradient(90deg, var(--black-a3), var(--gray-1)),
+            url(${alias("api", `/gamemodes/Insanity/banner.webp`)})
+          `,
+          backgroundSize: "auto, fit",
+          backgroundPosition: "50% 25%",
           overflow: "hidden",
         }}
       >
-        <Flex
-          align="center"
-          width="100%"
-          justify="between"
-          p="4"
-          style={{
-            background:
-              "linear-gradient(90deg, var(--black-a3), var(--gray-1))",
-          }}
-        >
+        <Flex align="center" width="100%" justify="between" p="4" style={{}}>
           <Text
             style={{
               textShadow: "0 0 var(--space-1) var(--black-a12)",

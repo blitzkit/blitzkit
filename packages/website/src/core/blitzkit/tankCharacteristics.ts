@@ -22,6 +22,7 @@ import {
 } from "@blitzkit/core";
 import { coefficient } from "@blitzkit/core/src/blitzkit/coefficient";
 import type { EquipmentMatrix } from "../../stores/duel";
+import { SPALL_LINER_HE_DAMAGE_DELTA } from "./spallLiner";
 import { defaultEqualizer } from "./tankToDuelMember";
 
 export type TankCharacteristics = ReturnType<typeof tankCharacteristics>;
@@ -118,6 +119,7 @@ export function tankCharacteristics(
   const hasImprovedVerticalStabilizer = equipment(122);
   const hasDownImprovedVerticalStabilizer = equipment(124);
   const hasImprovedSuspension = equipment(123);
+  const hasToolbox = equipment(113);
 
   const hasTungsten = consumable(45);
   const hasAdrenaline = consumable(18);
@@ -170,7 +172,10 @@ export function tankCharacteristics(
     coefficient(
       [applyReactiveArmor && shell.type !== ShellType.SHELL_TYPE_HE, -0.27],
       [applyDynamicArmor, -0.1],
-      [applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE, -0.2],
+      [
+        applySpallLiner && shell.type === ShellType.SHELL_TYPE_HE,
+        SPALL_LINER_HE_DAMAGE_DELTA,
+      ],
     );
   const assaultDamageCoefficient =
     gun.assault_ranges && gun.assault_ranges.types.includes(shell.type)
@@ -418,6 +423,10 @@ export function tankCharacteristics(
       : (gun.gun_type!.$case === "regular"
           ? gun.gun_type!.value.reload
           : gun.gun_type!.value.clip_reload) * reloadCoefficient;
+  const peekabooDpm =
+    gun.gun_type!.$case === "regular"
+      ? Math.round(damage * (60 / Math.max(shellReload!, 10)))
+      : undefined;
   const caliber = shell.caliber;
   const penetration = shell.penetration!.near * penetrationCoefficient;
   const clipDamage =
@@ -510,6 +519,12 @@ export function tankCharacteristics(
   }
 
   const fireChance = engine.fire_chance * fireChanceCoefficient;
+  const trackRepairTime = track.repair_time
+    ? track.repair_time /
+      ((hasToolbox ? 1.2 : 1) *
+        (1 + (crewSkills.repair ?? 0) * 0.04) *
+        (hasProtectiveKit ? 1.1 : 1))
+    : undefined;
   const viewRange = turret.view_range * viewRangeCoefficient;
   const camouflageStill = tank.camouflage_still * camouflageCoefficientStill;
   const camouflageMoving =
@@ -545,6 +560,7 @@ export function tankCharacteristics(
     shellRicochet,
     dpm,
     dpmEffective,
+    peekabooDpm,
     shells,
     mostOptimalShellIndex,
     shellReloads,
@@ -593,6 +609,7 @@ export function tankCharacteristics(
     hullTraverseSoftTerrain,
     health,
     fireChance,
+    trackRepairTime,
     viewRange,
     camouflageStill,
     camouflageMoving,

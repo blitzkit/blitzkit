@@ -139,7 +139,14 @@ jobs:
 
       - name: Trigger deployment
 
-        if: ${{ github.ref == 'refs/heads/production' }}
+        # Deploy if:
+        # 1. Running cron from main using content from production to target production
+        # 2. Running manually and targeting non-production
+        if: >-
+          ${{
+            github.ref == 'refs/heads/production' ||
+            (inputs.environment != '' && inputs.environment != 'production')
+          }}
 
         env:
           TOKEN: ${{ secrets.GH_NODE_DEPLOY_TOKEN }}

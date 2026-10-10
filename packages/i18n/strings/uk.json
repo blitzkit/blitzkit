@@ -13,7 +13,7 @@
       "hp": "{value}од",
       "x": "x{value}",
       "percentage": "{value}%",
-      "deg_s": "{value}град/c",
+      "deg_s": "{value}°/c",
       "plus": "+{value}"
     },
     "gun_types": {
@@ -37,8 +37,8 @@
       "d_1": "Вчора"
     },
     "branches": {
-      "beta": "Beta",
-      "development": "Development",
+      "beta": "Бета",
+      "development": "Розробка",
       "opentest": "Відкритий тест",
       "preview": "Preview",
       "production": "Production"
@@ -194,6 +194,7 @@
       "title": "Налаштування",
       "description": "Змінити налаштування BlitzKit ",
       "dev_mode": "Режим розробника",
+      "auto_load_models": "Auto-load models",
       "language": "Мова"
     },
     "common": {
@@ -340,8 +341,8 @@
       },
       "mixer": {
         "name": "Mixer",
-        "button": "Mix and match",
-        "description": "Mix tank modules",
+        "button": "Змішувати та поєднувати",
+        "description": "Змішані танкові модулі",
         "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
         "screenshot": "Знімок екрану",
         "randomize": "Рандомізувати"
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Від башти",
             "face_hug": "Клінч",
@@ -501,11 +503,11 @@
         "tech_tree": {
           "title": "Звичайний",
           "battle": "1 бій",
-          "battles": "{count} battles",
+          "battles": "{count} битви",
           "route": "Route {index} of {count}"
         },
         "game_modes": {
-          "title": "Game mode abilities"
+          "title": "Здібності ігрового режиму"
         },
         "review": {
           "title": "Review videos",
@@ -515,8 +517,7 @@
           "title": "Configuration",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "Модулі",
@@ -572,6 +573,8 @@
             "shellRicochet": "Рикошет",
             "dpm": "DPM",
             "dpmEffective": "Effective at 60s",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "Снаряди",
             "mostOptimalShellIndex": "Most optimal shell",
             "shellReloads": "Reloads",
@@ -620,13 +623,14 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Здоров'я",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Нерухомо",
             "camouflageMoving": "У русі",
             "camouflageShootingStill": "Нерухомо",
             "camouflageShootingMoving": "У русі",
             "camouflageCaughtOnFire": "Caught on fire",
-            "width": "Width",
+            "width": "Ширина",
             "height": "Height",
             "length": "Length",
             "volume": "Volume",
@@ -740,7 +744,7 @@
         }
       },
       "gallery": {
-        "name": "Gallery",
+        "name": "Галерея",
         "button": "Browse all",
         "description": "Blitz player avatars",
         "seo_description": "Усі World of Tanks Blitz аватари гравців",
@@ -843,7 +847,7 @@
           "breakdown": {
             "name": "Breakdown",
             "options": {
-              "width": "Width",
+              "width": "Ширина",
               "height": "Height",
               "showTotal": "Show total",
               "listGap": "List gap",

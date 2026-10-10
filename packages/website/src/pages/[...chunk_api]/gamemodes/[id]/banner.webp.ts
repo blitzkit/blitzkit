@@ -17,15 +17,15 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const bannerMatches: { name: string; path: string }[] = [];
 
   for (const match of gameTypeSelectorStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /eGameMode\.([a-zA-Z]+) -> "~res:([^"]+)"/g,
+    /eGameMode\.(\w+) -> "~res:([^"]+)"/g,
   )) {
     bannerMatches.push({ name: match[1], path: match[2] });
   }
 
   for (const match of squadBattleTypeStyles.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-    /"(\d+)" -> "battleType\/([a-zA-Z]+)"/g,
+    /eGameMode\.(\w+) -> "battleType\/([a-zA-Z]+)"/g,
   )) {
-    const id = Number(match[1]);
+    const id = match[1];
     const name = match[2];
     let path = bannerMatches.find(
       (bannerMatch) => bannerMatch.name.toLowerCase() === name.toLowerCase(),

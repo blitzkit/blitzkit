@@ -8,6 +8,7 @@ export interface WargamingLogin {
 
 export interface App {
   developerMode: boolean;
+  autoLoadModels: boolean;
   policiesAgreementIndex: number;
   logins: {
     wargaming?: WargamingLogin;
@@ -17,6 +18,7 @@ export interface App {
 export const App = new Varuna<App>(
   {
     developerMode: false,
+    autoLoadModels: true,
     policiesAgreementIndex: -1,
     logins: {},
   },

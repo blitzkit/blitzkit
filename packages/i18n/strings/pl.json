@@ -194,6 +194,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "Development mode",
+      "auto_load_models": "Auto-load models",
       "language": "Language"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Hull down",
             "face_hug": "Face hug",
@@ -515,8 +517,7 @@
           "title": "Configuration",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "Modules",
@@ -572,6 +573,8 @@
             "shellRicochet": "Ricochet",
             "dpm": "DPM",
             "dpmEffective": "Effective at 60s",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "Shells",
             "mostOptimalShellIndex": "Most optimal shell",
             "shellReloads": "Reloads",
@@ -620,11 +623,12 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Still",
             "camouflageMoving": "Moving",
-            "camouflageShootingStill": "Still",
-            "camouflageShootingMoving": "Moving",
+            "camouflageShootingStill": "Shooting while still",
+            "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "Caught on fire",
             "width": "Width",
             "height": "Height",

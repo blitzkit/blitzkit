@@ -1,9 +1,11 @@
 import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
-import { times } from "lodash-es";
 import { memo } from "react";
+import { awaitableTiers } from "../../../core/awaitables/tiers";
 import { TankFilters } from "../../../stores/tankFilters";
 import { TankSort } from "../../../stores/tankopediaSort";
+
+const TIERS = await awaitableTiers;
 
 export const TierFilter = memo(() => {
   const by = TankSort.use((state) => state.by);
@@ -19,8 +21,7 @@ export const TierFilter = memo(() => {
         overflow="hidden"
         style={{ borderRadius: "var(--radius-full)" }}
       >
-        {times(10, (index) => {
-          const tier = 10 - index;
+        {TIERS.map((tier) => {
           const selected = tiers.includes(tier);
 
           return (

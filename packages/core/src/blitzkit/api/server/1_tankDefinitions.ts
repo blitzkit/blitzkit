@@ -50,10 +50,11 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   async tankDefinitions() {
     const tankDefinitions = TankDefinitions.create();
 
-    const gameModeNativeNames: Record<string, number> = {};
+    const gameModeNativeNames: Record<string, string> = {};
+
     const squadBattleTypeGameModeNativeNameMatches =
       this.squadBattleTypeStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
-        /"(\d+)" -> "(battleType\/([a-zA-Z]+))"/g,
+        /eGameMode\.(\w+) -> "(battleType\/([a-zA-Z]+))"/g,
       );
     const gameTypeGameModeNativeNameMatches =
       this.gameTypeSelectorStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
@@ -61,8 +62,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
       );
 
     for (const match of squadBattleTypeGameModeNativeNameMatches) {
-      const id = Number(match[1]);
-      gameModeNativeNames[match[3]] = id;
+      gameModeNativeNames[match[3]] = match[1];
     }
 
     for (const match of gameTypeGameModeNativeNameMatches) {
@@ -350,6 +350,15 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
         const tankClass =
           this.blitzTankClassToBlitzkit[blitzTankClass as BlitzTankClass];
 
+        const canonicalFullName = this.getString(tank.userString);
+        const name =
+          (tank.shortUserString
+            ? this.getString(tank.shortUserString)
+            : undefined) ?? canonicalFullName;
+        // only supply full name if it's different from the displayed short name to save some bytes
+        const name_full =
+          name === canonicalFullName ? undefined : canonicalFullName;
+
         tankDefinitions.tanks[tankId] = {
           ancestors: [],
           successors: [],
@@ -367,10 +376,8 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             typeof equipment === "string" ? equipment : equipment.at(-1)!,
           max_consumables: tankDefinition.root.consumableSlots,
           max_provisions: tankDefinition.root.provisionSlots,
-          name:
-            (tank.shortUserString
-              ? this.getString(tank.shortUserString)
-              : undefined) ?? this.getString(tank.userString),
+          name,
+          name_full,
           slug,
           nation,
           type: tankTags.includes("collectible")
@@ -427,6 +434,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             resistance_hard: terrainResistances[0],
             resistance_medium: terrainResistances[1],
             resistance_soft: terrainResistances[2],
+            repair_time: track.hysteresisHealth / track.healthRegenPerSec,
             tier: track.level,
             unlocks: resolveUnlocks(
               this.blitzModuleTypeToBlitzkit,

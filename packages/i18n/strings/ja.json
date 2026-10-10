@@ -194,6 +194,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "開発者モード",
+      "auto_load_models": "Auto-load models",
       "language": "言語 / Language"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "ハルダウン",
             "face_hug": "密着",
@@ -515,8 +517,7 @@
           "title": "構成",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "モジュール",
@@ -572,6 +573,8 @@
             "shellRicochet": "跳弾角度",
             "dpm": "DPM",
             "dpmEffective": "60秒での有効値",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "砲弾",
             "mostOptimalShellIndex": "最適な弾数",
             "shellReloads": "Reloads",
@@ -620,11 +623,12 @@
             "hullTraverseSoftTerrain": "軟弱地",
             "health": "耐久値",
             "fireChance": "火災発生率",
+            "trackRepairTime": "Track repair time",
             "viewRange": "視認範囲",
             "camouflageStill": "静止時",
             "camouflageMoving": "移動時",
-            "camouflageShootingStill": "静止時",
-            "camouflageShootingMoving": "移動時",
+            "camouflageShootingStill": "Shooting while still",
+            "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "Caught on fire",
             "width": "全幅",
             "height": "全高",

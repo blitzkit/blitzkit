@@ -194,6 +194,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "Modo de desenvolvimento",
+      "auto_load_models": "Auto-load models",
       "language": "Idioma"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Casco para baixo",
             "face_hug": "Abraço facial",
@@ -515,8 +517,7 @@
           "title": "Configuração",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize",
-            "beta": "Beta"
+            "equalize": "Equalize"
           },
           "modules": {
             "title": "Módulos",
@@ -572,6 +573,8 @@
             "shellRicochet": "Ricochete",
             "dpm": "DPM",
             "dpmEffective": "Efetivo aos 60s",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "Projéteis",
             "mostOptimalShellIndex": "Projétil mais ideal",
             "shellReloads": "Reloads",
@@ -620,11 +623,12 @@
             "hullTraverseSoftTerrain": "Macio",
             "health": "Vida",
             "fireChance": "Chance de incêndio",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Alcance de visão",
             "camouflageStill": "Parado",
             "camouflageMoving": "Em movimento",
-            "camouflageShootingStill": "Parado",
-            "camouflageShootingMoving": "Em movimento",
+            "camouflageShootingStill": "Shooting while still",
+            "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "Preso em chamas",
             "width": "Largura",
             "height": "Altura",

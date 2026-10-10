@@ -194,6 +194,7 @@
       "title": "Настройки",
       "description": "Изменить настройки BlitzKit",
       "dev_mode": "Режим разработчика",
+      "auto_load_models": "Auto-load models",
       "language": "Язык"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "За холмом",
             "face_hug": "В упор",
@@ -515,8 +517,7 @@
           "title": "Конфигурация",
           "equalizer": {
             "title": "Уравнение",
-            "equalize": "Уравнять",
-            "beta": "Бета"
+            "equalize": "Уравнять"
           },
           "modules": {
             "title": "Модули",
@@ -572,6 +573,8 @@
             "shellRicochet": "Рикошет",
             "dpm": "ДПМ",
             "dpmEffective": "Эффективность за 60с",
+            "peekabooDpm": "Peekaboo DPM",
+            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
             "shells": "Снарядов в барабане",
             "mostOptimalShellIndex": "Самый эффективный снаряд",
             "shellReloads": "Перезарядка",
@@ -620,11 +623,12 @@
             "hullTraverseSoftTerrain": "На мягком грунте",
             "health": "Прочность",
             "fireChance": "Вероятность возгорания",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Радиус обзора",
             "camouflageStill": "Когда неподвижен",
             "camouflageMoving": "В движении",
-            "camouflageShootingStill": "После выстрела, если неподвижен",
-            "camouflageShootingMoving": "После выстрела в движении",
+            "camouflageShootingStill": "Shooting while still",
+            "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "При пожаре",
             "width": "Ширина",
             "height": "Высота",

@@ -82,6 +82,7 @@ export function Lighting({ hasPbr }: Props) {
         blur={2 ** 1}
         resolution={2 ** 9}
         depthWrite={false}
+        renderOrder={1}
       />
 
       {animate && (

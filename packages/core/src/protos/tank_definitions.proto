@@ -11,7 +11,7 @@ message TankDefinitions {
 message TankDefinition {
   required uint32           id                 = 1;
   required string           slug               = 2;
-  map<uint32, uint32>       roles              = 3;
+  map<string, uint32>       roles              = 3;
   required bool             fixed_camouflage   = 5;
   repeated int32            camouflages        = 6;
   repeated int32            ancestors          = 7;
@@ -41,6 +41,7 @@ message TankDefinition {
   required uint32           weight             = 31;
   required string           dev_name           = 32;
   optional Equalizer        equalizer          = 33;
+  optional I18nString       name_full          = 34;
 }
 
 message Equalizer {
@@ -86,6 +87,7 @@ message TrackDefinition {
   required float        resistance_medium   = 10;
   required float        resistance_soft     = 11;
   repeated Unlock       unlocks             = 12;
+  required float        repair_time         = 13;
 }
 
 message EngineDefinition {

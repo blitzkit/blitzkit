@@ -18,6 +18,10 @@ export function Page({ locale }: LocaleAcceptorProps) {
 
 function Content({ locale }: LocaleAcceptorProps) {
   const developerMode = App.useDeferred((state) => state.developerMode, false);
+  const autoLoadModels = App.useDeferred(
+    (state) => state.autoLoadModels,
+    true,
+  );
   const { strings } = useLocale();
 
   return (
@@ -31,6 +35,19 @@ function Content({ locale }: LocaleAcceptorProps) {
             onCheckedChange={(checked) =>
               App.mutate((draft) => {
                 draft.developerMode = checked;
+              })
+            }
+          />
+        </Flex>
+
+        <Flex align="center" gap="2" justify="between">
+          <Text>{strings.website.settings.auto_load_models}</Text>
+          <Switch
+            variant="classic"
+            checked={autoLoadModels}
+            onCheckedChange={(checked) =>
+              App.mutate((draft) => {
+                draft.autoLoadModels = checked;
               })
             }
           />

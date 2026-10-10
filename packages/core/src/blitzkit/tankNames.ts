@@ -18,11 +18,22 @@ export async function fetchTankNames(api: BlitzKitAPI) {
         searchableNameDeburr.locales[key] = deburr(value);
       });
 
+      const searchableNameFull: I18nString = {
+        locales: { ...tank.name_full?.locales },
+      };
+      const searchableNameFullDeburr: I18nString = { locales: {} };
+
+      Object.entries(searchableNameFull.locales).forEach(([key, value]) => {
+        searchableNameFullDeburr.locales[key] = deburr(value);
+      });
+
       return {
         id: tank.id,
         name: tank.name,
         searchableName: tank.name,
         searchableNameDeburr,
+        searchableNameFull,
+        searchableNameFullDeburr,
         camouflages: tank.camouflages
           ?.map((id) =>
             locales.supported.map(
@@ -45,6 +56,8 @@ export const SEARCH_KEYS = [
     .map(({ locale }) => [
       `searchableName.locales.${locale}`,
       `searchableNameDeburr.locales.${locale}`,
+      `searchableNameFull.locales.${locale}`,
+      `searchableNameFullDeburr.locales.${locale}`,
     ])
     .flat(),
   "camouflages",

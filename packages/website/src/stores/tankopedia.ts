@@ -9,6 +9,7 @@ import type { ArmorType } from "../components/Armor/components/SpacedArmorScene"
 import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
 import { api } from "../core/blitzkit/api";
+import { App } from "./app";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -42,6 +43,7 @@ export type Shot = {
   containsGaps: boolean;
   damage: number;
   splashRadius?: number;
+  penetrationChance?: number;
 
   in: {
     surfaceNormal: Vector3;
@@ -79,6 +81,7 @@ export enum TankopediaRelativeAgainst {
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
+  modelRequested: boolean;
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
@@ -110,6 +113,7 @@ const skillDefinitions = await api.skillDefinitions();
 export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,
   revealed: false,
+  modelRequested: App.state.autoLoadModels,
   relativeAgainst: TankopediaRelativeAgainst.Class,
   editStatic: false,
   skills: createDefaultSkills(skillDefinitions),

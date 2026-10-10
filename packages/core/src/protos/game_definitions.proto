@@ -7,7 +7,7 @@ import "i18n.proto";
 message GameDefinitions {
   required string           version   = 1;
   repeated string           nations   = 2;
-  map<uint32, GameMode>     gameModes = 3;
+  map<string, GameMode>     gameModes = 3;
   map<uint32, GameModeRole> roles     = 4;
 }
 

@@ -18,6 +18,10 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { hasEquipment } from "../../../../core/blitzkit/hasEquipment";
 import { jsxTree } from "../../../../core/blitzkit/jsxTree";
+import {
+  SPALL_LINER_HE_DAMAGE_DELTA,
+  SPALL_LINER_PROVISION_ID,
+} from "../../../../core/blitzkit/spallLiner";
 import { defaultEqualizer } from "../../../../core/blitzkit/tankToDuelMember";
 import { discardClippingPlane } from "../../../../core/three/discardClippingPlane";
 import { Duel } from "../../../../stores/duel";
@@ -59,6 +63,36 @@ export type ArmorUserData = {
     }
 );
 
+const PENETRATION_RANDOMIZATION = 0.05;
+
+function resolvePenetrationChance(shoot: (scale: number) => Shot | null) {
+  function penetrates(scale: number) {
+    const shot = shoot(scale);
+
+    return (shot?.out ?? shot?.in)?.status === "penetration";
+  }
+
+  let low = 1 - PENETRATION_RANDOMIZATION;
+  let high = 1 + PENETRATION_RANDOMIZATION;
+
+  if (penetrates(low)) return 1;
+  if (!penetrates(high)) return 0;
+
+  for (let iteration = 0; iteration < 16; iteration++) {
+    const middle = (low + high) / 2;
+
+    if (penetrates(middle)) {
+      high = middle;
+    } else {
+      low = middle;
+    }
+  }
+
+  return (
+    (1 + PENETRATION_RANDOMIZATION - high) / (2 * PENETRATION_RANDOMIZATION)
+  );
+}
+
 const omitMaterial = new MeshBasicMaterial({
   colorWrite: false,
   depthWrite: true,
@@ -85,6 +119,7 @@ export function SpacedArmorSceneComponent({
       intersections: Intersection[],
       allowRicochet: boolean,
       remainingPenetrationInput?: number,
+      penetrationScale = 1,
     ) => {
       const { customShell } = Tankopedia.state;
       const shell = customShell ?? Duel.state.antagonist.shell;
@@ -121,6 +156,7 @@ export function SpacedArmorSceneComponent({
         Duel.state.protagonist.equipmentMatrix,
       );
       const penetration =
+        penetrationScale *
         shell.penetration!.near *
         resolvePenetrationCoefficient(
           hasCalibratedShells,
@@ -363,6 +399,7 @@ export function SpacedArmorSceneComponent({
               ricochetIntersections,
               false,
               remainingPenetration,
+              penetrationScale,
             );
 
             shot.in.status = "ricochet";
@@ -383,6 +420,13 @@ export function SpacedArmorSceneComponent({
       }
 
       shot.damage *= antagonistEqualizer.damage;
+
+      const hasSpallLiner = Duel.state.protagonist.provisions.includes(
+        SPALL_LINER_PROVISION_ID,
+      );
+      if (hasSpallLiner && shell.type === ShellType.SHELL_TYPE_HE) {
+        shot.damage *= 1 + SPALL_LINER_HE_DAMAGE_DELTA;
+      }
 
       return shot;
     },
@@ -410,6 +454,16 @@ export function SpacedArmorSceneComponent({
                   event.stopPropagation();
 
                   const shot = shoot(event.point, event.intersections, true)!;
+
+                  shot.penetrationChance = resolvePenetrationChance((scale) =>
+                    shoot(
+                      event.point,
+                      event.intersections,
+                      true,
+                      undefined,
+                      scale,
+                    ),
+                  );
 
                   Tankopedia.mutate((draft) => {
                     draft.shot = shot;
