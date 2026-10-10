@@ -37,6 +37,11 @@ export const credits: CreditPeople[] = [
     image: "/media/users/chickenman7777.webp",
   },
   {
+    name: "Avenir",
+    description: "Moderator",
+    image: "/media/users/avenir.webp",
+  },
+  {
     name: "Pyogenics",
     description: "Former advisor on back end",
     url: "https://github.com/Pyogenics",
