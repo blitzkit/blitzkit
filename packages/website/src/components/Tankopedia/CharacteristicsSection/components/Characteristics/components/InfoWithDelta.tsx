@@ -1,5 +1,5 @@
 import { createDefaultSkills } from "@blitzkit/core";
-import { Flex, Progress, Text } from "@radix-ui/themes";
+import { Box, Flex, Progress, Text } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
 import { api } from "../../../../../../core/blitzkit/api";
@@ -16,6 +16,7 @@ import {
   TankopediaRelativeAgainst,
 } from "../../../../../../stores/tankopedia";
 import { Info, type InfoProps } from "./Info";
+import { StatScale } from "./StatScale";
 
 type InfoWithDeltaProps = Omit<InfoProps, "name"> & {
   stats: TankCharacteristics;
@@ -122,6 +123,15 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
           return othersValue !== undefined;
         }) as TankCharacteristics[];
     }, [relativeAgainst, shellIndex, equipmentMatrix, equalize]);
+    const values = useMemo(
+      () =>
+        others.map((tank) =>
+          typeof props.value === "function"
+            ? props.value(tank)!
+            : (tank[props.value] as number),
+        ),
+      [others],
+    );
     const betterTanks = others.filter((tank) => {
       const othersValue =
         typeof props.value === "function"
@@ -161,13 +171,21 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
 
         {!noRanking && (
           <Flex pl={indent ? "2" : "0"} align="center" gap="2">
-            <Progress
-              variant="soft"
-              size="1"
-              value={goodness * 100}
-              color={color}
-              style={{ height: "0.125rem", opacity: 0.5 }}
-            />
+            <Box position="relative" flexGrow="1">
+              <StatScale
+                values={values}
+                value={uhWhatDoICallThisVariable}
+                lowerIsBetter={deltaType === "lowerIsBetter"}
+              />
+
+              <Progress
+                variant="soft"
+                size="1"
+                value={goodness * 100}
+                color={color}
+                style={{ height: "0.125rem", opacity: 0.5 }}
+              />
+            </Box>
 
             <Text color="gray" size="1">
               {clamp(betterTanks.length + 1, 1, others.length)} /{" "}
