@@ -405,7 +405,38 @@
         },
         "clear": "Clear",
         "select_all": "Select all",
-        "tier": "Tier {tier}"
+        "tier": "Tier {tier}",
+        "modes_description": "Pick a game mode",
+        "modes": {
+          "silhouette": {
+            "name": "Silhouette",
+            "description": "Name the tank from its silhouette",
+            "button": "What could it be?"
+          },
+          "clues": {
+            "name": "Clues",
+            "description": "Narrow down the tank with stat hints",
+            "button": "Start guessing"
+          }
+        },
+        "clues": {
+          "guesses": "{count} / {max} guesses",
+          "answer": "The tank was {tank}",
+          "correct": "Correct! Solved in {count} guesses",
+          "correct_single": "Correct! Solved in 1 guess",
+          "seconds": "{value}s",
+          "columns": {
+            "tank": "Tank",
+            "tier": "Tier",
+            "class": "Class",
+            "nation": "Nation",
+            "type": "Type",
+            "gun_type": "Gun",
+            "health": "HP",
+            "damage": "Alpha",
+            "reload": "Reload / Intraclip"
+          }
+        }
       },
 
       "tankopedia": {
