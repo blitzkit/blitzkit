@@ -23,10 +23,12 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
-import { debounce, times } from "lodash-es";
+import { debounce } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../api/dynamic";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
+import { awaitableTiers } from "../core/awaitables/tiers";
+import { api } from "../core/blitzkit/api";
 import { useLocale } from "../hooks/useLocale";
 import { Guess, GuessState } from "../stores/guess";
 import { classIcons } from "./ClassIcon";
@@ -34,9 +36,10 @@ import { SearchResults } from "./SearchResults";
 
 const { go } = fuzzysort;
 
-const [tankNames, tankDefinitions] = await Promise.all([
+const [tankNames, tankDefinitions, TIERS] = await Promise.all([
   awaitableTankNames,
-  api.tanks(),
+  api.tankDefinitions(),
+  awaitableTiers,
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);
@@ -189,8 +192,7 @@ export function Guesser() {
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Content>
-            {times(10, (index) => {
-              const tier = 10 - index;
+            {TIERS.map((tier) => {
               const isSelected = tiers.includes(tier);
 
               return (

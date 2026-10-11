@@ -194,6 +194,7 @@
       "title": "Paramètres",
       "description": "Modifier les paramètres de BlitzKit",
       "dev_mode": "Mode développement",
+      "auto_load_models": "Auto-load models",
       "language": "Langue"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Hull down",
             "face_hug": "Face hug",
@@ -621,6 +623,7 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Still",
             "camouflageMoving": "Moving",

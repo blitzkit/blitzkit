@@ -41,6 +41,7 @@ export type Shot = {
   containsGaps: boolean;
   damage: number;
   splashRadius?: number;
+  penetrationChance?: number;
 
   in: {
     surfaceNormal: Vector3;
@@ -88,6 +89,7 @@ interface Tankopedia {
   antagonist: TankState;
   environment: TankEnvironment;
 
+  modelRequested: boolean;
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
@@ -126,6 +128,8 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
     model: models.models[tank.id],
 
     environment: { equalize: false, distance: 0 },
+
+    modelRequested: false,
 
     relativeAgainst: TankopediaRelativeAgainst.Class,
     editStatic: false,

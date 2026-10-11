@@ -13,6 +13,7 @@ import { modelTransformEvent } from "../../../../../../../core/blitzkit/modelTra
 import { Var } from "../../../../../../../core/radix/var";
 import { useLocale } from "../../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../../stores/duel";
+import { Tankopedia } from "../../../../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../../../../types/maybeSkeletonComponentProps";
 import { VisualizerCard } from "../VisualizerCard";
 import { VisualizerCornerStat } from "../VisualizerCornerStat";
@@ -43,6 +44,7 @@ export function GunFlexibilityVisualizer({
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
+  const modelRequested = Tankopedia.use((state) => state.modelRequested);
 
   const tankModel = modelDefinition.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];
@@ -193,7 +195,7 @@ export function GunFlexibilityVisualizer({
             top="0"
             left="0"
           >
-            {!skeleton && <FlexibilityCanvas />}
+            {!skeleton && modelRequested && <FlexibilityCanvas />}
 
             <Box
               position="absolute"

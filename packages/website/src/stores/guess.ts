@@ -1,6 +1,8 @@
-import type { TankDefinition } from "@blitzkit/protos";
-import { times } from "lodash-es";
-import { Soapstone } from "soapstone";
+import type { TankDefinition } from "@blitzkit/core";
+import { Varuna } from "varuna";
+import { awaitableTiers } from "../core/awaitables/tiers";
+
+const tiers = await awaitableTiers;
 
 export enum GuessState {
   Correct,
@@ -25,5 +27,5 @@ export const Guess = new Soapstone<Guess, [TankDefinition]>((tank) => ({
   correctGuesses: 0,
   streak: 0,
   helpingReveal: false,
-  tiers: times(10, (index) => index + 1),
+  tiers,
 }));

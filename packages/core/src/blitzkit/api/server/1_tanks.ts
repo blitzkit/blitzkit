@@ -437,6 +437,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             resistance_hard: terrainResistances[0],
             resistance_medium: terrainResistances[1],
             resistance_soft: terrainResistances[2],
+            repair_time: track.hysteresisHealth / track.healthRegenPerSec,
             tier: track.level,
             unlocks: resolveUnlocks(
               this.blitzModuleTypeToBlitzkit,

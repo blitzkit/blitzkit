@@ -20,6 +20,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const canvas = useRef<HTMLCanvasElement>(null!);
   const isFullScreen = useFullScreen();
   const protagonist = Duel.use((state) => state.protagonist.tank);
+  const modelRequested = Tankopedia.use((state) => state.modelRequested);
   const thicknessRange = useMemo(() => {
     const entries = Object.values(tankDefinitions.tanks);
     const filtered = entries.filter(
@@ -131,13 +132,15 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
                 top="0"
                 left="0"
               >
-                {!skeleton && (
-                  <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
+                {!skeleton && modelRequested && (
+                  <Suspense>
+                    <TankSandbox ref={canvas} thicknessRange={thicknessRange} />
+                  </Suspense>
                 )}
               </Box>
             </Box>
 
-            <Title />
+            <Title skeleton={skeleton} />
 
             <Options
               skeleton={skeleton}

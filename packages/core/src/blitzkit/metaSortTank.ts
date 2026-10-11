@@ -7,6 +7,7 @@ export function metaSortTank(
   gameDefinitions: GameDefinitions,
 ) {
   return tanks
+    .sort((a, b) => a.id - b.id)
     .sort((a, b) => b.tier - a.tier)
     .sort(
       (a, b) => treeTypeOrder.indexOf(b.type) - treeTypeOrder.indexOf(a.type),

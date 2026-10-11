@@ -194,6 +194,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "開発者モード",
+      "auto_load_models": "Auto-load models",
       "language": "言語 / Language"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "ハルダウン",
             "face_hug": "密着",
@@ -621,6 +623,7 @@
             "hullTraverseSoftTerrain": "軟弱地",
             "health": "耐久値",
             "fireChance": "火災発生率",
+            "trackRepairTime": "Track repair time",
             "viewRange": "視認範囲",
             "camouflageStill": "静止時",
             "camouflageMoving": "移動時",

@@ -194,6 +194,7 @@
       "title": "Settings",
       "description": "Change BlitzKit settings",
       "dev_mode": "Modo de desenvolvimento",
+      "auto_load_models": "Auto-load models",
       "language": "Idioma"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "Casco para baixo",
             "face_hug": "Abraço facial",
@@ -621,6 +623,7 @@
             "hullTraverseSoftTerrain": "Macio",
             "health": "Vida",
             "fireChance": "Chance de incêndio",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Alcance de visão",
             "camouflageStill": "Parado",
             "camouflageMoving": "Em movimento",

@@ -153,7 +153,7 @@ const TANK_TYPE_COLORS: Record<TankType, string> = {
 
 const MAX_ICONS = 4;
 
-const TIERS = times(10, (i) => 10 - i);
+const TIERS = await awaitableTiers;
 
 export function TankSearchFilters() {
   return (

@@ -194,6 +194,7 @@
       "title": "设置",
       "description": "更改 BlitzKit 设置",
       "dev_mode": "开发者模式",
+      "auto_load_models": "Auto-load models",
       "language": "语言"
     },
     "common": {
@@ -412,6 +413,7 @@
           }
         },
         "sandbox": {
+          "load_model": "Load model",
           "poses": {
             "hull_down": "俯角视角",
             "face_hug": "顶牛视角",
@@ -621,6 +623,7 @@
             "hullTraverseSoftTerrain": "水面上车转速率",
             "health": "血量",
             "fireChance": "发动机受击时着火概率",
+            "trackRepairTime": "Track repair time",
             "viewRange": "视野范围",
             "camouflageStill": "静止隐蔽",
             "camouflageMoving": "移动时",

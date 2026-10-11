@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { vfs } from "../../../../core/blitzkit/vfs";
@@ -29,7 +30,10 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 });
 
 export async function GET({ props }: APIContext<{ path: string }>) {
-  const bytes = new Uint8Array(await vfs.file(props.path));
+  const bytes = await sharp(new Uint8Array(await vfs.file(props.path)))
+    .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 }, threshold: 1 })
+    .webp()
+    .toBuffer();
 
-  return new Response(bytes);
+  return new Response(new Uint8Array(bytes));
 }

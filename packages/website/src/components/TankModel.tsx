@@ -62,11 +62,17 @@ export function TankModel() {
 
           invalidate();
 
-          if (material.map) material.map.offset.y += offset;
-          if (material.aoMap) material.aoMap.offset.y += offset;
-          if (material.normalMap) material.normalMap.offset.y += offset;
-          if (material.roughnessMap) material.roughnessMap.offset.y += offset;
-          if (material.metalnessMap) material.metalnessMap.offset.y += offset;
+          const textures = new Set([
+            material.map,
+            material.aoMap,
+            material.normalMap,
+            material.roughnessMap,
+            material.metalnessMap,
+          ]);
+
+          for (const texture of textures) {
+            if (texture) texture.offset.y += offset;
+          }
         }
 
         function onPointerDown(event: ThreeEvent<PointerEvent>) {
