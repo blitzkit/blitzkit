@@ -38,7 +38,7 @@ export const credits: CreditPeople[] = [
   },
   {
     name: "Avenir",
-    description: "Moderator",
+    description: "Moderator and elite Advanced Recon Commando",
     image: "/media/users/avenir.webp",
   },
   {
@@ -67,7 +67,6 @@ export const credits: CreditPeople[] = [
   {
     name: "xkdkw",
     description: "Former advisor on bot and website",
-    url: "https://www.xkdkw.com/",
     image: "/media/users/xkdkw.webp",
   },
   {
@@ -105,5 +104,10 @@ export const credits: CreditPeople[] = [
     description: "Game asset decompression",
     url: "https://github.com/Maddoxkkm",
     image: "https://github.com/Maddoxkkm.png",
+  },
+  {
+    name: "TJ Duff",
+    description: "Chief executive cheer leader",
+    image: "/media/users/tj-duff.jpg",
   },
 ];

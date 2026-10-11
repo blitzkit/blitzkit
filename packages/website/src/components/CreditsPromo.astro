@@ -69,7 +69,7 @@ const strings = getStrings(locale);
                 height: 100%;
 
                 background-size: cover;
-                filter: saturate(256) blur(5rem) brightness(0.125);
+                filter: saturate(4) blur(5rem) brightness(0.25);
               }
             }
 
@@ -125,7 +125,7 @@ const strings = getStrings(locale);
               <Text className="text" color="gray" highContrast>
                 {person.name}
               </Text>
-              <Text className="text" color="gray">
+              <Text className="text" color="gray" wrap="pretty">
                 {person.description}
               </Text>
             </div>
