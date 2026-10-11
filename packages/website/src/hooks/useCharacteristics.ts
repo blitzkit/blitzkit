@@ -85,7 +85,7 @@ export function computeCharacteristics(
     return computed.get(name)!;
   }
 
-  console.log(scriptsMap);
+  // console.log(scriptsMap);
 
   function script(
     side: DuelSide,

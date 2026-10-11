@@ -14,9 +14,9 @@ import {
   ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import { times } from "lodash-es";
 import { Fragment } from "react";
 import { api } from "../../api/dynamic";
+import { awaitableTiers } from "../../core/awaitables/tiers";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { App } from "../../stores/app";
