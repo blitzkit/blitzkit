@@ -1,4 +1,6 @@
+import { degressiveStat, progressiveStat } from "@blitzkit/core";
 import type { BlitzEffectScript } from "@blitzkit/core/src/types/blitzEffectScript";
+import { CrewType } from "@blitzkit/protos";
 import { api } from "../api/dynamic";
 import { characteristics } from "../config/characteristics";
 import { defaultEqualizer } from "../config/equalizer";
@@ -44,37 +46,89 @@ export function computeCharacteristics(
     (shell) => shell.id === states.protagonist.shell,
   )!;
 
-  const equipmentPreset = equipment.presets[tank.equipment_preset];
-
-  const scriptsMap: Record<DuelSide, Map<string, BlitzEffectScript>> = {
+  const scriptsMap: Record<DuelSide, Map<string, BlitzEffectScript[]>> = {
     protagonist: new Map(),
     antagonist: new Map(),
   };
 
+  function addScript(side: DuelSide, name: string, script: BlitzEffectScript) {
+    if (!scriptsMap[side].has(name)) {
+      scriptsMap[side].set(name, []);
+    }
+
+    scriptsMap[side].get(name)!.push(script);
+  }
+
   for (const side of duelSides) {
+    const sideTank = tanks.tanks[states[side].tank];
+    const sideEquipmentPreset = equipment.presets[sideTank.equipment_preset];
+
     for (const id of states[side].consumables) {
       if (!(id in scripts.consumables)) continue;
 
       const script = scripts.consumables[id];
-      scriptsMap.protagonist.set(script["#text"], script);
+
+      addScript(side, script["#text"], script);
     }
 
     for (const id of states[side].provisions) {
       if (!(id in scripts.provisions)) continue;
 
       const script = scripts.provisions[id];
-      scriptsMap.protagonist.set(script["#text"], script);
+
+      addScript(side, script["#text"], script);
     }
 
     for (const index in states[side].equipment) {
       const choice = states[side].equipment[index];
-      const id = equipmentPreset.slots[index].options[choice];
+      const id = sideEquipmentPreset.slots[index].options[choice];
 
       if (!(id in scripts.equipment)) continue;
 
       const script = scripts.equipment[id];
-      scriptsMap.protagonist.set(script["#text"], script);
+
+      addScript(side, script["#text"], script);
     }
+  }
+
+  const protagonist = states.protagonist;
+  const protagonistEquipmentPreset = equipment.presets[tank.equipment_preset];
+  const hasImprovedVentilation = Object.entries(protagonist.equipment).some(
+    ([index, choice]) =>
+      protagonistEquipmentPreset.slots[Number(index)]?.options[choice] === 102,
+  );
+  const provisionCrewBonus =
+    protagonist.provisions.reduce(
+      (total, id) =>
+        total +
+        (scripts.provisions[id]?.bonusValues?.crewLevelIncrease ?? 0) / 100,
+      0,
+    ) + (hasImprovedVentilation ? 0.08 : 0);
+  const commanderMastery = 1 + provisionCrewBonus;
+  const crewMastery = {
+    commander: commanderMastery,
+    loader:
+      commanderMastery *
+      (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_LOADER)
+        ? 1.1
+        : 1.05),
+    gunner:
+      commanderMastery *
+      (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_GUNNER)
+        ? 1.1
+        : 1.05),
+    driver:
+      commanderMastery *
+      (tank.crew.some(({ type }) => type === CrewType.CREW_TYPE_DRIVER)
+        ? 1.1
+        : 1.05),
+  };
+
+  function progressive(role: keyof typeof crewMastery) {
+    return progressiveStat(crewMastery[role]);
+  }
+  function degressive(role: keyof typeof crewMastery) {
+    return degressiveStat(crewMastery[role]);
   }
 
   function characteristic(name: CharacteristicName) {
@@ -93,7 +147,12 @@ export function computeCharacteristics(
     callback: (effect: BlitzEffectScript) => void,
   ) {
     if (!scriptsMap[side].has(name)) return;
-    callback(scriptsMap[side].get(name)!);
+
+    const scripts = scriptsMap[side].get(name)!;
+
+    for (const script of scripts) {
+      callback(script);
+    }
   }
 
   const context = {
@@ -125,6 +184,7 @@ export function computeCharacteristics(
     }
 
     if (!shouldRender) continue;
+    if (!("compute" in characteristic)) continue;
 
     const value = characteristic.compute(context);
 

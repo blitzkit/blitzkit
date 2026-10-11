@@ -110,7 +110,7 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     // render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "penetration", units: "mm" },
-      { name: "penetration_loss_by_distance" },
+      { name: "penetration_loss_by_distance", units: "percentage" },
       { name: "penetration_loss_after_ricochet" },
       { name: "shell_velocity", units: "m_s" },
       { name: "shell_range", units: "m" },
@@ -127,7 +127,7 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     name: "accuracy",
     // render: CharacteristicsGroupRender.Statistical,
     order: [
-      { name: "aim_time", decimals: 1, units: "s" },
+      { name: "aim_time", decimals: 2, units: "s" },
       { name: "dispersion", decimals: 3, units: "m" },
       { name: "dispersion_angle", decimals: 3, units: "deg" },
       { toy: "aim_time" },
@@ -178,9 +178,9 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     // render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "health", units: "hp" },
-      { name: "fire_chance", units: "%" },
+      { name: "fire_chance", units: "percentage" },
       { name: "fire_rate", units: "hp_s" },
-      { name: "ramming_resistance", units: "%" },
+      { name: "ramming_resistance", units: "percentage" },
 
       { toy: "fire_health_burn" },
 
@@ -193,7 +193,7 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     // render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "view_range", units: "m" },
-      { name: "camouflage", decimals: 0, units: "%" },
+      { name: "camouflage", decimals: 0, units: "percentage" },
 
       { toy: "view_range" },
 

@@ -17,7 +17,6 @@ export * from "./normalizeBoundingBox";
 export * from "./patientFetchJSON";
 export * from "./popularTanks";
 export * from "./progressiveStat";
-export * from "./resolveDpm";
 export * from "./resolvePenetrationCoefficient";
 export * from "./reviews";
 export * from "./romanize";

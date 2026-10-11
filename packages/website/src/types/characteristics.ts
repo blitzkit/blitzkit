@@ -34,8 +34,8 @@ export interface CharacteristicContext {
 
   equalizer: Equalizer;
 
-  progressive: number;
-  degressive: number;
+  progressive(role: CrewStatRole): number;
+  degressive(role: CrewStatRole): number;
 
   tank: TankDefinition;
   engine: EngineDefinition;
@@ -54,6 +54,8 @@ export interface CharacteristicContext {
     effect: (effect: BlitzEffectScript) => void,
   ): void;
 }
+
+export type CrewStatRole = "commander" | "loader" | "gunner" | "driver";
 
 export enum CharacteristicType {
   Enum,

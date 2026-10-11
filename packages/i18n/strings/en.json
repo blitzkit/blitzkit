@@ -8,6 +8,13 @@
     "s": "{value}s",
     "percentage": "{value}%",
     "deg_s": "{value}°/s",
+    "m_s": "{value}m/s",
+    "km_h": "{value}km/h",
+    "t": "{value}t",
+    "bhp": "{value}bhp",
+    "bhp_t": "{value}bhp/t",
+    "kN": "{value}kN",
+    "hp_s": "{value}hp/s",
     "plus": "+{value}"
   },
 
@@ -38,7 +45,7 @@
         "burst_size": "Burst size",
         "intra_burst": "Intra-burst",
         "penetration": "Penetration",
-        "penetration_loss_by_distance": "Penetration loss by distance",
+        "penetration_loss_by_distance": "Penetration loss by 500m",
         "penetration_loss_after_ricochet": "Penetration loss after ricochet",
         "shell_velocity": "Shell velocity",
         "shell_range": "Shell range",

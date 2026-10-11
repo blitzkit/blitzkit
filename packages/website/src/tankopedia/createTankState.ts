@@ -1,6 +1,7 @@
 import { createDefaultProvisions } from "@blitzkit/core";
 import type { TankDefinition } from "@blitzkit/protos";
 import { api } from "../api/dynamic";
+import { createTankEquipment } from "./createTankEquipment";
 import { createTankStatus } from "./createTankStatus";
 import type { TankState } from "./tankState";
 
@@ -27,13 +28,9 @@ export function createTankState(tank: TankDefinition) {
     shell: gun.shells[0].id,
     track: tank.tracks.at(-1)!.id,
 
-    environment: {
-      assault_distance: (gun.assault_ranges?.ranges[0].distance ?? 0) / 2,
-    },
-
     speed: 0,
 
-    equipment: {},
+    equipment: createTankEquipment(),
     status: createTankStatus(),
 
     model: models.models[tank.id],
