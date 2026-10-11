@@ -1,0 +1,17 @@
+.container {
+  flex: 1;
+
+  .label {
+    margin: var(--space-4) 0;
+
+    /* mt="2" gap="1" align="center" justify="center" direction="column" */
+
+    .count {
+      /* gap="2" */
+    }
+  }
+
+  .test-warning {
+    /* justify="center" mt="4" */
+  }
+}

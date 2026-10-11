@@ -4,13 +4,13 @@ import {
   idToRegion,
   type IndividualTankStats,
 } from "@blitzkit/core";
+import { api } from "../../api/dynamic";
 import { App } from "../../stores/app";
 import { Playlist } from "../../stores/playlist";
 import { TankFilters } from "../../stores/tankFilters";
-import { api } from "./api";
 import { filterTanks } from "./filterTanks";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 const tanks = Object.values(tankDefinitions.tanks);
 
 export async function generatePlaylist() {

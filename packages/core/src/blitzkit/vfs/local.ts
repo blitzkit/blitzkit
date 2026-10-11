@@ -1,12 +1,20 @@
-import { readdir } from "node:fs/promises";
+import type { readdir } from "node:fs/promises";
 import { AbstractVFS } from "./abstract";
 
 export class LocalVFS extends AbstractVFS {
+  protected readdir?: typeof readdir;
+
   constructor(private base: string) {
     super();
   }
 
-  async init() {
+  async _init() {
+    const path = await import("node:path/posix");
+    const fs = await import("node:fs/promises");
+
+    this.normalizePath = path.normalize;
+    this.readdir = fs.readdir;
+
     return this;
   }
 
@@ -25,7 +33,7 @@ export class LocalVFS extends AbstractVFS {
 
   async _dir(path: string) {
     try {
-      return await readdir(`${this.base}/${path}`);
+      return await this.readdir!(`${this.base}/${path}`);
     } catch (_) {
       return [];
     }

@@ -1,6 +1,9 @@
 ---
+import ColorScale from "../../../../components/ColorScale.astro";
+import { Section } from "../../../../components/Section";
+import ToolBanner from "../../../../components/ToolBanner.astro";
 import { tools } from "../../../../constants/tools";
-import ToolLayout from "../../../../layouts/ToolLayout.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
@@ -8,8 +11,15 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<ToolLayout {locale} tool={tools.tanks}>
-  <Page {locale} client:only="react">
-    <Page {locale} skeleton slot="fallback" />
-  </Page>
-</ToolLayout>
+<BaseLayout {locale} accent="purple">
+  <ColorScale color="blue" />
+  <ColorScale color="amber" />
+
+  <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
+
+  <Section>
+    <Page {locale} client:only="react">
+      <Page {locale} skeleton slot="fallback" />
+    </Page>
+  </Section>
+</BaseLayout>

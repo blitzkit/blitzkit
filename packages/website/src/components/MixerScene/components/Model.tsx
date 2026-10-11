@@ -2,7 +2,7 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { useCallback, useEffect, useRef } from "react";
 import { Group, Vector2 } from "three";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../api/dynamic";
 import { jsxTree } from "../../../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,
@@ -12,7 +12,7 @@ import { controlsEnabledEvent } from "../../../core/controlsEnabled";
 import { useModel } from "../../../hooks/useModel";
 import { Mixer } from "../../../stores/mixer";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function Model() {
   const canvas = useThree((state) => state.gl.domElement);

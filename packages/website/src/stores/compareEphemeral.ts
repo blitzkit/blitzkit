@@ -1,4 +1,4 @@
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 import type { DuelMember } from "./duel";
 
 export interface CompareMember extends DuelMember {
@@ -15,9 +15,9 @@ export interface CompareEphemeral {
   };
 }
 
-export const CompareEphemeral = new Varuna<
+export const CompareEphemeral = new Soapstone<
   CompareEphemeral,
-  Record<string, number>
+  [Record<string, number>]
 >((crewSkills) => ({
   crewSkills,
   equalize: false,

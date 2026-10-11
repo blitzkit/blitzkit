@@ -1,16 +1,14 @@
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import type { Group } from "three";
-import { degToRad } from "three/src/math/MathUtils.js";
-import { api } from "../../../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../../../api/dynamic";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../../../../../../../../core/blitzkit/modelTransform";
-import { Duel } from "../../../../../../../../stores/duel";
 import { ModelChunk } from "./ModelChunk";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function CanvasContent() {
   const hullWrapper = useRef<Group>(null);
@@ -58,11 +56,7 @@ export function CanvasContent() {
         rotation={[initialTurretPitch, 0, 0]}
       >
         <group
-          position={[
-            0,
-            -turretModel.gun_origin!.y,
-            -turretModel.gun_origin!.z,
-          ]}
+          position={[0, -turretModel.gun_origin!.y, -turretModel.gun_origin!.z]}
         >
           <ModelChunk only="turret" />
 

@@ -1,9 +1,5 @@
-import {
-  alias,
-  TankPriceType,
-  TankType,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { TankPriceType, TankType } from "@blitzkit/protos";
 import { Box, Flex } from "@radix-ui/themes";
 import { Var } from "../../../core/radix/var";
 import { useLocale } from "../../../hooks/useLocale";

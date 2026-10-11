@@ -1,11 +1,12 @@
-import { CaretDownIcon } from '@radix-ui/react-icons';
-import { Button, DropdownMenu } from '@radix-ui/themes';
-import { useLocale } from '../../../hooks/useLocale';
+import { CaretDownIcon } from "@radix-ui/react-icons";
+import { useStrings } from "../../../hooks/useStrings";
 import type {
   TankopediaSortBy,
   TankopediaSortDirection,
-} from '../../../stores/tankopediaPersistent';
-import { TankSort } from '../../../stores/tankopediaSort';
+} from "../../../stores/tankopediaPersistent";
+import { TankSort } from "../../../stores/tankopediaSort";
+import { Button } from "../../Button";
+import { DropdownMenu } from "../../DropdownMenu";
 
 interface ItemProps {
   by: TankopediaSortBy;
@@ -16,7 +17,7 @@ interface ItemProps {
 }
 
 function Item({ by }: ItemProps) {
-  const { strings } = useLocale();
+  const strings = useStrings();
   const _by = TankSort.use((state) => state.by);
 
   return (
@@ -35,11 +36,11 @@ function Item({ by }: ItemProps) {
 
 export function Sort() {
   const direction = TankSort.use((state) => state.direction);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
         <Button variant="surface" color="gray">
           {strings.website.common.tank_search.sort_dropdown.label}
           <CaretDownIcon />

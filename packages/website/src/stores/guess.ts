@@ -20,7 +20,7 @@ export interface Guess {
   tiers: number[];
 }
 
-export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
+export const Guess = new Soapstone<Guess, [TankDefinition]>((tank) => ({
   tank,
   guessState: GuessState.NotGuessed,
   totalGuesses: 0,

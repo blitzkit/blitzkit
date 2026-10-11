@@ -4,56 +4,58 @@ import {
   resolveDpm,
   SEARCH_KEYS,
   unionBoundingBox,
-  type TankDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { Callout, Flex, Link, Text, type FlexProps } from "@radix-ui/themes";
+import type { TankDefinition } from "@blitzkit/protos";
 import fuzzysort from "fuzzysort";
-import { times, uniq } from "lodash-es";
-import { memo, useEffect, useMemo, useState } from "react";
+import { uniq } from "lodash-es";
+import { memo, useMemo } from "react";
 import usePromise from "react-promise-suspense";
+import { api } from "../../api/dynamic";
 import { awaitableTankNames } from "../../core/awaitables/tankNames";
-import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { resolveReload } from "../../core/blitzkit/resolveReload";
 import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { App } from "../../stores/app";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { SORT_UNITS } from "../../stores/tankopediaPersistent/constants";
 import { TankSort } from "../../stores/tankopediaSort";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
-import { TankSearchCard } from "./components/Card";
-import { FilterControl } from "./components/FilterControl";
-import { NoResults } from "./components/NoResults";
-import { RecentlyViewed } from "./components/RecentlyViewed";
-import { SearchBar } from "./components/SearchBar";
-import { SkeletonTankCard } from "./components/SkeletonTankCard";
-import { TankCardWrapper } from "./components/TankCardWrapper";
+import { Flex } from "../Flex";
+import { IncrementalLoader } from "../IncrementalLoader";
+import { Link } from "../Link";
+import { RecentlyViewedTanks } from "../RecentlyViewedTanks";
+import { TankCard } from "../TankCard";
+import { TankCardWrapper } from "../TankCardWrapper";
+import { TankSearchBar } from "../TankSearchBar";
+import { TankSearchFilters } from "../TankSearchFilters";
+import { TankSearchNoResults } from "../TankSearchNoResults";
+import { Text } from "../Text";
 import { MAX_RECENTLY_VIEWED } from "./constants";
+import styles from "./index.module.css";
 
-export type TankSearchProps = MaybeSkeletonComponentProps &
-  Omit<FlexProps, "onSelect"> & {
-    compact?: boolean;
-    onSelect?: (tank: TankDefinition) => void;
-    onSelectAll?: (tanks: TankDefinition[]) => void;
-  };
-
-const PREVIEW_COUNT = 20;
-const DEFAULT_LOADED_CARDS = 64;
+export type TankSearchProps = MaybeSkeletonComponentProps & {
+  compact?: boolean;
+  onSelect?: (tank: TankDefinition) => void;
+  onSelectAll?: (tanks: TankDefinition[]) => void;
+};
 
 const [gameDefinitions, modelDefinitions, tankDefinitions, tankNames] =
   await Promise.all([
-    api.gameDefinitions(),
-    api.modelDefinitions(),
-    api.tankDefinitions(),
+    api.game(),
+    api.models(),
+    api.tanks(),
     awaitableTankNames,
   ]);
 
 export const TankSearch = memo<TankSearchProps>(
-  ({ compact, onSelect, onSelectAll, skeleton, ...props }) => {
-    const { strings, locale } = useLocale();
+  ({ compact, onSelect, onSelectAll, skeleton }) => {
+    const strings = useStrings();
+    const locale = useLocale();
     const wargaming = App.use((state) => state.logins.wargaming);
     const awaitedTanksDefinitionsArray = Object.values(tankDefinitions.tanks);
     const tankopediaSort = TankSort.use();
@@ -70,9 +72,7 @@ export const TankSearch = memo<TankSearchProps>(
         } else {
           return Promise.resolve(
             fuzzysort
-              .go(tankFilters.search, tankNames, {
-                keys: SEARCH_KEYS,
-              })
+              .go(tankFilters.search, tankNames, { keys: SEARCH_KEYS })
               .map((result) => tankDefinitions.tanks[result.obj.id]),
           );
         }
@@ -419,130 +419,94 @@ export const TankSearch = memo<TankSearchProps>(
       }
     }, [tankFilters, tankopediaSort]);
 
-    const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED_CARDS);
-    const tanks = sorted.slice(0, loadedCards);
-
-    useEffect(() => {
-      setLoadedCards(DEFAULT_LOADED_CARDS);
-    }, [tankFilters, tankopediaSort]);
+    const data = sorted.map((tank) => ({
+      key: `${tank.id}`,
+      tank,
+      onTankSelect: onSelect,
+    }));
 
     return (
-      <Flex direction="column" gap="2" flexGrow="1" {...props}>
-        <SearchBar
+      <Flex className={styles.container} column gap="4">
+        <TankSearchBar
           skeleton={skeleton}
-          topResult={tanks?.[0]}
+          topResult={sorted[0]}
           onSelect={onSelect}
         />
 
-        {!tankFilters.search && !tankFilters.searching && <FilterControl />}
+        {!tankFilters.search && <TankSearchFilters />}
 
-        {!skeleton && !compact && <RecentlyViewed />}
+        {!skeleton && !compact && <RecentlyViewedTanks />}
 
-        <Flex mt="2" gap="1" align="center" justify="center" direction="column">
-          <Flex gap="2">
-            <Text color="gray">
-              {sorted.length === 1
-                ? strings.website.common.tank_search.count_singular
-                : literals(strings.website.common.tank_search.count_plural, {
-                    count: sorted.length.toLocaleString(locale),
-                  })}
-            </Text>
+        {sorted.length > 0 && (
+          <Flex justify="center" className={styles.label}>
+            <div className={styles.count}>
+              <Text lowContrast>
+                {sorted.length === 1
+                  ? strings.website.common.tank_search.count_singular
+                  : literals(strings.website.common.tank_search.count_plural, {
+                      count: sorted.length.toLocaleString(locale),
+                    })}
+              </Text>
 
-            {onSelectAll && (
-              <Link
-                underline="always"
-                href="#"
-                onClick={(event) => {
-                  event.preventDefault();
-                  onSelectAll(sorted);
-                  TankopediaPersistent.mutate((draft) => {
-                    draft.recentlyViewed = uniq([
-                      ...sorted.map(({ id }) => id),
-                      ...draft.recentlyViewed,
-                    ])
-                      .filter((id) => id in tankDefinitions.tanks)
-                      .slice(0, MAX_RECENTLY_VIEWED);
-                  });
-                }}
-              >
-                {strings.website.common.tank_search.select_all}
-              </Link>
+              {onSelectAll && (
+                <Link
+                  underline="always"
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    onSelectAll(sorted);
+                    TankopediaPersistent.mutate((draft) => {
+                      draft.recentlyViewed = uniq([
+                        ...sorted.map(({ id }) => id),
+                        ...draft.recentlyViewed,
+                      ])
+                        .filter((id) => id in tankDefinitions.tanks)
+                        .slice(0, MAX_RECENTLY_VIEWED);
+                    });
+                  }}
+                >
+                  {strings.website.common.tank_search.select_all}
+                </Link>
+              )}
+            </div>
+
+            {tankopediaSort.by !== "meta.none" && (
+              <Text color="gray">
+                {literals(strings.website.common.tank_search.sorting_by, {
+                  name: strings.website.common.tank_search.sort[
+                    tankopediaSort.by
+                  ],
+                })}
+                {SORT_UNITS[tankopediaSort.by] === undefined
+                  ? ""
+                  : ` (${SORT_UNITS[tankopediaSort.by]})`}
+                , {tankopediaSort.direction}
+              </Text>
             )}
           </Flex>
-
-          {tankopediaSort.by !== "meta.none" && (
-            <Text color="gray">
-              {literals(strings.website.common.tank_search.sorting_by, {
-                name: strings.website.common.tank_search.sort[
-                  tankopediaSort.by
-                ],
-              })}
-              {SORT_UNITS[tankopediaSort.by] === undefined
-                ? ""
-                : ` (${SORT_UNITS[tankopediaSort.by]})`}
-              , {tankopediaSort.direction}
-            </Text>
-          )}
-        </Flex>
+        )}
 
         {tankFilters.showTesting && !tankFilters.showNonTesting && (
-          <Flex justify="center" mt="4">
-            <Callout.Root color="amber">
-              <Callout.Icon>
-                <ExperimentIcon style={{ width: "1em", height: "1em" }} />
-              </Callout.Icon>
-              <Callout.Text>
-                {strings.website.common.warnings.test}
-              </Callout.Text>
-            </Callout.Root>
-          </Flex>
+          <div className={styles["test-warning"]}>
+            <Callout color="amber">
+              <ExperimentIcon style={{ width: "1em", height: "1em" }} />
+              {strings.website.common.warnings.test}
+            </Callout>
+          </div>
         )}
 
-        {!skeleton && !tankFilters.searching && (
-          <>
-            {tanks.length > 0 && (
-              <TankCardWrapper>
-                {tanks.map((tank) => (
-                  <TankSearchCard
-                    tank={tank}
-                    key={tank.id}
-                    onSelect={onSelect}
-                  />
-                ))}
+        <TankCardWrapper>
+          <IncrementalLoader
+            skeleton={skeleton}
+            initial={5 * 5}
+            intermediate={5 * 2}
+            data={data}
+            Component={TankCard}
+          />
+        </TankCardWrapper>
 
-                {times(
-                  Math.min(PREVIEW_COUNT, sorted.length - loadedCards),
-                  (index) => {
-                    return (
-                      <SkeletonTankCard
-                        key={index}
-                        onIntersection={() => {
-                          setLoadedCards((state) =>
-                            Math.min(state + 2, sorted.length),
-                          );
-                        }}
-                      />
-                    );
-                  },
-                )}
-              </TankCardWrapper>
-            )}
-
-            {tanks.length === 0 && <NoResults type="search" />}
-          </>
-        )}
-
-        {(skeleton || tankFilters.searching) && (
-          <TankCardWrapper>
-            {times(
-              Math.round(
-                skeleton ? DEFAULT_LOADED_CARDS : 10 + 10 * Math.random(),
-              ),
-              (index) => (
-                <SkeletonTankCard key={index} />
-              ),
-            )}
-          </TankCardWrapper>
+        {!skeleton && sorted.length === 0 && (
+          <TankSearchNoResults type="search" />
         )}
       </Flex>
     );

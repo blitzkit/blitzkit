@@ -1,15 +1,13 @@
-import {
-  createDefaultSkills,
-  ShellDefinition,
-  type ModelDefinition,
-} from "@blitzkit/core";
+import { createDefaultSkills } from "@blitzkit/core";
+import type { ShellDefinition, TankDefinition } from "@blitzkit/protos";
+import { Soapstone } from "soapstone";
 import type { Vector3 } from "three";
-import { Varuna } from "varuna";
-import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
-import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
+import { api } from "../api/dynamic";
+import type { ArmorType } from "../components/SpacedArmorScene";
+import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
 import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
-import { api } from "../core/blitzkit/api";
-import { App } from "./app";
+import { createTankState } from "../tankopedia/createTankState";
+import type { TankState } from "../tankopedia/tankState";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
@@ -78,14 +76,23 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
+export interface TankEnvironment {
+  equalize: boolean;
+  distance: number;
+}
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
+
+  protagonist: TankState;
+  antagonist: TankState;
+  environment: TankEnvironment;
+
   modelRequested: boolean;
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
-  model: ModelDefinition;
   editStatic: boolean;
   highlightArmor?: {
     editingPlate: boolean;
@@ -108,17 +115,27 @@ interface Tankopedia {
   statSearch?: string;
 }
 
-const skillDefinitions = await api.skillDefinitions();
+const skills = await api.skills();
+const models = await api.models();
 
-export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
-  disturbed: false,
-  revealed: false,
-  modelRequested: App.state.autoLoadModels,
-  relativeAgainst: TankopediaRelativeAgainst.Class,
-  editStatic: false,
-  skills: createDefaultSkills(skillDefinitions),
-  model,
-  xpMultiplier: 1,
-  requestedDisplay: TankopediaDisplay.Model,
-  display: TankopediaDisplay.Model,
-}));
+export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
+  (tank) => ({
+    disturbed: false,
+    revealed: false,
+
+    protagonist: createTankState(tank),
+    antagonist: createTankState(tank),
+    model: models.models[tank.id],
+
+    environment: { equalize: false, distance: 0 },
+
+    modelRequested: false,
+
+    relativeAgainst: TankopediaRelativeAgainst.Class,
+    editStatic: false,
+    skills: createDefaultSkills(skills),
+    xpMultiplier: 1,
+    requestedDisplay: TankopediaDisplay.Model,
+    display: TankopediaDisplay.Model,
+  }),
+);

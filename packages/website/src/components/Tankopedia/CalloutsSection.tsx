@@ -3,14 +3,14 @@ import { MinusCircledIcon } from "@radix-ui/react-icons";
 import { Callout, Flex } from "@radix-ui/themes";
 import { uniq } from "lodash-es";
 import { useEffect } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../api/dynamic";
 import { Duel } from "../../stores/duel";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { AesonPlug } from "../AesonPlug";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function CalloutsSection() {
   const tank = Duel.use((state) => state.protagonist.tank);

@@ -1,10 +1,6 @@
-import {
-  alias,
-  SEARCH_KEYS,
-  TankDefinition,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, SEARCH_KEYS, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import { TankDefinition } from "@blitzkit/protos";
 import {
   ArrowRightIcon,
   EyeOpenIcon,
@@ -29,6 +25,7 @@ import {
 import fuzzysort from "fuzzysort";
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "../api/dynamic";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
 import { awaitableTiers } from "../core/awaitables/tiers";
 import { api } from "../core/blitzkit/api";

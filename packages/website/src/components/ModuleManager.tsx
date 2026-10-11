@@ -1,12 +1,12 @@
-import {
-  TIER_ROMAN_NUMERALS,
-  type EngineDefinition,
-  type GunDefinition,
-  type ShellDefinition,
-  type TankDefinition,
-  type TrackDefinition,
-  type TurretDefinition,
-} from "@blitzkit/core";
+import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import type {
+  EngineDefinition,
+  GunDefinition,
+  ShellDefinition,
+  TankDefinition,
+  TrackDefinition,
+  TurretDefinition,
+} from "@blitzkit/protos";
 import { DropdownMenu, Flex } from "@radix-ui/themes";
 import { useState } from "react";
 import { useLocale } from "../hooks/useLocale";

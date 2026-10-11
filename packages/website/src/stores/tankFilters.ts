@@ -1,16 +1,11 @@
+import type { CaseType } from "@blitzkit/core";
 import type {
   GunDefinition,
   ShellType,
   TankClass,
   TankType,
-} from "@blitzkit/core";
-import { Varuna } from "varuna";
-
-export type CaseType<T> = T extends {
-  gun_type?: { $case: infer U; value: any };
-}
-  ? U
-  : never;
+} from "@blitzkit/protos";
+import { Soapstone } from "soapstone";
 
 export interface TankFilters {
   tiers: number[];
@@ -18,7 +13,6 @@ export interface TankFilters {
   classes: TankClass[];
   types: TankType[];
   search: string | null;
-  searching: boolean;
   gunType: CaseType<GunDefinition>[];
   shells: [ShellType | null, ShellType | null, ShellType | null];
   consumables: number[];
@@ -32,13 +26,12 @@ export interface TankFilters {
   showUnowned: boolean;
 }
 
-export const TankFilters = new Varuna<TankFilters>({
+export const TankFilters = new Soapstone<TankFilters>({
   tiers: [],
   nations: [],
   classes: [],
   types: [],
   search: null,
-  searching: false,
   gunType: [],
   shells: [null, null, null],
   consumables: [],

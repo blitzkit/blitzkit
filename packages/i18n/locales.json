@@ -1,14 +1,45 @@
 {
   "default": "en",
   "supported": [
-    { "locale": "en" },
-    { "locale": "es" },
-    { "locale": "fr" },
-    { "locale": "ja" },
-    { "locale": "pl" },
-    { "locale": "pt" },
-    { "locale": "ru" },
-    { "locale": "uk" },
-    { "locale": "zh", "blitz": "zh_Hans_SG" }
+    {
+      "locale": "en",
+      "flag": "🇺🇸"
+    },
+    {
+      "locale": "es",
+      "flag": "🇪🇸"
+    },
+    {
+      "locale": "fr",
+      "flag": "🇫🇷"
+    },
+    {
+      "locale": "ja",
+      "flag": "🇯🇵"
+    },
+    {
+      "locale": "pl",
+      "flag": "🇵🇱"
+    },
+    {
+      "locale": "pt",
+      "flag": "🇵🇹"
+    },
+    {
+      "locale": "ru",
+      "flag": "🇷🇺"
+    },
+    {
+      "locale": "uk",
+      "flag": "🇺🇦"
+    },
+    {
+      "locale": "zh",
+
+      "variant_blitz_local": "zh_Hans_SG",
+      "variant_blitz_cdn": "zh-Hans",
+
+      "flag": "🇨🇳"
+    }
   ]
 }

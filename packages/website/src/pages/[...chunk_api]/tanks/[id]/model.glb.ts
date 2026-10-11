@@ -262,13 +262,11 @@ async function extractModel(vfs: AbstractVFS, path: string) {
             break;
 
           case "TransformComponent": {
-            const localTranslation = component["tc.localTranslation"];
-            // The game resets top-level node translation to [0, 0, 0] on load.
-            // Child nodes must keep their authored local offsets.
-            node.setTranslation(
-              parent instanceof Scene ? [0, 0, 0] : localTranslation,
-            );
-            node.setRotation(component["tc.localRotation"]);
+            const t = component["tc.localTranslation"];
+            const r = component["tc.localRotation"];
+
+            node.setTranslation([t[0], t[2], -t[1]]);
+            node.setRotation([r[0], r[2], -r[1], r[3]]);
             node.setScale(component["tc.localScale"]);
 
             break;
@@ -332,10 +330,27 @@ async function extractModel(vfs: AbstractVFS, path: string) {
                 }
 
                 const vertexSize = vertexAttributeGltfVectorSizes[attribute];
+                const processed = new Float32Array(value.flat());
+
+                if (
+                  attribute === VertexAttribute.VERTEX ||
+                  attribute === VertexAttribute.NORMAL ||
+                  attribute === VertexAttribute.TANGENT ||
+                  attribute === VertexAttribute.BINORMAL
+                ) {
+                  for (let i = 0; i < processed.length; i += 3) {
+                    const y = processed[i + 1];
+                    const z = processed[i + 2];
+
+                    processed[i + 1] = z;
+                    processed[i + 2] = -y;
+                  }
+                }
+
                 const attributeAccessor = document
                   .createAccessor(name)
                   .setType(vertexSize === 1 ? "SCALAR" : `VEC${vertexSize}`)
-                  .setArray(new Float32Array(value.flat()))
+                  .setArray(processed)
                   .setBuffer(buffer);
 
                 primitive.setAttribute(name, attributeAccessor);

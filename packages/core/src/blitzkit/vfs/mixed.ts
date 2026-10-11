@@ -5,7 +5,7 @@ export class MixedVFS extends AbstractVFS {
     super();
   }
 
-  async init() {
+  async _init() {
     for (const vfs of this.vfses) {
       await vfs.init();
     }

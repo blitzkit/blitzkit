@@ -1,55 +1,65 @@
-import { TankType } from "@blitzkit/core";
-import { PageWrapper } from "../../../../../components/PageWrapper";
-import { CalloutsSection } from "../../../../../components/Tankopedia/CalloutsSection";
-import { CharacteristicsSection } from "../../../../../components/Tankopedia/CharacteristicsSection";
-import { GameModeSection } from "../../../../../components/Tankopedia/GameModeSection";
-import { GuideSection } from "../../../../../components/Tankopedia/GuideSection";
-import { HeroSection } from "../../../../../components/Tankopedia/HeroSection";
-import { MetaSection } from "../../../../../components/Tankopedia/MetaSection";
-import { TechTreeSection } from "../../../../../components/Tankopedia/TechTreeSection";
-import { VideoSection } from "../../../../../components/Tankopedia/VideoSection";
-import { api } from "../../../../../core/blitzkit/api";
-import {
-  LocaleProvider,
-  type LocaleAcceptorProps,
-} from "../../../../../hooks/useLocale";
-import { Duel } from "../../../../../stores/duel";
+import { useMemo } from "react";
+import { api } from "../../../../../api/dynamic";
+import type { ThicknessRange } from "../../../../../components/StaticArmor";
+import { TankopediaCharacteristics } from "../../../../../components/TankopediaCharacteristics";
+import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
+import { defaultEqualizer } from "../../../../../config/equalizer";
+import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../../hocs/withLocale";
+import { useAwait } from "../../../../../hooks/useAwait";
+import { useCharacteristics } from "../../../../../hooks/useCharacteristics";
 import { Tankopedia } from "../../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import type { TankGuide } from "../../../../../types/tankGuide";
+import styles from "./_index.module.css";
 
-type PageProps = MaybeSkeletonComponentProps &
-  LocaleAcceptorProps & {
-    id: number;
-    guide?: TankGuide;
-  };
+type PageProps = MaybeSkeletonComponentProps & {
+  id: number;
+};
 
-const [tankDefinitions, modelDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.modelDefinitions(),
-]);
+const tanks = await api.tanks();
 
-export function Page({ id, skeleton, locale, guide }: PageProps) {
-  const tank = tankDefinitions.tanks[id];
-  const model = modelDefinitions.models[id];
+export const Page = withErrorWrapper(
+  withLocale<PageProps>(({ skeleton, id }) => {
+    const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
-  Tankopedia.useInitialization(model);
-  Duel.useInitialization({ tank, model });
+    Tankopedia.useInitialization(protagonistTank);
 
-  return (
-    <LocaleProvider locale={locale}>
-      <PageWrapper p="0" maxWidth="unset" color="purple" gap="9" pb="9">
-        <HeroSection skeleton={skeleton} />
-        <MetaSection />
-        <CalloutsSection />
-        {tank.type === TankType.TANK_TYPE_RESEARCHABLE && !tank.deprecated && (
-          <TechTreeSection skeleton={skeleton} />
-        )}
-        <CharacteristicsSection skeleton={skeleton} />
-        <GameModeSection />
-        {guide && <GuideSection guide={guide} />}
-        <VideoSection skeleton={skeleton} />
-      </PageWrapper>
-    </LocaleProvider>
-  );
-}
+    const protagonist = Tankopedia.use((state) => state.protagonist);
+    const equalize = Tankopedia.use((state) => state.environment.equalize);
+
+    const characteristics = useCharacteristics();
+
+    const thicknessRange = useMemo(() => {
+      const entries = Object.values(tanks.tanks);
+      const filtered = entries.filter(
+        (thisTank) => thisTank.tier === protagonistTank.tier,
+      );
+      const value =
+        (filtered.reduce((accumulator, thisTank) => {
+          return (
+            accumulator +
+            thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+              ((equalize ? thisTank.equalizer : undefined) ?? defaultEqualizer)
+                .penetration
+          );
+        }, 0) /
+          filtered.length) *
+        (3 / 4);
+
+      return { value } satisfies ThicknessRange;
+    }, [protagonist, equalize]);
+
+    return (
+      <div className={styles.page}>
+        <div className={styles.loadout}>
+          <TankopediaLoadout characteristics={characteristics} />
+        </div>
+
+        <div className={styles.sandbox}>
+          {/* {!skeleton && <TankopediaSandbox thicknessRange={thicknessRange} />} */}
+          <TankopediaCharacteristics characteristics={characteristics} />
+        </div>
+      </div>
+    );
+  }),
+);

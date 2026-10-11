@@ -1,3 +1,1 @@
-import { fetchAverageDefinitions } from '@blitzkit/core';
-
-export const awaitableAverageDefinitions = fetchAverageDefinitions();
+export const awaitableAverageDefinitions = fetchAverage();

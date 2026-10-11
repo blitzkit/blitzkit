@@ -1,4 +1,5 @@
-import { TankDefinition, formatCompact } from "@blitzkit/core";
+import { formatCompact } from "@blitzkit/core";
+import { TankDefinition } from "@blitzkit/protos";
 import { Table } from "@radix-ui/themes";
 import { memo } from "react";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";

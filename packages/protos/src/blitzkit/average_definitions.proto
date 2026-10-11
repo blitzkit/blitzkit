@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message AverageDefinitions {
+  map<uint32, AverageDefinitionsEntry> averages = 1;
+  Samples                              samples  = 2;
+  uint64                               time     = 3;
+}
+
+message AverageDefinitionsEntry {
+  AverageDefinitionsAllStats mu      = 1;
+  AverageDefinitionsAllStats sigma   = 2;
+  AverageDefinitionsAllStats r       = 3;
+  Samples                    samples = 4;
+}
+
+message AverageDefinitionsAllStats {
+  float battles                = 1;
+  float capture_points         = 2;
+  float damage_dealt           = 3;
+  float damage_received        = 4;
+  float dropped_capture_points = 5;
+  float frags                  = 6;
+  float frags8p                = 7;
+  float hits                   = 8;
+  float losses                 = 9;
+  float max_frags              = 10;
+  float max_xp                 = 11;
+  float shots                  = 12;
+  float spotted                = 13;
+  float survived_battles       = 14;
+  float win_and_survived       = 15;
+  float wins                   = 16;
+  float xp                     = 17;
+  float battle_life_time       = 18;
+}
+
+message Samples {
+  uint32 d_1   = 1;
+  uint32 d_7   = 2;
+  uint32 d_30  = 3;
+  uint32 d_60  = 4;
+  uint32 d_90  = 5;
+  uint32 d_120 = 6;
+  uint32 total = 7;
+}

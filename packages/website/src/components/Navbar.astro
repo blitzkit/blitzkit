@@ -19,9 +19,7 @@ export interface Props {
 }
 
 const { integrated = false } = Astro.props;
-const toolsFiltered = Object.values(tools).filter(
-  (tool) => !tool.href && !tool.disabled
-);
+const toolsFiltered = Object.entries(tools).filter(([, tool]) => !tool.href);
 const { locale } = Astro.props;
 const branchName = resolveBranchName(locale);
 const isBranchNamed = branchName !== undefined;
@@ -141,12 +139,13 @@ const strings = getStrings(locale);
           className="tools"
         >
           {
-            toolsFiltered.map((tool) => {
-              const selected = Astro.url.pathname.includes(`/${tool.id}`);
+            toolsFiltered.map(([id, tool]) => {
+              const selected = Astro.url.pathname.includes(
+                `/${tool.path ?? id}`,
+              );
               const toolStrings =
                 strings.website.tools[
-                  (tool.strings ??
-                    tool.id) as keyof typeof strings.website.tools
+                  (tool.strings ?? id) as keyof typeof strings.website.tools
                 ];
 
               return (
@@ -156,7 +155,7 @@ const strings = getStrings(locale);
                   color="gray"
                   highContrast={selected}
                   size={{ initial: "1", md: "2" }}
-                  href={`/${tool.id}`}
+                  href={`/${tool.path ?? id}`}
                   underline="hover"
                 >
                   {toolStrings.name}
@@ -207,10 +206,10 @@ const strings = getStrings(locale);
         display={{ initial: "flex", sm: "none" }}
       >
         {
-          toolsFiltered.map((tool) => {
+          toolsFiltered.map(([id, tool]) => {
             const toolStrings =
               strings.website.tools[
-                (tool.strings ?? tool.id) as keyof typeof strings.website.tools
+                (tool.strings ?? id) as keyof typeof strings.website.tools
               ];
 
             return (
@@ -218,12 +217,12 @@ const strings = getStrings(locale);
                 color="gray"
                 highContrast
                 style={{ display: "contents" }}
-                href={`/${tool.id}`}
+                href={`/${tool.path ?? id}`}
               >
                 <Box
                   style={{
                     borderRadius: Var("radius-2"),
-                    backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
+                    backgroundImage: `url(/assets/images/tools/${id}.webp)`,
                     backgroundSize: "200%",
                     backgroundPosition: "right center",
                   }}

@@ -1,11 +1,13 @@
 import {
   alias,
-  GunDefinition,
-  TankDefinition,
   TIER_ROMAN_NUMERALS,
-  TurretDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import {
+  GunDefinition,
+  TankDefinition,
+  TurretDefinition,
+} from "@blitzkit/protos";
 import { CaretRightIcon, CaretUpIcon, UpdateIcon } from "@radix-ui/react-icons";
 import {
   Box,
@@ -19,12 +21,12 @@ import {
   type ButtonProps,
 } from "@radix-ui/themes";
 import { useRef, useState } from "react";
+import { api } from "../../../../api/dynamic";
 import { MixerScene } from "../../../../components/MixerScene";
 import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton";
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../../components/ScreenshotButton";
 import { TankSearch } from "../../../../components/TankSearch";
-import { api } from "../../../../core/blitzkit/api";
 import { curateMixer } from "../../../../core/blitzkit/curateMixer";
 import {
   LocaleProvider,
@@ -35,10 +37,8 @@ import { Mixer } from "../../../../stores/mixer";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
-const modelDefinition = await api
-  .modelDefinitions()
-  .then(({ models }) => models[1]);
-const tankDefinitions = await api.tankDefinitions();
+const modelDefinition = await api.models().then(({ models }) => models[1]);
+const tankDefinitions = await api.tanks();
 
 export function Page({
   locale,

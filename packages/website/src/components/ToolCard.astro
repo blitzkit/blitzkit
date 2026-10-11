@@ -1,44 +1,35 @@
 ---
-import { CaretRightIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Text,
-  type ButtonProps,
-} from "@radix-ui/themes";
+import { api } from "../api/dynamic";
 import type { Tool } from "../constants/tools";
-import { getStrings } from "../core/i18n/getStrings";
+import { Heading } from "./Heading";
 import { LinkI18n } from "./LinkI18n";
 
 interface Props {
   tool: Tool;
   locale: string;
+  minor?: boolean;
 }
 
-const { locale, tool } = Astro.props;
-const strings = getStrings(locale);
-const toolStrings =
-  strings.website.tools[
-    (tool.strings ?? tool.id) as keyof typeof strings.website.tools
-  ];
+const { locale, tool, minor } = Astro.props;
+const strings = await api.strings(locale);
+const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>
   .container {
-    border-radius: var(--radius-2);
+    flex: 1;
+
+    display: flex;
+
+    border-radius: var(--space-3);
     background-size: cover;
     background-position: center;
-    height: 16rem;
+
+    position: relative;
+    overflow: hidden;
 
     &[data-disabled="true"] {
       opacity: 0.25;
-    }
-
-    &[data-significant="true"] {
-      width: 100%;
-      height: min(20rem, 50vh);
     }
   }
 
@@ -48,82 +39,63 @@ const toolStrings =
     height: 100%;
     flex-direction: column;
     color: inherit;
+
+    .background {
+      flex: 1;
+
+      background-size: cover;
+      background-position: center;
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      width: 100%;
+
+      padding: var(--space-5);
+      box-sizing: border-box;
+
+      backdrop-filter: blur(64px);
+      -webkit-backdrop-filter: blur(64px);
+
+      &[data-minor="true"] {
+        padding: var(--space-4);
+      }
+
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
   }
 </style>
 
-<Flex
-  style={{
-    backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-  }}
-  data-significant={tool.significant}
-  className="container"
-  position="relative"
-  overflow="hidden"
-  flexGrow={tool.significant ? undefined : "1"}
-  flexBasis={tool.significant ? undefined : { initial: undefined, sm: "0" }}
+<div
+  style={{ backgroundImage: `url(/media/tools/banners/${tool.id}.webp)` }}
+  class="container"
 >
   <LinkI18n
     {locale}
     className="link"
-    underline="none"
+    underline="never"
     href={tool.href ?? `/${tool.id}`}
     target={tool.href ? "_blank" : undefined}
   >
-    <Box
-      flexGrow="1"
-      style={{
-        backgroundImage: `url(/assets/images/tools/${tool.id}.webp)`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    />
-
-    <Flex
-      px={{ initial: "6", md: tool.significant ? "8" : "6" }}
-      py={{ initial: "4", sm: tool.significant ? "6" : "4" }}
-      gap="4"
-      align="center"
-      justify="between"
-      width="100%"
-      direction={{ initial: "column", xs: "row" }}
-      style={{
-        backgroundColor: "var(--color-panel-translucent)",
-        backdropFilter: "blur(64px)",
-        WebkitBackdropFilter: "blur(64px)",
-      }}
+    <div
+      class="background"
+      style={{ backgroundImage: `url(/media/tools/banners/${tool.id}.webp)` }}
     >
-      <Flex
-        direction="column"
-        justify="center"
-        align={{ initial: "center", xs: "start" }}
-      >
-        <Heading
-          align={{ initial: "center", sm: "left" }}
-          size={{ initial: "6", sm: tool.significant ? "7" : "5" }}
-          weight="medium"
-        >
+    </div>
+
+    <div class="content" data-minor={minor}>
+      <div class="wrapper">
+        <Heading size={minor ? "3" : "2"} weight="medium">
           {toolStrings.name}
         </Heading>
-        <Text
-          align={{ initial: "center", sm: "left" }}
-          size={{ initial: "3", sm: tool.significant ? "4" : "3" }}
-          color="gray"
-        >
-          {toolStrings.description}
-        </Text>
-      </Flex>
-
-      <Button
-        size={{
-          initial: undefined,
-          sm: tool.significant ? "3" : undefined,
-        }}
-        color={tool.button as ButtonProps["color"]}
-        style={{ cursor: "inherit" }}
-      >
-        {toolStrings.button}
-        <CaretRightIcon />
-      </Button>
-    </Flex>
+      </div>
+    </div>
   </LinkI18n>
-</Flex>
+</div>

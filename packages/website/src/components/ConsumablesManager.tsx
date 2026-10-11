@@ -1,4 +1,4 @@
-import type { Consumable } from "@blitzkit/core";
+import type { Consumable } from "@blitzkit/protos";
 import { Flex, type FlexProps } from "@radix-ui/themes";
 import { ConsumableButton } from "./ModuleButtons/ConsumableButton";
 

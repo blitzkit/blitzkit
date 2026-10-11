@@ -1,0 +1,23 @@
+.page {
+  max-height: 100dvh;
+  flex-grow: 1;
+  display: flex;
+
+  .sandbox {
+    flex-grow: 1;
+
+    overflow-y: auto;
+  }
+
+  .loadout {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-5);
+    padding: var(--space-5);
+
+    overflow-y: auto;
+
+    background-color: var(--gray-2);
+  }
+}

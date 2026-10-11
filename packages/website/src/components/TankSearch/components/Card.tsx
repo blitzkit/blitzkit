@@ -2,10 +2,10 @@ import {
   normalizeBoundingBox,
   resolveDpm,
   unionBoundingBox,
-  type TankDefinition,
 } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { useMemo } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../api/dynamic";
 import { resolveReload } from "../../../core/blitzkit/resolveReload";
 import { TankSort } from "../../../stores/tankopediaSort";
 import { TankCard } from "../../TankCard";
@@ -15,7 +15,7 @@ interface TankSearchCardProps {
   onSelect?: (tank: TankDefinition) => void;
 }
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
   const by = TankSort.use((state) => state.by);
