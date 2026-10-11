@@ -1,0 +1,113 @@
+---
+import { Grid, Heading, Text } from "@radix-ui/themes";
+import { credits } from "../config/credits";
+import { getStrings } from "../core/i18n/getStrings";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = getStrings(locale);
+---
+
+<style>
+  .credits {
+    display: flex;
+    justify-content: center;
+
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+
+    .inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+
+      width: 100%;
+      max-width: 80rem;
+
+      .list {
+        gap: var(--space-5);
+
+        .link {
+          display: contents;
+
+          .person {
+            --profile-size: 5rem;
+
+            display: flex;
+            flex-direction: column;
+
+            background-color: var(--gray-3);
+
+            padding: var(--space-4);
+            padding-top: 0;
+            margin-top: calc(var(--profile-size) / 2);
+            gap: var(--space-1);
+
+            box-shadow: var(--shadow-2);
+            border-radius: var(--radius-3);
+
+            .link:first-child & {
+              background-color: var(--gray-5);
+              box-shadow: 0 0 2rem var(--gray-a4);
+              outline: 1px solid var(--gray-7);
+
+              /* background-color: var(--blue-3);
+              outline: 1px solid var(--blue-5);
+              box-shadow: 0 0 3rem var(--blue-a3); */
+            }
+
+            img {
+              border-radius: 50%;
+
+              position: relative;
+
+              margin-top: calc(var(--profile-size) / -2);
+
+              object-fit: cover;
+              width: var(--profile-size);
+              height: var(--profile-size);
+
+              margin-bottom: var(--space-2);
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<div class="credits">
+  <div class="inner">
+    <Heading align="center">{strings.credits.title}</Heading>
+
+    <Grid
+      className="list"
+      py="4"
+      columns="repeat(auto-fill, minmax(16rem, 1fr))"
+      flow="dense"
+      gap="4"
+      gapY="8"
+    >
+      {
+        credits.map((person) => (
+          <a target="_blank" href={person.url} class="link">
+            <div class="person">
+              <img src={person.image} />
+
+              <Text weight="medium" className="text" color="gray" highContrast>
+                {person.name}
+              </Text>
+              <Text className="text" color="gray" wrap="pretty">
+                {person.description}
+              </Text>
+            </div>
+          </a>
+        ))
+      }</Grid
+    >
+  </div>
+</div>
