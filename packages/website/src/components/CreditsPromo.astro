@@ -50,37 +50,20 @@ const strings = getStrings(locale);
             box-shadow: var(--shadow-2);
             border-radius: var(--radius-3);
 
-            position: relative;
+            .link:first-child & {
+              background-color: var(--gray-5);
+              box-shadow: 0 0 2rem var(--gray-a4);
+              outline: 1px solid var(--gray-7);
 
-            .background {
-              position: absolute;
-              top: 0;
-              left: 0;
-
-              width: 100%;
-              height: 100%;
-
-              border-radius: inherit;
-
-              overflow: hidden;
-
-              .image {
-                width: 100%;
-                height: 100%;
-
-                background-size: cover;
-                filter: saturate(4) blur(5rem) brightness(0.25);
-              }
-            }
-
-            .text {
-              position: relative;
+              /* background-color: var(--blue-3);
+              outline: 1px solid var(--blue-5);
+              box-shadow: 0 0 3rem var(--blue-a3); */
             }
 
             img {
-              position: relative;
-
               border-radius: 50%;
+
+              position: relative;
 
               margin-top: calc(var(--profile-size) / -2);
 
@@ -104,7 +87,7 @@ const strings = getStrings(locale);
     <Grid
       className="list"
       py="4"
-      columns="repeat(auto-fill, minmax(12rem, 1fr))"
+      columns="repeat(auto-fill, minmax(16rem, 1fr))"
       flow="dense"
       gap="4"
       gapY="8"
@@ -113,16 +96,9 @@ const strings = getStrings(locale);
         credits.map((person) => (
           <a target="_blank" href={person.url} class="link">
             <div class="person">
-              <div class="background">
-                <div
-                  class="image"
-                  style={`background-image: url(${person.image})`}
-                />
-              </div>
-
               <img src={person.image} />
 
-              <Text className="text" color="gray" highContrast>
+              <Text weight="medium" className="text" color="gray" highContrast>
                 {person.name}
               </Text>
               <Text className="text" color="gray" wrap="pretty">
