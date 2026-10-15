@@ -1,4 +1,4 @@
-import { BoundingBox } from "../protos";
+import { BoundingBox } from "../../../protos/src/blitzkit";
 
 export function unionBoundingBox(a: BoundingBox, b: BoundingBox) {
   return {

@@ -1,11 +1,11 @@
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import { Suspense, useEffect } from "react";
+import { api } from "../../../../api/dynamic";
 import { GuessBackground } from "../../../../components/GuessBackground";
 import { Guesser } from "../../../../components/Guesser";
 import { GuessRenderer } from "../../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../../components/GuessRendererLoader";
 import { PageWrapper } from "../../../../components/PageWrapper";
-import { api } from "../../../../core/blitzkit/api";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
@@ -17,8 +17,8 @@ import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.modelDefinitions(),
+  api.tanks(),
+  api.models(),
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);

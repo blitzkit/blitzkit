@@ -1,6 +1,6 @@
 import { Box } from "@radix-ui/themes";
 import { useEffect } from "react";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../api/dynamic";
 import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
 import { Var } from "../../core/radix/var";
 import { Duel } from "../../stores/duel";
@@ -9,8 +9,8 @@ import { Tankopedia } from "../../stores/tankopedia";
 import "./index.css";
 
 const [modelDefinitions, provisionDefinitions] = await Promise.all([
-  api.modelDefinitions(),
-  api.provisionDefinitions(),
+  api.models(),
+  api.provisions(),
 ]);
 
 export function GuessBackground() {

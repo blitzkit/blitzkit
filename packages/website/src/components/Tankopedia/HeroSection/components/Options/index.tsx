@@ -1,7 +1,7 @@
 import {
   alias,
   resolvePenetrationCoefficient,
-  TIER_ROMAN_NUMERALS,
+  romanize,
   uniqueGuns,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
@@ -37,7 +37,7 @@ import { Tankopedia } from "../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../../../Armor/components/StaticArmor";
+import type { ThicknessRange } from "../../../../StaticArmor";
 import { EqualIcon } from "../../../../EqualIcon";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";
@@ -69,9 +69,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const antagonistShell = Duel.use((state) => state.antagonist.shell);
   const [antagonistSelectorOpen, setAntagonistSelectorOpen] = useState(false);
   const antagonistTank = Duel.use((state) => state.antagonist.tank);
-  const hasCalibratedShells = useEquipment(103, true);
+  const hasCalibratedShells = useEquipment("protagonist", 103, true);
   const [tab, setTab] = useState("search");
-  const hasEnhancedArmor = useEquipment(110);
+  const hasEnhancedArmor = useEquipment("protagonist", 110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
   const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);
@@ -137,7 +137,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   mr="2"
                   mb="1"
                 >
-                  {TIER_ROMAN_NUMERALS[antagonistGun.tier]}
+                  {romanize(antagonistGun.tier)}
                 </Text>
 
                 <img
@@ -166,7 +166,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                       })
                     }
                     selected={gun.id === antagonistGun.id}
-                    discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
+                    discriminator={romanize(gun.tier)}
                     secondaryDiscriminator={
                       <Text style={{ fontSize: "0.75em" }}>
                         {literals(strings.common.units.mm, {

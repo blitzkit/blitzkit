@@ -69,7 +69,7 @@ export function Shell({ index, stats }: ShellProps & StatsAcceptorProps) {
             borderRadius: '0.25rem',
             overflow: 'hidden',
             maskImage:
-              'url(/assets/images/tankopedia/visualizers/reload/shell.png)',
+              'url(/media/toys/shell.png)',
             maskSize: 'contain',
             maskRepeat: 'no-repeat',
             maskPosition: 'center',

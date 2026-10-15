@@ -1,9 +1,9 @@
-import type en from "@blitzkit/i18n/strings/en.json";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
-export type TankopediaSortBy = keyof typeof en.website.common.tank_search.sort;
-export type TankopediaSortDirection = "ascending" | "descending";
-export type TankopediaTestTankDisplay = "include" | "exclude" | "only";
+export enum TankopediaSortDirection {
+  Ascending,
+  Descending,
+}
 
 export interface TankopediaPersistent {
   wireframe: boolean;
@@ -16,14 +16,9 @@ export interface TankopediaPersistent {
   recentlyViewed: number[];
   hideTankModelUnderArmor: boolean;
   highGraphics: boolean;
-
-  sort: {
-    by: TankopediaSortBy;
-    direction: TankopediaSortDirection;
-  };
 }
 
-export const TankopediaPersistent = new Varuna<TankopediaPersistent>(
+export const TankopediaPersistent = new Soapstone<TankopediaPersistent>(
   {
     hideTankModelUnderArmor: false,
     wireframe: false,
@@ -35,10 +30,6 @@ export const TankopediaPersistent = new Varuna<TankopediaPersistent>(
     showPrimaryArmor: true,
     recentlyViewed: [],
     highGraphics: true,
-    sort: {
-      by: "meta.none",
-      direction: "ascending",
-    },
   },
   "tankopedia-3",
 );

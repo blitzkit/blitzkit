@@ -23,8 +23,8 @@ export function QuickInputs() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const initialTurretPitch =
     tankModelDefinition.initial_turret_rotation?.pitch ?? 0;
-  const hasImprovedVerticalStabilizer = useEquipment(122);
-  const hasDownImprovedVerticalStabilizer = useEquipment(124);
+  const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
+  const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
   function displayPitch(pitch: number) {
     return radToDeg(pitch) - initialTurretPitch;

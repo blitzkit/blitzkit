@@ -1,9 +1,9 @@
-import type { EquipmentPreset } from '@blitzkit/core';
-import { Flex } from '@radix-ui/themes';
-import { chunk, cloneDeep } from 'lodash-es';
-import type { EquipmentMatrix } from '../../stores/duel';
-import { EquipmentButton } from '../ModuleButtons/EquipmentButton';
-import './index.css';
+import type { EquipmentPreset } from "@blitzkit/protos";
+import { Flex } from "@radix-ui/themes";
+import { chunk, cloneDeep } from "lodash-es";
+import type { EquipmentMatrix } from "../../stores/duel";
+import { EquipmentButton } from "../ModuleButtons/EquipmentButton";
+import "./index.css";
 
 interface EquipmentManagerProps {
   preset: EquipmentPreset;

@@ -1,143 +1,117 @@
-import { CaretDownIcon } from '@radix-ui/react-icons';
-import { Button, DropdownMenu } from '@radix-ui/themes';
-import { useLocale } from '../../../hooks/useLocale';
-import type {
-  TankopediaSortBy,
-  TankopediaSortDirection,
-} from '../../../stores/tankopediaPersistent';
-import { TankSort } from '../../../stores/tankopediaSort';
+import { CaretDownIcon } from "@radix-ui/react-icons";
+import { characteristicsGroups } from "../../../config/characteristicsGroups";
+import { useStrings } from "../../../hooks/useStrings";
+import { TankopediaSortDirection } from "../../../stores/tankopediaPersistent";
+import { TankSort } from "../../../stores/tankopediaSort";
+import { sortableCharacteristics } from "../../../tankopedia/sortableCharacteristics";
+import type { CharacteristicName } from "../../../types/characteristics";
+import { Button } from "../../Button";
+import { DropdownMenu } from "../../DropdownMenu";
 
 interface ItemProps {
-  by: TankopediaSortBy;
-}
-
-interface ItemProps {
-  by: TankopediaSortBy;
+  by: CharacteristicName;
 }
 
 function Item({ by }: ItemProps) {
-  const { strings } = useLocale();
-  const _by = TankSort.use((state) => state.by);
+  const strings = useStrings();
+  const selectedBy = TankSort.use((state) => state.by);
 
   return (
     <DropdownMenu.CheckboxItem
-      checked={_by === by}
+      checked={selectedBy === by}
       onClick={() => {
         TankSort.mutate((draft) => {
           draft.by = by;
         });
       }}
     >
-      {strings.website.common.tank_search.sort[by]}
+      {strings.tanks.characteristics.items[by]}
     </DropdownMenu.CheckboxItem>
   );
 }
 
 export function Sort() {
+  const by = TankSort.use((state) => state.by);
   const direction = TankSort.use((state) => state.direction);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
         <Button variant="surface" color="gray">
-          {strings.website.common.tank_search.sort_dropdown.label}
+          {strings.website.common.tank_search.sort.label}
           <CaretDownIcon />
         </Button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content align="end">
         <DropdownMenu.Label>
-          {strings.website.common.tank_search.sort_dropdown.groups.sort.label}
+          {strings.website.common.tank_search.sort.direction.label}
         </DropdownMenu.Label>
 
-        <Item by="meta.none" />
+        <DropdownMenu.CheckboxItem
+          checked={by === null || !sortableCharacteristics.has(by)}
+          onClick={() => {
+            TankSort.mutate((draft) => {
+              draft.by = null;
+            });
+          }}
+        >
+          {strings.website.common.tank_search.sort.none}
+        </DropdownMenu.CheckboxItem>
 
-        <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger>
-            {strings.website.common.tank_search.sort_dropdown.groups.sort.fire}
-          </DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent>
-            <Item by="fire.dpm" />
-            <Item by="fire.dpmPremium" />
-            <Item by="fire.reload" />
-            <Item by="fire.caliber" />
-            <Item by="fire.standardPenetration" />
-            <Item by="fire.premiumPenetration" />
-            <Item by="fire.tertiaryPenetration" />
-            <Item by="fire.damage" />
-            <Item by="fire.moduleDamage" />
-            <Item by="fire.shellVelocity" />
-            <Item by="fire.shellRange" />
-            <Item by="fire.shellCapacity" />
-            <Item by="fire.aimTime" />
-            <Item by="fire.dispersionStill" />
-            <Item by="fire.dispersionMoving" />
-            <Item by="fire.gunDepression" />
-            <Item by="fire.gunElevation" />
-          </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
+        {characteristicsGroups.map((group) => {
+          const items = group.order.filter(
+            (item) => "name" in item && sortableCharacteristics.has(item.name),
+          );
 
-        <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger>
-            {
-              strings.website.common.tank_search.sort_dropdown.groups.sort
-                .maneuverability
-            }
-          </DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent>
-            <Item by="maneuverability.forwardsSpeed" />
-            <Item by="maneuverability.backwardsSpeed" />
-            <Item by="maneuverability.power" />
-            <Item by="maneuverability.powerToWeight" />
-            <Item by="maneuverability.weight" />
-            <Item by="maneuverability.traverseSpeed" />
-          </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
+          return (
+            <DropdownMenu.Sub key={group.name}>
+              <DropdownMenu.SubTrigger>
+                {
+                  (
+                    strings.tanks.characteristics.titles as Record<
+                      string,
+                      string
+                    >
+                  )[group.name]
+                }
+              </DropdownMenu.SubTrigger>
 
-        <DropdownMenu.Sub>
-          <DropdownMenu.SubTrigger>
-            {
-              strings.website.common.tank_search.sort_dropdown.groups.sort
-                .survivability
-            }
-          </DropdownMenu.SubTrigger>
-          <DropdownMenu.SubContent>
-            <Item by="survivability.health" />
-            <Item by="survivability.viewRange" />
-            <Item by="survivability.camouflageStill" />
-            <Item by="survivability.camouflageMoving" />
-            <Item by="survivability.camouflageShooting" />
-            <Item by="survivability.volume" />
-            <Item by="survivability.length" />
-          </DropdownMenu.SubContent>
-        </DropdownMenu.Sub>
+              <DropdownMenu.SubContent>
+                {items.map((item) => {
+                  if (!("name" in item)) return null;
+
+                  return <Item key={item.name} by={item.name} />;
+                })}
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+          );
+        })}
 
         <DropdownMenu.Label>
-          {
-            strings.website.common.tank_search.sort_dropdown.groups.direction
-              .label
-          }
+          {strings.website.common.tank_search.sort.direction.label}
         </DropdownMenu.Label>
         <DropdownMenu.RadioGroup
           value={direction}
           onValueChange={(value) => {
+            if (
+              value !== TankopediaSortDirection.Ascending &&
+              value !== TankopediaSortDirection.Descending
+            ) {
+              throw new Error(`Unknown tankopedia sort direction: ${value}`);
+            }
+
             TankSort.mutate((draft) => {
-              draft.direction = value as TankopediaSortDirection;
+              draft.direction = value;
             });
           }}
         >
-          <DropdownMenu.RadioItem value="ascending">
-            {
-              strings.website.common.tank_search.sort_dropdown.groups.direction
-                .ascending
-            }
+          <DropdownMenu.RadioItem value={TankopediaSortDirection.Ascending}>
+            {strings.website.common.tank_search.sort.direction.ascending}
           </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value="descending">
-            {
-              strings.website.common.tank_search.sort_dropdown.groups.direction
-                .descending
-            }
+          <DropdownMenu.RadioItem value={TankopediaSortDirection.Descending}>
+            {strings.website.common.tank_search.sort.direction.descending}
           </DropdownMenu.RadioItem>
         </DropdownMenu.RadioGroup>
       </DropdownMenu.Content>

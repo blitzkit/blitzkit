@@ -1,4 +1,5 @@
-import { type TankDefinition, tankIcon, TankType } from "@blitzkit/core";
+import { tankIcon } from "@blitzkit/core";
+import { type TankDefinition, TankType } from "@blitzkit/protos";
 import { Box, Flex } from "@radix-ui/themes";
 import { useLocale } from "../hooks/useLocale";
 import { classIcons } from "./ClassIcon";

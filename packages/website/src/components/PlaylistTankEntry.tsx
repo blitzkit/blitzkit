@@ -5,7 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Checkbox, Flex, IconButton, Table, Text } from "@radix-ui/themes";
 import { memo } from "react";
-import { api } from "../core/blitzkit/api";
+import { api } from "../api/dynamic";
 import { useLocale } from "../hooks/useLocale";
 import { Playlist, type PlaylistEntry } from "../stores/playlist";
 import { TankRowHeaderCell } from "./TankRowHeaderCell";
@@ -14,7 +14,7 @@ interface Props extends PlaylistEntry {
   index: number;
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export const PlaylistTankEntry = memo<Props>(
   ({ id, checked, then, now, index }) => {

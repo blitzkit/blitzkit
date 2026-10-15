@@ -1,6 +1,11 @@
-import { alias, permanentSkills, romanize } from "@blitzkit/core";
+import {
+  alias,
+  MAX_SKILL_LEVEL,
+  permanentSkills,
+  romanize,
+} from "@blitzkit/core";
 import { Flex } from "@radix-ui/themes";
-import { api } from "../core/blitzkit/api";
+import { api } from "../api/dynamic";
 import { GenericTankComponentButton } from "./ModuleButtons/GenericTankComponentButton";
 
 interface CrewSkillManagerProps {
@@ -8,7 +13,7 @@ interface CrewSkillManagerProps {
   onChange?: (skillLevels: Record<string, number>) => void;
 }
 
-const skillDefinitions = await api.skillDefinitions();
+const skillDefinitions = await api.skills();
 
 export function CrewSkillManager({
   skillLevels,
@@ -34,10 +39,10 @@ export function CrewSkillManager({
                   const draft = { ...skillLevels };
 
                   if (event.shiftKey) {
-                    draft[skill] = draft[skill] === 0 ? 7 : 0;
+                    draft[skill] = draft[skill] === 0 ? MAX_SKILL_LEVEL : 0;
                   } else {
                     draft[skill] = level - 1;
-                    if (draft[skill] < 0) draft[skill] = 7;
+                    if (draft[skill] < 0) draft[skill] = MAX_SKILL_LEVEL;
                   }
 
                   onChange(draft);

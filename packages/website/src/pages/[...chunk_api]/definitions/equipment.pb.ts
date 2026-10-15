@@ -1,10 +1,10 @@
-import { EquipmentDefinitions } from "@blitzkit/core";
-import { api } from "../../../core/blitzkit/api";
+import { EquipmentDefinitions } from "@blitzkit/protos";
+import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";
 
 export async function GET() {
-  const definitions = await api.equipmentDefinitions();
+  const definitions = await api.equipment();
   const bytes = EquipmentDefinitions.encode(definitions).finish();
 
   return new Response(bytes);

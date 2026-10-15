@@ -1,3 +1,3 @@
-import { ServerBlitzKitAPI10 } from "@blitzkit/core/src/blitzkit/api/server/10_galleryDefinitions";
+import { ServerBlitzKitAPI12 } from "./12_strings";
 
-export class ServerBlitzKitAPI extends ServerBlitzKitAPI10 {}
+export class ServerBlitzKitAPI extends ServerBlitzKitAPI12 {}

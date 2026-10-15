@@ -1,8 +1,8 @@
-import { alias, formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { alias, formatCompact, romanize } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Skeleton, Text } from "@radix-ui/themes";
+import { api } from "../../../../api/dynamic";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
@@ -15,7 +15,7 @@ type NodeProps = MaybeSkeletonComponentProps & {
 };
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 
@@ -90,7 +90,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
           <Flex direction="column" align="center">
             <Flex gap="2" align="center">
               <Text color="gray" size="1">
-                {TIER_ROMAN_NUMERALS[tank.tier]}
+                {romanize(tank.tier)}
               </Text>
               <Text wrap="nowrap">{unwrap(tank.name!)}</Text>
             </Flex>

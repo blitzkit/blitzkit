@@ -1,77 +1,76 @@
-import type { ButtonProps } from "@radix-ui/themes";
-
 export interface Tool {
   id: string;
-  strings?: string;
 
-  button: ButtonProps["color"];
-  significant?: boolean;
-  disabled?: boolean;
+  path?: string;
   href?: string;
+
+  banner_background_position: "top" | "center" | "bottom";
 }
 
 export const tools: Record<string, Tool> = {
   tanks: {
     id: "tanks",
-    strings: "tankopedia",
-    button: "purple",
-    significant: true,
+    banner_background_position: "top",
   },
   players: {
     id: "players",
-    disabled: true,
-    button: "blue",
+    banner_background_position: "top",
   },
   compare: {
     id: "compare",
-    button: "crimson",
+    banner_background_position: "bottom",
   },
   performance: {
     id: "performance",
-    button: "jade",
-  },
-  charts: {
-    id: "charts",
-    disabled: true,
-    button: "bronze",
+    banner_background_position: "bottom",
   },
   playlist: {
     id: "playlist",
-    button: "tomato",
+    banner_background_position: "bottom",
   },
   mixer: {
     id: "mixer",
-    button: "gray",
+    banner_background_position: "bottom",
   },
-  guess: {
-    id: "guess",
-    button: "cyan",
+  guesser: {
+    id: "guesser",
+    banner_background_position: "bottom",
   },
-  gallery: {
-    id: "gallery",
-    button: "gold",
+  avatars: {
+    id: "avatars",
+    banner_background_position: "bottom",
+  },
+  backgrounds: {
+    id: "backgrounds",
+    banner_background_position: "bottom",
   },
   session: {
     id: "session",
-    button: "blue",
+    banner_background_position: "bottom",
   },
   tier_list: {
-    id: "tier-list",
-    strings: "tier_list",
-    button: "orange",
+    id: "tier_list",
+    banner_background_position: "bottom",
   },
   embed: {
     id: "embed",
-    button: "red",
-  },
-  api: {
-    id: "api",
-    disabled: true,
-    button: "bronze",
+    banner_background_position: "bottom",
   },
   more: {
     id: "more",
     href: "https://discord.gg/nDt7AjGJQH",
-    button: "plum",
+    banner_background_position: "bottom",
+  },
+  api: {
+    id: "api",
+    banner_background_position: "bottom",
+  },
+  changelogs: {
+    id: "changelogs",
+    banner_background_position: "bottom",
+  },
+  settings: {
+    id: "changelogs",
+    banner_background_position: "center",
   },
 };

@@ -1,10 +1,10 @@
-import { TankDefinitions } from "@blitzkit/core";
-import { api } from "../../../core/blitzkit/api";
+import { TankDefinitions } from "@blitzkit/protos";
+import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";
 
 export async function GET() {
-  const definitions = await api.tankDefinitions();
+  const definitions = await api.tanks();
   const bytes = TankDefinitions.encode(definitions).finish();
 
   return new Response(bytes);

@@ -1,31 +1,40 @@
 import { useMemo } from "react";
-import { api } from "../core/blitzkit/api";
-import { Duel } from "../stores/duel";
+import { api } from "../api/dynamic";
+import { Tankopedia } from "../stores/tankopedia";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipment = await api.equipment();
+const tanks = await api.tanks();
 
-export function useEquipment(id: number, antagonist = false) {
-  const member = Duel.use(
-    (state) => state[antagonist ? "antagonist" : "protagonist"]!,
+export const duelSides = ["protagonist", "antagonist"] as const;
+
+export type DuelSide = (typeof duelSides)[number];
+
+export function useEquipment(side: DuelSide, id: number) {
+  const member = Tankopedia.use((state) => state[side]);
+  const appliedEquipment = Tankopedia.use((state) => state[side].equipment);
+
+  const tank = tanks.tanks[member.tank];
+
+  const value = useMemo(
+    () => hasEquipment(id, tank.equipment_preset, appliedEquipment),
+    [appliedEquipment, member.tank],
   );
-  const preset = equipmentDefinitions.presets[member.tank.equipment_preset];
-  const equipmentMatrix = Duel.use(
-    (state) =>
-      state[antagonist ? "antagonist" : "protagonist"]!.equipmentMatrix,
-  );
-  const value = useMemo(() => {
-    return preset.slots.some((slot, index) => {
-      const row = Math.floor(index / 3);
-      const column = index % 3;
-      const choice = equipmentMatrix[row][column];
-
-      if (choice === 0) return false;
-
-      const equipped = slot[choice === -1 ? "left" : "right"];
-
-      return equipped === id;
-    });
-  }, [equipmentMatrix, member.tank]);
 
   return value;
+}
+
+export function hasEquipment(
+  id: number,
+  _preset: string,
+  applied: Record<number, number>,
+) {
+  const preset = equipment.presets[_preset];
+
+  return preset.slots.some((slot, index) => {
+    if (!(index in applied)) return false;
+
+    const choice = applied[index];
+
+    return slot.options[choice] === id;
+  });
 }
