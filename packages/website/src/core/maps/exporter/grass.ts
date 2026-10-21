@@ -77,8 +77,8 @@ export async function createGrass(
   if (tileMaskPath === undefined) return;
 
   const [albedo, lightmap, densityScale] = await Promise.all([
-    albedoPath ? textures.load(albedoPath, false) : null,
-    textures.load(vegetation["vro.lightmap"], true),
+    albedoPath ? textures.load(albedoPath, "rgba") : null,
+    textures.load(vegetation["vro.lightmap"], "rgb"),
     readMapTexture(context, vegetation["vro.lightmap"])
       .then((image) =>
         losslessTexture(

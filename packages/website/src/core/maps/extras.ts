@@ -26,6 +26,7 @@ export interface MapMaterialExtras {
   textureShift?: number[];
   textureShiftPerSecond?: number[];
   doubleSided?: boolean;
+  poster?: boolean;
   renderObject?: boolean;
   normal0Scale?: number;
   normal1Scale?: number;
@@ -121,13 +122,14 @@ export interface MapParticleLayer {
   sizeVariation: number[];
   sizeOverLife?: number[][];
   alphaOverLife?: number[][];
+  colorOverLife?: number[][][];
   angle: number;
   angleVariation: number;
-  color: number[];
+  lods: boolean[];
 }
 
 export interface MapParticleEmitter {
-  offset: number[];
+  position: number[];
   direction: number[];
   range: number;
   radius: number;
@@ -136,6 +138,8 @@ export interface MapParticleEmitter {
 
 export interface MapParticleEffect {
   position: number[];
+  delay: number;
+  lodDistances?: number[];
   emitters: MapParticleEmitter[];
 }
 

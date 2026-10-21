@@ -81,7 +81,7 @@ export async function extractMapModel(scenePath: string, tags?: string) {
   const animator = createAnimator(context, animationData, motions);
   const script = compileScript(sc2["#hierarchy"], animator);
   const terrains = buildScene(context, materials, animator, script);
-  const particles = await createParticles(context);
+  const particles = await createParticles(context, script.particleStarts);
 
   if (particles) context.scene.addChild(particles);
 

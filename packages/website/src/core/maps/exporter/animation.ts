@@ -14,6 +14,7 @@ import {
 } from "@gltf-transform/core";
 import { times } from "lodash-es";
 import { normalize } from "path/posix";
+import { Matrix4, Quaternion, Vector3 } from "three";
 import { vfs } from "../../blitzkit/vfs";
 import type { MapAnimationInfo } from "../extras";
 import {
@@ -110,32 +111,53 @@ export function createAnimator(
   function keyframeAccessors(id: bigint) {
     if (!samplers.has(id)) {
       const data = animationData.get(id)!;
-      const keys = times(data.keyCount, (index) => index);
+      const invPose = new Matrix4().fromArray(
+        (data.invPose as number[][]).flat(),
+      );
+      const keys = times(data.keyCount, (index) => {
+        const translation = new Vector3();
+        const rotation = new Quaternion();
+        const scale = new Vector3();
+
+        new Matrix4()
+          .compose(
+            new Vector3(...data[`key_${index}_translation`]),
+            new Quaternion(...data[`key_${index}_rotation`]),
+            new Vector3(...data[`key_${index}_scale`]),
+          )
+          .multiply(invPose)
+          .decompose(translation, rotation, scale);
+
+        return {
+          time: data[`key_${index}_time`],
+          translation,
+          rotation,
+          scale,
+        };
+      });
 
       samplers.set(id, [
         createAccessor(
           context,
           "SCALAR",
-          new Float32Array(keys.map((index) => data[`key_${index}_time`])),
+          new Float32Array(keys.map(({ time }) => time)),
         ),
         createAccessor(
           context,
           "VEC3",
           new Float32Array(
-            keys.flatMap((index) => data[`key_${index}_translation`]),
+            keys.flatMap(({ translation }) => translation.toArray()),
           ),
         ),
         createAccessor(
           context,
           "VEC4",
-          new Float32Array(
-            keys.flatMap((index) => data[`key_${index}_rotation`]),
-          ),
+          new Float32Array(keys.flatMap(({ rotation }) => rotation.toArray())),
         ),
         createAccessor(
           context,
           "VEC3",
-          new Float32Array(keys.flatMap((index) => data[`key_${index}_scale`])),
+          new Float32Array(keys.flatMap(({ scale }) => scale.toArray())),
         ),
       ]);
     }

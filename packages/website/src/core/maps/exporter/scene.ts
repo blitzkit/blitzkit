@@ -120,9 +120,6 @@ export function buildScene(
     states?: States,
   ) {
     hierarchies.forEach((hierarchy) => {
-      const state = hierarchy.name.match(/ State (\d+)$/);
-
-      if (state && state[1] !== "0") return;
       if (OMIT_NODES.test(hierarchy.name)) return;
 
       const node = document.createNode(hierarchy.name);

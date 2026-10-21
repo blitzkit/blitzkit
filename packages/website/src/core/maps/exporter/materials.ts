@@ -2,7 +2,12 @@ import type { Material } from "@gltf-transform/core";
 import { times } from "lodash-es";
 import type { MapMaterialExtras } from "../extras";
 import type { DataNode, MapContext } from "./context";
-import { setTextureSlot, type TextureLoader } from "./textures";
+import { posterAtlas } from "./posters";
+import {
+  setTextureSlot,
+  type TextureFormat,
+  type TextureLoader,
+} from "./textures";
 
 const SH_DC_FACTOR = 0.282094;
 
@@ -107,6 +112,12 @@ export function treeVertexColors(
   );
 }
 
+function decalFormat(effective: EffectiveMaterial): TextureFormat {
+  return effective.flags.LANDSCAPE_SEPARATE_LIGHTMAP_CHANNEL === 1
+    ? "rgbTimesAlpha"
+    : "rgb";
+}
+
 function isWater(effective: EffectiveMaterial) {
   return (effective.fxName ?? "").includes("Water");
 }
@@ -136,10 +147,12 @@ export function createMaterialResolver(
 
         return [
           (albedo ?? baseColorMap) &&
-            textures.load(albedo ?? baseColorMap, false),
-          ...[lightmap, flowmap, decal, detail, isWater(effective) && normalmap]
+            textures.load(albedo ?? baseColorMap, "rgba"),
+          typeof decal === "string" &&
+            textures.load(decal, decalFormat(effective)),
+          ...[lightmap, flowmap, detail, isWater(effective) && normalmap]
             .filter((path): path is string => typeof path === "string")
-            .map((path) => textures.load(path, true)),
+            .map((path) => textures.load(path, "rgb")),
         ].filter(Boolean);
       }),
     );
@@ -149,7 +162,7 @@ export function createMaterialResolver(
     materialKey: bigint,
     effective: EffectiveMaterial,
   ): ResolvedMaterial | undefined {
-    const normalmap = textures.get(effective.textures.normalmap, true);
+    const normalmap = textures.get(effective.textures.normalmap, "rgb");
 
     if (!normalmap) return undefined;
 
@@ -222,7 +235,7 @@ export function createMaterialResolver(
 
     const albedoPath =
       effective.textures.albedo ?? effective.textures.baseColorMap;
-    const albedo = textures.get(albedoPath, false);
+    const albedo = textures.get(albedoPath, "rgba");
 
     if (!albedo) return undefined;
 
@@ -239,10 +252,13 @@ export function createMaterialResolver(
       fxName.includes("Detail") || flags.MATERIAL_DETAIL === 1
         ? effective.textures.detail
         : undefined;
-    const detail = textures.get(detailPath, true);
-    const lightmap = textures.get(lightmapPath, true);
+    const detail = textures.get(detailPath, "rgb");
+    const lightmap = textures.get(
+      lightmapPath,
+      usesLightmap ? "rgb" : decalFormat(effective),
+    );
     const flowmap = enabledPresets.FlowMap
-      ? textures.get(effective.textures.flowmap, true)
+      ? textures.get(effective.textures.flowmap, "rgb")
       : undefined;
     const alphaTest = enabledPresets.AlphaTest
       ? flags.ALPHATESTVALUE === 1
@@ -301,6 +317,10 @@ export function createMaterialResolver(
         effective.customCullMode === 0 ||
         fxName.includes("SpeedTree") ||
         alphaTest > 0,
+      poster:
+        (albedoPath !== undefined &&
+          posterAtlas(context.directory, albedoPath) !== undefined) ||
+        undefined,
     } satisfies MapMaterialExtras;
     const key = `${albedoPath}|${lightmapPath}|${detailPath}|${JSON.stringify(
       extras,

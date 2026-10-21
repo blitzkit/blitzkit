@@ -17,6 +17,8 @@ import {
   shadowVertexPars,
 } from "./shadow";
 
+const POSTER_ANISOTROPY = 16;
+
 export function createObjectMaterial(
   source: MeshStandardMaterial,
   extras: MapMaterialExtras,
@@ -35,7 +37,10 @@ export function createObjectMaterial(
   };
 
   const receiveShadow = !!extras.shadowReceiver && !billboard;
+  const albedo = slotTexture(source, "albedo");
   const detail = extras.detailScale ? slotTexture(source, "detail") : null;
+
+  if (albedo && extras.poster) albedo.anisotropy = POSTER_ANISOTROPY;
 
   if (detail) {
     detail.wrapS = RepeatWrapping;
@@ -60,7 +65,7 @@ export function createObjectMaterial(
       ...(detail && { DETAIL: "" }),
     },
     uniforms: {
-      albedo: { value: slotTexture(source, "albedo") },
+      albedo: { value: albedo },
       detail: { value: detail },
       detailScale: { value: new Vector2(...(extras.detailScale ?? [1, 1])) },
       lightmap: {

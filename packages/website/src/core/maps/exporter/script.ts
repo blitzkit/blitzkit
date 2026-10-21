@@ -7,10 +7,10 @@ import {
   type MapComponent,
 } from "./hierarchy";
 
-export const SCENE_LOADED_EVENT = 1;
+const SCENE_LOADED_EVENT = 1;
 const USER_EVENT = 2;
 const ANIMATION_END_EVENT = 3;
-export const PARTICLE_START_ACTION = 1;
+const PARTICLE_START_ACTION = 1;
 const ANIMATION_START_ACTION = 6;
 const STATE_SWITCH_ACTION = 9;
 const TRIGGER_EVENT_ACTION = 10;
@@ -21,6 +21,7 @@ export type StateSwitch = [time: number, state: number];
 
 export interface MapScript {
   animationStarts: Map<Hierarchy, ActionStart>;
+  particleStarts: Map<Hierarchy, number>;
   stateSwitches: Map<Hierarchy, StateSwitch[]>;
 }
 
@@ -29,6 +30,7 @@ export function compileScript(
   animator: Animator,
 ): MapScript {
   const animationStarts = new Map<Hierarchy, ActionStart>();
+  const particleStarts = new Map<Hierarchy, number>();
   const stateSwitches = new Map<Hierarchy, StateSwitch[]>();
   const fired = new Set<string>();
 
@@ -39,6 +41,13 @@ export function compileScript(
     if (time > BATTLE_DURATION) return;
 
     switch (action["act.type"]) {
+      case PARTICLE_START_ACTION: {
+        if (!target || particleStarts.has(target)) return;
+
+        particleStarts.set(target, time);
+        break;
+      }
+
       case ANIMATION_START_ACTION: {
         if (!target || animationStarts.has(target)) return;
 
@@ -107,5 +116,5 @@ export function compileScript(
     switches.sort(([a], [b]) => a - b);
   }
 
-  return { animationStarts, stateSwitches };
+  return { animationStarts, particleStarts, stateSwitches };
 }

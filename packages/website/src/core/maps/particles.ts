@@ -6,7 +6,7 @@ import {
   PlaneGeometry,
   ShaderMaterial,
   Vector3,
-  Vector4,
+  type Camera,
   type MeshStandardMaterial,
   type Object3D,
   type Texture,
@@ -16,6 +16,8 @@ import type {
   MapParticleEffect,
   MapParticleLayer,
 } from "./extras";
+
+const cameraPosition = new Vector3();
 
 interface Particle {
   age: number;
@@ -41,6 +43,14 @@ function sampleKeyframes(keyframes: number[][] | undefined, time: number) {
   }
 
   return keyframes.at(-1)![1];
+}
+
+function effectLod(distances: number[] | undefined, distance: number) {
+  if (!distances) return 0;
+
+  const index = distances.findIndex((maximum) => distance < maximum);
+
+  return index === -1 ? distances.length : index;
 }
 
 function randomDirection(direction: Vector3, rangeDegrees: number) {
@@ -72,19 +82,18 @@ function createLayerMesh(texture: Texture, layer: MapParticleLayer) {
     depthWrite: false,
     uniforms: {
       sprite: { value: texture },
-      color: { value: new Vector4(...layer.color) },
     },
     vertexShader: /* glsl */ `
       attribute vec3 particlePosition;
       attribute float particleSize;
-      attribute float particleAlpha;
+      attribute vec4 particleColor;
       attribute float particleAngle;
       varying vec2 vUv;
-      varying float vAlpha;
+      varying vec4 vColor;
 
       void main() {
         vUv = uv;
-        vAlpha = particleAlpha;
+        vColor = particleColor;
 
         vec4 mvPosition = modelViewMatrix * vec4(particlePosition, 1.0);
         float c = cos(particleAngle);
@@ -99,14 +108,11 @@ function createLayerMesh(texture: Texture, layer: MapParticleLayer) {
     `,
     fragmentShader: /* glsl */ `
       uniform sampler2D sprite;
-      uniform vec4 color;
       varying vec2 vUv;
-      varying float vAlpha;
+      varying vec4 vColor;
 
       void main() {
-        vec4 texel = texture2D(sprite, vUv);
-
-        gl_FragColor = vec4(texel.rgb * color.rgb, texel.a * color.a * vAlpha);
+        gl_FragColor = texture2D(sprite, vUv) * vColor;
       }
     `,
   });
@@ -116,7 +122,10 @@ function createLayerMesh(texture: Texture, layer: MapParticleLayer) {
       3,
     ),
     particleSize: new InstancedBufferAttribute(new Float32Array(capacity), 1),
-    particleAlpha: new InstancedBufferAttribute(new Float32Array(capacity), 1),
+    particleColor: new InstancedBufferAttribute(
+      new Float32Array(capacity * 4),
+      4,
+    ),
     particleAngle: new InstancedBufferAttribute(new Float32Array(capacity), 1),
   };
 
@@ -156,13 +165,19 @@ export function createParticleSystem(scene: Object3D) {
 
   const simulations: (() => void)[] = [];
   const updaters: ((delta: number) => void)[] = [];
+  let elapsed = 0;
 
   for (const effect of root.userData.effects as MapParticleEffect[]) {
+    const position = new Vector3(...effect.position);
+    let lod = 0;
+
+    updaters.push(() => {
+      lod = effectLod(effect.lodDistances, cameraPosition.distanceTo(position));
+    });
+
     for (const emitter of effect.emitters) {
-      const origin = new Vector3(...effect.position).add(
-        new Vector3(...(emitter.offset ?? [0, 0, 0])),
-      );
-      const direction = new Vector3(...(emitter.direction ?? [0, 0, 1]));
+      const origin = new Vector3(...emitter.position);
+      const direction = new Vector3(...emitter.direction);
 
       if (direction.lengthSq() === 0) direction.set(0, 0, 1);
 
@@ -180,8 +195,10 @@ export function createParticleSystem(scene: Object3D) {
         root.add(mesh);
         simulations.push(() => mesh.removeFromParent());
         updaters.push((delta) => {
-          spawnAccumulator +=
-            delta * (layer.number + layer.numberVariation * Math.random());
+          if (elapsed >= effect.delay) {
+            spawnAccumulator +=
+              delta * (layer.number + layer.numberVariation * Math.random());
+          }
 
           while (spawnAccumulator >= 1 && particles.length < capacity) {
             spawnAccumulator -= 1;
@@ -222,6 +239,10 @@ export function createParticleSystem(scene: Object3D) {
             particle.position.addScaledVector(particle.velocity, delta);
           }
 
+          mesh.visible = layer.lods[lod] ?? false;
+
+          if (!mesh.visible) return;
+
           particles.forEach((particle, index) => {
             const time = particle.age / particle.life;
 
@@ -235,9 +256,13 @@ export function createParticleSystem(scene: Object3D) {
               index,
               particle.size * sampleKeyframes(layer.sizeOverLife, time),
             );
-            attributes.particleAlpha.setX(
+            attributes.particleColor.setXYZW(
               index,
-              sampleKeyframes(layer.alphaOverLife, time),
+              sampleKeyframes(layer.colorOverLife?.[0], time),
+              sampleKeyframes(layer.colorOverLife?.[1], time),
+              sampleKeyframes(layer.colorOverLife?.[2], time),
+              sampleKeyframes(layer.colorOverLife?.[3], time) *
+                sampleKeyframes(layer.alphaOverLife, time),
             );
             attributes.particleAngle.setX(index, particle.angle);
           });
@@ -253,7 +278,11 @@ export function createParticleSystem(scene: Object3D) {
   }
 
   return {
-    update(delta: number) {
+    update(delta: number, camera: Camera) {
+      elapsed += delta;
+      root!.updateWorldMatrix(true, false);
+      root!.worldToLocal(camera.getWorldPosition(cameraPosition));
+
       for (const updater of updaters) updater(Math.min(delta, 0.1));
     },
     dispose() {

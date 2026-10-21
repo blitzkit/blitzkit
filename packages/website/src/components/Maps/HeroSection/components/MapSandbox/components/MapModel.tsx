@@ -118,7 +118,7 @@ export function MapModel({ id }: { id: number }) {
 
   useFrame(({ clock, camera, scene }, delta) => {
     mapTime.value = clock.elapsedTime;
-    particles.current?.update(delta);
+    particles.current?.update(delta, camera);
 
     for (const volume of vegetation.current) {
       const inside = volume.box.containsPoint(camera.position);

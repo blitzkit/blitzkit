@@ -104,7 +104,7 @@ export function createBatches(scene: Object3D) {
     batch.receiveShadow = first.receiveShadow;
     batch.customDepthMaterial = first.customDepthMaterial;
     batch.frustumCulled = false;
-    batch.perObjectFrustumCulled = false;
+    batch.perObjectFrustumCulled = true;
     batch.sortObjects = (first.material as Material).transparent;
 
     for (const mesh of meshes) {
