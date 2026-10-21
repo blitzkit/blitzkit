@@ -220,190 +220,190 @@
         "clear": "Clear",
         "tier": "Tier {tier}",
         "passive": "{name} (Passive)",
-        "active": "{name} (Active)",
+        "active": "{name} (Aktywne)",
         "no_tanks_found": {
-          "body": "No tanks found.",
+          "body": "Nie znaleziono czołgu.",
           "search_again": "",
           "clear_filters": "Try clearing filters."
         },
         "sort": {
-          "meta.none": "none",
-          "survivability.health": "health",
-          "survivability.viewRange": "view range",
-          "survivability.camouflageStill": "camouflage still",
-          "survivability.camouflageMoving": "camouflage moving",
-          "survivability.camouflageShooting": "camouflage shooting",
-          "survivability.volume": "volume",
-          "survivability.length": "length",
-          "fire.dpm": "standard DPM",
-          "fire.dpmPremium": "premium DPM",
-          "fire.reload": "reload",
-          "fire.caliber": "caliber",
-          "fire.standardPenetration": "standard penetration",
-          "fire.premiumPenetration": "premium penetration",
+          "meta.none": "brak",
+          "survivability.health": "punkty.życia",
+          "survivability.viewRange": "zasięg widzenia",
+          "survivability.camouflageStill": "kamuflaż w bezruchu",
+          "survivability.camouflageMoving": "kamuflaż w trakcie ruchu",
+          "survivability.camouflageShooting": "kamuflaż podczas strzału",
+          "survivability.volume": "wartość",
+          "survivability.length": "długość",
+          "fire.dpm": "DPM pocisków podstawowych",
+          "fire.dpmPremium": "DPM pocisków premium",
+          "fire.reload": "przeładowanie",
+          "fire.caliber": "kaliber",
+          "fire.standardPenetration": "Penetracja pocisków standardowych",
+          "fire.premiumPenetration": "Penetracja pocisków premium",
           "fire.tertiaryPenetration": "tertiary penetration",
-          "fire.damage": "damage",
-          "fire.moduleDamage": "module damage",
-          "fire.shellVelocity": "shell velocity",
-          "fire.shellRange": "shell range",
-          "fire.shellCapacity": "shell capacity",
-          "fire.aimTime": "aim time",
+          "fire.damage": "uszkodzenia",
+          "fire.moduleDamage": "Uszkodzenia modułów",
+          "fire.shellVelocity": "Prędkość pocisku",
+          "fire.shellRange": "Zasięg pocisku",
+          "fire.shellCapacity": "Maksymalna ilość pocisków",
+          "fire.aimTime": "Czas celowania",
           "fire.dispersionStill": "dispersion still",
           "fire.dispersionMoving": "dispersion moving",
-          "fire.gunDepression": "gun depression",
-          "fire.gunElevation": "gun elevation",
-          "maneuverability.forwardsSpeed": "forwards speed",
-          "maneuverability.backwardsSpeed": "backwards speed",
-          "maneuverability.power": "power",
-          "maneuverability.powerToWeight": "power to weight",
-          "maneuverability.weight": "weight",
+          "fire.gunDepression": "Depresja działa",
+          "fire.gunElevation": "Elewacja działa",
+          "maneuverability.forwardsSpeed": "Maksymalna prędkość do przodu",
+          "maneuverability.backwardsSpeed": "Maksymalna prędkość do tyłu",
+          "maneuverability.power": "Moc silnika",
+          "maneuverability.powerToWeight": "Proporcja mocy do masy",
+          "maneuverability.weight": "Masa czołgu",
           "maneuverability.traverseSpeed": "traverse speed"
         },
         "sort_dropdown": {
-          "label": "Sort",
+          "label": "Filtruj",
           "groups": {
             "sort": {
-              "no_sort": "No sort",
-              "label": "Sort by",
-              "fire": "Fire",
-              "maneuverability": "Maneuverability",
-              "survivability": "Survivability"
+              "no_sort": "Brak filtrów",
+              "label": "Filtruj według",
+              "fire": "Siła ognia",
+              "maneuverability": "Mobilność ",
+              "survivability": "Przetrwanie"
             },
             "direction": {
               "label": "Direction",
-              "ascending": "Ascending",
-              "descending": "Descending"
+              "ascending": "Rosnąco",
+              "descending": "Malejąco"
             }
           }
         }
       },
       "warnings": {
-        "test": "Tanks in testing are subject to change and may not represent the final product."
+        "test": "Wartości statystyk czołgów w fazie testowej mogą ulec zmianie."
       }
     },
     "home": {
       "discord": {
-        "join_short": "Join cool people!",
-        "join_long": "Join super duper cool people!",
+        "join_short": "Dołącz do elity!",
+        "join_long": "Dołącz do topowej elity!",
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "Według {name} ♥️"
       },
       "hot_tanks": {
-        "title": "Popular tanks",
-        "subtitle": "Last {days} days"
+        "title": "Popularne czołgi",
+        "subtitle": "Ostatnie {days} dni"
       },
       "other_projects": {
-        "title": "Other cool projects"
+        "title": "Inne epickie projekty"
       },
-      "help_translate": "Please help translate {name} to {language}!",
-      "seo_description": "Tools for everything World of Tanks Blitz"
+      "help_translate": "Proszę pomóż przetłumaczyć {name} na {language}!",
+      "seo_description": "Narzędzia do wszystkiego World of Tanks Blitz"
     },
     "docs": {
       "patches": {
-        "name": "BlitzKit Changelogs",
-        "seo_description": "Changelogs for BlitzKit Discord bot and website"
+        "name": "Zapisy zmian BlitzKit",
+        "seo_description": "Zapisy zmian BlitzKit: Discord bot i strona internetowa"
       }
     },
     "tools": {
       "playlist": {
-        "reset": "Reset",
-        "shuffle": "Shuffle",
-        "remove": "Remove played",
-        "tracking": "BlitzKit is tracking your battles",
+        "reset": "Resetuj",
+        "shuffle": "Wymieszaj",
+        "remove": "Usuń czołgi, którymi grałem",
+        "tracking": "BlitzKit zapisuje twoje bitwy",
         "sort": {
-          "button": "Sort by",
-          "last_played": "Last played",
-          "least_played": "Least played"
+          "button": "Filtruj według",
+          "last_played": "Ostatnio używane czołgi",
+          "least_played": "Najmniej używane czołgi"
         },
         "table": {
           "index": "#",
-          "never": "Never",
-          "tank": "Tank",
-          "last_played": "Last played",
-          "battles": "Career battles",
+          "never": "Nigdy",
+          "tank": "Czołg",
+          "last_played": "Ostatnio używane czołgi",
+          "battles": "Wszystkie bitwy na koncie",
           "unrecorded": "--",
           "wins": "Zwycięstwa"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
-          "cancel": "Cancel",
-          "proceed": "Proceed"
+          "title": "To jest mnóstwo czołgów!",
+          "description": "Czy na pewno chcesz stworzyć playlistę złożoną z {count} czołgów? To {time} godzin gry przy 50% zwycięstw!",
+          "cancel": "Anuluj",
+          "proceed": "Zatwierdź"
         },
-        "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
-        "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
-        "button": "Generate",
-        "pool_size": "{count} possible tanks"
+        "generate": "Wygeneruj playlistę",
+        "name": "Playlista",
+        "description": "Generator playlisty czołgów",
+        "seo_description": "Nie wiesz, którym czołgiem grać w World of Tanks Blitz? Użyj funkcji playlisty BlitzKit, i ułóż własną listę czołgów do gry!",
+        "button": "Wygeneruj",
+        "pool_size": "{count} możliwe czołgi"
       },
       "mixer": {
-        "name": "Mixer",
+        "name": "Mikser",
         "button": "Mix and match",
         "description": "Mix tank modules",
         "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
-        "screenshot": "Screenshot",
-        "randomize": "Randomize"
+        "screenshot": "Zrzut ekranu",
+        "randomize": "Wymieszaj"
       },
       "guess": {
-        "name": "Guess",
+        "name": "Zgadnij",
         "button": "What could it be?",
         "description": "Silhouette mini-game",
         "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
         "search": {
-          "placeholder": "Type to guess...",
-          "skip": "Skip",
-          "guess": "Guess",
-          "next": "Next",
+          "placeholder": "Wpisz odpowiedź",
+          "skip": "Pomiń",
+          "guess": "Zgaduję",
+          "next": "Następny",
           "no_results": "Brak wyników"
         },
         "stats": "{correct} / {total} correct, {streak} streak",
         "help": {
-          "title": "Partially reveal tank?",
+          "title": "Odsłonić część czołgu?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
-          "cancel": "Cancel",
-          "reveal": "Reveal"
+          "cancel": "Anuluj",
+          "reveal": "Pokaż"
         },
-        "clear": "Clear",
-        "select_all": "Select all",
-        "tier": "Tier {tier}"
+        "clear": "Wyczyść",
+        "select_all": "Zaznacz wszystko ",
+        "tier": "Poziom czołgu {tier}"
       },
       "tankopedia": {
-        "search": "Search a stat...",
+        "search": "Wyszukaj statystykę...",
         "name": "Tankopedia",
-        "button": "Find tanks",
-        "description": "Blitz tank encyclopedia",
+        "button": "Znajdź czołg",
+        "description": "Encyklopedia czołgów w WoTb",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
         "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
         "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
         "visualizers": {
           "reload": {
-            "skip": "Skip"
+            "skip": "Pomiń"
           },
           "assault": {
             "title": "Assault shells"
           },
           "rotator": {
-            "hull": "Hull",
-            "turret": "Turret",
-            "hard": "Hard",
+            "hull": "Kadłub",
+            "turret": "Wieża",
+            "hard": "Utwardzony",
             "medium": "Średni",
-            "soft": "Soft",
-            "effective": "Effective"
+            "soft": "Miękki",
+            "effective": "Rzeczywisty"
           },
           "ricochet": {
-            "angle": "Angle",
+            "angle": "Kąt",
             "normalization": "Normalization",
-            "effective_angle": "Effective angle",
-            "armor": "Armor",
-            "no_ricochet": "Explosive shells don't ricochet"
+            "effective_angle": "Rzeczywisty kąt nachylenia pancerza",
+            "armor": "Pancerz",
+            "no_ricochet": "Pociski odłamkowe nie rykoszetują."
           },
           "view_range": {
-            "camo": "Camo",
-            "ghost_factory": "Ghost Factory",
-            "dead_rail": "Dead Rail"
+            "camo": "Kamuflaż",
+            "ghost_factory": "Fabryka duchów",
+            "dead_rail": "Martwy tor"
           },
           "flexibility": {
             "yaw": "Yaw",
@@ -623,6 +623,7 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Still",
             "camouflageMoving": "Moving",
@@ -655,10 +656,10 @@
           "loader": "Loader"
         },
         "maneuverability": {
-          "title": "Maneuverability"
+          "title": "Mobilność "
         },
         "survivability": {
-          "title": "Survivability"
+          "title": "Przetrwanie"
         }
       },
       "compare": {

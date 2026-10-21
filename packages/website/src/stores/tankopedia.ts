@@ -43,6 +43,7 @@ export type Shot = {
   containsGaps: boolean;
   damage: number;
   splashRadius?: number;
+  penetrationChance?: number;
 
   in: {
     surfaceNormal: Vector3;

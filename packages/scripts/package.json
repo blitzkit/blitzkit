@@ -5,7 +5,8 @@
     "discover-ids": "bun src/discoverIds/index.ts",
     "build-protos": "bun src/protos.ts",
     "record-performance": "bun src/recordPerformance/index.ts",
-    "download-client": "bun src/downloadClient/index.ts"
+    "download-client": "bun src/downloadClient/index.ts",
+    "vfs": "bun src/vfs/index.ts"
   },
   "dependencies": {
     "@blitzkit/closed": "workspace:*",

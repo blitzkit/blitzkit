@@ -3,9 +3,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { InlineSkeleton } from "./InlineSkeleton";
 
-const TIME = 1764898200 * 1000;
+const TIME = 1792598400 * 1000;
 
-export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
+export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
   const [timeLeft, setTimeLeft] = useState<number>(TIME - Date.now());
 
   useEffect(() => {
@@ -31,14 +31,14 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
 
     string = (
       <>
-        in{" "}
+        revealed in{" "}
         <Code highContrast>
           {hours}h {minutes}m {seconds}s
         </Code>
       </>
     );
   } else {
-    string = "has ended. Come again later!";
+    string = "have been revealed.";
   }
 
   return (
@@ -47,7 +47,7 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
         color="gray"
         highContrast
         style={{ display: "content" }}
-        href="https://discord.gg/njQdBhNS?event=1446208951136813117"
+        href="/tanks"
         underline="none"
       >
         <Flex
@@ -56,17 +56,17 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
           py="4"
           style={{
             borderRadius: "var(--radius-3)",
-            backgroundImage: "url(https://i.imgur.com/LRYmSkg.png)",
+            backgroundImage: "url(https://i.imgur.com/xgngxoy.png)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             boxSizing: "border-box",
-            boxShadow: "0 0 var(--space-7) var(--blue-a5)",
+            boxShadow: "0 0 var(--space-7) var(--white-a2)",
           }}
           align="center"
           gap="5"
         >
           <img
-            src="https://i.imgur.com/mvmJQgB.png"
+            src="https://i.imgur.com/kXV3r3P.png"
             style={{
               height: "min(15vw, 5rem)",
               filter: "drop-shadow(0.5rem 0.5rem 1rem #00000080)",
@@ -75,11 +75,11 @@ export function Giveaway({ skeleton }: MaybeSkeletonComponentProps) {
 
           <Flex direction="column">
             <Heading size={{ initial: "4", sm: "6" }}>
-              Music Box giveaway {!skeleton && string}{" "}
+              Tier XIs {!skeleton && string}{" "}
               {skeleton && <InlineSkeleton width="10rem" />}
             </Heading>
             <Text size={{ initial: "2", sm: "3" }}>
-              Join the BlitzKit Discord server event
+              Get ready to go to the Tankopedia!
             </Text>
           </Flex>
         </Flex>

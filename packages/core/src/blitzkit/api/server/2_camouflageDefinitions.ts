@@ -10,6 +10,8 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
     for (const camoKey in this.camouflagesXml!.root.camouflages) {
       const camo = this.camouflagesXml!.root.camouflages[camoKey];
 
+      if (!(camoKey in this.camouflagesYaml!)) continue;
+
       const yamlEntry = this.camouflagesYaml![camoKey];
       const fullName = yamlEntry.userString
         ? this.getString(yamlEntry.userString)

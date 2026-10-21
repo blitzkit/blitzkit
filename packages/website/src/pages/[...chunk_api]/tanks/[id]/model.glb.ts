@@ -1,13 +1,13 @@
 import {
   bufferToBigInt,
   DdsReadStream,
+  parseHierarchies,
   PvrReadStream,
   Sc2ReadStream,
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
   type ConfigArchive,
-  type Hierarchy,
   type TankParameters,
   type Textures,
   type VehicleDefinitionList,
@@ -240,8 +240,10 @@ async function extractModel(vfs: AbstractVFS, path: string) {
     materials.set(id, resolvedMaterial);
   });
 
-  function parseHierarchies(hierarchies: Hierarchy[], parent: Scene | Node) {
-    hierarchies.forEach((hierarchy) => {
+  parseHierarchies<Scene | Node>(
+    sc2["#hierarchy"],
+    scene,
+    (hierarchy, components, parent) => {
       if (
         omitMeshNames.start.some((omit) => hierarchy.name.startsWith(omit)) ||
         omitMeshNames.end.some((omit) => hierarchy.name.endsWith(omit))
@@ -249,10 +251,6 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         return;
 
       const node = document.createNode(hierarchy.name);
-      const components = times(
-        hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, "0")],
-      );
 
       components.forEach((component) => {
         switch (component["comp.typename"]) {
@@ -361,15 +359,11 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         }
       });
 
-      if (hierarchy["#hierarchy"]) {
-        parseHierarchies(hierarchy["#hierarchy"], node);
-      }
-
       parent.addChild(node);
-    });
-  }
 
-  parseHierarchies(sc2["#hierarchy"], scene);
+      return node;
+    },
+  );
 
   scene.addChild(document.createNode("test"));
 

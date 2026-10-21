@@ -13,6 +13,7 @@ import { load } from "cheerio";
 import { api } from "../../../../../core/blitzkit/api";
 import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
+import { defaultTankWeapon } from "../../../../../core/blitzkit/tankToDuelMember";
 import { getStrings } from "../../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { genericDefaultEquipmentMatrix } from "../../../../../stores/duel/constants";
@@ -53,9 +54,7 @@ const title = literals(strings.website.tools.tankopedia.tank_seo_title, {
 const url = import.meta.env.SITE + Astro.url.pathname;
 
 const icon = alias("api", `/tanks/${id}/icons/big.webp`);
-const turret = tank.turrets.at(-1)!;
-const gun = turret.guns.at(-1)!;
-const shell = gun.shells[0];
+const { turret, gun, shell } = defaultTankWeapon(tank);
 const characteristics = tankCharacteristics(
   {
     tank,

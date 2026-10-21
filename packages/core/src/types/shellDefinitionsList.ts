@@ -10,6 +10,9 @@ export type ShellDefinitionsList = Record<
     normalizationAngle?: number;
     ricochetAngle?: number;
     explosionRadius?: number;
+    speed: number;
+    maxDistance?: number;
+    piercingPower: string;
   }
 > & {
   icons: Record<string, string>;
