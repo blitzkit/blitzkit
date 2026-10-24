@@ -364,7 +364,7 @@
           "title": "Partially reveal tank?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "",
-          "reveal": "Reveal"
+          "reveal": "Рівень"
         },
         "clear": "Clear",
         "select_all": "Вибрати все",
