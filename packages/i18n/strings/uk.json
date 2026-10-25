@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "тест",
-    "long": "{color}{fruit}",
-    "fox": "Швидка бура лисиця перестрибує через лінивого собаку."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Скинути",
         "shuffle": "Перемішати",
@@ -922,7 +923,6 @@
       "copyright": "Unaffiliated with Wargaming or any service",
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"
