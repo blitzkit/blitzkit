@@ -132,7 +132,8 @@ jobs:
         run: bun run download-client
 
       - name: Download SmartDLC
-        if: ${{ inputs.client_provider == 'steam' }}
+        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
+
         run: bun run download-smart-dlc
 
       - name: Build
