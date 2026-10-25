@@ -1,7 +1,4 @@
-import { assertSecret } from "@blitzkit/core";
-import { LocalVFS } from "@blitzkit/core/src/blitzkit/vfs/local";
-
-export const vfs = new LocalVFS(assertSecret(import.meta.env.CLIENT_DIR));
+import { vfs } from "./vfs";
 
 const command = Bun.argv[2];
 const path = Bun.argv[3];

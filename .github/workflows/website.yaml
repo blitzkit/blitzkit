@@ -128,8 +128,12 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Download Client
+      - name: Download client
         run: bun run download-client
+
+      - name: Download SmartDLC
+        if: ${{ inputs.client_provider == 'steam' }}
+        run: bun run download-smart-dlc
 
       - name: Build
         run: bun run --bun build
