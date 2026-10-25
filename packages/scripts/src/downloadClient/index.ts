@@ -9,6 +9,8 @@ import {
 } from "./constants";
 import { QuickGitHubRelease } from "./types";
 
+const DEPOT_DOWNLOADER_RETRY_TIME = 30_000;
+
 const provider = assertSecret(import.meta.env.CLIENT_PROVIDER);
 const source = assertSecret(import.meta.env.CLIENT_SOURCE);
 const dir = assertSecret(import.meta.env.CLIENT_DIR);
@@ -43,11 +45,26 @@ if (provider === "steam") {
   const username = assertSecret(import.meta.env.STEAM_USERNAME);
   const password = assertSecret(import.meta.env.STEAM_PASSWORD);
 
-  await $`${DEPOT_DOWNLOADER_EXECUTABLE} -os ${
-    platform
-  } -app ${id} -username ${username} -password ${
-    password
-  } -dir ${dir} -max-downloads ${DEPOT_DOWNLOADER_MAX_DOWNLOADS}`;
+  while (true) {
+    try {
+      await $`${DEPOT_DOWNLOADER_EXECUTABLE} -os ${
+        platform
+      } -app ${id} -username ${username} -password ${
+        password
+      } -dir ${dir} -max-downloads ${DEPOT_DOWNLOADER_MAX_DOWNLOADS}`;
+
+      console.log("Client downloaded successfully!");
+      break;
+    } catch {
+      console.error(
+        `DepotDownloader failed. Retrying in ${DEPOT_DOWNLOADER_RETRY_TIME / 1000} seconds...`,
+      );
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, DEPOT_DOWNLOADER_RETRY_TIME),
+      );
+    }
+  }
 } else if (provider === "zip") {
   const url = assertSecret(import.meta.env.CLIENT_SOURCE);
 
