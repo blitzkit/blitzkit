@@ -17,4 +17,7 @@ if (command === "cat") {
   for (const file of files) {
     console.log(file);
   }
+} else if (command === "yaml") {
+  const content = await vfs.yaml(path);
+  await Bun.write(Bun.stdout, JSON.stringify(content, null, 2));
 }

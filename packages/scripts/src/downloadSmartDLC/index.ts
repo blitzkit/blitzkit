@@ -3,9 +3,15 @@ import { assertSecret } from "@blitzkit/core";
 import { mkdir, writeFile } from "fs/promises";
 import { parse as parsePath } from "path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
+import { RegionsPublish } from "../types/regionsPublish";
 import { vfs } from "../vfs/vfs";
 
 const CLIENT_DIR = assertSecret(import.meta.env.CLIENT_DIR);
+
+const regionsPublish = await vfs.yaml<RegionsPublish>(
+  "Data/regions_publish.yaml",
+);
+const [smartDlcUrl] = regionsPublish.Common.smartDlcUrls;
 
 const versionTextFile = await vfs.text(`Data/version.txt`);
 const currentVersion = versionTextFile
@@ -19,9 +25,7 @@ console.log(`Installing patches for ${currentVersion}...`);
 let patchIndex = 1;
 while (true) {
   const response = await fetch(
-    `${assertSecret(
-      import.meta.env.WOTB_DLC_CDN,
-    )}/dlc/s${currentVersion}_${patchIndex}.yaml`,
+    `${smartDlcUrl}/s${currentVersion}_${patchIndex}.yaml`,
   );
 
   console.log(patchIndex, response.status);
@@ -31,14 +35,11 @@ while (true) {
   console.log(`Applying patch ${patchIndex}...`);
 
   const data = parseYaml(await response.text());
-  const dvpm = await fetch(
-    `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${data.dx11}`,
-  ).then((response) => response.arrayBuffer());
+  const dvpm = await fetch(`${smartDlcUrl}/${data.dx11}`).then((response) =>
+    response.arrayBuffer(),
+  );
   const dvpd = await fetch(
-    `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${data.dx11.replace(
-      ".dvpm",
-      ".dvpd",
-    )}`,
+    `${smartDlcUrl}/${data.dx11.replace(".dvpm", ".dvpd")}`,
   ).then((response) => response.arrayBuffer());
   const files = await dvp(dvpm, dvpd);
 
@@ -58,14 +59,10 @@ while (true) {
 
   if ("dynamicContentLocalizationsDir" in data) {
     console.log(
-      `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
-        data.dynamicContentLocalizationsDir
-      }/en.yaml`,
+      `${smartDlcUrl}/${data.dynamicContentLocalizationsDir}/en.yaml`,
     );
     const localizationsResponse = await fetch(
-      `${assertSecret(import.meta.env.WOTB_DLC_CDN)}/dlc/${
-        data.dynamicContentLocalizationsDir
-      }/en.yaml`,
+      `${smartDlcUrl}/${data.dynamicContentLocalizationsDir}/en.yaml`,
     );
     console.log("fetched");
     const newStrings = parseYaml(await localizationsResponse.text());
