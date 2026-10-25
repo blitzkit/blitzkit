@@ -334,7 +334,7 @@
     "tools": {
       "credits": {
         "name": "Credits",
-        "button": "To the docs",
+        "button": "View people",
         "description": "Contributors of BlitzKit",
         "seo_description": "BlitzKit is the work of many"
       },

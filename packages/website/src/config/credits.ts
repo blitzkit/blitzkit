@@ -43,7 +43,7 @@ export const credits: CreditPeople[] = [
   },
   {
     name: "Pyogenics",
-    description: "Former advisor on back end",
+    description: "Former advisor on game 3D format",
     url: "https://github.com/Pyogenics",
     image: "https://github.com/Pyogenics.png",
   },
@@ -60,7 +60,7 @@ export const credits: CreditPeople[] = [
   },
   {
     name: "S0AP",
-    description: "Former advisor and advertiser on bot",
+    description: "Former advisor on and advertiser for bot",
     url: "https://discord.gg/3KfH93um3Y",
     image: "/media/users/s0ap.webp",
   },
