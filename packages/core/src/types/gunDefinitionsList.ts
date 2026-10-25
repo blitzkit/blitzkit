@@ -20,11 +20,13 @@ export interface GunDefinitionsList {
       burst?: { count: number; rate: number };
       clip?: { count: number; rate: number };
       shots: {
-        [key: string]: {
-          speed: number;
-          piercingPower: string;
-          maxDistance: number;
-        };
+        [key: string]:
+          | ""
+          | {
+              speed: number;
+              piercingPower: string;
+              maxDistance: number;
+            };
       };
     };
   };

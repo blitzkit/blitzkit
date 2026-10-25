@@ -26,6 +26,7 @@ export * from "./staticAsset";
 export * from "./sum";
 export * from "./tankDefinitions";
 export * from "./tankEnvironment";
+export * from "./tankBoundingBox";
 export * from "./tankIcon";
 export * from "./tankNames";
 export * from "./unionBoundingBox";

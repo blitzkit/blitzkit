@@ -2,13 +2,14 @@ import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useRef } from "react";
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
-import { jsxTree } from "../core/blitzkit/jsxTree";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
+import { skinTree } from "../core/blitzkit/skinTree";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
 import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
 import { useDuelModel } from "../hooks/useDuelModel";
 import { hasEquipment } from "../hooks/useEquipment";
 import { useModel } from "../hooks/useModel";
+import { useSkin } from "../hooks/useSkin";
 import { useTankTransform } from "../hooks/useTankTransform";
 import { Tankopedia } from "../stores/tankopedia";
 import { TankopediaDisplay } from "../stores/tankopediaPersistent/constants";
@@ -27,6 +28,7 @@ export function TankModel() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun];
   const { gltf } = useModel(protagonist.tank);
   const nodes = Object.values(gltf.nodes);
+  const skinGltf = useSkin(protagonist.tank);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -103,7 +105,7 @@ export function TankModel() {
           window.removeEventListener("pointerup", handlePointerUp);
         }
 
-        return jsxTree(node, {
+        return skinTree(node, skinGltf, {
           mesh(_, props, key) {
             return (
               <mesh
@@ -182,7 +184,7 @@ export function TankModel() {
             window.removeEventListener("pointerup", handlePointerUp);
           }
 
-          return jsxTree(node, {
+          return skinTree(node, skinGltf, {
             mesh(_, props, key) {
               return (
                 <mesh
@@ -265,7 +267,7 @@ export function TankModel() {
               window.removeEventListener("pointerup", handlePointerUp);
             }
 
-            return jsxTree(node, {
+            return skinTree(node, skinGltf, {
               mesh(_, props, key) {
                 return (
                   <mesh

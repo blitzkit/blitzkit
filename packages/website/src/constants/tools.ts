@@ -73,4 +73,8 @@ export const tools: Record<string, Tool> = {
     id: "changelogs",
     banner_background_position: "center",
   },
+  credits: {
+    id: "credits",
+    button: "bronze",
+  },
 };

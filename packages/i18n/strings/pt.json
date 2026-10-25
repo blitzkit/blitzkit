@@ -41,7 +41,7 @@
       "development": "Development",
       "opentest": "TesteAberto",
       "preview": "Preview",
-      "production": "Production"
+      "production": "Produção"
     },
     "locales": {
       "en": "Inglês",
@@ -187,11 +187,11 @@
   },
   "website": {
     "redirect": {
-      "title": "301: moved permanently",
+      "title": "301: movido permanentemente",
       "body": "This page has moved. Redirecting..."
     },
     "settings": {
-      "title": "Settings",
+      "title": "Configurações",
       "description": "Change BlitzKit settings",
       "dev_mode": "Modo de desenvolvimento",
       "auto_load_models": "Auto-load models",
@@ -207,9 +207,9 @@
         "copied": "Copiado!"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
+        "select_dialog_title": "Procura por tanque",
         "swap_dialog_title": "Swap tank",
-        "clear_filters": "Clear filters",
+        "clear_filters": "Limpar filtros",
         "login": "Login to use this",
         "search_bar_hint": "Procurar tanques...",
         "recent": "Visto recentemente",

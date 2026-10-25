@@ -42,9 +42,9 @@ const strings = await api.strings(locale);
       }}
     >
       <Heading>BlitzKit</Heading>
-      <Text color="gray">{strings.website.footer.motto}</Text>
-      <Text size="1" color="gray">
-        {strings.website.footer.copyright}
+      <Text size="2" color="gray">{strings.website.footer.motto}</Text>
+      <Text size="2" color="gray">
+        {strings.website.footer.association}
       </Text>
 
       <Box mt="2">
@@ -83,9 +83,6 @@ const strings = await api.strings(locale);
             sm: "start",
           }}
         >
-          <LinkI18n {locale} href="/docs/about/credits" color="gray">
-            {strings.website.footer.about.credits}
-          </LinkI18n>
           <Link
             href="https://discord.gg/nDt7AjGJQH"
             target="_blank"

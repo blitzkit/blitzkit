@@ -8,7 +8,7 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
   async provisions() {
     const provisionDefinitions = ProvisionDefinitions.create();
 
-    Object.entries(this.provisionsCommon).forEach(([, provision]) => {
+    Object.entries(this.provisionsCommon).forEach(([key, provision]) => {
       const entry = Provision.create({
         id: provision.id,
         exclude: [],
@@ -39,9 +39,7 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
             filter_type: {
               $case: "ids",
               value: {
-                ids: includeRaw.name.split(/ +/).map((key) => {
-                  return this.tankStringIdMap[key];
-                }),
+                ids: this.getTankFilterIds(includeRaw.name, key, "include"),
               },
             },
           });
@@ -67,9 +65,7 @@ export abstract class ServerBlitzKitAPI7 extends ServerBlitzKitAPI6 {
             filter_type: {
               $case: "ids",
               value: {
-                ids: excludeRaw.name
-                  .split(/ +/)
-                  .map((key) => this.tankStringIdMap[key]),
+                ids: this.getTankFilterIds(excludeRaw.name, key, "exclude"),
               },
             },
           });

@@ -39,9 +39,7 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
             filter_type: {
               $case: "ids",
               value: {
-                ids: includeRaw.name.split(/ +/).map((key) => {
-                  return this.tankStringIdMap[key];
-                }),
+                ids: this.getTankFilterIds(includeRaw.name, key, "include"),
               },
             },
           });
@@ -67,9 +65,7 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
             filter_type: {
               $case: "ids",
               value: {
-                ids: excludeRaw.name.split(/ +/).map((key) => {
-                  return this.tankStringIdMap[key];
-                }),
+                ids: this.getTankFilterIds(excludeRaw.name, key, "exclude"),
               },
             },
           });

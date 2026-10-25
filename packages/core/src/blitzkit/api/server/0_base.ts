@@ -253,6 +253,27 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
     return this;
   }
 
+  protected getTankFilterIds(
+    name: string,
+    definitionKey: string,
+    filter: "include" | "exclude",
+  ) {
+    const keys = name.trim().split(/\s+/).filter(Boolean);
+
+    return keys.flatMap((key) => {
+      const id = this.tankStringIdMap[key];
+
+      if (id === undefined) {
+        console.warn(
+          `Skipping unavailable tank "${key}" in ${filter} vehicle filter for "${definitionKey}"`,
+        );
+        return [];
+      }
+
+      return [id];
+    });
+  }
+
   protected getString(name: string) {
     const collection: Record<string, string> = {
       [locales.default]: this.stringsI18n[locales.default][name],
@@ -270,6 +291,8 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
 
       collection[locale] = localizedString;
     }
+
+    collection[locales.default] = collection[locales.default] ?? name;
 
     return { locales: collection } satisfies I18nString;
   }

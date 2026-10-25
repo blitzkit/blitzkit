@@ -5,7 +5,7 @@ import {
   GearIcon,
   HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
-import { Box, Code, Flex, IconButton, Link } from "@radix-ui/themes";
+import { Box, Code, Flex, Grid, IconButton, Link } from "@radix-ui/themes";
 import { resolveBranchName } from "../core/blitzkit/branches";
 import { getStrings } from "../core/i18n/getStrings";
 import { Var } from "../core/radix/var";
@@ -103,7 +103,7 @@ const strings = getStrings(locale);
   <Flex
     className="content"
     width="100%"
-    p={{ initial: "4", sm: "3" }}
+    p="3"
     direction="column"
     align="center"
   >
@@ -131,42 +131,6 @@ const strings = getStrings(locale);
 
         <Box flexGrow="1" />
 
-        <Flex
-          align="center"
-          gap={{ initial: "3", md: "6" }}
-          display={{ initial: "none", sm: "flex" }}
-          justify="center"
-          className="tools"
-        >
-          {
-            toolsFiltered.map(([id, tool]) => {
-              const selected = Astro.url.pathname.includes(
-                `/${tool.path ?? id}`,
-              );
-              const toolStrings =
-                strings.website.tools[
-                  (tool.strings ?? id) as keyof typeof strings.website.tools
-                ];
-
-              return (
-                <LinkI18n
-                  {locale}
-                  weight={selected ? "medium" : "regular"}
-                  color="gray"
-                  highContrast={selected}
-                  size={{ initial: "1", md: "2" }}
-                  href={`/${tool.path ?? id}`}
-                  underline="hover"
-                >
-                  {toolStrings.name}
-                </LinkI18n>
-              );
-            })
-          }
-        </Flex>
-
-        <Box flexGrow="1" />
-
         <Flex align="center" gap="4">
           <Link
             style={{ display: "flex", alignContent: "center" }}
@@ -190,7 +154,7 @@ const strings = getStrings(locale);
 
           <NavbarAccount {locale} client:idle />
 
-          <Flex align="center" display={{ initial: "flex", sm: "none" }}>
+          <Flex align="center">
             <IconButton variant="ghost" color="gray" className="hamburger">
               <Cross1Icon data-expanded />
               <HamburgerMenuIcon data-closed />
@@ -199,11 +163,10 @@ const strings = getStrings(locale);
         </Flex>
       </Flex>
 
-      <Flex
-        direction="column"
+      <Grid
         data-expanded
+        columns="repeat(auto-fill, minmax(30rem, 1fr))"
         gap="3"
-        display={{ initial: "flex", sm: "none" }}
       >
         {
           toolsFiltered.map(([id, tool]) => {
@@ -228,7 +191,7 @@ const strings = getStrings(locale);
                   }}
                 >
                   <Flex
-                    py="4"
+                    p="6"
                     justify="end"
                     flexGrow="1"
                     style={{
@@ -242,7 +205,7 @@ const strings = getStrings(locale);
             );
           })
         }
-      </Flex>
+      </Grid>
     </Flex>
   </Flex>
 

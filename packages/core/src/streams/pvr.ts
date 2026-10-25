@@ -88,6 +88,7 @@ enum PvrChannelType {
 
 enum ResolvedBitRatePixelFormat {
   R4G4B4A4,
+  R8G8B8A8,
   R5G6B5A0,
 }
 
@@ -127,6 +128,27 @@ export class PvrReadStream extends ReadStream {
             data[bufferIndex + 1] = Math.round(clamp(g * 255, 0, 255));
             data[bufferIndex + 2] = Math.round(clamp(b * 255, 0, 255));
             data[bufferIndex + 3] = Math.round(clamp(a * 255, 0, 255));
+          });
+
+          return {
+            data,
+            width: header.width,
+            height: header.height,
+            channels: 4 as const,
+          };
+        }
+
+        case ResolvedBitRatePixelFormat.R8G8B8A8: {
+          const data = Buffer.alloc(pixelCount * 4);
+
+          times(pixelCount, (index) => {
+            const buffer = this.consumeUint8Array(4);
+            const bufferIndex = index * 4;
+
+            data[bufferIndex] = buffer[0]; // R
+            data[bufferIndex + 1] = buffer[1]; // G
+            data[bufferIndex + 2] = buffer[2]; // B
+            data[bufferIndex + 3] = buffer[3]; // A
           });
 
           return {
@@ -208,10 +230,13 @@ export class PvrReadStream extends ReadStream {
     if (pixelFormat.order === "rgba") {
       if (isEqual(pixelFormat.bitRates, [4, 4, 4, 4])) {
         return ResolvedBitRatePixelFormat.R4G4B4A4;
-      } else
+      } else if (isEqual(pixelFormat.bitRates, [8, 8, 8, 8])) {
+        return ResolvedBitRatePixelFormat.R8G8B8A8;
+      } else {
         throw new TypeError(
           `Unhandled rgba bit rate ${pixelFormat.bitRates.join(", ")}`,
         );
+      }
     } else if (pixelFormat.order === "rgb\0") {
       if (isEqual(pixelFormat.bitRates, [5, 6, 5, 0])) {
         return ResolvedBitRatePixelFormat.R5G6B5A0;
