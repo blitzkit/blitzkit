@@ -38,7 +38,7 @@
 
     "branches": {
       "beta": "Beta",
-      "development": "Development",
+      "development": "Post Malone Edition",
       "opentest": "OpenTest",
       "preview": "Preview",
       "production": "Production"
@@ -993,7 +993,7 @@
 
     "footer": {
       "motto": "Everything World of Tanks Blitz",
-      "copyright": "Unaffiliated with Wargaming or any service",
+      "association": "An Open Collective Project",
 
       "about": {
         "title": "About",

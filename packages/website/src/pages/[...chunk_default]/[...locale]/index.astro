@@ -5,7 +5,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import { AesonPlug } from "../../../components/AesonPlug";
-import { Countdown } from "../../../components/Countdown";
+import { Beg } from "../../../components/Beg";
 import HomeHero from "../../../components/HomeHero.astro";
 import { Plugs } from "../../../components/Plugs";
 import ToolCard from "../../../components/ToolCard.astro";
@@ -66,7 +66,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 <BaseLayout {locale}>
   <HomeHero />
 
-  <Countdown client:load />
+  <Beg />
 
   {
     locale !== locales.default && (
