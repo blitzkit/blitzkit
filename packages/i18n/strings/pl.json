@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "test",
-    "long": "To jest długi ciąg testowy. NIGDY NIE ZOBACZYSZ tego w interfejsie użytkownika. Mój ulubiony owoc to {fruit}, ponieważ ma kolor {color}. Tak bardzo go lubię, że powiem jego nazwę 3 razy! {fruit}! {fruit}! {fruit}! Po raz kolejny to {color}, a nie {not_color}.",
-    "fox": "Szybki brązowy lis przeskoczył nad leniwym psem."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Resetuj",
         "shuffle": "Wymieszaj",
@@ -922,7 +923,6 @@
       "copyright": "Unaffiliated with Wargaming or any service",
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"
