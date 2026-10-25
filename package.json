@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "cd packages/website && bun --bun run dev",
-    "build": "cd packages/website && bun run build",
+    "build": "cd packages/website && bun --bun run build",
     "discover-ids": "cd packages/scripts && bun run discover-ids",
     "build-protos": "cd packages/scripts && bun run build-protos",
     "record-performance": "cd packages/scripts && bun run record-performance",
     "download-client": "cd packages/scripts && bun run download-client",
+    "download-smart-dlc": "cd packages/scripts && bun run download-smart-dlc",
     "clean-astro": "rm -rf packages/website/.astro packages/website/node_modules/.astro packages/website/node_modules/.vite",
     "vfs": "cd packages/scripts && bun run vfs"
   },
