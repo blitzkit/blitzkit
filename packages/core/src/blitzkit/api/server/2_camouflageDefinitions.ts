@@ -15,7 +15,9 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
     );
     const sc2 = new Sc2ReadStream(
       (
-        await this.vfs.file(`Data/3d/${parameters.resourcesPath.blitzModelPath}`)
+        await this.vfs.file(
+          `Data/3d/${parameters.resourcesPath.blitzModelPath}`,
+        )
       ).buffer as ArrayBuffer,
     ).sc2();
     const presets = new Set<string>();
@@ -100,9 +102,11 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         }
       }
 
+      const name = this.getString(camo.userString);
+
       camouflageDefinitions.camouflages[camo.id] = {
         id: camo.id,
-        name: this.getString(camo.userString),
+        name,
         tank_name: resolvedTankName,
         tank_name_full: resolvedTankNameFull,
         tank_id: tankId,

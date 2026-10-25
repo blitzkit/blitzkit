@@ -285,6 +285,8 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
       collection[locale] = localizedString;
     }
 
+    collection[locales.default] = collection[locales.default] ?? name;
+
     return { locales: collection } satisfies I18nString;
   }
 }
