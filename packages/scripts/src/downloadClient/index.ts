@@ -46,24 +46,25 @@ if (provider === "steam") {
   const password = assertSecret(import.meta.env.STEAM_PASSWORD);
 
   while (true) {
-    try {
-      await $`${DEPOT_DOWNLOADER_EXECUTABLE} -os ${
-        platform
-      } -app ${id} -username ${username} -password ${
-        password
-      } -dir ${dir} -max-downloads ${DEPOT_DOWNLOADER_MAX_DOWNLOADS}`;
+    const result = await $`${
+      DEPOT_DOWNLOADER_EXECUTABLE
+    } -os ${platform} -app ${id} -username ${
+      username
+    } -password ${password} -dir ${dir} -max-downloads ${
+      DEPOT_DOWNLOADER_MAX_DOWNLOADS
+    }`.nothrow();
 
+    if (result.exitCode === 0) {
       console.log("Client downloaded successfully!");
       break;
-    } catch {
-      console.error(
-        `DepotDownloader failed. Retrying in ${DEPOT_DOWNLOADER_RETRY_TIME / 1000} seconds...`,
-      );
-
-      await new Promise((resolve) =>
-        setTimeout(resolve, DEPOT_DOWNLOADER_RETRY_TIME),
-      );
     }
+
+    console.error(
+      `DepotDownloader failed (exit ${result.exitCode}). Retrying in ${DEPOT_DOWNLOADER_RETRY_TIME / 1000} seconds...`,
+    );
+    await new Promise((resolve) =>
+      setTimeout(resolve, DEPOT_DOWNLOADER_RETRY_TIME),
+    );
   }
 } else if (provider === "zip") {
   const url = assertSecret(import.meta.env.CLIENT_SOURCE);
