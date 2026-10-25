@@ -24,7 +24,7 @@ import {
   extractMaterials,
   extractModel,
 } from "../../../[...chunk_models_tanks]/[id]/model.glb";
-import { getStaticPaths as _getStaticPaths } from "../_index";
+import { getStaticPaths as _getStaticPaths } from "../../_index";
 
 const SKIN_NUMBER_SLOTS = 5;
 const DIGIT_COLUMNS = 5;
