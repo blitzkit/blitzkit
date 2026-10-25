@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "тест",
-    "long": "Это длинная тестовая строка. Вы НИКОГДА не должны видеть её в пользовательском интерфейсе. Мой любимый фрукт — {fruit}, потому что это цвет {color}. Он мне так нравится, так что я скажу его 3 раза {fruit}! {fruit}! {fruit}! И ещё раз, это {color}, а не {not_color}.",
-    "fox": "Съешь же ещё этих мягких французских булок, да выпей чаю."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Сброс",
         "shuffle": "Перемешать",
@@ -922,7 +923,6 @@
       "copyright": "Не связан с Wargaming или иным сервисом",
       "about": {
         "title": "О сайте",
-        "credits": "Авторы",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Патчи"
