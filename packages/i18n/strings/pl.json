@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "test",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
-    "fox": "Szybki brązowy lis przeskoczył nad leniwym psem."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -19,7 +14,7 @@
     "gun_types": {
       "auto_loader": "Samo ładowacz",
       "auto_reloader": "Automatyczne przeładowanie",
-      "regular": "Regular"
+      "regular": "Regularny"
     },
     "shells": {
       "ap": "AP",
@@ -38,10 +33,10 @@
     },
     "branches": {
       "beta": "Beta",
-      "development": "Development",
-      "opentest": "OpenTest",
-      "preview": "Preview",
-      "production": "Production"
+      "development": "Rozwój",
+      "opentest": "OtwartyTest",
+      "preview": "Przegląd",
+      "production": "Produkcja"
     },
     "locales": {
       "en": "Angielski",
@@ -102,28 +97,28 @@
       "other": "Hybryda"
     },
     "tank_class_short": {
-      "-1": "unrecognized",
+      "-1": "nierozpoznany",
       "0": "Lekki",
       "1": "Średni",
       "2": "Ciężki",
-      "3": "TD"
+      "3": "NC"
     },
     "tank_class_short_plural_lowercase": {
       "0": "lekkie",
       "1": "średnie",
       "2": "ciężkie",
-      "3": "TDs"
+      "3": "NC-ów"
     },
     "tank_class_medium": {
-      "-1": "unrecognized",
+      "-1": "nierozpoznany",
       "0": "Lekki",
       "1": "Średni",
       "2": "Ciężki",
       "3": "Niszczyciel czołgów"
     },
     "tree_type": {
-      "-1": "unrecognized",
-      "0": "Tech tree",
+      "-1": "nierozpoznany",
+      "0": "Drzewko technologiczne",
       "1": "Premium",
       "2": "Kolekcjonerski"
     },
@@ -187,44 +182,44 @@
   },
   "website": {
     "redirect": {
-      "title": "301: moved permanently",
-      "body": "This page has moved. Redirecting..."
+      "title": "301: przeniesiony na stałe",
+      "body": "Ta strona została przeniesiona. Przekierowywanie..."
     },
     "settings": {
-      "title": "Settings",
-      "description": "Change BlitzKit settings",
-      "dev_mode": "Development mode",
-      "auto_load_models": "Auto-load models",
-      "language": "Language"
+      "title": "Ustawienia",
+      "description": "Zmień ustawienia BlitzKit",
+      "dev_mode": "Tryb deweloperski",
+      "auto_load_models": "Automatycznie wczytaj modele",
+      "language": "Język"
     },
     "common": {
       "player_search": {
-        "hint": "Search players...",
-        "no_results": "No results",
-        "searching": "Searching..."
+        "hint": "Szukaj graczy...",
+        "no_results": "Brak wyników",
+        "searching": "Wyszukiwanie..."
       },
       "copy_button": {
-        "copied": "Copied!"
+        "copied": "Skopiowano!"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
-        "swap_dialog_title": "Swap tank",
-        "clear_filters": "Clear filters",
-        "login": "Login to use this",
-        "search_bar_hint": "Search tanks...",
-        "recent": "Recently viewed",
-        "select_all": "Select all",
-        "count_singular": "1 tank",
-        "count_plural": "{count} tanks",
-        "sorting_by": "Sorting by {name}",
-        "clear": "Clear",
-        "tier": "Tier {tier}",
-        "passive": "{name} (Passive)",
+        "select_dialog_title": "Szukaj czołgów",
+        "swap_dialog_title": "Zamień czołg",
+        "clear_filters": "Wyczyść filtry",
+        "login": "Zaloguj się, aby tego użyć",
+        "search_bar_hint": "Szukaj czołgów...",
+        "recent": "Ostatnio oglądane",
+        "select_all": "Zaznacz wszystko",
+        "count_singular": "1 czołg",
+        "count_plural": "{count} czołgi",
+        "sorting_by": "Sortowanie według {name}",
+        "clear": "Wyczyść",
+        "tier": "Poziom czołgu {tier}",
+        "passive": "{name} (Pasywny)",
         "active": "{name} (Aktywne)",
         "no_tanks_found": {
           "body": "Nie znaleziono czołgu.",
           "search_again": "",
-          "clear_filters": "Try clearing filters."
+          "clear_filters": "Spróbuj wyczyścić filtry."
         },
         "sort": {
           "meta.none": "brak",
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Resetuj",
         "shuffle": "Wymieszaj",
@@ -443,71 +444,71 @@
               "ricochet": "Ricochet",
               "explosion_radius": "Explosion radius",
               "exit": "Exit",
-              "reset": "Reset"
+              "reset": "Zresetuj"
             },
-            "advanced": "Advanced highlighting",
+            "advanced": "Zaawansowane podświetlanie",
             "shot_card": {
               "element": {
-                "primary": "Primary",
+                "primary": "Główny",
                 "spaced": "Spaced",
-                "external": "External",
-                "gap": "Gap",
-                "gun": "Gun",
-                "track": "Tracks"
+                "external": "Zewnętrzny",
+                "gap": "Odstęp",
+                "gun": "Działo",
+                "track": "Gąsienice"
               },
               "status": {
-                "penetration": "{damage}hp penetration",
-                "blocked": "Blocked",
-                "ricochet": "Ricochet",
-                "splash": "{damage}hp splash"
+                "penetration": "{damage} penetracja punktów wytrzymałości",
+                "blocked": "Zablokowany",
+                "ricochet": "Rykoszet",
+                "splash": "{damage} rozprysk punktów wytrzymałości"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}°",
-                "nominal": "{thickness}mm nominal",
-                "ricochet_loss": "{loss}% penetration"
+                "thickness_and_angle": "{thickness}mm {angle}",
+                "nominal": "{thickness}mm nominalny",
+                "ricochet_loss": "{loss}% penetracji"
               }
             }
           },
           "static": {
-            "name": "Static armor",
-            "primary": "Primary",
-            "spaced": "Spaced",
-            "external": "External",
+            "name": "Pancerz statyczny",
+            "primary": "Główny Pancerz",
+            "spaced": "Ekran przeciwkumulacyjny",
+            "external": "Zewnętrzny",
             "edit": {
-              "label": "Edit",
-              "reset": "Reset"
+              "label": "Edytuj",
+              "reset": "Zresetuj"
             }
           }
         },
         "meta": {
-          "back": "Back",
-          "compare": "Compare",
+          "back": "Powrót",
+          "compare": "Porównaj",
           "swap": {
-            "button": "Swap",
-            "title": "Swap tanks"
+            "button": "Zamień",
+            "title": "Zamień czołgi"
           },
           "vanilla": "Vanilla",
           "opentest": "OpenTest",
-          "full_name": "Full name",
+          "full_name": "Pełna nazwa",
           "nation": "Naród",
           "class": "Klasa",
           "tier": "Poziom",
           "type": "Rodzaj",
           "dev_id": "DEV: ID",
-          "dev_name": "DEV: NAME",
-          "purchase": "Purchase price",
-          "restoration": "Restoration price",
+          "dev_name": "DEV: NAZWA",
+          "purchase": "Cena zakupu",
+          "restoration": "Cena odzyskania",
           "sale": "Sale price",
           "research": "Research XP"
         },
         "tech_tree": {
-          "title": "Tech tree",
-          "battle": "1 battle",
-          "battles": "{count} battles",
-          "route": "Route {index} of {count}"
+          "title": "Drzewko technologiczne",
+          "battle": "1 bitwa",
+          "battles": "{count} bitew",
+          "route": "Ścieżka {index} z {count}"
         },
         "game_modes": {
-          "title": "Game mode abilities"
+          "title": "Umiejętności trybu gry"
         },
         "review": {
           "title": "Review videos",
@@ -520,26 +521,26 @@
             "equalize": "Equalize"
           },
           "modules": {
-            "title": "Modules",
-            "stock": "Stock",
-            "upgrade": "Upgrade"
+            "title": "Moduły",
+            "stock": "Standardowy",
+            "upgrade": "Ulepsz"
           },
           "equipment": {
-            "title": "Equipment",
-            "clear": "Clear"
+            "title": "Wyposażenie",
+            "clear": "Wyczyść"
           },
           "provisions": {
-            "title": "Provisions",
-            "clear": "Clear"
+            "title": "Materiały eksploatacyjne",
+            "clear": "Wyczyść"
           },
           "consumables": {
             "title": "Consumables",
-            "clear": "Clear",
+            "clear": "Wyczyść",
             "info": "Yellow consumables do not affect the statistics."
           },
           "skills": {
             "title": "Crew skills",
-            "clear": "Clear",
+            "clear": "Wyczyść",
             "maximize": "Maximize",
             "info": "Yellow skills only apply under special circumstances. Hold Space to quickly toggle between level 0 and 7."
           },
@@ -557,49 +558,49 @@
           },
           "values": {
             "shell_index": "Shell {index}",
-            "at_distance": "At {distance}m",
-            "at_distance_slider_label": "Distance",
-            "dispersion_at_distance": "Dispersion at {distance}m",
-            "gun_flexibility": "Gun flexibility",
-            "speed": "Speed",
-            "terrain_coefficients": "Terrain coefficients",
-            "raw_terrain_coefficients": "Raw terrain coefficients",
-            "power_to_weight_ratio": "Power to weight ratio",
-            "hull_traverse_speed": "Hull traverse speed",
-            "camouflage": "Camouflage",
-            "reload": "Reload",
-            "crewCount": "Crew count",
+            "at_distance": "Z odległości {distance}m",
+            "at_distance_slider_label": "Zasięg widzenia",
+            "dispersion_at_distance": "Rozrzut na {distance}m",
+            "gun_flexibility": "Elastyczność działa",
+            "speed": "Prędkość",
+            "terrain_coefficients": "Współczynniki terenu",
+            "raw_terrain_coefficients": "Surowe współczynniki terenu",
+            "power_to_weight_ratio": "Stosunek mocy do masy",
+            "hull_traverse_speed": "Prędkość obrotu kadłuba",
+            "camouflage": "Kamuflaż",
+            "reload": "Przeładowanie",
+            "crewCount": "Liczba członków załogi",
             "shellNormalization": "Normalization",
             "shellRicochet": "Ricochet",
-            "dpm": "DPM",
-            "dpmEffective": "Effective at 60s",
-            "peekabooDpm": "Peekaboo DPM",
-            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
-            "shells": "Shells",
-            "mostOptimalShellIndex": "Most optimal shell",
-            "shellReloads": "Reloads",
-            "shellReload": "Reload",
-            "intraClip": "Intra-clip",
+            "dpm": "Uszkodzenia na minutę",
+            "dpmEffective": "Efektywne w 60s",
+            "peekabooDpm": "Obrażenia na minutę w stylu „wychyl i schowaj”",
+            "peekabooDpmInfo": "Obrażenia na minutę przy założeniu, że strzelisz tylko po zresetowaniu kamuflażu (lub ponownym załadowaniu, jeśli jest wolniejszy) — co najmniej 10 sekund pomiędzy strzałami.",
+            "shells": "Pociski",
+            "mostOptimalShellIndex": "Optymalny pocisk",
+            "shellReloads": "Przeładowania",
+            "shellReload": "Przeładowanie",
+            "intraClip": "Czas przeładowania pocisku",
             "caliber": "Caliber",
             "penetration": "Penetration",
             "damage": "Uszkodzenia",
-            "damageWithoutAssault": "Damage without assault shells",
-            "clipDamage": "Clipping potential",
-            "moduleDamage": "Module damage",
-            "explosionRadius": "Explosion radius",
-            "shellVelocity": "Shell velocity",
-            "aimTime": "Aim time",
+            "damageWithoutAssault": "Uszkodzenia bez pocisków szturmowych",
+            "clipDamage": "Potencjał magazynu",
+            "moduleDamage": "Uszkodzenia modułów",
+            "explosionRadius": "Promień eksplozji",
+            "shellVelocity": "Prędkość pocisku",
+            "aimTime": "Czas celowania",
             "dispersion": "Still",
-            "dispersionMoving": "Moving",
-            "dispersionHullTraversing": "Hull traversing",
-            "dispersionTurretTraversing": "Turret traversing",
-            "dispersionShooting": "Shooting",
-            "dispersionGunDamaged": "Gun damaged",
-            "gunDepression": "Depression",
-            "gunElevation": "Elevation",
-            "gunFrontalDepression": "Frontal depression",
-            "gunFrontalElevation": "Frontal elevation",
-            "gunRearDepression": "Rear depression",
+            "dispersionMoving": "Podczas ruchu",
+            "dispersionHullTraversing": "Obrót kadłuba",
+            "dispersionTurretTraversing": "Obrót wieży",
+            "dispersionShooting": "Strzelanie",
+            "dispersionGunDamaged": "Uszkodzone Działo",
+            "gunDepression": "Limit obrotu działa w dół",
+            "gunElevation": "Limit obrotu działa w górę",
+            "gunFrontalDepression": "Przedni limit obrotu działa w dół",
+            "gunFrontalElevation": "Przedni limit obrotu działa w górę",
+            "gunRearDepression": "Tylne opuszczanie działa",
             "gunRearElevation": "Rear elevation",
             "azimuthLeft": "Azimuth left",
             "azimuthRight": "Azimuth right",
@@ -626,7 +627,7 @@
             "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Still",
-            "camouflageMoving": "Moving",
+            "camouflageMoving": "Podczas ruchu",
             "camouflageShootingStill": "Shooting while still",
             "camouflageShootingMoving": "Shooting while moving",
             "camouflageCaughtOnFire": "Caught on fire",
@@ -648,7 +649,7 @@
         "crew": {
           "title": "Crew training",
           "info": "represents the other roles a crew member can take.",
-          "count": "Crew count",
+          "count": "Liczba członków załogi",
           "commander": "Commander",
           "gunner": "Gunner",
           "driver": "Driver",
@@ -663,7 +664,7 @@
         }
       },
       "compare": {
-        "name": "Compare",
+        "name": "Porównaj",
         "button": "Compare tanks",
         "description": "Compare tank statistics",
         "seo_description": "Compare tanks statistics and loadouts in World of Tanks Blitz",
@@ -673,7 +674,7 @@
             "title": "Add tanks",
             "description": "Select tanks to add to comparison"
           },
-          "clear": "Clear",
+          "clear": "Wyczyść",
           "deltas": {
             "none": "No deltas",
             "percentage": "Percentage",
@@ -686,17 +687,17 @@
         },
         "table": {
           "equipment": {
-            "clear": "Clear",
+            "clear": "Wyczyść",
             "apply_to_all": "Apply to all"
           },
           "skills": {
-            "clear": "Clear",
+            "clear": "Wyczyść",
             "maximize": "Maximize",
             "equalize": "Equalize"
           },
           "modules": {
-            "stock": "Stock",
-            "upgrade": "Upgrade"
+            "stock": "Standardowy",
+            "upgrade": "Ulepsz"
           },
           "provisions": {
             "clear": "Clear this tank",
@@ -761,14 +762,14 @@
         "seo_description": "Track your stats in real time as you play World of Tanks Blitz",
         "search": {
           "lookup": "Look up a player to get started",
-          "hint": "Search players...",
-          "searching": "Searching...",
+          "hint": "Szukaj graczy...",
+          "searching": "Wyszukiwanie...",
           "no_results": "No players found"
         },
         "controls": {
           "title": "Tracking {name}",
           "subtitle": "Since {time}",
-          "reset": "Reset",
+          "reset": "Zresetuj",
           "change": "Change"
         },
         "no_cc": {
@@ -792,7 +793,7 @@
         "description": "Rank Blitz tanks",
         "seo_description": "Explore tier lists ranking tanks from best to worst, based on player ratings and statistical performance in World of Tanks Blitz",
         "buttons": {
-          "reset": "Reset",
+          "reset": "Zresetuj",
           "share": "Share"
         }
       },
@@ -828,7 +829,7 @@
               "success": {
                 "title": "Copy URL",
                 "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
-                "back": "Back",
+                "back": "Powrót",
                 "copy": "Copy URL"
               }
             },
@@ -839,7 +840,7 @@
           },
           "customize": {
             "title": "Customize",
-            "reset": "Reset",
+            "reset": "Zresetuj",
             "description": "Bells and whistles of your embed"
           }
         },
@@ -922,7 +923,6 @@
       "copyright": "Unaffiliated with Wargaming or any service",
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"
