@@ -17,7 +17,6 @@ import {
   VertexAttribute,
 } from "@blitzkit/core";
 import { Armor, Crew, ModelDefinitions, Vector3 } from "@blitzkit/protos";
-import { parse as parsePath } from "path";
 import { MathUtils, Vector3 as THREEVector3, Vector3Tuple } from "three";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI2 } from "./2_camouflages";
@@ -287,11 +286,11 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
               this.assignArmor(armorRaw, armorId, turretArmor);
             });
 
-          turret.userString;
-
-          const turretCollisionName = parsePath(
-            turret.hitTester.collisionModel,
-          ).name.toLowerCase();
+          const turretCollisionName = turret.hitTester.collisionModel
+            .split("/")
+            .at(-1)!
+            .split(".")[0]
+            .toLowerCase();
           const isFullYaw = -turretYaw[0] + turretYaw[1] === 360;
 
           if (!collisionBoundingBoxes[turretCollisionName] && isFullYaw) {
