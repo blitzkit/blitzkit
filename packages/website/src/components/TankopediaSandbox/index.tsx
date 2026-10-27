@@ -1,3 +1,4 @@
+import type { QuicklimeEvent } from "quicklime";
 import { Suspense, useEffect, useRef } from "react";
 import { applyPitchYawLimits } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
@@ -14,7 +15,7 @@ import { CanvasAutoClear } from "../CanvasAutoClear";
 import { CanvasControl } from "../CanvasControl";
 import { DynamicArmor } from "../DynamicArmor";
 import { InitialCameraAligner } from "../InitialCameraAligner";
-import { Lighting } from "../Lighting";
+import { Lighting, transitionEvent } from "../Lighting";
 import { SceneProps } from "../SceneProps";
 import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
@@ -31,6 +32,7 @@ export function TankopediaSandbox({
   skeleton,
   thicknessRange,
 }: TankSandboxProps) {
+  const wrapper = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
   const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
@@ -104,12 +106,20 @@ export function TankopediaSandbox({
       }
     }
 
+    function handleTransitionEvent(event: QuicklimeEvent<number>) {
+      if (!wrapper.current) return;
+
+      wrapper.current.style.backgroundColor = `rgba(0, 0, 0, ${1 - event.data})`;
+    }
+
     poseEvent.on(handlePoseEvent);
+    transitionEvent.on(handleTransitionEvent);
 
     return () => {
       poseEvent.off(handlePoseEvent);
+      transitionEvent.off(handleTransitionEvent);
     };
-  });
+  }, []);
 
   useEffect(() => {
     const [pitch, yaw] = applyPitchYawLimits(
@@ -138,7 +148,7 @@ export function TankopediaSandbox({
   }, [display]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} ref={wrapper}>
       <SmartCanvas
         className={styles.canvas}
         resize={{ debounce: 0 }}
