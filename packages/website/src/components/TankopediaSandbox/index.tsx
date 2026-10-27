@@ -23,6 +23,7 @@ import { SmartCanvas } from "../SmartCanvas";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
 import { TankopediaAntagonistControl } from "../TankopediaAntagonistControl";
+import { TankopediaOptions } from "../TankopediaOptions";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import styles from "./index.module.css";
 
@@ -178,6 +179,7 @@ export function TankopediaSandbox({
       <TankopediaAntagonistControl
         antagonistCharacteristics={antagonistCharacteristics}
       />
+      <TankopediaOptions />
     </div>
   );
 }

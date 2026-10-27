@@ -69,6 +69,13 @@
 
     .label {
       white-space: nowrap;
+
+      line-height: 1;
+
+      img,
+      svg {
+        height: 1em;
+      }
     }
 
     &:has(input:checked) {
