@@ -2,6 +2,8 @@
   height: calc(100dvh - 16rem);
   position: relative;
 
+  overflow: hidden;
+
   .sandbox {
     position: absolute;
     top: 0;

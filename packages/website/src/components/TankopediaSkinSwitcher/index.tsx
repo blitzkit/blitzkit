@@ -1,22 +1,26 @@
 import { alias } from "@blitzkit/core";
-import { Flex, Tooltip } from "@radix-ui/themes";
 import { uniqBy } from "lodash-es";
-import { SKIN_NUMBER } from "../../../../../../constants/skinNumber";
-import { api } from "../../../../../../core/blitzkit/api";
-import { useLocale } from "../../../../../../hooks/useLocale";
-import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
-import { SidebarIconButton } from "./SidebarIconButton";
+import { api } from "../../api/dynamic";
+import { SKIN_NUMBER } from "../../constants/skinNumber";
+import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
+import { Tankopedia } from "../../stores/tankopedia";
+import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
+import { SidebarIconButton } from "../Tankopedia/HeroSection/components/Options/components/SidebarIconButton";
+import { Tooltip } from "../Tooltip";
+import styles from "./index.module.css";
 
-const camouflageDefinitions = await api.camouflageDefinitions();
+const camouflageDefinitions = await api.camouflages();
 
-export function SkinSwitcher() {
-  const tank = Duel.use((state) => state.protagonist.tank);
+export function TankopediaSkinSwitcher() {
+  const unwrap = useUnwrapper();
+
+  const tank = useDuel("protagonist", DuelModule.Tank);
+
   const skin = Tankopedia.use((state) => state.requestedSkin);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const { unwrap } = useLocale();
+
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
       (camouflage) => camouflage.tank_id === tank.id,
@@ -27,20 +31,9 @@ export function SkinSwitcher() {
   if (skins.length === 0) return null;
 
   return (
-    <Flex
-      direction="column"
-      top="50%"
-      right={
-        disturbed && requestedDisplay === TankopediaDisplay.Model
-          ? "3"
-          : "-4rem"
-      }
-      style={{
-        position: "absolute",
-        transform: "translateY(-50%)",
-        transitionDuration: "200ms",
-        pointerEvents: "auto",
-      }}
+    <div
+      className={styles["skin-switcher"]}
+      data-visible={disturbed && requestedDisplay === TankopediaDisplay.Model}
     >
       {skins.map((camouflage, index) => {
         const name = unwrap(camouflage.name!).replace(
@@ -51,7 +44,7 @@ export function SkinSwitcher() {
         const bottom = index === skins.length - 1 ? "var(--radius-full)" : "0";
 
         return (
-          <Tooltip key={camouflage.id} content={name} side="left">
+          <Tooltip key={camouflage.id} tooltip={name} side="left">
             <SidebarIconButton
               selected={skin === camouflage.id}
               alt={name}
@@ -78,6 +71,6 @@ export function SkinSwitcher() {
           </Tooltip>
         );
       })}
-    </Flex>
+    </div>
   );
 }

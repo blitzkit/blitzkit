@@ -5,6 +5,7 @@ import { Tankopedia } from "../stores/tankopedia";
 const equipment = await api.equipment();
 const tanks = await api.tanks();
 
+// TODO: use enum here instead
 export const duelSides = ["protagonist", "antagonist"] as const;
 
 export type DuelSide = (typeof duelSides)[number];

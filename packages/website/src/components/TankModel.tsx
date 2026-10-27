@@ -23,7 +23,6 @@ export function TankModel() {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tankModelDefinition = useDuelModel("protagonist");
-  const trackModelDefinition = tankModelDefinition.tracks[track.id];
   const turretModelDefinition = tankModelDefinition.turrets[protagonist.turret];
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun];
   const { gltf } = useModel(protagonist.tank);

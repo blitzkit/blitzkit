@@ -20,6 +20,7 @@ import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
+import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import styles from "./index.module.css";
 
 type TankSandboxProps = MaybeSkeletonComponentProps & {
@@ -158,6 +159,8 @@ export function TankopediaSandbox({
       >
         {!skeleton && <Content thicknessRange={thicknessRange} />}
       </SmartCanvas>
+
+      <TankopediaSkinSwitcher />
     </div>
   );
 }

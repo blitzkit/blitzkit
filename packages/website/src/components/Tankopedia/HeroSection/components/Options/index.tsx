@@ -37,11 +37,12 @@ import { Tankopedia } from "../../../../../stores/tankopedia";
 import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../../../StaticArmor";
 import { EqualIcon } from "../../../../EqualIcon";
 import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";
 import { SmallTankIcon } from "../../../../SmallTankIcon";
+import type { ThicknessRange } from "../../../../StaticArmor";
+import { SkinSwitcher } from "../../../../TankopediaSkinSwitcher";
 import { TankSearch } from "../../../../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
@@ -50,7 +51,6 @@ import {
   SidebarIconButton,
   SidebarIconGroup,
 } from "./components/SidebarIconButton";
-import { SkinSwitcher } from "./components/SkinSwitcher";
 import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 import { Thicknesses } from "./components/Thicknesses";
 
