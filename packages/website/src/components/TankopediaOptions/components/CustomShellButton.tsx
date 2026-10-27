@@ -12,9 +12,9 @@ import {
 } from "@radix-ui/themes";
 import { throttle } from "lodash-es";
 import { type ChangeEvent } from "react";
-import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { useLocale } from "../../../hooks/useLocale";
+import { Tankopedia } from "../../../stores/tankopedia";
 
 export function CustomShellButton() {
   const customShell = Tankopedia.use((state) => state.customShell);

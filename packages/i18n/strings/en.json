@@ -20,6 +20,18 @@
   },
 
   "tanks": {
+    "tabs": {
+      "model": "Model",
+      "dynamic_armor": "Dynamic armor",
+      "static_armor": "Static armor"
+    },
+
+    "poses": {
+      "hull_down": "Hull down",
+      "face_hug": "Face hug",
+      "default": "Default"
+    },
+
     "toys": {
       "ricochet": {
         "angle": "Angle",

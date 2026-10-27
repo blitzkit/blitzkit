@@ -2,12 +2,12 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { EyeClosedIcon, EyeOpenIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { Button, Checkbox, Flex, Text } from "@radix-ui/themes";
 import { Suspense } from "react";
-import { useLocale } from "../../../../../../hooks/useLocale";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
-import { TankopediaPersistent } from "../../../../../../stores/tankopediaPersistent";
-import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
-import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../../../../StaticArmor";
+import { useLocale } from "../../../hooks/useLocale";
+import { Tankopedia } from "../../../stores/tankopedia";
+import { TankopediaPersistent } from "../../../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../../../stores/tankopediaPersistent/constants";
+import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import type { ThicknessRange } from "../../StaticArmor";
 import { DynamicArmorSwitcher } from "./DynamicArmorSwitcher";
 
 type ThicknessesProps = MaybeSkeletonComponentProps & {
@@ -17,13 +17,13 @@ type ThicknessesProps = MaybeSkeletonComponentProps & {
 export function Thicknesses({ thicknessRange, skeleton }: ThicknessesProps) {
   const display = Tankopedia.use((state) => state.display);
   const showExternalModules = TankopediaPersistent.use(
-    (state) => state.showExternalModules
+    (state) => state.showExternalModules,
   );
   const showSpacedArmor = TankopediaPersistent.use(
-    (state) => state.showSpacedArmor
+    (state) => state.showSpacedArmor,
   );
   const showPrimaryArmor = TankopediaPersistent.use(
-    (state) => state.showPrimaryArmor
+    (state) => state.showPrimaryArmor,
   );
   const editStatic = Tankopedia.use((state) => state.editStatic);
   const { strings } = useLocale();

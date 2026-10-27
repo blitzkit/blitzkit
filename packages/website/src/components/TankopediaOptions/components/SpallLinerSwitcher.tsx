@@ -2,10 +2,10 @@ import { alias, availableProvisions } from "@blitzkit/core";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import { Flex, IconButton, Popover } from "@radix-ui/themes";
 import { api } from "../../../../../../core/blitzkit/api";
-import { SPALL_LINER_PROVISION_ID } from "../../../../../../core/blitzkit/spallLiner";
-import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { SPALL_LINER_PROVISION_ID } from "../../../core/blitzkit/spallLiner";
+import { useLocale } from "../../../hooks/useLocale";
+import { Tankopedia } from "../../../stores/tankopedia";
 
 const provisionDefinitions = await api.provisionDefinitions();
 

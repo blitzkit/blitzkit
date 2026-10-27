@@ -1,9 +1,4 @@
-import {
-  alias,
-  resolvePenetrationCoefficient,
-  romanize,
-  uniqueGuns,
-} from "@blitzkit/core";
+import { alias, romanize, uniqueGuns } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import {
   Crosshair1Icon,
@@ -27,39 +22,38 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { Suspense, useState, type RefObject } from "react";
-import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
-import { useEquipment } from "../../../../../hooks/useEquipment";
-import { useFullScreen } from "../../../../../hooks/useFullScreen";
-import { useFullscreenAvailability } from "../../../../../hooks/useFullscreenAvailability";
-import { useLocale } from "../../../../../hooks/useLocale";
-import { Duel } from "../../../../../stores/duel";
-import { Tankopedia } from "../../../../../stores/tankopedia";
-import { TankopediaPersistent } from "../../../../../stores/tankopediaPersistent";
-import { TankopediaDisplay } from "../../../../../stores/tankopediaPersistent/constants";
-import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
-import { EqualIcon } from "../../../../EqualIcon";
-import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
-import { ScreenshotButton } from "../../../../ScreenshotButton";
-import { SmallTankIcon } from "../../../../SmallTankIcon";
-import type { ThicknessRange } from "../../../../StaticArmor";
+import { Pose, poseEvent } from "../../core/blitzkit/pose";
+import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useEquipment } from "../../hooks/useEquipment";
+import { useFullScreen } from "../../hooks/useFullScreen";
+import { useFullscreenAvailability } from "../../hooks/useFullscreenAvailability";
+import { useStrings } from "../../hooks/useStrings";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
+import { Tankopedia } from "../../stores/tankopedia";
+import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
+import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { EqualIcon } from "../EqualIcon";
+import { ModuleButton } from "../ModuleButtons/ModuleButton";
+import { ScreenshotButton } from "../ScreenshotButton";
+import { SmallTankIcon } from "../SmallTankIcon";
 import {
   SidebarIconButton,
   SidebarIconGroup,
-} from "../../../../TankopediaSidebarIconButtons";
-import { SkinSwitcher } from "../../../../TankopediaSkinSwitcher";
-import { TankSearch } from "../../../../TankSearch";
+} from "../TankopediaSidebarIconButtons";
+import { TankSearch } from "../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
-import { QuickInputs } from "./components/QuickInputs";
 import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
-import { Thicknesses } from "./components/Thicknesses";
 
 type OptionsProps = MaybeSkeletonComponentProps & {
-  thicknessRange: ThicknessRange;
   canvas: RefObject<HTMLCanvasElement>;
 };
 
-export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
+export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
+
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined,
   );
@@ -69,31 +63,23 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
     (state) => state.advancedHighlighting,
   );
   const fullScreenAvailable = useFullscreenAvailability(true);
-  const protagonistTank = Duel.use((state) => state.protagonist.tank);
-  const antagonistGun = Duel.use((state) => state.antagonist.gun);
-  const antagonistShell = Duel.use((state) => state.antagonist.shell);
+  const protagonistTank = useDuel("protagonist", DuelModule.Tank);
+  const antagonistGun = useDuel("antagonist", DuelModule.Gun);
+  const antagonistShell = useDuel("antagonist", DuelModule.Shell);
   const [antagonistSelectorOpen, setAntagonistSelectorOpen] = useState(false);
-  const antagonistTank = Duel.use((state) => state.antagonist.tank);
-  const hasCalibratedShells = useEquipment("protagonist", 103, true);
+  const antagonistTank = useDuel("antagonist", DuelModule.Tank);
+  const hasCalibratedShells = useEquipment("protagonist", 103);
   const [tab, setTab] = useState("search");
   const hasEnhancedArmor = useEquipment("protagonist", 110);
   const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
-  const { strings, unwrap } = useLocale();
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
   const modelRequested = Tankopedia.use((state) => state.modelRequested);
-  const equalize = Duel.use((state) => state.equalize);
-  const equalizer = Duel.use((state) => state.antagonist.tank.equalizer);
+  const equalize = Tankopedia.use((state) => state.environment.equalize);
 
   return (
     <>
-      {disturbed && <QuickInputs />}
-
-      <Thicknesses skeleton={skeleton} thicknessRange={thicknessRange} />
-
-      <SkinSwitcher />
-
       <Flex
         gap="2"
         direction="column"
@@ -110,7 +96,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
       >
         {!hasCustomShell && (
           <Text color="gray" size={{ initial: "1", sm: "2" }}>
-            {literals(strings.common.units.mm, {
+            {/* {literals(strings.common.units.mm, {
               value: (
                 resolvePenetrationCoefficient(
                   hasCalibratedShells,
@@ -119,7 +105,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   equalizer,
                 ) * antagonistShell.penetration!.near
               ).toFixed(0),
-            })}
+            })} */}
+            what
           </Text>
         )}
 
@@ -165,13 +152,13 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   <ModuleButton
                     module="gun"
                     key={gun.id}
-                    onClick={() =>
-                      Duel.mutate((draft) => {
-                        draft.antagonist.turret = turret;
-                        draft.antagonist.gun = gun;
-                        draft.antagonist.shell = gun.shells[0];
-                      })
-                    }
+                    onClick={() => {
+                      Tankopedia.mutate((draft) => {
+                        draft.antagonist.turret = turret.id;
+                        draft.antagonist.gun = gun.id;
+                        draft.antagonist.shell = gun.shells[0].id;
+                      });
+                    }}
                     selected={gun.id === antagonistGun.id}
                     discriminator={romanize(gun.tier)}
                     secondaryDiscriminator={
@@ -196,10 +183,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               alt={unwrap(thisShell.name!)}
               src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
               onClick={() => {
-                Duel.mutate((draft) => {
-                  draft.antagonist.shell = thisShell;
-                });
                 Tankopedia.mutate((draft) => {
+                  draft.antagonist.shell = thisShell.id;
                   draft.shot = undefined;
                   draft.customShell = undefined;
                 });
@@ -223,13 +208,14 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
-              Duel.mutate((draft) => {
-                draft.antagonist.equipmentMatrix[0][0] = hasCalibratedShells
-                  ? 0
-                  : 1;
-              });
               Tankopedia.mutate((draft) => {
                 draft.shot = undefined;
+
+                if (hasCalibratedShells) {
+                  delete draft.protagonist.equipment[0];
+                } else {
+                  draft.antagonist.equipment[0] = 1;
+                }
               });
             }}
           >
@@ -248,12 +234,13 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             size={{ initial: "2", sm: "3" }}
             radius="none"
             onClick={() => {
-              Duel.mutate((draft) => {
-                draft.protagonist.equipmentMatrix[1][1] = hasEnhancedArmor
-                  ? 0
-                  : -1;
-              });
               Tankopedia.mutate((draft) => {
+                if (hasEnhancedArmor) {
+                  delete draft.protagonist.equipment[4];
+                } else {
+                  draft.antagonist.equipment[4] = 0;
+                }
+
                 draft.shot = undefined;
               });
             }}
@@ -282,10 +269,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           size={{ initial: "2", sm: "3" }}
           color={equalize ? undefined : "gray"}
           onClick={() => {
-            Duel.mutate((draft) => {
-              draft.equalize = !draft.equalize;
-            });
             Tankopedia.mutate((draft) => {
+              draft.environment.equalize = !draft.environment.equalize;
               draft.shot = undefined;
             });
           }}
@@ -347,19 +332,19 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   <DropdownMenu.Item
                     onClick={() => poseEvent.emit(Pose.HullDown)}
                   >
-                    {strings.website.tools.tankopedia.sandbox.poses.hull_down}
+                    {strings.tanks.poses.hull_down}
                   </DropdownMenu.Item>
 
                   <DropdownMenu.Item
                     onClick={() => poseEvent.emit(Pose.FaceHug)}
                   >
-                    {strings.website.tools.tankopedia.sandbox.poses.face_hug}
+                    {strings.tanks.poses.face_hug}
                   </DropdownMenu.Item>
 
                   <DropdownMenu.Item
                     onClick={() => poseEvent.emit(Pose.Default)}
                   >
-                    {strings.website.tools.tankopedia.sandbox.poses.default}
+                    {strings.tanks.poses.default}
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
@@ -422,9 +407,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
             }}
           >
             <SegmentedControl.Item value={`${TankopediaDisplay.Model}`}>
-              <Tooltip
-                content={strings.website.tools.tankopedia.sandbox.model.name}
-              >
+              <Tooltip content={strings.tanks.tabs.model}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-model.png"
@@ -434,9 +417,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               </Tooltip>
             </SegmentedControl.Item>
             <SegmentedControl.Item value={`${TankopediaDisplay.DynamicArmor}`}>
-              <Tooltip
-                content={strings.website.tools.tankopedia.sandbox.dynamic.name}
-              >
+              <Tooltip content={strings.tanks.tabs.dynamic_armor}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-dynamic-armor.png"
@@ -446,9 +427,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
               </Tooltip>
             </SegmentedControl.Item>
             <SegmentedControl.Item value={`${TankopediaDisplay.StaticArmor}`}>
-              <Tooltip
-                content={strings.website.tools.tankopedia.sandbox.static.name}
-              >
+              <Tooltip content={strings.tanks.tabs.model}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-static-armor.png"
@@ -485,14 +464,17 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   <TankSearch
                     compact
                     onSelect={(tank) => {
-                      Duel.mutate((draft) => {
-                        draft.antagonist.tank = tank;
-                        draft.antagonist.engine = tank.engines.at(-1)!;
-                        draft.antagonist.track = tank.tracks.at(-1)!;
-                        draft.antagonist.turret = tank.turrets.at(-1)!;
-                        draft.antagonist.gun =
-                          draft.antagonist.turret.guns.at(-1)!;
-                        draft.antagonist.shell = draft.antagonist.gun.shells[0];
+                      Tankopedia.mutate((draft) => {
+                        draft.antagonist.tank = tank.id;
+                        draft.antagonist.engine = tank.engines.at(-1)!.id;
+                        draft.antagonist.track = tank.tracks.at(-1)!.id;
+
+                        const turret = tank.turrets.at(-1)!;
+                        const gun = turret.guns.at(-1)!;
+
+                        draft.antagonist.turret = turret.id;
+                        draft.antagonist.gun = gun.id;
+                        draft.antagonist.shell = gun.shells[0].id;
                       });
                       setAntagonistSelectorOpen(false);
                     }}

@@ -1,8 +1,8 @@
 import { alias } from "@blitzkit/core";
 import { IconButton } from "@radix-ui/themes";
-import { useArmor } from "../../../../../../hooks/useArmor";
 import { Duel } from "../../../../../../stores/duel";
-import { Tankopedia } from "../../../../../../stores/tankopedia";
+import { useArmor } from "../../../hooks/useArmor";
+import { Tankopedia } from "../../../stores/tankopedia";
 
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);

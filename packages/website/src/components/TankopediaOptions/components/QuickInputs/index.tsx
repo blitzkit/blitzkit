@@ -3,14 +3,14 @@ import { Flex, TextField } from "@radix-ui/themes";
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
-import { applyPitchYawLimits } from "../../../../../../../core/blitz/applyPitchYawLimits";
+import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
+import { Duel } from "../../../../../../../stores/duel";
+import { applyPitchYawLimits } from "../../../../core/blitz/applyPitchYawLimits";
 import {
   type ModelTransformEventData,
   modelTransformEvent,
-} from "../../../../../../../core/blitzkit/modelTransform";
-import { useEquipment } from "../../../../../../../hooks/useEquipment";
-import { useTankModelDefinition } from "../../../../../../../hooks/useTankModelDefinition";
-import { Duel } from "../../../../../../../stores/duel";
+} from "../../../../core/blitzkit/modelTransform";
+import { useEquipment } from "../../../../hooks/useEquipment";
 import "./index.css";
 
 export function QuickInputs() {

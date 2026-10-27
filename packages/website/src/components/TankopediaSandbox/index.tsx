@@ -21,6 +21,7 @@ import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
+import { TankopediaOptions } from "../TankopediaOptions";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import styles from "./index.module.css";
 
@@ -171,6 +172,7 @@ export function TankopediaSandbox({
       </SmartCanvas>
 
       <TankopediaSkinSwitcher />
+      <TankopediaOptions />
     </div>
   );
 }

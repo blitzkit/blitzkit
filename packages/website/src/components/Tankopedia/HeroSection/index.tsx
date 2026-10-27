@@ -8,7 +8,7 @@ import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
 import type { ThicknessRange } from "../../StaticArmor";
-import { Options } from "./components/Options";
+import { TankopediaOptions } from "../../TankopediaOptions";
 import { TankSandbox } from "./components/TankSandbox";
 import { Title } from "./components/TankSandbox/Title";
 
@@ -142,7 +142,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
             <Title skeleton={skeleton} />
 
-            <Options
+            <TankopediaOptions
               skeleton={skeleton}
               canvas={canvas}
               thicknessRange={thicknessRange}
