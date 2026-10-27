@@ -32,7 +32,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     .text {
       display: block;
     }
