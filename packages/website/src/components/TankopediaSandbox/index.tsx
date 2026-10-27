@@ -9,6 +9,7 @@ import { useModel } from "../../hooks/useModel";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
+import type { ComputedCharacteristics } from "../../types/characteristics";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { ArmorPlateDisplay } from "../ArmorPlateDisplay";
 import { CanvasAutoClear } from "../CanvasAutoClear";
@@ -21,17 +22,19 @@ import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
-import { TankopediaOptions } from "../TankopediaOptions";
+import { TankopediaAntagonistControl } from "../TankopediaAntagonistControl";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import styles from "./index.module.css";
 
 type TankSandboxProps = MaybeSkeletonComponentProps & {
   thicknessRange: ThicknessRange;
+  antagonistCharacteristics: ComputedCharacteristics;
 };
 
 export function TankopediaSandbox({
   skeleton,
   thicknessRange,
+  antagonistCharacteristics,
 }: TankSandboxProps) {
   const wrapper = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -172,7 +175,9 @@ export function TankopediaSandbox({
       </SmartCanvas>
 
       <TankopediaSkinSwitcher />
-      <TankopediaOptions />
+      <TankopediaAntagonistControl
+        antagonistCharacteristics={antagonistCharacteristics}
+      />
     </div>
   );
 }

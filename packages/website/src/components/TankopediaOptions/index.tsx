@@ -1,28 +1,7 @@
 import { alias, romanize, uniqueGuns } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
-import {
-  Crosshair1Icon,
-  EnterFullScreenIcon,
-  ExitFullScreenIcon,
-  EyeOpenIcon,
-  ShadowInnerIcon,
-  ShadowNoneIcon,
-  SunIcon,
-} from "@radix-ui/react-icons";
-import {
-  Button,
-  Dialog,
-  DropdownMenu,
-  Flex,
-  IconButton,
-  Popover,
-  SegmentedControl,
-  Tabs,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
-import { Suspense, useState, type RefObject } from "react";
-import { Pose, poseEvent } from "../../core/blitzkit/pose";
+import { Flex, IconButton, Popover, Text } from "@radix-ui/themes";
+import { useState, type RefObject } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useFullScreen } from "../../hooks/useFullScreen";
@@ -32,25 +11,26 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
+import type { ComputedCharacteristics } from "../../types/characteristics";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { EqualIcon } from "../EqualIcon";
 import { ModuleButton } from "../ModuleButtons/ModuleButton";
-import { ScreenshotButton } from "../ScreenshotButton";
-import { SmallTankIcon } from "../SmallTankIcon";
 import {
   SidebarIconButton,
   SidebarIconGroup,
 } from "../TankopediaSidebarIconButtons";
-import { TankSearch } from "../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
-import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
-import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 
 type OptionsProps = MaybeSkeletonComponentProps & {
   canvas: RefObject<HTMLCanvasElement>;
+  antagonistCharacteristics: ComputedCharacteristics;
 };
 
-export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
+export function TankopediaOptions({
+  canvas,
+  skeleton,
+  antagonistCharacteristics,
+}: OptionsProps) {
   const strings = useStrings();
   const unwrap = useUnwrapper();
 
@@ -80,206 +60,9 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
 
   return (
     <>
-      <Flex
-        gap="2"
-        direction="column"
-        top="50%"
-        right={
-          requestedDisplay === TankopediaDisplay.DynamicArmor ? "3" : "-4rem"
-        }
-        style={{
-          position: "absolute",
-          transform: "translateY(-50%)",
-          transitionDuration: "200ms",
-        }}
-        align="end"
-      >
-        {!hasCustomShell && (
-          <Text color="gray" size={{ initial: "1", sm: "2" }}>
-            {/* {literals(strings.common.units.mm, {
-              value: (
-                resolvePenetrationCoefficient(
-                  hasCalibratedShells,
-                  equalize,
-                  antagonistShell.type,
-                  equalizer,
-                ) * antagonistShell.penetration!.near
-              ).toFixed(0),
-            })} */}
-            what
-          </Text>
-        )}
+      
 
-        {antagonistUniqueGuns.length > 1 && (
-          <Popover.Root>
-            <Popover.Trigger>
-              <IconButton
-                radius="full"
-                variant="soft"
-                color="gray"
-                size={{ initial: "2", sm: "3" }}
-                style={{ position: "relative" }}
-              >
-                <Text
-                  size="1"
-                  color="gray"
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    bottom: 0,
-                  }}
-                  mr="2"
-                  mb="1"
-                >
-                  {romanize(antagonistGun.tier)}
-                </Text>
-
-                <img
-                  alt="Antagonist Gun"
-                  src={alias("api", "/icons/modules/gun.webp")}
-                  style={{
-                    width: "65%",
-                    height: "65%",
-                    objectFit: "contain",
-                  }}
-                />
-              </IconButton>
-            </Popover.Trigger>
-
-            <Popover.Content side="left" align="center">
-              <Flex gap="2">
-                {[...antagonistUniqueGuns].reverse().map(({ gun, turret }) => (
-                  <ModuleButton
-                    module="gun"
-                    key={gun.id}
-                    onClick={() => {
-                      Tankopedia.mutate((draft) => {
-                        draft.antagonist.turret = turret.id;
-                        draft.antagonist.gun = gun.id;
-                        draft.antagonist.shell = gun.shells[0].id;
-                      });
-                    }}
-                    selected={gun.id === antagonistGun.id}
-                    discriminator={romanize(gun.tier)}
-                    secondaryDiscriminator={
-                      <Text style={{ fontSize: "0.75em" }}>
-                        {literals(strings.common.units.mm, {
-                          value: gun.shells[0].caliber.toFixed(0),
-                        })}
-                      </Text>
-                    }
-                  />
-                ))}
-              </Flex>
-            </Popover.Content>
-          </Popover.Root>
-        )}
-
-        <SidebarIconGroup>
-          {antagonistGun.shells.map((thisShell) => (
-            <SidebarIconButton
-              key={thisShell.id}
-              selected={thisShell.id === antagonistShell.id && !hasCustomShell}
-              alt={unwrap(thisShell.name!)}
-              src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
-              onClick={() => {
-                Tankopedia.mutate((draft) => {
-                  draft.antagonist.shell = thisShell.id;
-                  draft.shot = undefined;
-                  draft.customShell = undefined;
-                });
-              }}
-            />
-          ))}
-          <CustomShellButton />
-        </SidebarIconGroup>
-
-        <Flex
-          direction="column"
-          style={{
-            pointerEvents: "auto",
-            borderRadius: "var(--radius-full)",
-          }}
-          overflow="hidden"
-        >
-          <IconButton
-            color={hasCalibratedShells ? undefined : "gray"}
-            variant="soft"
-            size={{ initial: "2", sm: "3" }}
-            radius="none"
-            onClick={() => {
-              Tankopedia.mutate((draft) => {
-                draft.shot = undefined;
-
-                if (hasCalibratedShells) {
-                  delete draft.protagonist.equipment[0];
-                } else {
-                  draft.antagonist.equipment[0] = 1;
-                }
-              });
-            }}
-          >
-            <img
-              alt="Calibrated Shells"
-              src={alias("api", "/icons/equipment/103.webp")}
-              style={{
-                width: "50%",
-                height: "50%",
-              }}
-            />
-          </IconButton>
-          <IconButton
-            color={hasEnhancedArmor ? undefined : "gray"}
-            variant="soft"
-            size={{ initial: "2", sm: "3" }}
-            radius="none"
-            onClick={() => {
-              Tankopedia.mutate((draft) => {
-                if (hasEnhancedArmor) {
-                  delete draft.protagonist.equipment[4];
-                } else {
-                  draft.antagonist.equipment[4] = 0;
-                }
-
-                draft.shot = undefined;
-              });
-            }}
-          >
-            <img
-              alt="Enhanced Armor"
-              src={alias("api", "/icons/equipment/110.webp")}
-              style={{
-                width: "50%",
-                height: "50%",
-              }}
-            />
-          </IconButton>
-
-          <SpallLinerSwitcher />
-        </Flex>
-
-        {!skeleton && modelRequested && (
-          <Suspense>
-            <DynamicArmorSwitcher />
-          </Suspense>
-        )}
-
-        <IconButton
-          variant="soft"
-          size={{ initial: "2", sm: "3" }}
-          color={equalize ? undefined : "gray"}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.environment.equalize = !draft.environment.equalize;
-              draft.shot = undefined;
-            });
-          }}
-        >
-          <EqualIcon />
-        </IconButton>
-      </Flex>
-
-      <Flex
+      {/* <Flex
         direction="column"
         align="center"
         position="absolute"
@@ -407,7 +190,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
             }}
           >
             <SegmentedControl.Item value={`${TankopediaDisplay.Model}`}>
-              <Tooltip content={strings.tanks.tabs.model}>
+              <Tooltip tooltip={strings.tanks.tabs.model}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-model.png"
@@ -417,7 +200,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
               </Tooltip>
             </SegmentedControl.Item>
             <SegmentedControl.Item value={`${TankopediaDisplay.DynamicArmor}`}>
-              <Tooltip content={strings.tanks.tabs.dynamic_armor}>
+              <Tooltip tooltip={strings.tanks.tabs.dynamic_armor}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-dynamic-armor.png"
@@ -427,7 +210,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
               </Tooltip>
             </SegmentedControl.Item>
             <SegmentedControl.Item value={`${TankopediaDisplay.StaticArmor}`}>
-              <Tooltip content={strings.tanks.tabs.model}>
+              <Tooltip tooltip={strings.tanks.tabs.model}>
                 <Flex height="100%" align="center">
                   <img
                     src="/assets/images/icons/tankopedia-static-armor.png"
@@ -484,7 +267,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
             </Dialog.Root>
           )}
         </Flex>
-      </Flex>
+      </Flex> */}
     </>
   );
 }

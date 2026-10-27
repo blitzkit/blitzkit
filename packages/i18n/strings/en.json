@@ -20,6 +20,16 @@
   },
 
   "tanks": {
+    "custom_shell": {
+      "type": "Type",
+      "caliber": "Caliber",
+      "penetration": "Penetration",
+      "normalization": "Normalization",
+      "ricochet": "Ricochet",
+      "exit": "Exit",
+      "reset": "Reset"
+    },
+
     "tabs": {
       "model": "Model",
       "dynamic_armor": "Dynamic armor",

@@ -12,15 +12,15 @@ import {
 } from "@radix-ui/themes";
 import { throttle } from "lodash-es";
 import { type ChangeEvent } from "react";
-import { Duel } from "../../../../../../stores/duel";
-import { useLocale } from "../../../hooks/useLocale";
+import { DuelModule, useDuel } from "../../../hooks/useDuel";
+import { useStrings } from "../../../hooks/useStrings";
 import { Tankopedia } from "../../../stores/tankopedia";
 
 export function CustomShellButton() {
   const customShell = Tankopedia.use((state) => state.customShell);
-  const gun = Duel.use((state) => state.protagonist.gun);
-  const antagonistShell = Duel.use((state) => state.antagonist.shell);
-  const { strings } = useLocale();
+  const gun = useDuel("protagonist", DuelModule.Gun);
+  const antagonistShell = useDuel("antagonist", DuelModule.Shell);
+  const strings = useStrings();
 
   return (
     <Popover.Root
@@ -55,12 +55,7 @@ export function CustomShellButton() {
           <>
             <Flex direction="column" gap="2">
               <Flex align="center" justify="between" gap="4">
-                <Text>
-                  {
-                    strings.website.tools.tankopedia.sandbox.dynamic
-                      .custom_shell.type
-                  }
-                </Text>
+                <Text>{strings.tanks.custom_shell.type}</Text>
                 <Select.Root
                   value={`${customShell.type}`}
                   onValueChange={(value) => {
@@ -121,12 +116,7 @@ export function CustomShellButton() {
               </Flex>
 
               <Flex align="center" justify="between" gap="4">
-                <Text>
-                  {
-                    strings.website.tools.tankopedia.sandbox.dynamic
-                      .custom_shell.caliber
-                  }
-                </Text>
+                <Text>{strings.tanks.custom_shell.caliber}</Text>
                 <TextField.Root
                   variant="classic"
                   style={{ maxWidth: "6rem" }}
@@ -157,12 +147,7 @@ export function CustomShellButton() {
               </Flex>
 
               <Flex align="center" justify="between" gap="4">
-                <Text>
-                  {
-                    strings.website.tools.tankopedia.sandbox.dynamic
-                      .custom_shell.penetration
-                  }
-                </Text>
+                <Text>{strings.tanks.custom_shell.penetration}</Text>
                 <TextField.Root
                   variant="classic"
                   style={{ maxWidth: "6rem" }}
@@ -197,12 +182,7 @@ export function CustomShellButton() {
                 customShell.type === ShellType.SHELL_TYPE_APCR) && (
                 <>
                   <Flex align="center" justify="between" gap="4" py="1">
-                    <Text>
-                      {
-                        strings.website.tools.tankopedia.sandbox.dynamic
-                          .custom_shell.normalization
-                      }
-                    </Text>
+                    <Text>{strings.tanks.custom_shell.normalization}</Text>
 
                     <Flex
                       align="center"
@@ -234,12 +214,7 @@ export function CustomShellButton() {
                   </Flex>
 
                   <Flex align="center" justify="between" gap="4" py="1">
-                    <Text>
-                      {
-                        strings.website.tools.tankopedia.sandbox.dynamic
-                          .custom_shell.ricochet
-                      }
-                    </Text>
+                    <Text>{strings.tanks.custom_shell.ricochet}</Text>
 
                     <Flex align="center" gap="2" flexGrow="1" maxWidth="15rem">
                       <Text color="gray">
@@ -300,10 +275,7 @@ export function CustomShellButton() {
             <Flex justify="end" mt="6" gap="2">
               <Popover.Close>
                 <Button color="red" variant="outline">
-                  {
-                    strings.website.tools.tankopedia.sandbox.dynamic
-                      .custom_shell.exit
-                  }
+                  {strings.tanks.custom_shell.exit}
                 </Button>
               </Popover.Close>
               <Button
@@ -314,10 +286,7 @@ export function CustomShellButton() {
                   });
                 }}
               >
-                {
-                  strings.website.tools.tankopedia.sandbox.dynamic.custom_shell
-                    .reset
-                }
+                {strings.tanks.custom_shell.reset}
               </Button>
             </Flex>
           </>

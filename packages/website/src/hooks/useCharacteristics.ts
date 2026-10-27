@@ -191,12 +191,14 @@ export function computeCharacteristics(
   return computed;
 }
 
-export function useCharacteristics() {
-  const protagonist = Tankopedia.use((state) => state.protagonist);
-  const antagonist = Tankopedia.use((state) => state.antagonist);
+export function useCharacteristics(side: DuelSide) {
+  const A = Tankopedia.use((state) => state[side]);
+  const B = Tankopedia.use(
+    (state) => state[side === "antagonist" ? "protagonist" : "antagonist"],
+  );
   const environment = Tankopedia.use((state) => state.environment);
 
-  return computeCharacteristics({ protagonist, antagonist }, environment);
+  return computeCharacteristics({ protagonist: A, antagonist: B }, environment);
 }
 
 export function computeDefaultCharacteristics(tank: TankDefinition) {

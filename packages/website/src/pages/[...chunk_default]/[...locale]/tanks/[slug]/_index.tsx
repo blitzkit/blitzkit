@@ -30,7 +30,8 @@ export const Page = withErrorWrapper(
     const protagonist = Tankopedia.use((state) => state.protagonist);
     const equalize = Tankopedia.use((state) => state.environment.equalize);
 
-    const characteristics = useCharacteristics();
+    const characteristics = useCharacteristics("protagonist");
+    const antagonistCharacteristics = useCharacteristics("antagonist");
 
     const thicknessRange = useMemo(() => {
       const entries = Object.values(tanks.tanks);
@@ -62,6 +63,7 @@ export const Page = withErrorWrapper(
 
         <div className={styles.sandbox}>
           <TankopediaSandbox
+            antagonistCharacteristics={antagonistCharacteristics}
             skeleton={skeleton}
             thicknessRange={thicknessRange}
           />
