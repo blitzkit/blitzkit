@@ -304,9 +304,9 @@
     "tools": {
       "credits": {
         "name": "Credits",
-        "button": "View people",
-        "description": "Contributors of BlitzKit",
-        "seo_description": "BlitzKit is the work of many"
+        "button": "Посмотреть людей",
+        "description": "Участники проекта blitzkit",
+        "seo_description": "Blitzkit Это работа многих"
       },
       "playlist": {
         "reset": "Сброс",
@@ -624,12 +624,12 @@
             "hullTraverseSoftTerrain": "На мягком грунте",
             "health": "Прочность",
             "fireChance": "Вероятность возгорания",
-            "trackRepairTime": "Track repair time",
+            "trackRepairTime": "Время ремонта гусениц",
             "viewRange": "Радиус обзора",
             "camouflageStill": "Когда неподвижен",
             "camouflageMoving": "В движении",
-            "camouflageShootingStill": "Shooting while still",
-            "camouflageShootingMoving": "Shooting while moving",
+            "camouflageShootingStill": "Стрельба без движения",
+            "camouflageShootingMoving": "Стрельба в движении",
             "camouflageCaughtOnFire": "При пожаре",
             "width": "Ширина",
             "height": "Высота",
@@ -920,7 +920,7 @@
     },
     "footer": {
       "motto": "Всё о World of Tanks Blitz",
-      "association": "An Open Collective Project",
+      "association": "Открытый коллективный проект",
       "about": {
         "title": "О сайте",
         "discord": "Discord",
