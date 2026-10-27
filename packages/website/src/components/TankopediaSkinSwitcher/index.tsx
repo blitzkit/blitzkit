@@ -6,7 +6,7 @@ import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import { SidebarIconButton } from "../Tankopedia/HeroSection/components/Options/components/SidebarIconButton";
+import { IconButton } from "../IconButton";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
@@ -35,30 +35,22 @@ export function TankopediaSkinSwitcher() {
       className={styles["skin-switcher"]}
       data-visible={disturbed && requestedDisplay === TankopediaDisplay.Model}
     >
-      {skins.map((camouflage, index) => {
+      {skins.map((camouflage) => {
         const name = unwrap(camouflage.name!).replace(
           "%(camo_num)",
           SKIN_NUMBER,
         );
-        const top = index === 0 ? "var(--radius-full)" : "0";
-        const bottom = index === skins.length - 1 ? "var(--radius-full)" : "0";
+
+        const selected = skin === camouflage.id;
 
         return (
           <Tooltip key={camouflage.id} tooltip={name} side="left">
-            <SidebarIconButton
-              selected={skin === camouflage.id}
-              alt={name}
-              src={alias("api", `/icons/camouflages/${camouflage.id}.webp`)}
-              size={{ initial: "3", sm: "4" }}
-              radius="full"
-              style={{
-                borderRadius: `${top} ${top} ${bottom} ${bottom}`,
-              }}
-              imageStyle={{
-                width: "70%",
-                height: "70%",
-                borderRadius: "50%",
-              }}
+            <IconButton
+              parentListChild="vertical"
+              color={selected ? undefined : "gray"}
+              variant={selected ? "solid" : "soft"}
+              highContrast={selected}
+              size="major"
               onClick={() => {
                 Tankopedia.mutate((draft) => {
                   draft.requestedSkin =
@@ -67,7 +59,13 @@ export function TankopediaSkinSwitcher() {
                       : camouflage.id;
                 });
               }}
-            />
+            >
+              <img
+                className={styles["camouflage-icon"]}
+                alt={name}
+                src={alias("api", `/icons/camouflages/${camouflage.id}.webp`)}
+              />
+            </IconButton>
           </Tooltip>
         );
       })}

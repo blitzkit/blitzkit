@@ -42,15 +42,15 @@ import { ModuleButton } from "../../../../ModuleButtons/ModuleButton";
 import { ScreenshotButton } from "../../../../ScreenshotButton";
 import { SmallTankIcon } from "../../../../SmallTankIcon";
 import type { ThicknessRange } from "../../../../StaticArmor";
+import {
+  SidebarIconButton,
+  SidebarIconGroup,
+} from "../../../../TankopediaSidebarIconButtons";
 import { SkinSwitcher } from "../../../../TankopediaSkinSwitcher";
 import { TankSearch } from "../../../../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
 import { QuickInputs } from "./components/QuickInputs";
-import {
-  SidebarIconButton,
-  SidebarIconGroup,
-} from "./components/SidebarIconButton";
 import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 import { Thicknesses } from "./components/Thicknesses";
 

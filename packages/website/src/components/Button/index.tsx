@@ -10,8 +10,8 @@ export interface ButtonProps extends ComponentProps<"button"> {
   size?: "regular" | "minor" | "major";
   highContrast?: boolean;
 
-  listChild?: boolean;
-  parentListChild?: boolean;
+  listChild?: "horizontal" | "vertical";
+  parentListChild?: "horizontal" | "vertical";
 }
 
 export const LIGHT_TEXT_COLORS = new Set<Color>([

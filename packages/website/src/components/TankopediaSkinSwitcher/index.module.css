@@ -15,4 +15,8 @@
   &[data-visible="true"] {
     transform: translate(0, -50%);
   }
+
+  .camouflage-icon {
+    border-radius: 50%;
+  }
 }

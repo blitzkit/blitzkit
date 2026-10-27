@@ -256,7 +256,7 @@ function Shells() {
                 radius="1"
                 color={isSelected ? undefined : "gray"}
                 variant={isSelected ? "surface" : "soft"}
-                parentListChild
+                parentListChild="horizontal"
                 onClick={() => {
                   Tankopedia.mutate((draft) => {
                     draft.protagonist.shell = candidate.id;
@@ -605,7 +605,7 @@ function EquipmentOption({
         color={isSelected ? undefined : "gray"}
         variant={isSelected ? "surface" : "soft"}
         radius="1"
-        parentListChild
+        parentListChild="horizontal"
         className={styles.slot}
         onClick={() => {
           Tankopedia.mutate((draft) => {

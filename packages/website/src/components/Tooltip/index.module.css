@@ -5,9 +5,6 @@
     display: none;
 
     position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
 
     z-index: 1;
     background-color: var(--gray-12);
@@ -15,9 +12,24 @@
     border-radius: var(--space-3);
 
     padding: var(--space-2) var(--space-3);
-    margin-bottom: var(--space-3);
 
     white-space: nowrap;
+
+    &[data-side="top"] {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+
+      margin-bottom: var(--space-3);
+    }
+
+    &[data-side="left"] {
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+
+      margin-right: var(--space-3);
+    }
   }
 
   &:hover {
