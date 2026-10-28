@@ -1,0 +1,51 @@
+---
+import { AstroSeo } from "@astrolib/seo";
+import { alias } from "@blitzkit/core";
+import { unwrapper } from "@blitzkit/i18n";
+import { api } from "../../../../../core/blitzkit/api";
+import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
+import { getStrings } from "../../../../../core/i18n/getStrings";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../../index.astro";
+import { Page } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  const mapDefinitions = await api.mapDefinitions();
+
+  return Object.values(mapDefinitions.maps)
+    .filter((map) => map.model_id === map.id)
+    .map((map) => ({
+      params: { slug: map.slug },
+      props: { id: map.id },
+    }));
+});
+
+const { id, locale } = Astro.props;
+const strings = getStrings(locale);
+const mapDefinitions = await api.mapDefinitions();
+const unwrap = unwrapper(locale);
+const title = `${unwrap(mapDefinitions.maps[id].name!)} - ${strings.website.tools.maps.name}`;
+const description = strings.website.tools.maps.seo_description;
+const url = import.meta.env.SITE + Astro.url.pathname;
+const icon = alias("api", `/maps/${id}/icons/big.webp`);
+---
+
+<AstroSeo
+  {title}
+  {description}
+  canonical={url}
+  openGraph={{
+    url,
+    title,
+    description,
+    images: [{ url: icon }],
+    site_name: "BlitzKit",
+  }}
+  twitter={{ cardType: "summary" }}
+/>
+
+<BaseLayout {locale} integrated>
+  <Page {locale} id={id} client:only="react">
+    <Page {locale} id={id} skeleton slot="fallback" />
+  </Page>
+</BaseLayout>
