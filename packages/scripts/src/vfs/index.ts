@@ -1,7 +1,4 @@
-import { assertSecret } from "@blitzkit/core";
-import { LocalVFS } from "@blitzkit/core/src/blitzkit/vfs/local";
-
-export const vfs = new LocalVFS(assertSecret(import.meta.env.CLIENT_DIR));
+import { vfs } from "./vfs";
 
 const command = Bun.argv[2];
 const path = Bun.argv[3];
@@ -20,4 +17,7 @@ if (command === "cat") {
   for (const file of files) {
     console.log(file);
   }
+} else if (command === "yaml") {
+  const content = await vfs.yaml(path);
+  await Bun.write(Bun.stdout, JSON.stringify(content, null, 2));
 }

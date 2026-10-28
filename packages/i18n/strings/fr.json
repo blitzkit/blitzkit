@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "teste",
-    "long": "Ceci est une longue chaîne de test. Vous ne DEVEZ JAMAIS le voir dans l'interface utilisateur. Mon fruit préféré est {fruit}, car il a la couleur {color}. Je l'aime tellement que je vais dire son nom 3 fois ! {fruit}! {fruit}! {fruit} ! Encore une fois, c'est {color}, pas {not_color}.",
-    "fox": "Le renard brun et rapide saute par-dessus le chien paresseux."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Reset",
         "shuffle": "Shuffle",
@@ -922,7 +923,6 @@
       "copyright": "Unaffiliated with Wargaming or any service",
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"

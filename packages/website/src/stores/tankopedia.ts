@@ -103,6 +103,9 @@ interface Tankopedia {
   );
   xpMultiplier: (typeof XP_MULTIPLIERS)[number];
   customShell?: ShellDefinition;
+  requestedSkin?: number;
+  loadedSkin?: number;
+  skin?: number;
   requestedDisplay: TankopediaDisplay;
   display: TankopediaDisplay;
   statSearch?: string;

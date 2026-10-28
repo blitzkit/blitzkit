@@ -47,7 +47,7 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
         color="gray"
         highContrast
         style={{ display: "content" }}
-        href="/tanks"
+        href="https://preview.blitzkit.app/tanks"
         underline="none"
       >
         <Flex
