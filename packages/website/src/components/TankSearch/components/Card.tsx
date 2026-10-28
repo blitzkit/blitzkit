@@ -1,7 +1,7 @@
 import {
   normalizeBoundingBox,
   resolveDpm,
-  unionBoundingBox,
+  tankBoundingBox,
   type TankDefinition,
 } from "@blitzkit/core";
 import { useMemo } from "react";
@@ -112,10 +112,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
         return (tank.camouflage_still * gun.camouflage_loss * 100).toFixed(0);
       case "survivability.volume": {
         const dimensions = normalizeBoundingBox(
-          unionBoundingBox(
-            tankModelDefinition.bounding_box!,
-            turretModelDefinition.bounding_box!,
-          ),
+          tankBoundingBox(tankModelDefinition, turretModelDefinition),
         );
 
         return (dimensions.x * dimensions.y * dimensions.z).toFixed(0);
@@ -123,10 +120,7 @@ export function TankSearchCard({ tank, onSelect }: TankSearchCardProps) {
 
       case "survivability.length": {
         const bounds = normalizeBoundingBox(
-          unionBoundingBox(
-            tankModelDefinition.bounding_box!,
-            turretModelDefinition.bounding_box!,
-          ),
+          tankBoundingBox(tankModelDefinition, turretModelDefinition),
         );
 
         return Math.max(bounds.x, bounds.y, bounds.z).toFixed(0);

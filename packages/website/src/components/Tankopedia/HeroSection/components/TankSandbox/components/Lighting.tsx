@@ -18,7 +18,7 @@ import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent
 
 const ANGLE = degToRad(15);
 const REVEAL_ANIMATION_TIME = 3;
-const TRANSITION_ANIMATION_TIME = 0.5;
+export const TRANSITION_ANIMATION_TIME = 0.5;
 
 const LIGHTS_COUNT = 3;
 const THETA_OFFSET = degToRad(180 - 45);
@@ -46,11 +46,17 @@ export function Lighting({ hasPbr }: Props) {
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+  const revealed = Tankopedia.use((state) => state.revealed);
+  const skinPending = Tankopedia.use(
+    (state) => state.loadedSkin !== state.skin,
+  );
 
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
   const t0 = useRef(performance.now() / 1e3 - animationTime.current);
+  const holding = useRef(false);
 
   const isRevealing = useRef(true);
+  const isFirstReveal = useRef(true);
 
   const [animate, setAnimate] = useState(true);
 
@@ -71,6 +77,37 @@ export function Lighting({ hasPbr }: Props) {
     setAnimate(true);
   }, [requestedDisplay]);
 
+  useEffect(() => {
+    if (isFirstReveal.current) {
+      isFirstReveal.current = false;
+      return;
+    }
+
+    if (!revealed) {
+      animationTime.current = TRANSITION_ANIMATION_TIME;
+      t0.current = performance.now() / 1e3;
+      holding.current = true;
+    } else if (holding.current) {
+      animationTime.current = REVEAL_ANIMATION_TIME;
+      t0.current = performance.now() / 1e3 - animationTime.current;
+      holding.current = false;
+    } else {
+      return;
+    }
+
+    setAnimate(true);
+    invalidate();
+  }, [revealed]);
+
+  useEffect(() => {
+    if (!skinPending) return;
+
+    animationTime.current = TRANSITION_ANIMATION_TIME;
+    t0.current = performance.now() / 1e3;
+
+    setAnimate(true);
+  }, [skinPending]);
+
   return (
     <>
       <ContactShadows
@@ -90,6 +127,7 @@ export function Lighting({ hasPbr }: Props) {
           hasPbr={hasPbr}
           t0={t0}
           animationTime={animationTime}
+          holding={holding}
           wrapper={wrapper}
           stop={() => {
             setAnimate(false);
@@ -145,11 +183,19 @@ interface AnimatorProps {
 
   t0: RefObject<number>;
   animationTime: RefObject<number>;
+  holding: RefObject<boolean>;
   wrapper: RefObject<Group | null>;
   hasPbr: boolean;
 }
 
-function Animator({ stop, t0, animationTime, wrapper, hasPbr }: AnimatorProps) {
+function Animator({
+  stop,
+  t0,
+  animationTime,
+  holding,
+  wrapper,
+  hasPbr,
+}: AnimatorProps) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const display = Tankopedia.use((state) => state.display);
 
@@ -176,7 +222,7 @@ function Animator({ stop, t0, animationTime, wrapper, hasPbr }: AnimatorProps) {
 
   useFrame(({ invalidate }) => {
     const dt = performance.now() / 1e3 - t0.current;
-    const x = clamp(dt / animationTime.current, 0, 2);
+    const x = clamp(dt / animationTime.current, 0, holding.current ? 1 : 2);
 
     if (x === 2) {
       apply(1);
@@ -188,11 +234,20 @@ function Animator({ stop, t0, animationTime, wrapper, hasPbr }: AnimatorProps) {
     const t = (0.5 * Math.sin(Math.PI * (x + 0.5)) + 0.5) ** 2;
 
     apply(t);
+
+    if (holding.current && x === 1) return;
+
     invalidate();
 
     if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
       Tankopedia.mutate((draft) => {
         draft.display = requestedDisplay;
+      });
+    }
+
+    if (x >= 1 && Tankopedia.state.skin !== Tankopedia.state.loadedSkin) {
+      Tankopedia.mutate((draft) => {
+        draft.skin = draft.loadedSkin;
       });
     }
   });

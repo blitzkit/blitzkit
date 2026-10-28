@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "test",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
-    "fox": "El rápido zorro marrón salta sobre el perro perezoso."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Restablecer",
         "shuffle": "Shuffle",
@@ -623,6 +624,7 @@
             "hullTraverseSoftTerrain": "Suave",
             "health": "Salud",
             "fireChance": "Probabilidad de incendio",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Rango de visión",
             "camouflageStill": "Quieto",
             "camouflageMoving": "En movimiento",
@@ -921,7 +923,6 @@
       "copyright": "No afiliado con Wargaming u otros servicios",
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Parches"

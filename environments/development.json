@@ -4,11 +4,25 @@
 
   "paths": {
     "default": null,
-    "api": "api"
+
+    "api": "api",
+
+    "models_tanks": "models/tanks",
+    "models_legendary": "models/legendary",
+    "models_maps": "models/maps"
   },
+
   "nodes": {},
+
   "aliases": {
+    "default": "/",
+
     "api": "/api",
+
+    "models_tanks": "/models/tanks",
+    "models_legendary": "/models/legendary",
+    "models_maps": "/models/maps",
+
     "static": "https://static.blitzkit.app"
   }
 }

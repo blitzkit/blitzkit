@@ -1,10 +1,4 @@
 {
-  "test": {
-    "default": "test",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
-    "fox": "The quick brown fox jumps over the lazy dog."
-  },
-
   "common": {
     "name": "BlitzKit",
 
@@ -44,7 +38,7 @@
 
     "branches": {
       "beta": "Beta",
-      "development": "Development",
+      "development": "Post Malone Edition",
       "opentest": "OpenTest",
       "preview": "Preview",
       "production": "Production"
@@ -338,6 +332,13 @@
     },
 
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
+
       "playlist": {
         "reset": "Reset",
         "shuffle": "Shuffle",
@@ -691,6 +692,7 @@
             "hullTraverseSoftTerrain": "Soft",
             "health": "Health",
             "fireChance": "Fire chance",
+            "trackRepairTime": "Track repair time",
             "viewRange": "View range",
             "camouflageStill": "Camouflage still",
             "camouflageMoving": "Moving",
@@ -999,11 +1001,10 @@
 
     "footer": {
       "motto": "Everything World of Tanks Blitz",
-      "copyright": "Unaffiliated with Wargaming or any service",
+      "association": "An Open Collective Project",
 
       "about": {
         "title": "About",
-        "credits": "Credits",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"
