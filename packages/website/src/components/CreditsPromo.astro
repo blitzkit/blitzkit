@@ -1,0 +1,135 @@
+---
+import { Grid, Text } from "@radix-ui/themes";
+import { credits } from "../config/credits";
+import { getStrings } from "../core/i18n/getStrings";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = getStrings(locale);
+---
+
+<style>
+  .credits {
+    display: flex;
+    justify-content: center;
+
+    padding: var(--space-4);
+
+    .inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+
+      width: 100%;
+      max-width: 80rem;
+
+      .list {
+        gap: var(--space-5);
+
+        .link {
+          display: contents;
+
+          .person {
+            --profile-size: 5rem;
+
+            position: relative;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: var(--space-4);
+            padding-top: 0;
+            margin-top: calc(var(--profile-size) / 2);
+            gap: var(--space-1);
+
+            box-shadow: var(--shadow-3);
+            border-radius: var(--radius-3);
+
+            .contain {
+              border-radius: inherit;
+
+              position: absolute;
+
+              top: 0;
+              right: 0;
+
+              width: 100%;
+              height: 100%;
+
+              overflow: hidden;
+
+              .hint {
+                width: 100%;
+                height: 100%;
+
+                background-size: cover;
+                background-position: center;
+
+                filter: saturate(20) brightness(0.125) blur(4rem);
+              }
+            }
+
+            .text {
+              position: relative;
+            }
+
+            img {
+              border-radius: 50%;
+
+              position: relative;
+
+              margin-top: calc(var(--profile-size) / -2);
+
+              object-fit: cover;
+              width: var(--profile-size);
+              height: var(--profile-size);
+
+              margin-bottom: var(--space-2);
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<div class="credits">
+  <div class="inner">
+    <Grid
+      className="list"
+      py="4"
+      columns="repeat(auto-fill, minmax(16rem, 1fr))"
+      flow="dense"
+      gap="4"
+      gapY="8"
+    >
+      {
+        credits.map((person) => (
+          <a target="_blank" href={person.url} class="link">
+            <div class="person">
+              <div class="contain">
+                <div
+                  class="hint"
+                  style={`background-image: url(${person.image})`}
+                />
+              </div>
+
+              <img src={person.image} />
+
+              <Text weight="medium" className="text" color="gray" highContrast>
+                {person.name}
+              </Text>
+              <Text className="text" color="gray" wrap="pretty">
+                {person.description}
+              </Text>
+            </div>
+          </a>
+        ))
+      }
+    </Grid>
+  </div>
+</div>

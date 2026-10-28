@@ -6,6 +6,7 @@
     "build-protos": "bun src/protos.ts",
     "record-performance": "bun src/recordPerformance/index.ts",
     "download-client": "bun src/downloadClient/index.ts",
+    "download-smart-dlc": "bun src/downloadSmartDLC/index.ts",
     "vfs": "bun src/vfs/index.ts"
   },
   "dependencies": {

@@ -4,14 +4,33 @@
 
   "paths": {
     "default": null,
-    "api": null
+
+    "api": null,
+
+    "models_tanks": null,
+    "models_legendary": null,
+    "models_maps": null
   },
+
   "nodes": {
     "default": "blitzkit/deploy-node-beta.blitzkit.app",
-    "api": "blitzkit/deploy-node-api.beta.blitzkit.app"
+
+    "api": "blitzkit/deploy-node-api.beta.blitzkit.app",
+
+    "models_tanks": "blitzkit/deploy-node-tanks.models.beta.blitzkit.app",
+    "models_legendary": "blitzkit/deploy-node-legendary.models.beta.blitzkit.app",
+    "models_maps": "blitzkit/deploy-node-maps.models.beta.blitzkit.app"
   },
+
   "aliases": {
+    "default": "/",
+
     "api": "https://api.beta.blitzkit.app",
-    "static": "https://static.beta.blitzkit.app"
+
+    "models_tanks": "https://tanks.models.beta.blitzkit.app",
+    "models_legendary": "https://legendary.models.beta.blitzkit.app",
+    "models_maps": "https://maps.models.beta.blitzkit.app",
+
+    "static": "https://static.blitzkit.app"
   }
 }

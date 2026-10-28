@@ -387,7 +387,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
               : TankType.TANK_TYPE_RESEARCHABLE,
           tier: tank.level,
           class: tankClass,
-          testing: tankTags.includes("testTank"),
+          testing: tankTags.includes("testTank") || tank.level === 11,
           deprecated: tankTags.includes("deprecated"),
           price: tankPrice,
           camouflage_still: tankDefinition.root.invisibility.still,
