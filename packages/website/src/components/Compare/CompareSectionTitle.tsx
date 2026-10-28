@@ -13,9 +13,12 @@ export function CompareSectionTitle({ children }: { children: string }) {
           <Heading size="4">{children}</Heading>
         </StickyColumnHeaderCell>
 
-        {times(memberCount, (index) => (
-          <StickyColumnHeaderCell key={index} top={137} />
-        ))}
+        {times(
+          memberCount > 1 ? memberCount + 1 : memberCount,
+          (index) => (
+            <StickyColumnHeaderCell key={index} top={137} />
+          ),
+        )}
       </Table.Row>
     </Table.Header>
   );
