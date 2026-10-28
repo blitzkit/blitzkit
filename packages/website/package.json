@@ -30,6 +30,7 @@
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.14.4",
     "astro-favicons": "^3.1.5",
+    "bun-webgpu": "^0.1.7",
     "cheerio": "^1.1.2",
     "compare-versions": "^6.1.1",
     "fuzzysort": "^3.1.0",
@@ -49,5 +50,8 @@
     "urlon": "^3.1.0",
     "varuna": "workspace:*",
     "vite": "^7.1.9"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.74"
   }
 }
