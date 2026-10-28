@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message DescriptionDefinitions {
+  map<uint32, TankDescription> descriptions = 1;
+}
+
+message TankDescription {
+  required I18nString        text   = 1;
+  required DescriptionSource source = 2;
+}
+
+enum DescriptionSource {
+  DESCRIPTION_SOURCE_BLITZ = 0;
+  DESCRIPTION_SOURCE_WOT   = 1;
+}
