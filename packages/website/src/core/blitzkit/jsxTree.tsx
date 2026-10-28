@@ -1,5 +1,11 @@
 import type { ComponentProps, ReactNode } from "react";
-import { Mesh, MeshStandardMaterial, Object3D } from "three";
+import {
+  AdditiveBlending,
+  Material,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+} from "three";
 
 export function jsxTree(
   node: Object3D,
@@ -27,6 +33,13 @@ export function jsxTree(
 
     if (props.material instanceof MeshStandardMaterial) {
       props.material.depthWrite = true;
+    }
+
+    if (
+      props.material instanceof Material &&
+      props.material.userData.blending === "additive"
+    ) {
+      props.material.blending = AdditiveBlending;
     }
 
     return mergers?.mesh ? (

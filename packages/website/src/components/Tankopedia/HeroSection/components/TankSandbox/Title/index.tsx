@@ -22,9 +22,16 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
   const camouflage =
     skin === undefined ? undefined : camouflageDefinitions.camouflages[skin];
   const tankName = unwrap(protagonist.name!);
-  const name = camouflage
-    ? `${tankName} ${unwrap(camouflage.name!).replace("%(camo_num)", SKIN_NUMBER)}`
-    : tankName;
+  // legendary camos carry the tank's in-battle name
+  const name = (
+    camouflage
+      ? camouflage.tank_name
+        ? unwrap(camouflage.tank_name)
+        : camouflage.name
+          ? `${tankName} ${unwrap(camouflage.name)}`
+          : tankName
+      : tankName
+  ).replace("%(camo_num)", SKIN_NUMBER);
   const fontSize = revealed
     ? disturbed
       ? "1.5rem"

@@ -3,6 +3,7 @@ import {
   Sc2ReadStream,
   type TankParameters,
 } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
 import { isEqual, times } from "lodash-es";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI1 } from "./1_tankDefinitions";
@@ -87,14 +88,19 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
           ),
         );
 
+        const [nation, tankKey] = vehicle.split(":");
+        // some unique camos only set the preset for their one tank
+        const preset =
+          yamlEntry.preset ??
+          yamlEntry.override?.[nation]?.override?.[tankKey]?.preset;
         let hasPreset = false;
 
-        if (camo.group === "legendary" && yamlEntry.preset !== undefined) {
+        if (preset !== undefined) {
           if (!skinPresets.has(vehicle)) {
             skinPresets.set(vehicle, this.skinPresets(vehicle));
           }
 
-          hasPreset = (await skinPresets.get(vehicle)!).has(yamlEntry.preset);
+          hasPreset = (await skinPresets.get(vehicle)!).has(preset);
         }
 
         if (resolvedParts.some(Boolean) || hasPreset) {
@@ -102,7 +108,11 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         }
       }
 
-      const name = this.getString(camo.userString);
+      // unreleased camos are in the game files before their names
+      const name =
+        camo.userString in this.stringsI18n[locales.default]
+          ? this.getString(camo.userString)
+          : undefined;
 
       camouflageDefinitions.camouflages[camo.id] = {
         id: camo.id,
@@ -110,6 +120,7 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         tank_name: resolvedTankName,
         tank_name_full: resolvedTankNameFull,
         tank_id: tankId,
+        attachment: camo.kind === "customization",
       };
     }
 

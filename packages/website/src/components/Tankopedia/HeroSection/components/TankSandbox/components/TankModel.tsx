@@ -30,6 +30,8 @@ export function TankModel() {
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
   const skinGltf = useSkin(protagonist.tank.id);
+  const attachmentGltf = useSkin(protagonist.tank.id, "attachment");
+  const skins = [skinGltf, attachmentGltf].filter((skin) => skin !== undefined);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
 
@@ -94,7 +96,7 @@ export function TankModel() {
           window.removeEventListener("pointerup", handlePointerUp);
         }
 
-        return skinTree(node, skinGltf, {
+        return skinTree(node, skins, {
           mesh(_, props, key) {
             return (
               <mesh
@@ -171,7 +173,7 @@ export function TankModel() {
             window.removeEventListener("pointerup", handlePointerUp);
           }
 
-          return skinTree(node, skinGltf, {
+          return skinTree(node, skins, {
             mesh(_, props, key) {
               return (
                 <mesh
@@ -252,7 +254,7 @@ export function TankModel() {
               window.removeEventListener("pointerup", handlePointerUp);
             }
 
-            return skinTree(node, skinGltf, {
+            return skinTree(node, skins, {
               mesh(_, props, key) {
                 return (
                   <mesh

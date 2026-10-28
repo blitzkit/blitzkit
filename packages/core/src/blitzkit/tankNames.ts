@@ -38,7 +38,7 @@ export async function fetchTankNames(api: BlitzKitAPI) {
           ?.map((id) =>
             locales.supported.map(
               ({ locale }) =>
-                camouflageDefinitions.camouflages[id]?.name!.locales[locale],
+                camouflageDefinitions.camouflages[id]?.name?.locales[locale],
             ),
           )
           .flat()

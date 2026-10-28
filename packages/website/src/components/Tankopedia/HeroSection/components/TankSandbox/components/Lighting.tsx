@@ -48,7 +48,9 @@ export function Lighting({ hasPbr }: Props) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const revealed = Tankopedia.use((state) => state.revealed);
   const skinPending = Tankopedia.use(
-    (state) => state.loadedSkin !== state.skin,
+    (state) =>
+      state.loadedSkin !== state.skin ||
+      state.loadedAttachment !== state.attachment,
   );
 
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
@@ -245,9 +247,14 @@ function Animator({
       });
     }
 
-    if (x >= 1 && Tankopedia.state.skin !== Tankopedia.state.loadedSkin) {
+    if (
+      x >= 1 &&
+      (Tankopedia.state.skin !== Tankopedia.state.loadedSkin ||
+        Tankopedia.state.attachment !== Tankopedia.state.loadedAttachment)
+    ) {
       Tankopedia.mutate((draft) => {
         draft.skin = draft.loadedSkin;
+        draft.attachment = draft.loadedAttachment;
       });
     }
   });

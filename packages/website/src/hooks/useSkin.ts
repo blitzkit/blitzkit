@@ -18,7 +18,11 @@ async function loadSkin(path: string) {
   const materials: Material[] = await gltf.parser.getDependencies("material");
   const skin = {
     scene: gltf.scene,
-    materials: new Map(materials.map((material) => [material.name, material])),
+    materials: new Map(
+      materials
+        .filter((material) => material.userData.camouflage)
+        .map((material) => [material.name, material]),
+    ),
   };
 
   loadedSkins.set(path, skin);
@@ -30,9 +34,16 @@ function skinPath(id: number, skin: number) {
   return alias("models_legendary", `/${id}/skins/${skin}.glb`);
 }
 
-export function useSkin(id: number) {
-  const requestedSkin = Tankopedia.use((state) => state.requestedSkin);
-  const skin = Tankopedia.use((state) => state.skin);
+// attachments load the same way as camouflages and can be shown with one
+const slots = {
+  skin: { requested: "requestedSkin", loaded: "loadedSkin" },
+  attachment: { requested: "requestedAttachment", loaded: "loadedAttachment" },
+} as const;
+
+export function useSkin(id: number, slot: keyof typeof slots = "skin") {
+  const { requested, loaded } = slots[slot];
+  const requestedSkin = Tankopedia.use((state) => state[requested]);
+  const skin = Tankopedia.use((state) => state[slot]);
 
   useEffect(() => {
     const path =
@@ -41,7 +52,7 @@ export function useSkin(id: number) {
 
     if (path === undefined || loadedSkins.has(path)) {
       Tankopedia.mutate((draft) => {
-        draft.loadedSkin = requestedSkin;
+        draft[loaded] = requestedSkin;
       });
       return;
     }
@@ -62,8 +73,8 @@ export function useSkin(id: number) {
 
       settled = true;
       Tankopedia.mutate((draft) => {
-        draft.loadedSkin = requestedSkin;
-        draft.skin = requestedSkin;
+        draft[loaded] = requestedSkin;
+        draft[slot] = requestedSkin;
         draft.revealed = true;
       });
     });
@@ -76,7 +87,7 @@ export function useSkin(id: number) {
         draft.revealed = true;
       });
     };
-  }, [id, requestedSkin]);
+  }, [id, slot, requestedSkin]);
 
   return skin === undefined ? undefined : loadedSkins.get(skinPath(id, skin));
 }

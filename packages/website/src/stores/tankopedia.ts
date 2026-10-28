@@ -106,6 +106,9 @@ interface Tankopedia {
   requestedSkin?: number;
   loadedSkin?: number;
   skin?: number;
+  requestedAttachment?: number;
+  loadedAttachment?: number;
+  attachment?: number;
   requestedDisplay: TankopediaDisplay;
   display: TankopediaDisplay;
   statSearch?: string;

@@ -40,6 +40,8 @@ export interface ConfigArchive {
 
 interface EnabledPresets {
   AlphaTest: boolean;
+  AlphaBlend?: boolean;
+  AlphaBlendAdditive?: boolean;
 }
 
 interface Flags {
