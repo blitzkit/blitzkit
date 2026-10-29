@@ -14,9 +14,11 @@
   opacity: 1;
   filter: blur(0);
 
-  transition: var(--duration-subtle);
+  transition: var(--duration-brief);
 
   &[data-visible="false"] {
+    transition: var(--duration-subtle);
+
     opacity: 0;
     pointer-events: none;
 

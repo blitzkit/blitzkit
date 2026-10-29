@@ -46,10 +46,6 @@ export function useSkin(id: number) {
       return;
     }
 
-    Tankopedia.mutate((draft) => {
-      draft.revealed = false;
-    });
-
     if (!skins.has(path)) skins.set(path, loadSkin(path));
 
     Promise.all([
