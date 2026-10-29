@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { api } from "../../../../../api/dynamic";
 import { Scroller } from "../../../../../components/Scroller";
-import type { ThicknessRange } from "../../../../../components/StaticArmor";
+import type { ThicknessRange } from "../../../../../components/TankStaticArmor";
 import { TankopediaCharacteristics } from "../../../../../components/TankopediaCharacteristics";
 import { TankopediaGameModeAbilities } from "../../../../../components/TankopediaGameModeAbilities";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";

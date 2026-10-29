@@ -27,7 +27,7 @@ export interface ThicknessRange {
   value: number;
 }
 
-export const StaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
+export const TankStaticArmor = memo<ArmorSceneProps>(({ thicknessRange }) => {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
 

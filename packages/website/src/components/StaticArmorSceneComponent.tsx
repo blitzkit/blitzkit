@@ -33,7 +33,7 @@ import type {
   ArmorUserData,
   ExternalModuleVariant,
 } from "./SpacedArmorSceneComponent";
-import type { ThicknessRange } from "./StaticArmor";
+import type { ThicknessRange } from "./TankStaticArmor";
 
 type StaticArmorSceneComponentProps = {
   name: string;

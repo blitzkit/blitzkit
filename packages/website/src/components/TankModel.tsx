@@ -33,18 +33,6 @@ export function TankModel() {
 
   return (
     <>
-      {/* <mesh
-        scale={0.1}
-        position={[
-          trackModelDefinition.origin!.x + tankModelDefinition.turret_origin!.x,
-          trackModelDefinition.origin!.y + tankModelDefinition.turret_origin!.y,
-          trackModelDefinition.origin!.z + tankModelDefinition.turret_origin!.z,
-        ]}
-      >
-        <sphereGeometry />
-        <meshBasicMaterial color="red" depthTest={false} />
-      </mesh> */}
-
       {nodes.map((node) => {
         const isHull = node.name === "hull";
         const isWheel = node.name.startsWith("chassis_wheel_");
