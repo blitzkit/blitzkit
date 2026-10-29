@@ -1,4 +1,9 @@
-import { alias, availableProvisions, permanentSkills } from "@blitzkit/core";
+import {
+  alias,
+  availableProvisions,
+  MAX_SKILL_LEVEL,
+  permanentSkills,
+} from "@blitzkit/core";
 import { checkConsumableProvisionInclusivity } from "@blitzkit/core/src/blitzkit/checkConsumableProvisionInclusivity";
 import { ComponentPlaceholderIcon } from "@radix-ui/react-icons";
 import {
@@ -11,13 +16,14 @@ import {
   Text,
 } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../api/dynamic";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { Var } from "../../core/radix/var";
 import { useLocale } from "../../hooks/useLocale";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
 import type { EquipmentMatrix } from "../../stores/duel";
 import { BlitzkitButtonGrayIcon } from "../BlitzkitButtonGrayIcon";
+import { CompareTankCard } from "../CompareTankCard";
 import { ConsumablesManager } from "../ConsumablesManager";
 import { CrewSkillManager } from "../CrewSkillManager";
 import { EquipmentManager } from "../EquipmentManager";
@@ -27,7 +33,6 @@ import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 import { StickyTableRoot } from "../StickyTableRoot";
 import { Body } from "./Body";
 import { InsertionMarker } from "./IntersectionMarker";
-import { TankCard } from "./TankCard";
 
 interface CompareTableProps {
   stats: TankCharacteristics[];
@@ -39,10 +44,10 @@ const [
   consumableDefinitions,
   provisionDefinitions,
 ] = await Promise.all([
-  api.skillDefinitions(),
-  api.equipmentDefinitions(),
-  api.consumableDefinitions(),
-  api.provisionDefinitions(),
+  api.skills(),
+  api.equipment(),
+  api.consumables(),
+  api.provisions(),
 ]);
 
 export function CompareTable({ stats }: CompareTableProps) {
@@ -77,7 +82,7 @@ export function CompareTable({ stats }: CompareTableProps) {
           </StickyColumnHeaderCell>
 
           {members.map(({ tank, key }, index) => {
-            return <TankCard index={index} key={key} tank={tank} />;
+            return <CompareTankCard index={index} key={key} tank={tank} />;
           })}
         </Table.Row>
       </Table.Header>
@@ -153,7 +158,7 @@ export function CompareTable({ stats }: CompareTableProps) {
                       onClick={() => {
                         CompareEphemeral.mutate((draft) => {
                           Object.keys(draft.crewSkills).forEach((skill) => {
-                            draft.crewSkills[skill] = 7;
+                            draft.crewSkills[skill] = MAX_SKILL_LEVEL;
                           });
                         });
                       }}

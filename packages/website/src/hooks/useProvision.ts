@@ -1,6 +1,6 @@
-import { Duel } from '../stores/duel';
+import { Tankopedia } from "../stores/tankopedia";
+import type { DuelSide } from "./useEquipment";
 
-export function useProvision(id: number) {
-  const provisions = Duel.use((state) => state.protagonist.provisions);
-  return provisions.includes(id);
+export function useProvision(side: DuelSide, id: number) {
+  return Tankopedia.use((state) => state[side].provisions.includes(id));
 }

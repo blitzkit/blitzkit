@@ -1,0 +1,54 @@
+.foreground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+
+  transition-duration: var(--duration-subtle);
+  background-color: var(--accent-2);
+
+  &[data-guess-state="correct"] {
+    background-color: var(--jade-3);
+  }
+
+  &[data-guess-state="incorrect"] {
+    background-color: var(--tomato-3);
+  }
+
+  .overlay {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--gray-a9), var(--gray-3));
+  }
+}
+
+.background {
+  animation: moveBackground 180s linear infinite;
+
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: 0;
+  left: 0;
+
+  background-image:
+    radial-gradient(circle, var(--white-a1) 20%, transparent 20%),
+    radial-gradient(circle at 0 0, var(--white-a1) 10%, transparent 10%),
+    radial-gradient(circle at 100% 0, var(--white-a1) 10%, transparent 10%),
+    radial-gradient(circle at 0 100%, var(--white-a1) 10%, transparent 10%),
+    radial-gradient(circle at 100% 100%, var(--white-a1) 10%, transparent 10%);
+
+  background-size: 4rem 4rem;
+}
+
+@keyframes moveBackground {
+  from {
+    top: 0;
+    left: 0;
+  }
+  to {
+    top: -100%;
+    left: -100%;
+  }
+}

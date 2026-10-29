@@ -1,0 +1,22 @@
+import { BlitzTankClass } from "@blitzkit/core";
+
+import { SkillDefinitions } from "@blitzkit/protos";
+import { Cache } from "./0_base";
+import { ServerBlitzKitAPI7 } from "./7_provisions";
+
+export abstract class ServerBlitzKitAPI8 extends ServerBlitzKitAPI7 {
+  @Cache()
+  async skills() {
+    const skillDefinitions = SkillDefinitions.create();
+
+    for (const tankClass in this.tankmenAvatar!.root.skillsByClasses) {
+      const skills = this.tankmenAvatar!.root.skillsByClasses[tankClass];
+
+      skillDefinitions.classes[
+        this.blitzTankClassToBlitzkit[tankClass as BlitzTankClass]
+      ] = { skills: skills.split(" ") };
+    }
+
+    return skillDefinitions;
+  }
+}

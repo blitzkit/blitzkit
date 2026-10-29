@@ -1,9 +1,9 @@
 import { type IndividualTankStats } from "@blitzkit/core";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 type EmbedBreakdown = Record<number, IndividualTankStats[]>;
 
-export const EmbedBreakdown = new Varuna<EmbedBreakdown>(
+export const EmbedBreakdown = new Soapstone<EmbedBreakdown>(
   {},
   "embed-breakdown-2"
 );

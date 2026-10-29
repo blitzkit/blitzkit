@@ -6,7 +6,7 @@ export interface DiscoveredIdsDefinitions {
   count: number;
 }
 
-export async function fetchDiscoveredIdsDefinitions() {
+export async function fetchDiscoveredIds() {
   const response = await fetch(staticAsset("ids/manifest.json"));
   return response.json() as Promise<DiscoveredIdsDefinitions>;
 }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message MapDefinitions {
+  map<int32, MapDefinition> maps = 1;
+}
+
+message MapDefinition {
+  uint32     id   = 1;
+  I18nString name = 2;
+}

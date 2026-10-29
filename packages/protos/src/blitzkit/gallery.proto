@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message Gallery {
+  repeated Avatar avatars = 1;
+}
+
+message Avatar {
+  string     id        = 1;
+  I18nString name      = 2;
+  string     extension = 3;
+}

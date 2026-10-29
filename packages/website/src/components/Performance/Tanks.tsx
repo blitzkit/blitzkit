@@ -10,8 +10,8 @@ import {
   useState,
 } from "react";
 import usePromise from "react-promise-suspense";
+import { api } from "../../api/dynamic";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
-import { api } from "../../core/blitzkit/api";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { useAveragesExclusionRatio } from "../../hooks/useAveragesExclusionRatio";
 import { useLocale } from "../../hooks/useLocale";
@@ -27,7 +27,7 @@ const PREVIEW_COUNT = 10;
 const DEFAULT_LOADED_ROWS = 25;
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 

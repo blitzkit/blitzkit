@@ -8,14 +8,14 @@ import {
   Popover,
   Text,
 } from "@radix-ui/themes";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { useEquipment } from "../../../../hooks/useEquipment";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { ConsumablesManager } from "../../../ConsumablesManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const consumableDefinitions = await api.consumableDefinitions();
+const consumableDefinitions = await api.consumables();
 
 export function Consumables() {
   const protagonist = Duel.use((state) => state.protagonist);
@@ -32,8 +32,8 @@ export function Consumables() {
   const cooldownBooster = Duel.use(
     (state) => state.protagonist.cooldownBooster,
   );
-  const hasConsumableDeliverySystem = useEquipment(118);
-  const hasHighEndConsumables = useEquipment(101);
+  const hasConsumableDeliverySystem = useEquipment("protagonist", 118);
+  const hasHighEndConsumables = useEquipment("protagonist", 101);
   const { strings } = useLocale();
 
   return (

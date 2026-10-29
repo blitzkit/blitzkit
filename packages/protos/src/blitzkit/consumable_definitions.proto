@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message ConsumableDefinitions {
+  map<uint32, Consumable> consumables = 1;
+}
+
+message Consumable {
+  uint32                         id                  = 1;
+  I18nString                     name                = 2;
+  bool                           game_mode_exclusive = 5;
+  repeated TankInclusivityFilter include             = 6;
+  repeated TankInclusivityFilter exclude             = 7;
+}
+
+message TankInclusivityFilter {
+  oneof filter_type {
+    ConsumableTankTierFilter     tiers      = 1;
+    ConsumableTankIdsFilter      ids        = 2;
+    ConsumableTankCategoryFilter categories = 3;
+    ConsumableTankNationFilter   nations    = 4;
+  }
+}
+
+message ConsumableTankTierFilter {
+  uint32 min = 1;
+  uint32 max = 2;
+}
+
+message ConsumableTankIdsFilter {
+  repeated uint32 ids = 1;
+}
+
+message ConsumableTankCategoryFilter {
+  repeated ConsumableTankCategoryFilterCategory categories = 1;
+}
+
+enum ConsumableTankCategoryFilterCategory {
+  CONSUMABLE_TANK_CATEGORY_FILTER_CATEGORY_CLIP = 0;
+}
+
+message ConsumableTankNationFilter {
+  repeated string nations = 1;
+}

@@ -1,7 +1,7 @@
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 interface Gallery {
   search?: string;
 }
 
-export const Gallery = new Varuna<Gallery>({});
+export const Gallery = new Soapstone<Gallery>({});

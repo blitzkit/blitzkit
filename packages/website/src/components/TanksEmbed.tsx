@@ -1,12 +1,14 @@
 import {
   formatCompositeStat,
-  TankClass,
-  TankDefinition,
-  TankType,
   type CompositeStats,
   type CompositeStatsKey,
 } from "@blitzkit/core";
 import strings from "@blitzkit/i18n/strings/en.json";
+import {
+  TankClass,
+  TankDefinition,
+  TankType,
+} from "@blitzkit/protos";
 import { amberDark, blueDark } from "@radix-ui/colors";
 import { Flex, Text, type FlexProps } from "@radix-ui/themes";
 import { times } from "lodash-es";

@@ -1,15 +1,13 @@
-import { Varuna } from 'varuna';
-import {
-  type TankopediaSortBy,
-  type TankopediaSortDirection,
-} from './tankopediaPersistent';
+import { Soapstone } from "soapstone";
+import type { CharacteristicName } from "../types/characteristics";
+import { TankopediaSortDirection } from "./tankopediaPersistent";
 
 export interface TankSort {
-  by: TankopediaSortBy;
+  by: CharacteristicName | null;
   direction: TankopediaSortDirection;
 }
 
-export const TankSort = new Varuna<TankSort>({
-  by: 'meta.none',
-  direction: 'descending',
+export const TankSort = new Soapstone<TankSort>({
+  by: null,
+  direction: TankopediaSortDirection.Descending,
 });

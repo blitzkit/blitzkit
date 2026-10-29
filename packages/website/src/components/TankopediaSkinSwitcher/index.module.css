@@ -1,0 +1,22 @@
+.skin-switcher {
+  pointer-events: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: var(--duration-brief);
+
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+
+  transform: translate(calc(100% + var(--space-4)), -50%);
+
+  &[data-visible="true"] {
+    transform: translate(0, -50%);
+  }
+
+  .camouflage-icon {
+    border-radius: 50%;
+  }
+}

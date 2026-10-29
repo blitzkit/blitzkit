@@ -1,10 +1,6 @@
-import {
-  alias,
-  SEARCH_KEYS,
-  TankDefinition,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, romanize, SEARCH_KEYS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import { TankDefinition } from "@blitzkit/protos";
 import {
   ArrowRightIcon,
   EyeOpenIcon,
@@ -14,47 +10,38 @@ import {
   StarFilledIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
-import {
-  AlertDialog,
-  Box,
-  Button,
-  Card,
-  DropdownMenu,
-  Flex,
-  IconButton,
-  Spinner,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
 import fuzzysort from "fuzzysort";
 import { debounce } from "lodash-es";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "../api/dynamic";
 import { awaitableTankNames } from "../core/awaitables/tankNames";
 import { awaitableTiers } from "../core/awaitables/tiers";
-import { api } from "../core/blitzkit/api";
-import { useLocale } from "../hooks/useLocale";
+import { useStrings } from "../hooks/useStrings";
+import { useUnwrapper } from "../hooks/useUnwrapper";
 import { Guess, GuessState } from "../stores/guess";
-import { classIcons } from "./ClassIcon";
+import { ClassIcon } from "./ClassIcon";
 import { SearchResults } from "./SearchResults";
 
 const { go } = fuzzysort;
 
 const [tankNames, tankDefinitions, TIERS] = await Promise.all([
   awaitableTankNames,
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableTiers,
 ]);
 
 const ids = Object.keys(tankDefinitions.tanks);
 
 export function Guesser() {
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
+
   const tank = Guess.use((state) => state.tank);
   const guessState = Guess.use((state) => state.guessState);
   const correctGuesses = Guess.use((state) => state.correctGuesses);
   const totalGuesses = Guess.use((state) => state.totalGuesses);
   const helpingReveal = Guess.use((state) => state.helpingReveal);
   const streak = Guess.use((state) => state.streak);
-  const { strings, unwrap } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<TankDefinition[] | null>(null);
@@ -100,7 +87,7 @@ export function Guesser() {
     const interval = setInterval(() => {
       if (!status.current) return;
 
-      status.current.innerText = literals(strings.website.tools.guess.stats, {
+      status.current.innerText = literals(strings.guesser.stats, {
         correct: correctGuesses,
         total: totalGuesses,
         streak: streak,
@@ -128,16 +115,12 @@ export function Guesser() {
             <Box py="2" px="3">
               {results.length === 0 && (
                 <Flex justify="center">
-                  <Text color="gray">
-                    {strings.website.tools.guess.search.no_results}
-                  </Text>
+                  <Text color="gray">{strings.common.search.no_results}</Text>
                 </Flex>
               )}
 
               <SearchResults.Root>
                 {results.map((result) => {
-                  const Icon = classIcons[result.class];
-
                   return (
                     <SearchResults.Item
                       key={result.id}
@@ -165,8 +148,12 @@ export function Guesser() {
                           width="38px"
                           justify="center"
                         >
-                          <Icon width="1em" height="1em" />
-                          {TIER_ROMAN_NUMERALS[result.tier]}
+                          <ClassIcon
+                            class={result.class}
+                            width="1em"
+                            height="1em"
+                          />
+                          {romanize(result.tier)}
                         </Flex>
                       }
                     />
@@ -217,8 +204,8 @@ export function Guesser() {
                     });
                   }}
                 >
-                  {literals(strings.website.tools.guess.tier, {
-                    tier: TIER_ROMAN_NUMERALS[tier],
+                  {literals(strings.guesser.tier, {
+                    tier: romanize(tier),
                   })}
                 </DropdownMenu.CheckboxItem>
               );
@@ -235,7 +222,7 @@ export function Guesser() {
                 });
               }}
             >
-              <StarFilledIcon /> {strings.website.tools.guess.select_all}
+              <StarFilledIcon /> {strings.guesser.select_all}
             </DropdownMenu.Item>
 
             <DropdownMenu.Item
@@ -248,7 +235,7 @@ export function Guesser() {
                 });
               }}
             >
-              <TrashIcon /> {strings.website.tools.guess.clear}
+              <TrashIcon /> {strings.guesser.clear}
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
@@ -258,7 +245,7 @@ export function Guesser() {
           ref={input}
           onChange={requestSearch}
           style={{ flex: 1, maxWidth: "14rem" }}
-          placeholder={strings.website.tools.guess.search.placeholder}
+          placeholder={strings.common.search.hint_tanks}
           size={{ initial: "2", sm: "3" }}
           variant="classic"
         >
@@ -278,18 +265,14 @@ export function Guesser() {
           </AlertDialog.Trigger>
 
           <AlertDialog.Content>
-            <AlertDialog.Title>
-              {strings.website.tools.guess.help.title}
-            </AlertDialog.Title>
+            <AlertDialog.Title>{strings.guesser.help.title}</AlertDialog.Title>
             <AlertDialog.Description>
-              {strings.website.tools.guess.help.description}
+              {strings.guesser.help.description}
             </AlertDialog.Description>
 
             <Flex justify="end" gap="2">
               <AlertDialog.Cancel>
-                <Button variant="outline">
-                  {strings.website.tools.guess.help.cancel}
-                </Button>
+                <Button variant="outline">{strings.guesser.help.cancel}</Button>
               </AlertDialog.Cancel>
 
               <AlertDialog.Action>
@@ -302,7 +285,7 @@ export function Guesser() {
                     });
                   }}
                 >
-                  {strings.website.tools.guess.help.reveal}
+                  {strings.guesser.help.reveal}
                 </Button>
               </AlertDialog.Action>
             </Flex>
@@ -319,7 +302,7 @@ export function Guesser() {
           onClick={() => {
             if (guessState === GuessState.NotGuessed) {
               const correct =
-                selected !== null && selected.id === tank.id && !helpingReveal;
+                selected !== null && selected.id === tank && !helpingReveal;
 
               Guess.mutate((draft) => {
                 draft.guessState = correct
@@ -343,7 +326,7 @@ export function Guesser() {
               Guess.mutate((draft) => {
                 if (!input.current) return;
 
-                draft.tank = tank;
+                draft.tank = tank.id;
                 draft.guessState = GuessState.NotGuessed;
                 draft.helpingReveal = false;
 
@@ -354,16 +337,12 @@ export function Guesser() {
         >
           {guessState === GuessState.NotGuessed ? (
             <>
-              {
-                strings.website.tools.guess.search[
-                  selected === null ? "skip" : "guess"
-                ]
-              }
+              {strings.guesser.search[selected === null ? "skip" : "guess"]}
               {selected === null ? <ArrowRightIcon /> : <PaperPlaneIcon />}
             </>
           ) : (
             <>
-              {strings.website.tools.guess.search.next}
+              {strings.guesser.search.next}
               <ArrowRightIcon />
             </>
           )}

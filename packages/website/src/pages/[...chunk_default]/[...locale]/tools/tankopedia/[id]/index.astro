@@ -5,7 +5,7 @@ import LegacyRedirect from "../../../../../../layouts/LegacyRedirect.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
-  const tankDefinitions = await api.tankDefinitions();
+  const tankDefinitions = await api.tanks();
 
   return Object.values(tankDefinitions.tanks).map(({ id }) => ({
     params: { id },
@@ -14,7 +14,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
 const { id } = Astro.params;
 const { locale } = Astro.props;
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 const tank = tankDefinitions.tanks[id];
 ---
 

@@ -1,5 +1,5 @@
 import type en from "@blitzkit/i18n/strings/en.json";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export type TankPerformanceSortType =
   keyof typeof en.website.tools.performance.table.stats;
@@ -9,7 +9,7 @@ export interface TankPerformanceSort {
   direction: -1 | 1;
 }
 
-export const TankPerformanceSort = new Varuna<TankPerformanceSort>({
+export const TankPerformanceSort = new Soapstone<TankPerformanceSort>({
   type: "winrate",
   direction: -1,
 });

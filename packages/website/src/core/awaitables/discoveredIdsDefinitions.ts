@@ -1,4 +1,1 @@
-import { fetchDiscoveredIdsDefinitions } from '@blitzkit/core';
-
-export const awaitableDiscoveredIdsDefinitions =
-  fetchDiscoveredIdsDefinitions();
+export const awaitableDiscoveredIdsDefinitions = fetchDiscoveredIds();

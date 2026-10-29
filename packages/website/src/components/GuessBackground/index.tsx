@@ -1,77 +1,31 @@
-import { Box } from "@radix-ui/themes";
 import { useEffect } from "react";
-import { api } from "../../core/blitzkit/api";
-import { tankToDuelMember } from "../../core/blitzkit/tankToDuelMember";
-import { Var } from "../../core/radix/var";
-import { Duel } from "../../stores/duel";
-import { Guess, GuessState } from "../../stores/guess";
+import { api } from "../../api/dynamic";
+import { Guess } from "../../stores/guess";
 import { Tankopedia } from "../../stores/tankopedia";
-import "./index.css";
+import { createTankState } from "../../tankopedia/createTankState";
+import styles from "./index.module.css";
 
-const [modelDefinitions, provisionDefinitions] = await Promise.all([
-  api.modelDefinitions(),
-  api.provisionDefinitions(),
-]);
+const [models, tanks] = await Promise.all([api.models(), api.tanks()]);
 
 export function GuessBackground() {
   const guessState = Guess.use((state) => state.guessState);
-  const tank = Guess.use((state) => state.tank);
+  const id = Guess.use((state) => state.tank);
 
   useEffect(() => {
-    Duel.mutate((state) => {
-      state.protagonist = tankToDuelMember(tank, provisionDefinitions);
-    });
+    const tank = tanks.tanks[id];
+
     Tankopedia.mutate((state) => {
-      state.model = modelDefinitions.models[tank.id];
+      state.protagonist = createTankState(tank);
     });
-  }, [tank]);
+  }, [id]);
 
   return (
     <>
-      <Box
-        position="absolute"
-        width="100%"
-        height="100%"
-        top="0"
-        left="0"
-        style={{
-          transitionDuration: "2s",
-          backgroundColor: Var(
-            guessState === GuessState.NotGuessed
-              ? "accent-2"
-              : guessState === GuessState.Correct
-                ? "jade-3"
-                : "tomato-3",
-          ),
-        }}
-      >
-        <Box
-          width="100%"
-          height="100%"
-          style={{
-            background: `radial-gradient(circle, ${Var("color-panel-translucent")}, ${Var("color-panel-solid")})`,
-          }}
-        />
-      </Box>
+      <div className={styles.foreground} data-guess-state={guessState}>
+        <div className={styles.overlay} />
+      </div>
 
-      <Box
-        className="guess-background"
-        position="absolute"
-        width="200%"
-        height="200%"
-        top="0"
-        left="0"
-        style={{
-          backgroundImage: `
-            radial-gradient(circle, ${Var("white-a1")} 20%, transparent 20%),
-            radial-gradient(circle at 0 0, ${Var("white-a1")} 10%, transparent 10%),
-            radial-gradient(circle at 100% 0, ${Var("white-a1")} 10%, transparent 10%),
-            radial-gradient(circle at 0 100%, ${Var("white-a1")} 10%, transparent 10%),
-            radial-gradient(circle at 100% 100%, ${Var("white-a1")} 10%, transparent 10%)
-          `,
-          backgroundSize: "4rem 4rem",
-        }}
-      />
+      <div className={styles.background} />
     </>
   );
 }
