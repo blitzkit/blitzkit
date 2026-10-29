@@ -3,7 +3,6 @@ import {
   Sc2ReadStream,
   type TankParameters,
 } from "@blitzkit/core";
-import locales from "@blitzkit/i18n/locales.json";
 import { isEqual, times } from "lodash-es";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI1 } from "./1_tankDefinitions";
@@ -108,11 +107,7 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         }
       }
 
-      // unreleased camos are in the game files before their names
-      const name =
-        camo.userString in this.stringsI18n[locales.default]
-          ? this.getString(camo.userString)
-          : undefined;
+      const name = this.getString(camo.userString);
 
       camouflageDefinitions.camouflages[camo.id] = {
         id: camo.id,
