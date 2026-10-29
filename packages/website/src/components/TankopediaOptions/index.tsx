@@ -1,13 +1,7 @@
 import { uniqueGuns } from "@blitzkit/core";
-import {
-  Crosshair1Icon,
-  EnterFullScreenIcon,
-  ExitFullScreenIcon,
-  ShadowInnerIcon,
-  ShadowNoneIcon,
-  SunIcon,
-} from "@radix-ui/react-icons";
-import { useState, type RefObject } from "react";
+import { Crosshair1Icon } from "@radix-ui/react-icons";
+import { Dialog, Tabs } from "radix-ui";
+import { useState } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useFullScreen } from "../../hooks/useFullScreen";
@@ -17,21 +11,13 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
-import { IconButton } from "../IconButton";
-import { ScreenshotButton } from "../ScreenshotButton";
-import { SegmentedControl } from "../SegmentedControl";
-import styles from "./index.module.css";
-import { Dialog, Tabs } from "radix-ui";
 import { Button } from "../Button";
+import { SegmentedControl } from "../SegmentedControl";
 import { SmallTankIcon } from "../SmallTankIcon";
 import { TankSearch } from "../TankSearch";
+import styles from "./index.module.css";
 
-type OptionsProps = MaybeSkeletonComponentProps & {
-  canvas: RefObject<HTMLCanvasElement>;
-};
-
-export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
+export function TankopediaOptions() {
   const strings = useStrings();
   const unwrap = useUnwrapper();
 
@@ -60,8 +46,8 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
   const equalize = Tankopedia.use((state) => state.environment.equalize);
 
   return (
-    <div className={styles.options}>
-      <div className={styles.controls}>
+    <div className={styles.options} data-visible={revealed}>
+      {/* <div className={styles.controls}>
         {disturbed && (
           <>
             {requestedDisplay === TankopediaDisplay.DynamicArmor && (
@@ -84,7 +70,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
               </IconButton>
             )}
 
-            {/* <DropdownMenu.Root>
+            <DropdownMenu.Root>
               <DropdownMenu.Trigger>
                 <IconButton
                   size="2"
@@ -111,7 +97,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
                   {strings.tanks.poses.default}
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
-            </DropdownMenu.Root> */}
+            </DropdownMenu.Root>
 
             <IconButton
               size="2"
@@ -157,7 +143,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
             )}
           </>
         )}
-      </div>
+      </div> */}
 
       <div gap="3" align="center" mt="2">
         <SegmentedControl
