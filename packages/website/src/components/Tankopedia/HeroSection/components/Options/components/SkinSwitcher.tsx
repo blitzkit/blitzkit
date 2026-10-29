@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { Flex, Text, Tooltip } from "@radix-ui/themes";
+import { Flex, Tooltip } from "@radix-ui/themes";
 import { uniqBy } from "lodash-es";
 import { SKIN_NUMBER } from "../../../../../../constants/skinNumber";
 import { api } from "../../../../../../core/blitzkit/api";
@@ -13,17 +13,18 @@ const camouflageDefinitions = await api.camouflageDefinitions();
 
 export function SkinSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
-  const skin = Tankopedia.use((state) => state.requestedSkin);
-  const attachment = Tankopedia.use((state) => state.requestedAttachment);
+  const skin = Tankopedia.use((state) => state.loaders.skin.requested);
+  const attachment = Tankopedia.use(
+    (state) => state.loaders.attachment.requested,
+  );
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const { unwrap, strings } = useLocale();
+  const { unwrap } = useLocale();
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
       (camouflage) => camouflage.tank_id === tank.id,
     ),
-    (camouflage) =>
-      (camouflage.name && unwrap(camouflage.name)) || camouflage.id,
+    (camouflage) => unwrap(camouflage.name!),
   );
 
   // attachments aren't camouflages so they get their own group
@@ -54,26 +55,16 @@ export function SkinSwitcher() {
       {groups.map((group) => (
         <Flex key={group[0].id} direction="column">
           {group.map((camouflage, index) => {
-            const rawName = camouflage.name && unwrap(camouflage.name);
-            const name = rawName
-              ? rawName.replace("%(camo_num)", SKIN_NUMBER)
-              : strings.website.tools.tankopedia.sandbox.skins.unreleased;
+            const name = unwrap(camouflage.name!).replace(
+              "%(camo_num)",
+              SKIN_NUMBER,
+            );
             const top = index === 0 ? "var(--radius-full)" : "0";
             const bottom =
               index === group.length - 1 ? "var(--radius-full)" : "0";
 
             return (
-              <Tooltip
-                key={camouflage.id}
-                content={
-                  rawName ? (
-                    name
-                  ) : (
-                    <Text style={{ color: "var(--orange-9)" }}>{name}</Text>
-                  )
-                }
-                side="left"
-              >
+              <Tooltip key={camouflage.id} content={name} side="left">
                 <SidebarIconButton
                   selected={
                     (camouflage.attachment ? attachment : skin) ===
@@ -92,13 +83,14 @@ export function SkinSwitcher() {
                     borderRadius: "50%",
                   }}
                   onClick={() => {
-                    const slot = camouflage.attachment
-                      ? "requestedAttachment"
-                      : "requestedSkin";
-
                     Tankopedia.mutate((draft) => {
-                      draft[slot] =
-                        draft[slot] === camouflage.id
+                      const loader =
+                        draft.loaders[
+                          camouflage.attachment ? "attachment" : "skin"
+                        ];
+
+                      loader.requested =
+                        loader.requested === camouflage.id
                           ? undefined
                           : camouflage.id;
                     });

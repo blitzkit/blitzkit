@@ -49,8 +49,8 @@ export function Lighting({ hasPbr }: Props) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const skinPending = Tankopedia.use(
     (state) =>
-      state.loadedSkin !== state.skin ||
-      state.loadedAttachment !== state.attachment,
+      state.loaders.skin.requested !== state.loaders.skin.loaded ||
+      state.loaders.attachment.requested !== state.loaders.attachment.loaded,
   );
 
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
@@ -65,6 +65,7 @@ export function Lighting({ hasPbr }: Props) {
   useEffect(() => {
     Tankopedia.mutate((draft) => {
       draft.revealed = true;
+      draft.loaders.model.loaded = true;
     });
   }, []);
 
@@ -244,17 +245,6 @@ function Animator({
     if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
       Tankopedia.mutate((draft) => {
         draft.display = requestedDisplay;
-      });
-    }
-
-    if (
-      x >= 1 &&
-      (Tankopedia.state.skin !== Tankopedia.state.loadedSkin ||
-        Tankopedia.state.attachment !== Tankopedia.state.loadedAttachment)
-    ) {
-      Tankopedia.mutate((draft) => {
-        draft.skin = draft.loadedSkin;
-        draft.attachment = draft.loadedAttachment;
       });
     }
   });

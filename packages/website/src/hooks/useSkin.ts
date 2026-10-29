@@ -35,36 +35,28 @@ function skinPath(id: number, skin: number) {
 }
 
 // attachments load the same way as camouflages and can be shown with one
-const slots = {
-  skin: { requested: "requestedSkin", loaded: "loadedSkin" },
-  attachment: { requested: "requestedAttachment", loaded: "loadedAttachment" },
-} as const;
-
-export function useSkin(id: number, slot: keyof typeof slots = "skin") {
-  const { requested, loaded } = slots[slot];
-  const requestedSkin = Tankopedia.use((state) => state[requested]);
-  const skin = Tankopedia.use((state) => state[slot]);
+export function useSkin(id: number, loader: "skin" | "attachment" = "skin") {
+  const requested = Tankopedia.use((state) => state.loaders[loader].requested);
+  const loaded = Tankopedia.use((state) => state.loaders[loader].loaded);
 
   useEffect(() => {
-    const path =
-      requestedSkin === undefined ? undefined : skinPath(id, requestedSkin);
+    if (requested === Tankopedia.state.loaders[loader].loaded) return;
+
+    const path = requested === undefined ? undefined : skinPath(id, requested);
+    const cached = path === undefined || loadedSkins.has(path);
     let settled = false;
 
-    if (path === undefined || loadedSkins.has(path)) {
+    if (!cached) {
       Tankopedia.mutate((draft) => {
-        draft[loaded] = requestedSkin;
+        draft.revealed = false;
       });
-      return;
+
+      if (!skins.has(path)) skins.set(path, loadSkin(path));
     }
 
-    Tankopedia.mutate((draft) => {
-      draft.revealed = false;
-    });
-
-    if (!skins.has(path)) skins.set(path, loadSkin(path));
-
+    // swaps halfway through the lighting transition
     Promise.all([
-      skins.get(path),
+      path && skins.get(path),
       new Promise((resolve) =>
         setTimeout(resolve, TRANSITION_ANIMATION_TIME * 1e3),
       ),
@@ -73,9 +65,8 @@ export function useSkin(id: number, slot: keyof typeof slots = "skin") {
 
       settled = true;
       Tankopedia.mutate((draft) => {
-        draft[loaded] = requestedSkin;
-        draft[slot] = requestedSkin;
-        draft.revealed = true;
+        draft.loaders[loader].loaded = requested;
+        if (!cached) draft.revealed = true;
       });
     });
 
@@ -83,11 +74,16 @@ export function useSkin(id: number, slot: keyof typeof slots = "skin") {
       if (settled) return;
 
       settled = true;
+
+      if (cached) return;
+
       Tankopedia.mutate((draft) => {
         draft.revealed = true;
       });
     };
-  }, [id, slot, requestedSkin]);
+  }, [id, loader, requested]);
 
-  return skin === undefined ? undefined : loadedSkins.get(skinPath(id, skin));
+  return loaded === undefined
+    ? undefined
+    : loadedSkins.get(skinPath(id, loaded));
 }

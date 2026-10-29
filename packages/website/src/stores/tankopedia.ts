@@ -78,10 +78,19 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
+interface LoaderState<Type> {
+  requested: Type;
+  loaded: Type;
+}
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
-  modelRequested: boolean;
+  loaders: {
+    model: LoaderState<boolean>;
+    skin: LoaderState<number | undefined>;
+    attachment: LoaderState<number | undefined>;
+  };
   shot?: Shot;
   skills: Record<string, number>;
   relativeAgainst: TankopediaRelativeAgainst;
@@ -103,12 +112,6 @@ interface Tankopedia {
   );
   xpMultiplier: (typeof XP_MULTIPLIERS)[number];
   customShell?: ShellDefinition;
-  requestedSkin?: number;
-  loadedSkin?: number;
-  skin?: number;
-  requestedAttachment?: number;
-  loadedAttachment?: number;
-  attachment?: number;
   requestedDisplay: TankopediaDisplay;
   display: TankopediaDisplay;
   statSearch?: string;
@@ -119,7 +122,11 @@ const skillDefinitions = await api.skillDefinitions();
 export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
   disturbed: false,
   revealed: false,
-  modelRequested: App.state.autoLoadModels,
+  loaders: {
+    model: { requested: App.state.autoLoadModels, loaded: false },
+    skin: { requested: undefined, loaded: undefined },
+    attachment: { requested: undefined, loaded: undefined },
+  },
   relativeAgainst: TankopediaRelativeAgainst.Class,
   editStatic: false,
   skills: createDefaultSkills(skillDefinitions),
