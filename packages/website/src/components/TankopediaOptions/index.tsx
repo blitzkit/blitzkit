@@ -1,6 +1,4 @@
 import { uniqueGuns } from "@blitzkit/core";
-import { Crosshair1Icon } from "@radix-ui/react-icons";
-import { Dialog, Tabs } from "radix-ui";
 import { useState } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
@@ -11,10 +9,7 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import { Button } from "../Button";
 import { SegmentedControl } from "../SegmentedControl";
-import { SmallTankIcon } from "../SmallTankIcon";
-import { TankSearch } from "../TankSearch";
 import styles from "./index.module.css";
 
 export function TankopediaOptions() {
@@ -210,7 +205,7 @@ export function TankopediaOptions() {
           </SegmentedControl.Item>
         </SegmentedControl.Root> */}
 
-        {requestedDisplay === TankopediaDisplay.DynamicArmor && (
+        {/* {requestedDisplay === TankopediaDisplay.DynamicArmor && (
           <Dialog.Root
             open={antagonistSelectorOpen}
             onOpenChange={setAntagonistSelectorOpen}
@@ -250,7 +245,7 @@ export function TankopediaOptions() {
               </Tabs.Root>
             </Dialog.Content>
           </Dialog.Root>
-        )}
+        )} */}
       </div>
     </div>
   );

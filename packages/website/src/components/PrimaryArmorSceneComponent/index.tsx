@@ -1,8 +1,5 @@
-import {
-  canSplash,
-  isExplosive,
-  resolvePenetrationCoefficient,
-} from "@blitzkit/core";
+import { isExplosive, resolvePenetrationCoefficient } from "@blitzkit/core";
+import { ShellType } from "@blitzkit/protos";
 import { invalidate, useFrame } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { useEffect, useRef } from "react";
@@ -95,7 +92,8 @@ export function PrimaryArmorSceneComponent({
         shell.normalization ?? 0,
       );
       material.current.uniforms.isExplosive.value = isExplosive(shell.type);
-      material.current.uniforms.canSplash.value = canSplash(shell.type);
+      material.current.uniforms.canSplash.value =
+        shell.type === ShellType.SHELL_TYPE_HE;
       material.current.uniforms.damage.value = shell.armor_damage;
       material.current.uniforms.explosionRadius.value = shell.explosion_radius;
 
