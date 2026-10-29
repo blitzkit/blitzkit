@@ -1,4 +1,24 @@
 {
+  "guesser": {
+    "help": {
+      "title": "Partially reveal tank?",
+      "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+      "cancel": "Cancel",
+      "reveal": "Reveal"
+    },
+
+    "search": {
+      "skip": "Skip",
+      "guess": "Guess",
+      "next": "Next"
+    },
+
+    "stats": "{correct} / {total} correct, {streak} streak",
+    "tier": "Tier {tier}",
+    "select_all": "Select all",
+    "clear": "Clear"
+  },
+
   "units": {
     "m": "{value}m",
     "mm": "{value}mm",
@@ -261,6 +281,13 @@
   "common": {
     "name": "BlitzKit",
 
+    "search": {
+      "hint_players": "Search players...",
+      "hint_tanks": "Search tanks...",
+      "no_results": "No results",
+      "searching": "Searching..."
+    },
+
     "units": {
       "m": "{value}m",
       "mm": "{value}mm",
@@ -473,12 +500,6 @@
     },
 
     "common": {
-      "player_search": {
-        "hint": "Search players...",
-        "no_results": "No results",
-        "searching": "Searching..."
-      },
-
       "copy_button": {
         "copied": "Copied!"
       },

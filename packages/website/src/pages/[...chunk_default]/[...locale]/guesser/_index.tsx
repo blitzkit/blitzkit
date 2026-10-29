@@ -5,13 +5,10 @@ import { GuessBackground } from "../../../../components/GuessBackground";
 import { Guesser } from "../../../../components/Guesser";
 import { GuessRenderer } from "../../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../../components/GuessRendererLoader";
-import { PageWrapper } from "../../../../components/PageWrapper";
-import {
-  type LocaleAcceptorProps,
-  LocaleProvider,
-  useLocale,
-} from "../../../../hooks/useLocale";
-import { Duel } from "../../../../stores/duel";
+import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../hocs/withLocale";
+import { DuelModule, useDuel } from "../../../../hooks/useDuel";
+import { useUnwrapper } from "../../../../hooks/useUnwrapper";
 import { Guess, GuessState } from "../../../../stores/guess";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
@@ -23,42 +20,34 @@ const [tankDefinitions, modelDefinitions] = await Promise.all([
 
 const ids = Object.keys(tankDefinitions.tanks);
 
-export function Page({
-  locale,
-  skeleton,
-}: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
-  const id = Number(ids[Math.floor(Math.random() * ids.length)]);
-  const tank = tankDefinitions.tanks[id];
+export const Page = withLocale(
+  withErrorWrapper(({ skeleton }: MaybeSkeletonComponentProps) => {
+    const id = Number(ids[Math.floor(Math.random() * ids.length)]);
 
-  Guess.useInitialization(tank);
+    Guess.useInitialization(id);
 
-  return (
-    <LocaleProvider locale={locale}>
-      <Container skeleton={skeleton} />
-    </LocaleProvider>
-  );
-}
+    return <Container skeleton={skeleton} />;
+  }),
+);
 
 function Container({ skeleton }: MaybeSkeletonComponentProps) {
-  const tank = Guess.use((state) => state.tank);
-  const model = modelDefinitions.models[tank.id];
+  const id = Guess.use((state) => state.tank);
+  const tank = tankDefinitions.tanks[id];
 
-  Tankopedia.useInitialization(model);
-  Duel.useInitialization({ tank, model });
+  Tankopedia.useInitialization(tank);
 
-  return (
-    <PageWrapper p="0" maxWidth="unset" color="cyan">
-      <Content skeleton={skeleton} />
-    </PageWrapper>
-  );
+  return <Content skeleton={skeleton} />;
 }
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
-  const { unwrap } = useLocale();
-  const tank = Guess.use((state) => state.tank);
+  const tank = useDuel("protagonist", DuelModule.Tank);
+
+  const unwrap = useUnwrapper();
+
+  const name = unwrap(tank.name!);
+
   const guessState = Guess.use((state) => state.guessState);
   const isRevealed = guessState !== GuessState.NotGuessed;
-  const name = unwrap(tank.name!);
   const fontSize = `min(48vh, ${55 / name.length}vw)`;
   const transitionDuration = isRevealed ? "2s" : undefined;
   const tiers = Guess.use((state) => state.tiers);
@@ -78,10 +67,9 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
     const id = Number(
       filteredIds[Math.floor(Math.random() * filteredIds.length)],
     );
-    const newTank = tankDefinitions.tanks[id];
 
     Guess.mutate((draft) => {
-      draft.tank = newTank;
+      draft.tank = id;
       draft.guessState = GuessState.NotGuessed;
       draft.helpingReveal = false;
     });
