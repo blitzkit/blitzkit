@@ -203,8 +203,6 @@ export function CustomShellButton() {
                         step={Number.EPSILON}
                         defaultValue={[customShell.normalization ?? 0]}
                         onValueChange={([value]) => {
-                          console.log("asd");
-
                           Tankopedia.mutate((draft) => {
                             draft.customShell!.normalization = value;
                           });

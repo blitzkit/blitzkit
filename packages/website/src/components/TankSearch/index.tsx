@@ -79,16 +79,10 @@ export const TankSearch = memo<TankSearchProps>(
       async () => {
         let filtered = tankDefinitionsArray;
 
-        console.log("A");
-
         if (tankopediaSort.by !== null) {
-          console.log("B", filtered.length);
-
           filtered = filtered.filter((tank) =>
             defaultCharacteristics.get(tank.id)!.has(tankopediaSort.by!),
           );
-
-          console.log("C", filtered.length);
         }
 
         if (tankFilters.search === null) {
@@ -183,8 +177,6 @@ export const TankSearch = memo<TankSearchProps>(
         return (aValue < bValue ? -1 : 1) * direction;
       });
     }, [tankFilters, tankopediaSort]);
-
-    console.log("V", sorted.length);
 
     const sortConfig =
       tankopediaSort.by !== null &&
