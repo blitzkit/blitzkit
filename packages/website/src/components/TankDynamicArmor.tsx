@@ -5,7 +5,7 @@ import { spacedArmorRenderTarget } from "./PrimaryArmorRenderTarget";
 import { PrimaryArmorScene } from "./PrimaryArmorScene";
 import { SpacedArmorScene } from "./SpacedArmorScene";
 
-export const DynamicArmor = memo(() => {
+export const TankDynamicArmor = memo(() => {
   const rootScene = useThree((state) => state.scene);
   const [spacedArmorScene] = useState(() => new Scene());
   const [primaryArmorScene] = useState(() => {

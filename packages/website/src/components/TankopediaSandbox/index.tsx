@@ -1,5 +1,6 @@
 import type { QuicklimeEvent } from "quicklime";
 import { Suspense, useEffect, useRef } from "react";
+import { Scene } from "three";
 import { applyPitchYawLimits } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../core/blitzkit/pose";
@@ -14,14 +15,13 @@ import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonCompo
 import { ArmorPlateDisplay } from "../ArmorPlateDisplay";
 import { CanvasAutoClear } from "../CanvasAutoClear";
 import { CanvasControl } from "../CanvasControl";
-import { DynamicArmor } from "../DynamicArmor";
 import { InitialCameraAligner } from "../InitialCameraAligner";
 import { Lighting, transitionEvent } from "../Lighting";
 import { SceneProps } from "../SceneProps";
 import { ShotDisplay } from "../ShotDisplay";
 import { SmartCanvas } from "../SmartCanvas";
+import { SpacedArmorScene } from "../SpacedArmorScene";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
-import { TankModel } from "../TankModel";
 import { TankopediaAntagonistControl } from "../TankopediaAntagonistControl";
 import { TankopediaOptions } from "../TankopediaOptions";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
@@ -200,9 +200,13 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
 
       <SceneProps />
 
-      {(display === TankopediaDisplay.Model ||
+      {/* {(display === TankopediaDisplay.Model ||
         (display === TankopediaDisplay.DynamicArmor &&
-          !hideTankModelUnderArmor)) && <TankModel />}
+          !hideTankModelUnderArmor)) && <TankModel />} */}
+
+      {/* {display === TankopediaDisplay.DynamicArmor && <TankDynamicArmor />} */}
+
+      <SpacedArmorScene scene={new Scene()} />
 
       <ShotDisplay />
       <ArmorPlateDisplay />
@@ -212,7 +216,6 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
         {/* Controls within Suspense to allow for frame-perfect start of camera auto-rotate */}
         <CanvasControl />
 
-        {display === TankopediaDisplay.DynamicArmor && <DynamicArmor />}
         {display === TankopediaDisplay.StaticArmor && (
           <StaticArmor thicknessRange={thicknessRange} />
         )}
