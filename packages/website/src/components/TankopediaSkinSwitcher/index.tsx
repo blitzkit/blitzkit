@@ -19,7 +19,7 @@ export function TankopediaSkinSwitcher() {
 
   const skin = Tankopedia.use((state) => state.requestedSkin);
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
-  const disturbed = Tankopedia.use((state) => state.disturbed);
+  const revealed = Tankopedia.use((state) => state.revealed);
 
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
@@ -33,7 +33,7 @@ export function TankopediaSkinSwitcher() {
   return (
     <div
       className={styles["skin-switcher"]}
-      data-visible={disturbed && requestedDisplay === TankopediaDisplay.Model}
+      data-visible={revealed && requestedDisplay === TankopediaDisplay.Model}
     >
       {skins.map((camouflage) => {
         const name = unwrap(camouflage.name!).replace(

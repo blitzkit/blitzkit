@@ -23,7 +23,6 @@ import { SmartCanvas } from "../SmartCanvas";
 import { StaticArmor, type ThicknessRange } from "../StaticArmor";
 import { TankModel } from "../TankModel";
 import { TankopediaAntagonistControl } from "../TankopediaAntagonistControl";
-import { TankopediaOptions } from "../TankopediaOptions";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import styles from "./index.module.css";
 
@@ -113,8 +112,6 @@ export function TankopediaSandbox({
 
     function handleTransitionEvent(event: QuicklimeEvent<number>) {
       if (!wrapper.current) return;
-
-      wrapper.current.style.backgroundColor = `rgba(0, 0, 0, ${1 - event.data})`;
     }
 
     poseEvent.on(handlePoseEvent);
@@ -179,7 +176,7 @@ export function TankopediaSandbox({
       <TankopediaAntagonistControl
         antagonistCharacteristics={antagonistCharacteristics}
       />
-      <TankopediaOptions />
+      {/* <TankopediaOptions /> */}
     </div>
   );
 }

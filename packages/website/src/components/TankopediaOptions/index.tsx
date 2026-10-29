@@ -1,5 +1,12 @@
 import { uniqueGuns } from "@blitzkit/core";
-import { ShadowInnerIcon, ShadowNoneIcon } from "@radix-ui/react-icons";
+import {
+  Crosshair1Icon,
+  EnterFullScreenIcon,
+  ExitFullScreenIcon,
+  ShadowInnerIcon,
+  ShadowNoneIcon,
+  SunIcon,
+} from "@radix-ui/react-icons";
 import { useState, type RefObject } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
@@ -12,8 +19,13 @@ import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { IconButton } from "../IconButton";
+import { ScreenshotButton } from "../ScreenshotButton";
 import { SegmentedControl } from "../SegmentedControl";
 import styles from "./index.module.css";
+import { Dialog, Tabs } from "radix-ui";
+import { Button } from "../Button";
+import { SmallTankIcon } from "../SmallTankIcon";
+import { TankSearch } from "../TankSearch";
 
 type OptionsProps = MaybeSkeletonComponentProps & {
   canvas: RefObject<HTMLCanvasElement>;
@@ -230,11 +242,7 @@ export function TankopediaOptions({ canvas, skeleton }: OptionsProps) {
                 {strings.website.common.tank_search.select_dialog_title}
               </Dialog.Title>
 
-              <Tabs.Root
-                value={tab}
-                onValueChange={setTab}
-                style={{ position: "relative" }}
-              >
+              <Tabs.Root value={tab} onValueChange={setTab}>
                 <TankSearch
                   compact
                   onSelect={(tank) => {

@@ -1,4 +1,6 @@
 .wrapper {
+  background-color: black;
+
   height: calc(100dvh - 16rem);
   position: relative;
 
