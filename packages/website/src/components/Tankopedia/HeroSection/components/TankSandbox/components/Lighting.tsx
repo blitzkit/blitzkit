@@ -165,6 +165,7 @@ export function Lighting({ hasPbr }: Props) {
               key={index}
               position={position}
               intensity={intensity}
+              userData={{ intensity }}
               penumbra={1}
               castShadow={highGraphics}
               decay={1}
@@ -215,6 +216,11 @@ function Animator({
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
         child.angle = ANGLE * t * factor;
+        child.intensity = child.userData.intensity;
+
+        if (child.angle === 0) {
+          child.intensity = 0;
+        }
       } else if (child instanceof HemisphereLight) {
         child.intensity = HEMISPHERE_INTENSITY * t * factor;
       }
