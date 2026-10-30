@@ -65,7 +65,13 @@ export async function GET({ props }: APIContext<{ id: number }>) {
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
 const omitMeshNames = {
-  start: ["chassis_chassis_", "chassis_track_crash_", "HP_"],
+  start: [
+    "chassis_chassis_",
+    "chassis_track_crash_",
+    "HP_",
+    // mastery marks a new tank doesn't have yet
+    "custom_gun_marks_",
+  ],
   end: ["_POINT"],
 };
 
@@ -132,7 +138,8 @@ export async function extractModel(
             times(renderObject["ro.batchCount"], (batchIndex): void => {
               const lodIndex = renderObject[`rb${batchIndex}.lodIndex`];
 
-              if (lodIndex !== 0) return;
+              // -1 means the batch has no lods and is always drawn
+              if (lodIndex !== 0 && !(isPart && lodIndex === -1)) return;
 
               const batchKey = batchIndex.toString().padStart(4, "0");
               const batch = renderObject["ro.batches"][batchKey];
@@ -343,6 +350,27 @@ export async function extractMaterials(
 
           material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
+      }
+
+      const enabledPresets =
+        node.enabledPresets ?? defaultConfigArchive?.enabledPresets;
+      const fxName = node.fxName ?? defaultConfigArchive?.fxName;
+
+      if (enabledPresets?.AlphaBlend || enabledPresets?.AlphaBlendAdditive) {
+        material.setAlphaMode("BLEND");
+      }
+
+      if (enabledPresets?.AlphaBlendAdditive) {
+        // gltf has no additive blending so the viewer applies it
+        material.setExtras({ blending: "additive" });
+      }
+
+      if (fxName?.endsWith("/Textured.material")) {
+        // unlit in game, emissive so the viewer can fade it with the lights
+        material
+          .setEmissiveTexture(material.getBaseColorTexture())
+          .setEmissiveFactor([1, 1, 1])
+          .setBaseColorFactor([0, 0, 0, 1]);
       }
 
       if (textures.miscMap) {

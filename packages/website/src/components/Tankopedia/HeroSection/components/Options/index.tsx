@@ -82,7 +82,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
   const equalize = Duel.use((state) => state.equalize);
   const equalizer = Duel.use((state) => state.antagonist.tank.equalizer);
 
