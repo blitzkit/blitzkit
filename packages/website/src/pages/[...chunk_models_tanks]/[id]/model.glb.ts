@@ -14,7 +14,7 @@ import {
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
-import { ALL_EXTENSIONS, KHRMaterialsUnlit } from "@gltf-transform/extensions";
+import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
@@ -366,10 +366,11 @@ export async function extractMaterials(
       }
 
       if (fxName?.endsWith("/Textured.material")) {
-        material.setExtension(
-          "KHR_materials_unlit",
-          document.createExtension(KHRMaterialsUnlit).createUnlit(),
-        );
+        // unlit in game, emissive so the viewer can fade it with the lights
+        material
+          .setEmissiveTexture(material.getBaseColorTexture())
+          .setEmissiveFactor([1, 1, 1])
+          .setBaseColorFactor([0, 0, 0, 1]);
       }
 
       if (textures.miscMap) {
