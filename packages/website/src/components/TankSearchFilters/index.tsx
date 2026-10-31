@@ -5,9 +5,9 @@ import locales from "@blitzkit/i18n/locales.json";
 import { ShellType, TankType } from "@blitzkit/protos";
 import {
   CheckIcon,
+  DotFilledIcon,
   LockClosedIcon,
   LockOpen2Icon,
-  ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { Fragment } from "react";
@@ -27,7 +27,6 @@ import { MissingShellIcon } from "../MissingShellIcon";
 import { ResearchedIcon } from "../ResearchedIcon";
 import { ScienceIcon } from "../ScienceIcon";
 import { ScienceOffIcon } from "../ScienceOffIcon";
-import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
@@ -163,13 +162,13 @@ export function TankSearchFilters() {
       <TestFilter />
 
       <GunTypeFilter />
-      {/* <ShellFilter />
+      <ShellFilter />
 
       <ConsumablesFilter />
       <ProvisionsFilter />
       <GameModeAbilitiesFilter />
 
-      <ResetButton /> */}
+      <ResetButton />
     </div>
   );
 }
@@ -183,7 +182,7 @@ function ResetButton() {
         TankFilters.set(TankFilters.initial);
       }}
     >
-      <ResetIcon />
+      <TrashIcon />
     </IconButton>
   );
 }
@@ -586,11 +585,11 @@ function TypeFilter() {
 
 function ShellFilter() {
   return (
-    <Flex>
+    <div className={styles.grouped}>
       <IndividualShellFilter index={0} />
       <IndividualShellFilter index={1} premium />
       <IndividualShellFilter index={2} />
-    </Flex>
+    </div>
   );
 }
 
@@ -607,15 +606,13 @@ function IndividualShellFilter({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <IconButton listChild variant="surface" color="gray">
+        <IconButton listChild="horizontal" variant="soft" color="gray">
           {shells[index] === null && (
-            <Text lowContrast className={styles["shell-icon"]}>
-              <MissingShellIcon width="1em" height="1em" />
-            </Text>
+            <MissingShellIcon width="1em" height="1em" />
           )}
+
           {shells[index] !== null && (
             <img
-              style={{ width: "1em", height: "1em" }}
               src={alias(
                 "api",
                 `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
@@ -649,15 +646,9 @@ function IndividualShellFilter({
                 }}
                 color={selected ? undefined : "gray"}
               >
-                <img
-                  src={alias(
-                    "api",
-                    `/icons/shells/${shellTypeIcons[shellType]}${
-                      premium ? "_premium" : ""
-                    }.webp`,
-                  )}
-                  style={{ width: "1.25em", height: "1.25em" }}
-                />
+                <DropdownMenu.ItemIndicator>
+                  <DotFilledIcon />
+                </DropdownMenu.ItemIndicator>
 
                 {
                   strings.common.shells[
@@ -666,6 +657,15 @@ function IndividualShellFilter({
                     ] as keyof typeof strings.common.shells
                   ]
                 }
+
+                <img
+                  src={alias(
+                    "api",
+                    `/icons/shells/${shellTypeIcons[shellType]}${
+                      premium ? "_premium" : ""
+                    }.webp`,
+                  )}
+                />
               </DropdownMenu.RadioItem>
             );
           })}
@@ -686,8 +686,9 @@ function IndividualShellFilter({
               });
             }}
           >
-            <TrashIcon />
             {strings.website.common.tank_search.clear}
+
+            <TrashIcon />
           </DropdownMenu.Item>
         </DropdownMenu.RadioGroup>
       </DropdownMenu.Content>
@@ -821,8 +822,8 @@ function ConsumablesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
+        <Button color="gray" variant="soft">
+          {consumables.slice(0, MAX_ICONS).map((consumable) => (
             <img
               key={consumable}
               className={styles.icon}
@@ -864,16 +865,15 @@ function ConsumablesFilter() {
               checked={selected}
               key={consumable}
             >
-              <img
-                style={{
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={alias("api", `/icons/consumables/${consumable}.webp`)}
-              />
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
 
               {unwrap(consumableDefinition.name!)}
+
+              <img
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
+              />
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -890,8 +890,9 @@ function ConsumablesFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -908,8 +909,8 @@ function ProvisionsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          {provisions.slice(0, MAX_ICONS).map((provision, index) => (
+        <Button color="gray" variant="soft">
+          {provisions.slice(0, MAX_ICONS).map((provision) => (
             <img
               key={provision}
               className={styles.icon}
@@ -951,16 +952,13 @@ function ProvisionsFilter() {
               checked={selected}
               key={provision}
             >
-              <img
-                style={{
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={alias("api", `/icons/provisions/${provision}.webp`)}
-              />
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
 
               {unwrap(provisionDefinition.name!)}
+
+              <img src={alias("api", `/icons/provisions/${provision}.webp`)} />
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -977,8 +975,9 @@ function ProvisionsFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -1010,8 +1009,8 @@ function GameModeAbilitiesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          {icons.slice(0, MAX_ICONS).map((icon, index) => (
+        <Button color="gray" variant="soft">
+          {icons.slice(0, MAX_ICONS).map((icon) => (
             <img key={icon} className={styles.icon} src={icon} />
           ))}
 
@@ -1071,19 +1070,18 @@ function GameModeAbilitiesFilter() {
                       checked={selected}
                       key={consumable}
                     >
+                      <DropdownMenu.ItemIndicator>
+                        <CheckIcon />
+                      </DropdownMenu.ItemIndicator>
+
+                      {unwrap(abilityDefinition.name!)}
+
                       <img
-                        style={{
-                          width: "1.25em",
-                          height: "1.25em",
-                          objectFit: "contain",
-                        }}
                         src={alias(
                           "api",
                           `/icons/consumables/${consumable}.webp`,
                         )}
                       />
-
-                      {unwrap(abilityDefinition.name!)}
                     </DropdownMenu.CheckboxItem>
                   );
                 }
@@ -1123,19 +1121,18 @@ function GameModeAbilitiesFilter() {
                       checked={selected}
                       key={provision}
                     >
+                      <DropdownMenu.ItemIndicator>
+                        <CheckIcon />
+                      </DropdownMenu.ItemIndicator>
+
+                      {unwrap(powerDefinition.name!)}
+
                       <img
-                        style={{
-                          width: "1.25em",
-                          height: "1.25em",
-                          objectFit: "contain",
-                        }}
                         src={alias(
                           "api",
                           `/icons/provisions/${provision}.webp`,
                         )}
                       />
-
-                      {unwrap(powerDefinition.name!)}
                     </DropdownMenu.CheckboxItem>
                   );
                 }
@@ -1157,8 +1154,9 @@ function GameModeAbilitiesFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

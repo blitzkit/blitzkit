@@ -23,7 +23,8 @@
   }
 
   .Item,
-  .CheckboxItem {
+  .CheckboxItem,
+  .RadioItem {
     position: relative;
 
     background-color: var(--gray-3);
