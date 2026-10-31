@@ -206,13 +206,13 @@
         "swap_dialog_title": "Резервуар підміни",
         "clear_filters": "Очистити",
         "login": "Увійдіть, щоб скористатися",
-        "search_bar_hint": "Шукайте техніку...",
+        "search_bar_hint": "Пошук техніки...",
         "recent": "Недавно переглянуті",
         "select_all": "Вибрати все",
         "count_singular": "1 танк",
         "count_plural": "Танків: {count} ",
         "sorting_by": "Відсортувати за {name}",
-        "clear": "Clear",
+        "clear": "Очистити",
         "tier": "Рівень {tier}",
         "passive": "",
         "active": "{name}{name}",
@@ -238,7 +238,7 @@
           "fire.premiumPenetration": "преміум пробиття",
           "fire.tertiaryPenetration": "tertiary penetration",
           "fire.damage": "шкода",
-          "fire.moduleDamage": "шкода по модулях",
+          "fire.moduleDamage": "шкода по модулям",
           "fire.shellVelocity": "швидкість польоту снаряда",
           "fire.shellRange": "дальність польоту",
           "fire.shellCapacity": "кількість снарядів",
@@ -250,7 +250,7 @@
           "maneuverability.forwardsSpeed": "максимальна швидкість вперед",
           "maneuverability.backwardsSpeed": "максимальна швидкість назад",
           "maneuverability.power": "потужність двигуна",
-          "maneuverability.powerToWeight": "притома потужність",
+          "maneuverability.powerToWeight": "питома потужність",
           "maneuverability.weight": "маса",
           "maneuverability.traverseSpeed": "швидкість повороту"
         },
@@ -349,25 +349,25 @@
         "randomize": "Рандомізувати"
       },
       "guess": {
-        "name": "Guess",
-        "button": "What could it be?",
-        "description": "Silhouette mini-game",
-        "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
+        "name": "Вгадайка",
+        "button": "Що це може бути?",
+        "description": "Мінігра Силует",
+        "seo_description": "Зіграти",
         "search": {
-          "placeholder": "Type to guess...",
+          "placeholder": "Час Відгадувати",
           "skip": "Пропустити",
-          "guess": "Guess",
+          "guess": "Відгадати",
           "next": "Наступний",
           "no_results": "Немає результатів"
         },
-        "stats": "{correct} / {total} correct, {streak} streak",
+        "stats": "{correct} / {total} відгадано, {streak} серія",
         "help": {
-          "title": "Partially reveal tank?",
-          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
-          "cancel": "",
-          "reveal": "Рівень"
+          "title": "Розкрити танк частково?",
+          "description": "Показує танк без назви. Цей раунд",
+          "cancel": "Скасувати",
+          "reveal": "Показати"
         },
-        "clear": "Clear",
+        "clear": "Очистити",
         "select_all": "Вибрати все",
         "tier": "Рівень {tier}"
       },
@@ -389,9 +389,9 @@
           "rotator": {
             "hull": "Корпус",
             "turret": "Башта",
-            "hard": "Жорстко",
-            "medium": "Середній",
-            "soft": "Ніжно",
+            "hard": "По дорозі",
+            "medium": "По ґрунту",
+            "soft": "По воді",
             "effective": "Ефективний"
           },
           "ricochet": {
@@ -437,7 +437,7 @@
           "dynamic": {
             "name": "Динамічна броня",
             "custom_shell": {
-              "type": "Вид",
+              "type": "Тип",
               "caliber": "Калібр",
               "penetration": "Бронепробиття",
               "normalization": "Нормалізація",
@@ -493,13 +493,13 @@
           "nation": "Нація",
           "class": "Клас",
           "tier": "Рівень",
-          "type": "Вид",
+          "type": "Тип",
           "dev_id": "DEV: ID",
           "dev_name": "DEV: NAME",
-          "purchase": "Purchase price",
+          "purchase": "Ціна покупки",
           "restoration": "Restoration price",
-          "sale": "Sale price",
-          "research": "Research XP"
+          "sale": "Ціна продажу",
+          "research": "Дослідження"
         },
         "tech_tree": {
           "title": "Звичайний",
@@ -511,7 +511,7 @@
           "title": "Здібності ігрового режиму"
         },
         "review": {
-          "title": "Review videos",
+          "title": "Відеоогляди",
           "join": "Apply to {name} YouTuber program"
         },
         "configuration": {
@@ -522,12 +522,12 @@
           },
           "modules": {
             "title": "Модулі",
-            "stock": "Stock",
-            "upgrade": "Upgrade"
+            "stock": "Базові",
+            "upgrade": "Топовий"
           },
           "equipment": {
             "title": "Обладнання",
-            "clear": "Clear"
+            "clear": "Очистити"
           },
           "provisions": {
             "title": "Амуніція",
@@ -553,88 +553,88 @@
           "compare": {
             "label": "Compare against",
             "class": "{tier} {class}",
-            "tier": "All tier {tier}",
+            "tier": "Весь рівень{tier}",
             "all": "Усі танки"
           },
           "values": {
             "shell_index": "Shell {index}",
             "at_distance": "At {distance}m",
             "at_distance_slider_label": "Відстань",
-            "dispersion_at_distance": "Dispersion at {distance}m",
-            "gun_flexibility": "Gun flexibility",
+            "dispersion_at_distance": "Розкид на {distance}м",
+            "gun_flexibility": "Кути наведення",
             "speed": "Швидкість",
-            "terrain_coefficients": "Terrain coefficients",
+            "terrain_coefficients": "Прохідність",
             "raw_terrain_coefficients": "Raw terrain coefficients",
-            "power_to_weight_ratio": "Power to weight ratio",
-            "hull_traverse_speed": "Hull traverse speed",
+            "power_to_weight_ratio": "Питома потужність",
+            "hull_traverse_speed": "Швидкість обертання корпуса",
             "camouflage": "Камуфляж",
             "reload": "Час перезаряджання",
-            "crewCount": "Crew count",
+            "crewCount": "Розмір екіпажу",
             "shellNormalization": "Нормалізація",
             "shellRicochet": "Рикошет",
             "dpm": "DPM",
             "dpmEffective": "Effective at 60s",
             "peekabooDpm": "Peekaboo DPM",
-            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
+            "peekabooDpmInfo": "Шкода на хвилину за умови пострілу тільки після повторного маскування (або після повного перезаряджання, якщо воно триваліше) — не менше 10 секунд між пострілами.",
             "shells": "Снаряди",
             "mostOptimalShellIndex": "Most optimal shell",
             "shellReloads": "Reloads",
             "shellReload": "Час перезаряджання",
-            "intraClip": "Intra-clip",
+            "intraClip": "Між пострілами",
             "caliber": "Калібр",
             "penetration": "Бронепробиття",
             "damage": "Шкода",
             "damageWithoutAssault": "Шкода без урахування золотих снарядів",
-            "clipDamage": "Clipping potential",
-            "moduleDamage": "Шкода по модулях",
+            "clipDamage": "Шкода за барабан",
+            "moduleDamage": "Шкода по модулям",
             "explosionRadius": "Радіус розльоту уламків",
             "shellVelocity": "Швидкість польоту снаряда",
             "aimTime": "Час зведення",
             "dispersion": "Нерухомо",
             "dispersionMoving": "У русі",
-            "dispersionHullTraversing": "Hull traversing",
+            "dispersionHullTraversing": "Обертання корпусу",
             "dispersionTurretTraversing": "Обертання башти",
-            "dispersionShooting": "Shooting",
-            "dispersionGunDamaged": "Gun damaged",
-            "gunDepression": "Depression",
-            "gunElevation": "Elevation",
-            "gunFrontalDepression": "Frontal depression",
-            "gunFrontalElevation": "Frontal elevation",
-            "gunRearDepression": "Rear depression",
-            "gunRearElevation": "Rear elevation",
+            "dispersionShooting": "Після пострілу",
+            "dispersionGunDamaged": "Гармата пошкоджена",
+            "gunDepression": "Вниз",
+            "gunElevation": "Вгору",
+            "gunFrontalDepression": "КВН вниз спереду",
+            "gunFrontalElevation": "КВН вгору спереду",
+            "gunRearDepression": "КВН вниз позаду",
+            "gunRearElevation": "КВН вгору позаду",
             "azimuthLeft": "Azimuth left",
             "azimuthRight": "Azimuth right",
-            "speedForwards": "Forwards",
-            "speedBackwards": "Backwards",
-            "hardTerrainCoefficient": "Hard",
-            "hardTerrainCoefficientRaw": "Hard",
-            "mediumTerrainCoefficient": "Середній",
-            "mediumTerrainCoefficientRaw": "Середній",
-            "softTerrainCoefficient": "Soft",
-            "softTerrainCoefficientRaw": "Soft",
-            "enginePower": "Engine power",
-            "powerToWeightRatioHardTerrain": "Hard",
-            "powerToWeightRatioMediumTerrain": "Середній",
-            "powerToWeightRatioSoftTerrain": "Soft",
+            "speedForwards": "Вперед",
+            "speedBackwards": "Назад",
+            "hardTerrainCoefficient": "По дорозі",
+            "hardTerrainCoefficientRaw": "По дорозі",
+            "mediumTerrainCoefficient": "По ґрунту",
+            "mediumTerrainCoefficientRaw": "По ґрунту",
+            "softTerrainCoefficient": "По воді",
+            "softTerrainCoefficientRaw": "По воді",
+            "enginePower": "Потужність двигуна",
+            "powerToWeightRatioHardTerrain": "По дорозі",
+            "powerToWeightRatioMediumTerrain": "По ґрунту",
+            "powerToWeightRatioSoftTerrain": "По воді",
             "weight": "Маса",
-            "turretTraverseSpeed": "Turret traverse speed",
+            "turretTraverseSpeed": "Швидкість обертання башти",
             "gunTraverseSpeed": "Gun traverse speed",
-            "hullTraverseHardTerrain": "Hard",
-            "hullTraverseMediumTerrain": "Середній",
-            "hullTraverseSoftTerrain": "Soft",
+            "hullTraverseHardTerrain": "Поворот корпусу на дорозі",
+            "hullTraverseMediumTerrain": "По ґрунту",
+            "hullTraverseSoftTerrain": "По воді",
             "health": "Здоров'я",
-            "fireChance": "Fire chance",
-            "trackRepairTime": "Track repair time",
-            "viewRange": "View range",
+            "fireChance": "Імовірність загоряння",
+            "trackRepairTime": "Час ремонту гусениці",
+            "viewRange": "Радіус огляду",
             "camouflageStill": "Нерухомо",
             "camouflageMoving": "У русі",
-            "camouflageShootingStill": "Нерухомо",
-            "camouflageShootingMoving": "У русі",
-            "camouflageCaughtOnFire": "Caught on fire",
+            "camouflageShootingStill": "Постріл в нерухомості",
+            "camouflageShootingMoving": "Постріл у русі",
+            "camouflageCaughtOnFire": "Під час загоряння",
             "width": "Ширина",
-            "height": "Height",
-            "length": "Length",
-            "volume": "Volume",
+            "height": "Висота",
+            "length": "Довжина",
+            "volume": "Об'єм",
             "shellRange": "Shell range",
             "shellCapacity": "Shell capacity",
             "gunType": "Тип гармати",
@@ -644,16 +644,16 @@
           }
         },
         "firepower": {
-          "title": "Firepower"
+          "title": "Вогнева міць"
         },
         "crew": {
-          "title": "Crew training",
-          "info": "represents the other roles a crew member can take.",
-          "count": "Crew count",
+          "title": "Майстерність екіпажу",
+          "info": "відображає інші ролі, які може виконувати член екіпажу.",
+          "count": "Розмір команди",
           "commander": "Командир",
           "gunner": "Навідник",
           "driver": "Водій",
-          "radioman": "Radioman",
+          "radioman": "Радист",
           "loader": "Заряджаючий"
         },
         "maneuverability": {
@@ -666,15 +666,15 @@
       "compare": {
         "name": "Порівняти",
         "button": "Порівняти танки",
-        "description": "Compare tank statistics",
+        "description": "Порівняти статистику танків",
         "seo_description": "Compare tanks statistics and loadouts in World of Tanks Blitz",
         "actions": {
           "add": {
             "button": "Додати",
-            "title": "Add tanks",
-            "description": "Select tanks to add to comparison"
+            "title": "Додати танки",
+            "description": "Виберіть танки, щоб додати для порівняння"
           },
-          "clear": "Clear",
+          "clear": "Очистити",
           "deltas": {
             "none": "No deltas",
             "percentage": "Відсоток",
@@ -687,7 +687,7 @@
         },
         "table": {
           "equipment": {
-            "clear": "Clear",
+            "clear": "Очистити",
             "apply_to_all": "Apply to all"
           },
           "skills": {
@@ -696,8 +696,8 @@
             "equalize": "Equalize"
           },
           "modules": {
-            "stock": "Stock",
-            "upgrade": "Upgrade"
+            "stock": "Базові",
+            "upgrade": "Топовий"
           },
           "provisions": {
             "clear": "Clear this tank",
@@ -710,9 +710,9 @@
         }
       },
       "performance": {
-        "name": "Performance",
+        "name": "Результативність",
         "button": "Переглянути танки",
-        "description": "Tank performance statistics",
+        "description": "Статистика Результативності танків",
         "seo_description": "Best tanks and their performances in World of Tanks Blitz",
         "estimation": {
           "body": "Estimated stats based on {count} players. Updated {age} ago.",
@@ -720,7 +720,7 @@
           "minutes": "{count} minutes"
         },
         "player_count": {
-          "label": "Player count"
+          "label": "Кількість гравців"
         },
         "table": {
           "tanks": {
@@ -738,8 +738,8 @@
             "accuracy": "Точність",
             "shots": "Постріли",
             "hits": "Пробиття",
-            "damage_ratio": "Dmg. ratio",
-            "damage_taken": "Dmg. taken",
+            "damage_ratio": "Коефіцієнт шкоди",
+            "damage_taken": "Шкоди отримано",
             "capture_points": "Cap points"
           }
         }
@@ -849,7 +849,7 @@
             "name": "Breakdown",
             "options": {
               "width": "Ширина",
-              "height": "Height",
+              "height": "Висота",
               "showTotal": "Show total",
               "listGap": "List gap",
               "listMaxTanks": "Max tanks",
@@ -920,7 +920,7 @@
     },
     "footer": {
       "motto": "Everything World of Tanks Blitz",
-      "copyright": "Unaffiliated with Wargaming or any service",
+      "association": "An Open Collective Project",
       "about": {
         "title": "About",
         "discord": "Discord",
