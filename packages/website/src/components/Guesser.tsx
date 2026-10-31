@@ -19,8 +19,15 @@ import { awaitableTiers } from "../core/awaitables/tiers";
 import { useStrings } from "../hooks/useStrings";
 import { useUnwrapper } from "../hooks/useUnwrapper";
 import { Guess, GuessState } from "../stores/guess";
+import { AlertDialog } from "./AlertDialog";
+import { Button } from "./Button";
 import { ClassIcon } from "./ClassIcon";
+import { DropdownMenu } from "./DropdownMenu";
+import { IconButton } from "./IconButton";
 import { SearchResults } from "./SearchResults";
+import { Spinner } from "./Spinner";
+import { Text } from "./Text";
+import { TextField } from "./TextField";
 
 const { go } = fuzzysort;
 
@@ -98,7 +105,7 @@ export function Guesser() {
   }, [correctGuesses, totalGuesses, streak]);
 
   return (
-    <Flex
+    <div
       direction="column"
       position="absolute"
       bottom="0"
@@ -109,14 +116,14 @@ export function Guesser() {
       maxWidth="25rem"
       gap="3"
     >
-      <Box position="relative">
+      <div position="relative">
         {results !== null && (
           <Card variant="classic">
-            <Box py="2" px="3">
+            <div py="2" px="3">
               {results.length === 0 && (
-                <Flex justify="center">
+                <div justify="center">
                   <Text color="gray">{strings.common.search.no_results}</Text>
-                </Flex>
+                </div>
               )}
 
               <SearchResults.Root>
@@ -142,7 +149,7 @@ export function Guesser() {
                         />
                       }
                       discriminator={
-                        <Flex
+                        <div
                           align="center"
                           gap="1"
                           width="38px"
@@ -154,22 +161,22 @@ export function Guesser() {
                             height="1em"
                           />
                           {romanize(result.tier)}
-                        </Flex>
+                        </div>
                       }
                     />
                   );
                 })}
               </SearchResults.Root>
-            </Box>
+            </div>
           </Card>
         )}
-      </Box>
+      </div>
 
-      <Flex justify="center" style={{ userSelect: "none" }}>
+      <div justify="center" style={{ userSelect: "none" }}>
         <Text ref={status} />
-      </Flex>
+      </div>
 
-      <Flex gap={{ initial: "2", sm: "3" }}>
+      <div gap={{ initial: "2", sm: "3" }}>
         <DropdownMenu.Root modal={false}>
           <DropdownMenu.Trigger>
             <IconButton
@@ -240,7 +247,7 @@ export function Guesser() {
           </DropdownMenu.Content>
         </DropdownMenu.Root>
 
-        <TextField.Root
+        <TextField
           disabled={guessState !== GuessState.NotGuessed}
           ref={input}
           onChange={requestSearch}
@@ -249,10 +256,8 @@ export function Guesser() {
           size={{ initial: "2", sm: "3" }}
           variant="classic"
         >
-          <TextField.Slot>
-            {searching ? <Spinner /> : <MagnifyingGlassIcon />}
-          </TextField.Slot>
-        </TextField.Root>
+          {searching ? <Spinner /> : <MagnifyingGlassIcon />}
+        </TextField>
 
         <AlertDialog.Root>
           <AlertDialog.Trigger>
@@ -270,7 +275,7 @@ export function Guesser() {
               {strings.guesser.help.description}
             </AlertDialog.Description>
 
-            <Flex justify="end" gap="2">
+            <div justify="end" gap="2">
               <AlertDialog.Cancel>
                 <Button variant="outline">{strings.guesser.help.cancel}</Button>
               </AlertDialog.Cancel>
@@ -288,7 +293,7 @@ export function Guesser() {
                   {strings.guesser.help.reveal}
                 </Button>
               </AlertDialog.Action>
-            </Flex>
+            </div>
           </AlertDialog.Content>
         </AlertDialog.Root>
 
@@ -347,7 +352,7 @@ export function Guesser() {
             </>
           )}
         </Button>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 }
