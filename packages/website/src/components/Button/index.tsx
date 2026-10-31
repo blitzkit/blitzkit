@@ -39,7 +39,6 @@ export function Button({
 
   listChild,
   parentListChild,
-  disabled,
   highContrast,
   ...props
 }: ButtonProps) {
@@ -54,8 +53,6 @@ export function Button({
       data-list-child={listChild}
       data-parent-list-child={parentListChild}
       data-high-contrast={highContrast}
-      data-disabled={disabled}
-      disabled={disabled}
       {...props}
     />
   );

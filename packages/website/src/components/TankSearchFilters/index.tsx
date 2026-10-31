@@ -153,7 +153,7 @@ const TIERS = await awaitableTiers;
 
 export function TankSearchFilters() {
   return (
-    <Flex gap="3" wrap>
+    <div className={styles.filters}>
       <TiersFilter />
       <ClassFilter />
       <TypeFilter />
@@ -163,14 +163,14 @@ export function TankSearchFilters() {
       <TestFilter />
 
       <GunTypeFilter />
-      <ShellFilter />
+      {/* <ShellFilter />
 
       <ConsumablesFilter />
       <ProvisionsFilter />
       <GameModeAbilitiesFilter />
 
-      <ResetButton />
-    </Flex>
+      <ResetButton /> */}
+    </div>
   );
 }
 
@@ -196,7 +196,7 @@ function TiersFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
+        <Button color="gray" variant="soft">
           {tiers
             .slice(0, MAX_ICONS)
             .map((tier) => romanize(tier))
@@ -272,16 +272,14 @@ function NationsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {nations.map((nation) => (
-              <img
-                className={styles.icon}
-                key={nation}
-                src={alias("api", `/flags/circle/${nation}.webp`)}
-              />
-            ))}
-          </Flex>
+        <Button color="gray" variant="soft">
+          {nations.map((nation) => (
+            <img
+              className={styles.icon}
+              key={nation}
+              src={alias("api", `/flags/circle/${nation}.webp`)}
+            />
+          ))}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -355,18 +353,16 @@ function ClassFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {classes.map((tankClass, index) => {
-              return (
-                <ClassIcon
-                  key={tankClass}
-                  class={tankClass}
-                  className={styles.icon}
-                />
-              );
-            })}
-          </Flex>
+        <Button color="gray" variant="soft">
+          {classes.map((tankClass) => {
+            return (
+              <ClassIcon
+                key={tankClass}
+                class={tankClass}
+                className={styles.icon}
+              />
+            );
+          })}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -435,24 +431,17 @@ function GunTypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          <Flex>
-            {gunTypes.map((gunType) => {
-              return (
-                <GunTypeIcon
-                  key={gunType}
-                  type={gunType}
-                  style={{
-                    margin: gunType === "regular" ? "0 -0.125em" : undefined,
-                    opacity: 1,
-                    color: "var(--gray-12)",
-                    width: "1.25em",
-                    height: "1.25em",
-                  }}
-                />
-              );
-            })}
-          </Flex>
+        <Button color="gray" variant="soft">
+          {gunTypes.map((gunType) => {
+            return (
+              <GunTypeIcon
+                key={gunType}
+                type={gunType}
+                data-no-overlap
+                className={styles.icon}
+              />
+            );
+          })}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -476,12 +465,13 @@ function GunTypeFilter() {
               checked={selected}
               key={gunType}
             >
-              <GunTypeIcon
-                type={gunType}
-                style={{ width: "1.25em", height: "1.25em" }}
-              />
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
 
               {strings.common.gun_types[gunType]}
+
+              <GunTypeIcon type={gunType} />
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -498,8 +488,9 @@ function GunTypeFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -514,22 +505,21 @@ function TypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button color="gray" variant="surface">
-          <Flex gap="1">
-            {types.map((tankType) => {
-              return (
-                <ResearchedIcon
-                  style={{
-                    color: `var(--${TANK_TYPE_COLORS[tankType]}-${
-                      tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
-                    })`,
-                  }}
-                  className={styles.icon}
-                  key={tankType}
-                />
-              );
-            })}
-          </Flex>
+        <Button color="gray" variant="soft">
+          {types.map((tankType) => {
+            return (
+              <ResearchedIcon
+                style={{
+                  color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                    tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
+                  })`,
+                }}
+                data-no-overlap
+                className={styles.icon}
+                key={tankType}
+              />
+            );
+          })}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -730,10 +720,11 @@ function OwnershipFilterInternal() {
           borderTopRightRadius: 0,
           borderBottomRightRadius: 0,
         }}
-        listChild
+        listChild="horizontal"
         disabled={!wargaming}
-        variant={showOwned ? "solid" : "surface"}
+        variant={showOwned ? "solid" : "soft"}
         color={showOwned ? undefined : "gray"}
+        highContrast={showOwned}
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showOwned = !draft.showOwned;
@@ -750,10 +741,11 @@ function OwnershipFilterInternal() {
           borderBottomLeftRadius: 0,
           marginLeft: "-1px",
         }}
-        listChild
+        listChild="horizontal"
         disabled={!wargaming}
-        variant={showUnowned ? "solid" : "surface"}
+        variant={showUnowned ? "solid" : "soft"}
         color={showUnowned ? undefined : "gray"}
+        highContrast={showUnowned}
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showUnowned = !draft.showUnowned;
@@ -772,15 +764,16 @@ function TestFilter() {
   const showNonTesting = TankFilters.use((state) => state.showNonTesting);
 
   return (
-    <Flex>
+    <div className={styles.grouped}>
       <IconButton
         style={{
           borderTopRightRadius: 0,
           borderBottomRightRadius: 0,
         }}
-        variant={showNonTesting ? "solid" : "surface"}
+        variant={showNonTesting ? "solid" : "soft"}
         color={showNonTesting ? undefined : "gray"}
-        listChild
+        highContrast={showNonTesting}
+        listChild="horizontal"
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showNonTesting = !draft.showNonTesting;
@@ -799,9 +792,10 @@ function TestFilter() {
           borderBottomLeftRadius: 0,
           marginLeft: "-1px",
         }}
-        variant={showTesting ? "solid" : "surface"}
+        variant={showTesting ? "solid" : "soft"}
         color={showTesting ? undefined : "gray"}
-        listChild
+        highContrast={showTesting}
+        listChild="horizontal"
         onClick={() => {
           TankFilters.mutate((draft) => {
             draft.showTesting = !draft.showTesting;
@@ -813,7 +807,7 @@ function TestFilter() {
           style={{ width: "1em", height: "1em", color: "currentColor" }}
         />
       </IconButton>
-    </Flex>
+    </div>
   );
 }
 
@@ -828,23 +822,21 @@ function ConsumablesFilter() {
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="surface">
-          <Flex>
-            {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
-              <img
-                key={consumable}
-                className={styles.icon}
-                src={alias("api", `/icons/consumables/${consumable}.webp`)}
-              />
-            ))}
+          {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
+            <img
+              key={consumable}
+              className={styles.icon}
+              src={alias("api", `/icons/consumables/${consumable}.webp`)}
+            />
+          ))}
 
-            {consumables.length > MAX_ICONS && (
-              <span className={styles.plus}>
-                {literals(strings.common.units.plus, {
-                  value: consumables.length - MAX_ICONS,
-                })}
-              </span>
-            )}
-          </Flex>
+          {consumables.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: consumables.length - MAX_ICONS,
+              })}
+            </span>
+          )}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -917,23 +909,21 @@ function ProvisionsFilter() {
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="surface">
-          <Flex>
-            {provisions.slice(0, MAX_ICONS).map((provision, index) => (
-              <img
-                key={provision}
-                className={styles.icon}
-                src={alias("api", `/icons/provisions/${provision}.webp`)}
-              />
-            ))}
+          {provisions.slice(0, MAX_ICONS).map((provision, index) => (
+            <img
+              key={provision}
+              className={styles.icon}
+              src={alias("api", `/icons/provisions/${provision}.webp`)}
+            />
+          ))}
 
-            {provisions.length > MAX_ICONS && (
-              <span className={styles.plus}>
-                {literals(strings.common.units.plus, {
-                  value: provisions.length - MAX_ICONS,
-                })}
-              </span>
-            )}
-          </Flex>
+          {provisions.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: provisions.length - MAX_ICONS,
+              })}
+            </span>
+          )}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -1021,19 +1011,17 @@ function GameModeAbilitiesFilter() {
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="surface">
-          <Flex>
-            {icons.slice(0, MAX_ICONS).map((icon, index) => (
-              <img key={icon} className={styles.icon} src={icon} />
-            ))}
+          {icons.slice(0, MAX_ICONS).map((icon, index) => (
+            <img key={icon} className={styles.icon} src={icon} />
+          ))}
 
-            {icons.length > MAX_ICONS && (
-              <span className={styles.plus}>
-                {literals(strings.common.units.plus, {
-                  value: icons.length - MAX_ICONS,
-                })}
-              </span>
-            )}
-          </Flex>
+          {icons.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: icons.length - MAX_ICONS,
+              })}
+            </span>
+          )}
         </Button>
       </DropdownMenu.Trigger>
 

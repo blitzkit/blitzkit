@@ -1,25 +1,39 @@
-.nation {
-  .flag {
-    position: absolute;
-    top: 0;
-    right: 0;
+.filters {
+  display: flex;
 
-    width: var(--space-7);
-    height: 100%;
+  gap: var(--space-3);
 
-    background-size: 200%;
-    background-position: 0% 50%;
+  .nation {
+    .flag {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      width: var(--space-7);
+      height: 100%;
+
+      background-size: 200%;
+      background-position: 0% 50%;
+    }
   }
-}
 
-.plus {
-  color: var(--gray-11);
-}
+  .plus {
+    color: var(--gray-11);
+  }
 
-.icon {
-  filter: drop-shadow(var(--shadow-icon));
+  .icon {
+    filter: drop-shadow(var(--shadow-icon));
 
-  & + & {
-    margin-left: -0.5em;
+    & + &:not([data-no-overlap]) {
+      margin-left: calc(-0.5em - var(--space-3));
+    }
+
+    &[data-no-overlap] {
+      margin: 0 calc(-1 * var(--space-1));
+    }
+  }
+
+  .grouped {
+    display: flex;
   }
 }

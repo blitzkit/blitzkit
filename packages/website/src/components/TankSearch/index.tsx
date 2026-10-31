@@ -206,7 +206,7 @@ export const TankSearch = memo<TankSearchProps>(
     });
 
     return (
-      <Flex className={styles.container} column gap="4">
+      <div className={styles.container}>
         <TankSearchBar
           skeleton={skeleton}
           topResult={sorted[0]}
@@ -288,7 +288,7 @@ export const TankSearch = memo<TankSearchProps>(
         {!skeleton && sorted.length === 0 && (
           <TankSearchNoResults type="search" />
         )}
-      </Flex>
+      </div>
     );
   },
 );

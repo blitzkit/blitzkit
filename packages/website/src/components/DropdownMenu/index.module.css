@@ -52,6 +52,9 @@
 
     img,
     svg {
+      width: 1em;
+      height: 1em;
+
       &:last-child {
         margin-left: auto;
       }
@@ -65,12 +68,6 @@
       display: flex;
 
       transform: translate(calc(-50% + var(--gutter) / 2), -50%);
-
-      img,
-      svg {
-        width: 1em;
-        height: 1em;
-      }
     }
   }
 }

@@ -16,11 +16,6 @@
 
   cursor: pointer;
 
-  &[data-disabled="true"] {
-    cursor: default;
-    opacity: 0.5;
-  }
-
   &[data-size="minor"] {
     font-size: 0.7em;
     padding: var(--space-2) var(--space-3);
@@ -67,6 +62,8 @@
     width: 1.25em;
     height: 1.25em;
 
+    margin: -0.25em 0;
+
     object-fit: contain;
   }
 
@@ -78,6 +75,7 @@
     background-color: var(--accent-8);
 
     &[data-high-contrast="true"] {
+      color: var(--accent-1);
       background-color: var(--accent-12);
     }
   }
@@ -110,5 +108,11 @@
     &[data-high-contrast="true"] {
       outline: var(--space-1) solid var(--accent-11);
     }
+  }
+
+  &[disabled] {
+    cursor: default;
+    opacity: 0.5;
+    outline: none;
   }
 }
