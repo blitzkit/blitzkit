@@ -193,7 +193,7 @@ function TiersFilter() {
   const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
 
   return (
-    <DropdownMenu.Root open modal={false}>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button size="minor" color="gray" variant="surface">
           <Flex gap="1">
@@ -298,6 +298,7 @@ function NationsFilter() {
 
           return (
             <DropdownMenu.CheckboxItem
+              className={styles.nation}
               onClick={(event) => {
                 event.preventDefault();
 
@@ -311,21 +312,23 @@ function NationsFilter() {
               }}
               checked={selected}
               key={nation}
-              style={{
-                position: "relative",
-              }}
             >
-              <div className={styles["nation-option"]}>
-                <div className={styles.overlay} />
-              </div>
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
 
-              <Text style={{ zIndex: 1 }}>
-                {
-                  strings.common.nations[
-                    nation as keyof typeof strings.common.nations
-                  ]
-                }
-              </Text>
+              <div
+                className={styles.flag}
+                style={{
+                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
+                }}
+              />
+
+              {
+                strings.common.nations[
+                  nation as keyof typeof strings.common.nations
+                ]
+              }
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -342,8 +345,9 @@ function NationsFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -402,12 +406,16 @@ function ClassFilter() {
               }}
               checked={selected}
             >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {strings.common.tank_class_medium[tankClass]}
+
               <ClassIcon
                 class={tankClass}
                 style={{ width: "1.25em", height: "1.25em" }}
               />
-
-              {strings.common.tank_class_medium[tankClass]}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -424,8 +432,9 @@ function ClassFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
@@ -561,6 +570,12 @@ function TypeFilter() {
               checked={selected}
               key={tankType}
             >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {strings.common.tree_type[tankType]}
+
               <ResearchedIcon
                 style={{
                   color: `var(--${TANK_TYPE_COLORS[tankType]}-${
@@ -571,8 +586,6 @@ function TypeFilter() {
                   height: "1.25em",
                 }}
               />
-
-              {strings.common.tree_type[tankType]}
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -589,8 +602,9 @@ function TypeFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
