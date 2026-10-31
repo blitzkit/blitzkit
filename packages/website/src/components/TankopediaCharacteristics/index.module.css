@@ -53,19 +53,6 @@
         .center {
           flex: 1;
           padding: var(--space-3);
-
-          .text {
-            .align {
-              display: flex;
-              align-items: center;
-              gap: var(--space-3);
-
-              img {
-                width: 1em;
-                height: 1em;
-              }
-            }
-          }
         }
       }
 

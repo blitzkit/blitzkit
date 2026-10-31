@@ -8,7 +8,7 @@ import type { ExternalModuleVariant } from "../components/SpacedArmorSceneCompon
 import { createTankState } from "../tankopedia/createTankState";
 import type { TankState } from "../tankopedia/tankState";
 import { App } from "./app";
-import type { TankopediaDisplay } from "./tankopediaPersistent/constants";
+import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
   index: number;
@@ -133,6 +133,10 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
     relative_against: TankopediaRelativeAgainst.ClassAndTier,
 
     loaders: {
+      display: {
+        requested: TankopediaDisplay.Model,
+        loaded: TankopediaDisplay.Model,
+      },
       model: { requested: App.state.autoLoadModels, loaded: false },
       skin: { requested: undefined, loaded: undefined },
       attachment: { requested: undefined, loaded: undefined },

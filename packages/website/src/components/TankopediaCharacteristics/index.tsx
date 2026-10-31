@@ -88,15 +88,12 @@ function Group({ group, characteristics, rankings }: GroupProps) {
     >
       <div className={styles.title}>
         <div className={styles.center}>
-          <Heading size="3" className={styles.text}>
-            <div className={styles.align}>
-              {
-                (
-                  strings.tanks.characteristics.titles as Record<string, string>
-                )[group.name]
-              }
-              <img src={`/media/groups/${group.name}.png`} />
-            </div>
+          <Heading size="3">
+            {
+              (strings.tanks.characteristics.titles as Record<string, string>)[
+                group.name
+              ]
+            }
           </Heading>
         </div>
       </div>
