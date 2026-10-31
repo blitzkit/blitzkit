@@ -99,6 +99,7 @@ type HighlightArmor = {
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
+  showControls: boolean;
 
   protagonist: TankState;
   antagonist: TankState;
@@ -129,6 +130,7 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
   (tank) => ({
     disturbed: false,
     revealed: false,
+    showControls: false,
 
     protagonist: createTankState(tank),
     antagonist: createTankState(tank),

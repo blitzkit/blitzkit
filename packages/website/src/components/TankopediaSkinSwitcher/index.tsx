@@ -18,10 +18,8 @@ export function TankopediaSkinSwitcher() {
   const tank = useDuel("protagonist", DuelModule.Tank);
 
   const skin = Tankopedia.use((state) => state.loaders.skin.requested);
-  const requestedDisplay = Tankopedia.use(
-    (state) => state.loaders.display.requested,
-  );
-  const revealed = Tankopedia.use((state) => state.revealed);
+  const showControls = Tankopedia.use((state) => state.showControls);
+  const display = Tankopedia.use((state) => state.loaders.display.loaded);
 
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
@@ -37,11 +35,10 @@ export function TankopediaSkinSwitcher() {
     skins.filter((camouflage) => camouflage.attachment),
   ].filter((group) => group.length > 0);
 
+  const isVisible = showControls && display === TankopediaDisplay.Model;
+
   return (
-    <div
-      className={styles["skin-switcher"]}
-      data-visible={revealed && requestedDisplay === TankopediaDisplay.Model}
-    >
+    <div className={styles["skin-switcher"]} data-visible={isVisible}>
       {groups.map((group, index) => (
         <div className={styles.group} key={index}>
           {group.map((camouflage) => {

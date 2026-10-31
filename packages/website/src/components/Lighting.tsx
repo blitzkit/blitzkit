@@ -45,7 +45,9 @@ export function Lighting({ hasPbr }: Props) {
   const wrapper = useRef<Group>(null);
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+  const requestedDisplay = Tankopedia.use(
+    (state) => state.loaders.display.requested,
+  );
   const revealed = Tankopedia.use((state) => state.revealed);
   const skinPending = Tankopedia.use(
     (state) =>
@@ -64,6 +66,7 @@ export function Lighting({ hasPbr }: Props) {
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {
+      draft.showControls = true;
       draft.revealed = true;
       draft.loaders.model.loaded = true;
     });
@@ -200,8 +203,10 @@ function Animator({
   wrapper,
   hasPbr,
 }: AnimatorProps) {
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
-  const display = Tankopedia.use((state) => state.display);
+  const requestedDisplay = Tankopedia.use(
+    (state) => state.loaders.display.requested,
+  );
+  const display = Tankopedia.use((state) => state.loaders.display.loaded);
 
   const factor =
     !hasPbr && display !== TankopediaDisplay.StaticArmor ? NON_PBR_FACTOR : 1;
@@ -248,9 +253,12 @@ function Animator({
 
     invalidate();
 
-    if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
+    if (
+      x >= 1 &&
+      Tankopedia.state.loaders.display.loaded !== requestedDisplay
+    ) {
       Tankopedia.mutate((draft) => {
-        draft.display = requestedDisplay;
+        draft.loaders.display.loaded = requestedDisplay;
       });
     }
   });

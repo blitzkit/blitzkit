@@ -1,47 +1,16 @@
-import { uniqueGuns } from "@blitzkit/core";
-import { useState } from "react";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
-import { useEquipment } from "../../hooks/useEquipment";
-import { useFullScreen } from "../../hooks/useFullScreen";
-import { useFullscreenAvailability } from "../../hooks/useFullscreenAvailability";
-import { useStrings } from "../../hooks/useStrings";
-import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
-import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
 import { SegmentedControl } from "../SegmentedControl";
 import styles from "./index.module.css";
 
 export function TankopediaOptions() {
-  const strings = useStrings();
-  const unwrap = useUnwrapper();
-
-  const hasCustomShell = Tankopedia.use(
-    (state) => state.customShell !== undefined,
+  const requestedDisplay = Tankopedia.use(
+    (state) => state.loaders.display.requested,
   );
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
-  const isFullScreen = useFullScreen();
-  const advancedHighlighting = TankopediaPersistent.use(
-    (state) => state.advancedHighlighting,
-  );
-  const fullScreenAvailable = useFullscreenAvailability(true);
-  const protagonistTank = useDuel("protagonist", DuelModule.Tank);
-  const antagonistGun = useDuel("antagonist", DuelModule.Gun);
-  const antagonistShell = useDuel("antagonist", DuelModule.Shell);
-  const [antagonistSelectorOpen, setAntagonistSelectorOpen] = useState(false);
-  const antagonistTank = useDuel("antagonist", DuelModule.Tank);
-  const hasCalibratedShells = useEquipment("protagonist", 103);
-  const [tab, setTab] = useState("search");
-  const hasEnhancedArmor = useEquipment("protagonist", 110);
-  const antagonistUniqueGuns = uniqueGuns(antagonistTank.turrets);
-  const revealed = Tankopedia.use((state) => state.revealed);
-  const disturbed = Tankopedia.use((state) => state.disturbed);
-  const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
-  const equalize = Tankopedia.use((state) => state.environment.equalize);
+  const isVisible = Tankopedia.use((state) => state.showControls);
 
   return (
-    <div className={styles.options} data-visible={revealed}>
+    <div className={styles.options} data-visible={isVisible}>
       {/* <div className={styles.controls}>
         {disturbed && (
           <>
@@ -140,11 +109,11 @@ export function TankopediaOptions() {
         )}
       </div> */}
 
-      <div gap="3" align="center" mt="2">
+      <div>
         <SegmentedControl
           onValueChange={(value) => {
             Tankopedia.mutate((draft) => {
-              draft.requestedDisplay = Number(value);
+              draft.loaders.display.requested = Number(value);
             });
           }}
           value={`${requestedDisplay}`}
