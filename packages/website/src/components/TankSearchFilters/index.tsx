@@ -392,10 +392,7 @@ function ClassFilter() {
 
               {strings.common.tank_class_medium[tankClass]}
 
-              <ClassIcon
-                class={tankClass}
-                style={{ width: "1.25em", height: "1.25em" }}
-              />
+              <ClassIcon class={tankClass} />
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -552,9 +549,6 @@ function TypeFilter() {
                   color: `var(--${TANK_TYPE_COLORS[tankType]}-${
                     tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
                   })`,
-                  opacity: 1,
-                  width: "1.25em",
-                  height: "1.25em",
                 }}
               />
             </DropdownMenu.CheckboxItem>
@@ -716,10 +710,6 @@ function OwnershipFilterInternal() {
   return (
     <div className={styles.grouped}>
       <IconButton
-        style={{
-          borderTopRightRadius: 0,
-          borderBottomRightRadius: 0,
-        }}
         listChild="horizontal"
         disabled={!wargaming}
         variant={showOwned ? "solid" : "soft"}
@@ -736,11 +726,6 @@ function OwnershipFilterInternal() {
       </IconButton>
 
       <IconButton
-        style={{
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          marginLeft: "-1px",
-        }}
         listChild="horizontal"
         disabled={!wargaming}
         variant={showUnowned ? "solid" : "soft"}
@@ -766,10 +751,6 @@ function TestFilter() {
   return (
     <div className={styles.grouped}>
       <IconButton
-        style={{
-          borderTopRightRadius: 0,
-          borderBottomRightRadius: 0,
-        }}
         variant={showNonTesting ? "solid" : "soft"}
         color={showNonTesting ? undefined : "gray"}
         highContrast={showNonTesting}
@@ -781,17 +762,10 @@ function TestFilter() {
           });
         }}
       >
-        <ScienceOffIcon
-          style={{ width: "1em", height: "1em", color: "currentColor" }}
-        />
+        <ScienceOffIcon />
       </IconButton>
 
       <IconButton
-        style={{
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          marginLeft: "-1px",
-        }}
         variant={showTesting ? "solid" : "soft"}
         color={showTesting ? undefined : "gray"}
         highContrast={showTesting}
@@ -803,9 +777,7 @@ function TestFilter() {
           });
         }}
       >
-        <ScienceIcon
-          style={{ width: "1em", height: "1em", color: "currentColor" }}
-        />
+        <ScienceIcon />
       </IconButton>
     </div>
   );
