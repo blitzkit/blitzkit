@@ -2,8 +2,8 @@ import type {
   GunDefinition,
   TankDefinition,
   TurretDefinition,
-} from "@blitzkit/core";
-import { Varuna } from "varuna";
+} from "@blitzkit/protos";
+import { Soapstone } from "soapstone";
 
 export interface Mixer {
   hull: TankDefinition;
@@ -18,4 +18,4 @@ export interface Mixer {
   };
 }
 
-export const Mixer = new Varuna<Mixer, Mixer>((data) => data);
+export const Mixer = new Soapstone<Mixer, [Mixer]>((data) => data);

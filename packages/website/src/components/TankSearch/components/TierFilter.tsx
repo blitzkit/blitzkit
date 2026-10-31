@@ -1,4 +1,4 @@
-import { TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { romanize } from "@blitzkit/core";
 import { Flex, IconButton, Text } from "@radix-ui/themes";
 import { memo } from "react";
 import { awaitableTiers } from "../../../core/awaitables/tiers";
@@ -12,7 +12,9 @@ export const TierFilter = memo(() => {
   const search = TankFilters.use((state) => state.search);
   const tiers = TankFilters.use((state) => state.tiers);
 
-  if (by !== "meta.none" || search) return null;
+  if (by !== null || search) {
+    return null;
+  }
 
   return (
     <Flex justify="center">
@@ -41,7 +43,7 @@ export const TierFilter = memo(() => {
                 });
               }}
             >
-              <Text size="2">{TIER_ROMAN_NUMERALS[tier]}</Text>
+              <Text size="2">{romanize(tier)}</Text>
             </IconButton>
           );
         })}

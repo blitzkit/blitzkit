@@ -1,16 +1,18 @@
 import {
   alias,
-  EngineDefinition,
   formatCompact,
+  tankIcon,
+  romanize,
+} from "@blitzkit/core";
+import {
+  EngineDefinition,
   GunDefinition,
   ModuleType,
-  tankIcon,
-  TIER_ROMAN_NUMERALS,
   TrackDefinition,
   TurretDefinition,
   type TankDefinition,
   type Unlock,
-} from "@blitzkit/core";
+} from "@blitzkit/protos";
 import {
   Button,
   ChevronDownIcon,
@@ -20,7 +22,7 @@ import {
   Text,
   Tooltip,
 } from "@radix-ui/themes";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { LinkI18n } from "../../../LinkI18n";
@@ -91,7 +93,7 @@ function ModuleButton({
           top: isTank ? 8 : 4,
         }}
       >
-        {TIER_ROMAN_NUMERALS[tier]}
+        {romanize(tier)}
       </Text>
 
       {unlock.cost!.value > 0 && (
@@ -156,7 +158,7 @@ function ModuleButton({
   return <Tooltip content={tooltip}>{node}</Tooltip>;
 }
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function Modules() {
   const tank = Duel.use((state) => state.protagonist.tank);

@@ -1,0 +1,81 @@
+import locales from "@blitzkit/i18n/locales.json";
+import { literals } from "@blitzkit/i18n/src/literals";
+import fuzzysort from "fuzzysort";
+import { times } from "lodash-es";
+import { useMemo, useState } from "react";
+import { api } from "../../api/dynamic";
+import { useLocale } from "../../hooks/useLocale";
+import { Gallery } from "../../stores/gallery";
+import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
+import { AvatarCard } from "../AvatarCard";
+import { Flex } from "../Flex";
+import { InlineSkeleton } from "../InlineSkeleton";
+import { Text } from "../Text";
+
+export interface Avatar {
+  name: string;
+  id: string;
+}
+
+const gallery = await api.gallery();
+
+const DEFAULT_LOADED = 42;
+const PREVIEW_COUNT = 28;
+
+export function AvatarsList({ skeleton }: MaybeSkeletonComponentProps) {
+  const search = Gallery.use((state) => state.search);
+  const [loadedCards, setLoadedCards] = useState(DEFAULT_LOADED);
+  const { locale, strings } = useLocale();
+  const filtered = useMemo(() => {
+    setLoadedCards(DEFAULT_LOADED);
+
+    if (search === undefined) {
+      return gallery.avatars;
+    } else {
+      return fuzzysort
+        .go(search, gallery.avatars, {
+          keys: [
+            ...locales.supported.map(
+              (supported) => `name.locales.${supported.locale}`,
+            ),
+            "id",
+          ],
+        })
+        .map((result) => result.obj);
+    }
+  }, [search]);
+
+  return (
+    <>
+      <Text align="center" color="gray">
+        {skeleton ? (
+          <InlineSkeleton />
+        ) : (
+          literals(strings.website.tools.avatars.search.results, {
+            count: filtered.length.toLocaleString(locale),
+          })
+        )}
+      </Text>
+
+      <Flex wrap="wrap" gap="4" justify="center">
+        {!skeleton &&
+          filtered
+            .slice(0, loadedCards)
+            .map((avatar) => <AvatarCard key={avatar.id} avatar={avatar} />)}
+
+        {times(
+          skeleton
+            ? DEFAULT_LOADED + PREVIEW_COUNT
+            : Math.min(PREVIEW_COUNT, filtered.length - loadedCards),
+          (index) => (
+            <AvatarCard
+              key={index}
+              skeleton
+              onIntersection={() => setLoadedCards((state) => state + 2)}
+            />
+          ),
+        )}
+      </Flex>
+    </>
+  );
+}

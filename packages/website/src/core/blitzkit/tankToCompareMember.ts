@@ -1,7 +1,7 @@
-import type { ProvisionDefinitions, TankDefinition } from '@blitzkit/core';
-import { uniqueId } from 'lodash-es';
-import type { CompareMember } from '../../stores/compareEphemeral';
-import { tankToDuelMember } from './tankToDuelMember';
+import type { ProvisionDefinitions, TankDefinition } from "@blitzkit/protos";
+import { uniqueId } from "lodash-es";
+import type { CompareMember } from "../../stores/compareEphemeral";
+import { tankToDuelMember } from "./tankToDuelMember";
 
 export function tankToCompareMember(
   tank: TankDefinition,

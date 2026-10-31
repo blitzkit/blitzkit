@@ -1,11 +1,12 @@
-import { getTankStats, idToRegion, TankDefinition } from "@blitzkit/core";
+import { getTankStats, idToRegion } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { TankFilters } from "../../stores/tankFilters";
 import { filterTank } from "./filterTank";
 
 export async function filterTanks(
   filters: TankFilters,
   tanks: TankDefinition[],
-  player?: number
+  player?: number,
 ) {
   const filtered: TankDefinition[] = [];
   let owned: number[] | undefined;

@@ -1,4 +1,4 @@
-import type { Armor } from '@blitzkit/core';
+import type { Armor } from "@blitzkit/protos";
 
 export function resolveArmor(armor: Armor, index: number) {
   const spaced = armor.spaced?.includes(index) ?? false;

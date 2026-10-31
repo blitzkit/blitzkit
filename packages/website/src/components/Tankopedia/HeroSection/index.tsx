@@ -1,18 +1,18 @@
 import { Box, Flex } from "@radix-ui/themes";
 import { times } from "lodash-es";
-import { Suspense, useEffect, useMemo, useRef } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { useEffect, useMemo, useRef } from "react";
+import { api } from "../../../api/dynamic";
 import { defaultEqualizer } from "../../../core/blitzkit/tankToDuelMember";
 import { useFullScreen } from "../../../hooks/useFullScreen";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
-import type { ThicknessRange } from "../../Armor/components/StaticArmor";
-import { Options } from "./components/Options";
+import type { ThicknessRange } from "../../TankStaticArmor";
+import { TankopediaOptions } from "../../TankopediaOptions";
 import { TankSandbox } from "./components/TankSandbox";
 import { Title } from "./components/TankSandbox/Title";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
   const equalize = Duel.use((state) => state.equalize);
@@ -144,7 +144,7 @@ export function HeroSection({ skeleton }: MaybeSkeletonComponentProps) {
 
             <Title skeleton={skeleton} />
 
-            <Options
+            <TankopediaOptions
               skeleton={skeleton}
               canvas={canvas}
               thicknessRange={thicknessRange}

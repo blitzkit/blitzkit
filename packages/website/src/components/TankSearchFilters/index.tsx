@@ -1,0 +1,1139 @@
+import { alias, gunTypeOrder, romanize, treeTypeOrder } from "@blitzkit/core";
+import { tankClassOrder } from "@blitzkit/core/src/config/tankClassOrder";
+import { literals } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
+import { ShellType, TankType } from "@blitzkit/protos";
+import {
+  CheckIcon,
+  DotFilledIcon,
+  LockClosedIcon,
+  LockOpen2Icon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { Fragment } from "react";
+import { api } from "../../api/dynamic";
+import { awaitableTiers } from "../../core/awaitables/tiers";
+import { useStrings } from "../../hooks/useStrings";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
+import { App } from "../../stores/app";
+import { TankFilters } from "../../stores/tankFilters";
+import { Button } from "../Button";
+import { ClassIcon } from "../ClassIcon";
+import { DropdownMenu } from "../DropdownMenu";
+import { GunTypeIcon } from "../GunTypeIcon";
+import { MissingShellIcon } from "../MissingShellIcon";
+import { ResearchedIcon } from "../ResearchedIcon";
+import { ScienceIcon } from "../ScienceIcon";
+import { ScienceOffIcon } from "../ScienceOffIcon";
+import { Tooltip } from "../Tooltip";
+import styles from "./index.module.css";
+
+const gameDefinitions = await api.game();
+const consumableDefinitions = await api.consumables();
+const provisionDefinitions = await api.provisions();
+const tankDefinitions = await api.tanks();
+
+const gameModeRoleSets: Record<string, Set<number>> = {};
+
+for (const tankIdString in tankDefinitions.tanks) {
+  const gameMode = tankDefinitions.tanks[tankIdString];
+
+  for (const gameModeId in gameMode.roles) {
+    const role = gameMode.roles[gameModeId];
+
+    if (gameModeId in gameModeRoleSets) {
+      gameModeRoleSets[gameModeId].add(role);
+    } else {
+      gameModeRoleSets[gameModeId] = new Set([role]);
+    }
+  }
+}
+
+const gameModeRoles: {
+  gameModeId: string;
+  consumables: number[];
+  provisions: number[];
+}[] = [];
+
+const allGameModeConsumables = new Set<number>();
+const allGameModeProvisions = new Set<number>();
+
+for (const gameModeIdString in gameModeRoleSets) {
+  const roles = gameModeRoleSets[gameModeIdString];
+  const consumables = new Set<number>();
+  const provisions = new Set<number>();
+
+  for (const roleId of roles) {
+    const role = gameDefinitions.roles[roleId];
+
+    outerLoop: for (const id of role.consumables) {
+      const name =
+        consumableDefinitions.consumables[id].name!.locales[locales.default];
+
+      for (const otherConsumable of consumables.values()) {
+        const otherName =
+          consumableDefinitions.consumables[otherConsumable].name!.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
+      consumables.add(id);
+      allGameModeConsumables.add(id);
+    }
+
+    outerLoop: for (const id of role.provisions) {
+      const name =
+        provisionDefinitions.provisions[id].name!.locales[locales.default];
+
+      for (const otherProvision of provisions.values()) {
+        const otherName =
+          provisionDefinitions.provisions[otherProvision].name!.locales[
+            locales.default
+          ];
+
+        if (name === otherName) continue outerLoop;
+      }
+
+      provisions.add(id);
+      allGameModeProvisions.add(id);
+    }
+  }
+
+  gameModeRoles.push({
+    gameModeId: gameModeIdString,
+    consumables: Array.from(consumables.values()),
+    provisions: Array.from(provisions.values()),
+  });
+}
+
+const consumablesArray = Object.values(consumableDefinitions.consumables)
+  .filter(
+    (consumable) =>
+      !consumable.game_mode_exclusive &&
+      consumable.name!.locales[locales.default],
+  )
+  .map((consumable) => consumable.id);
+const provisionsArray = Array.from(
+  Object.values(provisionDefinitions.provisions)
+    .filter(
+      (provision) =>
+        !provision.game_mode_exclusive &&
+        provision.name!.locales[locales.default],
+    )
+    .reduce((uniqueMap, consumable) => {
+      if (!uniqueMap.has(consumable.name!.locales[locales.default])) {
+        uniqueMap.set(consumable.name!.locales[locales.default], consumable.id);
+      }
+
+      return uniqueMap;
+    }, new Map<string, number>())
+    .values(),
+);
+const shellTypeIcons: Record<ShellType, string> = {
+  [ShellType.SHELL_TYPE_AP]: "ap",
+  [ShellType.SHELL_TYPE_APCR]: "ap_cr",
+  [ShellType.SHELL_TYPE_HE]: "he",
+  [ShellType.SHELL_TYPE_HEAT]: "hc",
+};
+
+const TANK_TYPE_COLORS: Record<TankType, string> = {
+  [TankType.TANK_TYPE_RESEARCHABLE]: "gray",
+  [TankType.TANK_TYPE_PREMIUM]: "amber",
+  [TankType.TANK_TYPE_COLLECTOR]: "blue",
+};
+
+const MAX_ICONS = 4;
+
+const TIERS = await awaitableTiers;
+
+export function TankSearchFilters() {
+  return (
+    <div className={styles.filters}>
+      <TiersFilter />
+      <ClassFilter />
+      <TypeFilter />
+      <NationsFilter />
+
+      <OwnershipFilter />
+      <TestFilter />
+
+      <GunTypeFilter />
+      <ShellFilter />
+
+      <ConsumablesFilter />
+      <ProvisionsFilter />
+      <GameModeAbilitiesFilter />
+
+      <ResetButton />
+    </div>
+  );
+}
+
+function ResetButton() {
+  return (
+    <Button
+      evenPadding
+      color="red"
+      variant="solid"
+      onClick={() => {
+        TankFilters.set(TankFilters.initial);
+      }}
+    >
+      <TrashIcon />
+    </Button>
+  );
+}
+
+function TiersFilter() {
+  const strings = useStrings();
+  const tiersRaw = TankFilters.use((state) => state.tiers);
+  const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {tiers
+            .slice(0, MAX_ICONS)
+            .map((tier) => romanize(tier))
+            .join(" ")}
+
+          {tiers.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: tiers.length - MAX_ICONS,
+              })}
+            </span>
+          )}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {TIERS.map((tier) => {
+          const selected = tiersRaw.includes(tier);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.tiers = draft.tiers.filter((t) => t !== tier);
+                  } else {
+                    draft.tiers = [...draft.tiers, tier].sort((a, b) => b - a);
+                  }
+                });
+              }}
+              checked={selected}
+              key={tier}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {literals(strings.website.common.tank_search.tier, {
+                tier: romanize(tier),
+              })}
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.tiers = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function NationsFilter() {
+  const rawNations = TankFilters.use((state) => state.nations);
+  const nations =
+    rawNations.length === 0 ? gameDefinitions.nations : rawNations;
+  const strings = useStrings();
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {nations.map((nation) => (
+            <img
+              className={styles.icon}
+              key={nation}
+              src={alias("api", `/flags/circle/${nation}.webp`)}
+            />
+          ))}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {gameDefinitions.nations.map((nation) => {
+          const selected = rawNations.includes(nation);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              className={styles.nation}
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.nations = draft.nations.filter((n) => n !== nation);
+                  } else {
+                    draft.nations = [...draft.nations, nation];
+                  }
+                });
+              }}
+              checked={selected}
+              key={nation}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              <div
+                className={styles.flag}
+                style={{
+                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
+                }}
+              />
+
+              {
+                strings.common.nations[
+                  nation as keyof typeof strings.common.nations
+                ]
+              }
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.nations = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function ClassFilter() {
+  const strings = useStrings();
+  const rawClasses = TankFilters.use((state) => state.classes);
+  const classes = rawClasses.length === 0 ? tankClassOrder : rawClasses;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {classes.map((tankClass) => {
+            return (
+              <ClassIcon
+                key={tankClass}
+                class={tankClass}
+                className={styles.icon}
+              />
+            );
+          })}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {tankClassOrder.map((tankClass) => {
+          const selected = rawClasses.includes(tankClass);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              key={tankClass}
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.classes = draft.classes.filter(
+                      (c) => c !== tankClass,
+                    );
+                  } else {
+                    draft.classes = [...draft.classes, tankClass];
+                  }
+                });
+              }}
+              checked={selected}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {strings.common.tank_class_medium[tankClass]}
+
+              <ClassIcon class={tankClass} />
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.classes = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function GunTypeFilter() {
+  const rawGunTypes = TankFilters.use((state) => state.gunType);
+  const gunTypes = rawGunTypes.length === 0 ? gunTypeOrder : rawGunTypes;
+  const strings = useStrings();
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {gunTypes.map((gunType) => {
+            return (
+              <GunTypeIcon
+                key={gunType}
+                type={gunType}
+                data-no-overlap
+                className={styles.icon}
+              />
+            );
+          })}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {gunTypeOrder.map((gunType) => {
+          const selected = rawGunTypes.includes(gunType);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.gunType = draft.gunType.filter((c) => c !== gunType);
+                  } else {
+                    draft.gunType = [...draft.gunType, gunType];
+                  }
+                });
+              }}
+              checked={selected}
+              key={gunType}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {strings.common.gun_types[gunType]}
+
+              <GunTypeIcon type={gunType} />
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.gunType = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function TypeFilter() {
+  const strings = useStrings();
+  const rawTypes = TankFilters.use((state) => state.types);
+  const types = rawTypes.length === 0 ? treeTypeOrder : rawTypes;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {types.map((tankType) => {
+            return (
+              <ResearchedIcon
+                style={{
+                  color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                    tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
+                  })`,
+                }}
+                data-no-overlap
+                className={styles.icon}
+                key={tankType}
+              />
+            );
+          })}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {treeTypeOrder.map((tankType) => {
+          const selected = rawTypes.includes(tankType);
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.types = draft.types.filter((c) => c !== tankType);
+                  } else {
+                    draft.types = [...draft.types, tankType];
+                  }
+                });
+              }}
+              checked={selected}
+              key={tankType}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {strings.common.tree_type[tankType]}
+
+              <ResearchedIcon
+                style={{
+                  color: `var(--${TANK_TYPE_COLORS[tankType]}-${
+                    tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
+                  })`,
+                }}
+              />
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.types = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function ShellFilter() {
+  return (
+    <div className={styles.grouped}>
+      <IndividualShellFilter index={0} />
+      <IndividualShellFilter index={1} premium />
+      <IndividualShellFilter index={2} />
+    </div>
+  );
+}
+
+function IndividualShellFilter({
+  index,
+  premium,
+}: {
+  index: number;
+  premium?: boolean;
+}) {
+  const strings = useStrings();
+  const shells = TankFilters.use((state) => state.shells);
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button listChild="horizontal" variant="soft" color="gray" evenPadding>
+          {shells[index] === null && (
+            <MissingShellIcon width="1em" height="1em" />
+          )}
+
+          {shells[index] !== null && (
+            <img
+              src={alias(
+                "api",
+                `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
+              )}
+            />
+          )}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        <DropdownMenu.RadioGroup value={`${shells[index]}`}>
+          {Object.values(ShellType).map((shellType) => {
+            if (typeof shellType === "string") return null;
+
+            const selected = shells[index] === shellType;
+
+            return (
+              <DropdownMenu.RadioItem
+                key={shellType}
+                value={`${shellType}`}
+                onClick={(event) => {
+                  event.preventDefault();
+
+                  const mutated = [...shells] as TankFilters["shells"];
+
+                  mutated[index] = selected ? null : shellType;
+
+                  TankFilters.mutate((draft) => {
+                    draft.shells = mutated;
+                  });
+                }}
+                color={selected ? undefined : "gray"}
+              >
+                <DropdownMenu.ItemIndicator>
+                  <DotFilledIcon />
+                </DropdownMenu.ItemIndicator>
+
+                {
+                  strings.common.shells[
+                    shellTypeIcons[
+                      shellType
+                    ] as keyof typeof strings.common.shells
+                  ]
+                }
+
+                <img
+                  src={alias(
+                    "api",
+                    `/icons/shells/${shellTypeIcons[shellType]}${
+                      premium ? "_premium" : ""
+                    }.webp`,
+                  )}
+                />
+              </DropdownMenu.RadioItem>
+            );
+          })}
+
+          <DropdownMenu.Separator />
+
+          <DropdownMenu.Item
+            color="red"
+            onClick={(event) => {
+              event.preventDefault();
+
+              const mutated = [...shells] as TankFilters["shells"];
+
+              mutated[index] = null;
+
+              TankFilters.mutate((draft) => {
+                draft.shells = mutated;
+              });
+            }}
+          >
+            {strings.website.common.tank_search.clear}
+
+            <TrashIcon />
+          </DropdownMenu.Item>
+        </DropdownMenu.RadioGroup>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function OwnershipFilter() {
+  const wargaming = App.use((state) => state.logins.wargaming);
+  const strings = useStrings();
+
+  return wargaming ? (
+    <OwnershipFilterInternal />
+  ) : (
+    <Tooltip tooltip={strings.website.common.tank_search.login}>
+      <OwnershipFilterInternal />
+    </Tooltip>
+  );
+}
+
+function OwnershipFilterInternal() {
+  const wargaming = App.use((state) => state.logins.wargaming);
+  const showOwned = TankFilters.use((state) => state.showOwned);
+  const showUnowned = TankFilters.use((state) => state.showUnowned);
+
+  return (
+    <div className={styles.grouped}>
+      <Button
+        evenPadding
+        listChild="horizontal"
+        disabled={!wargaming}
+        variant={showOwned ? "solid" : "soft"}
+        color={showOwned ? undefined : "gray"}
+        highContrast={showOwned}
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showOwned = !draft.showOwned;
+            if (draft.showOwned) draft.showUnowned = false;
+          });
+        }}
+      >
+        <LockOpen2Icon />
+      </Button>
+
+      <Button
+        evenPadding
+        listChild="horizontal"
+        disabled={!wargaming}
+        variant={showUnowned ? "solid" : "soft"}
+        color={showUnowned ? undefined : "gray"}
+        highContrast={showUnowned}
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showUnowned = !draft.showUnowned;
+            if (draft.showUnowned) draft.showOwned = false;
+          });
+        }}
+      >
+        <LockClosedIcon />
+      </Button>
+    </div>
+  );
+}
+
+function TestFilter() {
+  const showTesting = TankFilters.use((state) => state.showTesting);
+  const showNonTesting = TankFilters.use((state) => state.showNonTesting);
+
+  return (
+    <div className={styles.grouped}>
+      <Button
+        evenPadding
+        variant={showNonTesting ? "solid" : "soft"}
+        color={showNonTesting ? undefined : "gray"}
+        highContrast={showNonTesting}
+        listChild="horizontal"
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showNonTesting = !draft.showNonTesting;
+            if (draft.showNonTesting) draft.showTesting = false;
+          });
+        }}
+      >
+        <ScienceOffIcon />
+      </Button>
+
+      <Button
+        evenPadding
+        variant={showTesting ? "solid" : "soft"}
+        color={showTesting ? undefined : "gray"}
+        highContrast={showTesting}
+        listChild="horizontal"
+        onClick={() => {
+          TankFilters.mutate((draft) => {
+            draft.showTesting = !draft.showTesting;
+            if (draft.showTesting) draft.showNonTesting = false;
+          });
+        }}
+      >
+        <ScienceIcon />
+      </Button>
+    </div>
+  );
+}
+
+function ConsumablesFilter() {
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
+  const rawConsumables = TankFilters.use((state) => state.consumables);
+  const consumables =
+    rawConsumables.length === 0 ? consumablesArray : rawConsumables;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {consumables.slice(0, MAX_ICONS).map((consumable) => (
+            <img
+              key={consumable}
+              className={styles.icon}
+              src={alias("api", `/icons/consumables/${consumable}.webp`)}
+            />
+          ))}
+
+          {consumables.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: consumables.length - MAX_ICONS,
+              })}
+            </span>
+          )}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {consumablesArray.map((consumable) => {
+          const selected = rawConsumables.includes(consumable);
+          const consumableDefinition =
+            consumableDefinitions.consumables[consumable];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.consumables = draft.consumables.filter(
+                      (n) => n !== consumable,
+                    );
+                  } else {
+                    draft.consumables = [...draft.consumables, consumable];
+                  }
+                });
+              }}
+              checked={selected}
+              key={consumable}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {unwrap(consumableDefinition.name!)}
+
+              <img
+                src={alias("api", `/icons/consumables/${consumable}.webp`)}
+              />
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.consumables = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function ProvisionsFilter() {
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
+  const rawProvisions = TankFilters.use((state) => state.provisions);
+  const provisions =
+    rawProvisions.length === 0 ? provisionsArray : rawProvisions;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {provisions.slice(0, MAX_ICONS).map((provision) => (
+            <img
+              key={provision}
+              className={styles.icon}
+              src={alias("api", `/icons/provisions/${provision}.webp`)}
+            />
+          ))}
+
+          {provisions.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: provisions.length - MAX_ICONS,
+              })}
+            </span>
+          )}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {provisionsArray.map((provision) => {
+          const selected = rawProvisions.includes(provision);
+          const provisionDefinition =
+            provisionDefinitions.provisions[provision];
+
+          return (
+            <DropdownMenu.CheckboxItem
+              onClick={(event) => {
+                event.preventDefault();
+
+                TankFilters.mutate((draft) => {
+                  if (selected) {
+                    draft.provisions = draft.provisions.filter(
+                      (n) => n !== provision,
+                    );
+                  } else {
+                    draft.provisions = [...draft.provisions, provision];
+                  }
+                });
+              }}
+              checked={selected}
+              key={provision}
+            >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
+              {unwrap(provisionDefinition.name!)}
+
+              <img src={alias("api", `/icons/provisions/${provision}.webp`)} />
+            </DropdownMenu.CheckboxItem>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.provisions = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function GameModeAbilitiesFilter() {
+  const strings = useStrings();
+  const unwrap = useUnwrapper();
+  const rawAbilities = TankFilters.use((state) => state.abilities);
+  const rawPowers = TankFilters.use((state) => state.powers);
+
+  const abilities =
+    rawAbilities.length === 0 && rawPowers.length === 0
+      ? Array.from(allGameModeConsumables.values())
+      : rawAbilities;
+  const powers =
+    rawPowers.length === 0 && rawAbilities.length === 0
+      ? Array.from(allGameModeProvisions.values())
+      : rawPowers;
+
+  const icons = [
+    ...abilities.map((ability) =>
+      alias("api", `/icons/consumables/${ability}.webp`),
+    ),
+    ...powers.map((power) => alias("api", `/icons/provisions/${power}.webp`)),
+  ];
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger asChild>
+        <Button color="gray" variant="soft">
+          {icons.slice(0, MAX_ICONS).map((icon) => (
+            <img key={icon} className={styles.icon} src={icon} />
+          ))}
+
+          {icons.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: icons.length - MAX_ICONS,
+              })}
+            </span>
+          )}
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content>
+        {gameModeRoles.map(({ gameModeId, consumables, provisions }) => {
+          const gameMode = gameDefinitions.gameModes[gameModeId];
+          const hasNeither =
+            consumables.length === 0 && provisions.length === 0;
+
+          if (hasNeither) return null;
+
+          const hasBoth = consumables.length > 0 && provisions.length > 0;
+
+          return (
+            <Fragment key={gameModeId}>
+              {consumables.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.active, {
+                        name: unwrap(gameMode.name!),
+                      })
+                    : unwrap(gameMode.name!)}
+                </DropdownMenu.Label>
+              )}
+
+              {consumables.map((consumable) => {
+                {
+                  const selected = rawAbilities.includes(consumable);
+                  const abilityDefinition =
+                    consumableDefinitions.consumables[consumable];
+
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
+
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.abilities = draft.abilities.filter(
+                              (n) => n !== consumable,
+                            );
+                          } else {
+                            draft.abilities = [...draft.abilities, consumable];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={consumable}
+                    >
+                      <DropdownMenu.ItemIndicator>
+                        <CheckIcon />
+                      </DropdownMenu.ItemIndicator>
+
+                      {unwrap(abilityDefinition.name!)}
+
+                      <img
+                        src={alias(
+                          "api",
+                          `/icons/consumables/${consumable}.webp`,
+                        )}
+                      />
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+
+              {provisions.length > 0 && (
+                <DropdownMenu.Label>
+                  {hasBoth
+                    ? literals(strings.website.common.tank_search.passive, {
+                        name: unwrap(gameMode.name!),
+                      })
+                    : unwrap(gameMode.name!)}
+                </DropdownMenu.Label>
+              )}
+
+              {provisions.map((provision) => {
+                {
+                  const selected = rawPowers.includes(provision);
+                  const powerDefinition =
+                    provisionDefinitions.provisions[provision];
+
+                  return (
+                    <DropdownMenu.CheckboxItem
+                      onClick={(event) => {
+                        event.preventDefault();
+
+                        TankFilters.mutate((draft) => {
+                          if (selected) {
+                            draft.powers = draft.powers.filter(
+                              (n) => n !== provision,
+                            );
+                          } else {
+                            draft.powers = [...draft.powers, provision];
+                          }
+                        });
+                      }}
+                      checked={selected}
+                      key={provision}
+                    >
+                      <DropdownMenu.ItemIndicator>
+                        <CheckIcon />
+                      </DropdownMenu.ItemIndicator>
+
+                      {unwrap(powerDefinition.name!)}
+
+                      <img
+                        src={alias(
+                          "api",
+                          `/icons/provisions/${provision}.webp`,
+                        )}
+                      />
+                    </DropdownMenu.CheckboxItem>
+                  );
+                }
+              })}
+            </Fragment>
+          );
+        })}
+
+        <DropdownMenu.Separator />
+
+        <DropdownMenu.Item
+          color="red"
+          onClick={(event) => {
+            event.preventDefault();
+
+            TankFilters.mutate((draft) => {
+              draft.abilities = [];
+              draft.powers = [];
+            });
+          }}
+        >
+          {strings.website.common.tank_search.clear}
+
+          <TrashIcon />
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}

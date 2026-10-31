@@ -1,9 +1,0 @@
-@import "@radix-ui/themes/styles.css";
-
-.radix-themes {
-  --default-font-family: "Inter";
-}
-
-body {
-  margin: 0;
-}

@@ -1,5 +1,5 @@
 import * as radixColors from "@radix-ui/colors";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 import {
   type EmbedConfigItemType,
   EmbedItemType,
@@ -103,6 +103,6 @@ export type EmbedConfigItem = (
 
 export type EmbedStateStore = Record<string, EmbedConfigItem["default"]>;
 
-export const EmbedState = new Varuna<EmbedStateStore, EmbedStateStore>(
+export const EmbedState = new Soapstone<EmbedStateStore, [EmbedStateStore]>(
   (data) => data
 );

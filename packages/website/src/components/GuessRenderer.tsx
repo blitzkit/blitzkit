@@ -1,9 +1,10 @@
 import { useModel } from "../hooks/useModel";
 import { Guess, GuessState } from "../stores/guess";
+import { CanvasControl } from "./CanvasControl";
+import { Lighting } from "./Lighting";
+import { SceneProps } from "./SceneProps";
 import { SmartCanvas } from "./SmartCanvas";
-import { Controls } from "./Tankopedia/HeroSection/components/TankSandbox/components/Control";
-import { Lighting } from "./Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
-import { TankModel } from "./Tankopedia/HeroSection/components/TankSandbox/components/TankModel";
+import { TankModel } from "./TankModel";
 
 const BRIGHTNESS = 2 ** -5.5;
 const CONTRAST = 2 ** 2;
@@ -13,7 +14,7 @@ export function GuessRenderer() {
   const helpingReveal = Guess.use((state) => state.helpingReveal);
   const isRevealed = helpingReveal || guessState !== GuessState.NotGuessed;
 
-  const id = Guess.use((state) => state.tank.id);
+  const id = Guess.use((state) => state.tank);
   const { hasPbr } = useModel(id);
 
   return (
@@ -27,7 +28,8 @@ export function GuessRenderer() {
       }}
       camera={{ position: [-5, 5, -5] }}
     >
-      <Controls zoomable={false} />
+      <SceneProps />
+      <CanvasControl zoomable={false} />
       <Lighting hasPbr={hasPbr} />
       <TankModel />
     </SmartCanvas>

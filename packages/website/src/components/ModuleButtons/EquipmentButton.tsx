@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../api/dynamic";
 import { useLocale } from "../../hooks/useLocale";
 import { GenericTankComponentButton } from "./GenericTankComponentButton";
 import type { TankComponentButtonProps } from "./TankComponentButton";
@@ -8,7 +8,7 @@ interface EquipmentButtonProps extends TankComponentButtonProps {
   equipment: number;
 }
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function EquipmentButton({ equipment, ...props }: EquipmentButtonProps) {
   const { unwrap } = useLocale();

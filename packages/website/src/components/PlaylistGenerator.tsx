@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { api } from "../core/blitzkit/api";
+import { api } from "../api/dynamic";
 import { filterTanks } from "../core/blitzkit/filterTanks";
 import { generatePlaylist } from "../core/blitzkit/generatePlaylist";
 import { useLocale } from "../hooks/useLocale";
@@ -20,9 +20,9 @@ import { App } from "../stores/app";
 import { TankFilters } from "../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { LinkI18n } from "./LinkI18n";
-import { FilterControl } from "./TankSearch/components/FilterControl";
+import { TankSearchFilters } from "./TankSearchFilters";
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 const POOL_HEIGHT = "16rem";
 const FILTERS_WIDTH = "32rem";

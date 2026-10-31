@@ -1,14 +1,12 @@
-import {
-  createDefaultSkills,
-  ShellDefinition,
-  type ModelDefinition,
-} from "@blitzkit/core";
+import { createDefaultEnvironment, type TankEnvironment } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
+import { Soapstone } from "soapstone";
 import type { Vector3 } from "three";
-import { Varuna } from "varuna";
-import type { ArmorType } from "../components/Armor/components/SpacedArmorScene";
-import type { ExternalModuleVariant } from "../components/Armor/components/SpacedArmorSceneComponent";
-import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
-import { api } from "../core/blitzkit/api";
+import { api } from "../api/dynamic";
+import type { ArmorType } from "../components/SpacedArmorScene";
+import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
+import { createTankState } from "../tankopedia/createTankState";
+import type { TankState } from "../tankopedia/tankState";
 import { App } from "./app";
 import { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
@@ -73,7 +71,7 @@ export type ArmorPiercingLayer =
     };
 
 export enum TankopediaRelativeAgainst {
-  Class,
+  ClassAndTier,
   Tier,
   All,
 }
@@ -83,55 +81,74 @@ interface LoaderState<Type> {
   loaded: Type;
 }
 
+type HighlightArmor = {
+  editingPlate: boolean;
+  name: string;
+  point: Vector3;
+  thickness: number;
+  color: string;
+} & (
+  | {
+      type: ArmorType.Primary | ArmorType.Spaced;
+      thicknessAngled: number;
+      angle: number;
+    }
+  | { type: ArmorType.External }
+);
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
+  showControls: boolean;
+
+  protagonist: TankState;
+  antagonist: TankState;
+  environment: TankEnvironment;
+
+  relative_against: TankopediaRelativeAgainst;
+
   loaders: {
+    display: LoaderState<TankopediaDisplay>;
     model: LoaderState<boolean>;
     skin: LoaderState<number | undefined>;
     attachment: LoaderState<number | undefined>;
   };
+
   shot?: Shot;
-  skills: Record<string, number>;
-  relativeAgainst: TankopediaRelativeAgainst;
-  model: ModelDefinition;
-  editStatic: boolean;
-  highlightArmor?: {
-    editingPlate: boolean;
-    name: string;
-    point: Vector3;
-    thickness: number;
-    color: string;
-  } & (
-    | {
-        type: ArmorType.Primary | ArmorType.Spaced;
-        thicknessAngled: number;
-        angle: number;
-      }
-    | { type: ArmorType.External }
-  );
-  xpMultiplier: (typeof XP_MULTIPLIERS)[number];
-  customShell?: ShellDefinition;
-  requestedDisplay: TankopediaDisplay;
-  display: TankopediaDisplay;
-  statSearch?: string;
+  highlightArmor?: HighlightArmor;
+
+  // editStatic: boolean;
+
+  // xpMultiplier: (typeof XP_MULTIPLIERS)[number];
+  // customShell?: ShellDefinition;
+  // statSearch?: string;
 }
 
-const skillDefinitions = await api.skillDefinitions();
+const skills = await api.skills();
 
-export const Tankopedia = new Varuna<Tankopedia, ModelDefinition>((model) => ({
-  disturbed: false,
-  revealed: false,
-  loaders: {
-    model: { requested: App.state.autoLoadModels, loaded: false },
-    skin: { requested: undefined, loaded: undefined },
-    attachment: { requested: undefined, loaded: undefined },
-  },
-  relativeAgainst: TankopediaRelativeAgainst.Class,
-  editStatic: false,
-  skills: createDefaultSkills(skillDefinitions),
-  model,
-  xpMultiplier: 1,
-  requestedDisplay: TankopediaDisplay.Model,
-  display: TankopediaDisplay.Model,
-}));
+export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
+  (tank) => ({
+    disturbed: false,
+    revealed: false,
+    showControls: false,
+
+    protagonist: createTankState(tank),
+    antagonist: createTankState(tank),
+    environment: createDefaultEnvironment(skills),
+
+    relative_against: TankopediaRelativeAgainst.ClassAndTier,
+
+    loaders: {
+      display: {
+        requested: TankopediaDisplay.Model,
+        loaded: TankopediaDisplay.Model,
+      },
+      model: { requested: App.state.autoLoadModels, loaded: false },
+      skin: { requested: undefined, loaded: undefined },
+      attachment: { requested: undefined, loaded: undefined },
+    },
+
+    editStatic: false,
+    xpMultiplier: 1,
+  }),
+);

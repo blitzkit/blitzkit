@@ -1,0 +1,25 @@
+---
+interface Props {
+  minor?: boolean;
+}
+
+const { minor } = Astro.props;
+---
+
+<style>
+  .tool-card-layout-root {
+    display: flex;
+
+    height: 30rem;
+
+    gap: var(--space-4);
+
+    &[data-minor="true"] {
+      height: 20rem;
+    }
+  }
+</style>
+
+<div class="tool-card-layout-root" data-minor={minor}>
+  <slot />
+</div>

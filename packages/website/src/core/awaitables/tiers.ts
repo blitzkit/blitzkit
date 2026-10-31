@@ -1,7 +1,7 @@
 import { times } from "lodash-es";
-import { api } from "../blitzkit/api";
+import { api } from "../../api/dynamic";
 
-export const awaitableTiers = api.tankDefinitions().then((tankDefinitions) => {
+export const awaitableTiers = api.tanks().then((tankDefinitions) => {
   let max = 0;
 
   for (const tank of Object.values(tankDefinitions.tanks)) {

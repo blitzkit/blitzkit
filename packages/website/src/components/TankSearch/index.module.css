@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  flex: 1;
+
+  .label {
+    margin: var(--space-4) 0;
+
+    display: flex;
+    justify-content: center;
+
+    .count {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+  }
+}

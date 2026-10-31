@@ -1,0 +1,98 @@
+.Content,
+.SubContent {
+  --gutter: var(--space-5);
+
+  min-width: min(calc(100dvw - 2 * var(--space-4)), 16rem);
+  max-height: calc(
+    var(--radix-dropdown-menu-content-available-height) - var(--space-6)
+  );
+  overflow-y: auto;
+
+  z-index: 1;
+  background-color: var(--gray-2);
+
+  display: flex;
+  flex-direction: column;
+
+  margin: var(--space-4);
+
+  box-shadow: var(--shadow-subtle);
+  border-radius: var(--space-4);
+  outline: var(--outline-interactive) !important;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .Separator {
+    flex-shrink: 0;
+    height: var(--space-3);
+  }
+
+  .Label {
+    font-size: var(--font-size-minor);
+
+    color: var(--gray-11);
+
+    padding: var(--space-3);
+    padding-left: var(--gutter);
+
+    * + & {
+      margin-top: var(--space-3);
+    }
+  }
+
+  .Item,
+  .CheckboxItem,
+  .RadioItem,
+  .SubTrigger {
+    position: relative;
+
+    background-color: var(--gray-3);
+
+    padding: var(--space-3);
+    padding-left: var(--gutter);
+
+    cursor: pointer;
+    user-select: none;
+
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+
+    font-size: var(--font-size-minor);
+
+    &:focus {
+      outline: none;
+
+      background-color: var(--gray-5);
+    }
+
+    &:not(:last-child) {
+      border-bottom: var(--space-1) solid var(--gray-2);
+    }
+
+    img,
+    svg {
+      width: 1em;
+      height: 1em;
+
+      &:last-child {
+        margin-left: auto;
+      }
+    }
+
+    .ItemIndicator {
+      position: absolute;
+      left: 0;
+      top: 50%;
+
+      display: flex;
+
+      transform: translate(calc(-50% + var(--gutter) / 2), -50%);
+    }
+  }
+}
