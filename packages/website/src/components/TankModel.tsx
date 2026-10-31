@@ -103,7 +103,10 @@ export function TankModel() {
         }
 
         function onPointerDown(event: ThreeEvent<PointerEvent>) {
-          if (isTrack && Tankopedia.state.display === TankopediaDisplay.Model) {
+          if (
+            isTrack &&
+            Tankopedia.state.loaders.display.loaded === TankopediaDisplay.Model
+          ) {
             position.set(event.clientX, event.clientY);
             event.stopPropagation();
 

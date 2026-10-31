@@ -12,8 +12,15 @@
 
   transform: translate(calc(100% + var(--space-4)), -50%);
 
+  gap: var(--space-3);
+
   &[data-visible="true"] {
     transform: translate(0, -50%);
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
   }
 
   .camouflage-icon {

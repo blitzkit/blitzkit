@@ -49,7 +49,7 @@ export function TankopediaSandbox({
   const model = Tankopedia.use((state) => state.protagonist.model);
   const turretModelDefinition = model.turrets[turret.id];
   const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const display = Tankopedia.use((state) => state.display);
+  const display = Tankopedia.use((state) => state.loaders.display.loaded);
 
   function handlePointerDown() {
     window.addEventListener("pointermove", handlePointerMove);
@@ -185,7 +185,7 @@ export function TankopediaSandbox({
 }
 
 function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
-  const display = Tankopedia.use((state) => state.display);
+  const display = Tankopedia.use((state) => state.loaders.display.loaded);
   const tank = useDuel("protagonist", DuelModule.Tank);
 
   const { hasPbr } = useModel(tank.id);

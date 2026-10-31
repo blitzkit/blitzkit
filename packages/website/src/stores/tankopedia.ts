@@ -81,6 +81,21 @@ interface LoaderState<Type> {
   loaded: Type;
 }
 
+type HighlightArmor = {
+  editingPlate: boolean;
+  name: string;
+  point: Vector3;
+  thickness: number;
+  color: string;
+} & (
+  | {
+      type: ArmorType.Primary | ArmorType.Spaced;
+      thicknessAngled: number;
+      angle: number;
+    }
+  | { type: ArmorType.External }
+);
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
@@ -98,22 +113,11 @@ interface Tankopedia {
     attachment: LoaderState<number | undefined>;
   };
 
-  // shot?: Shot;
+  shot?: Shot;
+  highlightArmor?: HighlightArmor;
+
   // editStatic: boolean;
-  // highlightArmor?: {
-  //   editingPlate: boolean;
-  //   name: string;
-  //   point: Vector3;
-  //   thickness: number;
-  //   color: string;
-  // } & (
-  //   | {
-  //       type: ArmorType.Primary | ArmorType.Spaced;
-  //       thicknessAngled: number;
-  //       angle: number;
-  //     }
-  //   | { type: ArmorType.External }
-  // );
+
   // xpMultiplier: (typeof XP_MULTIPLIERS)[number];
   // customShell?: ShellDefinition;
   // statSearch?: string;

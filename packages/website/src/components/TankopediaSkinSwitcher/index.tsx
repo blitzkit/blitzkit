@@ -32,45 +32,57 @@ export function TankopediaSkinSwitcher() {
 
   if (skins.length === 0) return null;
 
+  const groups = [
+    skins.filter((camouflage) => !camouflage.attachment),
+    skins.filter((camouflage) => camouflage.attachment),
+  ].filter((group) => group.length > 0);
+
   return (
     <div
       className={styles["skin-switcher"]}
       data-visible={revealed && requestedDisplay === TankopediaDisplay.Model}
     >
-      {skins.map((camouflage) => {
-        const name = unwrap(camouflage.name!).replace(
-          "%(camo_num)",
-          SKIN_NUMBER,
-        );
+      {groups.map((group, index) => (
+        <div className={styles.group} key={index}>
+          {group.map((camouflage) => {
+            const name = unwrap(camouflage.name!).replace(
+              "%(camo_num)",
+              SKIN_NUMBER,
+            );
 
-        const selected = skin === camouflage.id;
+            const selected = skin === camouflage.id;
 
-        return (
-          <Tooltip key={camouflage.id} tooltip={name} side="left">
-            <IconButton
-              parentListChild="vertical"
-              color={selected ? undefined : "gray"}
-              variant={selected ? "solid" : "soft"}
-              highContrast={selected}
-              size="major"
-              onClick={() => {
-                Tankopedia.mutate((draft) => {
-                  draft.loaders.skin.requested =
-                    draft.loaders.skin.requested === camouflage.id
-                      ? undefined
-                      : camouflage.id;
-                });
-              }}
-            >
-              <img
-                className={styles["camouflage-icon"]}
-                alt={name}
-                src={alias("api", `/icons/camouflages/${camouflage.id}.webp`)}
-              />
-            </IconButton>
-          </Tooltip>
-        );
-      })}
+            return (
+              <Tooltip key={camouflage.id} tooltip={name} side="left">
+                <IconButton
+                  parentListChild="vertical"
+                  color={selected ? undefined : "gray"}
+                  variant={selected ? "solid" : "soft"}
+                  highContrast={selected}
+                  size="major"
+                  onClick={() => {
+                    Tankopedia.mutate((draft) => {
+                      draft.loaders.skin.requested =
+                        draft.loaders.skin.requested === camouflage.id
+                          ? undefined
+                          : camouflage.id;
+                    });
+                  }}
+                >
+                  <img
+                    className={styles["camouflage-icon"]}
+                    alt={name}
+                    src={alias(
+                      "api",
+                      `/icons/camouflages/${camouflage.id}.webp`,
+                    )}
+                  />
+                </IconButton>
+              </Tooltip>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }

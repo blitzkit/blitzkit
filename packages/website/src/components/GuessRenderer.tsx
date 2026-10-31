@@ -1,6 +1,5 @@
 import { useModel } from "../hooks/useModel";
 import { Guess, GuessState } from "../stores/guess";
-import { Controls } from "./CanvasControl";
 import { Lighting } from "./Lighting";
 import { SmartCanvas } from "./SmartCanvas";
 import { TankModel } from "./TankModel";
