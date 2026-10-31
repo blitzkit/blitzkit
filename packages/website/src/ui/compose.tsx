@@ -27,7 +27,7 @@ export function composeRadixComponents<
 
     mapped[key] = composeRadixComponent(
       components[key] as FC,
-      `radix__${styles[key]}`,
+      styles[key],
     ) as Components[Extract<keyof Components, string>];
   }
 

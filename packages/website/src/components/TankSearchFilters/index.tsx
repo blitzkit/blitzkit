@@ -192,7 +192,7 @@ function TiersFilter() {
   const tiers = tiersRaw.length === 0 ? TIERS : tiersRaw;
 
   return (
-    <DropdownMenu.Root modal={false}>
+    <DropdownMenu.Root open modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button size="minor" color="gray" variant="surface">
           <Flex gap="1">
