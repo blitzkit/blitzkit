@@ -24,16 +24,8 @@ type SkeletonComponent = Extract<
 type MotionComponent = Extract<
   Component,
   { "comp.typename": "MotionComponent" }
-> & { "simpleMotion.rewindOnFinish"?: boolean };
+>;
 type AccessorType = "SCALAR" | "VEC3" | "VEC4" | "MAT4";
-
-export interface SkinMotion {
-  clip: string;
-  duration: number;
-  playbackRate: number;
-  repeats: number;
-  rewind: boolean;
-}
 
 const JOINT_ROOT = 0xffffff;
 const MOTION_PATHS = {
@@ -60,11 +52,9 @@ export async function loadMotion(
   path: string,
   component: MotionComponent,
 ) {
-  const file = await vfs
-    .file(normalize(`Data/3d/${dirname(path)}/${component["motion.filepath"]}`))
-    .catch(() => undefined);
-
-  if (!file) return;
+  const file = await vfs.file(
+    normalize(`Data/3d/${dirname(path)}/${component["motion.filepath"]}`),
+  );
 
   return new MotionReadStream(
     file.buffer.slice(
@@ -153,8 +143,9 @@ export function createMotionClip(
   joints: Map<string, Node>,
   motion: Motion,
   component: MotionComponent,
-): SkinMotion {
+) {
   const animation = document.createAnimation(clip);
+  const playbackRate = component["motion.playbackRate"];
 
   for (const [uid, track] of motion.tracks) {
     const joint = joints.get(uid);
@@ -165,7 +156,12 @@ export function createMotionClip(
       const sampler = document
         .createAnimationSampler()
         .setInput(
-          createAccessor(document, buffer, "SCALAR", new Float32Array(times)),
+          createAccessor(
+            document,
+            buffer,
+            "SCALAR",
+            new Float32Array(times.map((time) => time / playbackRate)),
+          ),
         )
         .setOutput(
           createAccessor(
@@ -192,14 +188,6 @@ export function createMotionClip(
         );
     }
   }
-
-  return {
-    clip,
-    duration: motion.duration,
-    playbackRate: component["motion.playbackRate"],
-    repeats: component["simpleMotion.repeatsCount"],
-    rewind: component["simpleMotion.rewindOnFinish"] ?? false,
-  };
 }
 
 /**
@@ -261,9 +249,17 @@ export function skinPrimitive(
         "VEC4",
         new Uint16Array(
           jointIndices.flatMap((indices) =>
-            times(4, (index) =>
-              index < indices.length ? targets[indices[index]] ?? 0 : 0,
-            ),
+            times(4, (index) => {
+              if (index >= indices.length) return 0;
+
+              const target = targets[indices[index]];
+
+              if (target === undefined) {
+                throw new Error(`Missing joint target ${indices[index]}`);
+              }
+
+              return target;
+            }),
           ),
         ),
       ),

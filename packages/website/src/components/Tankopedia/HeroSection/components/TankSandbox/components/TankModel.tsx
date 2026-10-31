@@ -1,5 +1,6 @@
 import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useRef } from "react";
+import type { QuicklimeEvent } from "quicklime";
+import { useEffect, useRef } from "react";
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
 import { applyPitchYawLimits } from "../../../../../../core/blitz/applyPitchYawLimits";
 import { hasEquipment } from "../../../../../../core/blitzkit/hasEquipment";
@@ -15,6 +16,7 @@ import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import { TankopediaDisplay } from "../../../../../../stores/tankopediaPersistent/constants";
 import { ModelTankWrapper } from "../../../../../Armor/components/ModelTankWrapper";
+import { transitionEvent } from "./Lighting";
 
 export function TankModel() {
   const protagonist = Duel.use((draft) => draft.protagonist);
@@ -30,11 +32,50 @@ export function TankModel() {
   const gunModelDefinition = turretModelDefinition.guns[protagonist.gun.id];
   const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
-  const skin = Tankopedia.use((state) => state.skin);
-  const skinGltf = useSkin(protagonist.tank.id, skin);
+  const skinGltf = useSkin(protagonist.tank.id);
+  const attachmentGltf = useSkin(protagonist.tank.id, "attachment");
+  const skins = [skinGltf, attachmentGltf].filter((skin) => skin !== undefined);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
-  useSkinAnimation(skinGltf);
+  useSkinAnimation(skins);
+
+  useEffect(() => {
+    const emissiveMaterials = new Set<MeshStandardMaterial>();
+    const roots = [
+      gltf.scene,
+      ...skins.flatMap((skin) => [...skin.parts.values()].flat()),
+    ];
+
+    for (const root of roots) {
+      root.traverse((object) => {
+        if (
+          object instanceof Mesh &&
+          object.material instanceof MeshStandardMaterial &&
+          object.material.emissiveMap
+        ) {
+          emissiveMaterials.add(object.material);
+        }
+      });
+    }
+
+    // emissive parts fade with the lights instead of glowing in the dark
+    function applyIntensity(intensity: number) {
+      for (const material of emissiveMaterials) {
+        material.emissiveIntensity = intensity;
+      }
+    }
+
+    function handleTransitionEvent(event: QuicklimeEvent<number>) {
+      applyIntensity(event.data);
+    }
+
+    applyIntensity(transitionEvent.last!);
+    transitionEvent.on(handleTransitionEvent);
+
+    return () => {
+      transitionEvent.off(handleTransitionEvent);
+    };
+  }, [gltf, skinGltf, attachmentGltf]);
 
   return (
     <ModelTankWrapper ref={hullContainer}>
@@ -97,7 +138,7 @@ export function TankModel() {
           window.removeEventListener("pointerup", handlePointerUp);
         }
 
-        return skinTree(node, skinGltf, {
+        return skinTree(node, skins, {
           mesh(_, props, key) {
             return (
               <mesh
@@ -183,7 +224,7 @@ export function TankModel() {
             window.removeEventListener("pointerup", handlePointerUp);
           }
 
-          return skinTree(node, skinGltf, {
+          return skinTree(node, skins, {
             mesh(_, props, key) {
               return (
                 <mesh
@@ -273,7 +314,7 @@ export function TankModel() {
               window.removeEventListener("pointerup", handlePointerUp);
             }
 
-            return skinTree(node, skinGltf, {
+            return skinTree(node, skins, {
               mesh(_, props, key) {
                 return (
                   <mesh

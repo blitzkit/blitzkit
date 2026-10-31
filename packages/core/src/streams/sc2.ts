@@ -40,6 +40,8 @@ export interface ConfigArchive {
 
 interface EnabledPresets {
   AlphaTest: boolean;
+  AlphaBlend?: boolean;
+  AlphaBlendAdditive?: boolean;
 }
 
 interface Flags {
@@ -156,7 +158,11 @@ export type Component =
         "ro.notShadowOnly": boolean;
         "ro.sOclCull": boolean;
         "ro.sOclIndex": number;
-      } & Record<`rb${number}.${"lodIndex" | "switchIndex"}`, number>;
+      } & Record<`rb${number}.${"lodIndex" | "switchIndex"}`, number> &
+        Record<
+          `skinnedObject.batch${number}.targetsData`,
+          ArrayBuffer | undefined
+        >;
     }
   | {
       "comp.typename": "SlotComponent";

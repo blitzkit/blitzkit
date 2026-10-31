@@ -15,7 +15,9 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
     );
     const sc2 = new Sc2ReadStream(
       (
-        await this.vfs.file(`Data/3d/${parameters.resourcesPath.blitzModelPath}`)
+        await this.vfs.file(
+          `Data/3d/${parameters.resourcesPath.blitzModelPath}`,
+        )
       ).buffer as ArrayBuffer,
     ).sc2();
     const presets = new Set<string>();
@@ -51,6 +53,8 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
     for (const camoKey in this.camouflagesXml!.root.camouflages) {
       const camo = this.camouflagesXml!.root.camouflages[camoKey];
 
+      if (!(camoKey in this.camouflagesYaml!)) continue;
+
       const yamlEntry = this.camouflagesYaml![camoKey];
       const fullName = yamlEntry.userString
         ? this.getString(yamlEntry.userString)
@@ -83,14 +87,19 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
           ),
         );
 
+        const [nation, tankKey] = vehicle.split(":");
+        // some unique camos only set the preset for their one tank
+        const preset =
+          yamlEntry.preset ??
+          yamlEntry.override?.[nation]?.override?.[tankKey]?.preset;
         let hasPreset = false;
 
-        if (camo.group === "legendary" && yamlEntry.preset !== undefined) {
+        if (preset !== undefined) {
           if (!skinPresets.has(vehicle)) {
             skinPresets.set(vehicle, this.skinPresets(vehicle));
           }
 
-          hasPreset = (await skinPresets.get(vehicle)!).has(yamlEntry.preset);
+          hasPreset = (await skinPresets.get(vehicle)!).has(preset);
         }
 
         if (resolvedParts.some(Boolean) || hasPreset) {
@@ -98,12 +107,15 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         }
       }
 
+      const name = this.getString(camo.userString);
+
       camouflageDefinitions.camouflages[camo.id] = {
         id: camo.id,
-        name: this.getString(camo.userString),
+        name,
         tank_name: resolvedTankName,
         tank_name_full: resolvedTankNameFull,
         tank_id: tankId,
+        attachment: camo.kind === "customization",
       };
     }
 

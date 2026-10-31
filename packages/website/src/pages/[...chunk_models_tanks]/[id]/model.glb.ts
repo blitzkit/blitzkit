@@ -28,19 +28,16 @@ import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
-import {
-  addExtras,
-  toExtras,
-} from "../../../../core/blitzkit/skinAnimations/extras";
-import type { Motion } from "../../../../core/blitzkit/skinAnimations/motion";
+import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
 import {
   bindSocket,
   createMotionClip,
   createSkeleton,
   loadMotion,
   skinPrimitive,
-} from "../../../../core/blitzkit/skinAnimations/skeleton";
-import { vfs } from "../../../../core/blitzkit/vfs";
+} from "../../../core/blitzkit/skinAnimations/skeleton";
+import { partGarage } from "../../../core/blitzkit/switcherStates";
+import { vfs } from "../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
@@ -85,7 +82,13 @@ export async function GET({ props }: APIContext<{ id: number }>) {
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
 const omitMeshNames = {
-  start: ["chassis_chassis_", "chassis_track_crash_", "HP_"],
+  start: [
+    "chassis_chassis_",
+    "chassis_track_crash_",
+    "HP_",
+    // mastery marks a new tank doesn't have yet
+    "custom_gun_marks_",
+  ],
   end: ["_POINT"],
 };
 
@@ -93,6 +96,7 @@ export async function extractModel(
   vfs: AbstractVFS,
   path: string,
   isPart = false,
+  preset?: string,
 ) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
@@ -114,6 +118,7 @@ export async function extractModel(
     skin: Skin,
   ][] = [];
   const motions = new Map<Hierarchy, Motion>();
+  const garageMotions = isPart ? partGarage(sc2, preset).motions : new Set();
 
   if (isPart) {
     const loading: Promise<void>[] = [];
@@ -124,7 +129,7 @@ export async function extractModel(
 
         loading.push(
           loadMotion(vfs, path, component).then((motion) => {
-            if (motion) motions.set(hierarchy, motion);
+            motions.set(hierarchy, motion);
           }),
         );
       }
@@ -133,14 +138,6 @@ export async function extractModel(
     });
 
     await Promise.all(loading);
-
-    for (const component of Object.values(
-      (sc2["#sceneComponents"] ?? {}) as Record<string, Record<string, any>>,
-    )) {
-      if (component["comp.typename"] === "ScenarioSingletonComponent") {
-        scene.setExtras({ scripts: toExtras(component["ssc.scripts"]) });
-      }
-    }
   }
 
   parseHierarchies<Scene | Node>(
@@ -162,7 +159,7 @@ export async function extractModel(
         const motionComponent = components.find(
           (component) => component["comp.typename"] === "MotionComponent",
         );
-        const motion = motionComponent ? motions.get(hierarchy) : undefined;
+        const motion = motions.get(hierarchy);
 
         if (skeleton) {
           const created = createSkeleton(
@@ -175,17 +172,16 @@ export async function extractModel(
 
           skeletons.set(hierarchy, created);
 
-          if (motion && motionComponent) {
-            addExtras(node, {
-              motion: createMotionClip(
-                document,
-                buffer,
-                `motion${document.getRoot().listAnimations().length}`,
-                created.joints,
-                motion,
-                motionComponent,
-              ),
-            });
+          // only what loops in the garage is exported
+          if (motion && motionComponent && garageMotions.has(hierarchy)) {
+            createMotionClip(
+              document,
+              buffer,
+              `motion${document.getRoot().listAnimations().length}`,
+              created.joints,
+              motion,
+              motionComponent,
+            );
           }
         }
       }
@@ -212,37 +208,9 @@ export async function extractModel(
           }
 
           case "StateSwitcherComponent":
-            addExtras(node, {
+            node.setExtras({
               state: component[`ssc.state${component["ssc.activeState"]}`],
             });
-
-            if (isPart) {
-              addExtras(node, {
-                stateNames: times(
-                  component["ssc.statesCount"],
-                  (index) => component[`ssc.state${index}`],
-                ),
-              });
-            }
-            break;
-
-          case "ActionComponent":
-            if (!isPart) break;
-
-            addExtras(node, {
-              actions: toExtras(
-                times(
-                  component["ac.actionCount"],
-                  (index) => component[index.toString().padStart(4, "0")],
-                ),
-              ),
-            });
-            break;
-
-          case "ScenarioComponent":
-            if (!isPart) break;
-
-            addExtras(node, { scenario: component["scenario.scriptId"] });
             break;
 
           case "SkeletonJointBindingComponent": {
@@ -256,14 +224,14 @@ export async function extractModel(
               ] as unknown as { entityUid: string; jointUid: string };
               const joint = skeleton.joints.get(binding.jointUid);
 
-              if (joint) {
-                jointBindings.push([
-                  node,
-                  binding.entityUid,
-                  joint,
-                  skeleton.skin,
-                ]);
-              }
+              if (!joint) throw new Error(`Missing joint ${binding.jointUid}`);
+
+              jointBindings.push([
+                node,
+                binding.entityUid,
+                joint,
+                skeleton.skin,
+              ]);
             });
             break;
           }
@@ -379,7 +347,9 @@ export async function extractModel(
   for (const [owner, entity, joint, skin] of jointBindings) {
     const socket = findNode(owner, entity);
 
-    if (socket) bindSocket(socket, joint, skin);
+    if (!socket) throw new Error(`Missing socket ${entity}`);
+
+    bindSocket(socket, joint, skin);
   }
 
   scene.addChild(document.createNode("test"));
@@ -516,6 +486,27 @@ export async function extractMaterials(
 
           material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
+      }
+
+      const enabledPresets =
+        node.enabledPresets ?? defaultConfigArchive?.enabledPresets;
+      const fxName = node.fxName ?? defaultConfigArchive?.fxName;
+
+      if (enabledPresets?.AlphaBlend || enabledPresets?.AlphaBlendAdditive) {
+        material.setAlphaMode("BLEND");
+      }
+
+      if (enabledPresets?.AlphaBlendAdditive) {
+        // gltf has no additive blending so the viewer applies it
+        material.setExtras({ blending: "additive" });
+      }
+
+      if (fxName?.endsWith("/Textured.material")) {
+        // unlit in game, emissive so the viewer can fade it with the lights
+        material
+          .setEmissiveTexture(material.getBaseColorTexture())
+          .setEmissiveFactor([1, 1, 1])
+          .setBaseColorFactor([0, 0, 0, 1]);
       }
 
       if (textures.miscMap) {

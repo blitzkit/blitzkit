@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "тест",
-    "long": "Это длинная тестовая строка. Вы НИКОГДА не должны видеть её в пользовательском интерфейсе. Мой любимый фрукт — {fruit}, потому что это цвет {color}. Он мне так нравится, так что я скажу его 3 раза {fruit}! {fruit}! {fruit}! И ещё раз, это {color}, а не {not_color}.",
-    "fox": "Съешь же ещё этих мягких французских булок, да выпей чаю."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -38,10 +33,10 @@
     },
     "branches": {
       "beta": "Бета",
-      "development": "Development",
+      "development": "Разработка",
       "opentest": "Открытый тест",
-      "preview": "Preview",
-      "production": "Production"
+      "preview": "Предпросмотр",
+      "production": "Производство"
     },
     "locales": {
       "en": "Английский",
@@ -194,7 +189,7 @@
       "title": "Настройки",
       "description": "Изменить настройки BlitzKit",
       "dev_mode": "Режим разработчика",
-      "auto_load_models": "Auto-load models",
+      "auto_load_models": "Автозагрузка моделей",
       "language": "Язык"
     },
     "common": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Сброс",
         "shuffle": "Перемешать",
@@ -413,7 +414,7 @@
           }
         },
         "sandbox": {
-          "load_model": "Load model",
+          "load_model": "Загрузить модель",
           "poses": {
             "hull_down": "За холмом",
             "face_hug": "В упор",
@@ -574,7 +575,7 @@
             "dpm": "ДПМ",
             "dpmEffective": "Эффективность за 60с",
             "peekabooDpm": "Peekaboo DPM",
-            "peekabooDpmInfo": "Damage per minute assuming you only fire after resetting camouflage (or the reload finishes, if it's slower) — at least 10 seconds between shots.",
+            "peekabooDpmInfo": "Урон в минуту при условии, если вы сбросите камуфляж(или перезарядка окончена, если она медленнее) - не менее 10 секунд между выстрелами.",
             "shells": "Снарядов в барабане",
             "mostOptimalShellIndex": "Самый эффективный снаряд",
             "shellReloads": "Перезарядка",
@@ -922,7 +923,6 @@
       "copyright": "Не связан с Wargaming или иным сервисом",
       "about": {
         "title": "О сайте",
-        "credits": "Авторы",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Патчи"

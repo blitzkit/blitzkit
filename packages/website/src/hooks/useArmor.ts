@@ -4,7 +4,7 @@ import { GLTFLoader } from "three-stdlib";
 import { useDispose } from "./useDispose";
 
 export function useArmor(id: number) {
-  const path = alias("api", `/tanks/${id}/collision.glb`);
+  const path = alias("models_tanks", `/${id}/collision.glb`);
   const gltf = useLoader(GLTFLoader, path);
 
   useDispose(gltf, path);

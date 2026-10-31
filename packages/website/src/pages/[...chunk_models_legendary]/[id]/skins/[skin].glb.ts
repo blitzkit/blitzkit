@@ -6,8 +6,8 @@ import {
   type TankParameters,
 } from "@blitzkit/core";
 import {
-  Animation,
   Document,
+  Material,
   Node,
   NodeIO,
   PropertyType,
@@ -17,13 +17,19 @@ import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, mergeDocuments, unpartition } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import type { Vector3Tuple, Vector4Tuple } from "three";
-import { SKIN_NUMBER } from "../../../../../constants/skinNumber";
-import { api } from "../../../../../core/blitzkit/api";
-import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
-import type { SkinMotion } from "../../../../../core/blitzkit/skinAnimations/skeleton";
-import { vfs } from "../../../../../core/blitzkit/vfs";
-import { getStaticPaths as _getStaticPaths } from "../../../_index";
-import { extractMaterials, extractModel } from "../model.glb";
+import { SKIN_NUMBER } from "../../../../constants/skinNumber";
+import { api } from "../../../../core/blitzkit/api";
+import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import {
+  partGarage,
+  switcherStates,
+} from "../../../../core/blitzkit/switcherStates";
+import { vfs } from "../../../../core/blitzkit/vfs";
+import {
+  extractMaterials,
+  extractModel,
+} from "../../../[...chunk_models_tanks]/[id]/model.glb";
+import { getStaticPaths as _getStaticPaths } from "../../_index";
 
 const SKIN_NUMBER_SLOTS = 5;
 const DIGIT_COLUMNS = 5;
@@ -66,8 +72,10 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
   const [nation, tankKey] = (
     include as { vehicle: { name: string } }
   ).vehicle.name.split(":");
-  const { preset, customEntities } = camouflagesYaml[key];
-  const skinNumber = Number(preset?.match(/(\d+)$/)?.[1] ?? 1);
+  const { customEntities } = camouflagesYaml[key];
+  const preset =
+    camouflagesYaml[key].preset ??
+    camouflagesYaml[key].override?.[nation]?.override?.[tankKey]?.preset;
   const parameters = await vfs.yaml<TankParameters>(
     `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
   );
@@ -87,7 +95,6 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
       scale: Vector3Tuple;
     }
   > = {};
-  const states: Record<string, string | null> = {};
 
   parseHierarchies(sc2["#hierarchy"], null, (hierarchy, components) => {
     for (const component of components) {
@@ -110,43 +117,50 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
           scale: component["sc.attachmentScale"] as Vector3Tuple,
         };
       }
-
-      if (component["comp.typename"] !== "StateSwitcherComponent") continue;
-
-      const active = component[`ssc.state${component["ssc.activeState"]}`];
-      // camos without their own variant keep the default piece, but groups
-      // of elements to hide stay hidden
-      let state: string | null =
-        active && !/skin\d*/.test(active) && !active.includes("hide")
-          ? active
-          : null;
-
-      for (let index = 0; index < component["ssc.statesCount"]; index++) {
-        const name = component[`ssc.state${index}`];
-        const match = name.match(/skin(\d*)/);
-
-        if (
-          match &&
-          !name.includes("hide") &&
-          Number(match[1] || 1) === skinNumber
-        ) {
-          state = name;
-        }
-      }
-
-      states[hierarchy.name] = state;
     }
 
     return null;
   });
 
+  const attachments = new Map<string, string[]>();
+
+  for (const name in customEntities) {
+    const slot = slots[name];
+
+    if (!slot) continue;
+
+    attachments.set(slot.target, [
+      ...(attachments.get(slot.target) ?? []),
+      customEntities[name].item,
+    ]);
+  }
+
+  const states = switcherStates(sc2, preset, attachments);
+
+  // attachments are layered over camouflages, so they only keep what they change
+  if (camouflagesXml.root.camouflages[key].kind === "customization") {
+    const baseline = switcherStates(sc2, preset, new Map());
+
+    for (const name in states) {
+      if (states[name] === baseline[name]) delete states[name];
+    }
+  }
   const document = new Document();
-  const scene = document.createScene().setExtras({ states });
+  const scene = document.createScene();
   const targets = new Map<string, Node>();
 
   document.createBuffer();
 
-  if (preset) await extractMaterials(document, sc2, basePath, preset);
+  if (preset) {
+    const materials = await extractMaterials(document, sc2, basePath, preset);
+
+    // parts may share these names, so mark the ones that replace the tank's
+    for (const material of materials.values()) {
+      if (!(material instanceof Material)) continue;
+
+      material.setExtras({ ...material.getExtras(), camouflage: true });
+    }
+  }
 
   for (const name in customEntities) {
     const slot = slots[name];
@@ -161,33 +175,20 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
       continue;
     }
 
-    const part = await extractModel(vfs, path, true);
+    const part = await extractModel(vfs, path, true, preset);
+    const partSc2 = new Sc2ReadStream(
+      (await vfs.file(`Data/3d/${path}.sc2`)).buffer as ArrayBuffer,
+    ).sc2();
+
+    Object.assign(states, partGarage(partSc2, preset).states);
+
     const map = mergeDocuments(document, part);
     const partScene = map.get(part.getRoot().listScenes()[0]) as Scene;
     const node = document
       .createNode(name)
       .setTranslation(slot.position)
       .setRotation(slot.rotation)
-      .setScale(slot.scale)
-      .setExtras(partScene.getExtras());
-
-    // clip names repeat across parts
-    for (const animation of part.getRoot().listAnimations()) {
-      (map.get(animation) as Animation).setName(
-        `${name}:${animation.getName()}`,
-      );
-    }
-
-    partScene.traverse((child) => {
-      const { motion } = child.getExtras() as { motion?: SkinMotion };
-
-      if (motion) {
-        child.setExtras({
-          ...child.getExtras(),
-          motion: { ...motion, clip: `${name}:${motion.clip}` },
-        });
-      }
-    });
+      .setScale(slot.scale);
     let target = targets.get(slot.target);
 
     if (!target) {
@@ -203,6 +204,8 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
     partScene.dispose();
     target.addChild(node);
   }
+
+  scene.setExtras({ states });
 
   applySkinNumber(document, SKIN_NUMBER);
 

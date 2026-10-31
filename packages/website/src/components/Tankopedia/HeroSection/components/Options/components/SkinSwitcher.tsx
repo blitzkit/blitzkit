@@ -13,7 +13,10 @@ const camouflageDefinitions = await api.camouflageDefinitions();
 
 export function SkinSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
-  const skin = Tankopedia.use((state) => state.skin);
+  const skin = Tankopedia.use((state) => state.loaders.skin.requested);
+  const attachment = Tankopedia.use(
+    (state) => state.loaders.attachment.requested,
+  );
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const { unwrap } = useLocale();
@@ -24,11 +27,18 @@ export function SkinSwitcher() {
     (camouflage) => unwrap(camouflage.name!),
   );
 
+  // attachments aren't camouflages so they get their own group
+  const groups = [
+    skins.filter((camouflage) => !camouflage.attachment),
+    skins.filter((camouflage) => camouflage.attachment),
+  ].filter((group) => group.length > 0);
+
   if (skins.length === 0) return null;
 
   return (
     <Flex
       direction="column"
+      gap="3"
       top="50%"
       right={
         disturbed && requestedDisplay === TankopediaDisplay.Model
@@ -42,40 +52,55 @@ export function SkinSwitcher() {
         pointerEvents: "auto",
       }}
     >
-      {skins.map((camouflage, index) => {
-        const name = unwrap(camouflage.name!).replace(
-          "%(camo_num)",
-          SKIN_NUMBER,
-        );
-        const top = index === 0 ? "var(--radius-full)" : "0";
-        const bottom = index === skins.length - 1 ? "var(--radius-full)" : "0";
+      {groups.map((group) => (
+        <Flex key={group[0].id} direction="column">
+          {group.map((camouflage, index) => {
+            const name = unwrap(camouflage.name!).replace(
+              "%(camo_num)",
+              SKIN_NUMBER,
+            );
+            const top = index === 0 ? "var(--radius-full)" : "0";
+            const bottom =
+              index === group.length - 1 ? "var(--radius-full)" : "0";
 
-        return (
-          <Tooltip key={camouflage.id} content={name} side="left">
-            <SidebarIconButton
-              selected={skin === camouflage.id}
-              alt={name}
-              src={alias("api", `/icons/camouflages/${camouflage.id}.webp`)}
-              size={{ initial: "3", sm: "4" }}
-              radius="full"
-              style={{
-                borderRadius: `${top} ${top} ${bottom} ${bottom}`,
-              }}
-              imageStyle={{
-                width: "70%",
-                height: "70%",
-                borderRadius: "50%",
-              }}
-              onClick={() => {
-                Tankopedia.mutate((draft) => {
-                  draft.skin =
-                    draft.skin === camouflage.id ? undefined : camouflage.id;
-                });
-              }}
-            />
-          </Tooltip>
-        );
-      })}
+            return (
+              <Tooltip key={camouflage.id} content={name} side="left">
+                <SidebarIconButton
+                  selected={
+                    (camouflage.attachment ? attachment : skin) ===
+                    camouflage.id
+                  }
+                  alt={name}
+                  src={alias("api", `/icons/camouflages/${camouflage.id}.webp`)}
+                  size={{ initial: "3", sm: "4" }}
+                  radius="full"
+                  style={{
+                    borderRadius: `${top} ${top} ${bottom} ${bottom}`,
+                  }}
+                  imageStyle={{
+                    width: "70%",
+                    height: "70%",
+                    borderRadius: "50%",
+                  }}
+                  onClick={() => {
+                    Tankopedia.mutate((draft) => {
+                      const loader =
+                        draft.loaders[
+                          camouflage.attachment ? "attachment" : "skin"
+                        ];
+
+                      loader.requested =
+                        loader.requested === camouflage.id
+                          ? undefined
+                          : camouflage.id;
+                    });
+                  }}
+                />
+              </Tooltip>
+            );
+          })}
+        </Flex>
+      ))}
     </Flex>
   );
 }

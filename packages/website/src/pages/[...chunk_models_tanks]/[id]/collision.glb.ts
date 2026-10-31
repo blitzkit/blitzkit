@@ -10,7 +10,7 @@ import {
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import { Accessor, Document, Node, NodeIO, Scene } from "@gltf-transform/core";
 import type { APIContext } from "astro";
-import { vfs } from "../../../../core/blitzkit/vfs";
+import { vfs } from "../../../core/blitzkit/vfs";
 
 export { getStaticPaths } from "./_index";
 

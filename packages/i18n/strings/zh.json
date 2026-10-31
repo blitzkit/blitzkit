@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "测试",
-    "long": "这是一个测试用长字符串。你绝对不会在用户界面中看见这些。我最喜欢的水果是{fruit}因为它的颜色是{color}的。我如此喜欢它，以至于我会把它的名字念3次！{fruit}！{fruit}！{fruit}！重申一次，它是{color}的而不是{not_color}的。",
-    "fox": "褐色的狐狸迅速地跳过那只懒狗"
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "重置",
         "shuffle": "换一批",
@@ -922,7 +923,6 @@
       "copyright": "本网站与 Wargaming战游网 或任何服务无关",
       "about": {
         "title": "关于",
-        "credits": "鸣谢",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "补丁"

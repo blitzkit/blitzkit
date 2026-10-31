@@ -1,23 +1,25 @@
 import { alias } from "@blitzkit/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import {
+  AnimationMixer,
   Mesh,
   SkinnedMesh,
-  type AnimationClip,
   type Group,
   type Material,
   type Object3D,
 } from "three";
 import { GLTFLoader } from "three-stdlib";
 import { TRANSITION_ANIMATION_TIME } from "../components/Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
+import { prepareMaterial } from "../core/blitzkit/jsxTree";
+import { nameOf } from "../core/blitzkit/skinTree";
 import { Tankopedia } from "../stores/tankopedia";
 
 export interface Skin {
   scene: Group;
   materials: Map<string, Material>;
-  animations: AnimationClip[];
   /** customization parts by the tank node they attach to */
   parts: Map<string, Object3D[]>;
+  mixer?: AnimationMixer;
 }
 
 const skins = new Map<string, Promise<Skin>>();
@@ -28,25 +30,24 @@ async function loadSkin(path: string) {
   const materials: Material[] = await gltf.parser.getDependencies("material");
   const skin = {
     scene: gltf.scene,
-    materials: new Map(materials.map((material) => [material.name, material])),
-    animations: gltf.animations,
-    // captured now because rendering moves the parts out of the scene
+    materials: new Map(
+      materials
+        .filter((material) => material.userData.camouflage)
+        .map((material) => [material.name, material]),
+    ),
+    // taken now because rendering moves the parts out of the scene
     parts: new Map(
       gltf.scene.children.map((target) => [target.name, [...target.children]]),
     ),
+    mixer:
+      gltf.animations.length > 0 ? new AnimationMixer(gltf.scene) : undefined,
   };
 
-  for (const parts of skin.parts.values()) {
-    for (const part of parts) {
-      part.traverse((child) => {
-        if (!(child instanceof Mesh)) return;
+  // bound now for the same reason, every exported clip loops in the garage
+  for (const clip of gltf.animations) skin.mixer!.clipAction(clip).play();
 
-        child.castShadow = true;
-        child.receiveShadow = true;
-        // bounds are from the bind pose
-        if (child instanceof SkinnedMesh) child.frustumCulled = false;
-      });
-    }
+  for (const parts of skin.parts.values()) {
+    for (const part of parts) preparePart(part, gltf.scene.userData.states);
   }
 
   loadedSkins.set(path, skin);
@@ -54,48 +55,66 @@ async function loadSkin(path: string) {
   return skin;
 }
 
-function skinPath(id: number, skin: number) {
-  return alias("api", `/tanks/${id}/skins/${skin}.glb`);
-}
+// parts render as they are, so what jsxTree and skinTree would do happens here
+function preparePart(part: Object3D, states: Record<string, string | null>) {
+  part.traverse((object) => {
+    if (object.userData.state !== undefined) {
+      const name = nameOf(object);
+      const state = name in states ? states[name] : object.userData.state;
 
-export function useSkin(id: number, skin?: number) {
-  const [loaded, setLoaded] = useState<Skin>();
-  const mounted = useRef(false);
-
-  useEffect(() => {
-    const path = skin === undefined ? undefined : skinPath(id, skin);
-    const cached = path === undefined ? undefined : loadedSkins.get(path);
-    let settled = false;
-
-    if (!mounted.current) {
-      mounted.current = true;
-
-      if (path === undefined || cached) {
-        setLoaded(cached);
-        return;
+      for (const child of object.children) {
+        child.visible = nameOf(child) === state;
       }
     }
 
-    Tankopedia.mutate((draft) => {
-      draft.revealed = false;
-    });
+    if (!(object instanceof Mesh)) return;
 
-    if (path !== undefined && !skins.has(path)) {
-      skins.set(path, loadSkin(path));
+    object.castShadow = true;
+    object.receiveShadow = true;
+    // bounds are from the bind pose
+    if (object instanceof SkinnedMesh) object.frustumCulled = false;
+
+    prepareMaterial(object.material);
+  });
+}
+
+function skinPath(id: number, skin: number) {
+  return alias("models_legendary", `/${id}/skins/${skin}.glb`);
+}
+
+// attachments load the same way as camouflages and can be shown with one
+export function useSkin(id: number, loader: "skin" | "attachment" = "skin") {
+  const requested = Tankopedia.use((state) => state.loaders[loader].requested);
+  const loaded = Tankopedia.use((state) => state.loaders[loader].loaded);
+
+  useEffect(() => {
+    if (requested === Tankopedia.state.loaders[loader].loaded) return;
+
+    const path = requested === undefined ? undefined : skinPath(id, requested);
+    const cached = path === undefined || loadedSkins.has(path);
+    let settled = false;
+
+    if (!cached) {
+      Tankopedia.mutate((draft) => {
+        draft.revealed = false;
+      });
+
+      if (!skins.has(path)) skins.set(path, loadSkin(path));
     }
 
+    // swaps halfway through the lighting transition
     Promise.all([
-      path === undefined ? undefined : skins.get(path),
+      path && skins.get(path),
       new Promise((resolve) =>
         setTimeout(resolve, TRANSITION_ANIMATION_TIME * 1e3),
       ),
-    ]).then(([loaded]) => {
+    ]).then(() => {
       if (settled) return;
 
       settled = true;
-      setLoaded(loaded);
       Tankopedia.mutate((draft) => {
-        draft.revealed = true;
+        draft.loaders[loader].loaded = requested;
+        if (!cached) draft.revealed = true;
       });
     });
 
@@ -103,11 +122,16 @@ export function useSkin(id: number, skin?: number) {
       if (settled) return;
 
       settled = true;
+
+      if (cached) return;
+
       Tankopedia.mutate((draft) => {
         draft.revealed = true;
       });
     };
-  }, [id, skin]);
+  }, [id, loader, requested]);
 
-  return loaded;
+  return loaded === undefined
+    ? undefined
+    : loadedSkins.get(skinPath(id, loaded));
 }
