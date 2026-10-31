@@ -14,4 +14,5 @@ message Camouflage {
   optional I18nString tank_name      = 3;
   optional I18nString tank_name_full = 4;
   optional uint32     tank_id        = 5;
+  optional bool       attachment     = 6;
 }
