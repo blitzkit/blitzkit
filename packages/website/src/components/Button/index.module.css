@@ -16,9 +16,17 @@
 
   cursor: pointer;
 
+  &[data-even-padding] {
+    padding: var(--space-3);
+  }
+
   &[data-size="minor"] {
     font-size: 0.7em;
     padding: var(--space-2) var(--space-3);
+
+    &[data-even-padding] {
+      padding: var(--space-2);
+    }
   }
 
   &[data-size="major"] {
@@ -61,8 +69,6 @@
   img {
     width: 1.25em;
     height: 1.25em;
-
-    margin: -0.25em 0;
 
     object-fit: contain;
   }

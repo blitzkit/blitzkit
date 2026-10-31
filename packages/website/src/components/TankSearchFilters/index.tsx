@@ -21,7 +21,6 @@ import { Button } from "../Button";
 import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { GunTypeIcon } from "../GunTypeIcon";
-import { IconButton } from "../IconButton";
 import { MissingShellIcon } from "../MissingShellIcon";
 import { ResearchedIcon } from "../ResearchedIcon";
 import { ScienceIcon } from "../ScienceIcon";
@@ -174,7 +173,8 @@ export function TankSearchFilters() {
 
 function ResetButton() {
   return (
-    <IconButton
+    <Button
+      evenPadding
       color="red"
       variant="solid"
       onClick={() => {
@@ -182,7 +182,7 @@ function ResetButton() {
       }}
     >
       <TrashIcon />
-    </IconButton>
+    </Button>
   );
 }
 
@@ -599,7 +599,7 @@ function IndividualShellFilter({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <IconButton listChild="horizontal" variant="soft" color="gray">
+        <Button listChild="horizontal" variant="soft" color="gray" evenPadding>
           {shells[index] === null && (
             <MissingShellIcon width="1em" height="1em" />
           )}
@@ -612,7 +612,7 @@ function IndividualShellFilter({
               )}
             />
           )}
-        </IconButton>
+        </Button>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content>
@@ -709,7 +709,8 @@ function OwnershipFilterInternal() {
 
   return (
     <div className={styles.grouped}>
-      <IconButton
+      <Button
+        evenPadding
         listChild="horizontal"
         disabled={!wargaming}
         variant={showOwned ? "solid" : "soft"}
@@ -723,9 +724,10 @@ function OwnershipFilterInternal() {
         }}
       >
         <LockOpen2Icon />
-      </IconButton>
+      </Button>
 
-      <IconButton
+      <Button
+        evenPadding
         listChild="horizontal"
         disabled={!wargaming}
         variant={showUnowned ? "solid" : "soft"}
@@ -739,7 +741,7 @@ function OwnershipFilterInternal() {
         }}
       >
         <LockClosedIcon />
-      </IconButton>
+      </Button>
     </div>
   );
 }
@@ -750,7 +752,8 @@ function TestFilter() {
 
   return (
     <div className={styles.grouped}>
-      <IconButton
+      <Button
+        evenPadding
         variant={showNonTesting ? "solid" : "soft"}
         color={showNonTesting ? undefined : "gray"}
         highContrast={showNonTesting}
@@ -763,9 +766,10 @@ function TestFilter() {
         }}
       >
         <ScienceOffIcon />
-      </IconButton>
+      </Button>
 
-      <IconButton
+      <Button
+        evenPadding
         variant={showTesting ? "solid" : "soft"}
         color={showTesting ? undefined : "gray"}
         highContrast={showTesting}
@@ -778,7 +782,7 @@ function TestFilter() {
         }}
       >
         <ScienceIcon />
-      </IconButton>
+      </Button>
     </div>
   );
 }

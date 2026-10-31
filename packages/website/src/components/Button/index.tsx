@@ -9,6 +9,7 @@ export interface ButtonProps extends ComponentProps<"button"> {
   variant?: "solid" | "surface" | "soft" | "inverted" | "ghost" | "outline";
   size?: "regular" | "minor" | "major";
   highContrast?: boolean;
+  evenPadding?: boolean;
 
   listChild?: "horizontal" | "vertical";
   parentListChild?: "horizontal" | "vertical";
@@ -36,6 +37,7 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
+  evenPadding,
 
   listChild,
   parentListChild,
@@ -53,6 +55,7 @@ export function Button({
       data-list-child={listChild}
       data-parent-list-child={parentListChild}
       data-high-contrast={highContrast}
+      data-even-padding={evenPadding}
       {...props}
     />
   );

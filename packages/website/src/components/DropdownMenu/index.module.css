@@ -17,7 +17,7 @@
   margin: var(--space-4);
 
   box-shadow: var(--shadow-subtle);
-  border-radius: var(--space-3);
+  border-radius: var(--space-4);
   outline: var(--outline-interactive) !important;
 
   scrollbar-width: none;
