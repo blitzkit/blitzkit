@@ -8,18 +8,35 @@ import {
   toUniqueId,
   VertexAttribute,
   type ConfigArchive,
+  type Hierarchy,
   type TankParameters,
   type Textures,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
-import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
+import {
+  Document,
+  Material,
+  Node,
+  NodeIO,
+  Scene,
+  type Skin,
+} from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
+import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
+import {
+  bindSocket,
+  createMotionClip,
+  createSkeleton,
+  loadMotion,
+  skinPrimitive,
+} from "../../../core/blitzkit/skinAnimations/skeleton";
+import { partGarage } from "../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
@@ -65,7 +82,13 @@ export async function GET({ props }: APIContext<{ id: number }>) {
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
 const omitMeshNames = {
-  start: ["chassis_chassis_", "chassis_track_crash_", "HP_"],
+  start: [
+    "chassis_chassis_",
+    "chassis_track_crash_",
+    "HP_",
+    // mastery marks a new tank doesn't have yet
+    "custom_gun_marks_",
+  ],
   end: ["_POINT"],
 };
 
@@ -73,6 +96,7 @@ export async function extractModel(
   vfs: AbstractVFS,
   path: string,
   isPart = false,
+  preset?: string,
 ) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
@@ -86,6 +110,35 @@ export async function extractModel(
   const scene = document.createScene();
   const buffer = document.createBuffer();
   const materials = await extractMaterials(document, sc2, path);
+  const skeletons = new Map<Hierarchy, ReturnType<typeof createSkeleton>>();
+  const jointBindings: [
+    owner: Node,
+    entity: string,
+    joint: Node,
+    skin: Skin,
+  ][] = [];
+  const motions = new Map<Hierarchy, Motion>();
+  const garageMotions = isPart ? partGarage(sc2, preset).motions : new Set();
+
+  if (isPart) {
+    const loading: Promise<void>[] = [];
+
+    parseHierarchies(sc2["#hierarchy"], null, (hierarchy, components) => {
+      for (const component of components) {
+        if (component["comp.typename"] !== "MotionComponent") continue;
+
+        loading.push(
+          loadMotion(vfs, path, component).then((motion) => {
+            motions.set(hierarchy, motion);
+          }),
+        );
+      }
+
+      return null;
+    });
+
+    await Promise.all(loading);
+  }
 
   parseHierarchies<Scene | Node>(
     sc2["#hierarchy"],
@@ -98,6 +151,40 @@ export async function extractModel(
         return;
 
       const node = document.createNode(hierarchy.name);
+
+      if (isPart) {
+        const skeleton = components.find(
+          (component) => component["comp.typename"] === "SkeletonComponent",
+        );
+        const motionComponent = components.find(
+          (component) => component["comp.typename"] === "MotionComponent",
+        );
+        const motion = motions.get(hierarchy);
+
+        if (skeleton) {
+          const created = createSkeleton(
+            document,
+            buffer,
+            node,
+            skeleton,
+            motion,
+          );
+
+          skeletons.set(hierarchy, created);
+
+          // only what loops in the garage is exported
+          if (motion && motionComponent && garageMotions.has(hierarchy)) {
+            createMotionClip(
+              document,
+              buffer,
+              `motion${document.getRoot().listAnimations().length}`,
+              created.joints,
+              motion,
+              motionComponent,
+            );
+          }
+        }
+      }
 
       components.forEach((component) => {
         switch (component["comp.typename"]) {
@@ -126,13 +213,37 @@ export async function extractModel(
             });
             break;
 
+          case "SkeletonJointBindingComponent": {
+            const skeleton = skeletons.get(hierarchy);
+
+            if (!skeleton) break;
+
+            times(component.count, (index) => {
+              const binding = component.map[
+                index.toString().padStart(4, "0")
+              ] as unknown as { entityUid: string; jointUid: string };
+              const joint = skeleton.joints.get(binding.jointUid);
+
+              if (!joint) throw new Error(`Missing joint ${binding.jointUid}`);
+
+              jointBindings.push([
+                node,
+                binding.entityUid,
+                joint,
+                skeleton.skin,
+              ]);
+            });
+            break;
+          }
+
           case "RenderComponent": {
             const renderObject = component["rc.renderObj"];
 
             times(renderObject["ro.batchCount"], (batchIndex): void => {
               const lodIndex = renderObject[`rb${batchIndex}.lodIndex`];
 
-              if (lodIndex !== 0) return;
+              // -1 means the batch has no lods and is always drawn
+              if (lodIndex !== 0 && !(isPart && lodIndex === -1)) return;
 
               const batchKey = batchIndex.toString().padStart(4, "0");
               const batch = renderObject["ro.batches"][batchKey];
@@ -193,10 +304,24 @@ export async function extractModel(
                 primitive.setAttribute(name, attributeAccessor);
               });
 
+              const skeleton = skeletons.get(hierarchy);
               const mesh = document
                 .createMesh(batch["##name"])
                 .addPrimitive(primitive);
               lodNode.setMesh(mesh);
+
+              if (
+                skeleton &&
+                skinPrimitive(
+                  document,
+                  buffer,
+                  primitive,
+                  attributes,
+                  renderObject[`skinnedObject.batch${batchIndex}.targetsData`],
+                )
+              ) {
+                lodNode.setSkin(skeleton.skin);
+              }
               node.addChild(lodNode);
             });
 
@@ -219,11 +344,29 @@ export async function extractModel(
     },
   );
 
+  for (const [owner, entity, joint, skin] of jointBindings) {
+    const socket = findNode(owner, entity);
+
+    if (!socket) throw new Error(`Missing socket ${entity}`);
+
+    bindSocket(socket, joint, skin);
+  }
+
   scene.addChild(document.createNode("test"));
 
   await document.transform(prune({ keepAttributes: true }), dedup());
 
   return document;
+}
+
+function findNode(node: Node, name: string): Node | undefined {
+  for (const child of node.listChildren()) {
+    if (child.getName() === name) return child;
+
+    const found = findNode(child, name);
+
+    if (found) return found;
+  }
 }
 
 export async function extractMaterials(
@@ -343,6 +486,27 @@ export async function extractMaterials(
 
           material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
         }
+      }
+
+      const enabledPresets =
+        node.enabledPresets ?? defaultConfigArchive?.enabledPresets;
+      const fxName = node.fxName ?? defaultConfigArchive?.fxName;
+
+      if (enabledPresets?.AlphaBlend || enabledPresets?.AlphaBlendAdditive) {
+        material.setAlphaMode("BLEND");
+      }
+
+      if (enabledPresets?.AlphaBlendAdditive) {
+        // gltf has no additive blending so the viewer applies it
+        material.setExtras({ blending: "additive" });
+      }
+
+      if (fxName?.endsWith("/Textured.material")) {
+        // unlit in game, emissive so the viewer can fade it with the lights
+        material
+          .setEmissiveTexture(material.getBaseColorTexture())
+          .setEmissiveFactor([1, 1, 1])
+          .setBaseColorFactor([0, 0, 0, 1]);
       }
 
       if (textures.miscMap) {

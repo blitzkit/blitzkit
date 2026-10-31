@@ -1,20 +1,52 @@
+import type { ReactNode } from "react";
 import type { Material, Object3D } from "three";
 import type { Skin } from "../../hooks/useSkin";
 import { jsxTree } from "./jsxTree";
 
 type Mergers = Parameters<typeof jsxTree>[1];
 
+// names get sanitized and made unique on load
+export function nameOf(object3d: Object3D): string {
+  return object3d.userData.name ?? object3d.name;
+}
+
+/**
+ * skins are layered in order, so an attachment's states win over the
+ * camouflage's; `primitive` renders customization parts as they are so their
+ * bones can animate
+ */
 export function skinTree(
   node: Object3D,
-  skin: Skin | undefined,
-  mergers: Mergers,
+  skins: Skin[],
+  mergers: Mergers & {
+    primitive: (object: Object3D, key: string) => ReactNode;
+  },
 ) {
-  const skinNodes = new Map(
-    skin?.scene.children.map((node) => [node.name, node]),
-  );
+  const materials = new Map<string, Material>();
+  const states: Record<string, string | null> = {};
+
+  for (const skin of skins) {
+    for (const [name, material] of skin.materials) {
+      materials.set(name, material);
+    }
+
+    Object.assign(states, skin.scene.userData.states);
+  }
+
+  function switchChildren(object3d: Object3D) {
+    if (object3d.userData.state === undefined) return;
+
+    const name = nameOf(object3d);
+    const state = name in states ? states[name] : object3d.userData.state;
+
+    return object3d.children
+      .filter((child) => nameOf(child) === state)
+      .map((child) => jsxTree(child, skinMergers));
+  }
+
   const skinMergers: Mergers = {
     mesh(mesh, props, key) {
-      const material = skin?.materials.get((mesh.material as Material).name);
+      const material = materials.get((mesh.material as Material).name);
 
       return mergers!.mesh!(
         mesh,
@@ -23,20 +55,14 @@ export function skinTree(
       );
     },
     group(object3d, props, key) {
-      const skinNode = skinNodes.get(object3d.name);
-      const isSwitch = object3d.userData.state !== undefined;
-      const state = skin
-        ? skin.scene.userData.states[object3d.name]
-        : object3d.userData.state;
-
       return (
         <group key={key} {...props}>
-          {isSwitch
-            ? object3d.children
-                .filter((child) => child.name === state)
-                .map((child) => jsxTree(child, skinMergers))
-            : props.children}
-          {skinNode?.children.map((child) => jsxTree(child, mergers))}
+          {switchChildren(object3d) ?? props.children}
+          {skins.flatMap((skin) =>
+            (skin.parts.get(object3d.name) ?? []).map((part) =>
+              mergers.primitive(part, part.uuid),
+            ),
+          )}
         </group>
       );
     },
