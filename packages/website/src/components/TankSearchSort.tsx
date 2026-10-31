@@ -107,10 +107,8 @@ export function TankSearchSort() {
           {strings.website.common.tank_search.sort.direction.label}
         </DropdownMenu.Label>
         <DropdownMenu.RadioGroup
-          value={`${direction}`}
-          onValueChange={(_value) => {
-            const value = Number(_value);
-
+          value={direction}
+          onValueChange={(value) => {
             if (
               value !== TankopediaSortDirection.Ascending &&
               value !== TankopediaSortDirection.Descending
@@ -123,18 +121,14 @@ export function TankSearchSort() {
             });
           }}
         >
-          <DropdownMenu.RadioItem
-            value={`${TankopediaSortDirection.Ascending}`}
-          >
+          <DropdownMenu.RadioItem value={TankopediaSortDirection.Ascending}>
             <DropdownMenu.ItemIndicator>
               <DotFilledIcon />
             </DropdownMenu.ItemIndicator>
 
             {strings.website.common.tank_search.sort.direction.ascending}
           </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem
-            value={`${TankopediaSortDirection.Descending}`}
-          >
+          <DropdownMenu.RadioItem value={TankopediaSortDirection.Descending}>
             <DropdownMenu.ItemIndicator>
               <DotFilledIcon />
             </DropdownMenu.ItemIndicator>

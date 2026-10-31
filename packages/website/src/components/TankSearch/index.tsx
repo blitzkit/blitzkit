@@ -29,7 +29,6 @@ import {
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { Callout } from "../Callout";
 import { ExperimentIcon } from "../ExperimentIcon";
-import { Flex } from "../Flex";
 import { IncrementalLoader } from "../IncrementalLoader";
 import { Link } from "../Link";
 import { RecentlyViewedTanks } from "../RecentlyViewedTanks";
@@ -218,52 +217,59 @@ export const TankSearch = memo<TankSearchProps>(
         {!skeleton && !compact && <RecentlyViewedTanks />}
 
         {sorted.length > 0 && (
-          <Flex justify="center" className={styles.label}>
-            <div className={styles.count}>
-              <Text lowContrast>
-                {sorted.length === 1
-                  ? strings.website.common.tank_search.count_singular
-                  : literals(strings.website.common.tank_search.count_plural, {
-                      count: sorted.length.toLocaleString(locale),
-                    })}
-              </Text>
+          <div className={styles.label}>
+            <Text lowContrast className={styles.count}>
+              {sorted.length === 1
+                ? strings.website.common.tank_search.count_singular
+                : literals(strings.website.common.tank_search.count_plural, {
+                    count: sorted.length.toLocaleString(locale),
+                  })}
+
+              {sortConfig && (
+                <>
+                  {" - "}
+                  {literals(strings.website.common.tank_search.sorting_by, {
+                    name: (
+                      strings.tanks.characteristics.items as Record<
+                        string,
+                        string
+                      >
+                    )[sortConfig],
+                  })}
+                  ,{" "}
+                  {
+                    strings.website.common.tank_search.sort.direction[
+                      tankopediaSort.direction
+                    ]
+                  }
+                </>
+              )}
 
               {onSelectAll && (
-                <Link
-                  underline="always"
-                  href="#"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    onSelectAll(sorted);
-                    TankopediaPersistent.mutate((draft) => {
-                      draft.recentlyViewed = uniq([
-                        ...sorted.map(({ id }) => id),
-                        ...draft.recentlyViewed,
-                      ])
-                        .filter((id) => id in tankDefinitions.tanks)
-                        .slice(0, MAX_RECENTLY_VIEWED);
-                    });
-                  }}
-                >
-                  {strings.website.common.tank_search.select_all}
-                </Link>
+                <>
+                  {" "}
+                  <Link
+                    underline="always"
+                    href="#"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onSelectAll(sorted);
+                      TankopediaPersistent.mutate((draft) => {
+                        draft.recentlyViewed = uniq([
+                          ...sorted.map(({ id }) => id),
+                          ...draft.recentlyViewed,
+                        ])
+                          .filter((id) => id in tankDefinitions.tanks)
+                          .slice(0, MAX_RECENTLY_VIEWED);
+                      });
+                    }}
+                  >
+                    {strings.website.common.tank_search.select_all}
+                  </Link>
+                </>
               )}
-            </div>
-
-            {sortConfig && (
-              <Text color="gray">
-                {literals(strings.website.common.tank_search.sorting_by, {
-                  name: (
-                    strings.tanks.characteristics.items as Record<
-                      string,
-                      string
-                    >
-                  )[sortConfig],
-                })}
-                , {tankopediaSort.direction}
-              </Text>
-            )}
-          </Flex>
+            </Text>
+          </div>
         )}
 
         {tankFilters.showTesting && !tankFilters.showNonTesting && (

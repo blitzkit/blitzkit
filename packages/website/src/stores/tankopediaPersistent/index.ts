@@ -1,8 +1,8 @@
 import { Soapstone } from "soapstone";
 
 export enum TankopediaSortDirection {
-  Ascending,
-  Descending,
+  Ascending = "ascending",
+  Descending = "descending",
 }
 
 export interface TankopediaPersistent {
