@@ -1,14 +1,14 @@
 import { createDefaultEnvironment, type TankEnvironment } from "@blitzkit/core";
-import type { ShellDefinition, TankDefinition } from "@blitzkit/protos";
+import type { TankDefinition } from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
 import type { Vector3 } from "three";
 import { api } from "../api/dynamic";
 import type { ArmorType } from "../components/SpacedArmorScene";
 import type { ExternalModuleVariant } from "../components/SpacedArmorSceneComponent";
-import type { XP_MULTIPLIERS } from "../components/Tankopedia/TechTreeSection";
 import { createTankState } from "../tankopedia/createTankState";
 import type { TankState } from "../tankopedia/tankState";
-import { TankopediaDisplay } from "./tankopediaPersistent/constants";
+import { App } from "./app";
+import type { TankopediaDisplay } from "./tankopediaPersistent/constants";
 
 export interface ShotLayerBase {
   index: number;
@@ -76,6 +76,11 @@ export enum TankopediaRelativeAgainst {
   All,
 }
 
+interface LoaderState<Type> {
+  requested: Type;
+  loaded: Type;
+}
+
 interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
@@ -86,35 +91,35 @@ interface Tankopedia {
 
   relative_against: TankopediaRelativeAgainst;
 
-  modelRequested: boolean;
-  shot?: Shot;
-  editStatic: boolean;
-  highlightArmor?: {
-    editingPlate: boolean;
-    name: string;
-    point: Vector3;
-    thickness: number;
-    color: string;
-  } & (
-    | {
-        type: ArmorType.Primary | ArmorType.Spaced;
-        thicknessAngled: number;
-        angle: number;
-      }
-    | { type: ArmorType.External }
-  );
-  xpMultiplier: (typeof XP_MULTIPLIERS)[number];
-  customShell?: ShellDefinition;
-  requestedSkin?: number;
-  loadedSkin?: number;
-  skin?: number;
-  requestedDisplay: TankopediaDisplay;
-  display: TankopediaDisplay;
-  statSearch?: string;
+  loaders: {
+    display: LoaderState<TankopediaDisplay>;
+    model: LoaderState<boolean>;
+    skin: LoaderState<number | undefined>;
+    attachment: LoaderState<number | undefined>;
+  };
+
+  // shot?: Shot;
+  // editStatic: boolean;
+  // highlightArmor?: {
+  //   editingPlate: boolean;
+  //   name: string;
+  //   point: Vector3;
+  //   thickness: number;
+  //   color: string;
+  // } & (
+  //   | {
+  //       type: ArmorType.Primary | ArmorType.Spaced;
+  //       thicknessAngled: number;
+  //       angle: number;
+  //     }
+  //   | { type: ArmorType.External }
+  // );
+  // xpMultiplier: (typeof XP_MULTIPLIERS)[number];
+  // customShell?: ShellDefinition;
+  // statSearch?: string;
 }
 
 const skills = await api.skills();
-const models = await api.models();
 
 export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
   (tank) => ({
@@ -123,17 +128,17 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
 
     protagonist: createTankState(tank),
     antagonist: createTankState(tank),
-    model: models.models[tank.id],
-
     environment: createDefaultEnvironment(skills),
 
     relative_against: TankopediaRelativeAgainst.ClassAndTier,
 
-    modelRequested: false,
+    loaders: {
+      model: { requested: App.state.autoLoadModels, loaded: false },
+      skin: { requested: undefined, loaded: undefined },
+      attachment: { requested: undefined, loaded: undefined },
+    },
 
     editStatic: false,
     xpMultiplier: 1,
-    requestedDisplay: TankopediaDisplay.Model,
-    display: TankopediaDisplay.Model,
   }),
 );

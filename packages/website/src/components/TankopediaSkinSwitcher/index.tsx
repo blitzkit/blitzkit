@@ -17,8 +17,10 @@ export function TankopediaSkinSwitcher() {
 
   const tank = useDuel("protagonist", DuelModule.Tank);
 
-  const skin = Tankopedia.use((state) => state.requestedSkin);
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+  const skin = Tankopedia.use((state) => state.loaders.skin.requested);
+  const requestedDisplay = Tankopedia.use(
+    (state) => state.loaders.display.requested,
+  );
   const revealed = Tankopedia.use((state) => state.revealed);
 
   const skins = uniqBy(
@@ -53,8 +55,8 @@ export function TankopediaSkinSwitcher() {
               size="major"
               onClick={() => {
                 Tankopedia.mutate((draft) => {
-                  draft.requestedSkin =
-                    draft.requestedSkin === camouflage.id
+                  draft.loaders.skin.requested =
+                    draft.loaders.skin.requested === camouflage.id
                       ? undefined
                       : camouflage.id;
                 });
