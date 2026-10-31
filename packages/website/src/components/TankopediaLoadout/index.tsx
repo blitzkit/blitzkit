@@ -547,9 +547,6 @@ function EquipmentSlotEntry({
   rowIndex,
   columnIndex,
 }: EquipmentSlotProps) {
-  const equipmentIndex = rowIndex * equipmentColumns + columnIndex;
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const equipment = useEquipmentPreset(tank.equipment_preset);
   // const { price } = equipment.price.unlock_slot_prices[equipmentIndex];
 
   return (
