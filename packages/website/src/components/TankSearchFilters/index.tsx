@@ -4,6 +4,7 @@ import { literals } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { ShellType, TankType } from "@blitzkit/protos";
 import {
+  CheckIcon,
   LockClosedIcon,
   LockOpen2Icon,
   ResetIcon,
@@ -233,6 +234,10 @@ function TiersFilter() {
               checked={selected}
               key={tier}
             >
+              <DropdownMenu.ItemIndicator>
+                <CheckIcon />
+              </DropdownMenu.ItemIndicator>
+
               {literals(strings.website.common.tank_search.tier, {
                 tier: romanize(tier),
               })}
@@ -252,8 +257,8 @@ function TiersFilter() {
             });
           }}
         >
-          <TrashIcon />
           {strings.website.common.tank_search.clear}
+          <TrashIcon />
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

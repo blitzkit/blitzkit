@@ -1,35 +1,49 @@
-import type { FC } from "react";
+import type { ComponentProps, ComponentType } from "react";
 import { classNames } from "./classNames";
 
-function composeRadixComponent<Props>(
-  Component: FC<Props>,
+function composeRadixComponent<Props extends object>(
+  Component: ComponentType<Props>,
   style: CSSModuleClasses[string],
+  _props?: Partial<Props>,
 ) {
   return function (props: Props & { className?: string }) {
     return (
-      <Component {...props} className={classNames(style, props.className)} />
+      <Component
+        {..._props}
+        {...props}
+        className={classNames(style, props.className)}
+      />
     );
   };
 }
 
-export function composeRadixComponents<
-  Components extends Record<string, unknown>,
->(components: Components, styles: CSSModuleClasses) {
-  const mapped: Partial<Components> = {};
+type ComponentKeys<T> = {
+  [K in keyof T]: T[K] extends ComponentType<any> ? K : never;
+}[keyof T];
+
+type PickComponents<T> = Pick<T, ComponentKeys<T>>;
+
+export function composeRadixComponents<Module extends Record<string, unknown>>(
+  components: Module,
+  styles: CSSModuleClasses,
+  props: Partial<{
+    [C in ComponentKeys<Module>]: ComponentProps<
+      Extract<Module[C], ComponentType<any>>
+    >;
+  }> = {},
+) {
+  const mapped: Record<string, unknown> = {};
+  const propsByName = props as Record<string, object | undefined>;
 
   for (const key in components) {
-    const isMethod = key[0].toLowerCase() === key[0];
-
-    if (isMethod) {
-      mapped[key] = components[key];
-      continue;
-    }
+    if (key[0].toLowerCase() === key[0]) continue;
 
     mapped[key] = composeRadixComponent(
-      components[key] as FC,
+      components[key] as ComponentType<any>,
       styles[key],
-    ) as Components[Extract<keyof Components, string>];
+      propsByName[key],
+    );
   }
 
-  return mapped as Components;
+  return mapped as PickComponents<Module>;
 }
