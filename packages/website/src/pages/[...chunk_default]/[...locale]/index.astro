@@ -11,6 +11,7 @@ import HomeGames from "../../../components/HomeGames.astro";
 import HomePlayers from "../../../components/HomePlayers.astro";
 import HomeTanks from "../../../components/HomeTanks.astro";
 import HomeTechnical from "../../../components/HomeTechnical.astro";
+import { Section } from "../../../components/Section";
 import { tools, type Tool } from "../../../constants/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../_index";
@@ -68,9 +69,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 
   {environment === "preview" && <AesonPlug />}
 
-  <HomeTanks {locale} />
-  <HomePlayers {locale} />
-  <HomeGames {locale} />
-  <HomeCosmetics {locale} />
-  <HomeTechnical {locale} />
+  <Section>
+    <HomeTanks {locale} />
+    <HomePlayers {locale} />
+    <HomeGames {locale} />
+    <HomeCosmetics {locale} />
+    <HomeTechnical {locale} />
+  </Section>
 </BaseLayout>
