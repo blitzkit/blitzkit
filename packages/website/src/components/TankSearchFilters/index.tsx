@@ -20,7 +20,6 @@ import { TankFilters } from "../../stores/tankFilters";
 import { Button } from "../Button";
 import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
-import { Flex } from "../Flex";
 import { GunTypeIcon } from "../GunTypeIcon";
 import { IconButton } from "../IconButton";
 import { MissingShellIcon } from "../MissingShellIcon";
@@ -715,7 +714,7 @@ function OwnershipFilterInternal() {
   const showUnowned = TankFilters.use((state) => state.showUnowned);
 
   return (
-    <Flex>
+    <div className={styles.grouped}>
       <IconButton
         style={{
           borderTopRightRadius: 0,
@@ -756,7 +755,7 @@ function OwnershipFilterInternal() {
       >
         <LockClosedIcon />
       </IconButton>
-    </Flex>
+    </div>
   );
 }
 
