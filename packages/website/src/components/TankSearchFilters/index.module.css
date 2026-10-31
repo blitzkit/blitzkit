@@ -11,3 +11,15 @@
     background-position: 0% 50%;
   }
 }
+
+.plus {
+  color: var(--gray-11);
+}
+
+.icon {
+  filter: drop-shadow(var(--shadow-icon));
+
+  & + & {
+    margin-left: -0.5em;
+  }
+}

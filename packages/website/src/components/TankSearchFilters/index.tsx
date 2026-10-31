@@ -164,6 +164,7 @@ export function TankSearchFilters() {
 
       <GunTypeFilter />
       <ShellFilter />
+
       <ConsumablesFilter />
       <ProvisionsFilter />
       <GameModeAbilitiesFilter />
@@ -195,22 +196,19 @@ function TiersFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
-          <Flex gap="1">
-            {tiers.slice(0, MAX_ICONS).map((tier) => (
-              <Text size="minor" key={tier}>
-                {romanize(tier)}
-              </Text>
-            ))}
+        <Button color="gray" variant="surface">
+          {tiers
+            .slice(0, MAX_ICONS)
+            .map((tier) => romanize(tier))
+            .join(" ")}
 
-            {tiers.length > MAX_ICONS && (
-              <Text size="minor">
-                {literals(strings.common.units.plus, {
-                  value: tiers.length - MAX_ICONS,
-                })}
-              </Text>
-            )}
-          </Flex>
+          {tiers.length > MAX_ICONS && (
+            <span className={styles.plus}>
+              {literals(strings.common.units.plus, {
+                value: tiers.length - MAX_ICONS,
+              })}
+            </span>
+          )}
         </Button>
       </DropdownMenu.Trigger>
 
@@ -274,17 +272,12 @@ function NationsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
-            {nations.map((nation, index) => (
+            {nations.map((nation) => (
               <img
+                className={styles.icon}
                 key={nation}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                }}
                 src={alias("api", `/flags/circle/${nation}.webp`)}
               />
             ))}
@@ -362,21 +355,14 @@ function ClassFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
             {classes.map((tankClass, index) => {
               return (
                 <ClassIcon
                   key={tankClass}
                   class={tankClass}
-                  style={{
-                    color: "var(--gray-12)",
-                    opacity: 1,
-                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                    marginLeft: index > 0 ? "-0.5em" : undefined,
-                    width: "1.25em",
-                    height: "1.25em",
-                  }}
+                  className={styles.icon}
                 />
               );
             })}
@@ -449,7 +435,7 @@ function GunTypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
             {gunTypes.map((gunType) => {
               return (
@@ -528,7 +514,7 @@ function TypeFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex gap="1">
             {types.map((tankType) => {
               return (
@@ -537,11 +523,8 @@ function TypeFilter() {
                     color: `var(--${TANK_TYPE_COLORS[tankType]}-${
                       tankType === TankType.TANK_TYPE_RESEARCHABLE ? "12" : "11"
                     })`,
-                    filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                    opacity: 1,
-                    width: "1.25em",
-                    height: "1.25em",
                   }}
+                  className={styles.icon}
                   key={tankType}
                 />
               );
@@ -634,7 +617,7 @@ function IndividualShellFilter({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <IconButton listChild size="minor" variant="surface" color="gray">
+        <IconButton listChild variant="surface" color="gray">
           {shells[index] === null && (
             <Text lowContrast className={styles["shell-icon"]}>
               <MissingShellIcon width="1em" height="1em" />
@@ -844,28 +827,22 @@ function ConsumablesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
             {consumables.slice(0, MAX_ICONS).map((consumable, index) => (
               <img
                 key={consumable}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
+                className={styles.icon}
                 src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
             ))}
 
             {consumables.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
+              <span className={styles.plus}>
                 {literals(strings.common.units.plus, {
                   value: consumables.length - MAX_ICONS,
                 })}
-              </Text>
+              </span>
             )}
           </Flex>
         </Button>
@@ -939,28 +916,22 @@ function ProvisionsFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
             {provisions.slice(0, MAX_ICONS).map((provision, index) => (
               <img
                 key={provision}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
+                className={styles.icon}
                 src={alias("api", `/icons/provisions/${provision}.webp`)}
               />
             ))}
 
             {provisions.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
+              <span className={styles.plus}>
                 {literals(strings.common.units.plus, {
                   value: provisions.length - MAX_ICONS,
                 })}
-              </Text>
+              </span>
             )}
           </Flex>
         </Button>
@@ -1049,28 +1020,18 @@ function GameModeAbilitiesFilter() {
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button size="minor" color="gray" variant="surface">
+        <Button color="gray" variant="surface">
           <Flex>
             {icons.slice(0, MAX_ICONS).map((icon, index) => (
-              <img
-                key={icon}
-                style={{
-                  filter: "drop-shadow(0 0 var(--space-1) var(--black-a11))",
-                  marginLeft: index > 0 ? "-0.5em" : undefined,
-                  width: "1.25em",
-                  height: "1.25em",
-                  objectFit: "contain",
-                }}
-                src={icon}
-              />
+              <img key={icon} className={styles.icon} src={icon} />
             ))}
 
             {icons.length > MAX_ICONS && (
-              <Text size="minor" className={styles["overflow-plus"]}>
+              <span className={styles.plus}>
                 {literals(strings.common.units.plus, {
                   value: icons.length - MAX_ICONS,
                 })}
-              </Text>
+              </span>
             )}
           </Flex>
         </Button>

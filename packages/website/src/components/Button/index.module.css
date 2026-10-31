@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 
   border-radius: var(--max-size);
   padding: var(--space-3) var(--space-4);
@@ -64,8 +64,8 @@
 
   svg,
   img {
-    width: 1em;
-    height: 1em;
+    width: 1.25em;
+    height: 1.25em;
 
     object-fit: contain;
   }
@@ -105,7 +105,7 @@
 
   &[data-variant="surface"],
   &[data-variant="outline"] {
-    outline: var(--space-1) solid var(--accent-6);
+    outline: var(--space-1) solid var(--accent-5);
 
     &[data-high-contrast="true"] {
       outline: var(--space-1) solid var(--accent-11);

@@ -1,6 +1,7 @@
 .text {
-  font-size: var(--font-size-regular);
-
+  &[data-size="regular"] {
+    font-size: var(--font-size-regular);
+  }
   &[data-size="minor"] {
     font-size: var(--font-size-minor);
   }
