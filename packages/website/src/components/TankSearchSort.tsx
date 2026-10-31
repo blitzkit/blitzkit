@@ -1,12 +1,16 @@
-import { CaretDownIcon } from "@radix-ui/react-icons";
-import { characteristicsGroups } from "../../../config/characteristicsGroups";
-import { useStrings } from "../../../hooks/useStrings";
-import { TankopediaSortDirection } from "../../../stores/tankopediaPersistent";
-import { TankSort } from "../../../stores/tankopediaSort";
-import { sortableCharacteristics } from "../../../tankopedia/sortableCharacteristics";
-import type { CharacteristicName } from "../../../types/characteristics";
-import { Button } from "../../Button";
-import { DropdownMenu } from "../../DropdownMenu";
+import {
+  CaretDownIcon,
+  CaretRightIcon,
+  DotFilledIcon,
+} from "@radix-ui/react-icons";
+import { characteristicsGroups } from "../config/characteristicsGroups";
+import { useStrings } from "../hooks/useStrings";
+import { TankopediaSortDirection } from "../stores/tankopediaPersistent";
+import { TankSort } from "../stores/tankopediaSort";
+import { sortableCharacteristics } from "../tankopedia/sortableCharacteristics";
+import type { CharacteristicName } from "../types/characteristics";
+import { Button } from "./Button";
+import { DropdownMenu } from "./DropdownMenu";
 
 interface ItemProps {
   by: CharacteristicName;
@@ -25,12 +29,16 @@ function Item({ by }: ItemProps) {
         });
       }}
     >
+      <DropdownMenu.ItemIndicator>
+        <DotFilledIcon />
+      </DropdownMenu.ItemIndicator>
+
       {strings.tanks.characteristics.items[by]}
     </DropdownMenu.CheckboxItem>
   );
 }
 
-export function Sort() {
+export function TankSearchSort() {
   const by = TankSort.use((state) => state.by);
   const direction = TankSort.use((state) => state.direction);
   const strings = useStrings();
@@ -46,7 +54,7 @@ export function Sort() {
 
       <DropdownMenu.Content align="end">
         <DropdownMenu.Label>
-          {strings.website.common.tank_search.sort.direction.label}
+          {strings.website.common.tank_search.sort.by}
         </DropdownMenu.Label>
 
         <DropdownMenu.CheckboxItem
@@ -57,6 +65,10 @@ export function Sort() {
             });
           }}
         >
+          <DropdownMenu.ItemIndicator>
+            <DotFilledIcon />
+          </DropdownMenu.ItemIndicator>
+
           {strings.website.common.tank_search.sort.none}
         </DropdownMenu.CheckboxItem>
 
@@ -76,6 +88,8 @@ export function Sort() {
                     >
                   )[group.name]
                 }
+
+                <CaretRightIcon />
               </DropdownMenu.SubTrigger>
 
               <DropdownMenu.SubContent>
@@ -93,8 +107,10 @@ export function Sort() {
           {strings.website.common.tank_search.sort.direction.label}
         </DropdownMenu.Label>
         <DropdownMenu.RadioGroup
-          value={direction}
-          onValueChange={(value) => {
+          value={`${direction}`}
+          onValueChange={(_value) => {
+            const value = Number(_value);
+
             if (
               value !== TankopediaSortDirection.Ascending &&
               value !== TankopediaSortDirection.Descending
@@ -107,10 +123,22 @@ export function Sort() {
             });
           }}
         >
-          <DropdownMenu.RadioItem value={TankopediaSortDirection.Ascending}>
+          <DropdownMenu.RadioItem
+            value={`${TankopediaSortDirection.Ascending}`}
+          >
+            <DropdownMenu.ItemIndicator>
+              <DotFilledIcon />
+            </DropdownMenu.ItemIndicator>
+
             {strings.website.common.tank_search.sort.direction.ascending}
           </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value={TankopediaSortDirection.Descending}>
+          <DropdownMenu.RadioItem
+            value={`${TankopediaSortDirection.Descending}`}
+          >
+            <DropdownMenu.ItemIndicator>
+              <DotFilledIcon />
+            </DropdownMenu.ItemIndicator>
+
             {strings.website.common.tank_search.sort.direction.descending}
           </DropdownMenu.RadioItem>
         </DropdownMenu.RadioGroup>

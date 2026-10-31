@@ -10,7 +10,7 @@ import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { Flex } from "../Flex";
-import { Sort } from "../TankSearch/components/Sort";
+import { TankSearchSort } from "../TankSearchSort";
 import { TextField } from "../TextField";
 
 type SearchBarProps = MaybeSkeletonComponentProps & {
@@ -74,7 +74,7 @@ export function TankSearchBar({
         <MagnifyingGlassIcon />
       </TextField>
 
-      <Sort />
+      <TankSearchSort />
     </Flex>
   );
 }
