@@ -553,7 +553,7 @@
           "compare": {
             "label": "Compare against",
             "class": "{tier} {class}",
-            "tier": "All tier {tier}",
+            "tier": "Весь рівень{tier}",
             "all": "Усі танки"
           },
           "values": {
