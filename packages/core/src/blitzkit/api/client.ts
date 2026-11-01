@@ -3,6 +3,7 @@ import { fetchPB } from "../../protobuf";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
+  DescriptionDefinitions,
   EquipmentDefinitions,
   Gallery,
   GameDefinitions,
@@ -65,5 +66,12 @@ export class ClientBlitzKitAPI extends BlitzKitAPI {
 
   mapDefinitions() {
     return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
+  }
+
+  descriptionDefinitions() {
+    return fetchPB(
+      alias("api", "/definitions/descriptions.pb"),
+      DescriptionDefinitions,
+    );
   }
 }
