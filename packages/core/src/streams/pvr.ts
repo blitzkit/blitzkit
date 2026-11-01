@@ -88,8 +88,9 @@ enum PvrChannelType {
 
 enum ResolvedBitRatePixelFormat {
   R4G4B4A4,
-  R8G8B8A8,
   R5G6B5A0,
+  R8G8B8A8,
+  R8G8B8A0,
 }
 
 export class PvrReadStream extends ReadStream {
@@ -138,27 +139,6 @@ export class PvrReadStream extends ReadStream {
           };
         }
 
-        case ResolvedBitRatePixelFormat.R8G8B8A8: {
-          const data = Buffer.alloc(pixelCount * 4);
-
-          times(pixelCount, (index) => {
-            const buffer = this.consumeUint8Array(4);
-            const bufferIndex = index * 4;
-
-            data[bufferIndex] = buffer[0]; // R
-            data[bufferIndex + 1] = buffer[1]; // G
-            data[bufferIndex + 2] = buffer[2]; // B
-            data[bufferIndex + 3] = buffer[3]; // A
-          });
-
-          return {
-            data,
-            width: header.width,
-            height: header.height,
-            channels: 4 as const,
-          };
-        }
-
         case ResolvedBitRatePixelFormat.R5G6B5A0: {
           const data = Buffer.alloc(pixelCount * 3);
 
@@ -178,6 +158,24 @@ export class PvrReadStream extends ReadStream {
 
           return {
             data,
+            width: header.width,
+            height: header.height,
+            channels: 3 as const,
+          };
+        }
+
+        case ResolvedBitRatePixelFormat.R8G8B8A8: {
+          return {
+            data: Buffer.from(this.consumeUint8Array(pixelCount * 4)),
+            width: header.width,
+            height: header.height,
+            channels: 4 as const,
+          };
+        }
+
+        case ResolvedBitRatePixelFormat.R8G8B8A0: {
+          return {
+            data: Buffer.from(this.consumeUint8Array(pixelCount * 3)),
             width: header.width,
             height: header.height,
             channels: 3 as const,
@@ -240,6 +238,8 @@ export class PvrReadStream extends ReadStream {
     } else if (pixelFormat.order === "rgb\0") {
       if (isEqual(pixelFormat.bitRates, [5, 6, 5, 0])) {
         return ResolvedBitRatePixelFormat.R5G6B5A0;
+      } else if (isEqual(pixelFormat.bitRates, [8, 8, 8, 0])) {
+        return ResolvedBitRatePixelFormat.R8G8B8A0;
       } else
         throw new TypeError(
           `Unhandled rgb bit rate ${pixelFormat.bitRates.join(", ")}`,

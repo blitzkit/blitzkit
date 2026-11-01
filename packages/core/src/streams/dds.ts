@@ -353,7 +353,7 @@ export class DdsReadStream extends WindowsReadStream {
     const color0 = this.R5G6B5A0();
     const int1 = this.readR5G6B5Int();
     const color1 = this.R5G6B5A0();
-    const alpha = int0 < int1;
+    const alpha = int0 <= int1;
     const color2 = alpha
       ? (color0.map(
           (channel0, index) => (channel0 + color1[index]) / 2
