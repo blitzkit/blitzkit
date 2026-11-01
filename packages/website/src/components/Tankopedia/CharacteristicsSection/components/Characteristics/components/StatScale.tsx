@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 
 const RESOLUTION = 1000;
 const HEIGHT = 9;
@@ -12,6 +12,7 @@ interface StatScaleProps {
 
 export const StatScale = memo<StatScaleProps>(
   ({ values, value, lowerIsBetter }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const ticks = useMemo(() => {
       const min = Math.min(value, ...values);
       const max = Math.max(value, ...values);
@@ -27,19 +28,52 @@ export const StatScale = memo<StatScaleProps>(
         counts.set(x, (counts.get(x) ?? 0) + 1);
       }
 
-      return Array.from(counts, ([x, count]) => ({
-        x,
-        color:
-          count === 1
-            ? "var(--gray-a5)"
-            : count <= 3
-              ? "var(--gray-a6)"
-              : "var(--gray-a7)",
-      }));
+      return Array.from(counts, ([x, count]) => ({ x }));
     }, [values, value, lowerIsBetter]);
 
+    useEffect(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const draw = () => {
+        const { width } = canvas.getBoundingClientRect();
+        const pixelRatio = window.devicePixelRatio || 1;
+        const canvasWidth = Math.ceil(width * pixelRatio);
+        const canvasHeight = Math.ceil(HEIGHT * pixelRatio);
+
+        if (canvas.width !== canvasWidth || canvas.height !== canvasHeight) {
+          canvas.width = canvasWidth;
+          canvas.height = canvasHeight;
+        }
+
+        const context = canvas.getContext("2d");
+        if (!context) return;
+
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        context.clearRect(0, 0, width, HEIGHT);
+
+        const styles = getComputedStyle(canvas);
+        for (const { x } of ticks) {
+          context.fillStyle = styles.getPropertyValue("--gray-a5").trim();
+          context.fillRect((x / RESOLUTION) * width, 0, 1, HEIGHT);
+        }
+      };
+
+      const observer = new ResizeObserver(draw);
+      observer.observe(canvas);
+      window.addEventListener("resize", draw);
+      draw();
+
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("resize", draw);
+      };
+    }, [ticks]);
+
     return (
-      <div
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -51,21 +85,7 @@ export const StatScale = memo<StatScaleProps>(
           opacity: Math.min(1, Math.sqrt(DENSE_TICKS / ticks.length)),
           pointerEvents: "none",
         }}
-      >
-        {ticks.map(({ x, color }) => (
-          <div
-            key={x}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: `${(x / RESOLUTION) * 100}%`,
-              width: 1,
-              height: "100%",
-              backgroundColor: color,
-            }}
-          />
-        ))}
-      </div>
+      />
     );
   },
 );
