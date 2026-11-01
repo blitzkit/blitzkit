@@ -679,7 +679,8 @@
             "none": "差分なし",
             "percentage": "割合",
             "absolute": "絶対値"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "車輌が選択されていません",
