@@ -387,7 +387,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
               : TankType.TANK_TYPE_RESEARCHABLE,
           tier: tank.level,
           class: tankClass,
-          testing: tankTags.includes("testTank"),
+          testing: tankTags.includes("testTank") || tank.level === 11,
           deprecated: tankTags.includes("deprecated"),
           price: tankPrice,
           camouflage_still: tankDefinition.root.invisibility.still,
@@ -595,9 +595,25 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             for (const shellKey in gunListEntry.shots) {
               const gunShellEntry = gunListEntry.shots[shellKey];
               const shell = shellList.root[shellKey];
+
+              // Newer client data stores shot properties on the shell rather
+              // than repeating them under every gun's <shots> entry.
+              const speed =
+                typeof gunShellEntry === "string"
+                  ? shell.speed
+                  : gunShellEntry.speed;
+              const maxDistance =
+                typeof gunShellEntry === "string"
+                  ? shell.maxDistance
+                  : gunShellEntry.maxDistance;
+              const piercingPower =
+                typeof gunShellEntry === "string"
+                  ? shell.piercingPower
+                  : gunShellEntry.piercingPower;
+
               const shellId = toUniqueId(nation, shell.id);
               const shellName = this.getString(shell.userString);
-              const penetrationRaw = gunShellEntry.piercingPower
+              const penetrationRaw = piercingPower
                 .split(" ")
                 .filter((penetrationString) => penetrationString !== "")
                 .map(Number);
@@ -607,7 +623,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
               ].shells.push({
                 id: shellId,
                 name: shellName,
-                velocity: gunShellEntry.speed,
+                velocity: speed,
                 armor_damage: shell.damage.armor,
                 module_damage: shell.damage.devices,
                 caliber: shell.caliber,
@@ -623,7 +639,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
                   near: penetrationRaw[0],
                   far: penetrationRaw[1],
                 },
-                range: gunShellEntry.maxDistance,
+                range: maxDistance,
               });
             }
 

@@ -2,6 +2,11 @@ name: Website
 
 on:
   push:
+    branches:
+      - main
+      - production
+
+  pull_request:
 
   schedule:
     - cron: "0 4 * * *"
@@ -93,7 +98,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        chunk: [default, api]
+        chunk: [default, api, models_tanks, models_legendary, models_maps]
 
     steps:
       - name: Free disk space
@@ -102,9 +107,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.branch || 'production' }}
+          # the PR's ref, or the manual input, or production (selected when cron)
+          ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
           submodules: recursive
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
@@ -122,8 +128,13 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Download Client
+      - name: Download client
         run: bun run download-client
+
+      - name: Download SmartDLC
+        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
+
+        run: bun run download-smart-dlc
 
       - name: Build
         run: bun run --bun build
@@ -139,13 +150,15 @@ jobs:
 
       - name: Trigger deployment
 
-        # Deploy if:
-        # 1. Running cron from main using content from production to target production
-        # 2. Running manually and targeting non-production
+        # workflow should trigger if:
+        # - is by cron and is on main: triggering to production
+        # - is by push and is on production: triggering to production
+        # - is by manual and is on anything: triggering to anything
         if: >-
           ${{
-            github.ref == 'refs/heads/production' ||
-            (inputs.environment != '' && inputs.environment != 'production')
+            (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+            || (github.event_name == 'push' && github.ref == 'refs/heads/production')
+            || (github.event_name == 'workflow_dispatch')
           }}
 
         env:

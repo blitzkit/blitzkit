@@ -24,6 +24,8 @@ export interface Camouflage {
   name: I18nString | undefined;
   tank_name?: I18nString | undefined;
   tank_name_full?: I18nString | undefined;
+  tank_id?: number | undefined;
+  attachment?: boolean | undefined;
 }
 
 function createBaseCamouflageDefinitions(): CamouflageDefinitions {
@@ -191,7 +193,7 @@ export const CamouflageDefinitions_CamouflagesEntry: MessageFns<CamouflageDefini
 };
 
 function createBaseCamouflage(): Camouflage {
-  return { id: 0, name: undefined, tank_name: undefined, tank_name_full: undefined };
+  return { id: 0, name: undefined, tank_name: undefined, tank_name_full: undefined, tank_id: 0, attachment: false };
 }
 
 export const Camouflage: MessageFns<Camouflage> = {
@@ -207,6 +209,12 @@ export const Camouflage: MessageFns<Camouflage> = {
     }
     if (message.tank_name_full !== undefined) {
       I18nString.encode(message.tank_name_full, writer.uint32(34).fork()).join();
+    }
+    if (message.tank_id !== undefined && message.tank_id !== 0) {
+      writer.uint32(40).uint32(message.tank_id);
+    }
+    if (message.attachment !== undefined && message.attachment !== false) {
+      writer.uint32(48).bool(message.attachment);
     }
     return writer;
   },
@@ -250,6 +258,22 @@ export const Camouflage: MessageFns<Camouflage> = {
           message.tank_name_full = I18nString.decode(reader, reader.uint32());
           continue;
         }
+        case 5: {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.tank_id = reader.uint32();
+          continue;
+        }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.attachment = reader.bool();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -265,6 +289,8 @@ export const Camouflage: MessageFns<Camouflage> = {
       name: isSet(object.name) ? I18nString.fromJSON(object.name) : undefined,
       tank_name: isSet(object.tank_name) ? I18nString.fromJSON(object.tank_name) : undefined,
       tank_name_full: isSet(object.tank_name_full) ? I18nString.fromJSON(object.tank_name_full) : undefined,
+      tank_id: isSet(object.tank_id) ? globalThis.Number(object.tank_id) : 0,
+      attachment: isSet(object.attachment) ? globalThis.Boolean(object.attachment) : false,
     };
   },
 
@@ -281,6 +307,12 @@ export const Camouflage: MessageFns<Camouflage> = {
     }
     if (message.tank_name_full !== undefined) {
       obj.tank_name_full = I18nString.toJSON(message.tank_name_full);
+    }
+    if (message.tank_id !== undefined && message.tank_id !== 0) {
+      obj.tank_id = Math.round(message.tank_id);
+    }
+    if (message.attachment !== undefined && message.attachment !== false) {
+      obj.attachment = message.attachment;
     }
     return obj;
   },
@@ -300,6 +332,8 @@ export const Camouflage: MessageFns<Camouflage> = {
     message.tank_name_full = (object.tank_name_full !== undefined && object.tank_name_full !== null)
       ? I18nString.fromPartial(object.tank_name_full)
       : undefined;
+    message.tank_id = object.tank_id ?? 0;
+    message.attachment = object.attachment ?? false;
     return message;
   },
 };
