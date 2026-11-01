@@ -7,19 +7,41 @@ import {
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
+  type Component,
   type ConfigArchive,
+  type Hierarchy,
   type TankParameters,
   type Textures,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
-import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
+import {
+  Document,
+  Material,
+  Node,
+  NodeIO,
+  Scene,
+  type Skin,
+} from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
+import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
+import {
+  bindSocket,
+  createMotionClip,
+  createSkeleton,
+  loadMotion,
+  skinPrimitive,
+} from "../../../core/blitzkit/skinAnimations/skeleton";
+import {
+  createParticleEffect,
+  particleEmitters,
+} from "../../../core/blitzkit/skinParticles/effect";
+import { partGarage } from "../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
@@ -79,6 +101,7 @@ export async function extractModel(
   vfs: AbstractVFS,
   path: string,
   isPart = false,
+  preset?: string,
 ) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
@@ -92,6 +115,40 @@ export async function extractModel(
   const scene = document.createScene();
   const buffer = document.createBuffer();
   const materials = await extractMaterials(document, sc2, path);
+  const skeletons = new Map<Hierarchy, ReturnType<typeof createSkeleton>>();
+  const jointBindings: [
+    owner: Node,
+    entity: string,
+    joint: Node,
+    skin: Skin,
+  ][] = [];
+  const effects: [
+    node: Node,
+    effect: Extract<Component, { "comp.typename": "ParticleEffectComponent" }>,
+    repeats: number,
+  ][] = [];
+  const motions = new Map<Hierarchy, Motion>();
+  const garage = isPart ? partGarage(sc2, preset) : undefined;
+
+  if (isPart) {
+    const loading: Promise<void>[] = [];
+
+    parseHierarchies(sc2["#hierarchy"], null, (hierarchy, components) => {
+      for (const component of components) {
+        if (component["comp.typename"] !== "MotionComponent") continue;
+
+        loading.push(
+          loadMotion(vfs, path, component).then((motion) => {
+            motions.set(hierarchy, motion);
+          }),
+        );
+      }
+
+      return null;
+    });
+
+    await Promise.all(loading);
+  }
 
   parseHierarchies<Scene | Node>(
     sc2["#hierarchy"],
@@ -104,6 +161,40 @@ export async function extractModel(
         return;
 
       const node = document.createNode(hierarchy.name);
+
+      if (isPart) {
+        const skeleton = components.find(
+          (component) => component["comp.typename"] === "SkeletonComponent",
+        );
+        const motionComponent = components.find(
+          (component) => component["comp.typename"] === "MotionComponent",
+        );
+        const motion = motions.get(hierarchy);
+
+        if (skeleton) {
+          const created = createSkeleton(
+            document,
+            buffer,
+            node,
+            skeleton,
+            motion,
+          );
+
+          skeletons.set(hierarchy, created);
+
+          // only what loops in the garage is exported
+          if (motion && motionComponent && garage?.motions.has(hierarchy)) {
+            createMotionClip(
+              document,
+              buffer,
+              `motion${document.getRoot().listAnimations().length}`,
+              created.joints,
+              motion,
+              motionComponent,
+            );
+          }
+        }
+      }
 
       components.forEach((component) => {
         switch (component["comp.typename"]) {
@@ -128,9 +219,42 @@ export async function extractModel(
 
           case "StateSwitcherComponent":
             node.setExtras({
-              state: component[`ssc.state${component["ssc.activeState"]}`],
+              // a part's scenarios can pick its state as it loads
+              state:
+                component[`ssc.state${component["ssc.activeState"]}`] ??
+                (isPart ? null : undefined),
             });
             break;
+
+          case "ParticleEffectComponent": {
+            const repeats = garage?.effects.get(hierarchy);
+
+            if (repeats !== undefined) effects.push([node, component, repeats]);
+            break;
+          }
+
+          case "SkeletonJointBindingComponent": {
+            const skeleton = skeletons.get(hierarchy);
+
+            if (!skeleton) break;
+
+            times(component.count, (index) => {
+              const binding = component.map[
+                index.toString().padStart(4, "0")
+              ] as unknown as { entityUid: string; jointUid: string };
+              const joint = skeleton.joints.get(binding.jointUid);
+
+              if (!joint) throw new Error(`Missing joint ${binding.jointUid}`);
+
+              jointBindings.push([
+                node,
+                binding.entityUid,
+                joint,
+                skeleton.skin,
+              ]);
+            });
+            break;
+          }
 
           case "RenderComponent": {
             const renderObject = component["rc.renderObj"];
@@ -200,10 +324,24 @@ export async function extractModel(
                 primitive.setAttribute(name, attributeAccessor);
               });
 
+              const skeleton = skeletons.get(hierarchy);
               const mesh = document
                 .createMesh(batch["##name"])
                 .addPrimitive(primitive);
               lodNode.setMesh(mesh);
+
+              if (
+                skeleton &&
+                skinPrimitive(
+                  document,
+                  buffer,
+                  primitive,
+                  attributes,
+                  renderObject[`skinnedObject.batch${batchIndex}.targetsData`],
+                )
+              ) {
+                lodNode.setSkin(skeleton.skin);
+              }
               node.addChild(lodNode);
             });
 
@@ -226,11 +364,43 @@ export async function extractModel(
     },
   );
 
+  for (const [owner, entity, joint, skin] of jointBindings) {
+    const socket = findNode(owner, entity);
+
+    if (!socket) throw new Error(`Missing socket ${entity}`);
+
+    bindSocket(socket, joint, skin);
+  }
+
+  const emitters = particleEmitters(sc2);
+
+  for (const [node, effect, repeats] of effects) {
+    await createParticleEffect(
+      document,
+      buffer,
+      vfs,
+      node,
+      effect,
+      repeats,
+      emitters,
+    );
+  }
+
   scene.addChild(document.createNode("test"));
 
   await document.transform(prune({ keepAttributes: true }), dedup());
 
   return document;
+}
+
+function findNode(node: Node, name: string): Node | undefined {
+  for (const child of node.listChildren()) {
+    if (child.getName() === name) return child;
+
+    const found = findNode(child, name);
+
+    if (found) return found;
+  }
 }
 
 export async function extractMaterials(

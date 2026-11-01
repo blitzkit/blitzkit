@@ -27,6 +27,55 @@ type DataNode = {
     }
 );
 
+/**
+ * a constant, [2, ...channels] where each key is [type, value, time, ...], or
+ * [0, source, curve, factor] when bound to something like the vehicle's speed
+ */
+export type ParticleValue = number | (number | string | number[][])[];
+
+export interface ParticleLayer {
+  activeLODS: boolean[];
+  alphaOverLife?: ParticleValue;
+  angle3d?: ParticleValue;
+  angleVariation3d?: Vector3Tuple;
+  blending: number;
+  colorOverLife?: ParticleValue;
+  colorRandom?: ParticleValue;
+  deltaTime: number;
+  deltaVariation: number;
+  enableAlphaRemap: boolean;
+  enableFlow: boolean;
+  enableMask: boolean;
+  enableNoise: boolean;
+  enableUvScroll: boolean;
+  endTime: number;
+  forces: unknown[];
+  frameOverLifeEnabled: boolean;
+  inheritPosition: boolean;
+  isLong: boolean;
+  isLooped: boolean;
+  isSingle: boolean;
+  layerType: string;
+  name: string;
+  particleOrientation: number;
+  pivotPoint3d: Vector3Tuple;
+  simplifiedForces: unknown[];
+  size3d?: Vector3Tuple;
+  sizeOverLife3ds?: ParticleValue;
+  sizeVariation3d?: Vector3Tuple;
+  spin3d?: Vector3Tuple;
+  spritePath?: string;
+  velocity?: ParticleValue;
+}
+
+export interface ParticleEmitterNode {
+  "##name": "ParticleEmitterNode";
+  "#id": ArrayBuffer;
+  layers?: ParticleLayer[];
+  name?: string;
+  type?: number;
+}
+
 export interface ConfigArchive {
   configName: string;
   fxName: string;
@@ -158,7 +207,11 @@ export type Component =
         "ro.notShadowOnly": boolean;
         "ro.sOclCull": boolean;
         "ro.sOclIndex": number;
-      } & Record<`rb${number}.${"lodIndex" | "switchIndex"}`, number>;
+      } & Record<`rb${number}.${"lodIndex" | "switchIndex"}`, number> &
+        Record<
+          `skinnedObject.batch${number}.targetsData`,
+          ArrayBuffer | undefined
+        >;
     }
   | {
       "comp.typename": "SlotComponent";
