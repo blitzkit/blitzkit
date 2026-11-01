@@ -679,7 +679,8 @@
             "none": "Без дельты",
             "percentage": "Проценты",
             "absolute": "Абсолютные"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "Нет выбранных танков",
