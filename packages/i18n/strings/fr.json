@@ -679,7 +679,8 @@
             "none": "No deltas",
             "percentage": "Percentage",
             "absolute": "Absolute"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "No tanks selected",
@@ -920,7 +921,7 @@
     },
     "footer": {
       "motto": "Everything World of Tanks Blitz",
-      "copyright": "Unaffiliated with Wargaming or any service",
+      "association": "An Open Collective Project",
       "about": {
         "title": "About",
         "discord": "Discord",
