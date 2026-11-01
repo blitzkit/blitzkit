@@ -4,7 +4,13 @@ import {
   ChassisDefinitionsList,
   Crew,
   GunDefinitionsList,
+  I_HAT,
+  J_HAT,
+  K_HAT,
   ModelDefinitions,
+  parseHierarchies,
+  Sc2ReadStream,
+  ScgReadStream,
   TankParameters,
   toUniqueId,
   TurretDefinitionsList,
@@ -12,15 +18,97 @@ import {
   VehicleDefinitionArmor,
   VehicleDefinitionList,
   VehicleDefinitions,
+  VertexAttribute,
 } from "@blitzkit/core";
 import { parse as parsePath } from "path";
-import { Vector3Tuple } from "three";
+import { MathUtils, Vector3 as THREEVector3, Vector3Tuple } from "three";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI2 } from "./2_camouflageDefinitions";
 
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
     return { x: tuple[0], y: tuple[1], z: tuple[2] } satisfies Vector3;
+  }
+
+  private async collisionBoundingBoxes(
+    nation: string,
+    tankKey: string,
+    turretRotation?: { yaw: number; pitch: number; roll: number },
+  ) {
+    const boundingBoxes: Record<
+      string,
+      { min: Vector3Tuple; max: Vector3Tuple }
+    > = {};
+    const path = `Data/3d/Tanks/CollisionMeshes/${nation}-${tankKey}`;
+
+    if (!(await this.vfs.resolve(`${path}.sc2`))) {
+      throw new Error(`Missing collision mesh for ${nation}-${tankKey}`);
+    }
+
+    const sc2 = new Sc2ReadStream(
+      (await this.vfs.file(`${path}.sc2`)).buffer as ArrayBuffer,
+    ).sc2();
+    const scg = new ScgReadStream(
+      (await this.vfs.file(`${path}.scg`)).buffer as ArrayBuffer,
+    ).scg();
+
+    parseHierarchies(sc2["#hierarchy"], null, (hierarchy, components) => {
+      for (const component of components) {
+        if (component["comp.typename"] !== "RenderComponent") continue;
+
+        const polygonGroup = scg.get(
+          component["rc.renderObj"]["ro.batches"]["0000"]["rb.datasource"],
+        );
+
+        if (!polygonGroup) continue;
+
+        const min: Vector3Tuple = [Infinity, Infinity, Infinity];
+        const max: Vector3Tuple = [-Infinity, -Infinity, -Infinity];
+        const rotate =
+          turretRotation && hierarchy.name.toLowerCase().startsWith("turret");
+
+        polygonGroup.vertices.forEach((vertex) => {
+          vertex.forEach(({ attribute, value }) => {
+            if (attribute !== VertexAttribute.VERTEX) return;
+
+            const position = new THREEVector3(...value);
+
+            if (rotate) {
+              position
+                .applyAxisAngle(
+                  I_HAT,
+                  -MathUtils.degToRad(turretRotation.pitch),
+                )
+                .applyAxisAngle(
+                  J_HAT,
+                  -MathUtils.degToRad(turretRotation.roll),
+                )
+                .applyAxisAngle(
+                  K_HAT,
+                  -MathUtils.degToRad(turretRotation.yaw),
+                );
+            }
+
+            const coordinates = position.toArray();
+
+            for (let axis = 0; axis < 3; axis++) {
+              min[axis] = Math.min(min[axis], coordinates[axis]);
+              max[axis] = Math.max(max[axis], coordinates[axis]);
+            }
+          });
+        });
+
+        boundingBoxes[hierarchy.name.toLowerCase()] = { min, max };
+      }
+
+      return null;
+    });
+
+    if (!boundingBoxes.hull) {
+      throw new Error(`Missing hull collision mesh for ${nation}-${tankKey}`);
+    }
+
+    return boundingBoxes;
   }
 
   private assignArmor(
@@ -67,6 +155,12 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
         const tankParameters = await this.vfs.yaml<TankParameters>(
           `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
         );
+        const collisionBoundingBoxes = await this.collisionBoundingBoxes(
+          nation,
+          tankKey,
+          tankDefinition.root.hull.turretInitialRotation,
+        );
+        const hullBoundingBox = collisionBoundingBoxes.hull;
         const turretOrigin = tankDefinition.root.hull.turretPositions.turret
           .split(" ")
           .map(Number) as Vector3Tuple;
@@ -141,12 +235,8 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
               }
             : undefined,
           bounding_box: {
-            min: this.vector3TupleToBlitzkit(
-              tankParameters.collision.hull.bbox.min,
-            ),
-            max: this.vector3TupleToBlitzkit(
-              tankParameters.collision.hull.bbox.max,
-            ),
+            min: this.vector3TupleToBlitzkit(hullBoundingBox.min),
+            max: this.vector3TupleToBlitzkit(hullBoundingBox.max),
           },
           turrets: {},
           tracks: {},
@@ -208,26 +298,35 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
 
           turret.userString;
 
+          const turretCollisionName = parsePath(
+            turret.hitTester.collisionModel,
+          ).name.toLowerCase();
+          const isFullYaw = -turretYaw[0] + turretYaw[1] === 360;
+
+          if (!collisionBoundingBoxes[turretCollisionName] && isFullYaw) {
+            throw new Error(
+              `Missing turret collision mesh for ${nation}-${tankKey} ${turretKey}`,
+            );
+          }
+
+          const turretBoundingBox = collisionBoundingBoxes[
+            turretCollisionName
+          ] ?? {
+            min: [0, 0, 0] as Vector3Tuple,
+            max: [0, 0, 0] as Vector3Tuple,
+          };
+
           modelDefinitions.models[tankId].turrets[turretId] = {
             armor: turretArmor,
             gun_origin: this.vector3TupleToBlitzkit(gunOrigin),
             model_id: turretModel,
-            yaw:
-              -turretYaw[0] + turretYaw[1] === 360
-                ? undefined
-                : { min: turretYaw[0], max: turretYaw[1] },
+            yaw: isFullYaw
+              ? undefined
+              : { min: turretYaw[0], max: turretYaw[1] },
             guns: {},
             bounding_box: {
-              min: this.vector3TupleToBlitzkit(
-                tankParameters.collision[
-                  parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.min,
-              ),
-              max: this.vector3TupleToBlitzkit(
-                tankParameters.collision[
-                  parsePath(turret.hitTester.collisionModel).name.toLowerCase()
-                ].bbox.max,
-              ),
+              min: this.vector3TupleToBlitzkit(turretBoundingBox.min),
+              max: this.vector3TupleToBlitzkit(turretBoundingBox.max),
             },
           };
 

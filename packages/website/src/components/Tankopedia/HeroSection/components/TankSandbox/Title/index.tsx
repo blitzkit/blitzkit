@@ -1,30 +1,53 @@
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Heading } from "@radix-ui/themes";
+import { useEffect, useRef } from "react";
+import { SKIN_NUMBER } from "../../../../../../constants/skinNumber";
+import { api } from "../../../../../../core/blitzkit/api";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
 import { Tankopedia } from "../../../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
 import { Tracker } from "./components/Tracker";
 
+const camouflageDefinitions = await api.camouflageDefinitions();
+
 export function Title({ skeleton }: MaybeSkeletonComponentProps) {
   const { unwrap, strings } = useLocale();
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
-  const name = unwrap(protagonist.name!);
+  const hasRevealed = useRef(false);
+  const skin = Tankopedia.use((state) => state.loaders.skin.requested);
+  const camouflage =
+    skin === undefined ? undefined : camouflageDefinitions.camouflages[skin];
+  const tankName = unwrap(protagonist.name!);
+  // legendary camos carry the tank's in-battle name
+  const name = (
+    camouflage
+      ? camouflage.tank_name
+        ? unwrap(camouflage.tank_name)
+        : `${tankName} ${unwrap(camouflage.name!)}`
+      : tankName
+  ).replace("%(camo_num)", SKIN_NUMBER);
   const fontSize = revealed
     ? disturbed
       ? "1.5rem"
       : "2rem"
     : `min(12vh, ${75 / name.length}vw)`;
 
+  useEffect(() => {
+    if (revealed) hasRevealed.current = true;
+  }, [revealed]);
+
   return (
     <Flex
       onPointerDown={(event) => {
         event.preventDefault();
 
-        if (!modelRequested) return;
+        if (!modelRequested || hasRevealed.current) return;
 
         Tankopedia.mutate((draft) => {
           draft.revealed = true;
@@ -86,7 +109,7 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
             onPointerDown={(event) => event.stopPropagation()}
             onClick={() => {
               Tankopedia.mutate((draft) => {
-                draft.modelRequested = true;
+                draft.loaders.model.requested = true;
               });
             }}
           >

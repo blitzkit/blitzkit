@@ -3,7 +3,7 @@ import {
   normalizeBoundingBox,
   resolveDpm,
   SEARCH_KEYS,
-  unionBoundingBox,
+  tankBoundingBox,
   type TankDefinition,
 } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
@@ -137,16 +137,10 @@ export const TankSearch = memo<TankSearchProps>(
               const bTurretModelDefinition =
                 bTankModelDefinition.turrets[b.turrets.at(-1)!.id];
               const aSize = normalizeBoundingBox(
-                unionBoundingBox(
-                  aTankModelDefinition.bounding_box!,
-                  aTurretModelDefinition.bounding_box!,
-                ),
+                tankBoundingBox(aTankModelDefinition, aTurretModelDefinition),
               );
               const bSize = normalizeBoundingBox(
-                unionBoundingBox(
-                  bTankModelDefinition.bounding_box!,
-                  bTurretModelDefinition.bounding_box!,
-                ),
+                tankBoundingBox(bTankModelDefinition, bTurretModelDefinition),
               );
               const aVolume = aSize.x * aSize.y * aSize.z;
               const bVolume = bSize.x * bSize.y * bSize.z;
@@ -164,16 +158,10 @@ export const TankSearch = memo<TankSearchProps>(
               const bTurretModelDefinition =
                 bTankModelDefinition.turrets[b.turrets.at(-1)!.id];
               const aSize = normalizeBoundingBox(
-                unionBoundingBox(
-                  aTankModelDefinition.bounding_box!,
-                  aTurretModelDefinition.bounding_box!,
-                ),
+                tankBoundingBox(aTankModelDefinition, aTurretModelDefinition),
               );
               const bSize = normalizeBoundingBox(
-                unionBoundingBox(
-                  bTankModelDefinition.bounding_box!,
-                  bTurretModelDefinition.bounding_box!,
-                ),
+                tankBoundingBox(bTankModelDefinition, bTurretModelDefinition),
               );
               const aLength = Math.max(aSize.x, aSize.y, aSize.z);
               const bLength = Math.max(bSize.x, bSize.y, bSize.z);

@@ -26,6 +26,7 @@ body:
       description: What branch of BlitzKit were you using? Please see the "Branch" section of the footer at the very bottom of any page.
       options:
         - Production
+        - Beta
         - Preview
         - OpenTest
       default: 0
