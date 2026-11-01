@@ -7,6 +7,7 @@ import {
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
+  type Component,
   type ConfigArchive,
   type Hierarchy,
   type TankParameters,
@@ -36,6 +37,10 @@ import {
   loadMotion,
   skinPrimitive,
 } from "../../../core/blitzkit/skinAnimations/skeleton";
+import {
+  createParticleEffect,
+  particleEmitters,
+} from "../../../core/blitzkit/skinParticles/effect";
 import { partGarage } from "../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../core/blitzkit/vfs";
 import {
@@ -117,8 +122,13 @@ export async function extractModel(
     joint: Node,
     skin: Skin,
   ][] = [];
+  const effects: [
+    node: Node,
+    effect: Extract<Component, { "comp.typename": "ParticleEffectComponent" }>,
+    repeats: number,
+  ][] = [];
   const motions = new Map<Hierarchy, Motion>();
-  const garageMotions = isPart ? partGarage(sc2, preset).motions : new Set();
+  const garage = isPart ? partGarage(sc2, preset) : undefined;
 
   if (isPart) {
     const loading: Promise<void>[] = [];
@@ -173,7 +183,7 @@ export async function extractModel(
           skeletons.set(hierarchy, created);
 
           // only what loops in the garage is exported
-          if (motion && motionComponent && garageMotions.has(hierarchy)) {
+          if (motion && motionComponent && garage?.motions.has(hierarchy)) {
             createMotionClip(
               document,
               buffer,
@@ -215,6 +225,13 @@ export async function extractModel(
                 (isPart ? null : undefined),
             });
             break;
+
+          case "ParticleEffectComponent": {
+            const repeats = garage?.effects.get(hierarchy);
+
+            if (repeats !== undefined) effects.push([node, component, repeats]);
+            break;
+          }
 
           case "SkeletonJointBindingComponent": {
             const skeleton = skeletons.get(hierarchy);
@@ -353,6 +370,20 @@ export async function extractModel(
     if (!socket) throw new Error(`Missing socket ${entity}`);
 
     bindSocket(socket, joint, skin);
+  }
+
+  const emitters = particleEmitters(sc2);
+
+  for (const [node, effect, repeats] of effects) {
+    await createParticleEffect(
+      document,
+      buffer,
+      vfs,
+      node,
+      effect,
+      repeats,
+      emitters,
+    );
   }
 
   scene.addChild(document.createNode("test"));

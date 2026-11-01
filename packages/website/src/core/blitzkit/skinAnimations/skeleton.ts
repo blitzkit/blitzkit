@@ -25,7 +25,7 @@ type MotionComponent = Extract<
   Component,
   { "comp.typename": "MotionComponent" }
 >;
-type AccessorType = "SCALAR" | "VEC3" | "VEC4" | "MAT4";
+type AccessorType = "SCALAR" | "VEC2" | "VEC3" | "VEC4" | "MAT4";
 
 const JOINT_ROOT = 0xffffff;
 const MOTION_PATHS = {
@@ -34,7 +34,7 @@ const MOTION_PATHS = {
   [MotionChannel.Scale]: "scale",
 } as const;
 
-function createAccessor(
+export function createAccessor(
   document: Document,
   buffer: Buffer,
   type: AccessorType,

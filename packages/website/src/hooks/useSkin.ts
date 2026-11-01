@@ -69,12 +69,18 @@ function preparePart(part: Object3D, states: Record<string, string | null>) {
 
     if (!(object instanceof Mesh)) return;
 
+    prepareMaterial(object.material);
+
+    // particles are light, not a surface to shade or drag on
+    if ((object.material as Material).userData.particle) {
+      object.raycast = () => {};
+      return;
+    }
+
     object.castShadow = true;
     object.receiveShadow = true;
     // bounds are from the bind pose
     if (object instanceof SkinnedMesh) object.frustumCulled = false;
-
-    prepareMaterial(object.material);
   });
 }
 
