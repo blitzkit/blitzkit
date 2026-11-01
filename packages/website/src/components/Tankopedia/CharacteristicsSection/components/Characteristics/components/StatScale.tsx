@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 
+const RESOLUTION = 1000;
 const HEIGHT = 9;
 const DENSE_TICKS = 100;
 
@@ -19,9 +20,9 @@ export const StatScale = memo<StatScaleProps>(
 
       for (const other of values) {
         const raw = range === 0 ? 0.5 : (other - min) / range;
-        const x = lowerIsBetter ? 1 - raw : raw;
+        const x = Math.round((lowerIsBetter ? 1 - raw : raw) * RESOLUTION);
 
-        if (x === 0 || x === 1) continue;
+        if (x === 0 || x === RESOLUTION) continue;
 
         counts.set(x, (counts.get(x) ?? 0) + 1);
       }
@@ -57,7 +58,7 @@ export const StatScale = memo<StatScaleProps>(
             style={{
               position: "absolute",
               top: 0,
-              left: `${x * 100}%`,
+              left: `${(x / RESOLUTION) * 100}%`,
               width: 1,
               height: "100%",
               backgroundColor: color,
