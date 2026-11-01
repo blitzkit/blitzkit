@@ -183,7 +183,11 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
                 size="1"
                 value={goodness * 100}
                 color={color}
-                style={{ height: "0.125rem", opacity: 0.5 }}
+                style={{
+                  position: "relative",
+                  height: "0.125rem",
+                  opacity: 0.75,
+                }}
               />
             </Box>
 

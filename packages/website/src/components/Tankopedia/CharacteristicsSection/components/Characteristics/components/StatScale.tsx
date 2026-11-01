@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef } from "react";
 
 const RESOLUTION = 1000;
-const HEIGHT = 9;
+const HEIGHT = 8;
 const DENSE_TICKS = 100;
 
 interface StatScaleProps {
@@ -17,7 +17,7 @@ export const StatScale = memo<StatScaleProps>(
       const min = Math.min(value, ...values);
       const max = Math.max(value, ...values);
       const range = max - min;
-      const counts = new Map<number, number>();
+      const positions = new Set<number>();
 
       for (const other of values) {
         const raw = range === 0 ? 0.5 : (other - min) / range;
@@ -25,10 +25,10 @@ export const StatScale = memo<StatScaleProps>(
 
         if (x === 0 || x === RESOLUTION) continue;
 
-        counts.set(x, (counts.get(x) ?? 0) + 1);
+        positions.add(x);
       }
 
-      return Array.from(counts, ([x, count]) => ({ x }));
+      return Array.from(positions, (x) => ({ x }));
     }, [values, value, lowerIsBetter]);
 
     useEffect(() => {
@@ -54,7 +54,7 @@ export const StatScale = memo<StatScaleProps>(
 
         const styles = getComputedStyle(canvas);
         for (const { x } of ticks) {
-          context.fillStyle = styles.getPropertyValue("--gray-a5").trim();
+          context.fillStyle = styles.getPropertyValue("--gray-a6").trim();
           context.fillRect((x / RESOLUTION) * width, 0, 1, HEIGHT);
         }
       };
