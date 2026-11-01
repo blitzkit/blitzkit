@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 
 const HEIGHT = 9;
 const DENSE_TICKS = 100;
@@ -11,6 +11,7 @@ interface StatScaleProps {
 
 export const StatScale = memo<StatScaleProps>(
   ({ values, value, lowerIsBetter }) => {
+    const canvas = useRef<HTMLCanvasElement>(null);
     const ticks = useMemo(() => {
       const min = Math.min(value, ...values);
       const max = Math.max(value, ...values);
@@ -29,16 +30,42 @@ export const StatScale = memo<StatScaleProps>(
       return Array.from(counts, ([x, count]) => ({
         x,
         color:
-          count === 1
-            ? "var(--gray-a5)"
-            : count <= 3
-              ? "var(--gray-a6)"
-              : "var(--gray-a7)",
+          count === 1 ? "--gray-a5" : count <= 3 ? "--gray-a6" : "--gray-a7",
       }));
     }, [values, value, lowerIsBetter]);
 
+    useEffect(() => {
+      const element = canvas.current;
+      if (!element) return;
+
+      const draw = () => {
+        const { width } = element.getBoundingClientRect();
+        const pixelRatio = window.devicePixelRatio || 1;
+        const context = element.getContext("2d");
+        if (!context) return;
+
+        element.width = Math.round(width * pixelRatio);
+        element.height = Math.round(HEIGHT * pixelRatio);
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+        const styles = getComputedStyle(element);
+        for (const { x, color } of ticks) {
+          context.fillStyle = styles.getPropertyValue(color);
+          context.fillRect(x * width, 0, 1, HEIGHT);
+        }
+      };
+
+      const observer = new ResizeObserver(draw);
+      observer.observe(element);
+      draw();
+
+      return () => observer.disconnect();
+    }, [ticks]);
+
     return (
-      <div
+      <canvas
+        ref={canvas}
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -50,21 +77,7 @@ export const StatScale = memo<StatScaleProps>(
           opacity: Math.min(1, Math.sqrt(DENSE_TICKS / ticks.length)),
           pointerEvents: "none",
         }}
-      >
-        {ticks.map(({ x, color }) => (
-          <div
-            key={x}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: `${x * 100}%`,
-              width: 1,
-              height: "100%",
-              backgroundColor: color,
-            }}
-          />
-        ))}
-      </div>
+      />
     );
   },
 );
