@@ -35,8 +35,8 @@
       "beta": "Бета",
       "development": "Розробка",
       "opentest": "Відкритий тест",
-      "preview": "Preview",
-      "production": "Production"
+      "preview": "Перегляд",
+      "production": "Виробництво"
     },
     "locales": {
       "en": "Англійська",
@@ -304,7 +304,7 @@
     "tools": {
       "credits": {
         "name": "Credits",
-        "button": "View people",
+        "button": "Переглянути людей",
         "description": "Contributors of BlitzKit",
         "seo_description": "BlitzKit is the work of many"
       },
