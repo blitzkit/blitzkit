@@ -16,7 +16,7 @@ export const StatScale = memo<StatScaleProps>(
       const min = Math.min(value, ...values);
       const max = Math.max(value, ...values);
       const range = max - min;
-      const positions = new Set<number>();
+      const counts = new Map<number, number>();
 
       for (const other of values) {
         const raw = range === 0 ? 0.5 : (other - min) / range;
@@ -24,10 +24,14 @@ export const StatScale = memo<StatScaleProps>(
 
         if (x === 0 || x === 1) continue;
 
-        positions.add(x);
+        counts.set(x, (counts.get(x) ?? 0) + 1);
       }
 
-      return Array.from(positions);
+      return Array.from(counts, ([x, count]) => ({
+        x,
+        color:
+          count === 1 ? "--gray-a5" : count <= 3 ? "--gray-a6" : "--gray-a7",
+      }));
     }, [values, value, lowerIsBetter]);
 
     useEffect(() => {
@@ -45,8 +49,8 @@ export const StatScale = memo<StatScaleProps>(
         context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
         const styles = getComputedStyle(element);
-        context.fillStyle = styles.getPropertyValue("--gray-a5");
-        for (const x of ticks) {
+        for (const { x, color } of ticks) {
+          context.fillStyle = styles.getPropertyValue(color);
           context.fillRect(x * width, 0, 1, HEIGHT);
         }
       };
