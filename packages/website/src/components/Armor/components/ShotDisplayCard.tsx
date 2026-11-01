@@ -128,19 +128,30 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
     ? shotStatusColors[shot.out.status]
     : undefined;
   const inTitleColor = shotStatusColors[shot.in.status];
+  const hasOutLayers = shot.out !== undefined && shot.out.layers.length > 0;
+  const penetrationChance = shot.penetrationChance !== undefined && (
+    <Text color="gray" weight="bold">
+      {literals(strings.common.units.percentage, {
+        value: (shot.penetrationChance * 100).toFixed(0),
+      })}
+    </Text>
+  );
 
   return (
     <Card variant="classic" {...props}>
       <Flex direction="column" gap="2">
         <Flex direction="column" gap="1">
-          <Text color={inTitleColor} weight="bold">
-            {literals(
-              strings.website.tools.tankopedia.sandbox.dynamic.shot_card.status[
-                shot.in.status
-              ],
-              { damage: Math.round(shot.damage).toLocaleString(locale) }
-            )}
-          </Text>
+          <Flex justify="between" align="center" gap="4">
+            <Text color={inTitleColor} weight="bold">
+              {literals(
+                strings.website.tools.tankopedia.sandbox.dynamic.shot_card
+                  .status[shot.in.status],
+                { damage: Math.round(shot.damage).toLocaleString(locale) }
+              )}
+            </Text>
+
+            {!hasOutLayers && penetrationChance}
+          </Flex>
 
           <table
             style={{
@@ -204,13 +215,17 @@ export function ShotDisplayCard({ shot, ...props }: ShotDisplayCardProps) {
               </Flex>
             </Inset>
 
-            <Text color={outTitleColor} weight="bold">
-              {literals(
-                strings.website.tools.tankopedia.sandbox.dynamic.shot_card
-                  .status[shot.out.status],
-                { damage: Math.round(shot.damage).toLocaleString(locale) }
-              )}
-            </Text>
+            <Flex justify="between" align="center" gap="4">
+              <Text color={outTitleColor} weight="bold">
+                {literals(
+                  strings.website.tools.tankopedia.sandbox.dynamic.shot_card
+                    .status[shot.out.status],
+                  { damage: Math.round(shot.damage).toLocaleString(locale) }
+                )}
+              </Text>
+
+              {penetrationChance}
+            </Flex>
 
             <Flex direction="column">
               {shot.out.layers.map((layer, index) => {

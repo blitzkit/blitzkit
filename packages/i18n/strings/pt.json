@@ -1,9 +1,4 @@
 {
-  "test": {
-    "default": "teste",
-    "long": "This is a long test string. You MUST NEVER see this in the UI. My favorite fruit is {fruit} because it has the color of {color}. I like it so much that I will say its name 3 times! {fruit}! {fruit}! {fruit}! Once again, it's {color}, not {not_color}.",
-    "fox": "A ágil raposa castanha salta por cima do cão preguiçoso."
-  },
   "common": {
     "name": "BlitzKit",
     "units": {
@@ -41,7 +36,7 @@
       "development": "Development",
       "opentest": "TesteAberto",
       "preview": "Preview",
-      "production": "Production"
+      "production": "Produção"
     },
     "locales": {
       "en": "Inglês",
@@ -187,11 +182,11 @@
   },
   "website": {
     "redirect": {
-      "title": "301: moved permanently",
+      "title": "301: movido permanentemente",
       "body": "This page has moved. Redirecting..."
     },
     "settings": {
-      "title": "Settings",
+      "title": "Configurações",
       "description": "Change BlitzKit settings",
       "dev_mode": "Modo de desenvolvimento",
       "auto_load_models": "Auto-load models",
@@ -207,9 +202,9 @@
         "copied": "Copiado!"
       },
       "tank_search": {
-        "select_dialog_title": "Search for tanks",
+        "select_dialog_title": "Procura por tanque",
         "swap_dialog_title": "Swap tank",
-        "clear_filters": "Clear filters",
+        "clear_filters": "Limpar filtros",
         "login": "Login to use this",
         "search_bar_hint": "Procurar tanques...",
         "recent": "Visto recentemente",
@@ -307,6 +302,12 @@
       }
     },
     "tools": {
+      "credits": {
+        "name": "Credits",
+        "button": "View people",
+        "description": "Contributors of BlitzKit",
+        "seo_description": "BlitzKit is the work of many"
+      },
       "playlist": {
         "reset": "Restaurar",
         "shuffle": "Shuffle",
@@ -623,6 +624,7 @@
             "hullTraverseSoftTerrain": "Macio",
             "health": "Vida",
             "fireChance": "Chance de incêndio",
+            "trackRepairTime": "Track repair time",
             "viewRange": "Alcance de visão",
             "camouflageStill": "Parado",
             "camouflageMoving": "Em movimento",
@@ -921,7 +923,6 @@
       "copyright": "Não afiliado à Wargaming ou qualquer serviço",
       "about": {
         "title": "Sobre",
-        "credits": "Créditos",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Atualizações"

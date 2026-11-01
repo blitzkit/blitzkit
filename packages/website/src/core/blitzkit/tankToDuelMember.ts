@@ -7,12 +7,23 @@ import {
 import type { DuelMember } from "../../stores/duel";
 import { genericDefaultEquipmentMatrix } from "../../stores/duel/constants";
 
+export function defaultTankWeapon(tank: TankDefinition) {
+  for (const turret of [...tank.turrets].reverse()) {
+    for (const gun of [...turret.guns].reverse()) {
+      const shell = gun.shells[0];
+
+      if (shell) return { turret, gun, shell };
+    }
+  }
+
+  throw new Error(`Tank ${tank.id} has no gun with shells`);
+}
+
 export function tankToDuelMember(
   tank: TankDefinition,
   provisionDefinitions: ProvisionDefinitions,
 ) {
-  const turret = tank.turrets.at(-1)!;
-  const gun = turret.guns.at(-1)!;
+  const { turret, gun, shell } = defaultTankWeapon(tank);
 
   return {
     camouflage: true,
@@ -22,7 +33,7 @@ export function tankToDuelMember(
     provisions: createDefaultProvisions(tank, gun, provisionDefinitions),
     engine: tank.engines.at(-1)!,
     gun,
-    shell: tank.turrets.at(-1)!.guns.at(-1)!.shells[0],
+    shell,
     tank,
     track: tank.tracks.at(-1)!,
     turret,
