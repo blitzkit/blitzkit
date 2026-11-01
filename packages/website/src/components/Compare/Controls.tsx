@@ -7,6 +7,7 @@ import {
   SegmentedControl,
   Text,
 } from "@radix-ui/themes";
+import { DIALOG_MAX_HEIGHT } from "../../constants/dialog";
 import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
@@ -44,11 +45,11 @@ export function Controls({
           </Button>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title align="center">
             {strings.website.tools.compare.actions.add.title}
           </Dialog.Title>
-          <Dialog.Description align="center">
+          <Dialog.Description align="center" mb="4">
             {strings.website.tools.compare.actions.add.description}
           </Dialog.Description>
 
