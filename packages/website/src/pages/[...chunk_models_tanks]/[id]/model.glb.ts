@@ -209,7 +209,10 @@ export async function extractModel(
 
           case "StateSwitcherComponent":
             node.setExtras({
-              state: component[`ssc.state${component["ssc.activeState"]}`],
+              // a part's scenarios can pick its state as it loads
+              state:
+                component[`ssc.state${component["ssc.activeState"]}`] ??
+                (isPart ? null : undefined),
             });
             break;
 

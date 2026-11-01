@@ -1,4 +1,5 @@
 import {
+  camouflagePreset,
   parseHierarchies,
   Sc2ReadStream,
   type CamouflagesXml,
@@ -73,9 +74,7 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
     include as { vehicle: { name: string } }
   ).vehicle.name.split(":");
   const { customEntities } = camouflagesYaml[key];
-  const preset =
-    camouflagesYaml[key].preset ??
-    camouflagesYaml[key].override?.[nation]?.override?.[tankKey]?.preset;
+  const preset = camouflagePreset(camouflagesYaml[key], nation, tankKey);
   const parameters = await vfs.yaml<TankParameters>(
     `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
   );

@@ -12,3 +12,15 @@ export type CamouflagesYaml = Record<
     >;
   }
 >;
+
+// some unique camos only set the preset for their one tank
+export function camouflagePreset(
+  camouflage: CamouflagesYaml[string],
+  nation: string,
+  tankKey: string,
+) {
+  return (
+    camouflage.preset ??
+    camouflage.override?.[nation]?.override?.[tankKey]?.preset
+  );
+}
