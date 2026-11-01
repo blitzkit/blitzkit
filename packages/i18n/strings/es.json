@@ -679,7 +679,8 @@
             "none": "Sin deltas",
             "percentage": "Porcentaje",
             "absolute": "Absoluto"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "No hay tanques seleccionados",
