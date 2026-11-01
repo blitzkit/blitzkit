@@ -679,7 +679,8 @@
             "none": "无变化",
             "percentage": "百分比",
             "absolute": "绝对值"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "未选择坦克",
