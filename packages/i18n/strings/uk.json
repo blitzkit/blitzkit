@@ -679,7 +679,8 @@
             "none": "No deltas",
             "percentage": "Відсоток",
             "absolute": "Absolute"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "Не вибрано жодного танку",
