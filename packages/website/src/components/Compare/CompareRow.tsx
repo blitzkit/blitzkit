@@ -4,6 +4,7 @@ import {
   CaretSortIcon,
 } from "@radix-ui/react-icons";
 import { Flex, IconButton, Table, Text } from "@radix-ui/themes";
+import { mean } from "lodash-es";
 import { useRef } from "react";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { useLocale } from "../../hooks/useLocale";
@@ -49,6 +50,21 @@ export function CompareRow({
       : (stat[props.value] as number),
   );
   const id = useRef(Math.random());
+  const definedValues = values.filter(Number.isFinite);
+  const displayedValues = display ? stats.map((stat) => display(stat)) : [];
+  const average =
+    definedValues.length === 0
+      ? undefined
+      : display &&
+          displayedValues.every((value) => Number.isFinite(Number(value)))
+        ? mean(displayedValues.map(Number)).toFixed(
+            Math.max(
+              ...displayedValues.map(
+                (value) => `${value}`.split(".")[1]?.length ?? 0,
+              ),
+            ),
+          )
+        : mean(definedValues).toFixed(decimals ?? 2);
   const name =
     typeof props.value === "string"
       ? strings.website.tools.tankopedia.characteristics.values[props.value]
@@ -104,6 +120,16 @@ export function CompareRow({
           <Text size={{ initial: "1", sm: "2" }}>{name}</Text>
         </Flex>
       </StickyRowHeaderCell>
+
+      {stats.length > 1 && (
+        <Table.Cell>
+          <Flex align="center" justify="center" height="100%">
+            <Text color="gray" wrap="nowrap">
+              {average}
+            </Text>
+          </Flex>
+        </Table.Cell>
+      )}
 
       {values.map((value, index) => {
         const delta = value - values[0];
