@@ -1,13 +1,13 @@
 import {
   bufferToBigInt,
   DdsReadStream,
+  parseHierarchies,
   PvrReadStream,
   Sc2ReadStream,
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
   type ConfigArchive,
-  type Hierarchy,
   type TankParameters,
   type Textures,
   type VehicleDefinitionList,
@@ -17,10 +17,10 @@ import { Document, Material, Node, NodeIO, Scene } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
-import { times } from "lodash-es";
+import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
-import { vfs } from "../../../../core/blitzkit/vfs";
+import { vfs } from "../../../core/blitzkit/vfs";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
@@ -65,11 +65,21 @@ export async function GET({ props }: APIContext<{ id: number }>) {
 const ERROR_ON_UNKNOWN_COMPONENT = false;
 
 const omitMeshNames = {
-  start: ["chassis_chassis_", "chassis_track_crash_", "HP_"],
+  start: [
+    "chassis_chassis_",
+    "chassis_track_crash_",
+    "HP_",
+    // mastery marks a new tank doesn't have yet
+    "custom_gun_marks_",
+  ],
   end: ["_POINT"],
 };
 
-async function extractModel(vfs: AbstractVFS, path: string) {
+export async function extractModel(
+  vfs: AbstractVFS,
+  path: string,
+  isPart = false,
+) {
   const sc2Path = `Data/3d/${path}.sc2`;
   const scgPath = `Data/3d/${path}.scg`;
   const sc2 = new Sc2ReadStream(
@@ -81,167 +91,12 @@ async function extractModel(vfs: AbstractVFS, path: string) {
   const document = new Document();
   const scene = document.createScene();
   const buffer = document.createBuffer();
-  const materials = new Map<bigint, Material | bigint | undefined>();
+  const materials = await extractMaterials(document, sc2, path);
 
-  for (const node of sc2["#dataNodes"]) {
-    const id = bufferToBigInt(node["#id"]);
-
-    if (node.parentMaterialKey !== undefined) {
-      /**
-       * material depends on a parent and doesn't seem to have any
-       * properties so we just point it to the parent
-       */
-      materials.set(id, node.parentMaterialKey);
-      continue;
-    }
-
-    const material = document.createMaterial(node.materialName);
-    let textures: Textures | undefined = undefined;
-
-    if (node.textures) {
-      textures = node.textures;
-    } else if (typeof node.configCount === "number") {
-      textures = node.configArchive_0.textures;
-    }
-
-    if (textures) {
-      const baseColor = await readBaseColor(
-        `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
-      );
-      material.setBaseColorTexture(
-        document
-          .createTexture(node.materialName)
-          .setMimeType("image/webp")
-          .setImage(baseColor),
-      );
-
-      let defaultConfigArchive: ConfigArchive | undefined = undefined;
-
-      if (node.configCount) {
-        const names = times(
-          node.configCount,
-          (index) => node[`configArchive_${index}`],
-        );
-
-        defaultConfigArchive = names.find(
-          (archive) => archive.configName === "Default",
-        );
-        defaultConfigArchive ??= node.configArchive_0;
-      }
-
-      const customCullMode =
-        node.customCullMode ?? defaultConfigArchive?.customCullMode;
-
-      if (customCullMode === 0) {
-        material.setDoubleSided(true);
-      } else if (customCullMode !== undefined) {
-        material.setDoubleSided(false);
-      }
-
-      if (
-        node.enabledPresets?.AlphaTest &&
-        node.properties?.alphatestThreshold
-      ) {
-        const view = new DataView(node.properties.alphatestThreshold);
-        const alphaCutoff =
-          view.byteLength < 4
-            ? 0.5
-            : view.getFloat32(view.byteLength - 4, true);
-
-        material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
-      }
-
-      if (node.configCount) {
-        for (
-          let configIndex = 0;
-          configIndex < node.configCount;
-          configIndex++
-        ) {
-          const archive = node[`configArchive_${configIndex}`];
-
-          if (
-            archive.configName !== "Default" ||
-            !archive.enabledPresets?.AlphaTest ||
-            !archive.properties?.alphatestThreshold
-          ) {
-            continue;
-          }
-
-          const view = new DataView(archive.properties.alphatestThreshold);
-          const alphaCutoff =
-            view.byteLength < 4
-              ? 0.5
-              : view.getFloat32(view.byteLength - 4, true);
-
-          material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
-        }
-      }
-
-      if (textures.miscMap) {
-        material.setOcclusionTexture(
-          document
-            .createTexture(node.materialName)
-            .setMimeType("image/webp")
-            .setImage(
-              await readOcclusion(
-                `Data/3d/${dirname(path)}/${textures.miscMap}`,
-              ),
-            ),
-        );
-      }
-
-      if (textures.baseRMMap) {
-        material.setMetallicRoughnessTexture(
-          document
-            .createTexture(node.materialName)
-            .setMimeType("image/webp")
-            .setImage(
-              await readRoughnessMetallic(
-                `Data/3d/${dirname(path)}/${textures.baseRMMap}`,
-              ),
-            ),
-        );
-      }
-
-      if (textures.baseNormalMap ?? textures.normalmap) {
-        const isBase = textures.baseNormalMap !== undefined;
-
-        material.setNormalTexture(
-          document
-            .createTexture(node.materialName)
-            .setMimeType("image/webp")
-            .setImage(
-              await readNormal(
-                `Data/3d/${dirname(path)}/${
-                  textures.baseNormalMap ?? textures.normalmap
-                }`,
-                isBase,
-              ),
-            ),
-        );
-      }
-
-      materials.set(id, material);
-    }
-  }
-
-  // replace children materials with parents
-  materials.forEach((material, id) => {
-    if (typeof material !== "bigint") return;
-
-    let resolvedMaterial: Material | bigint | undefined = material;
-
-    while (typeof resolvedMaterial === "bigint") {
-      const linkedParentMaterial = materials.get(resolvedMaterial);
-
-      resolvedMaterial = linkedParentMaterial;
-    }
-
-    materials.set(id, resolvedMaterial);
-  });
-
-  function parseHierarchies(hierarchies: Hierarchy[], parent: Scene | Node) {
-    hierarchies.forEach((hierarchy) => {
+  parseHierarchies<Scene | Node>(
+    sc2["#hierarchy"],
+    scene,
+    (hierarchy, components, parent) => {
       if (
         omitMeshNames.start.some((omit) => hierarchy.name.startsWith(omit)) ||
         omitMeshNames.end.some((omit) => hierarchy.name.endsWith(omit))
@@ -249,10 +104,6 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         return;
 
       const node = document.createNode(hierarchy.name);
-      const components = times(
-        hierarchy.components.count,
-        (index) => hierarchy.components[index.toString().padStart(4, "0")],
-      );
 
       components.forEach((component) => {
         switch (component["comp.typename"]) {
@@ -264,9 +115,10 @@ async function extractModel(vfs: AbstractVFS, path: string) {
           case "TransformComponent": {
             const localTranslation = component["tc.localTranslation"];
             // The game resets top-level node translation to [0, 0, 0] on load.
-            // Child nodes must keep their authored local offsets.
+            // Child nodes and customization parts must keep their authored
+            // local offsets.
             node.setTranslation(
-              parent instanceof Scene ? [0, 0, 0] : localTranslation,
+              parent instanceof Scene && !isPart ? [0, 0, 0] : localTranslation,
             );
             node.setRotation(component["tc.localRotation"]);
             node.setScale(component["tc.localScale"]);
@@ -274,13 +126,20 @@ async function extractModel(vfs: AbstractVFS, path: string) {
             break;
           }
 
+          case "StateSwitcherComponent":
+            node.setExtras({
+              state: component[`ssc.state${component["ssc.activeState"]}`],
+            });
+            break;
+
           case "RenderComponent": {
             const renderObject = component["rc.renderObj"];
 
             times(renderObject["ro.batchCount"], (batchIndex): void => {
               const lodIndex = renderObject[`rb${batchIndex}.lodIndex`];
 
-              if (lodIndex !== 0) return;
+              // -1 means the batch has no lods and is always drawn
+              if (lodIndex !== 0 && !(isPart && lodIndex === -1)) return;
 
               const batchKey = batchIndex.toString().padStart(4, "0");
               const batch = renderObject["ro.batches"][batchKey];
@@ -361,21 +220,223 @@ async function extractModel(vfs: AbstractVFS, path: string) {
         }
       });
 
-      if (hierarchy["#hierarchy"]) {
-        parseHierarchies(hierarchy["#hierarchy"], node);
-      }
-
       parent.addChild(node);
-    });
-  }
 
-  parseHierarchies(sc2["#hierarchy"], scene);
+      return node;
+    },
+  );
 
   scene.addChild(document.createNode("test"));
 
   await document.transform(prune({ keepAttributes: true }), dedup());
 
   return document;
+}
+
+export async function extractMaterials(
+  document: Document,
+  sc2: ReturnType<Sc2ReadStream["sc2"]>,
+  path: string,
+  config?: string,
+) {
+  const materials = new Map<bigint, Material | bigint | undefined>();
+
+  for (const node of sc2["#dataNodes"]) {
+    const id = bufferToBigInt(node["#id"]);
+
+    if (node.parentMaterialKey !== undefined) {
+      /**
+       * material depends on a parent and doesn't seem to have any
+       * properties so we just point it to the parent
+       */
+      materials.set(id, node.parentMaterialKey);
+      continue;
+    }
+
+    let textures: Textures | undefined = undefined;
+
+    if (config !== undefined) {
+      if (typeof node.configCount !== "number") continue;
+
+      const archive = times(
+        node.configCount,
+        (index) => node[`configArchive_${index}`],
+      ).find((archive) => archive.configName === config);
+
+      if (
+        !archive ||
+        isEqual(archive.textures, node.configArchive_0.textures)
+      ) {
+        continue;
+      }
+
+      textures = archive.textures;
+    } else if (node.textures) {
+      textures = node.textures;
+    } else if (typeof node.configCount === "number") {
+      textures = node.configArchive_0.textures;
+    }
+
+    const material = document.createMaterial(node.materialName);
+
+    if (textures) {
+      const baseColor = await readBaseColor(
+        `Data/3d/${dirname(path)}/${textures.baseColorMap ?? textures.albedo}`,
+      );
+      material.setBaseColorTexture(
+        document
+          .createTexture(node.materialName)
+          .setMimeType("image/webp")
+          .setImage(baseColor),
+      );
+
+      let defaultConfigArchive: ConfigArchive | undefined = undefined;
+
+      if (node.configCount) {
+        const names = times(
+          node.configCount,
+          (index) => node[`configArchive_${index}`],
+        );
+
+        defaultConfigArchive = names.find(
+          (archive) => archive.configName === "Default",
+        );
+        defaultConfigArchive ??= node.configArchive_0;
+      }
+
+      const customCullMode =
+        node.customCullMode ?? defaultConfigArchive?.customCullMode;
+
+      if (customCullMode === 0) {
+        material.setDoubleSided(true);
+      } else if (customCullMode !== undefined) {
+        material.setDoubleSided(false);
+      }
+
+      if (
+        node.enabledPresets?.AlphaTest &&
+        node.properties?.alphatestThreshold
+      ) {
+        const view = new DataView(node.properties.alphatestThreshold);
+        const alphaCutoff =
+          view.byteLength < 4
+            ? 0.5
+            : view.getFloat32(view.byteLength - 4, true);
+
+        material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
+      }
+
+      if (node.configCount) {
+        for (
+          let configIndex = 0;
+          configIndex < node.configCount;
+          configIndex++
+        ) {
+          const archive = node[`configArchive_${configIndex}`];
+
+          if (
+            archive.configName !== "Default" ||
+            !archive.enabledPresets?.AlphaTest ||
+            !archive.properties?.alphatestThreshold
+          ) {
+            continue;
+          }
+
+          const view = new DataView(archive.properties.alphatestThreshold);
+          const alphaCutoff =
+            view.byteLength < 4
+              ? 0.5
+              : view.getFloat32(view.byteLength - 4, true);
+
+          material.setAlphaMode("MASK").setAlphaCutoff(alphaCutoff);
+        }
+      }
+
+      const enabledPresets =
+        node.enabledPresets ?? defaultConfigArchive?.enabledPresets;
+      const fxName = node.fxName ?? defaultConfigArchive?.fxName;
+
+      if (enabledPresets?.AlphaBlend || enabledPresets?.AlphaBlendAdditive) {
+        material.setAlphaMode("BLEND");
+      }
+
+      if (enabledPresets?.AlphaBlendAdditive) {
+        // gltf has no additive blending so the viewer applies it
+        material.setExtras({ blending: "additive" });
+      }
+
+      if (fxName?.endsWith("/Textured.material")) {
+        // unlit in game, emissive so the viewer can fade it with the lights
+        material
+          .setEmissiveTexture(material.getBaseColorTexture())
+          .setEmissiveFactor([1, 1, 1])
+          .setBaseColorFactor([0, 0, 0, 1]);
+      }
+
+      if (textures.miscMap) {
+        material.setOcclusionTexture(
+          document
+            .createTexture(node.materialName)
+            .setMimeType("image/webp")
+            .setImage(
+              await readOcclusion(
+                `Data/3d/${dirname(path)}/${textures.miscMap}`,
+              ),
+            ),
+        );
+      }
+
+      if (textures.baseRMMap) {
+        material.setMetallicRoughnessTexture(
+          document
+            .createTexture(node.materialName)
+            .setMimeType("image/webp")
+            .setImage(
+              await readRoughnessMetallic(
+                `Data/3d/${dirname(path)}/${textures.baseRMMap}`,
+              ),
+            ),
+        );
+      }
+
+      if (textures.baseNormalMap ?? textures.normalmap) {
+        const isBase = textures.baseNormalMap !== undefined;
+
+        material.setNormalTexture(
+          document
+            .createTexture(node.materialName)
+            .setMimeType("image/webp")
+            .setImage(
+              await readNormal(
+                `Data/3d/${dirname(path)}/${
+                  textures.baseNormalMap ?? textures.normalmap
+                }`,
+                isBase,
+              ),
+            ),
+        );
+      }
+
+      materials.set(id, material);
+    }
+  }
+
+  // replace children materials with parents
+  materials.forEach((material, id) => {
+    if (typeof material !== "bigint") return;
+
+    let resolvedMaterial: Material | bigint | undefined = material;
+
+    while (typeof resolvedMaterial === "bigint") {
+      const linkedParentMaterial = materials.get(resolvedMaterial);
+
+      resolvedMaterial = linkedParentMaterial;
+    }
+
+    materials.set(id, resolvedMaterial);
+  });
+
+  return materials;
 }
 
 async function readBaseColor(path: string) {

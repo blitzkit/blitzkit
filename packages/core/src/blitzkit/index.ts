@@ -25,6 +25,7 @@ export * from "./sluggify";
 export * from "./staticAsset";
 export * from "./sum";
 export * from "./tankDefinitions";
+export * from "./tankBoundingBox";
 export * from "./tankIcon";
 export * from "./tankNames";
 export * from "./unionBoundingBox";

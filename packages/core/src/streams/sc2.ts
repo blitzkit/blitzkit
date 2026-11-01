@@ -40,6 +40,8 @@ export interface ConfigArchive {
 
 interface EnabledPresets {
   AlphaTest: boolean;
+  AlphaBlend?: boolean;
+  AlphaBlendAdditive?: boolean;
 }
 
 interface Flags {
@@ -88,6 +90,28 @@ export interface Hierarchy {
   flags: number;
   id: bigint;
   name: string;
+}
+
+export function parseHierarchies<Parent>(
+  hierarchies: Hierarchy[],
+  parent: Parent,
+  parseHierarchy: (
+    hierarchy: Hierarchy,
+    components: Component[],
+    parent: Parent,
+  ) => Parent | undefined,
+) {
+  for (const hierarchy of hierarchies) {
+    const components = Array.from(
+      { length: hierarchy.components.count },
+      (_, index) => hierarchy.components[index.toString().padStart(4, "0")],
+    );
+    const child = parseHierarchy(hierarchy, components, parent);
+
+    if (child !== undefined && hierarchy["#hierarchy"]) {
+      parseHierarchies(hierarchy["#hierarchy"], child, parseHierarchy);
+    }
+  }
 }
 
 // 0001, 0002, 0003...: Component

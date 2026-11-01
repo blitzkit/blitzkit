@@ -47,6 +47,11 @@ import { TankSearch } from "../../../../TankSearch";
 import { CustomShellButton } from "./components/CustomShellButton";
 import { DynamicArmorSwitcher } from "./components/DynamicArmorSwitcher";
 import { QuickInputs } from "./components/QuickInputs";
+import {
+  SidebarIconButton,
+  SidebarIconGroup,
+} from "./components/SidebarIconButton";
+import { SkinSwitcher } from "./components/SkinSwitcher";
 import { SpallLinerSwitcher } from "./components/SpallLinerSwitcher";
 import { Thicknesses } from "./components/Thicknesses";
 
@@ -78,7 +83,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
   const equalize = Duel.use((state) => state.equalize);
   const equalizer = Duel.use((state) => state.antagonist.tank.equalizer);
 
@@ -87,6 +94,8 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
       {disturbed && <QuickInputs />}
 
       <Thicknesses skeleton={skeleton} thicknessRange={thicknessRange} />
+
+      <SkinSwitcher />
 
       <Flex
         gap="2"
@@ -182,24 +191,13 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
           </Popover.Root>
         )}
 
-        <Flex
-          direction="column"
-          style={{
-            borderRadius: "var(--radius-full)",
-          }}
-          overflow="hidden"
-        >
+        <SidebarIconGroup>
           {antagonistGun.shells.map((thisShell) => (
-            <IconButton
-              color={
-                thisShell.id === antagonistShell.id && !hasCustomShell
-                  ? undefined
-                  : "gray"
-              }
-              variant="soft"
+            <SidebarIconButton
               key={thisShell.id}
-              size={{ initial: "2", sm: "3" }}
-              radius="none"
+              selected={thisShell.id === antagonistShell.id && !hasCustomShell}
+              alt={unwrap(thisShell.name!)}
+              src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
               onClick={() => {
                 Duel.mutate((draft) => {
                   draft.antagonist.shell = thisShell;
@@ -209,19 +207,10 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                   draft.customShell = undefined;
                 });
               }}
-            >
-              <img
-                alt={unwrap(thisShell.name!)}
-                src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
-                style={{
-                  width: "50%",
-                  height: "50%",
-                }}
-              />
-            </IconButton>
+            />
           ))}
           <CustomShellButton />
-        </Flex>
+        </SidebarIconGroup>
 
         <Flex
           direction="column"
