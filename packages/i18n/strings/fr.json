@@ -32,10 +32,10 @@
       "d_1": "Hier"
     },
     "branches": {
-      "beta": "Beta",
+      "beta": "Bêta",
       "development": "Development",
-      "opentest": "OpenTest",
-      "preview": "Preview",
+      "opentest": "Test ouvert",
+      "preview": "Aperçu",
       "production": "Production"
     },
     "locales": {
@@ -189,7 +189,7 @@
       "title": "Paramètres",
       "description": "Modifier les paramètres de BlitzKit",
       "dev_mode": "Mode développement",
-      "auto_load_models": "Auto-load models",
+      "auto_load_models": "Modèles à chargement automatique",
       "language": "Langue"
     },
     "common": {
