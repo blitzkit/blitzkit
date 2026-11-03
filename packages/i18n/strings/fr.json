@@ -236,68 +236,68 @@
           "fire.caliber": "calibration",
           "fire.standardPenetration": "pénétration standard",
           "fire.premiumPenetration": "pénétration premium",
-          "fire.tertiaryPenetration": "tertiary penetration",
-          "fire.damage": "damage",
-          "fire.moduleDamage": "module damage",
-          "fire.shellVelocity": "shell velocity",
-          "fire.shellRange": "shell range",
-          "fire.shellCapacity": "shell capacity",
-          "fire.aimTime": "aim time",
-          "fire.dispersionStill": "dispersion still",
-          "fire.dispersionMoving": "dispersion moving",
-          "fire.gunDepression": "gun depression",
-          "fire.gunElevation": "gun elevation",
-          "maneuverability.forwardsSpeed": "forwards speed",
-          "maneuverability.backwardsSpeed": "backwards speed",
-          "maneuverability.power": "power",
-          "maneuverability.powerToWeight": "power to weight",
-          "maneuverability.weight": "weight",
+          "fire.tertiaryPenetration": "pénétration tertiaire",
+          "fire.damage": "dégât",
+          "fire.moduleDamage": "Dégâts aux modules",
+          "fire.shellVelocity": "Vitesse des obus",
+          "fire.shellRange": "Portée des obus",
+          "fire.shellCapacity": "Capacité d'obus",
+          "fire.aimTime": "Temps de visé",
+          "fire.dispersionStill": "Dispersion à l'arrêt",
+          "fire.dispersionMoving": "Dispersion en mouvement",
+          "fire.gunDepression": "Dépression du canon",
+          "fire.gunElevation": "élévation du canon",
+          "maneuverability.forwardsSpeed": "Vitesse en marche avant",
+          "maneuverability.backwardsSpeed": "Vitesse en marche arrière",
+          "maneuverability.power": "Puissance",
+          "maneuverability.powerToWeight": "Rapport puissance/poids",
+          "maneuverability.weight": "Poids",
           "maneuverability.traverseSpeed": "traverse speed"
         },
         "sort_dropdown": {
-          "label": "Sort",
+          "label": "Trier",
           "groups": {
             "sort": {
-              "no_sort": "No sort",
-              "label": "Sort by",
-              "fire": "Fire",
-              "maneuverability": "Maneuverability",
-              "survivability": "Survivability"
+              "no_sort": "Pas trier",
+              "label": "Trier par",
+              "fire": "Feu",
+              "maneuverability": "Manœuvrabilité",
+              "survivability": "Survivabilité"
             },
             "direction": {
               "label": "Direction",
-              "ascending": "Ascending",
-              "descending": "Descending"
+              "ascending": "Croissant",
+              "descending": "Décroissant"
             }
           }
         }
       },
       "warnings": {
-        "test": "Tanks in testing are subject to change and may not represent the final product."
+        "test": "Les chars en phase de test sont susceptibles de changer et peuvent ne pas représenter le produit final."
       }
     },
     "home": {
       "discord": {
-        "join_short": "Join cool people!",
-        "join_long": "Join super duper cool people!",
+        "join_short": "Rejoins des gens géniaux",
+        "join_long": "Rejoins des gens super géniaux",
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "Par {name}❤️"
       },
       "hot_tanks": {
-        "title": "Popular tanks",
+        "title": "Chars populaire",
         "subtitle": "Last {days} days"
       },
       "other_projects": {
-        "title": "Other cool projects"
+        "title": "Autres projets géniaux"
       },
       "help_translate": "Please help translate {name} to {language}!",
-      "seo_description": "Tools for everything World of Tanks Blitz"
+      "seo_description": "Outils pour tout World of Tanks Blitz"
     },
     "docs": {
       "patches": {
-        "name": "BlitzKit Changelogs",
+        "name": "Journal des modifications",
         "seo_description": "Changelogs for BlitzKit Discord bot and website"
       }
     },
@@ -314,7 +314,7 @@
         "remove": "Remove played",
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
-          "button": "Sort by",
+          "button": "Trier par",
           "last_played": "Last played",
           "least_played": "Least played"
         },
@@ -657,10 +657,10 @@
           "loader": "Loader"
         },
         "maneuverability": {
-          "title": "Maneuverability"
+          "title": "Manœuvrabilité"
         },
         "survivability": {
-          "title": "Survivability"
+          "title": "Survivabilité"
         }
       },
       "compare": {
