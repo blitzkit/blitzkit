@@ -19,7 +19,7 @@
     "shells": {
       "ap": "AP",
       "ap_cr": "APCR",
-      "hc": "HEAT",
+      "hc": "AEAC",
       "he": "AE"
     },
     "player_count_period": {
@@ -187,7 +187,7 @@
     },
     "settings": {
       "title": "Settings",
-      "description": "Change BlitzKit settings",
+      "description": "Cambiar configuración de BlitzKit",
       "dev_mode": "Modo de desarrollador",
       "auto_load_models": "Auto-load models",
       "language": "Idioma"
