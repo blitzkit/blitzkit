@@ -342,9 +342,18 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
             )
               .split(" ")
               .map(Number) as [number, number];
-            const gunModel = Number(
+            let gunModel = Number(
               parsePath(gun.models.undamaged).name.split("_")[1],
             );
+
+            if (tankId === 30497) {
+              console.warn(
+                "HACK: using gun_02 for hacker tank instead of gun_01... hehe, that's quite appropriate for this tank haha",
+              );
+
+              gunModel = 2;
+            }
+
             const front = gun.extraPitchLimits?.front
               ? gun.extraPitchLimits.front.split(" ").map(Number)
               : undefined;
