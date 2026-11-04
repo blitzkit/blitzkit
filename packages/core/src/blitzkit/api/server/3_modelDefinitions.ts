@@ -79,14 +79,8 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
                   I_HAT,
                   -MathUtils.degToRad(turretRotation.pitch),
                 )
-                .applyAxisAngle(
-                  J_HAT,
-                  -MathUtils.degToRad(turretRotation.roll),
-                )
-                .applyAxisAngle(
-                  K_HAT,
-                  -MathUtils.degToRad(turretRotation.yaw),
-                );
+                .applyAxisAngle(J_HAT, -MathUtils.degToRad(turretRotation.roll))
+                .applyAxisAngle(K_HAT, -MathUtils.degToRad(turretRotation.yaw));
             }
 
             const coordinates = position.toArray();
@@ -298,23 +292,29 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
 
           turret.userString;
 
-          const turretCollisionName = parsePath(
+          let turretCollisionName = parsePath(
             turret.hitTester.collisionModel,
           ).name.toLowerCase();
           const isFullYaw = -turretYaw[0] + turretYaw[1] === 360;
 
           if (!collisionBoundingBoxes[turretCollisionName] && isFullYaw) {
-            throw new Error(
-              `Missing turret collision mesh for ${nation}-${tankKey} ${turretKey}`,
+            turretCollisionName = "turret_01";
+
+            console.warn(
+              `HACK: Missing turret collision mesh for ${nation}/${tankKey}; turret key: ${
+                turretKey
+              }; collision model: ${turretCollisionName}; available options: ${Object.keys(
+                collisionBoundingBoxes,
+              ).join(", ")}; using ${turretCollisionName} instead`,
             );
           }
 
-          const turretBoundingBox = collisionBoundingBoxes[
-            turretCollisionName
-          ] ?? {
-            min: [0, 0, 0] as Vector3Tuple,
-            max: [0, 0, 0] as Vector3Tuple,
-          };
+          let turretBoundingBox = collisionBoundingBoxes[turretCollisionName];
+
+          if (turretBoundingBox === undefined) {
+            console.warn("HACK: missing collision; using 0's");
+            turretBoundingBox = { min: [0, 0, 0], max: [0, 0, 0] };
+          }
 
           modelDefinitions.models[tankId].turrets[turretId] = {
             armor: turretArmor,
