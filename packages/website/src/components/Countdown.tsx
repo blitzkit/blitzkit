@@ -80,7 +80,7 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
               {skeleton && <InlineSkeleton width="10rem" />}
             </Heading>
             <Text size={{ initial: "2", sm: "3" }}>
-              Catch the next 2 tanks on BlitzKit Preview
+              Catch the next 3 tanks on BlitzKit Preview
             </Text>
           </Flex>
         </Flex>
