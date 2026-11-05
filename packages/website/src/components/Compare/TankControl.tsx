@@ -43,7 +43,7 @@ export function TankControl({ index, slug }: TankControlProps) {
           </IconButton>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title align="center">
             {strings.website.common.tank_search.swap_dialog_title}
           </Dialog.Title>

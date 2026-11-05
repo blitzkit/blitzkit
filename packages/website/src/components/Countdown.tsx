@@ -3,7 +3,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { InlineSkeleton } from "./InlineSkeleton";
 
-const TIME = 1792598400 * 1000;
+const TIME = 1793898000 * 1000;
+const HREF = "https://preview.blitzkit.app/tanks";
 
 export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
   const [timeLeft, setTimeLeft] = useState<number>(TIME - Date.now());
@@ -31,7 +32,7 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
 
     string = (
       <>
-        revealed in{" "}
+        in{" "}
         <Code highContrast>
           {hours}h {minutes}m {seconds}s
         </Code>
@@ -47,7 +48,7 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
         color="gray"
         highContrast
         style={{ display: "content" }}
-        href="https://preview.blitzkit.app/tanks"
+        href={timeLeft <= 0 ? HREF : undefined}
         underline="none"
       >
         <Flex
@@ -75,11 +76,11 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
 
           <Flex direction="column">
             <Heading size={{ initial: "4", sm: "6" }}>
-              Tier XIs {!skeleton && string}{" "}
+              More Tier XIs {!skeleton && string}{" "}
               {skeleton && <InlineSkeleton width="10rem" />}
             </Heading>
             <Text size={{ initial: "2", sm: "3" }}>
-              Get ready to go to the Tankopedia!
+              Catch the next 3 tanks on BlitzKit Preview
             </Text>
           </Flex>
         </Flex>

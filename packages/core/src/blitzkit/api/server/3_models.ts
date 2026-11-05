@@ -286,25 +286,31 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
               this.assignArmor(armorRaw, armorId, turretArmor);
             });
 
-          const turretCollisionName = turret.hitTester.collisionModel
-            .split("/")
-            .at(-1)!
-            .split(".")[0]
-            .toLowerCase();
+          turret.userString;
+
+          let turretCollisionName = this.parsePath!(
+            turret.hitTester.collisionModel,
+          ).name.toLowerCase();
           const isFullYaw = -turretYaw[0] + turretYaw[1] === 360;
 
           if (!collisionBoundingBoxes[turretCollisionName] && isFullYaw) {
-            throw new Error(
-              `Missing turret collision mesh for ${nation}-${tankKey} ${turretKey}`,
+            turretCollisionName = "turret_01";
+
+            console.warn(
+              `HACK: Missing turret collision mesh for ${nation}/${tankKey}; turret key: ${
+                turretKey
+              }; collision model: ${turretCollisionName}; available options: ${Object.keys(
+                collisionBoundingBoxes,
+              ).join(", ")}; using ${turretCollisionName} instead`,
             );
           }
 
-          const turretBoundingBox = collisionBoundingBoxes[
-            turretCollisionName
-          ] ?? {
-            min: [0, 0, 0] as Vector3Tuple,
-            max: [0, 0, 0] as Vector3Tuple,
-          };
+          let turretBoundingBox = collisionBoundingBoxes[turretCollisionName];
+
+          if (turretBoundingBox === undefined) {
+            console.warn("HACK: missing collision; using 0's");
+            turretBoundingBox = { min: [0, 0, 0], max: [0, 0, 0] };
+          }
 
           modelDefinitions.models[tankId].turrets[turretId] = {
             armor: turretArmor,
@@ -332,9 +338,18 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
             )
               .split(" ")
               .map(Number) as [number, number];
-            const gunModel = Number(
+            let gunModel = Number(
               this.parsePath!(gun.models.undamaged).name.split("_")[1],
             );
+
+            if (tankId === 30497) {
+              console.warn(
+                "HACK: using gun_02 for hacker tank instead of gun_01... hehe, that's quite appropriate for this tank haha",
+              );
+
+              gunModel = 2;
+            }
+
             const front = gun.extraPitchLimits?.front
               ? gun.extraPitchLimits.front.split(" ").map(Number)
               : undefined;

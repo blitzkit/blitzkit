@@ -2,7 +2,7 @@ import { alias } from "@blitzkit/core";
 import { Flex, Heading, IconButton, Table } from "@radix-ui/themes";
 import type { TankCharacteristics } from "../../core/blitzkit/tankCharacteristics";
 import { useLocale } from "../../hooks/useLocale";
-import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { CompareEphemeral, syncShellSlot } from "../../stores/compareEphemeral";
 import { CompareCellDirection } from "../CompareCell";
 import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 import { CompareRow } from "./CompareRow";
@@ -50,7 +50,11 @@ export function Body({ stats }: BodyProps) {
                       }}
                       onClick={() => {
                         CompareEphemeral.mutate((draft) => {
-                          draft.members[index].shell = thisShell;
+                          if (draft.syncShells) {
+                            syncShellSlot(draft.members, shellIndex);
+                          } else {
+                            draft.members[index].shell = thisShell;
+                          }
                         });
                       }}
                     >

@@ -117,7 +117,7 @@ function ModuleChooser({
           </Button>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title>
             {strings.website.common.tank_search.select_dialog_title}
           </Dialog.Title>

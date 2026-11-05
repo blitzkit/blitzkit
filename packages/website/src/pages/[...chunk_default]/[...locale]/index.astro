@@ -5,6 +5,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import { api } from "../../../api/dynamic";
 import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { AesonPlug } from "../../../components/AesonPlug";
+import { Beg } from "../../../components/Beg";
 import HelpTranslate from "../../../components/HelpTranslate.astro";
 import HomeCosmetics from "../../../components/HomeCosmetics.astro";
 import HomeGames from "../../../components/HomeGames.astro";
@@ -66,6 +67,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   <!-- <HomeHero {locale} /> -->
 
   <HelpTranslate {locale} />
+
+  <Beg />
 
   {environment === "preview" && <AesonPlug />}
 
