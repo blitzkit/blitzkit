@@ -12,7 +12,7 @@
       "plus": "+{value}"
     },
     "gun_types": {
-      "auto_loader": "Samo ładowacz",
+      "auto_loader": "Magazynek",
       "auto_reloader": "Automatyczne przeładowanie",
       "regular": "Regularny"
     },
@@ -24,18 +24,18 @@
     },
     "player_count_period": {
       "total": "Łącznie",
-      "d_120": "Powyżej 120 dni",
-      "d_90": "Powyżej 90 dni",
-      "d_60": "Powyżej 60 dni",
-      "d_30": "W ciągu miesiąca",
+      "d_120": "Ostatnie 120 dni",
+      "d_90": "Ostatnie 90 dni",
+      "d_60": "Ostatnie 60 dni",
+      "d_30": "W ostatnim miesiącu",
       "d_7": "W minionym tygodniu",
       "d_1": "Wczoraj"
     },
     "branches": {
       "beta": "Beta",
-      "development": "Rozwój",
+      "development": "W rozwoju",
       "opentest": "OtwartyTest",
-      "preview": "Przegląd",
+      "preview": "Podgląd",
       "production": "Produkcja"
     },
     "locales": {
@@ -58,8 +58,8 @@
       "5": "Dobre",
       "6": "Bardzo dobre",
       "7": "Świetne",
-      "8": "Unikalny",
-      "9": "Super unikalny"
+      "8": "Unikatowy",
+      "9": "Super unikatowy"
     },
     "bkni_percentile": {
       "0": "Super źle",
@@ -72,7 +72,7 @@
       "7": "Dobre",
       "8": "Bardzo dobre",
       "9": "Unikalny",
-      "10": "Super unikalny"
+      "10": "Super unikatowy"
     },
     "nations": {
       "ussr": "ZSRR",
@@ -86,15 +86,15 @@
       "other": "Nacja Hybrydowa"
     },
     "nations_adjectives": {
-      "ussr": "ZSRR",
-      "germany": "Niemcy",
+      "ussr": "Radziecki.",
+      "germany": "Niemiecki",
       "usa": "Amerykański",
       "china": "Chiński",
-      "uk": "Wielkiej Brytanii",
+      "uk": "Brytyjski.",
       "france": "Francuski",
       "japan": "Japoński",
-      "european": "Europa",
-      "other": "Hybryda"
+      "european": "Europejski",
+      "other": "Hybrydowy"
     },
     "tank_class_short": {
       "-1": "nierozpoznany",
@@ -114,7 +114,7 @@
       "0": "Lekki",
       "1": "Średni",
       "2": "Ciężki",
-      "3": "Niszczyciel czołgów"
+      "3": "Niszczyciel Czołgów"
     },
     "tree_type": {
       "-1": "nierozpoznany",
@@ -150,13 +150,13 @@
       "normalized_losses": "Wskaźnik przegranych",
       "normalized_misses": "Nietrafione",
       "normalized_shots": "Strzały",
-      "normalized_spotted": "Zwiad",
+      "normalized_spotted": "Wykrycia",
       "normalized_survived_battles": "Współczynnik przeżycia",
       "normalized_win_and_survived": "Wskaźnik wygranych i przeżywalności",
       "normalized_wins": "Śr. wygranych",
-      "normalized_xp": "XP",
+      "normalized_xp": "PD",
       "normalized_battle_life_time": "Czas bitwy",
-      "cumulative_accuracy": "Skuteczność",
+      "cumulative_accuracy": "Dokładność",
       "cumulative_battles": "Bitwy",
       "cumulative_capture_points": "Całkowita liczba punktów bazy",
       "cumulative_damage_dealt": "Łączne obrażenia",
@@ -215,57 +215,57 @@
         "clear": "Wyczyść",
         "tier": "Poziom czołgu {tier}",
         "passive": "{name} (Pasywny)",
-        "active": "{name} (Aktywne)",
+        "active": "{name} (Aktywny)",
         "no_tanks_found": {
-          "body": "Nie znaleziono czołgu.",
-          "search_again": "",
+          "body": "Nie znaleziono czołgów.",
+          "search_again": "Spróbuj wyszukać ponownie.",
           "clear_filters": "Spróbuj wyczyścić filtry."
         },
         "sort": {
           "meta.none": "brak",
-          "survivability.health": "punkty.życia",
+          "survivability.health": "punkty wytrzymałości",
           "survivability.viewRange": "zasięg widzenia",
           "survivability.camouflageStill": "kamuflaż w bezruchu",
           "survivability.camouflageMoving": "kamuflaż w trakcie ruchu",
           "survivability.camouflageShooting": "kamuflaż podczas strzału",
-          "survivability.volume": "wartość",
+          "survivability.volume": "objętość",
           "survivability.length": "długość",
-          "fire.dpm": "DPM pocisków podstawowych",
+          "fire.dpm": "uszkodzenia na minutę pocisków podstawowych",
           "fire.dpmPremium": "DPM pocisków premium",
           "fire.reload": "przeładowanie",
           "fire.caliber": "kaliber",
           "fire.standardPenetration": "Penetracja pocisków standardowych",
-          "fire.premiumPenetration": "Penetracja pocisków premium",
-          "fire.tertiaryPenetration": "tertiary penetration",
+          "fire.premiumPenetration": "penetracja pocisków premium",
+          "fire.tertiaryPenetration": "penetracja pocisków trzeciego typu",
           "fire.damage": "uszkodzenia",
-          "fire.moduleDamage": "Uszkodzenia modułów",
-          "fire.shellVelocity": "Prędkość pocisku",
-          "fire.shellRange": "Zasięg pocisku",
-          "fire.shellCapacity": "Maksymalna ilość pocisków",
-          "fire.aimTime": "Czas celowania",
-          "fire.dispersionStill": "dispersion still",
-          "fire.dispersionMoving": "dispersion moving",
-          "fire.gunDepression": "Depresja działa",
-          "fire.gunElevation": "Elewacja działa",
-          "maneuverability.forwardsSpeed": "Maksymalna prędkość do przodu",
-          "maneuverability.backwardsSpeed": "Maksymalna prędkość do tyłu",
-          "maneuverability.power": "Moc silnika",
+          "fire.moduleDamage": "uszkodzenia modułów",
+          "fire.shellVelocity": "prędkość pocisku",
+          "fire.shellRange": "zasięg pocisku",
+          "fire.shellCapacity": "maksymalna ilość pocisków",
+          "fire.aimTime": "czas celowania",
+          "fire.dispersionStill": "rozrzut podczas postoju",
+          "fire.dispersionMoving": "rozrzut podczas ruchu",
+          "fire.gunDepression": "opuszczanie działa",
+          "fire.gunElevation": "podnoszenie działa",
+          "maneuverability.forwardsSpeed": "maksymalna prędkość do przodu",
+          "maneuverability.backwardsSpeed": "maksymalna prędkość do tyłu",
+          "maneuverability.power": "moc silnika",
           "maneuverability.powerToWeight": "Proporcja mocy do masy",
-          "maneuverability.weight": "Masa czołgu",
-          "maneuverability.traverseSpeed": "traverse speed"
+          "maneuverability.weight": "masa",
+          "maneuverability.traverseSpeed": "prędkość obrotu"
         },
         "sort_dropdown": {
-          "label": "Filtruj",
+          "label": "Sortuj",
           "groups": {
             "sort": {
-              "no_sort": "Brak filtrów",
-              "label": "Filtruj według",
+              "no_sort": "Brak sortowania",
+              "label": "Sortuj według",
               "fire": "Siła ognia",
-              "maneuverability": "Mobilność ",
-              "survivability": "Przetrwanie"
+              "maneuverability": "Mobilność",
+              "survivability": "Przeżywalność"
             },
             "direction": {
-              "label": "Direction",
+              "label": "Kierunek",
               "ascending": "Rosnąco",
               "descending": "Malejąco"
             }
@@ -273,7 +273,7 @@
         }
       },
       "warnings": {
-        "test": "Wartości statystyk czołgów w fazie testowej mogą ulec zmianie."
+        "test": "Statystyki pojazdów testowych mogą ulec zmianie."
       }
     },
     "home": {
@@ -283,7 +283,7 @@
         "action": "Discord"
       },
       "hero": {
-        "credit": "Według {name} ♥️"
+        "credit": "Autorstwa {name} ♥️"
       },
       "hot_tanks": {
         "title": "Popularne czołgi",
@@ -292,21 +292,21 @@
       "other_projects": {
         "title": "Inne epickie projekty"
       },
-      "help_translate": "Proszę pomóż przetłumaczyć {name} na {language}!",
-      "seo_description": "Narzędzia do wszystkiego World of Tanks Blitz"
+      "help_translate": "Proszę, pomóż przetłumaczyć {name} na {language}!",
+      "seo_description": "Narzędzia do wszystkiego w World of Tanks Blitz"
     },
     "docs": {
       "patches": {
-        "name": "Zapisy zmian BlitzKit",
-        "seo_description": "Zapisy zmian BlitzKit: Discord bot i strona internetowa"
+        "name": "Dziennik zmian BlitzKit",
+        "seo_description": "Dziennik zmian BlitzKit: Discord bot i strona internetowa"
       }
     },
     "tools": {
       "credits": {
-        "name": "Kredyty",
+        "name": "Twórcy",
         "button": "Sprawdź graczy",
-        "description": "Współtwórcy Blitzkit",
-        "seo_description": "BlitzKit is the work of many"
+        "description": "Współtwórcy BlitzKit",
+        "seo_description": "BlitzKit jest pracą wielu"
       },
       "playlist": {
         "reset": "Resetuj",
@@ -331,60 +331,60 @@
           "title": "To jest mnóstwo czołgów!",
           "description": "Czy na pewno chcesz stworzyć playlistę złożoną z {count} czołgów? To {time} godzin gry przy 50% zwycięstw!",
           "cancel": "Anuluj",
-          "proceed": "Zatwierdź"
+          "proceed": "Kontynuuj"
         },
         "generate": "Wygeneruj playlistę",
         "name": "Playlista",
         "description": "Generator playlisty czołgów",
-        "seo_description": "Nie wiesz, którym czołgiem grać w World of Tanks Blitz? Użyj funkcji playlisty BlitzKit, i ułóż własną listę czołgów do gry!",
+        "seo_description": "Nie wiesz, którym czołgiem grać w World of Tanks Blitz? Użyj funkcji playlisty BlitzKit i ułóż własną listę czołgów do gry!",
         "button": "Wygeneruj",
-        "pool_size": "{count} możliwe czołgi"
+        "pool_size": "{count} możliwych czołgów"
       },
       "mixer": {
         "name": "Mikser",
-        "button": "Mix and match",
-        "description": "Mix tank modules",
-        "seo_description": "Mix and match hulls, turrets, and guns of tanks in World of Tanks Blitz",
+        "button": "Zmiksuj i dopasuj",
+        "description": "Zmiksuj moduły czołgów",
+        "seo_description": "Zmiksuj i dopasuj kadłuby, wieże i działa czołgów z World of Tanks Blitz",
         "screenshot": "Zrzut ekranu",
-        "randomize": "Wymieszaj"
+        "randomize": "Wylosuj"
       },
       "guess": {
-        "name": "Zgadnij",
+        "name": "Zgadywanka",
         "button": "What could it be?",
-        "description": "Silhouette mini-game",
-        "seo_description": "Play a tank guessing game with a silhouette in World of Tanks Blitz",
+        "description": "Sylwetkowa minigra",
+        "seo_description": "Zagraj w sylwetkową zgadywanką z World of Tanks Blitz",
         "search": {
-          "placeholder": "Wpisz odpowiedź",
+          "placeholder": "Wpisz, by zgadywać...",
           "skip": "Pomiń",
           "guess": "Zgaduję",
           "next": "Następny",
           "no_results": "Brak wyników"
         },
-        "stats": "{correct} / {total} correct, {streak} streak",
+        "stats": "{correct} / {total} poprawnych, {streak} z rzędu",
         "help": {
           "title": "Odsłonić część czołgu?",
-          "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+          "description": "Odkrywa część pojazdu, ale bez nazwy. Ta runda zostanie niezaliczona i przerwie twoje pasmo odpowiedzi!",
           "cancel": "Anuluj",
-          "reveal": "Pokaż"
+          "reveal": "Odkryj"
         },
         "clear": "Wyczyść",
         "select_all": "Zaznacz wszystko ",
-        "tier": "Poziom czołgu {tier}"
+        "tier": "Poziom {tier}"
       },
       "tankopedia": {
         "search": "Wyszukaj statystykę...",
-        "name": "Tankopedia",
-        "button": "Znajdź czołg",
-        "description": "Encyklopedia czołgów w WoTb",
-        "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
-        "tank_seo_title": "{name} - Tier {tier} {nationality} {class} | {website} Tankopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} armor, statistics, equipment, provisions, and more. {dpm} DPM, {alpha}hp alpha, {penetration}mm penetration, {speed}kph top speed, {health}hp health.",
+        "name": "Czołgopedia",
+        "button": "Znajdź czołgi",
+        "description": "Encyklopedia czołgów w Blitz",
+        "seo_description": "Statystyki, pancerz, i wiele więcej o każdym czołgu w World of Tanks Blitz",
+        "tank_seo_title": "{name} - Poziom {tier} {nationality} {class} | {website} Czołgopedia | World of Tanks Blitz (WoTB)",
+        "tank_seo_description": "{name} pancerz, statystyki, prowizje i więcej. {dpm} uszkodzeń na minutę, {alpha}uszkodzeń na strzał, {penetration}mm penetracji, {speed}km/h maks., {health}punktów wytrzymałości.",
         "visualizers": {
           "reload": {
             "skip": "Pomiń"
           },
           "assault": {
-            "title": "Assault shells"
+            "title": "Pociski szturmowe"
           },
           "rotator": {
             "hull": "Kadłub",
@@ -392,14 +392,14 @@
             "hard": "Utwardzony",
             "medium": "Średni",
             "soft": "Miękki",
-            "effective": "Rzeczywisty"
+            "effective": "Efektywne"
           },
           "ricochet": {
             "angle": "Kąt",
-            "normalization": "Normalization",
-            "effective_angle": "Rzeczywisty kąt nachylenia pancerza",
+            "normalization": "Normalizacja",
+            "effective_angle": "Kąt efektywny",
             "armor": "Pancerz",
-            "no_ricochet": "Pociski odłamkowe nie rykoszetują."
+            "no_ricochet": "Pociski wybuchowe nie rykoszetują"
           },
           "view_range": {
             "camo": "Kamuflaż",
@@ -407,64 +407,64 @@
             "dead_rail": "Martwy tor"
           },
           "flexibility": {
-            "yaw": "Yaw",
-            "pitch": "Pitch",
+            "yaw": "Wychył",
+            "pitch": "Wychył",
             "min": "Min",
-            "max": "Max"
+            "max": "Maks"
           }
         },
         "sandbox": {
-          "load_model": "Load model",
+          "load_model": "Załaduj model",
           "poses": {
-            "hull_down": "Hull down",
-            "face_hug": "Face hug",
-            "default": "Default"
+            "hull_down": "Na wieżę",
+            "face_hug": "Sklejka",
+            "default": "Domyślna"
           },
           "settings": {
-            "armor": "Armor",
-            "green_penetration": "Green penetration",
-            "hide_model_under_armor": "Hide model under armor",
-            "opaque": "Opaque",
-            "dev_wireframe": "DEV: wireframe"
+            "armor": "Pancerz",
+            "green_penetration": "Przebicie zielone",
+            "hide_model_under_armor": "Ukryj model pod pancerzem",
+            "opaque": "Nieprzezroczysty",
+            "dev_wireframe": "DEV: Szkieletowy"
           },
           "screenshot": {
             "download": "Download",
-            "copy": "Copy"
+            "copy": "Kopiuj"
           },
           "model": {
             "name": "Model"
           },
           "dynamic": {
-            "name": "Dynamic armor",
+            "name": "Pancerz dynamiczny",
             "custom_shell": {
               "type": "Rodzaj",
-              "caliber": "Caliber",
-              "penetration": "Penetration",
-              "normalization": "Normalization",
-              "ricochet": "Ricochet",
-              "explosion_radius": "Explosion radius",
-              "exit": "Exit",
+              "caliber": "Kaliber",
+              "penetration": "Penetracja",
+              "normalization": "Normalizacja",
+              "ricochet": "Rykoszet",
+              "explosion_radius": "Promień eksplozji",
+              "exit": "Wyjdź",
               "reset": "Zresetuj"
             },
             "advanced": "Zaawansowane podświetlanie",
             "shot_card": {
               "element": {
                 "primary": "Główny",
-                "spaced": "Spaced",
+                "spaced": "Warstwowy",
                 "external": "Zewnętrzny",
-                "gap": "Odstęp",
+                "gap": "Prześwit",
                 "gun": "Działo",
                 "track": "Gąsienice"
               },
               "status": {
-                "penetration": "{damage} penetracja punktów wytrzymałości",
-                "blocked": "Zablokowany",
+                "penetration": "{damage}pw penetracja",
+                "blocked": "Zablokowane",
                 "ricochet": "Rykoszet",
-                "splash": "{damage} rozprysk punktów wytrzymałości"
+                "splash": "{damage}pw rozprysk"
               },
               "stats": {
-                "thickness_and_angle": "{thickness}mm {angle}",
-                "nominal": "{thickness}mm nominalny",
+                "thickness_and_angle": "{thickness}mm {angle}°",
+                "nominal": "{thickness}mm nominalnie",
                 "ricochet_loss": "{loss}% penetracji"
               }
             }
@@ -472,7 +472,7 @@
           "static": {
             "name": "Pancerz statyczny",
             "primary": "Główny Pancerz",
-            "spaced": "Ekran przeciwkumulacyjny",
+            "spaced": "Warstwowy",
             "external": "Zewnętrzny",
             "edit": {
               "label": "Edytuj",
@@ -487,7 +487,7 @@
             "button": "Zamień",
             "title": "Zamień czołgi"
           },
-          "vanilla": "Vanilla",
+          "vanilla": "Domyślny",
           "opentest": "OpenTest",
           "full_name": "Pełna nazwa",
           "nation": "Naród",
@@ -498,8 +498,8 @@
           "dev_name": "DEV: NAZWA",
           "purchase": "Cena zakupu",
           "restoration": "Cena odzyskania",
-          "sale": "Sale price",
-          "research": "Research XP"
+          "sale": "Cena sprzedaży",
+          "research": "PD badań"
         },
         "tech_tree": {
           "title": "Drzewko technologiczne",
@@ -515,7 +515,7 @@
           "join": "Apply to {name} YouTuber program"
         },
         "configuration": {
-          "title": "Configuration",
+          "title": "Konfiguracja",
           "equalizer": {
             "title": "Equalizer",
             "equalize": "Equalize"
@@ -534,30 +534,30 @@
             "clear": "Wyczyść"
           },
           "consumables": {
-            "title": "Consumables",
+            "title": "Materiały eksploatacyjne",
             "clear": "Wyczyść",
-            "info": "Yellow consumables do not affect the statistics."
+            "info": "Materiały eksploatacyjne oznaczone na żółto nie wpływają na statystyki."
           },
           "skills": {
-            "title": "Crew skills",
+            "title": "Umiejętności załogi",
             "clear": "Wyczyść",
-            "maximize": "Maximize",
-            "info": "Yellow skills only apply under special circumstances. Hold Space to quickly toggle between level 0 and 7."
+            "maximize": "Maksymalizuj",
+            "info": "Umiejętności oznaczone na żółto działają tylko w określonych okolicznościach. Przytrzymaj Spację, aby szybko przełączyć między poziomem 0, a 7."
           },
           "miscellaneous": {
-            "title": "Miscellaneous"
+            "title": "Inne"
           }
         },
         "characteristics": {
-          "title": "Characteristics",
+          "title": "Charakterystyka",
           "compare": {
             "label": "Compare against",
             "class": "{tier} {class}",
-            "tier": "All tier {tier}",
-            "all": "All tanks"
+            "tier": "Wszystkie poziomy {tier}",
+            "all": "Wszystkie czołgi"
           },
           "values": {
-            "shell_index": "Shell {index}",
+            "shell_index": "Pocisk {index}",
             "at_distance": "Z odległości {distance}m",
             "at_distance_slider_label": "Zasięg widzenia",
             "dispersion_at_distance": "Rozrzut na {distance}m",
@@ -570,8 +570,8 @@
             "camouflage": "Kamuflaż",
             "reload": "Przeładowanie",
             "crewCount": "Liczba członków załogi",
-            "shellNormalization": "Normalization",
-            "shellRicochet": "Ricochet",
+            "shellNormalization": "Normalizacja",
+            "shellRicochet": "Rykoszet",
             "dpm": "Uszkodzenia na minutę",
             "dpmEffective": "Efektywne w 60s",
             "peekabooDpm": "Obrażenia na minutę w stylu „wychyl i schowaj”",
@@ -581,8 +581,8 @@
             "shellReloads": "Przeładowania",
             "shellReload": "Przeładowanie",
             "intraClip": "Czas przeładowania pocisku",
-            "caliber": "Caliber",
-            "penetration": "Penetration",
+            "caliber": "Kaliber",
+            "penetration": "Penetracja",
             "damage": "Uszkodzenia",
             "damageWithoutAssault": "Uszkodzenia bez pocisków szturmowych",
             "clipDamage": "Potencjał magazynu",
@@ -601,42 +601,42 @@
             "gunFrontalDepression": "Przedni limit obrotu działa w dół",
             "gunFrontalElevation": "Przedni limit obrotu działa w górę",
             "gunRearDepression": "Tylne opuszczanie działa",
-            "gunRearElevation": "Rear elevation",
-            "azimuthLeft": "Azimuth left",
-            "azimuthRight": "Azimuth right",
+            "gunRearElevation": "Elewacja działa z tyłu pojazdu",
+            "azimuthLeft": "Wychyl do lewej",
+            "azimuthRight": "Wychył do prawej",
             "speedForwards": "Forwards",
-            "speedBackwards": "Backwards",
+            "speedBackwards": "Do tyłu",
             "hardTerrainCoefficient": "Hard",
             "hardTerrainCoefficientRaw": "Hard",
             "mediumTerrainCoefficient": "Średni",
             "mediumTerrainCoefficientRaw": "Średni",
-            "softTerrainCoefficient": "Soft",
-            "softTerrainCoefficientRaw": "Soft",
-            "enginePower": "Engine power",
+            "softTerrainCoefficient": "Miękki",
+            "softTerrainCoefficientRaw": "Miękki",
+            "enginePower": "Moc silnika",
             "powerToWeightRatioHardTerrain": "Hard",
             "powerToWeightRatioMediumTerrain": "Średni",
-            "powerToWeightRatioSoftTerrain": "Soft",
-            "weight": "Weight",
-            "turretTraverseSpeed": "Turret traverse speed",
-            "gunTraverseSpeed": "Gun traverse speed",
+            "powerToWeightRatioSoftTerrain": "Miękki",
+            "weight": "Masa",
+            "turretTraverseSpeed": "Prędkość obrotu wieży",
+            "gunTraverseSpeed": "Prędkość ruchu działa",
             "hullTraverseHardTerrain": "Hard",
             "hullTraverseMediumTerrain": "Średni",
-            "hullTraverseSoftTerrain": "Soft",
-            "health": "Health",
-            "fireChance": "Fire chance",
-            "trackRepairTime": "Track repair time",
-            "viewRange": "View range",
+            "hullTraverseSoftTerrain": "Miękki",
+            "health": "Punkty wytrzymałości",
+            "fireChance": "Szansa na pożar",
+            "trackRepairTime": "Czas naprawy gąsienicy",
+            "viewRange": "Zasięg widzenia",
             "camouflageStill": "Still",
             "camouflageMoving": "Podczas ruchu",
-            "camouflageShootingStill": "Shooting while still",
-            "camouflageShootingMoving": "Shooting while moving",
-            "camouflageCaughtOnFire": "Caught on fire",
-            "width": "Width",
-            "height": "Height",
-            "length": "Length",
-            "volume": "Volume",
-            "shellRange": "Shell range",
-            "shellCapacity": "Shell capacity",
+            "camouflageShootingStill": "Strzał podczas postoju",
+            "camouflageShootingMoving": "Strzał w trakcie ruchu",
+            "camouflageCaughtOnFire": "W trakcie pożaru",
+            "width": "Szerokość",
+            "height": "Wysokość",
+            "length": "Długość",
+            "volume": "Objętość",
+            "shellRange": "Zasięg pocisku",
+            "shellCapacity": "Ilość pocisków",
             "gunType": "Gun type",
             "penetrationAt250m": "Penetration at 250m",
             "burstShells": "Burst shell count",
@@ -657,7 +657,7 @@
           "loader": "Loader"
         },
         "maneuverability": {
-          "title": "Mobilność "
+          "title": "Mobilność"
         },
         "survivability": {
           "title": "Przetrwanie"
@@ -693,7 +693,7 @@
           },
           "skills": {
             "clear": "Wyczyść",
-            "maximize": "Maximize",
+            "maximize": "Maksymalizuj",
             "equalize": "Equalize"
           },
           "modules": {
@@ -733,7 +733,7 @@
             "players": "Players",
             "damage": "Uszkodzenia",
             "survival": "Przeżycie",
-            "xp": "XP",
+            "xp": "PD",
             "kills": "Zniszczenia",
             "spots": "Zwiad",
             "accuracy": "Skuteczność",
@@ -749,92 +749,92 @@
         "name": "Gallery",
         "button": "Browse all",
         "description": "Blitz player avatars",
-        "seo_description": "All World of Tanks Blitz player avatars",
+        "seo_description": "Wszystkie awatary graczy World of Tanks Blitz",
         "last_updated": "Last updated on {time}",
         "search": {
-          "hint": "Search avatars...",
-          "results": "{count} avatars"
+          "hint": "Wyszukaj awatar...",
+          "results": "{count} awatarów"
         }
       },
       "session": {
-        "name": "Session",
-        "button": "Start tracking",
-        "description": "Live session stats",
-        "seo_description": "Track your stats in real time as you play World of Tanks Blitz",
+        "name": "Sesja",
+        "button": "Rozpocznij śledzenie",
+        "description": "Statystyki sesji na żywo",
+        "seo_description": "Śledź swoje statystyki na żywo w trakcie gry",
         "search": {
-          "lookup": "Look up a player to get started",
+          "lookup": "Żeby rozpocząć, wyszukaj gracza",
           "hint": "Szukaj graczy...",
           "searching": "Wyszukiwanie...",
-          "no_results": "No players found"
+          "no_results": "Nie znaleziono graczy"
         },
         "controls": {
-          "title": "Tracking {name}",
-          "subtitle": "Since {time}",
+          "title": "Śledzenie {name}",
+          "subtitle": "Od {time}",
           "reset": "Zresetuj",
-          "change": "Change"
+          "change": "Zmień"
         },
         "no_cc": {
-          "title": "You're attempting to track a CC account",
-          "body": "CC (community contributor) accounts do not have public tank statistics. We are in the process of adding embeds for CC accounts, stay tuned.",
-          "alright": "Alright"
+          "title": "Próbujesz śledzić konto CC",
+          "body": "Konta CC (współtwórca społeczności) nie mają dostępnych publicznie statystyk pojazdów. Jesteśmy w trakcie dodawania śledzenia dla kont CC.",
+          "alright": "W porządku"
         },
         "no_battles": {
-          "title": "No battles",
-          "hint": "Go ahead and play a game"
+          "title": "Brak bitew",
+          "hint": "Śmiało, zagraj bitwę"
         },
         "table": {
-          "tank": "Tank",
+          "tank": "Czołg",
           "total": "Łącznie",
-          "remove": "Remove"
+          "remove": "Usuń"
         }
       },
       "tier_list": {
-        "name": "Tier list",
-        "button": "Rank tanks",
-        "description": "Rank Blitz tanks",
-        "seo_description": "Explore tier lists ranking tanks from best to worst, based on player ratings and statistical performance in World of Tanks Blitz",
+        "name": "Lista rankingowa",
+        "button": "Oceń pojazdy",
+        "description": "Stwórz ranking pojazdów",
+        "seo_description": "Odkryj rankingi klasyfikujące czołgi od najlepszych do najgorszych na podstawie ocen graczy i ich statystycznych wyników w World of Tanks Blitz",
         "buttons": {
           "reset": "Zresetuj",
-          "share": "Share"
+          "share": "Udostępnij"
         }
       },
       "embed": {
-        "name": "Embed",
-        "button": "Create now",
-        "description": "Embeds for streaming",
+        "name": "Osadzenia",
+        "button": "Stwórz teraz",
+        "description": "Osadzenia do streamów",
         "seo_description": "Create embeds for streaming World of Tanks Blitz with extreme customization",
-        "coming_soon": "More embeds coming soon.",
-        "suggest": "Suggest ideas.",
+        "coming_soon": "Więcej osadzeń wkrótce.",
+        "suggest": "Zasugeruj pomysł.",
         "preview": {
-          "title": "Example preview",
-          "upload": "Upload test background"
+          "title": "Przykładowy podgląd",
+          "upload": "Wrzuć testowe tło"
         },
         "configuration": {
           "import": {
-            "title": "Import",
-            "description": "Paste your current URL if you have one already to import your settings",
-            "hint": "Paste URL...",
-            "apply": "Apply",
-            "idiot_title": "Invalid URL",
-            "idiot_description": "Try pasting the URL that BlitzKit previously generated, you silly goose!",
-            "idiot_button": "Okay, my bad"
+            "title": "Zaimportuj",
+            "description": "Jeśli masz URL ze swoimi ustawieniami, wklej go",
+            "hint": "Wklej URL...",
+            "apply": "Aplikuj",
+            "idiot_title": "Nieprawidłowy URL",
+            "idiot_description": "Spróbuj wkleić URL, który BlitzKit wcześniej wygenerował, gamoniu!",
+            "idiot_button": "Okej, mój błąd"
           },
           "export": {
-            "title": "Export",
-            "description": "Copy all properties for you streaming software",
+            "title": "Wyeksportuj",
+            "description": "Skopiuj wszystkie właściwości dla swojego programów do streamów",
             "generate": {
-              "button": "Generate URL",
-              "title": "Generate URL",
-              "subtitle": "Search an account to track",
-              "cancel": "Cancel",
+              "button": "Wygeneruj URL",
+              "title": "Wygeneruj URL",
+              "subtitle": "Wyszukaj konto, aby zacząć śledzić",
+              "cancel": "Anuluj",
               "success": {
-                "title": "Copy URL",
-                "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+                "title": "Skopiuj URL",
+                "info": "Wygenerowano URL dla {name}. Wbudowane narzędzia rozpoczną śledzenie od razu po wklejeniu URL. Możesz zresetować proces, klikając prawym przyciskiem myszy na komputerze lub długo przytrzymując na urządzeniu mobilnym, następnie klikając \"Resetuj\".",
                 "back": "Powrót",
-                "copy": "Copy URL"
+                "copy": "Skopiuj URL"
               }
             },
-            "css": "Copy CSS",
+            "css": "Skopiuj dane CSS",
             "width": "Copy Width",
             "height": "Copy Height",
             "framerate": "Copy Framerate"
@@ -849,8 +849,8 @@
           "breakdown": {
             "name": "Breakdown",
             "options": {
-              "width": "Width",
-              "height": "Height",
+              "width": "Szerokość",
+              "height": "Wysokość",
               "showTotal": "Show total",
               "listGap": "List gap",
               "listMaxTanks": "Max tanks",
@@ -909,21 +909,21 @@
       "home": {
         "name": "Home",
         "button": "Get started",
-        "description": "Get started with BlitzKit",
-        "seo_description": "Get started with BlitzKit"
+        "description": "Rozpocznij działanie z BlitzKit",
+        "seo_description": "Rozpocznij działanie z BlitzKit"
       },
       "api": {
         "name": "API",
-        "button": "To the docs",
-        "description": "BlitzKit hosted API",
-        "seo_description": "BlitzKit hosted static API for World of Tanks Blitz"
+        "button": "Do dokumentacji",
+        "description": "API hostowane przez BlitzKit",
+        "seo_description": "Statyczne AP hostowane przez BlitzKit, dla World of Tanks Blitz"
       }
     },
     "footer": {
-      "motto": "Everything World of Tanks Blitz",
+      "motto": "Wszystko o World of Tanks Blitz",
       "association": "An Open Collective Project",
       "about": {
-        "title": "About",
+        "title": "O BlitzKit",
         "discord": "Discord",
         "github": "GitHub",
         "patches": "Patches"
@@ -931,7 +931,7 @@
       "legal": {
         "title": "Legal",
         "privacy": "Privacy policy",
-        "terms": "Terms of service"
+        "terms": "Warunki serwisu"
       }
     }
   }
