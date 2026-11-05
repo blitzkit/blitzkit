@@ -30,6 +30,7 @@ export function jsxTree(
       props: ComponentProps<"group">,
       key: string,
     ) => ReactNode;
+    primitive?: (object3d: Object3D, key: string) => ReactNode;
   },
 ): ReactNode {
   if (node instanceof Mesh) {

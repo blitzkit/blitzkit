@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { Material, Object3D } from "three";
 import type { Skin } from "../../hooks/useSkin";
 import { jsxTree } from "./jsxTree";
@@ -18,9 +17,7 @@ export function nameOf(object3d: Object3D): string {
 export function skinTree(
   node: Object3D,
   skins: Skin[],
-  mergers: Mergers & {
-    primitive: (object: Object3D, key: string) => ReactNode;
-  },
+  mergers: NonNullable<Mergers>,
 ) {
   const materials = new Map<string, Material>();
   const states: Record<string, string | null> = {};
@@ -48,7 +45,7 @@ export function skinTree(
     mesh(mesh, props, key) {
       const material = materials.get((mesh.material as Material).name);
 
-      return mergers!.mesh!(
+      return mergers.mesh!(
         mesh,
         material ? { ...props, material } : props,
         key,
@@ -60,7 +57,11 @@ export function skinTree(
           {switchChildren(object3d) ?? props.children}
           {skins.flatMap((skin) =>
             (skin.parts.get(object3d.name) ?? []).map((part) =>
-              mergers.primitive(part, part.uuid),
+              mergers.primitive ? (
+                mergers.primitive(part, part.uuid)
+              ) : (
+                <primitive key={part.uuid} object={part} />
+              ),
             ),
           )}
         </group>

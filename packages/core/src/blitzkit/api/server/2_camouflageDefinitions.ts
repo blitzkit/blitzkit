@@ -1,6 +1,5 @@
 import {
   CamouflageDefinitions,
-  camouflagePreset,
   Sc2ReadStream,
   type TankParameters,
 } from "@blitzkit/core";
@@ -89,7 +88,10 @@ export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {
         );
 
         const [nation, tankKey] = vehicle.split(":");
-        const preset = camouflagePreset(yamlEntry, nation, tankKey);
+        // some unique camos only set the preset for their one tank
+        const preset =
+          yamlEntry.preset ??
+          yamlEntry.override?.[nation]?.override?.[tankKey]?.preset;
         let hasPreset = false;
 
         if (preset !== undefined) {
