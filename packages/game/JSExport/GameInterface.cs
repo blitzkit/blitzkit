@@ -32,16 +32,18 @@ public partial class GameInterface
   public HashSet<string> files;
   public int textureChunks;
 
+  readonly string textureCache;
+
   public GameInterface(string directory, string map, string temp, int textureChunks)
   {
     provider = new(directory, map, temp);
     files = [.. provider.Files.Keys];
 
     this.textureChunks = textureChunks;
+    this.textureCache = $"{temp}textures.json";
   }
 
   readonly Dictionary<string, (int, string)> texturePaths = [];
-  readonly string textureCache = $"{temp}textures.json";
 
   [GeneratedRegex(@"\+ClientDiscoveryBindingSources\s*=\s*\(Type=\w+,URL=""(.+)""\)")]
   private static partial Regex DiscoveryRegex();

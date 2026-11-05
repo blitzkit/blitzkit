@@ -1,2 +1,2 @@
 cd packages/website-ue
-bun run dev
+bun run --bun dev

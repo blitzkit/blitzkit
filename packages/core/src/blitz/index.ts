@@ -15,7 +15,6 @@ export * from "./normalizeExtra";
 export * from "./normalizeIds";
 export * from "./permanentSkills";
 export * from "./rating";
-export * from "./readDVPL";
 export * from "./regions";
 export * from "./regionSubdomainToRegion";
 export * from "./regionToRegionSubdomain";

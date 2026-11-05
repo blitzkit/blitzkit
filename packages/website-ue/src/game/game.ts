@@ -1,8 +1,8 @@
 import { assertSecret } from "@blitzkit/core";
 import type { GameInterface } from "@blitzkit/game";
-import { clientUnmounted } from "./unmounted";
 import { api } from "../api/dynamic";
 import { assertDiscoveryTag } from "./assertDiscoveryTag";
+import { clientUnmounted } from "./unmounted";
 
 let _game: GameInterface | null = null;
 
