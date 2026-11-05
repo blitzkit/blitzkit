@@ -518,7 +518,7 @@
           "title": "Konfiguracja",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Dorównaj"
+            "equalize": "Przyrównaj"
           },
           "modules": {
             "title": "Moduły",
@@ -677,7 +677,7 @@
           "clear": "Wyczyść",
           "deltas": {
             "none": "Bez różnicy",
-            "percentage": "Procentowo",
+            "percentage": "Procentowa",
             "absolute": "Absolutna"
           },
           "sync_shells": "Synchronizuj pociski"
@@ -694,7 +694,7 @@
           "skills": {
             "clear": "Wyczyść",
             "maximize": "Maksymalizuj",
-            "equalize": "Dorównaj"
+            "equalize": "Przyrównaj"
           },
           "modules": {
             "stock": "Standardowy",
@@ -740,7 +740,7 @@
             "shots": "Strzały",
             "hits": "Trafienia",
             "damage_ratio": "Współczynnik Z/P",
-            "damage_taken": "Zadane",
+            "damage_taken": "Przyjęte",
             "capture_points": "Punkty bazy"
           }
         }
