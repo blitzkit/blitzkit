@@ -1,12 +1,12 @@
-import {
-  TIER_ROMAN_NUMERALS,
-  type EngineDefinition,
-  type GunDefinition,
-  type ShellDefinition,
-  type TankDefinition,
-  type TrackDefinition,
-  type TurretDefinition,
-} from "@blitzkit/core";
+import { romanize } from "@blitzkit/core";
+import type {
+  EngineDefinition,
+  GunDefinition,
+  ShellDefinition,
+  TankDefinition,
+  TrackDefinition,
+  TurretDefinition,
+} from "@blitzkit/protos";
 import { DropdownMenu, Flex } from "@radix-ui/themes";
 import { useState } from "react";
 import { useLocale } from "../hooks/useLocale";
@@ -42,7 +42,7 @@ export function ModuleManager({
     <Flex gap="1" wrap="wrap">
       <ModuleButton
         module="turret"
-        discriminator={TIER_ROMAN_NUMERALS[modules.turret.tier]}
+        discriminator={romanize(modules.turret.tier)}
         onClick={() => setTurretMenuOpen(true)}
       />
 
@@ -71,7 +71,7 @@ export function ModuleManager({
                   <ModuleButton
                     variant="ghost"
                     module="turret"
-                    discriminator={TIER_ROMAN_NUMERALS[turret.tier]}
+                    discriminator={romanize(turret.tier)}
                   />{" "}
                   {unwrap(turret.name!)}
                 </DropdownMenu.RadioItem>
@@ -83,7 +83,7 @@ export function ModuleManager({
 
       <ModuleButton
         module="gun"
-        discriminator={TIER_ROMAN_NUMERALS[modules.gun.tier]}
+        discriminator={romanize(modules.gun.tier)}
         onClick={() => setGunMenuOpen(true)}
       />
 
@@ -111,7 +111,7 @@ export function ModuleManager({
                   <ModuleButton
                     variant="ghost"
                     module="gun"
-                    discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
+                    discriminator={romanize(gun.tier)}
                   />{" "}
                   {unwrap(gun.name!)}
                 </DropdownMenu.RadioItem>
@@ -123,7 +123,7 @@ export function ModuleManager({
 
       <ModuleButton
         module="engine"
-        discriminator={TIER_ROMAN_NUMERALS[modules.engine.tier]}
+        discriminator={romanize(modules.engine.tier)}
         onClick={() => setEngineMenuOpen(true)}
       />
 
@@ -150,7 +150,7 @@ export function ModuleManager({
                   <ModuleButton
                     variant="ghost"
                     module="engine"
-                    discriminator={TIER_ROMAN_NUMERALS[engine.tier]}
+                    discriminator={romanize(engine.tier)}
                   />{" "}
                   {unwrap(engine.name!)}
                 </DropdownMenu.RadioItem>
@@ -162,7 +162,7 @@ export function ModuleManager({
 
       <ModuleButton
         module="chassis"
-        discriminator={TIER_ROMAN_NUMERALS[modules.track.tier]}
+        discriminator={romanize(modules.track.tier)}
         onClick={() => setTrackMenuOpen(true)}
       />
 
@@ -189,7 +189,7 @@ export function ModuleManager({
                   <ModuleButton
                     variant="ghost"
                     module="chassis"
-                    discriminator={TIER_ROMAN_NUMERALS[track.tier]}
+                    discriminator={romanize(track.tier)}
                   />{" "}
                   {unwrap(track.name!)}
                 </DropdownMenu.RadioItem>

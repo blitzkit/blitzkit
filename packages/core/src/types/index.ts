@@ -4,6 +4,7 @@ export * from "./blitzStrings";
 export * from "./blitzTankFilterDefinitionCategory";
 export * from "./camouflagesXml";
 export * from "./camouflagesYaml";
+export * from "./caseType";
 export * from "./chassisDefinitionsList";
 export * from "./combatRolesYaml";
 export * from "./consumablesCommon";

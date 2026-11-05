@@ -1,5 +1,5 @@
-import type { AssaultRanges } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import type { AssaultRanges } from "@blitzkit/protos";
 import { Box, Flex, Text } from "@radix-ui/themes";
 import { clamp } from "three/src/math/MathUtils.js";
 import {
@@ -68,7 +68,7 @@ export function AssaultRangesVisualizer({ ranges: _ranges, stats }: Props) {
                 >
                   {literals(strings.common.units.hp, {
                     value: Math.round(
-                      stats.damageWithoutAssault * range.factor
+                      stats.damageWithoutAssault * range.factor,
                     ),
                   })}
                 </Text>

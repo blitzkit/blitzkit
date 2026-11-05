@@ -1,11 +1,8 @@
-import { unwrapper } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { createContext, useContext, type ReactNode } from "react";
-import { getStrings } from "../core/i18n/getStrings";
 
 const LocaleContext = createContext<{
   locale: string;
-  localeRaw: string | undefined;
 } | null>(null);
 
 interface LocaleProviderProps extends LocaleAcceptorProps {
@@ -14,9 +11,7 @@ interface LocaleProviderProps extends LocaleAcceptorProps {
 
 export function LocaleProvider({ locale, children }: LocaleProviderProps) {
   return (
-    <LocaleContext.Provider
-      value={{ locale: locale ?? locales.default, localeRaw: locale }}
-    >
+    <LocaleContext.Provider value={{ locale: locale ?? locales.default }}>
       {children}
     </LocaleContext.Provider>
   );
@@ -29,12 +24,9 @@ export function useLocale() {
     throw new Error("useLocale must be used within a LocaleProvider");
   }
 
-  const strings = getStrings(context.locale);
-  const unwrap = unwrapper(context.locale);
-
-  return { locale: context.locale, strings, unwrap };
+  return context.locale;
 }
 
 export interface LocaleAcceptorProps {
-  locale: string | undefined;
+  locale: string;
 }

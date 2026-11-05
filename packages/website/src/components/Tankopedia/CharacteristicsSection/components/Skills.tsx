@@ -1,3 +1,4 @@
+import { MAX_SKILL_LEVEL } from "@blitzkit/core";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   Button,
@@ -59,7 +60,7 @@ export function Skills() {
           onClick={() => {
             Tankopedia.mutate((draft) => {
               Object.keys(draft.skills).forEach((skill) => {
-                draft.skills[skill] = 7;
+                draft.skills[skill] = MAX_SKILL_LEVEL;
               });
             });
           }}

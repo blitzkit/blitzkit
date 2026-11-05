@@ -1,0 +1,19 @@
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  .control {
+    width: 1.25em;
+    height: 1.25em;
+
+    margin: 0;
+
+    accent-color: var(--accent-9);
+  }
+
+  &,
+  * {
+    cursor: pointer;
+  }
+}

@@ -1,11 +1,11 @@
 import { Button, Flex, Heading } from "@radix-ui/themes";
-import { api } from "../../../../core/blitzkit/api";
+import { api } from "../../../../api/dynamic";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Duel } from "../../../../stores/duel";
 import { EquipmentManager } from "../../../EquipmentManager";
 import { ConfigurationChildWrapper } from "./ConfigurationChildWrapper";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipmentDefinitions = await api.equipment();
 
 export function Equipment() {
   const protagonist = Duel.use((state) => state.protagonist);

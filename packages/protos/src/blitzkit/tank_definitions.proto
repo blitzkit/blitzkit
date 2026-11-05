@@ -1,0 +1,245 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message TankDefinitions {
+  map<uint32, TankDefinition> tanks = 1;
+}
+
+message TankDefinition {
+  uint32                    id                 = 1;
+  string                    slug               = 2;
+  map<string, uint32>       roles              = 3;
+  bool                      fixed_camouflage   = 5;
+  repeated int32            camouflages        = 6;
+  repeated int32            ancestors          = 7;
+  repeated int32            successors         = 8;
+  repeated Crew             crew               = 9;
+  uint32                    health             = 10;
+  string                    nation             = 11;
+  I18nString                name               = 12;
+  TankType                  type               = 13;
+  uint32                    max_consumables    = 14;
+  uint32                    max_provisions     = 15;
+  uint32                    tier               = 16;
+  TankClass                 class              = 17;
+  bool                      testing            = 18;
+  bool                      deprecated         = 19;
+  repeated TurretDefinition turrets            = 20;
+  repeated EngineDefinition engines            = 21;
+  repeated TrackDefinition  tracks             = 22;
+  TankPrice                 price              = 23;
+  optional ResearchCost     research_cost      = 24;
+  float                     speed_forwards     = 25;
+  float                     speed_backwards    = 26;
+  float                     camouflage_still   = 27;
+  float                     camouflage_moving  = 28;
+  float                     camouflage_on_fire = 29;
+  string                    equipment_preset   = 30;
+  uint32                    weight             = 31;
+  string                    dev_name           = 32;
+  optional Equalizer        equalizer          = 33;
+  optional I18nString       name_full          = 34;
+}
+
+message Equalizer {
+  float health        = 1;
+  float penetration   = 2;
+  float module_health = 3;
+  float damage        = 4;
+  float armor         = 5;
+}
+
+message ResearchCost {
+  oneof research_cost_type {
+    uint32                     xp              = 1;
+    ResearchCostSeasonalTokens seasonal_tokens = 2;
+  }
+}
+
+message ResearchCostSeasonalTokens {
+  uint32 season = 1;
+  uint32 tokens = 2;
+}
+
+enum TankPriceType {
+  TANK_PRICE_TYPE_CREDITS = 0;
+  TANK_PRICE_TYPE_GOLD    = 1;
+}
+
+message TankPrice {
+  TankPriceType type  = 1;
+  uint32        value = 2;
+}
+
+message TrackDefinition {
+  uint32                id                  = 1;
+  uint32                tier                = 2;
+  I18nString            name                = 3;
+  uint32                weight              = 4;
+  float                 traverse_speed      = 5;
+  optional ResearchCost research_cost       = 6;
+  float                 dispersion_move     = 7;
+  float                 dispersion_traverse = 8;
+  float                 resistance_hard     = 9;
+  float                 resistance_medium   = 10;
+  float                 resistance_soft     = 11;
+  repeated Unlock       unlocks             = 12;
+}
+
+message EngineDefinition {
+  uint32                id            = 1;
+  I18nString            name          = 2;
+  optional ResearchCost research_cost = 3;
+  uint32                tier          = 4;
+  float                 fire_chance   = 5;
+  uint32                power         = 6;
+  uint32                weight        = 7;
+  repeated Unlock       unlocks       = 8;
+}
+
+message TurretDefinition {
+  uint32                 id             = 1;
+  uint32                 health         = 2;
+  uint32                 view_range     = 3;
+  float                  traverse_speed = 4;
+  optional ResearchCost  research_cost  = 5;
+  I18nString             name           = 6;
+  uint32                 tier           = 7;
+  uint32                 weight         = 8;
+  repeated GunDefinition guns           = 9;
+  repeated Unlock        unlocks        = 10;
+}
+
+message GunDefinition {
+  oneof gun_type {
+    GunDefinitionRegular      regular       = 1;
+    GunDefinitionAutoLoader   auto_loader   = 2;
+    GunDefinitionAutoReloader auto_reloader = 3;
+  }
+
+  uint32                   id                  = 4;
+  float                    rotation_speed      = 5;
+  optional ResearchCost    research_cost       = 6;
+  uint32                   weight              = 7;
+  I18nString               name                = 8;
+  uint32                   tier                = 9;
+  repeated ShellDefinition shells              = 10;
+  float                    camouflage_loss     = 11;
+  float                    aim_time            = 12;
+  float                    dispersion_base     = 13;
+  float                    dispersion_traverse = 14;
+  float                    dispersion_shot     = 15;
+  float                    dispersion_damaged  = 16;
+  repeated Unlock          unlocks             = 17;
+  uint32                   shell_capacity      = 18;
+  optional AssaultRanges   assault_ranges      = 19;
+  optional Burst           burst               = 20;
+}
+
+message GunDefinitionRegular {
+  float reload = 1;
+}
+
+message GunDefinitionAutoLoader {
+  float clip_reload = 1;
+  float intra_clip  = 2;
+  float shell_count = 3;
+}
+
+message Burst {
+  uint32 count    = 1;
+  float  interval = 2;
+}
+
+message GunDefinitionAutoReloader {
+  repeated float shell_reloads = 1;
+  float          intra_clip    = 2;
+  float          shell_count   = 3;
+}
+
+message AssaultRanges {
+  repeated AssaultRange ranges = 1;
+  repeated ShellType    types  = 2;
+}
+
+message AssaultRange {
+  float distance = 1;
+  float factor   = 2;
+}
+
+message ShellDefinition {
+  uint32           id               = 1;
+  I18nString       name             = 2;
+  uint32           velocity         = 3;
+  uint32           armor_damage     = 4;
+  uint32           module_damage    = 5;
+  float            caliber          = 6;
+  string           icon             = 7;
+  ShellPenetration penetration      = 8;
+  ShellType        type             = 9;
+  optional float   normalization    = 10;
+  optional float   ricochet         = 11;
+  optional float   explosion_radius = 12;
+  uint32           range            = 13;
+}
+
+enum ShellType {
+  SHELL_TYPE_AP   = 0;
+  SHELL_TYPE_APCR = 1;
+  SHELL_TYPE_HEAT = 2;
+  SHELL_TYPE_HE   = 3;
+}
+
+message ShellPenetration {
+  float near = 1;
+  float far  = 2;
+}
+
+message Unlock {
+  int32      id   = 1;
+  ModuleType type = 2;
+  UnlockCost cost = 3;
+}
+
+message UnlockCost {
+  string type  = 1;
+  int32  value = 2;
+}
+
+enum ModuleType {
+  MODULE_TYPE_VEHICLE = 0;
+  MODULE_TYPE_ENGINE  = 1;
+  MODULE_TYPE_TRACKS  = 2;
+  MODULE_TYPE_TURRET  = 3;
+  MODULE_TYPE_GUN     = 4;
+}
+
+enum TankClass {
+  TANK_CLASS_LIGHT          = 0;
+  TANK_CLASS_MEDIUM         = 1;
+  TANK_CLASS_HEAVY          = 2;
+  TANK_CLASS_TANK_DESTROYER = 3;
+}
+
+enum TankType {
+  TANK_TYPE_RESEARCHABLE = 0;
+  TANK_TYPE_PREMIUM      = 1;
+  TANK_TYPE_COLLECTOR    = 2;
+}
+
+message Crew {
+  CrewType          type       = 1;
+  uint32            count      = 2;
+  repeated CrewType substitute = 3;
+}
+
+enum CrewType {
+  CREW_TYPE_COMMANDER = 0;
+  CREW_TYPE_RADIOMAN  = 1;
+  CREW_TYPE_GUNNER    = 2;
+  CREW_TYPE_DRIVER    = 3;
+  CREW_TYPE_LOADER    = 4;
+}

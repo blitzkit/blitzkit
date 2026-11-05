@@ -2,7 +2,7 @@ import { alias } from "@blitzkit/core";
 import { useEffect } from "react";
 import type { Group, Material } from "three";
 import { GLTFLoader } from "three-stdlib";
-import { TRANSITION_ANIMATION_TIME } from "../components/Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
+import { TRANSITION_ANIMATION_TIME } from "../components/Lighting";
 import { Tankopedia } from "../stores/tankopedia";
 
 export interface Skin {

@@ -1,7 +1,0 @@
-syntax = "proto2";
-
-package blitzkit;
-
-message I18nString {
-  map<string, string> locales = 1;
-}

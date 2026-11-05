@@ -8,30 +8,34 @@ import {
   CamouflagesYaml,
   CombatRolesYaml,
   ConsumablesCommon,
-  ConsumableTankCategoryFilterCategory,
-  CrewType,
-  I18nString,
   MapsYaml,
-  ModuleType,
   OptionalDevices,
   OptionalDeviceSlots,
   ProvisionsCommon,
-  ShellKind,
-  ShellType,
   SquadBattleTypeStylesYaml,
-  TankClass,
   TankmenAvatar,
   toUniqueId,
   VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import locales from "@blitzkit/i18n/locales.json";
-import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n/src/strings";
+import {
+  ConsumableTankCategoryFilterCategory,
+  CrewType,
+  I18nString,
+  ModuleType,
+  TankClass,
+} from "@blitzkit/protos";
+import type { extname, parse } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { BlitzKitAPI } from "../base";
+import { AbstractBlitzKitAPI } from "../abstract";
 
-export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
+export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
+  // TODO: move most of these to their respective constructors
+
   protected vfs: AbstractVFS;
+  protected parsePath?: typeof parse;
+  protected extname?: typeof extname;
 
   protected nationSlugDiscriminators = {
     china: "cn",
@@ -74,12 +78,6 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     heavyTank: TankClass.TANK_CLASS_HEAVY,
     mediumTank: TankClass.TANK_CLASS_MEDIUM,
   };
-  protected blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
-    ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
-    ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
-    HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
-    HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
-  };
   protected blitzTankFilterDefinitionCategoryToBlitzkit: Record<
     BlitzTankFilterDefinitionCategory,
     ConsumableTankCategoryFilterCategory
@@ -109,6 +107,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
   constructor(vfs: AbstractVFS) {
     super();
+
     this.vfs = vfs;
   }
 
@@ -117,6 +116,12 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     const { readFile, writeFile, mkdir } = await import("fs/promises");
 
     console.log("Initializing virtual file system...");
+
+    const path = await import("node:path");
+
+    this.extname = path.extname;
+    this.parsePath = path.parse;
+
     await this.vfs.init();
 
     console.log("Fetching game data...");
@@ -174,7 +179,9 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
         console.log(`  Cache miss for ${locale} (this will take a while...)`);
 
-        const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
+        const blitzLocale = locales.supported.find(
+          (l) => l.locale === locale,
+        )!.variant_blitz_local;
         const networkStrings = (await fetch(
           `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
         )

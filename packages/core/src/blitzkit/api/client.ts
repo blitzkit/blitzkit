@@ -1,5 +1,5 @@
 import { alias } from "@blitzkit/core";
-import { fetchPB } from "../../protobuf";
+import { Strings } from "@blitzkit/i18n";
 import {
   CamouflageDefinitions,
   ConsumableDefinitions,
@@ -11,59 +11,70 @@ import {
   ProvisionDefinitions,
   SkillDefinitions,
   TankDefinitions,
-} from "../../protos";
-import { BlitzKitAPI } from "./base";
+} from "@blitzkit/protos";
+import { fetchPB } from "../../api";
+import { fetchJSON } from "../../api/fetchJSON";
+import { BlitzScripts } from "../../types/blitzScripts";
+import { AbstractBlitzKitAPI } from "./abstract";
 
-export class ClientBlitzKitAPI extends BlitzKitAPI {
-  gameDefinitions() {
+export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
+  game() {
     return fetchPB(alias("api", "/definitions/game.pb"), GameDefinitions);
   }
 
-  consumableDefinitions() {
+  consumables() {
     return fetchPB(
       alias("api", "/definitions/consumables.pb"),
       ConsumableDefinitions,
     );
   }
 
-  tankDefinitions() {
+  tanks() {
     return fetchPB(alias("api", "/definitions/tanks.pb"), TankDefinitions);
   }
 
-  camouflageDefinitions() {
+  camouflages() {
     return fetchPB(
       alias("api", "/definitions/camouflage.pb"),
       CamouflageDefinitions,
     );
   }
 
-  provisionDefinitions() {
+  provisions() {
     return fetchPB(
       alias("api", "/definitions/provisions.pb"),
       ProvisionDefinitions,
     );
   }
 
-  modelDefinitions() {
+  models() {
     return fetchPB(alias("api", "/definitions/models.pb"), ModelDefinitions);
   }
 
-  skillDefinitions() {
+  skills() {
     return fetchPB(alias("api", "/definitions/skills.pb"), SkillDefinitions);
   }
 
-  equipmentDefinitions() {
+  equipment() {
     return fetchPB(
       alias("api", "/definitions/equipment.pb"),
       EquipmentDefinitions,
     );
   }
 
-  galleryDefinitions() {
+  gallery() {
     return fetchPB(alias("api", "/definitions/gallery.pb"), Gallery);
   }
 
-  mapDefinitions() {
+  maps() {
     return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
+  }
+
+  scripts() {
+    return fetchJSON<BlitzScripts>(alias("api", "/definitions/scripts.json"));
+  }
+
+  strings(locale: string) {
+    return fetchJSON<Strings>(alias("api", `/strings/${locale}.json`));
   }
 }

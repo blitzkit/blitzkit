@@ -4,8 +4,8 @@ import type { QuicklimeEvent } from "quicklime";
 import { forwardRef, Suspense, useEffect, useRef } from "react";
 import type { OrbitControls as OrbitControlsClass } from "three-stdlib";
 import { controlsEnabledEvent } from "../../core/controlsEnabled";
-import { Lighting } from "../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
-import { SceneProps } from "../Tankopedia/HeroSection/components/TankSandbox/components/SceneProps";
+import { Lighting } from "../Lighting";
+import { SceneProps } from "../SceneProps";
 import { MixerFallback } from "./components/MixerFallback";
 import { Model } from "./components/Model";
 

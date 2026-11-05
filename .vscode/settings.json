@@ -96,6 +96,7 @@
     "fullstats",
     "fuzzysort",
     "gamemode",
+    "gamemodes",
     "gameplay",
     "glsl",
     "GLTF",
@@ -157,6 +158,7 @@
     "ownedtanks",
     "padder",
     "partytown",
+    "passability",
     "patchnotes",
     "PIXELFORMAT",
     "playerachievements",
@@ -254,5 +256,8 @@
     "youtubers",
     "zoomable"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.enabledFileTypes": {
+    "proto": true
+  }
 }

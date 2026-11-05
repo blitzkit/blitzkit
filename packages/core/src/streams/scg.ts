@@ -1,8 +1,8 @@
-import { ScpgReadStream, VertexAttribute } from './scpg';
+import { ScpgReadStream, VertexAttribute } from "./scpg";
 
 interface PolygonGroupRaw {
-  '##name': 'PolygonGroup';
-  '#id': ArrayBuffer;
+  "##name": "PolygonGroup";
+  "#id": ArrayBuffer;
   cubeTextureCoordCount: number;
   indexCount: number;
   indexFormat: 0 | 1;
@@ -24,7 +24,7 @@ interface BlitzkitPolygonGroup {
 }
 
 const vertexAttributesArray = Object.values(VertexAttribute).filter(
-  (value) => typeof value === 'number',
+  (value) => typeof value === "number",
 );
 
 export const vertexAttributeVectorSizes = {
@@ -105,11 +105,8 @@ export class ScgReadStream extends ScpgReadStream {
       }
 
       polygonGroups.set(
-        new DataView(polygonGroupRaw['#id']).getBigUint64(0, true),
-        {
-          vertices,
-          indices,
-        },
+        new DataView(polygonGroupRaw["#id"]).getBigUint64(0, true),
+        { vertices, indices },
       );
     });
 

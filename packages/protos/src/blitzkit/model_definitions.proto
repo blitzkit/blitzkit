@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message ModelDefinitions {
+  map<uint32, ModelDefinition> models = 1;
+}
+
+message ModelDefinition {
+  Armor                              armor                   = 1;
+  Vector3                            turret_origin           = 2;
+  optional InitialTurretRotation     initial_turret_rotation = 3;
+  map<uint32, TurretModelDefinition> turrets                 = 4;
+  map<uint32, TrackModelDefinition>  tracks                  = 5;
+  BoundingBox                        bounding_box            = 6;
+}
+
+message Armor {
+  map<uint32, float> thickness = 1;
+  repeated uint32    spaced    = 2;
+}
+
+message Vector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message InitialTurretRotation {
+  float yaw   = 1;
+  float pitch = 2;
+  float roll  = 3;
+}
+
+message TurretModelDefinition {
+  BoundingBox                     bounding_box = 1;
+  Armor                           armor        = 2;
+  uint32                          model_id     = 3;
+  Vector3                         gun_origin   = 4;
+  map<uint32, GunModelDefinition> guns         = 5;
+  optional YawLimits              yaw          = 6;
+}
+
+message YawLimits {
+  float min = 1;
+  float max = 2;
+}
+
+message BoundingBox {
+  Vector3 min = 1;
+  Vector3 max = 2;
+}
+
+message TrackModelDefinition {
+  float   thickness = 1;
+  Vector3 origin    = 2;
+}
+
+message GunModelDefinition {
+  Armor          armor     = 1;
+  float          thickness = 2;
+  uint32         model_id  = 3;
+  PitchLimits    pitch     = 4;
+  optional float mask      = 5;
+}
+
+message PitchLimits {
+  float                       min        = 1;
+  float                       max        = 2;
+  optional PitchLimitsExtrema front      = 3;
+  optional PitchLimitsExtrema back       = 4;
+  optional float              transition = 5;
+}
+
+message PitchLimitsExtrema {
+  float min   = 1;
+  float max   = 2;
+  float range = 3;
+}

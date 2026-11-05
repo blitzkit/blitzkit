@@ -1,10 +1,10 @@
-import { GameDefinitions } from "@blitzkit/core";
-import { api } from "../../../core/blitzkit/api";
+import { GameDefinitions } from "@blitzkit/protos";
+import { api } from "../../../api/dynamic";
 
 export { getStaticPaths } from "../_index";
 
 export async function GET() {
-  const definitions = await api.gameDefinitions();
+  const definitions = await api.game();
   const bytes = GameDefinitions.encode(definitions).finish();
 
   return new Response(bytes);
