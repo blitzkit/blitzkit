@@ -303,9 +303,9 @@
     },
     "tools": {
       "credits": {
-        "name": "Credits",
-        "button": "View people",
-        "description": "Contributors of BlitzKit",
+        "name": "Kredyty",
+        "button": "Sprawdź graczy",
+        "description": "Współtwórcy Blitzkit",
         "seo_description": "BlitzKit is the work of many"
       },
       "playlist": {
