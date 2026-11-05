@@ -5,7 +5,7 @@
       "m": "{value}m",
       "mm": "{value}mm",
       "deg": "{value}°",
-      "hp": "{value}hp",
+      "hp": "{value}pw",
       "x": "x{value}",
       "percentage": "{value}%",
       "deg_s": "{value}°/s",
@@ -18,8 +18,8 @@
     },
     "shells": {
       "ap": "AP",
-      "ap_cr": "APCR",
-      "hc": "HEAT",
+      "ap_cr": "PP podkalibrowy",
+      "hc": "Kumulacyjny",
       "he": "OB"
     },
     "player_count_period": {
@@ -58,11 +58,11 @@
       "5": "Dobre",
       "6": "Bardzo dobre",
       "7": "Świetne",
-      "8": "Unikatowy",
-      "9": "Super unikatowy"
+      "8": "Unikatowe",
+      "9": "Super-unikatowe"
     },
     "bkni_percentile": {
-      "0": "Super źle",
+      "0": "Fatalne",
       "1": "Źle",
       "2": "Bardzo złe",
       "3": "Złe",
@@ -71,15 +71,15 @@
       "6": "Powyżej średniej",
       "7": "Dobre",
       "8": "Bardzo dobre",
-      "9": "Unikalny",
-      "10": "Super unikatowy"
+      "9": "Unikatowe",
+      "10": "Super-unikatowe"
     },
     "nations": {
-      "ussr": "ZSRR",
+      "ussr": "Z.S.R.R.",
       "germany": "Niemcy",
       "usa": "Stany Zjednoczone.",
       "china": "Chiny",
-      "uk": "Wielka Brytania",
+      "uk": "Wielka Brytania.",
       "france": "Francja",
       "japan": "Japonia",
       "european": "Nacja Europejska",
@@ -153,7 +153,7 @@
       "normalized_spotted": "Wykrycia",
       "normalized_survived_battles": "Współczynnik przeżycia",
       "normalized_win_and_survived": "Wskaźnik wygranych i przeżywalności",
-      "normalized_wins": "Śr. wygranych",
+      "normalized_wins": "Wygrane",
       "normalized_xp": "PD",
       "normalized_battle_life_time": "Czas bitwy",
       "cumulative_accuracy": "Dokładność",
@@ -378,7 +378,7 @@
         "description": "Encyklopedia czołgów w Blitz",
         "seo_description": "Statystyki, pancerz, i wiele więcej o każdym czołgu w World of Tanks Blitz",
         "tank_seo_title": "{name} - Poziom {tier} {nationality} {class} | {website} Czołgopedia | World of Tanks Blitz (WoTB)",
-        "tank_seo_description": "{name} pancerz, statystyki, prowizje i więcej. {dpm} uszkodzeń na minutę, {alpha}uszkodzeń na strzał, {penetration}mm penetracji, {speed}km/h maks., {health}punktów wytrzymałości.",
+        "tank_seo_description": "{name} pancerz, statystyki, prowizje i więcej. {dpm} uszkodzeń na minutę, {alpha}pw na strzał, {penetration}mm penetracji, {speed}km/h maks., {health}pw punktów wytrzymałości.",
         "visualizers": {
           "reload": {
             "skip": "Pomiń"
@@ -511,14 +511,14 @@
           "title": "Umiejętności trybu gry"
         },
         "review": {
-          "title": "Review videos",
-          "join": "Apply to {name} YouTuber program"
+          "title": "Oceń filmik",
+          "join": "Aplikuj do programu YouTubera {name}"
         },
         "configuration": {
           "title": "Konfiguracja",
           "equalizer": {
             "title": "Equalizer",
-            "equalize": "Equalize"
+            "equalize": "Dorównaj"
           },
           "modules": {
             "title": "Moduły",
@@ -530,7 +530,7 @@
             "clear": "Wyczyść"
           },
           "provisions": {
-            "title": "Materiały eksploatacyjne",
+            "title": "Zapasy",
             "clear": "Wyczyść"
           },
           "consumables": {
@@ -551,7 +551,7 @@
         "characteristics": {
           "title": "Charakterystyka",
           "compare": {
-            "label": "Compare against",
+            "label": "Porównaj",
             "class": "{tier} {class}",
             "tier": "Wszystkie poziomy {tier}",
             "all": "Wszystkie czołgi"
@@ -575,61 +575,61 @@
             "dpm": "Uszkodzenia na minutę",
             "dpmEffective": "Efektywne w 60s",
             "peekabooDpm": "Obrażenia na minutę w stylu „wychyl i schowaj”",
-            "peekabooDpmInfo": "Obrażenia na minutę przy założeniu, że strzelisz tylko po zresetowaniu kamuflażu (lub ponownym załadowaniu, jeśli jest wolniejszy) — co najmniej 10 sekund pomiędzy strzałami.",
+            "peekabooDpmInfo": "Obrażenia na minutę przy założeniu, że strzelisz tylko po zresetowaniu kamuflażu (lub ponownym załadowaniu, jeśli jest wolniejsze) — co najmniej 10 sekund pomiędzy strzałami.",
             "shells": "Pociski",
             "mostOptimalShellIndex": "Optymalny pocisk",
             "shellReloads": "Przeładowania",
             "shellReload": "Przeładowanie",
-            "intraClip": "Czas przeładowania pocisku",
+            "intraClip": "Czas między pociskami",
             "caliber": "Kaliber",
             "penetration": "Penetracja",
             "damage": "Uszkodzenia",
             "damageWithoutAssault": "Uszkodzenia bez pocisków szturmowych",
-            "clipDamage": "Potencjał magazynu",
+            "clipDamage": "Potencjał magazynka",
             "moduleDamage": "Uszkodzenia modułów",
             "explosionRadius": "Promień eksplozji",
             "shellVelocity": "Prędkość pocisku",
             "aimTime": "Czas celowania",
-            "dispersion": "Still",
+            "dispersion": "Rozrzut w bezruchu",
             "dispersionMoving": "Podczas ruchu",
             "dispersionHullTraversing": "Obrót kadłuba",
             "dispersionTurretTraversing": "Obrót wieży",
             "dispersionShooting": "Strzelanie",
             "dispersionGunDamaged": "Uszkodzone Działo",
             "gunDepression": "Limit obrotu działa w dół",
-            "gunElevation": "Limit obrotu działa w górę",
+            "gunElevation": "Limit podnoszenia działa",
             "gunFrontalDepression": "Przedni limit obrotu działa w dół",
-            "gunFrontalElevation": "Przedni limit obrotu działa w górę",
+            "gunFrontalElevation": "Przedni limit podnoszenia działa",
             "gunRearDepression": "Tylne opuszczanie działa",
-            "gunRearElevation": "Elewacja działa z tyłu pojazdu",
+            "gunRearElevation": "Tylne podnoszenie działa",
             "azimuthLeft": "Wychyl do lewej",
             "azimuthRight": "Wychył do prawej",
-            "speedForwards": "Forwards",
-            "speedBackwards": "Do tyłu",
-            "hardTerrainCoefficient": "Hard",
-            "hardTerrainCoefficientRaw": "Hard",
-            "mediumTerrainCoefficient": "Średni",
-            "mediumTerrainCoefficientRaw": "Średni",
+            "speedForwards": "Prędkość do przodu",
+            "speedBackwards": "Prędkość do tyłu",
+            "hardTerrainCoefficient": "Współczynniki terenu na gruncie utwardzonym",
+            "hardTerrainCoefficientRaw": "Surowe współczynniki terenu na gruncie utwardzonym",
+            "mediumTerrainCoefficient": "Średnio utwardzony",
+            "mediumTerrainCoefficientRaw": "Średnio utwardzony",
             "softTerrainCoefficient": "Miękki",
             "softTerrainCoefficientRaw": "Miękki",
             "enginePower": "Moc silnika",
-            "powerToWeightRatioHardTerrain": "Hard",
-            "powerToWeightRatioMediumTerrain": "Średni",
+            "powerToWeightRatioHardTerrain": "Stosunek mocy do masy utwardzony",
+            "powerToWeightRatioMediumTerrain": "Średnio utwardzony",
             "powerToWeightRatioSoftTerrain": "Miękki",
             "weight": "Masa",
             "turretTraverseSpeed": "Prędkość obrotu wieży",
             "gunTraverseSpeed": "Prędkość ruchu działa",
-            "hullTraverseHardTerrain": "Hard",
-            "hullTraverseMediumTerrain": "Średni",
-            "hullTraverseSoftTerrain": "Miękki",
+            "hullTraverseHardTerrain": "Obrót kadłuba na gruncie utwardzonym",
+            "hullTraverseMediumTerrain": "Średnio utwardzonym",
+            "hullTraverseSoftTerrain": "Miękkim",
             "health": "Punkty wytrzymałości",
             "fireChance": "Szansa na pożar",
             "trackRepairTime": "Czas naprawy gąsienicy",
             "viewRange": "Zasięg widzenia",
-            "camouflageStill": "Still",
+            "camouflageStill": "Kamuflaż w bezruchu",
             "camouflageMoving": "Podczas ruchu",
-            "camouflageShootingStill": "Strzał podczas postoju",
-            "camouflageShootingMoving": "Strzał w trakcie ruchu",
+            "camouflageShootingStill": "Strzał w bezruchu",
+            "camouflageShootingMoving": "Strzał w ruchu",
             "camouflageCaughtOnFire": "W trakcie pożaru",
             "width": "Szerokość",
             "height": "Wysokość",
@@ -637,24 +637,24 @@
             "volume": "Objętość",
             "shellRange": "Zasięg pocisku",
             "shellCapacity": "Ilość pocisków",
-            "gunType": "Gun type",
-            "penetrationAt250m": "Penetration at 250m",
-            "burstShells": "Burst shell count",
-            "burstInterShell": "Burst inter-shell"
+            "gunType": "Typ działa",
+            "penetrationAt250m": "Penetracja przy 250m",
+            "burstShells": "Ilość pocisków na raz",
+            "burstInterShell": "Czas między pociskami na raz"
           }
         },
         "firepower": {
-          "title": "Firepower"
+          "title": "Siła ognia"
         },
         "crew": {
-          "title": "Crew training",
-          "info": "represents the other roles a crew member can take.",
+          "title": "Szkolenie załogi",
+          "info": "reprezentuje inne role, jakie członek załogi może przejąć.",
           "count": "Liczba członków załogi",
-          "commander": "Commander",
-          "gunner": "Gunner",
-          "driver": "Driver",
-          "radioman": "Radioman",
-          "loader": "Loader"
+          "commander": "Dowódca",
+          "gunner": "Działonowy",
+          "driver": "Kierowca",
+          "radioman": "Radiooperator",
+          "loader": "Ładowniczy"
         },
         "maneuverability": {
           "title": "Mobilność"
@@ -665,92 +665,92 @@
       },
       "compare": {
         "name": "Porównaj",
-        "button": "Compare tanks",
-        "description": "Compare tank statistics",
-        "seo_description": "Compare tanks statistics and loadouts in World of Tanks Blitz",
+        "button": "Porównaj czołgi",
+        "description": "Porównaj statystyki czołgów",
+        "seo_description": "Porównaj statystyki i zestawy wyposażenia w World of Tanks Blitz",
         "actions": {
           "add": {
-            "button": "Add",
-            "title": "Add tanks",
-            "description": "Select tanks to add to comparison"
+            "button": "Dodaj",
+            "title": "Dodaj pojazd",
+            "description": "Wybierz pojazdy, aby dodać do porównania"
           },
           "clear": "Wyczyść",
           "deltas": {
-            "none": "No deltas",
-            "percentage": "Percentage",
-            "absolute": "Absolute"
+            "none": "Bez różnicy",
+            "percentage": "Procentowo",
+            "absolute": "Absolutna"
           },
-          "sync_shells": "Sync shells"
+          "sync_shells": "Synchronizuj pociski"
         },
         "no_tanks": {
-          "title": "No tanks selected",
-          "body": "Press the Add button to get started"
+          "title": "Brak wybranych czołgów",
+          "body": "Naciśnij przycisk Dodaj, aby rozpocząć"
         },
         "table": {
           "equipment": {
             "clear": "Wyczyść",
-            "apply_to_all": "Apply to all"
+            "apply_to_all": "Zaaplikuj do wszystkich"
           },
           "skills": {
             "clear": "Wyczyść",
             "maximize": "Maksymalizuj",
-            "equalize": "Equalize"
+            "equalize": "Dorównaj"
           },
           "modules": {
             "stock": "Standardowy",
             "upgrade": "Ulepsz"
           },
           "provisions": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
+            "clear": "Wyczyść ten pojazd",
+            "clear_all": "Wyczyść wszystkie pojazdy"
           },
           "consumables": {
-            "clear": "Clear this tank",
-            "clear_all": "Clear all tanks"
+            "clear": "Wyczyść ten pojazd",
+            "clear_all": "Wyczyść wszystkie pojazdy"
           }
         }
       },
       "performance": {
-        "name": "Performance",
-        "button": "View tanks",
-        "description": "Tank performance statistics",
-        "seo_description": "Best tanks and their performances in World of Tanks Blitz",
+        "name": "Osiągi",
+        "button": "Zobacz czołgi",
+        "description": "Statystyki osiągów czołgów",
+        "seo_description": "Najlepsze czołgi i ich osiągi w World of Tanks Blitz",
         "estimation": {
-          "body": "Estimated stats based on {count} players. Updated {age} ago.",
-          "hours": "{count} hours",
-          "minutes": "{count} minutes"
+          "body": "Szacunkowe statystyki bazowane na {count} graczach. Zaktualizowano {age} temu.",
+          "hours": "{count} godzin",
+          "minutes": "{count} minut"
         },
         "player_count": {
-          "label": "Player count"
+          "label": "Liczba graczy"
         },
         "table": {
           "tanks": {
-            "header": "Tank",
+            "header": "Czołg",
             "total": "Łącznie"
           },
           "stats": {
             "winrate": "Śr. wygranych",
-            "players": "Players",
+            "players": "Gracze",
             "damage": "Uszkodzenia",
             "survival": "Przeżycie",
             "xp": "PD",
             "kills": "Zniszczenia",
-            "spots": "Zwiad",
-            "accuracy": "Skuteczność",
+            "spots": "Wykrycia",
+            "accuracy": "Celność",
             "shots": "Strzały",
             "hits": "Trafienia",
-            "damage_ratio": "Dmg. ratio",
-            "damage_taken": "Dmg. taken",
-            "capture_points": "Cap points"
+            "damage_ratio": "Współczynnik Z/P",
+            "damage_taken": "Zadane",
+            "capture_points": "Punkty bazy"
           }
         }
       },
       "gallery": {
-        "name": "Gallery",
-        "button": "Browse all",
-        "description": "Blitz player avatars",
-        "seo_description": "Wszystkie awatary graczy World of Tanks Blitz",
-        "last_updated": "Last updated on {time}",
+        "name": "Galeria",
+        "button": "Wyszukaj wszystkie",
+        "description": "Awatary graczy",
+        "seo_description": "Wszystkie awatary graczy w World of Tanks Blitz",
+        "last_updated": "Ostatnio zaktualizowane {time}",
         "search": {
           "hint": "Wyszukaj awatar...",
           "results": "{count} awatarów"
@@ -780,7 +780,7 @@
         },
         "no_battles": {
           "title": "Brak bitew",
-          "hint": "Śmiało, zagraj bitwę"
+          "hint": "Śmiało, zagraj jakąś bitwę"
         },
         "table": {
           "tank": "Czołg",
@@ -802,7 +802,7 @@
         "name": "Osadzenia",
         "button": "Stwórz teraz",
         "description": "Osadzenia do streamów",
-        "seo_description": "Create embeds for streaming World of Tanks Blitz with extreme customization",
+        "seo_description": "Stwórz narzędzia wbudowane do streamów z niesamowitą personalizacją, dla World of Tanks Blitz",
         "coming_soon": "Więcej osadzeń wkrótce.",
         "suggest": "Zasugeruj pomysł.",
         "preview": {
@@ -816,7 +816,7 @@
             "hint": "Wklej URL...",
             "apply": "Aplikuj",
             "idiot_title": "Nieprawidłowy URL",
-            "idiot_description": "Spróbuj wkleić URL, który BlitzKit wcześniej wygenerował, gamoniu!",
+            "idiot_description": "Spróbuj wkleić URL, który BlitzKit wcześniej wygenerował, dzbanie!",
             "idiot_button": "Okej, mój błąd"
           },
           "export": {
@@ -835,80 +835,80 @@
               }
             },
             "css": "Skopiuj dane CSS",
-            "width": "Copy Width",
-            "height": "Copy Height",
-            "framerate": "Copy Framerate"
+            "width": "Kopiuj szerokość",
+            "height": "Kopiuj wysokość",
+            "framerate": "Kopiuj odświeżanie"
           },
           "customize": {
-            "title": "Customize",
+            "title": "Personalizuj",
             "reset": "Zresetuj",
-            "description": "Bells and whistles of your embed"
+            "description": "Cuda cudeńka dla Twojego ekranu"
           }
         },
         "types": {
           "breakdown": {
-            "name": "Breakdown",
+            "name": "Ogólnie",
             "options": {
               "width": "Szerokość",
               "height": "Wysokość",
-              "showTotal": "Show total",
-              "listGap": "List gap",
-              "listMaxTanks": "Max tanks",
-              "cardRadius": "Card radius",
-              "cardHeaderBackgroundColor": "Card header background color",
-              "cardHeaderPadding": "Card header padding",
-              "cardTitle": "Card title",
-              "cardTitleTypeColor": "Card title type color",
-              "cardTitleClassIcon": "Card title class icon",
-              "cardBodyBackgroundColor": "Card body background color",
-              "cardBodyPadding": "Card body padding",
-              "columnGap": "Column gap",
-              "columnValue": "Column value",
-              "columnLabel": "Column label",
-              "column1": "Column 1",
-              "column2": "Column 2",
-              "column3": "Column 3",
-              "column4": "Column 4",
-              "column1CustomLabel": "Column 1 label",
-              "column2CustomLabel": "Column 2 label",
-              "column3CustomLabel": "Column 3 label"
+              "showTotal": "Pokaż łącznie",
+              "listGap": "Odstęp między czołgami",
+              "listMaxTanks": "Czołgów maksymalnie",
+              "cardRadius": "Promień karty",
+              "cardHeaderBackgroundColor": "Kolor tła nagłówka karty",
+              "cardHeaderPadding": "Wielkość pojedynczej karty",
+              "cardTitle": "Tytuł karty",
+              "cardTitleTypeColor": "Tytuł karty w kolorze typu czołgu",
+              "cardTitleClassIcon": "Ikona czołgu na karcie",
+              "cardBodyBackgroundColor": "Kolor tła karty",
+              "cardBodyPadding": "Szerokość wewnątrz karty",
+              "columnGap": "Odstęp między kolumnami",
+              "columnValue": "Kolor i przezroczystość kolumny",
+              "columnLabel": "Etykieta kolumny",
+              "column1": "Kolumna 1",
+              "column2": "Kolumna 2",
+              "column3": "Kolumna 3",
+              "column4": "Kolumna 4",
+              "column1CustomLabel": "Etykieta kolumny 1",
+              "column2CustomLabel": "Etykieta kolumny 2",
+              "column3CustomLabel": "Etykieta kolumny 3"
             }
           }
         }
       },
       "charts": {
-        "name": "Charts",
-        "button": "Nerd out",
-        "description": "Lots of graphs",
-        "seo_description": "Charts and graphs on anything and everything about tanks, players, and events in World of Tanks Blitz"
+        "name": "Tabele",
+        "button": "Zanurz się",
+        "description": "Dużo tabelek",
+        "seo_description": "Tabele i grafy o wszystkim, o czołgach, graczach i wydarzeniach w World of Tanks Blitz"
       },
       "rating": {
-        "name": "Rating",
-        "button": "View leaderboard",
-        "description": "Full rating leaderboard",
-        "seo_description": "Live and archived full rating leaderboard for World of Tanks Blitz"
+        "name": "Bitwy rankingowe",
+        "button": "Zobacz tablę rankingową",
+        "description": "Pełna tabela rankingowa",
+        "seo_description": "Tabele rankingowe na żywo i zarchiwizowane, w World of Tanks Blitz"
       },
       "discord": {
-        "name": "Discord bot",
-        "button": "Install now",
-        "description": "Stats right in Discord",
-        "seo_description": "Get stats right in Discord with BlitzKit's Discord bot"
+        "name": "Bot Discord",
+        "button": "Zainstaluj teraz",
+        "description": "Statystyki bezpośrednio w Discord",
+        "seo_description": "Zobacz statystyki na Discord, dzięki botowi BlitzKit"
       },
       "more": {
-        "name": "More coming soon",
-        "button": "Join Discord",
-        "description": "What we're making",
-        "seo_description": "What we're making with BlitzKit"
+        "name": "Wkrótce więcej",
+        "button": "Dołącz na Discord",
+        "description": "Co teraz tworzymy",
+        "seo_description": "Co tworzymy na BlitzKit"
       },
       "players": {
-        "name": "Players",
-        "button": "Lookup player",
-        "description": "Periodical player statistics",
-        "seo_description": "Periodical player statistics in World of Tanks Blitz"
+        "name": "Gracze",
+        "button": "Znajdź gracza",
+        "description": "Okresowe statystyki gracza",
+        "seo_description": "Okresowe statystyki gracza w World of Tanks Blitz"
       },
       "home": {
-        "name": "Home",
-        "button": "Get started",
+        "name": "Strona główna",
+        "button": "Rozpocznij",
         "description": "Rozpocznij działanie z BlitzKit",
         "seo_description": "Rozpocznij działanie z BlitzKit"
       },
@@ -921,16 +921,16 @@
     },
     "footer": {
       "motto": "Wszystko o World of Tanks Blitz",
-      "association": "An Open Collective Project",
+      "association": "Projekt Open Collective",
       "about": {
         "title": "O BlitzKit",
         "discord": "Discord",
         "github": "GitHub",
-        "patches": "Patches"
+        "patches": "Łatki"
       },
       "legal": {
-        "title": "Legal",
-        "privacy": "Privacy policy",
+        "title": "Informacje prawne",
+        "privacy": "Polityka prywatności",
         "terms": "Warunki serwisu"
       }
     }
