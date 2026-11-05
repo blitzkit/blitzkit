@@ -13,11 +13,11 @@
     },
     "gun_types": {
       "auto_loader": "Magazynek",
-      "auto_reloader": "Automatyczne przeładowanie",
+      "auto_reloader": "Magazynek z doładowaniem",
       "regular": "Regularny"
     },
     "shells": {
-      "ap": "AP",
+      "ap": "PP",
       "ap_cr": "PP podkalibrowy",
       "hc": "Kumulacyjny",
       "he": "OB"
@@ -34,7 +34,7 @@
     "branches": {
       "beta": "Beta",
       "development": "W rozwoju",
-      "opentest": "OtwartyTest",
+      "opentest": "OpenTest",
       "preview": "Podgląd",
       "production": "Produkcja"
     },
@@ -63,7 +63,7 @@
     },
     "bkni_percentile": {
       "0": "Fatalne",
-      "1": "Źle",
+      "1": "Tragiczne",
       "2": "Bardzo złe",
       "3": "Złe",
       "4": "Poniżej średniej",
@@ -210,7 +210,7 @@
         "recent": "Ostatnio oglądane",
         "select_all": "Zaznacz wszystko",
         "count_singular": "1 czołg",
-        "count_plural": "{count} czołgi",
+        "count_plural": "{count} czołgi(ów)",
         "sorting_by": "Sortowanie według {name}",
         "clear": "Wyczyść",
         "tier": "Poziom czołgu {tier}",
@@ -230,11 +230,11 @@
           "survivability.camouflageShooting": "kamuflaż podczas strzału",
           "survivability.volume": "objętość",
           "survivability.length": "długość",
-          "fire.dpm": "uszkodzenia na minutę pocisków podstawowych",
+          "fire.dpm": "DPM pocisków podstawowych",
           "fire.dpmPremium": "DPM pocisków premium",
           "fire.reload": "przeładowanie",
           "fire.caliber": "kaliber",
-          "fire.standardPenetration": "Penetracja pocisków standardowych",
+          "fire.standardPenetration": "penetracja pocisków standardowych",
           "fire.premiumPenetration": "penetracja pocisków premium",
           "fire.tertiaryPenetration": "penetracja pocisków trzeciego typu",
           "fire.damage": "uszkodzenia",
@@ -350,7 +350,7 @@
       },
       "guess": {
         "name": "Zgadywanka",
-        "button": "What could it be?",
+        "button": "Cóż to może być?",
         "description": "Sylwetkowa minigra",
         "seo_description": "Zagraj w sylwetkową zgadywanką z World of Tanks Blitz",
         "search": {
@@ -407,7 +407,7 @@
             "dead_rail": "Martwy tor"
           },
           "flexibility": {
-            "yaw": "Wychył",
+            "yaw": "Obrót",
             "pitch": "Wychył",
             "min": "Min",
             "max": "Maks"
@@ -428,7 +428,7 @@
             "dev_wireframe": "DEV: Szkieletowy"
           },
           "screenshot": {
-            "download": "Download",
+            "download": "Pobierz",
             "copy": "Kopiuj"
           },
           "model": {
@@ -572,7 +572,7 @@
             "crewCount": "Liczba członków załogi",
             "shellNormalization": "Normalizacja",
             "shellRicochet": "Rykoszet",
-            "dpm": "Uszkodzenia na minutę",
+            "dpm": "DPM",
             "dpmEffective": "Efektywne w 60s",
             "peekabooDpm": "Obrażenia na minutę w stylu „wychyl i schowaj”",
             "peekabooDpmInfo": "Obrażenia na minutę przy założeniu, że strzelisz tylko po zresetowaniu kamuflażu (lub ponownym załadowaniu, jeśli jest wolniejsze) — co najmniej 10 sekund pomiędzy strzałami.",
@@ -596,9 +596,9 @@
             "dispersionTurretTraversing": "Obrót wieży",
             "dispersionShooting": "Strzelanie",
             "dispersionGunDamaged": "Uszkodzone Działo",
-            "gunDepression": "Limit obrotu działa w dół",
+            "gunDepression": "Limit opuszczania działa",
             "gunElevation": "Limit podnoszenia działa",
-            "gunFrontalDepression": "Przedni limit obrotu działa w dół",
+            "gunFrontalDepression": "Przedni limit opuszczania działa",
             "gunFrontalElevation": "Przedni limit podnoszenia działa",
             "gunRearDepression": "Tylne opuszczanie działa",
             "gunRearElevation": "Tylne podnoszenie działa",
@@ -799,11 +799,11 @@
         }
       },
       "embed": {
-        "name": "Osadzenia",
+        "name": "Wbudowane narzędzia",
         "button": "Stwórz teraz",
-        "description": "Osadzenia do streamów",
+        "description": "Wbudowane narzędzia do streamów",
         "seo_description": "Stwórz narzędzia wbudowane do streamów z niesamowitą personalizacją, dla World of Tanks Blitz",
-        "coming_soon": "Więcej osadzeń wkrótce.",
+        "coming_soon": "Więcej narzędzi wkrótce.",
         "suggest": "Zasugeruj pomysł.",
         "preview": {
           "title": "Przykładowy podgląd",
@@ -854,7 +854,7 @@
               "showTotal": "Pokaż łącznie",
               "listGap": "Odstęp między czołgami",
               "listMaxTanks": "Czołgów maksymalnie",
-              "cardRadius": "Promień karty",
+              "cardRadius": "Promień zaokrąglenia karty",
               "cardHeaderBackgroundColor": "Kolor tła nagłówka karty",
               "cardHeaderPadding": "Wielkość pojedynczej karty",
               "cardTitle": "Tytuł karty",
