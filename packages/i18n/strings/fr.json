@@ -252,7 +252,7 @@
           "maneuverability.power": "Puissance",
           "maneuverability.powerToWeight": "Rapport puissance/poids",
           "maneuverability.weight": "Poids",
-          "maneuverability.traverseSpeed": "traverse speed"
+          "maneuverability.traverseSpeed": "vitesse de traverse"
         },
         "sort_dropdown": {
           "label": "Trier",
@@ -287,18 +287,18 @@
       },
       "hot_tanks": {
         "title": "Chars populaire",
-        "subtitle": "Last {days} days"
+        "subtitle": "Dernier {days} jours"
       },
       "other_projects": {
         "title": "Autres projets géniaux"
       },
-      "help_translate": "Please help translate {name} to {language}!",
+      "help_translate": "Aidez-nous à traduire {name} en {language} !",
       "seo_description": "Outils pour tout World of Tanks Blitz"
     },
     "docs": {
       "patches": {
         "name": "Journal des modifications",
-        "seo_description": "Changelogs for BlitzKit Discord bot and website"
+        "seo_description": "Changelogs pour le bot Discord BlitzKit et site Web"
       }
     },
     "tools": {
@@ -373,7 +373,7 @@
       },
       "tankopedia": {
         "search": "Search a stat...",
-        "name": "Tankopedia",
+        "name": "Tankopédie",
         "button": "Find tanks",
         "description": "Blitz tank encyclopedia",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
