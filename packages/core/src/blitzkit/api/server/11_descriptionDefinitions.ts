@@ -11,58 +11,73 @@ import { matchDescription } from "../../matchDescription";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI10 } from "./10_galleryDefinitions";
 
-const ENCYCLOPEDIA_LANGUAGES: Record<string, string> = {
-  en: "en",
-  es: "es",
-  fr: "fr",
-  pl: "pl",
-  ru: "ru",
-  zh: "zh-cn",
-};
-
-async function fetchCachedEncyclopedia(game: EncyclopediaGame, locale: string) {
-  if (!import.meta.env.DEV) {
-    return fetchEncyclopedia(game, ENCYCLOPEDIA_LANGUAGES[locale]);
-  }
-
-  const { existsSync } = await import("fs");
-  const { readFile, writeFile, mkdir } = await import("fs/promises");
-  const root = "../../temp/encyclopedia";
-  const cachePath = `${root}/${game}-${locale}.json`;
-
-  if (existsSync(cachePath)) {
-    const content = await readFile(cachePath, "utf-8");
-    return JSON.parse(content) as EncyclopediaVehicle[];
-  }
-
-  const vehicles = await fetchEncyclopedia(
-    game,
-    ENCYCLOPEDIA_LANGUAGES[locale],
-  );
-
-  await mkdir(root, { recursive: true });
-  await writeFile(cachePath, JSON.stringify(vehicles));
-
-  return vehicles;
-}
-
-async function fetchDescriptions(game: EncyclopediaGame) {
-  const descriptions: Record<string, Map<number, EncyclopediaVehicle>> = {};
-
-  await Promise.all(
-    Object.keys(ENCYCLOPEDIA_LANGUAGES).map(async (locale) => {
-      const vehicles = await fetchCachedEncyclopedia(game, locale);
-
-      descriptions[locale] = new Map(
-        vehicles.map((vehicle) => [vehicle.tank_id, vehicle]),
-      );
-    }),
-  );
-
-  return descriptions;
-}
+// the rest of our locales are rejected by the encyclopedia
+const WG_API_LANGUAGES = [
+  "en",
+  "ru",
+  "pl",
+  "de",
+  "fr",
+  "es",
+  "zh-cn",
+  "zh-tw",
+  "tr",
+  "cs",
+  "th",
+  "vi",
+  "ko",
+];
 
 export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
+  private async fetchCachedEncyclopedia(
+    game: EncyclopediaGame,
+    locale: string,
+    language: string,
+  ) {
+    if (!import.meta.env.DEV) return fetchEncyclopedia(game, language);
+
+    const { existsSync } = await import("fs");
+    const { readFile, writeFile, mkdir } = await import("fs/promises");
+    const root = "../../temp/encyclopedia";
+    const cachePath = `${root}/${game}-${locale}.json`;
+
+    if (existsSync(cachePath)) {
+      const content = await readFile(cachePath, "utf-8");
+      return JSON.parse(content) as EncyclopediaVehicle[];
+    }
+
+    const vehicles = await fetchEncyclopedia(game, language);
+
+    await mkdir(root, { recursive: true });
+    await writeFile(cachePath, JSON.stringify(vehicles));
+
+    return vehicles;
+  }
+
+  private async fetchDescriptions(game: EncyclopediaGame) {
+    const descriptions: Record<string, Map<number, EncyclopediaVehicle>> = {};
+
+    await Promise.all(
+      locales.supported.map(async (supported) => {
+        const language = supported.variant_wg_api ?? supported.locale;
+
+        if (!WG_API_LANGUAGES.includes(language)) return;
+
+        const vehicles = await this.fetchCachedEncyclopedia(
+          game,
+          supported.locale,
+          language,
+        );
+
+        descriptions[supported.locale] = new Map(
+          vehicles.map((vehicle) => [vehicle.tank_id, vehicle]),
+        );
+      }),
+    );
+
+    return descriptions;
+  }
+
   @Cache()
   async descriptionDefinitions() {
     const descriptionDefinitions = DescriptionDefinitions.create();
@@ -70,8 +85,8 @@ export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {
 
     console.log("Fetching tank descriptions...");
 
-    const blitz = await fetchDescriptions("wotb");
-    const wot = await fetchDescriptions("wot");
+    const blitz = await this.fetchDescriptions("wotb");
+    const wot = await this.fetchDescriptions("wot");
     const wotVehicles = [...wot[locales.default].values()];
     const unmatched: string[] = [];
 

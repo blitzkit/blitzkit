@@ -1,7 +1,7 @@
 import locales from "@blitzkit/i18n/locales.json";
 import type { EncyclopediaVehicle } from "../blitz/fetchEncyclopedia";
 import type { TankDefinition } from "../protos";
-import { descriptionMatches } from "./descriptionMatches";
+import { descriptionMatches } from "../config/descriptionMatches";
 
 const EUROPEAN_NATIONS = ["czech", "sweden", "poland", "italy"];
 const MAX_TIER_DIFFERENCE = 2;
@@ -60,13 +60,13 @@ export function matchDescription(
     const tag = descriptionMatches[tank.dev_name];
     const vehicle = wotVehicles.find((vehicle) => vehicle.tag === tag);
 
-    if (tag !== null && !vehicle) {
+    if (!vehicle) {
       throw new Error(
         `Description match for ${tank.dev_name} points to unknown tag ${tag}`,
       );
     }
 
-    return vehicle ? { via: "file", vehicle } : null;
+    return { via: "file", vehicle };
   }
 
   const candidates = wotVehicles.filter(

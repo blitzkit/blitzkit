@@ -1,5 +1,5 @@
-// Blitz dev name -> World of Tanks tag, or null when no description applies
-export const descriptionMatches: Record<string, string | null> = {
+// Blitz dev name -> World of Tanks tag
+export const descriptionMatches: Record<string, string> = {
   // usa
   M4_Sherman: "A05_M4_Sherman",
   M48A1: "A120_M48A5",
