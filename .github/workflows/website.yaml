@@ -110,7 +110,7 @@ jobs:
           # the PR's ref, or the manual input, or production (selected when cron)
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
           submodules: recursive
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2

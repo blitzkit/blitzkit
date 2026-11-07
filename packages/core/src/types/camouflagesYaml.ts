@@ -5,5 +5,10 @@ export type CamouflagesYaml = Record<
     shortUserString?: string;
     preset?: string;
     customEntities?: Record<string, { item: string }>;
+    // nation -> tank
+    override?: Record<
+      string,
+      { override?: Record<string, { preset?: string }> }
+    >;
   }
 >;

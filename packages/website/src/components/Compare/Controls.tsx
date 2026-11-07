@@ -1,9 +1,17 @@
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
-import { Button, Dialog, Flex, SegmentedControl } from "@radix-ui/themes";
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  Flex,
+  SegmentedControl,
+  Text,
+} from "@radix-ui/themes";
+import { DIALOG_MAX_HEIGHT } from "../../constants/dialog";
 import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
-import { CompareEphemeral } from "../../stores/compareEphemeral";
+import { CompareEphemeral, syncShellSlot } from "../../stores/compareEphemeral";
 import {
   ComparePersistent,
   type DeltaMode,
@@ -22,6 +30,7 @@ export function Controls({
   onAddTankDialogOpenChange,
 }: ControlsProps) {
   const deltaMode = ComparePersistent.use((state) => state.deltaMode);
+  const syncShells = CompareEphemeral.use((state) => state.syncShells);
   const { strings } = useLocale();
 
   return (
@@ -36,11 +45,11 @@ export function Controls({
           </Button>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title align="center">
             {strings.website.tools.compare.actions.add.title}
           </Dialog.Title>
-          <Dialog.Description align="center">
+          <Dialog.Description align="center" mb="4">
             {strings.website.tools.compare.actions.add.description}
           </Dialog.Description>
 
@@ -111,6 +120,31 @@ export function Controls({
           {strings.website.tools.compare.actions.deltas.absolute}
         </SegmentedControl.Item>
       </SegmentedControl.Root>
+
+      <Flex
+        align="center"
+        gap="2"
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          CompareEphemeral.mutate((draft) => {
+            draft.syncShells = !draft.syncShells;
+
+            if (!draft.syncShells || draft.members.length === 0) return;
+
+            const [first] = draft.members;
+
+            syncShellSlot(
+              draft.members,
+              first.gun.shells.findIndex(({ id }) => id === first.shell.id),
+            );
+          });
+        }}
+      >
+        <Checkbox variant="classic" checked={syncShells} />
+        <Text size="2">
+          {strings.website.tools.compare.actions.sync_shells}
+        </Text>
+      </Flex>
     </Flex>
   );
 }

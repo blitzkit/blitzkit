@@ -6,6 +6,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Link } from "@radix-ui/themes";
 import { AesonPlug } from "../../../components/AesonPlug";
 import { Beg } from "../../../components/Beg";
+import { Countdown } from "../../../components/Countdown";
 import HomeHero from "../../../components/HomeHero.astro";
 import { Plugs } from "../../../components/Plugs";
 import ToolCard from "../../../components/ToolCard.astro";
@@ -65,6 +66,10 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 
 <BaseLayout {locale}>
   <HomeHero />
+
+  <Countdown client:only="react">
+    <Countdown skeleton slot="fallback" />
+  </Countdown>
 
   <Beg />
 

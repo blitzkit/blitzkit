@@ -27,6 +27,78 @@ type DataNode = {
     }
 );
 
+/**
+ * a constant, [2, ...channels] where each key is [type, value, time, ...], or
+ * [0, source, curve, factor] when bound to something like the vehicle's speed
+ */
+export type ParticleValue = number | (number | string | number[][])[];
+
+export interface ParticleForce {
+  /** the force's strength, per axis for drag */
+  dragForceLine?: ParticleValue;
+  forceDirection: ParticleValue;
+  forceIsActive: boolean;
+  forceType: "drag" | "grav" | "wind" | "pointgr" | "vortex";
+}
+
+export interface ParticleLayer {
+  activeLODS: boolean[];
+  alphaOverLife?: ParticleValue;
+  angle3d?: ParticleValue;
+  angleVariation3d?: Vector3Tuple;
+  blending: number;
+  colorOverLife?: ParticleValue;
+  colorRandom?: ParticleValue;
+  deltaTime: number;
+  deltaVariation: number;
+  enableAlphaRemap: boolean;
+  enableFlow: boolean;
+  enableMask: boolean;
+  enableNoise: boolean;
+  enableUvScroll: boolean;
+  endTime: number;
+  forces: ParticleForce[];
+  frameOverLifeEnabled: boolean;
+  fresToAlphaBias?: number;
+  fresToAlphaPower?: number;
+  inheritPosition: boolean;
+  isLong: boolean;
+  isLooped: boolean;
+  isSingle: boolean;
+  layerType: string;
+  life?: ParticleValue;
+  lifeVariation?: ParticleValue;
+  name: string;
+  number?: ParticleValue;
+  numberVariation?: ParticleValue;
+  particleOrientation: number;
+  pivotPoint3d: Vector3Tuple;
+  simplifiedForces: unknown[];
+  size3d?: Vector3Tuple;
+  sizeOverLife3ds?: ParticleValue;
+  sizeVariation3d?: Vector3Tuple;
+  spin3d?: Vector3Tuple;
+  spinVariation3d?: Vector3Tuple;
+  spritePath?: string;
+  useFresToAlpha?: boolean;
+  velocity?: ParticleValue;
+  velocityVariation?: ParticleValue;
+}
+
+export interface ParticleEmitterNode {
+  "##name": "ParticleEmitterNode";
+  "#id": ArrayBuffer;
+  clone?: boolean;
+  emissionRange?: ParticleValue;
+  emissionVector?: ParticleValue;
+  layers?: ParticleLayer[];
+  name?: string;
+  radius?: ParticleValue;
+  "reference.id"?: number;
+  size?: ParticleValue;
+  type?: number;
+}
+
 export interface ConfigArchive {
   configName: string;
   fxName: string;
@@ -40,6 +112,8 @@ export interface ConfigArchive {
 
 interface EnabledPresets {
   AlphaTest: boolean;
+  AlphaBlend?: boolean;
+  AlphaBlendAdditive?: boolean;
 }
 
 interface Flags {

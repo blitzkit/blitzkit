@@ -48,7 +48,9 @@ export function Lighting({ hasPbr }: Props) {
   const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
   const revealed = Tankopedia.use((state) => state.revealed);
   const skinPending = Tankopedia.use(
-    (state) => state.loadedSkin !== state.skin,
+    (state) =>
+      state.loaders.skin.requested !== state.loaders.skin.loaded ||
+      state.loaders.attachment.requested !== state.loaders.attachment.loaded,
   );
 
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
@@ -63,6 +65,7 @@ export function Lighting({ hasPbr }: Props) {
   useEffect(() => {
     Tankopedia.mutate((draft) => {
       draft.revealed = true;
+      draft.loaders.model.loaded = true;
     });
   }, []);
 
@@ -162,6 +165,7 @@ export function Lighting({ hasPbr }: Props) {
               key={index}
               position={position}
               intensity={intensity}
+              userData={{ intensity }}
               penumbra={1}
               castShadow={highGraphics}
               decay={1}
@@ -212,6 +216,11 @@ function Animator({
     for (const child of wrapper.current.children) {
       if (child instanceof SpotLight) {
         child.angle = ANGLE * t * factor;
+        child.intensity = child.userData.intensity;
+
+        if (child.angle === 0) {
+          child.intensity = 0;
+        }
       } else if (child instanceof HemisphereLight) {
         child.intensity = HEMISPHERE_INTENSITY * t * factor;
       }
@@ -242,12 +251,6 @@ function Animator({
     if (x >= 1 && Tankopedia.state.display !== requestedDisplay) {
       Tankopedia.mutate((draft) => {
         draft.display = requestedDisplay;
-      });
-    }
-
-    if (x >= 1 && Tankopedia.state.skin !== Tankopedia.state.loadedSkin) {
-      Tankopedia.mutate((draft) => {
-        draft.skin = draft.loadedSkin;
       });
     }
   });

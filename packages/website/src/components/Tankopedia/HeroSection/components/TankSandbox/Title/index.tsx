@@ -13,18 +13,25 @@ const camouflageDefinitions = await api.camouflageDefinitions();
 
 export function Title({ skeleton }: MaybeSkeletonComponentProps) {
   const { unwrap, strings } = useLocale();
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
   const protagonist = Duel.use((state) => state.protagonist.tank);
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const hasRevealed = useRef(false);
-  const skin = Tankopedia.use((state) => state.requestedSkin);
+  const skin = Tankopedia.use((state) => state.loaders.skin.requested);
   const camouflage =
     skin === undefined ? undefined : camouflageDefinitions.camouflages[skin];
   const tankName = unwrap(protagonist.name!);
-  const name = camouflage
-    ? `${tankName} ${unwrap(camouflage.name!).replace("%(camo_num)", SKIN_NUMBER)}`
-    : tankName;
+  // legendary camos carry the tank's in-battle name
+  const name = (
+    camouflage
+      ? camouflage.tank_name
+        ? unwrap(camouflage.tank_name)
+        : `${tankName} ${unwrap(camouflage.name!)}`
+      : tankName
+  ).replace("%(camo_num)", SKIN_NUMBER);
   const fontSize = revealed
     ? disturbed
       ? "1.5rem"
@@ -102,7 +109,7 @@ export function Title({ skeleton }: MaybeSkeletonComponentProps) {
             onPointerDown={(event) => event.stopPropagation()}
             onClick={() => {
               Tankopedia.mutate((draft) => {
-                draft.modelRequested = true;
+                draft.loaders.model.requested = true;
               });
             }}
           >

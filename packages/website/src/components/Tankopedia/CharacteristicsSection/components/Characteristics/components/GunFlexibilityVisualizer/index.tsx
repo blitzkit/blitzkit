@@ -44,7 +44,9 @@ export function GunFlexibilityVisualizer({
   const tank = Duel.use((state) => state.protagonist.tank);
   const turret = Duel.use((state) => state.protagonist.turret);
   const gun = Duel.use((state) => state.protagonist.gun);
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
 
   const tankModel = modelDefinition.models[tank.id];
   const turretModel = tankModel.turrets[turret.id];

@@ -27,6 +27,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { Suspense, useState, type RefObject } from "react";
+import { DIALOG_MAX_HEIGHT } from "../../../../../constants/dialog";
 import { Pose, poseEvent } from "../../../../../core/blitzkit/pose";
 import { useEquipment } from "../../../../../hooks/useEquipment";
 import { useFullScreen } from "../../../../../hooks/useFullScreen";
@@ -82,7 +83,9 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
   const revealed = Tankopedia.use((state) => state.revealed);
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
-  const modelRequested = Tankopedia.use((state) => state.modelRequested);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
   const equalize = Duel.use((state) => state.equalize);
   const equalizer = Duel.use((state) => state.antagonist.tank.equalizer);
 
@@ -472,7 +475,7 @@ export function Options({ thicknessRange, canvas, skeleton }: OptionsProps) {
                 </Button>
               </Dialog.Trigger>
 
-              <Dialog.Content>
+              <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
                 <Dialog.Title align="center">
                   {strings.website.common.tank_search.select_dialog_title}
                 </Dialog.Title>
