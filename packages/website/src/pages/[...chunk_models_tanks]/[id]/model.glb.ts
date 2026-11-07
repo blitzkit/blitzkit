@@ -118,7 +118,7 @@ export async function extractModel(
     skin: Skin,
   ][] = [];
   const motions = new Map<Hierarchy, Motion>();
-  const garageMotions = isPart ? partGarage(sc2, preset).motions : new Set();
+  const garage = isPart ? partGarage(sc2, preset) : undefined;
 
   if (isPart) {
     const loading: Promise<void>[] = [];
@@ -173,7 +173,7 @@ export async function extractModel(
           skeletons.set(hierarchy, created);
 
           // only what loops in the garage is exported
-          if (motion && motionComponent && garageMotions.has(hierarchy)) {
+          if (motion && motionComponent && garage?.motions.has(hierarchy)) {
             createMotionClip(
               document,
               buffer,
@@ -210,9 +210,9 @@ export async function extractModel(
           case "StateSwitcherComponent":
             node.setExtras({
               // a part's scenarios can pick its state as it loads
-              state:
-                component[`ssc.state${component["ssc.activeState"]}`] ??
-                (isPart ? null : undefined),
+              state: garage
+                ? (garage.states.get(hierarchy) ?? null)
+                : component[`ssc.state${component["ssc.activeState"]}`],
             });
             break;
 
@@ -348,7 +348,13 @@ export async function extractModel(
   );
 
   for (const [owner, entity, joint, skin] of jointBindings) {
-    const socket = findNode(owner, entity);
+    // the game only binds the skeleton entity's own children
+    const socket = owner
+      .listChildren()
+      .find(
+        (child) =>
+          child.getName() === entity && !skin.listJoints().includes(child),
+      );
 
     if (!socket) throw new Error(`Missing socket ${entity}`);
 
@@ -360,16 +366,6 @@ export async function extractModel(
   await document.transform(prune({ keepAttributes: true }), dedup());
 
   return document;
-}
-
-function findNode(node: Node, name: string): Node | undefined {
-  for (const child of node.listChildren()) {
-    if (child.getName() === name) return child;
-
-    const found = findNode(child, name);
-
-    if (found) return found;
-  }
 }
 
 export async function extractMaterials(

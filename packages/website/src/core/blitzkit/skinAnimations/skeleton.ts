@@ -146,6 +146,7 @@ export function createMotionClip(
 ) {
   const animation = document.createAnimation(clip);
   const playbackRate = component["motion.playbackRate"];
+  const duration = motion.duration / playbackRate;
 
   for (const [uid, track] of motion.tracks) {
     const joint = joints.get(uid);
@@ -153,6 +154,20 @@ export function createMotionClip(
     if (!joint) continue;
 
     for (const [type, { times, values }] of track) {
+      const keyTimes = times.map((time) => time / playbackRate);
+      const keyValues =
+        type === MotionChannel.Scale
+          ? values.flatMap((value) => [value, value, value])
+          : [...values];
+
+      // the game loops over the clip's duration, which can outlast its keys
+      if (keyTimes[keyTimes.length - 1] < duration) {
+        const size = keyValues.length / keyTimes.length;
+
+        keyTimes.push(duration);
+        keyValues.push(...keyValues.slice(-size));
+      }
+
       const sampler = document
         .createAnimationSampler()
         .setInput(
@@ -160,7 +175,7 @@ export function createMotionClip(
             document,
             buffer,
             "SCALAR",
-            new Float32Array(times.map((time) => time / playbackRate)),
+            new Float32Array(keyTimes),
           ),
         )
         .setOutput(
@@ -168,11 +183,7 @@ export function createMotionClip(
             document,
             buffer,
             type === MotionChannel.Rotation ? "VEC4" : "VEC3",
-            new Float32Array(
-              type === MotionChannel.Scale
-                ? values.flatMap((value) => [value, value, value])
-                : values,
-            ),
+            new Float32Array(keyValues),
           ),
         )
         .setInterpolation("LINEAR");
@@ -191,22 +202,12 @@ export function createMotionClip(
 }
 
 /**
- * Makes a socket follow a joint. Socket content is authored in the owner's
- * space, so it follows the joint's movement away from its bind pose.
+ * Makes a socket follow a joint. The game replaces the socket's own transform
+ * with the joint's, so it sits right on the joint.
  */
 export function bindSocket(socket: Node, joint: Node, skin: Skin) {
-  const index = skin.listJoints().indexOf(joint);
-  const inverseBind = skin
-    .getInverseBindMatrices()!
-    .getElement(index, []) as number[];
-
   joint.addChild(socket);
-  socket.setMatrix(
-    new Matrix4()
-      .fromArray(inverseBind)
-      .multiply(new Matrix4().fromArray(socket.getMatrix()))
-      .toArray() as mat4,
-  );
+  socket.setMatrix(new Matrix4().toArray() as mat4);
   socket.traverse((child) => {
     const childSkin = child.getSkin();
 

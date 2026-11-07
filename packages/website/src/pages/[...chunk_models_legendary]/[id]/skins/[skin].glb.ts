@@ -20,10 +20,7 @@ import type { Vector3Tuple, Vector4Tuple } from "three";
 import { SKIN_NUMBER } from "../../../../constants/skinNumber";
 import { api } from "../../../../core/blitzkit/api";
 import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
-import {
-  partGarage,
-  switcherStates,
-} from "../../../../core/blitzkit/switcherStates";
+import { switcherStates } from "../../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import {
   extractMaterials,
@@ -176,12 +173,6 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
     }
 
     const part = await extractModel(vfs, path, true, preset);
-    const partSc2 = new Sc2ReadStream(
-      (await vfs.file(`Data/3d/${path}.sc2`)).buffer as ArrayBuffer,
-    ).sc2();
-
-    Object.assign(states, partGarage(partSc2, preset).states);
-
     const map = mergeDocuments(document, part);
     const partScene = map.get(part.getRoot().listScenes()[0]) as Scene;
     const node = document

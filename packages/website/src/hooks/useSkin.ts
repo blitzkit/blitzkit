@@ -47,7 +47,7 @@ async function loadSkin(path: string) {
   for (const clip of gltf.animations) skin.mixer!.clipAction(clip).play();
 
   for (const parts of skin.parts.values()) {
-    for (const part of parts) preparePart(part, gltf.scene.userData.states);
+    for (const part of parts) preparePart(part);
   }
 
   loadedSkins.set(path, skin);
@@ -56,14 +56,11 @@ async function loadSkin(path: string) {
 }
 
 // parts render as they are, so what jsxTree and skinTree would do happens here
-function preparePart(part: Object3D, states: Record<string, string | null>) {
+function preparePart(part: Object3D) {
   part.traverse((object) => {
     if (object.userData.state !== undefined) {
-      const name = nameOf(object);
-      const state = name in states ? states[name] : object.userData.state;
-
       for (const child of object.children) {
-        child.visible = nameOf(child) === state;
+        child.visible = nameOf(child) === object.userData.state;
       }
     }
 
