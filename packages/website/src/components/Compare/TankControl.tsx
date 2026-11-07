@@ -1,6 +1,7 @@
 import { ExternalLinkIcon, LoopIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useState } from "react";
+import { DIALOG_MAX_HEIGHT } from "../../constants/dialog";
 import { api } from "../../core/blitzkit/api";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
 import { useLocale } from "../../hooks/useLocale";
@@ -43,7 +44,7 @@ export function TankControl({ index, slug }: TankControlProps) {
           </IconButton>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title align="center">
             {strings.website.common.tank_search.swap_dialog_title}
           </Dialog.Title>
