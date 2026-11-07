@@ -66,7 +66,8 @@ if (manifest.chunks === CHUNK_COUNT) {
 const regions: RegionDescriptor[] = [
   { domain: "eu", seed: 5e8, max: 10e8 - 1, dry_streak: 0 },
   { domain: "com", seed: 10e8, max: 20e8 - 1, dry_streak: 0 },
-  { domain: "asia", seed: 20e8, max: 31e8 - 1, dry_streak: 0 },
+  { domain: "asia", seed: 20e8, max: 30e8 - 1, dry_streak: 0 },
+  { domain: "asia", seed: 30e8, max: 31e8 - 1, dry_streak: 0 },
 ];
 
 console.log("Finding new seed ids...");
