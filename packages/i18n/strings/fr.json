@@ -320,8 +320,8 @@
         },
         "table": {
           "index": "#",
-          "never": "Never",
-          "tank": "Tank",
+          "never": "Jamais",
+          "tank": "Char d'assaut",
           "last_played": "Dernier joué",
           "battles": "Career battles",
           "unrecorded": "--",
@@ -329,7 +329,7 @@
         },
         "large_warning": {
           "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "description": "Êtes-vous sûr de vouloir créer une playlist de {count} chars ? C'est {time} heures de jeu à 50% de taux de victoire !",
           "cancel": "Cancel",
           "proceed": "Proceed"
         },
@@ -362,7 +362,7 @@
         },
         "stats": "{correct} / {total} guessed correctly",
         "help": {
-          "title": "Partially reveal tank?",
+          "title": "Révéler partiellement le char ?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "Cancel",
           "reveal": "Reveal"
