@@ -679,7 +679,8 @@
             "none": "无变化",
             "percentage": "百分比",
             "absolute": "绝对值"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "未选择坦克",
@@ -920,7 +921,7 @@
     },
     "footer": {
       "motto": "《坦克世界：闪击战》全方位工具",
-      "copyright": "本网站与 Wargaming战游网 或任何服务无关",
+      "association": "An Open Collective Project",
       "about": {
         "title": "关于",
         "discord": "Discord",

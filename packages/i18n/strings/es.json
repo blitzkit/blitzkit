@@ -19,7 +19,7 @@
     "shells": {
       "ap": "AP",
       "ap_cr": "APCR",
-      "hc": "HEAT",
+      "hc": "AEAC",
       "he": "AE"
     },
     "player_count_period": {
@@ -187,7 +187,7 @@
     },
     "settings": {
       "title": "Settings",
-      "description": "Change BlitzKit settings",
+      "description": "Cambiar configuración de BlitzKit",
       "dev_mode": "Modo de desarrollador",
       "auto_load_models": "Auto-load models",
       "language": "Idioma"
@@ -679,7 +679,8 @@
             "none": "Sin deltas",
             "percentage": "Porcentaje",
             "absolute": "Absoluto"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "No hay tanques seleccionados",
@@ -920,7 +921,7 @@
     },
     "footer": {
       "motto": "Todo sobre World of Tanks Blitz",
-      "copyright": "No afiliado con Wargaming u otros servicios",
+      "association": "An Open Collective Project",
       "about": {
         "title": "About",
         "discord": "Discord",
