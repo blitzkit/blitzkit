@@ -33,6 +33,14 @@ type DataNode = {
  */
 export type ParticleValue = number | (number | string | number[][])[];
 
+export interface ParticleForce {
+  /** the force's strength, per axis for drag */
+  dragForceLine?: ParticleValue;
+  forceDirection: ParticleValue;
+  forceIsActive: boolean;
+  forceType: "drag" | "grav" | "wind" | "pointgr" | "vortex";
+}
+
 export interface ParticleLayer {
   activeLODS: boolean[];
   alphaOverLife?: ParticleValue;
@@ -49,14 +57,20 @@ export interface ParticleLayer {
   enableNoise: boolean;
   enableUvScroll: boolean;
   endTime: number;
-  forces: unknown[];
+  forces: ParticleForce[];
   frameOverLifeEnabled: boolean;
+  fresToAlphaBias?: number;
+  fresToAlphaPower?: number;
   inheritPosition: boolean;
   isLong: boolean;
   isLooped: boolean;
   isSingle: boolean;
   layerType: string;
+  life?: ParticleValue;
+  lifeVariation?: ParticleValue;
   name: string;
+  number?: ParticleValue;
+  numberVariation?: ParticleValue;
   particleOrientation: number;
   pivotPoint3d: Vector3Tuple;
   simplifiedForces: unknown[];
@@ -64,15 +78,24 @@ export interface ParticleLayer {
   sizeOverLife3ds?: ParticleValue;
   sizeVariation3d?: Vector3Tuple;
   spin3d?: Vector3Tuple;
+  spinVariation3d?: Vector3Tuple;
   spritePath?: string;
+  useFresToAlpha?: boolean;
   velocity?: ParticleValue;
+  velocityVariation?: ParticleValue;
 }
 
 export interface ParticleEmitterNode {
   "##name": "ParticleEmitterNode";
   "#id": ArrayBuffer;
+  clone?: boolean;
+  emissionRange?: ParticleValue;
+  emissionVector?: ParticleValue;
   layers?: ParticleLayer[];
   name?: string;
+  radius?: ParticleValue;
+  "reference.id"?: number;
+  size?: ParticleValue;
   type?: number;
 }
 
