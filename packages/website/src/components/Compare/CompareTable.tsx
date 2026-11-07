@@ -76,6 +76,14 @@ export function CompareTable({ stats }: CompareTableProps) {
             </Flex>
           </StickyColumnHeaderCell>
 
+          {members.length > 1 && (
+            <StickyColumnHeaderCell>
+              <Flex height="100%" align="end" justify="center">
+                <Text>{strings.website.tools.compare.table.average}</Text>
+              </Flex>
+            </StickyColumnHeaderCell>
+          )}
+
           {members.map(({ tank, key }, index) => {
             return <TankCard index={index} key={key} tank={tank} />;
           })}
@@ -180,6 +188,8 @@ export function CompareTable({ stats }: CompareTableProps) {
               </Flex>
             </Flex>
           </Table.Cell>
+
+          {members.length > 1 && <Table.Cell />}
 
           {members.map(
             (
