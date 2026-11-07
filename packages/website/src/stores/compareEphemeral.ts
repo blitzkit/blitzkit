@@ -8,6 +8,7 @@ export interface CompareMember extends DuelMember {
 export interface CompareEphemeral {
   crewSkills: Record<string, number>;
   equalize: boolean;
+  syncShells: boolean;
   members: CompareMember[];
   sorting?: {
     direction: "ascending" | "descending";
@@ -21,5 +22,14 @@ export const CompareEphemeral = new Varuna<
 >((crewSkills) => ({
   crewSkills,
   equalize: false,
+  syncShells: false,
   members: [],
 }));
+
+export function syncShellSlot(members: CompareMember[], slot: number) {
+  for (const member of members) {
+    const shell = member.gun.shells[slot];
+
+    if (shell) member.shell = shell;
+  }
+}

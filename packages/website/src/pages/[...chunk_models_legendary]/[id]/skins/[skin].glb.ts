@@ -1,5 +1,4 @@
 import {
-  camouflagePreset,
   parseHierarchies,
   Sc2ReadStream,
   type CamouflagesXml,
@@ -21,10 +20,7 @@ import type { Vector3Tuple, Vector4Tuple } from "three";
 import { SKIN_NUMBER } from "../../../../constants/skinNumber";
 import { api } from "../../../../core/blitzkit/api";
 import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
-import {
-  partGarage,
-  switcherStates,
-} from "../../../../core/blitzkit/switcherStates";
+import { switcherStates } from "../../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import {
   extractMaterials,
@@ -74,7 +70,9 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
     include as { vehicle: { name: string } }
   ).vehicle.name.split(":");
   const { customEntities } = camouflagesYaml[key];
-  const preset = camouflagePreset(camouflagesYaml[key], nation, tankKey);
+  const preset =
+    camouflagesYaml[key].preset ??
+    camouflagesYaml[key].override?.[nation]?.override?.[tankKey]?.preset;
   const parameters = await vfs.yaml<TankParameters>(
     `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
   );
@@ -175,12 +173,6 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
     }
 
     const part = await extractModel(vfs, path, true, preset);
-    const partSc2 = new Sc2ReadStream(
-      (await vfs.file(`Data/3d/${path}.sc2`)).buffer as ArrayBuffer,
-    ).sc2();
-
-    Object.assign(states, partGarage(partSc2, preset).states);
-
     const map = mergeDocuments(document, part);
     const partScene = map.get(part.getRoot().listScenes()[0]) as Scene;
     const node = document

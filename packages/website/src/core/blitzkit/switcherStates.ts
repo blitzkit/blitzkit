@@ -3,7 +3,7 @@ import {
   type Hierarchy,
   type Sc2ReadStream,
 } from "@blitzkit/core";
-import { times } from "lodash-es";
+import { sortBy, times } from "lodash-es";
 
 interface Value {
   "any.type": string;
@@ -104,8 +104,10 @@ function replay(
     variables: Map<string, unknown>;
   }[] = [];
   const actions: { owner: Entity; action: Action }[] = [];
-  const states: Record<string, string | null> = {};
+  // names can repeat, so states are kept per entity
+  const states = new Map<Entity, string | null>();
   const looping = new Set<Entity>();
+  const finished = new Set<Entity>();
   const effects = new Map<Entity, number>();
   const pending: (() => void)[] = [];
   const fired = new Set<unknown>();
@@ -115,11 +117,11 @@ function replay(
 
     if (!names) return;
 
-    const previous = states[entity.name];
+    const previous = states.get(entity);
 
-    states[entity.name] = names[state] ?? null;
+    states.set(entity, names[state] ?? null);
 
-    if (!animate || previous === states[entity.name]) return;
+    if (!animate || previous === states.get(entity)) return;
 
     for (const scenario of scenarios) {
       if (scenario.owner === entity) {
@@ -132,7 +134,7 @@ function replay(
     for (let child = entity; child.parent; child = child.parent) {
       if (
         stateNames.get(child.parent)?.includes(child.name) &&
-        states[child.parent.name] !== child.name
+        states.get(child.parent) !== child.name
       ) {
         return false;
       }
@@ -147,19 +149,22 @@ function replay(
       return;
     }
 
-    // some clips restart themselves when they end
     if (looping.has(entity)) return;
 
     looping.add(entity);
 
-    if ((repeats ?? entity.repeats) > 0) {
+    // some clips restart themselves when they end, so each finishes once
+    if ((repeats ?? entity.repeats) > 0 && !finished.has(entity)) {
       pending.push(() => finishAnimation(entity));
     }
   }
 
   function finishAnimation(entity: Entity) {
-    const statesBefore = { ...states };
+    const statesBefore = new Map(states);
     const shownBefore = [...looping].filter(isShown);
+
+    looping.delete(entity);
+    finished.add(entity);
 
     for (const { owner, action } of actions) {
       if (
@@ -185,16 +190,17 @@ function replay(
       if (owned.length > 0) break;
     }
 
-    // an intro hands over to whatever it revealed; with nothing to hand over
-    // to, it's the only animation there is so it keeps looping
+    // as in game, a clip stops on whatever it switched to or revealed; one that
+    // changes nothing is the only animation there is, so it keeps looping
     if (
-      [...looping].some(
-        (other) => isShown(other) && !shownBefore.includes(other),
+      [...states].every(
+        ([other, state]) => statesBefore.get(other) === state,
+      ) &&
+      [...looping].every(
+        (other) => !isShown(other) || shownBefore.includes(other),
       )
     ) {
-      looping.delete(entity);
-    } else {
-      Object.assign(states, statesBefore);
+      looping.add(entity);
     }
   }
 
@@ -253,7 +259,7 @@ function replay(
             );
 
             stateNames.set(entity, names);
-            states[entity.name] = names[component["ssc.activeState"]] ?? null;
+            states.set(entity, names[component["ssc.activeState"]] ?? null);
             break;
           }
 
@@ -478,7 +484,12 @@ function replay(
 
     fired.add(event);
 
-    for (const { owner, action } of actions) {
+    // the game runs delayed actions once their delay is up, so they go in that
+    // order rather than the order they're stored in
+    for (const { owner, action } of sortBy(
+      actions,
+      ({ action }) => action["act.delay"],
+    )) {
       if (
         (animate || action["act.delay"] === 0) &&
         (event === LOAD_EVENTS[0]
@@ -498,7 +509,12 @@ function replay(
   for (let run = pending.shift(); run; run = pending.shift()) run();
 
   return {
-    states,
+    states: new Map(
+      [...states].map(([entity, state]) => [
+        entity.hierarchy as Hierarchy,
+        state,
+      ]),
+    ),
     motions: new Set(
       [...looping]
         .filter(isShown)
@@ -522,12 +538,20 @@ export function switcherStates(
   preset: string | undefined,
   attachments: Map<string, string[]>,
 ) {
-  return replay(sc2, preset, attachments, false).states;
+  const states: Record<string, string | null> = {};
+
+  for (const [hierarchy, state] of replay(sc2, preset, attachments, false)
+    .states) {
+    states[hierarchy.name] = state;
+  }
+
+  return states;
 }
 
 /**
- * where a customization part ends up: its states, the motions left looping and
- * the particle effects started with how many times they repeat
+ * where a customization part ends up: each state switcher's state, the
+ * motions left looping and the particle effects started with how many times
+ * they repeat
  */
 export function partGarage(
   sc2: ReturnType<Sc2ReadStream["sc2"]>,

@@ -24,6 +24,7 @@ import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton"
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../../components/ScreenshotButton";
 import { TankSearch } from "../../../../components/TankSearch";
+import { DIALOG_MAX_HEIGHT } from "../../../../constants/dialog";
 import { api } from "../../../../core/blitzkit/api";
 import { curateMixer } from "../../../../core/blitzkit/curateMixer";
 import {
@@ -117,7 +118,7 @@ function ModuleChooser({
           </Button>
         </Dialog.Trigger>
 
-        <Dialog.Content>
+        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
           <Dialog.Title>
             {strings.website.common.tank_search.select_dialog_title}
           </Dialog.Title>
