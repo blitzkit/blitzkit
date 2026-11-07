@@ -10,8 +10,7 @@ import {
 export function prepareMaterial(material: Material | Material[]) {
   if (!(material instanceof MeshStandardMaterial)) return;
 
-  // particles overlap each other, so they can't hide what's behind them
-  material.depthWrite = !material.userData.particle;
+  material.depthWrite = true;
 
   if (material.userData.blending === "additive") {
     material.blending = AdditiveBlending;

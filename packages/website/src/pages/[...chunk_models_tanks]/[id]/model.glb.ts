@@ -7,7 +7,6 @@ import {
   ScgReadStream,
   toUniqueId,
   VertexAttribute,
-  type Component,
   type ConfigArchive,
   type Hierarchy,
   type TankParameters,
@@ -29,6 +28,12 @@ import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
+import { addParticleEffect } from "../../../core/blitzkit/particles/gltf";
+import {
+  particleEmitters,
+  readParticleEffect,
+  type ParticleEffect,
+} from "../../../core/blitzkit/particles/read";
 import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
 import {
   bindSocket,
@@ -37,10 +42,6 @@ import {
   loadMotion,
   skinPrimitive,
 } from "../../../core/blitzkit/skinAnimations/skeleton";
-import {
-  createParticleEffect,
-  particleEmitters,
-} from "../../../core/blitzkit/skinParticles/effect";
 import { partGarage } from "../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../core/blitzkit/vfs";
 import {
@@ -96,6 +97,15 @@ const omitMeshNames = {
   ],
   end: ["_POINT"],
 };
+// seconds, past this an effect might as well last forever
+const ALWAYS = 1000;
+
+// an action's repeats win over the effect's, and 0 repeats forever
+function isLasting(effect: ParticleEffect, repeats: number) {
+  const runs = repeats > 0 ? repeats : effect["pe.repeatsCount"];
+
+  return runs === 0 || runs * effect["pe.effectDuration"] >= ALWAYS;
+}
 
 export async function extractModel(
   vfs: AbstractVFS,
@@ -122,11 +132,7 @@ export async function extractModel(
     joint: Node,
     skin: Skin,
   ][] = [];
-  const effects: [
-    node: Node,
-    effect: Extract<Component, { "comp.typename": "ParticleEffectComponent" }>,
-    repeats: number,
-  ][] = [];
+  const effects: [node: Node, effect: ParticleEffect][] = [];
   const motions = new Map<Hierarchy, Motion>();
   const garage = isPart ? partGarage(sc2, preset) : undefined;
 
@@ -229,7 +235,9 @@ export async function extractModel(
           case "ParticleEffectComponent": {
             const repeats = garage?.effects.get(hierarchy);
 
-            if (repeats !== undefined) effects.push([node, component, repeats]);
+            if (repeats !== undefined && isLasting(component, repeats)) {
+              effects.push([node, component]);
+            }
             break;
           }
 
@@ -380,16 +388,12 @@ export async function extractModel(
 
   const emitters = particleEmitters(sc2);
 
-  for (const [node, effect, repeats] of effects) {
-    await createParticleEffect(
-      document,
-      buffer,
-      vfs,
-      node,
-      effect,
-      repeats,
-      emitters,
-    );
+  for (const [node, effect] of effects) {
+    const read = readParticleEffect(effect, emitters, true);
+
+    if (read.length === 0) continue;
+
+    await addParticleEffect(document, vfs, node, { delay: 0, emitters: read });
   }
 
   scene.addChild(document.createNode("test"));
