@@ -5,24 +5,24 @@ import { jsxTree } from "./jsxTree";
 type Mergers = Parameters<typeof jsxTree>[1];
 
 // names get sanitized and made unique on load
-function nameOf(object3d: Object3D): string {
+export function nameOf(object3d: Object3D): string {
   return object3d.userData.name ?? object3d.name;
 }
 
 /**
  * skins are layered in order, so an attachment's states win over the
- * camouflage's
+ * camouflage's; `primitive` renders customization parts as they are so their
+ * bones can animate
  */
-export function skinTree(node: Object3D, skins: Skin[], mergers: Mergers) {
-  const skinNodes = new Map<string, Object3D[]>();
+export function skinTree(
+  node: Object3D,
+  skins: Skin[],
+  mergers: NonNullable<Mergers>,
+) {
   const materials = new Map<string, Material>();
   const states: Record<string, string | null> = {};
 
   for (const skin of skins) {
-    for (const node of skin.scene.children) {
-      skinNodes.set(node.name, [...(skinNodes.get(node.name) ?? []), node]);
-    }
-
     for (const [name, material] of skin.materials) {
       materials.set(name, material);
     }
@@ -30,7 +30,7 @@ export function skinTree(node: Object3D, skins: Skin[], mergers: Mergers) {
     Object.assign(states, skin.scene.userData.states);
   }
 
-  function switchChildren(object3d: Object3D, childMergers: Mergers) {
+  function switchChildren(object3d: Object3D) {
     if (object3d.userData.state === undefined) return;
 
     const name = nameOf(object3d);
@@ -38,37 +38,31 @@ export function skinTree(node: Object3D, skins: Skin[], mergers: Mergers) {
 
     return object3d.children
       .filter((child) => nameOf(child) === state)
-      .map((child) => jsxTree(child, childMergers));
+      .map((child) => jsxTree(child, skinMergers));
   }
 
-  const partMergers: Mergers = {
-    ...mergers,
-    group(object3d, props, key) {
-      return (
-        <group key={key} {...props}>
-          {switchChildren(object3d, partMergers) ?? props.children}
-        </group>
-      );
-    },
-  };
   const skinMergers: Mergers = {
     mesh(mesh, props, key) {
       const material = materials.get((mesh.material as Material).name);
 
-      return mergers!.mesh!(
+      return mergers.mesh!(
         mesh,
         material ? { ...props, material } : props,
         key,
       );
     },
     group(object3d, props, key) {
-      const parts = skinNodes.get(object3d.name) ?? [];
-
       return (
         <group key={key} {...props}>
-          {switchChildren(object3d, skinMergers) ?? props.children}
-          {parts.flatMap((part) =>
-            part.children.map((child) => jsxTree(child, partMergers)),
+          {switchChildren(object3d) ?? props.children}
+          {skins.flatMap((skin) =>
+            (skin.parts.get(object3d.name) ?? []).map((part) =>
+              mergers.primitive ? (
+                mergers.primitive(part, part.uuid)
+              ) : (
+                <primitive key={part.uuid} object={part} />
+              ),
+            ),
           )}
         </group>
       );
