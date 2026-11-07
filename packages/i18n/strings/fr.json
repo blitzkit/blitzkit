@@ -315,14 +315,14 @@
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
           "button": "Trier par",
-          "last_played": "Last played",
+          "last_played": "Dernier joué",
           "least_played": "Least played"
         },
         "table": {
           "index": "#",
           "never": "Never",
           "tank": "Tank",
-          "last_played": "Last played",
+          "last_played": "Dernier joué",
           "battles": "Career battles",
           "unrecorded": "--",
           "wins": "Victoires"
