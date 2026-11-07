@@ -7,6 +7,7 @@
     "record-performance": "bun src/recordPerformance/index.ts",
     "download-client": "bun src/downloadClient/index.ts",
     "download-smart-dlc": "bun src/downloadSmartDLC/index.ts",
+    "download-glossary": "bun src/downloadGlossary/index.ts",
     "vfs": "bun src/vfs/index.ts"
   },
   "dependencies": {
