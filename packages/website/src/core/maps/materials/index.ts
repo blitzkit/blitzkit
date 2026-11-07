@@ -109,7 +109,8 @@ export function convertMaterials(scene: Object3D) {
     const source = object.material as MeshStandardMaterial;
     const extras = source.userData as MapMaterialExtras;
 
-    if (extras.kind === "particleSprite") return;
+    // particle sprites are left for the particle system to draw
+    if (source.userData.particleSprite) return;
 
     if (extras.kind === "collision") {
       object.visible = false;

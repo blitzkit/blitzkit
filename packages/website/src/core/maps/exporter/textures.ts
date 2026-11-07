@@ -4,7 +4,7 @@ import sharp from "sharp";
 import {
   readBaseColor,
   readTexture,
-} from "../../../pages/[...chunk_api]/tanks/[id]/model.glb";
+} from "../../../pages/[...chunk_models_tanks]/[id]/model.glb";
 import { TEXTURE_SLOTS, type TextureRole } from "../extras";
 import type { MapContext } from "./context";
 import { posterAtlas, replacePosters } from "./posters";

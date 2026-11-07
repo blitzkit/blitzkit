@@ -6,8 +6,7 @@ export type MapMaterialKind =
   | "terrain"
   | "grass"
   | "border"
-  | "collision"
-  | "particleSprite";
+  | "collision";
 
 export interface MapMaterialExtras {
   kind: MapMaterialKind;
@@ -56,7 +55,6 @@ export interface MapMaterialExtras {
   baseColorMultiplier?: number;
   visibilityDistance?: number;
   mapBounds?: number[];
-  sprite?: string;
 }
 
 export type TextureSlot =
@@ -108,39 +106,6 @@ export interface MapWind {
   trunkAmplitude: number;
   trunkSpring: number;
   trunkDamping: number;
-}
-
-export interface MapParticleLayer {
-  sprite: string;
-  number: number;
-  numberVariation: number;
-  life: number;
-  lifeVariation: number;
-  velocity: number;
-  velocityVariation: number;
-  size: number[];
-  sizeVariation: number[];
-  sizeOverLife?: number[][];
-  alphaOverLife?: number[][];
-  colorOverLife?: number[][][];
-  angle: number;
-  angleVariation: number;
-  lods: boolean[];
-}
-
-export interface MapParticleEmitter {
-  position: number[];
-  direction: number[];
-  range: number;
-  radius: number;
-  layers: MapParticleLayer[];
-}
-
-export interface MapParticleEffect {
-  position: number[];
-  delay: number;
-  lodDistances?: number[];
-  emitters: MapParticleEmitter[];
 }
 
 export interface MapSceneExtras {

@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { Box3, Mesh, Vector3, type Object3D } from "three";
+import { createParticleSystem } from "../../../../../../core/blitzkit/particles/system";
 import { createAnimations } from "../../../../../../core/maps/animations";
 import { createBatches } from "../../../../../../core/maps/batching";
 import type { MapSceneExtras } from "../../../../../../core/maps/extras";
@@ -11,7 +12,6 @@ import {
   SUN_DIRECTION,
   VEGETATION_COLLISION_TYPE,
 } from "../../../../../../core/maps/materials";
-import { createParticleSystem } from "../../../../../../core/maps/particles";
 import { createReflections } from "../../../../../../core/maps/reflection";
 import { useMapModel } from "../../../../../../hooks/useMapModel";
 import { Maps } from "../../../../../../stores/maps";

@@ -4,7 +4,7 @@ import { times } from "lodash-es";
 import {
   vertexAttributeGLTFName,
   vertexAttributeGltfVectorSizes,
-} from "../../../pages/[...chunk_api]/tanks/[id]/collision.glb";
+} from "../../../pages/[...chunk_models_tanks]/[id]/collision.glb";
 import type { MapMaterialExtras } from "../extras";
 import { createAccessor, type MapContext } from "./context";
 import {
