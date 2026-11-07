@@ -9,6 +9,7 @@ import { skinTree } from "../../../../../../core/blitzkit/skinTree";
 import { controlsEnabledEvent } from "../../../../../../core/controlsEnabled";
 import { useModel } from "../../../../../../hooks/useModel";
 import { useSkin } from "../../../../../../hooks/useSkin";
+import { useSkinAnimation } from "../../../../../../hooks/useSkinAnimation";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
 import { useTankTransform } from "../../../../../../hooks/useTankTransform";
 import { Duel } from "../../../../../../stores/duel";
@@ -36,12 +37,17 @@ export function TankModel() {
   const skins = [skinGltf, attachmentGltf].filter((skin) => skin !== undefined);
 
   useTankTransform(track, turret, turretContainer, gunContainer);
+  useSkinAnimation(skins);
 
   useEffect(() => {
     const emissiveMaterials = new Set<MeshStandardMaterial>();
+    const roots = [
+      gltf.scene,
+      ...skins.flatMap((skin) => [...skin.parts.values()].flat()),
+    ];
 
-    for (const scene of [gltf.scene, ...skins.map((skin) => skin.scene)]) {
-      scene.traverse((object) => {
+    for (const root of roots) {
+      root.traverse((object) => {
         if (
           object instanceof Mesh &&
           object.material instanceof MeshStandardMaterial &&
@@ -57,6 +63,8 @@ export function TankModel() {
       for (const material of emissiveMaterials) {
         material.emissiveIntensity = intensity;
       }
+
+      for (const { particles } of skins) particles.setIntensity(intensity);
     }
 
     function handleTransitionEvent(event: QuicklimeEvent<number>) {
@@ -144,6 +152,15 @@ export function TankModel() {
               />
             );
           },
+          primitive(object, key) {
+            return (
+              <primitive
+                key={key}
+                object={object}
+                onPointerDown={onPointerDown}
+              />
+            );
+          },
         });
       })}
 
@@ -218,6 +235,15 @@ export function TankModel() {
                   onPointerDown={onPointerDown}
                   castShadow
                   receiveShadow
+                />
+              );
+            },
+            primitive(object, key) {
+              return (
+                <primitive
+                  key={key}
+                  object={object}
+                  onPointerDown={onPointerDown}
                 />
               );
             },
@@ -299,6 +325,15 @@ export function TankModel() {
                     onPointerDown={onPointerDown}
                     castShadow
                     receiveShadow
+                  />
+                );
+              },
+              primitive(object, key) {
+                return (
+                  <primitive
+                    key={key}
+                    object={object}
+                    onPointerDown={onPointerDown}
                   />
                 );
               },
