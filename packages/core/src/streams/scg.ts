@@ -1,3 +1,4 @@
+import { times } from 'lodash-es';
 import { ScpgReadStream, VertexAttribute } from './scpg';
 
 interface PolygonGroupRaw {
@@ -21,6 +22,7 @@ type BlitzkitVertex = { attribute: VertexAttribute; value: number[] }[];
 interface BlitzkitPolygonGroup {
   vertices: BlitzkitVertex[];
   indices: number[];
+  primitiveType: PolygonGroupRaw['rhi_primitiveType'];
 }
 
 const vertexAttributesArray = Object.values(VertexAttribute).filter(
@@ -100,7 +102,10 @@ export class ScgReadStream extends ScpgReadStream {
       for (let index = 0; index < polygonGroupRaw.vertexCount; index++) {
         vertices[index] = format.map((attribute) => ({
           attribute,
-          value: verticesStream.vectorN(vertexAttributeVectorSizes[attribute]),
+          value:
+            attribute === VertexAttribute.COLOR
+              ? times(4, () => verticesStream.uint8() / 255)
+              : verticesStream.vectorN(vertexAttributeVectorSizes[attribute]),
         }));
       }
 
@@ -109,6 +114,7 @@ export class ScgReadStream extends ScpgReadStream {
         {
           vertices,
           indices,
+          primitiveType: polygonGroupRaw.rhi_primitiveType,
         },
       );
     });
