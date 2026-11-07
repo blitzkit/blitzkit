@@ -124,9 +124,7 @@ export function CompareRow({
       {stats.length > 1 && (
         <Table.Cell>
           <Flex align="center" justify="center" height="100%">
-            <Text color="gray" wrap="nowrap">
-              {average}
-            </Text>
+            <Text wrap="nowrap">{average}</Text>
           </Flex>
         </Table.Cell>
       )}

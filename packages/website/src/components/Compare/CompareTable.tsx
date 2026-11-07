@@ -79,9 +79,7 @@ export function CompareTable({ stats }: CompareTableProps) {
           {members.length > 1 && (
             <StickyColumnHeaderCell>
               <Flex height="100%" align="end" justify="center">
-                <Text color="gray">
-                  {strings.website.tools.compare.table.average}
-                </Text>
+                <Text>{strings.website.tools.compare.table.average}</Text>
               </Flex>
             </StickyColumnHeaderCell>
           )}
