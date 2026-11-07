@@ -59,6 +59,8 @@ on:
 
 permissions:
   contents: read
+  # pull requests download the client that trusted runs publish
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ inputs.environment || github.ref }}
@@ -90,6 +92,73 @@ env:
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
 
 jobs:
+  # pull requests can't have the secrets that downloading the client takes, so
+  # trusted runs share it with them instead
+  client:
+    name: Publish client
+
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      # to replace the previously published client
+      actions: write
+
+    steps:
+      # unlike the build, this checks out the workflow's own commit, which is
+      # sure to have the download scripts
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          token: ${{ secrets.GH_TOKEN || github.token }}
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Download client
+        run: bun run download-client
+
+      - name: Download SmartDLC
+        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
+
+        run: bun run download-smart-dlc
+
+      - name: Download glossary
+        run: bun run download-glossary
+
+      - name: Upload client
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: client
+          path: |
+            temp/game
+            temp/glossary
+            temp/glossary.json
+          if-no-files-found: error
+          retention-days: 1
+          # the game's files are already compressed
+          compression-level: 0
+
+      - name: Delete older clients
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+
+        run: |
+          IDS=$(gh api --paginate "repos/${{ github.repository }}/actions/artifacts?name=client" \
+            --jq ".artifacts[] | select(.id != $ARTIFACT_ID) | .id")
+
+          for ID in $IDS; do
+            gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$ID"
+          done
+
   build:
     name: Build website
 
@@ -109,7 +178,8 @@ jobs:
         with:
           # the PR's ref, or the manual input, or production (selected when cron)
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: recursive
+          # pull requests can't reach the private submodule, nor do they need it
+          submodules: ${{ github.event_name == 'pull_request' && 'false' || 'recursive' }}
           token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Setup bun
@@ -118,28 +188,84 @@ jobs:
       - name: Setup protoc
         uses: arduino/setup-protoc@v3
         with:
-          repo-token: ${{ secrets.GH_TOKEN }}
+          repo-token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Setup CLIs
         run: |
           sudo apt-get update
           sudo apt-get install -y aria2 libarchive-tools
 
+      # the scripts depend on the private submodule, and the build uses neither
+      - name: Remove private packages
+        if: ${{ github.event_name == 'pull_request' }}
+
+        run: rm -rf packages/closed packages/scripts
+
       - name: Install dependencies
         run: bun install
 
       - name: Download client
+        if: ${{ github.event_name != 'pull_request' }}
+
         run: bun run download-client
 
       - name: Download SmartDLC
-        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
+        if: ${{ github.event_name != 'pull_request' && env.CLIENT_PROVIDER == 'steam' }}
 
         run: bun run download-smart-dlc
+
+      - name: Find published client
+        id: client
+        if: ${{ github.event_name == 'pull_request' }}
+
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+        run: |
+          RUN_IDS=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=client" \
+            --jq '[.artifacts[] | select(.expired | not)] | sort_by(.created_at) | reverse | .[].workflow_run.id')
+          RUN_ID=""
+
+          # any run can upload an artifact by this name, so only the trusted
+          # runs that publish the client are believed
+          for ID in $RUN_IDS; do
+            EVENT=$(gh api "repos/${{ github.repository }}/actions/runs/$ID" --jq .event)
+
+            if [ "$EVENT" = "schedule" ] || [ "$EVENT" = "push" ]; then
+              RUN_ID=$ID
+              break
+            fi
+          done
+
+          if [ -z "$RUN_ID" ]; then
+            echo "::error::No client has been published yet; a scheduled or push run publishes one"
+            exit 1
+          fi
+
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Download published client
+        if: ${{ github.event_name == 'pull_request' }}
+
+        uses: actions/download-artifact@v4
+        with:
+          name: client
+          path: temp
+          run-id: ${{ steps.client.outputs.run-id }}
+          github-token: ${{ github.token }}
 
       - name: Build
         run: bun run --bun build
         env:
           CHUNK: ${{ matrix.chunk }}
+
+          # pull requests have no secrets, so they read the published glossaries
+          # and stand in for the public ids
+          WOTB_GLOSSARY: ${{ github.event_name == 'pull_request' && format('file://{0}/temp/glossary.json', github.workspace) || secrets.WOTB_GLOSSARY }}
+          WOTB_GLOSSARY_DOMAIN: ${{ github.event_name == 'pull_request' && format('file://{0}/temp/glossary', github.workspace) || secrets.WOTB_GLOSSARY_DOMAIN }}
+          WOTB_GLOSSARY_PATH: ${{ github.event_name == 'pull_request' && '.json' || secrets.WOTB_GLOSSARY_PATH }}
+          PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ github.event_name == 'pull_request' && 'pull-request' || secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
+          PUBLIC_WARGAMING_APPLICATION_ID: ${{ github.event_name == 'pull_request' && 'pull-request' || secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
 
       - name: Upload artifact
         id: upload
@@ -147,6 +273,8 @@ jobs:
         with:
           name: chunk-${{ matrix.chunk }}
           path: dist/website
+          # pull requests aren't deployed, so their builds are only kept a day
+          retention-days: ${{ github.event_name == 'pull_request' && 1 || 0 }}
 
       - name: Trigger deployment
 

@@ -11,6 +11,7 @@
     "record-performance": "cd packages/scripts && bun run record-performance",
     "download-client": "cd packages/scripts && bun run download-client",
     "download-smart-dlc": "cd packages/scripts && bun run download-smart-dlc",
+    "download-glossary": "cd packages/scripts && bun run download-glossary",
     "clean-astro": "rm -rf packages/website/.astro packages/website/node_modules/.astro packages/website/node_modules/.vite",
     "vfs": "cd packages/scripts && bun run vfs"
   },
