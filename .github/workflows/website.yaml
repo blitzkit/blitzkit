@@ -89,6 +89,9 @@ env:
   # wargaming
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
 
+  # workflow
+  SHOULD_USE_BLITZKIT_CLOSED: ${{ github.event_name != 'pull_request' }}
+
 jobs:
   build:
     name: Build website
@@ -107,10 +110,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          # the PR's ref, or the manual input, or production (selected when cron)
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: recursive
+          submodules: false
           token: ${{ secrets.GH_TOKEN || github.token }}
+
+      # Future proofing for Reforged: we'll have both closed and open repos, so
+      # we need to handle them here instead of disabling submodules outright
+      - name: Checkout submodules
+        run: |
+          if [ "$SHOULD_USE_BLITZKIT_CLOSED" = "true" ]; then
+            git submodule update --init --recursive --depth=1
+          else
+            git submodule update --init --recursive --depth=1 -- . ':!packages/closed'
+          fi
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
@@ -132,8 +144,7 @@ jobs:
         run: bun run download-client
 
       - name: Download SmartDLC
-        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
-
+        if: ${{ env.CLIENT_PROVIDER == 'steam' && env.SHOULD_USE_BLITZKIT_CLOSED == 'true' }}
         run: bun run download-smart-dlc
 
       - name: Build
