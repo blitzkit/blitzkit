@@ -10,6 +10,7 @@
     "vfs": "bun src/vfs/index.ts"
   },
   "dependencies": {
+    "@blitzkit/closed": "workspace:*",
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@gltf-transform/core": "^4.2.1",
@@ -41,9 +42,6 @@
     "ts-proto": "^2.7.7",
     "unzipit": "^1.4.3",
     "yaml": "^2.8.1"
-  },
-  "optionalDependencies": {
-    "@blitzkit/closed": "workspace:*"
   },
   "type": "module"
 }
