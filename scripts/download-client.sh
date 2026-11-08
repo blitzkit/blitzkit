@@ -1,2 +1,2 @@
 cd packages/scripts
-bun run download-client
+bun src/downloadClient/index.ts

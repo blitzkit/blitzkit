@@ -1,2 +1,2 @@
 cd packages/website
-bun --bun run build
+bun x --bun astro build

@@ -1,2 +1,2 @@
 cd packages/scripts
-bun run discover-ids
+bun src/discoverIds/index.ts

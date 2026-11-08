@@ -65,7 +65,7 @@ Go through the different packages in the `packages` directory and clone their re
 Launching the website is as easy as running the `dev` script.
 
 ```bash
-scripts/dev.sh
+scripts/dev-website.sh
 ```
 
 If you ever make a change to any proto file, make sure to rebuild them.

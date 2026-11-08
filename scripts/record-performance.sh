@@ -1,2 +1,2 @@
 cd packages/scripts
-bun run record-performance
+bun src/recordPerformance/index.ts

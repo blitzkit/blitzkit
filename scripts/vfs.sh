@@ -1,2 +1,2 @@
 cd packages/scripts
-bun run vfs
+bun src/vfs/index.ts
