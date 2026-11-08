@@ -44,16 +44,16 @@ cd blitzkit
 > [!NOTE]
 > There is a closed source submodule under `packages/closed` that you can safely ignore. This sole purpose of this submodule is to provide `dvp.ts`, a proprietary Wargaming game asset tree compression tool. You will not need this at any point.
 
-Then, download the dependencies with Bun.
+Then, grand execution permission to the setup script.
 
 ```bash
-bun install
+chmod +x scripts/setup.sh
 ```
 
-Finally, compile the proto files into TypeScript.
+Finally, run the setup script.
 
 ```bash
-build build-protos
+scripts/setup.sh
 ```
 
 ## Developing: Environment
