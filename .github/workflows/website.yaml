@@ -89,6 +89,9 @@ env:
   # wargaming
   PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
 
+  # workflow
+  SHOULD_USE_BLITZKIT_CLOSED: ${{ github.event_name != 'pull_request' }}
+
 jobs:
   build:
     name: Build website
@@ -107,9 +110,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          # the PR's ref, or the manual input, or production (selected when cron)
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: recursive
+          submodules: ${{ env.SHOULD_USE_BLITZKIT_CLOSED == 'true' && 'recursive' || 'false' }}
           token: ${{ secrets.GH_TOKEN || github.token }}
 
       - name: Setup bun
@@ -132,8 +134,7 @@ jobs:
         run: bun run download-client
 
       - name: Download SmartDLC
-        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
-
+        if: ${{ env.CLIENT_PROVIDER == 'steam' && env.SHOULD_USE_BLITZKIT_CLOSED == 'true' }}
         run: bun run download-smart-dlc
 
       - name: Build
