@@ -6,11 +6,9 @@
     "build-protos": "bun src/protos.ts",
     "record-performance": "bun src/recordPerformance/index.ts",
     "download-client": "bun src/downloadClient/index.ts",
-    "download-smart-dlc": "bun src/downloadSmartDLC/index.ts",
     "vfs": "bun src/vfs/index.ts"
   },
   "dependencies": {
-    "@blitzkit/closed": "workspace:*",
     "@blitzkit/core": "workspace:*",
     "@blitzkit/i18n": "workspace:*",
     "@gltf-transform/core": "^4.2.1",
