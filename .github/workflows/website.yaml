@@ -111,8 +111,18 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: ${{ env.SHOULD_USE_BLITZKIT_CLOSED == 'true' && 'recursive' || 'false' }}
+          submodules: false
           token: ${{ secrets.GH_TOKEN || github.token }}
+
+      # Future proofing for Reforged: we'll have both closed and open repos, so
+      # we need to handle them here instead of disabling submodules outright
+      - name: Checkout submodules
+        run: |
+          if [ "$SHOULD_USE_BLITZKIT_CLOSED" = "true" ]; then
+            git submodule update --init --recursive --depth=1
+          else
+            git submodule update --init --recursive --depth=1 -- . ':!packages/closed'
+          fi
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
