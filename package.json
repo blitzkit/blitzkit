@@ -3,8 +3,6 @@
   "version": "1.33.0",
   "license": "BlitzKit License",
   "private": true,
-  "scripts": { 
-  },
   "type": "module",
   "workspaces": [
     "packages/*"
