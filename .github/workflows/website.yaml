@@ -137,18 +137,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y aria2 libarchive-tools
 
-      - name: Install dependencies
-        run: bun install
+      - name: Set up script
+        run: scripts/setup.sh
 
       - name: Download client
-        run: bun run download-client
+        run: scripts/download-client.sh
 
       - name: Download SmartDLC
         if: ${{ env.CLIENT_PROVIDER == 'steam' && env.SHOULD_USE_BLITZKIT_CLOSED == 'true' }}
-        run: bun run download-smart-dlc
+        run: scripts/download-smart-dlc.sh
 
       - name: Build
-        run: bun run --bun build
+        run: scripts/build-website.sh
         env:
           CHUNK: ${{ matrix.chunk }}
 

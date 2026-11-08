@@ -30,8 +30,8 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: bun install
+      - name: Set up script
+        run: scripts/setup.sh
 
       - name: Setup Git
         run: |
@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Discover IDs
-        run: bun run discover-ids
+        run: scripts/discover-ids.sh
         env:
           PUBLIC_WARGAMING_APPLICATION_ID: ${{ secrets.PUBLIC_WARGAMING_APPLICATION_ID }}
           GH_TOKEN: ${{ secrets.IDS_TOKEN }}
