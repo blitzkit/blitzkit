@@ -26,6 +26,10 @@ export async function downloadWGPKGClient() {
 
   console.log(`Downloading ${urls.length} packages...`);
 
+  await downloadWgParts(urls);
+}
+
+export async function downloadWgParts(urls: string[]) {
   await rm(WGPKG_DIR, { recursive: true, force: true });
   await mkdir(WGPKG_DIR, { recursive: true });
 

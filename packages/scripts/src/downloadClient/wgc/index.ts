@@ -6,6 +6,7 @@ import {
   WGC_METADATA_PROTOCOL_VERSION,
   WGC_PATCHES_CHAIN_PROTOCOL_VERSION,
 } from "../../config/wgcClient";
+import { downloadWgParts } from "../wgpkg";
 import { ClientMetadata, PatchesChain } from "./types";
 
 const parser = new XMLParser();
@@ -52,8 +53,10 @@ export async function downloadWGCClient() {
     .then((response) => response.text())
     .then((text) => parser.parse(text) as Promise<PatchesChain>);
 
-  for (const file of patchesChain.protocol.patches_chain.patch.files.file) {
-    const fileUrl = new URL(file.name, patchesChain.protocol.web_seeds.url);
-    console.log(`${fileUrl}`);
-  }
+  const urls = patchesChain.protocol.patches_chain.patch.files.file.map(
+    (file) =>
+      new URL(file.name, patchesChain.protocol.web_seeds.url).toString(),
+  );
+
+  await downloadWgParts(urls);
 }
