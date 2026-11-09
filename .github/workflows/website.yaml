@@ -43,9 +43,10 @@ on:
 
         type: choice
         required: true
-        default: steam
+        default: wgc
 
         options:
+          - wgc
           - steam
           - zip
           - wgpkg
@@ -68,7 +69,7 @@ env:
   # client
   STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
   STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-  CLIENT_PROVIDER: ${{ inputs.client_provider || 'steam' }}
+  CLIENT_PROVIDER: ${{ inputs.client_provider || 'wgc' }}
   CLIENT_SOURCE: ${{ inputs.client_source || '444200/windows' }}
   CLIENT_DIR: ../../temp/game
 
@@ -137,18 +138,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y aria2 libarchive-tools
 
-      - name: Install dependencies
-        run: bun install
+      - name: Set up script
+        run: scripts/setup.sh
+
+      - name: Lint
+        run: scripts/lint.sh
 
       - name: Download client
-        run: bun run download-client
+        run: scripts/download-client.sh
 
       - name: Download SmartDLC
-        if: ${{ env.CLIENT_PROVIDER == 'steam' && env.SHOULD_USE_BLITZKIT_CLOSED == 'true' }}
-        run: bun run download-smart-dlc
+        if: ${{ env.SHOULD_USE_BLITZKIT_CLOSED == 'true' }}
+        run: scripts/download-smart-dlc.sh
 
       - name: Build
-        run: bun run --bun build
+        run: scripts/build-website.sh
         env:
           CHUNK: ${{ matrix.chunk }}
 
