@@ -305,7 +305,7 @@
       "credits": {
         "name": "Credits",
         "button": "View people",
-        "description": "Contributors of BlitzKit",
+        "description": "Les contributeurs de BlitzKit",
         "seo_description": "BlitzKit is the work of many"
       },
       "playlist": {
@@ -328,7 +328,7 @@
           "wins": "Victoires"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
+          "title": "Ça fait beaucoup de chars !",
           "description": "Êtes-vous sûr de vouloir créer une playlist de {count} chars ? C'est {time} heures de jeu à 50% de taux de victoire !",
           "cancel": "Cancel",
           "proceed": "Proceed"
