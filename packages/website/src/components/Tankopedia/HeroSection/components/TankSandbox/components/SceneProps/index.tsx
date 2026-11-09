@@ -47,10 +47,10 @@ export function SceneProps() {
 
         ${shader.fragmentShader}
       `.replace(
-        "#include <color_fragment>",
+        "#include <dithering_fragment>",
 
         `
-          #include <color_fragment>
+          #include <dithering_fragment>
 
           vec3 scaled = vWorldPosition / size;
           float radius = length(scaled.xz);
@@ -59,7 +59,10 @@ export function SceneProps() {
             discard;
           }
 
-          diffuseColor.a *= (1.0 - radius);
+          float x = 1.0 - radius;
+          float y = x * x;
+
+          gl_FragColor.rgb *= y;
         `,
       );
     },
@@ -78,7 +81,6 @@ export function SceneProps() {
       <meshStandardMaterial
         color={mauveDark.mauve6}
         roughness={1}
-        transparent
         onBeforeCompile={handleBeforeCompile}
       />
     </mesh>
