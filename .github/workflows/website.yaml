@@ -82,11 +82,6 @@ env:
   PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
   PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com
 
-  # blitz
-  WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
-  WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
-  WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
-
   # google
   PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
 
