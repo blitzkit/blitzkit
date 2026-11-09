@@ -1,4 +1,9 @@
-import { assertSecret, type BlitzGlossary } from "@blitzkit/core";
+import {
+  WOTB_GLOSSARY_DOMAIN,
+  WOTB_GLOSSARY_PATH,
+  type BlitzGlossary,
+} from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
 import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
@@ -30,7 +35,9 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     });
   }
 
-  const glossary = await fetch(assertSecret(import.meta.env.WOTB_GLOSSARY))
+  const glossary = await fetch(
+    `${WOTB_GLOSSARY_DOMAIN}/${locales.default}/${WOTB_GLOSSARY_PATH}`,
+  )
     .then((response) => response.json() as Promise<BlitzGlossary>)
     .then((glossary) =>
       Object.values(glossary)
