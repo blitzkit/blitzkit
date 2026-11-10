@@ -311,7 +311,7 @@
       "playlist": {
         "reset": "Restablecer",
         "shuffle": "Shuffle",
-        "remove": "Remove played",
+        "remove": "Eliminar jugados",
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
           "button": "Ordenar por",
@@ -334,8 +334,8 @@
           "proceed": "Proceed"
         },
         "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
+        "name": "Lista de reproducción",
+        "description": "Lista de reproducción del generador de tanques",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
         "button": "Generate",
         "pool_size": "{count} possible tanks"
