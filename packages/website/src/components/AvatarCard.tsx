@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { useIntersection } from "../hooks/useIntersection";
 import { useLocale } from "../hooks/useLocale";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
-import { Flex } from "./Flex";
 import { Skeleton } from "./Skeleton";
 import { Text } from "./Text";
 
@@ -16,7 +15,9 @@ type GalleryCardProps = MaybeSkeletonComponentProps<{
 export function AvatarCard(props: GalleryCardProps) {
   const src = alias(
     "api",
-    `/gallery/avatars/${!props.skeleton && `${props.avatar.id}${props.avatar.extension}`}`,
+    `/gallery/avatars/${
+      !props.skeleton && `${props.avatar.id}${props.avatar.extension}`
+    }`
   );
   const card = useRef<HTMLDivElement>(null!);
   const { unwrap } = useLocale();
@@ -26,12 +27,15 @@ export function AvatarCard(props: GalleryCardProps) {
   });
 
   const content = (
-    <Flex
-      column
-      align="center"
-      gap="1"
+    <div
       ref={card}
-      style={{ cursor: "pointer" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "var(--space-1)",
+        cursor: "pointer",
+      }}
     >
       {props.skeleton && (
         <>
@@ -58,7 +62,7 @@ export function AvatarCard(props: GalleryCardProps) {
           </Text>
         </>
       )}
-    </Flex>
+    </div>
   );
 
   if (props.skeleton) return content;
@@ -71,7 +75,15 @@ export function AvatarCard(props: GalleryCardProps) {
         onOpenAutoFocus={(event) => event.preventDefault()}
         width="fit-content"
       >
-        <Flex position="absolute" top="3" right="3" gap="3">
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            top: "var(--space-3)",
+            right: "var(--space-3)",
+            gap: "var(--space-3)",
+          }}
+        >
           <Link download href={src}>
             <IconButton variant="ghost">
               <DownloadIcon />
@@ -83,17 +95,30 @@ export function AvatarCard(props: GalleryCardProps) {
               <Cross1Icon />
             </IconButton>
           </Dialog.Close>
-        </Flex>
+        </div>
 
-        <Flex px="4" justify="center" mt="3">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingInline: "var(--space-4)",
+            marginTop: "var(--space-3)",
+          }}
+        >
           <img src={src} alt={unwrap(props.avatar.name!)} />
-        </Flex>
+        </div>
 
-        <Flex justify="center" mt="4">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "var(--space-4)",
+          }}
+        >
           <Dialog.Title align="center" style={{ maxWidth: "10rem" }}>
             {unwrap(props.avatar.name!)}
           </Dialog.Title>
-        </Flex>
+        </div>
       </Dialog.Content>
     </Dialog.Root>
   );

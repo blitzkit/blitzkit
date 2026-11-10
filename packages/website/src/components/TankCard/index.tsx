@@ -8,7 +8,6 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { ClassIcon } from "../ClassIcon";
-import { Flex } from "../Flex";
 import { LinkI18nWrapper } from "../LinkI18nWrapper";
 import { TankCardSkeleton } from "../TankCardSkeleton";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
@@ -40,16 +39,19 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
     props.tank.type === TankType.TANK_TYPE_COLLECTOR
       ? "blue"
       : props.tank.type === TankType.TANK_TYPE_PREMIUM
-        ? "amber"
-        : "gray";
+      ? "amber"
+      : "gray";
   const lowContrast = props.tank.type !== TankType.TANK_TYPE_RESEARCHABLE;
 
   const content = (
-    <Flex
+    <div
       className={styles.wrapper}
       data-compact={props.compact}
-      column
-      gap="3"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-3)",
+      }}
       onClick={() => {
         props.onTankSelect?.(props.tank);
         TankopediaPersistent.mutate((draft) => {
@@ -59,13 +61,14 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
         });
       }}
     >
-      <Flex
-        justify="end"
+      <div
         className={styles["image-wrapper"]}
         style={{
+          display: "flex",
+          justifyContent: "flex-end",
           backgroundImage: `url(${alias(
             "api",
-            `/flags/scratched/${props.tank.nation}.webp`,
+            `/flags/scratched/${props.tank.nation}.webp`
           )})`,
         }}
       >
@@ -73,7 +76,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
           alt={name}
           src={alias("api", `/tanks/${props.tank.id}/icons/big.webp`)}
         />
-      </Flex>
+      </div>
 
       <Text className={styles.name} color={color} lowContrast={lowContrast}>
         <ClassIcon class={props.tank.class} className={styles.icon} />
@@ -85,7 +88,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
           <div className={styles.discriminator}>{props.discriminator}</div>
         </Text>
       )}
-    </Flex>
+    </div>
   );
 
   if (provideLink) {

@@ -8,7 +8,6 @@ import { useLocale } from "../../hooks/useLocale";
 import { Gallery } from "../../stores/gallery";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { AvatarCard } from "../AvatarCard";
-import { Flex } from "../Flex";
 import { InlineSkeleton } from "../InlineSkeleton";
 import { Text } from "../Text";
 
@@ -36,7 +35,7 @@ export function AvatarsList({ skeleton }: MaybeSkeletonComponentProps) {
         .go(search, gallery.avatars, {
           keys: [
             ...locales.supported.map(
-              (supported) => `name.locales.${supported.locale}`,
+              (supported) => `name.locales.${supported.locale}`
             ),
             "id",
           ],
@@ -57,7 +56,14 @@ export function AvatarsList({ skeleton }: MaybeSkeletonComponentProps) {
         )}
       </Text>
 
-      <Flex wrap="wrap" gap="4" justify="center">
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "var(--space-4)",
+          justifyContent: "center",
+        }}
+      >
         {!skeleton &&
           filtered
             .slice(0, loadedCards)
@@ -73,9 +79,9 @@ export function AvatarsList({ skeleton }: MaybeSkeletonComponentProps) {
               skeleton
               onIntersection={() => setLoadedCards((state) => state + 2)}
             />
-          ),
+          )
         )}
-      </Flex>
+      </div>
     </>
   );
 }

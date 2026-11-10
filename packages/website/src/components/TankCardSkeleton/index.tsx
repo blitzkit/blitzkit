@@ -1,4 +1,3 @@
-import { Flex } from "../Flex";
 import { InlineSkeleton } from "../InlineSkeleton";
 import { Skeleton } from "../Skeleton";
 import styles from "./index.module.css";
@@ -9,9 +8,17 @@ type TankCardProps = {
 
 export const TankCardSkeleton = ({ compact }: TankCardProps) => {
   return (
-    <Flex className={styles.wrapper} data-compact={compact} column gap="3">
+    <div
+      className={styles.wrapper}
+      data-compact={compact}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-3)",
+      }}
+    >
       <Skeleton className={styles["image-wrapper"]} />
       <InlineSkeleton className={styles.name} />
-    </Flex>
+    </div>
   );
 };

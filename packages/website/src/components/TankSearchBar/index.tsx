@@ -9,7 +9,6 @@ import {
 import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
-import { Flex } from "../Flex";
 import { TankSearchSort } from "../TankSearchSort";
 import { TextField } from "../TextField";
 
@@ -57,11 +56,11 @@ export function TankSearchBar({
         window.location.href = `/tanks/${topResult.slug}`;
       }
     },
-    [topResult],
+    [topResult]
   );
 
   return (
-    <Flex gap="3">
+    <div style={{ display: "flex", gap: "var(--space-3)" }}>
       <TextField
         disabled={skeleton}
         defaultValue={search ?? undefined}
@@ -75,6 +74,6 @@ export function TankSearchBar({
       </TextField>
 
       <TankSearchSort />
-    </Flex>
+    </div>
   );
 }

@@ -4,7 +4,6 @@ import { api } from "../api/dynamic";
 import type { Tool } from "../constants/tools";
 import { Logo } from "../icons/Logo";
 import { Back } from "./Back";
-import { Flex } from "./Flex";
 import { Heading } from "./Heading";
 import { IconButton } from "./IconButton";
 
@@ -112,7 +111,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 
     <div class="centered">
       <Heading weight="bold" size="2">
-        <Flex align="center" gap="4">
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)" }}>
           <Back client:load>
             <IconButton variant="soft" color="gray" highContrast>
               <ArrowLeftIcon className="return" />
@@ -120,7 +119,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
           </Back>
 
           {toolStrings.name}
-        </Flex>
+        </div>
       </Heading>
 
       <Logo className="logo" />

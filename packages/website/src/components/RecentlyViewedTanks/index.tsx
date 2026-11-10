@@ -5,7 +5,6 @@ import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankSort } from "../../stores/tankopediaSort";
-import { Flex } from "../Flex";
 import { TankCard } from "../TankCard";
 import { TankCardWrapper } from "../TankCardWrapper";
 import { Text } from "../Text";
@@ -17,17 +16,17 @@ export function RecentlyViewedTanks() {
   const filters = TankFilters.use();
   // non-reactive because it is a little weird that it updates instantly even before the page loads
   const recentlyViewed = TankopediaPersistent.state.recentlyViewed.filter(
-    (id) => id in tankDefinitions.tanks,
+    (id) => id in tankDefinitions.tanks
   );
   const hasFilters = useMemo(
     () =>
       Object.entries(filters).some(([key, value]) => {
         return !isEqual(
           value,
-          TankFilters.initial[key as keyof typeof TankFilters.initial],
+          TankFilters.initial[key as keyof typeof TankFilters.initial]
         );
       }),
-    [filters],
+    [filters]
   );
 
   const strings = useStrings();
@@ -38,7 +37,14 @@ export function RecentlyViewedTanks() {
   }
 
   return (
-    <Flex column gap="4" className={styles.recent}>
+    <div
+      className={styles.recent}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space-4)",
+      }}
+    >
       <Text color="gray" lowContrast>
         {strings.website.common.tank_search.recent}
       </Text>
@@ -48,6 +54,6 @@ export function RecentlyViewedTanks() {
           <TankCard compact tank={tankDefinitions.tanks[id]} key={id} />
         ))}
       </TankCardWrapper>
-    </Flex>
+    </div>
   );
 }

@@ -7,7 +7,6 @@ import { CompareEphemeral } from "../../stores/compareEphemeral";
 import { InsertionMarker } from "../Compare/IntersectionMarker";
 import { insertionMarkers } from "../Compare/IntersectionMarker/constants";
 import { TankControl } from "../Compare/TankControl";
-import { Flex } from "../Flex";
 import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -58,7 +57,7 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
         };
       });
       const closest = distances.reduce((a, b) =>
-        a.distance < b.distance ? a : b,
+        a.distance < b.distance ? a : b
       );
 
       dropIndex = closest.index;
@@ -106,16 +105,25 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
 
   return (
     <StickyColumnHeaderCell width="0">
-      <Flex column align="center" justify="between" gap="2">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "var(--space-2)",
+        }}
+      >
         <TankControl index={index} key={tank.id} slug={tank.slug} />
 
-        <Flex
+        <div
           ref={draggable}
-          column
-          align="center"
-          justify="between"
-          gap="2"
           style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "var(--space-2)",
             userSelect: "none",
             touchAction: "none",
             cursor: "grab",
@@ -135,8 +143,8 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
           <Text className={styles.name} nowrap overflow="ellipsis">
             {unwrap(tank.name!)}
           </Text>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
       <InsertionMarker index={index + 1} />
     </StickyColumnHeaderCell>
   );

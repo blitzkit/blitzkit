@@ -1,6 +1,5 @@
 import { useLocale } from "../../hooks/useLocale";
 import { TankFilters } from "../../stores/tankFilters";
-import { Flex } from "../Flex";
 import { Link } from "../Link";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -13,7 +12,14 @@ export function TankSearchNoResults({ type = "filters" }: NoResultsProps) {
   const { strings } = useLocale();
 
   return (
-    <Flex className={styles["no-results"]} align="center" justify="center">
+    <div
+      className={styles["no-results"]}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Text lowContrast>
         {strings.website.common.tank_search.no_tanks_found.body}{" "}
         <Link
@@ -28,6 +34,6 @@ export function TankSearchNoResults({ type = "filters" }: NoResultsProps) {
             : strings.website.common.tank_search.no_tanks_found.search_again}
         </Link>
       </Text>
-    </Flex>
+    </div>
   );
 }
