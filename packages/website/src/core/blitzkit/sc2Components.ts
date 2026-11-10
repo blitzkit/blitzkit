@@ -8,7 +8,7 @@ import {
   type Hierarchy,
   type PolygonGroup,
   type SC2,
-  type Scg,
+  type ScgPolygonGroups,
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import {
@@ -20,6 +20,12 @@ import {
   type Skin,
 } from "@gltf-transform/core";
 import { sortBy, times } from "lodash-es";
+import {
+  sc2ToGltfQuaternion,
+  sc2ToGltfScale,
+  sc2ToGltfVector,
+  sc2ToGltfVectors,
+} from "./sc2Axes";
 import type { Motion } from "./skinAnimations/motion";
 import {
   bindSocket,
@@ -53,22 +59,6 @@ export const vertexAttributeGltfVectorSizes = {
 } as const;
 
 type RenderComponent = ComponentOf<"RenderComponent">;
-
-/**
- * SC2 is Z-up (and right handed); glTF is Y-up. (x, y, z) -> (x, z, -y).
- */
-export function sc2ToGltfVector<T extends [number, number, number]>(
-  vector: T,
-): [number, number, number] {
-  return [vector[0], vector[2], -vector[1]];
-}
-
-/** Same conversion for a quaternion's (x, y, z, w). */
-export function sc2ToGltfQuaternion(
-  q: [number, number, number, number],
-): [number, number, number, number] {
-  return [q[0], q[2], -q[1], q[3]];
-}
 
 const SPATIAL_ATTRIBUTES = new Set<VertexAttribute>([
   VertexAttribute.VERTEX,
@@ -108,15 +98,7 @@ export function createAttributeAccessors(
     const vertexSize = vertexAttributeGltfVectorSizes[attribute];
     const array = new Float32Array(value.flat());
 
-    if (SPATIAL_ATTRIBUTES.has(attribute)) {
-      for (let i = 0; i < array.length; i += 3) {
-        const y = array[i + 1];
-        const z = array[i + 2];
-
-        array[i + 1] = z;
-        array[i + 2] = -y;
-      }
-    }
+    if (SPATIAL_ATTRIBUTES.has(attribute)) sc2ToGltfVectors(array);
 
     accessors.set(
       name,
@@ -178,7 +160,7 @@ export type Sc2RenderMode =
 export interface Sc2ComponentHandlerOptions {
   document: Document;
   buffer: Buffer;
-  scg: Scg;
+  scg: ScgPolygonGroups;
   render: Sc2RenderMode;
   /** enables skeletons, motion clips and joint bindings */
   skeleton?: {
@@ -240,7 +222,7 @@ export class Sc2ComponentHandler {
     TransformComponent: (component, { node }) => {
       node.setTranslation(sc2ToGltfVector(component["tc.localTranslation"]));
       node.setRotation(sc2ToGltfQuaternion(component["tc.localRotation"]));
-      node.setScale(component["tc.localScale"]);
+      node.setScale(sc2ToGltfScale(component["tc.localScale"]));
     },
     StateSwitcherComponent: (component, { hierarchy, node }) => {
       const garage = this.options.skeleton?.garage;
@@ -262,13 +244,7 @@ export class Sc2ComponentHandler {
         (other): other is ComponentOf<"MotionComponent"> =>
           other["comp.typename"] === "MotionComponent",
       );
-      const created = createSkeleton(
-        document,
-        buffer,
-        node,
-        component,
-        motion,
-      );
+      const created = createSkeleton(document, buffer, node, component, motion);
 
       this.skeletons.set(hierarchy, created);
 
@@ -341,7 +317,8 @@ export class Sc2ComponentHandler {
   private dispatch(component: Component, context: HierarchyContext) {
     const name = component["comp.typename"];
     // the table is exhaustive per name, but indexing by a union loses that
-    const handler = this.handlers[name] as AnyComponentHandler | null | undefined;
+    const handler = this.handlers[name] as
+      AnyComponentHandler | null | undefined;
 
     if (handler === undefined) {
       if (this.options.strict) {
@@ -472,22 +449,19 @@ export class Sc2ComponentHandler {
     );
 
     hardJointIndices.forEach((hardJointIndex) => {
-      const primitive = document
-        .createPrimitive()
-        .setIndices(
-          document
-            .createAccessor()
-            .setType("SCALAR")
-            .setArray(
-              new Uint16Array(
-                polygonGroup.indices.filter(
-                  (index) =>
-                    vertexHardJointIndices.get(index) === hardJointIndex,
-                ),
+      const primitive = document.createPrimitive().setIndices(
+        document
+          .createAccessor()
+          .setType("SCALAR")
+          .setArray(
+            new Uint16Array(
+              polygonGroup.indices.filter(
+                (index) => vertexHardJointIndices.get(index) === hardJointIndex,
               ),
-            )
-            .setBuffer(buffer),
-        );
+            ),
+          )
+          .setBuffer(buffer),
+      );
 
       accessors.forEach((accessor, name) =>
         primitive.setAttribute(name, accessor),
@@ -496,7 +470,9 @@ export class Sc2ComponentHandler {
       node.addChild(
         document
           .createNode(`${hierarchy.name}_armor_${hardJointIndex}`)
-          .setMesh(document.createMesh(batch["##name"]).addPrimitive(primitive)),
+          .setMesh(
+            document.createMesh(batch["##name"]).addPrimitive(primitive),
+          ),
       );
     });
   }

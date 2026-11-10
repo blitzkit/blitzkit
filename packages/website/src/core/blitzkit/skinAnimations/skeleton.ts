@@ -15,6 +15,13 @@ import {
 import { isEqual, times } from "lodash-es";
 import { dirname, normalize } from "path/posix";
 import { Matrix4 } from "three";
+import {
+  sc2ToGltfMatrix,
+  sc2ToGltfQuaternion,
+  sc2ToGltfQuaternions,
+  sc2ToGltfVector,
+  sc2ToGltfVectors,
+} from "../sc2Axes";
 import { MotionChannel, MotionReadStream, type Motion } from "./motion";
 
 export interface Skeleton {
@@ -79,9 +86,15 @@ export function createSkeleton(
     const scale: vec3 = [1, 1, 1];
     const track = motion?.tracks.get(joint["joint.uid"]);
     const trackScale = track?.get(MotionChannel.Scale)?.values[0];
+    const trackTranslation = track
+      ?.get(MotionChannel.Translation)
+      ?.values.slice(0, 3);
+    const trackRotation = track
+      ?.get(MotionChannel.Rotation)
+      ?.values.slice(0, 4);
 
     MathUtils.decompose(
-      joint["joint.bindPose"].flat() as mat4,
+      sc2ToGltfMatrix(joint["joint.bindPose"].flat()),
       translation,
       rotation,
       scale,
@@ -91,12 +104,10 @@ export function createSkeleton(
     return document
       .createNode(joint["joint.name"])
       .setTranslation(
-        (track?.get(MotionChannel.Translation)?.values.slice(0, 3) as vec3) ??
-          translation,
+        trackTranslation ? sc2ToGltfVector(trackTranslation) : translation,
       )
       .setRotation(
-        (track?.get(MotionChannel.Rotation)?.values.slice(0, 4) as vec4) ??
-          rotation,
+        trackRotation ? sc2ToGltfQuaternion(trackRotation) : rotation,
       )
       .setScale(
         trackScale === undefined ? scale : [trackScale, trackScale, trackScale],
@@ -119,7 +130,9 @@ export function createSkeleton(
         buffer,
         "MAT4",
         new Float32Array(
-          joints.flatMap((joint) => joint["joint.invBindPose"].flat()),
+          joints.flatMap((joint) =>
+            sc2ToGltfMatrix(joint["joint.invBindPose"].flat()),
+          ),
         ),
       ),
     );
@@ -153,10 +166,13 @@ export function createMotionClip(
 
     for (const [type, { times, values }] of track) {
       const keyTimes = times.map((time) => time / playbackRate);
+      // scale keys are uniform, so they need no axis conversion
       const keyValues =
         type === MotionChannel.Scale
           ? values.flatMap((value) => [value, value, value])
-          : [...values];
+          : type === MotionChannel.Rotation
+            ? sc2ToGltfQuaternions([...values])
+            : sc2ToGltfVectors([...values]);
 
       // the game loops over the clip's duration, which can outlast its keys
       if (keyTimes[keyTimes.length - 1] < duration) {
