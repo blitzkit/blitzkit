@@ -50,6 +50,31 @@
       "reset": "Reset"
     },
 
+    "shot_card": {
+      "element": {
+        "primary": "Primary",
+        "spaced": "Spaced",
+        "external": "External",
+        "gap": "Gap",
+        "gun": "Gun",
+        "track": "Tracks"
+      },
+
+      "status": {
+        "penetration": "{damage}hp penetration",
+        "blocked": "Blocked",
+        "ricochet": "Ricochet",
+        "splash": "{damage}hp splash"
+      },
+
+      "stats": {
+        "thickness_and_angle": "{thickness}mm {angle}°",
+        "nominal": "{thickness}mm nominal",
+        "ricochet_loss": "{loss}% penetration",
+        "ricochet_divider": "Ricochet (-25% penetration)"
+      }
+    },
+
     "tabs": {
       "model": "Model",
       "dynamic_armor": "Dynamic armor",

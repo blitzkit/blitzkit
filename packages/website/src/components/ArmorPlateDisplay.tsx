@@ -15,7 +15,7 @@ import { LocaleProvider, useLocale } from "../hooks/useLocale";
 import { useStrings } from "../hooks/useStrings";
 import { App } from "../stores/app";
 import { Tankopedia } from "../stores/tankopedia";
-import { layerTypeNames } from "./ShotDisplayCard";
+import { layerTypeNames } from "./ShotCard";
 import { ArmorType } from "./SpacedArmorScene";
 
 export function ArmorPlateDisplay() {
@@ -102,11 +102,11 @@ export function ArmorPlateDisplay() {
 
                         Tankopedia.mutate((draft) => {
                           draft.highlightArmor = undefined;
-                          const { protagonist } = Duel.state;
-                          const tank = draft.model;
-                          const turret = tank.turrets[protagonist.turret.id];
-                          const gun = turret.guns[protagonist.gun.id];
-                          const track = tank.tracks[protagonist.track.id];
+                          const { protagonist } = draft;
+                          const tank = protagonist.model;
+                          const turret = tank.turrets[protagonist.turret];
+                          const gun = turret.guns[protagonist.gun];
+                          const track = tank.tracks[protagonist.track];
 
                           if (highlightArmor.name.startsWith("hull_")) {
                             tank.armor!.thickness[index] = thickness;
@@ -155,18 +155,17 @@ export function ArmorPlateDisplay() {
 
                         draft.highlightArmor = undefined;
                         const initialState = Tankopedia.initial;
-                        const { protagonist } = Duel.state;
-                        const tank = draft.model;
-                        const initialTank = initialState.model;
-                        const turret = tank.turrets[protagonist.turret.id];
+                        const { protagonist } = draft;
+                        const tank = protagonist.model;
+                        const initialTank = initialState.protagonist.model;
+                        const turret = tank.turrets[protagonist.turret];
                         const initialTurret =
-                          initialTank.turrets[protagonist.turret.id];
-                        const gun = turret.guns[protagonist.gun.id];
-                        const initialGun =
-                          initialTurret.guns[protagonist.gun.id];
-                        const track = tank.tracks[protagonist.track.id];
+                          initialTank.turrets[protagonist.turret];
+                        const gun = turret.guns[protagonist.gun];
+                        const initialGun = initialTurret.guns[protagonist.gun];
+                        const track = tank.tracks[protagonist.track];
                         const initialTrack =
-                          initialTank.tracks[protagonist.track.id];
+                          initialTank.tracks[protagonist.track];
 
                         if (highlightArmor.name.startsWith("hull_")) {
                           tank.armor!.thickness[index] =

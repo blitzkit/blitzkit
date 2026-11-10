@@ -28,6 +28,7 @@ const { id, locale } = Astro.props;
   <ColorScale color="jade" />
   <ColorScale color="jade" alpha />
   <ColorScale color="cyan" alpha />
+  <ColorScale color="green" />
 
   <Page {id} {locale} client:only="react">
     <Page slot="fallback" {id} {locale} skeleton />

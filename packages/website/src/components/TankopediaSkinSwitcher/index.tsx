@@ -47,8 +47,6 @@ export function TankopediaSkinSwitcher() {
     hasSkinAnimations(tank.id, loadedSkin) ||
     hasSkinAnimations(tank.id, loadedAttachment);
 
-  console.log("hasAnimations", hasAnimations);
-
   return (
     <div className={styles["skin-switcher"]} data-visible={isVisible}>
       {groups.map((group, index) => (

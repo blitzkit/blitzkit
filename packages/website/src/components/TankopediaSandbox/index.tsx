@@ -17,7 +17,7 @@ import { CanvasControl } from "../CanvasControl";
 import { InitialCameraAligner } from "../InitialCameraAligner";
 import { Lighting, transitionEvent } from "../Lighting";
 import { SceneProps } from "../SceneProps";
-import { ShotDisplay } from "../ShotDisplay";
+import { ShotCard } from "../ShotCard";
 import { SmartCanvas } from "../SmartCanvas";
 import { TankDynamicArmor } from "../TankDynamicArmor";
 import { TankModel } from "../TankModel";
@@ -75,7 +75,7 @@ export function TankopediaSandbox({
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -89,7 +89,7 @@ export function TankopediaSandbox({
             0,
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
-            hasImprovedVerticalStabilizer,
+            hasImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -103,7 +103,7 @@ export function TankopediaSandbox({
             0,
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
-            hasImprovedVerticalStabilizer,
+            hasImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -131,7 +131,7 @@ export function TankopediaSandbox({
       modelTransformEvent.last!.yaw,
       gunModelDefinition.pitch!,
       turretModelDefinition.yaw,
-      hasImprovedVerticalStabilizer,
+      hasImprovedVerticalStabilizer
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });
@@ -191,7 +191,7 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
   const { hasPbr } = useModel(tank.id);
 
   const hideTankModelUnderArmor = TankopediaPersistent.use(
-    (state) => state.hideTankModelUnderArmor,
+    (state) => state.hideTankModelUnderArmor
   );
 
   return (
@@ -208,7 +208,7 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
         <TankStaticArmor thicknessRange={thicknessRange} />
       )}
 
-      <ShotDisplay />
+      <ShotCard />
       <ArmorPlateDisplay />
       <CanvasAutoClear />
 

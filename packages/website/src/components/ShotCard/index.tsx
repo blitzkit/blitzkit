@@ -1,5 +1,5 @@
 import { J_HAT, K_HAT } from "@blitzkit/core";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { literals } from "@blitzkit/i18n/src/literals";
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { clamp } from "lodash-es";
@@ -16,37 +16,236 @@ import {
   Path,
   Quaternion,
 } from "three";
-import { isHalloween } from "../core/blitzkit/isHalloween";
-import { LocaleProvider, useLocale } from "../hooks/useLocale";
+import { radToDeg } from "three/src/math/MathUtils.js";
+import { isHalloween } from "../../core/blitzkit/isHalloween";
+import { LocaleProvider, useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import {
   Tankopedia,
+  type Shot,
+  type ShotLayer,
   type ShotLayerNonExternal,
   type ShotStatus,
-} from "../stores/tankopedia";
-import { ShotDisplayCard } from "./ShotDisplayCard";
+} from "../../stores/tankopedia";
+import { classNames } from "../../ui/classNames";
+import { ArmorType } from "../SpacedArmorScene";
+import { Text, type TextProps } from "../Text";
+import styles from "./index.module.css";
 
-export const shotStatusColors: Record<
-  ShotStatus,
-  ComponentProps<typeof Text>["color"]
-> = {
+export const shotStatusColors: Record<ShotStatus, TextProps["color"]> = {
   blocked: "red",
   penetration: "green",
   ricochet: "yellow",
   splash: "orange",
 };
 
+export const layerTypeNames = {
+  [ArmorType.Primary]: "primary",
+  [ArmorType.Spaced]: "spaced",
+  [ArmorType.External]: "external",
+  null: "gap",
+} as const;
+
+interface LayerEntryProps {
+  layerIndex?: string;
+  color: TextProps["color"];
+  layerName: string;
+  layer: ShotLayer;
+  angle?: number;
+}
+
+function LayerEntry({
+  layerIndex,
+  color,
+  layerName,
+  layer,
+  angle,
+}: LayerEntryProps) {
+  const locale = useLocale();
+  const strings = useStrings();
+  const { stats } = strings.tanks.shot_card;
+  const format = (value: number) => Math.round(value).toLocaleString(locale);
+  const mm = (value: number) =>
+    literals(strings.common.units.mm, { value: format(value) });
+
+  return (
+    <div className={styles.row}>
+      <div className={styles.cell}>
+        <Text size="minor" lowContrast>
+          {layerIndex}
+        </Text>
+      </div>
+
+      <div className={styles.cell}>
+        <Text color={color}>{layerName}</Text>
+      </div>
+
+      <div className={styles.cell}>
+        <Text color={color}>
+          {layer.type === null && mm(layer.distance * 1000)}
+          {layer.type === ArmorType.External && mm(layer.thickness)}
+          {(layer.type === ArmorType.Primary ||
+            layer.type === ArmorType.Spaced) &&
+            (angle === undefined
+              ? mm(layer.thicknessAngled)
+              : literals(stats.thickness_and_angle, {
+                  thickness: format(layer.thicknessAngled),
+                  angle: radToDeg(angle).toFixed(0),
+                }))}
+        </Text>
+      </div>
+
+      <div className={styles.cell} data-align="right">
+        {layer.type === null && (
+          <Text lowContrast>
+            {literals(stats.ricochet_loss, {
+              loss: Math.max(-100, -50 * layer.distance).toFixed(0),
+            })}
+          </Text>
+        )}
+
+        {(layer.type === ArmorType.Primary ||
+          layer.type === ArmorType.Spaced) && (
+          <Text lowContrast>
+            {literals(stats.nominal, { thickness: format(layer.thickness) })}
+          </Text>
+        )}
+      </div>
+    </div>
+  );
+}
+
+interface LayersProps {
+  layers: ShotLayer[];
+  status: Shot["in"]["status"];
+  containsGaps: boolean;
+  /** Offset applied to displayed layer numbers (for post-ricochet layers). */
+  offset?: number;
+}
+
+function Layers({ layers, status, containsGaps, offset = 0 }: LayersProps) {
+  const strings = useStrings();
+
+  return (
+    <div className={styles.layers}>
+      {layers.map((layer, index) => {
+        const shiftedIndex = index + offset;
+
+        return (
+          <LayerEntry
+            key={index}
+            layer={layer}
+            layerName={
+              strings.tanks.shot_card.element[
+                layer.type === ArmorType.External
+                  ? layer.variant
+                  : layerTypeNames[`${layer.type}`]
+              ]
+            }
+            layerIndex={
+              layer.type === null
+                ? undefined
+                : `${(containsGaps ? shiftedIndex / 2 : shiftedIndex) + 1}.`
+            }
+            color={
+              status === "splash"
+                ? shotStatusColors.splash
+                : shotStatusColors[layer.status]
+            }
+            angle={
+              layer.type === ArmorType.Primary ||
+              layer.type === ArmorType.Spaced
+                ? layer.angle
+                : undefined
+            }
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+interface ShotCardHtmlProps extends ComponentProps<"div"> {
+  shot: Shot;
+}
+
+function ShotCardHtml({ shot, className, ...props }: ShotCardHtmlProps) {
+  const locale = useLocale();
+  const strings = useStrings();
+
+  if (!shot) return null;
+
+  const { status, stats } = strings.tanks.shot_card;
+  const damage = Math.round(shot.damage).toLocaleString(locale);
+  const hasOutLayers = shot.out !== undefined && shot.out.layers.length > 0;
+  const penetrationChance = shot.penetrationChance !== undefined && (
+    <Text lowContrast weight="bold">
+      {literals(strings.common.units.percentage, {
+        value: (shot.penetrationChance * 100).toFixed(0),
+      })}
+    </Text>
+  );
+
+  return (
+    <div className={classNames(styles.card, className)} {...props}>
+      <div className={styles.section}>
+        <div className={styles.header}>
+          <Text color={shotStatusColors[shot.in.status]} weight="bold">
+            {literals(status[shot.in.status], { damage })}
+          </Text>
+
+          {!hasOutLayers && penetrationChance}
+        </div>
+
+        <Layers
+          layers={shot.in.layers}
+          status={shot.in.status}
+          containsGaps={shot.containsGaps}
+        />
+      </div>
+
+      {shot.out && hasOutLayers && (
+        <>
+          <div className={styles.divider}>
+            <Text size="minor" lowContrast>
+              {stats.ricochet_divider}
+            </Text>
+          </div>
+
+          <div className={styles.section}>
+            <div className={styles.header}>
+              <Text color={shotStatusColors[shot.out.status]} weight="bold">
+                {literals(status[shot.out.status], { damage })}
+              </Text>
+
+              {penetrationChance}
+            </div>
+
+            <Layers
+              layers={shot.out.layers}
+              status={shot.out.status}
+              containsGaps={shot.containsGaps}
+              offset={shot.in.layers.length}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 const SURFACE_POINT_SIZE = 12;
-export const SHOT_DISPLAY_LENGTH_INFINITY = 4;
+const SHOT_DISPLAY_LENGTH_INFINITY = 4;
 const TRACER_THICK = 1 / 32;
 const TRACER_THIN = TRACER_THICK / 2;
 
-export function ShotDisplay() {
+export function ShotCard() {
   const shot = Tankopedia.use((state) => state.shot);
   const inTracer = useRef<Mesh>(null);
   const outTracer = useRef<Mesh>(null);
   const splashRadiusWrapper = useRef<Group>(null);
   const splashRadiusMaterial = useRef<MeshBasicMaterial>(null);
-  const { locale } = useLocale();
+  const locale = useLocale();
 
   useEffect(() => {
     if (shot?.splashRadius !== undefined) {
@@ -140,20 +339,11 @@ export function ShotDisplay() {
       )}
 
       <Html position={inLast.point} center>
-        <Box
-          style={{
-            pointerEvents: "none",
-            transform: `translateY(${tracerGoingUp ? 50 : -50}%)`,
-          }}
-          mb={tracerGoingUp ? "0" : "9"}
-          pb={tracerGoingUp ? "0" : "4"}
-          mt={tracerGoingUp ? "9" : "0"}
-          pt={tracerGoingUp ? "4" : "0"}
-        >
+        <div className={styles.cardWrapper} data-going-up={tracerGoingUp}>
           <LocaleProvider locale={locale}>
-            <ShotDisplayCard shot={shot} />
+            <ShotCardHtml shot={shot} />
           </LocaleProvider>
-        </Box>
+        </div>
       </Html>
 
       {[...shot.in.layers, ...(shot.out?.layers ?? [])].map((layer, index) => {
@@ -173,21 +363,15 @@ export function ShotDisplay() {
               transform: "translateY(-50%)",
             }}
           >
-            <Flex
+            <div
+              className={styles.point}
               style={{
+                width: SURFACE_POINT_SIZE,
+                height: SURFACE_POINT_SIZE,
                 marginLeft: -SURFACE_POINT_SIZE / 2,
+                backgroundColor: shotStatusColor,
               }}
-            >
-              <div
-                style={{
-                  width: SURFACE_POINT_SIZE,
-                  height: SURFACE_POINT_SIZE,
-                  backgroundColor: shotStatusColor,
-                  opacity: 0.75,
-                  borderRadius: SURFACE_POINT_SIZE / 2,
-                }}
-              />
-            </Flex>
+            />
           </Html>
         );
       })}

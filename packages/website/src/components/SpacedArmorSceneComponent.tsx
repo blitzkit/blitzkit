@@ -15,6 +15,10 @@ import {
 import { degToRad } from "three/src/math/MathUtils.js";
 import { defaultEqualizer } from "../config/equalizer";
 import { jsxTree } from "../core/blitzkit/jsxTree";
+import {
+  SPALL_LINER_HE_DAMAGE_DELTA,
+  SPALL_LINER_PROVISION_ID,
+} from "../core/blitzkit/spallLiner";
 import { discardClippingPlane } from "../core/three/discardClippingPlane";
 import { DuelModule, getDuel } from "../hooks/useDuel";
 import { hasEquipment } from "../hooks/useEquipment";
@@ -240,8 +244,8 @@ export function SpacedArmorSceneComponent({
               shell.type === ShellType.SHELL_TYPE_HE
                 ? "blocked"
                 : blocked
-                  ? "blocked"
-                  : "penetration",
+                ? "blocked"
+                : "penetration",
             variant: layer.variant,
           });
         } else {
@@ -292,8 +296,8 @@ export function SpacedArmorSceneComponent({
                 layer.type !== ArmorType.Primary
                   ? "blocked"
                   : blocked
-                    ? "blocked"
-                    : "penetration",
+                  ? "blocked"
+                  : "penetration",
               angle,
             });
           }
@@ -415,7 +419,7 @@ export function SpacedArmorSceneComponent({
 
       shot.damage *= antagonistEqualizer.damage;
 
-      const hasSpallLiner = Duel.state.protagonist.provisions.includes(
+      const hasSpallLiner = Tankopedia.state.protagonist.provisions.includes(
         SPALL_LINER_PROVISION_ID,
       );
       if (hasSpallLiner && shell.type === ShellType.SHELL_TYPE_HE) {

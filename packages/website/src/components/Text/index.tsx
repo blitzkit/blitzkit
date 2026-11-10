@@ -23,10 +23,18 @@ export function Text({
 }: TextProps) {
   const scale = color === "gray" && lowContrast ? "white" : color;
   const isBW = color === "black" || color === "white";
-  let power: string | number = isBW ? "a12" : 12;
+  let power = color === "gray" ? "12" : "11";
 
   if (lowContrast) {
-    power = color === "gray" ? "a9" : isBW ? "a11" : 11;
+    power = "5";
+
+    if (color === "gray") {
+      power = "a9";
+    }
+
+    if (isBW) {
+      power = "a11";
+    }
   }
 
   return (
@@ -36,9 +44,7 @@ export function Text({
       data-size={size}
       data-weight={weight}
       data-align={align === "left" ? undefined : align}
-      style={{
-        color: `var(--${scale}-${power})`,
-      }}
+      style={{ color: `var(--${scale}-${power})` }}
       {...props}
     />
   );
