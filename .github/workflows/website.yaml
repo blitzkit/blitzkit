@@ -107,18 +107,11 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: false
+          # the action clones submodules with its token; a manual
+          # `git submodule update` has no credentials for the private
+          # packages/closed, which pull requests can't access anyway
+          submodules: ${{ env.HAS_ROOT_REPO_CONTEXT == 'true' && 'recursive' || 'false' }}
           token: ${{ secrets.GH_TOKEN || github.token }}
-
-      # Future proofing for Reforged: we'll have both closed and open repos, so
-      # we need to handle them here instead of disabling submodules outright
-      - name: Checkout submodules
-        run: |
-          if [ "$HAS_ROOT_REPO_CONTEXT" = "true" ]; then
-            git submodule update --init --recursive --depth=1
-          else
-            git submodule update --init --recursive --depth=1 -- . ':!packages/closed'
-          fi
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
@@ -166,10 +159,11 @@ jobs:
         # - is by manual and is on anything: triggering to anything
         if: >-
           ${{
-            env.HAS_ROOT_REPO_CONTEXT == 'true'
-            || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
-            || (github.event_name == 'push' && github.ref == 'refs/heads/production')
-            || (github.event_name == 'workflow_dispatch')
+            env.HAS_ROOT_REPO_CONTEXT == 'true' && (
+              (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+              || (github.event_name == 'push' && github.ref == 'refs/heads/production')
+              || (github.event_name == 'workflow_dispatch')
+            )
           }}
 
         env:
