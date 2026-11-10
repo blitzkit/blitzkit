@@ -1,4 +1,4 @@
-import { VertexAttribute, type Component } from "@blitzkit/core";
+import { VertexAttribute, type ComponentOf } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import {
   MathUtils,
@@ -17,14 +17,12 @@ import { dirname, normalize } from "path/posix";
 import { Matrix4 } from "three";
 import { MotionChannel, MotionReadStream, type Motion } from "./motion";
 
-type SkeletonComponent = Extract<
-  Component,
-  { "comp.typename": "SkeletonComponent" }
->;
-type MotionComponent = Extract<
-  Component,
-  { "comp.typename": "MotionComponent" }
->;
+export interface Skeleton {
+  skin: Skin;
+  /** joint uid -> joint node */
+  joints: Map<string, Node>;
+}
+
 type AccessorType = "SCALAR" | "VEC3" | "VEC4" | "MAT4";
 
 const JOINT_ROOT = 0xffffff;
@@ -50,7 +48,7 @@ function createAccessor(
 export async function loadMotion(
   vfs: AbstractVFS,
   path: string,
-  component: MotionComponent,
+  component: ComponentOf<"MotionComponent">,
 ) {
   const file = await vfs.file(
     normalize(`Data/3d/${dirname(path)}/${component["motion.filepath"]}`),
@@ -68,9 +66,9 @@ export function createSkeleton(
   document: Document,
   buffer: Buffer,
   node: Node,
-  skeleton: SkeletonComponent,
+  skeleton: ComponentOf<"SkeletonComponent">,
   motion: Motion | undefined,
-) {
+): Skeleton {
   const joints = times(
     skeleton.jointsCount,
     (index) => skeleton.joints[index.toString().padStart(4, "0")],
@@ -133,7 +131,7 @@ export function createSkeleton(
     joints: new Map(
       joints.map((joint, index) => [joint["joint.uid"], jointNodes[index]]),
     ),
-  };
+  } satisfies Skeleton;
 }
 
 export function createMotionClip(
@@ -142,7 +140,7 @@ export function createMotionClip(
   clip: string,
   joints: Map<string, Node>,
   motion: Motion,
-  component: MotionComponent,
+  component: ComponentOf<"MotionComponent">,
 ) {
   const animation = document.createAnimation(clip);
   const playbackRate = component["motion.playbackRate"];

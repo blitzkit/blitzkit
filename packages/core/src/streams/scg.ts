@@ -16,12 +16,15 @@ interface PolygonGroupRaw {
   vertices: ArrayBuffer;
 }
 
-type BlitzkitVertex = { attribute: VertexAttribute; value: number[] }[];
+export type Vertex = { attribute: VertexAttribute; value: number[] }[];
 
-interface BlitzkitPolygonGroup {
-  vertices: BlitzkitVertex[];
+export interface PolygonGroup {
+  vertices: Vertex[];
   indices: number[];
 }
+
+/** polygon group id -> polygon group */
+export type ScgPolygonGroups = Map<bigint, PolygonGroup>;
 
 const vertexAttributesArray = Object.values(VertexAttribute).filter(
   (value) => typeof value === "number",
@@ -63,7 +66,7 @@ export class ScgReadStream extends ScpgReadStream {
   scg() {
     const header = this.header();
     const polygonGroupsRaw: PolygonGroupRaw[] = [];
-    const polygonGroups = new Map<bigint, BlitzkitPolygonGroup>();
+    const polygonGroups = new Map<bigint, PolygonGroup>();
 
     for (let index = 0; index < header.nodeCount; index++) {
       const polygonGroupRaw = this.ka() as PolygonGroupRaw;
@@ -83,7 +86,7 @@ export class ScgReadStream extends ScpgReadStream {
       }
 
       const verticesStream = new ScpgReadStream(polygonGroupRaw.vertices);
-      const vertices: BlitzkitVertex[] = [];
+      const vertices: Vertex[] = [];
       const { format, stride } = ScgReadStream.parseVertexFormat(
         polygonGroupRaw.vertexFormat,
       );
@@ -110,7 +113,7 @@ export class ScgReadStream extends ScpgReadStream {
       );
     });
 
-    return polygonGroups;
+    return polygonGroups satisfies ScgPolygonGroups;
   }
 
   static parseVertexFormat(formatInt: number) {

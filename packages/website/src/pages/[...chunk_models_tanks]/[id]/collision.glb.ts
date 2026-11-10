@@ -3,13 +3,12 @@ import {
   Sc2ReadStream,
   ScgReadStream,
   toUniqueId,
-  VertexAttribute,
-  vertexAttributeVectorSizes,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
-import { Accessor, Document, Node, NodeIO, Scene } from "@gltf-transform/core";
+import { Document, Node, NodeIO, Scene } from "@gltf-transform/core";
 import type { APIContext } from "astro";
+import { Sc2ComponentHandler } from "../../../core/blitzkit/sc2Components";
 import { vfs } from "../../../core/blitzkit/vfs";
 
 export { getStaticPaths } from "./_index";
@@ -54,110 +53,28 @@ async function extractArmor(vfs: AbstractVFS, fileName: string) {
   const document = new Document();
   const scene = document.createScene();
   const buffer = document.createBuffer();
+  const handler = new Sc2ComponentHandler({
+    document,
+    buffer,
+    scg,
+    render: { kind: "collision" },
+    strict: true,
+  });
 
   parseHierarchies<Scene | Node>(
     sc2["#hierarchy"],
     scene,
     (hierarchy, components, parent) => {
-      components.forEach((component) => {
-        switch (component["comp.typename"]) {
-          case "TransformComponent":
-            break;
+      /**
+       * Consumers (nameToArmorId and friends) expect a flat list of
+       * `<hierarchy>_armor_<n>` nodes under the scene, so the hierarchy node
+       * is only a scratch holder: its armor children are hoisted out of it
+       * and it is never attached.
+       */
+      const holder = document.createNode(hierarchy.name);
 
-          case "RenderComponent": {
-            const batch = component["rc.renderObj"]["ro.batches"]["0000"];
-            const polygonGroup = scg.get(batch["rb.datasource"]);
-
-            if (!polygonGroup) {
-              console.warn(
-                `Missing polygon group ${batch["rb.datasource"]} (${hierarchy.name}); skipping...`,
-              );
-
-              break;
-            }
-
-            const hardJointIndices = new Set<number>();
-            const vertexHardJointIndices = new Map<number, number>();
-            const attributes = new Map<VertexAttribute, number[][]>();
-
-            polygonGroup.vertices.forEach((vertex, index) => {
-              vertex.forEach(({ attribute, value }) => {
-                if (!attributes.has(attribute)) {
-                  attributes.set(attribute, []);
-                }
-
-                attributes.get(attribute)!.push(value);
-
-                if (attribute === VertexAttribute.HARD_JOINTINDEX) {
-                  hardJointIndices.add(value[0]);
-                  vertexHardJointIndices.set(index, value[0]);
-                }
-              });
-            });
-
-            if (attributes.has(VertexAttribute.TANGENT)) {
-              attributes.set(
-                VertexAttribute.TANGENT,
-                attributes
-                  .get(VertexAttribute.TANGENT)!
-                  .map((tangent) => [...tangent, 1]),
-              );
-            }
-
-            const accessors = new Map<string, Accessor>();
-
-            attributes.forEach((value, attribute) => {
-              const name = vertexAttributeGLTFName[attribute];
-              if (!name || accessors.has(name)) return;
-              const vertexSize = vertexAttributeGltfVectorSizes[attribute];
-              const accessor = document
-                .createAccessor(name)
-                .setType(vertexSize === 1 ? "SCALAR" : `VEC${vertexSize}`)
-                .setArray(new Float32Array(value.flat()))
-                .setBuffer(buffer);
-
-              accessors.set(name, accessor);
-            });
-
-            hardJointIndices.forEach((hardJointIndex) => {
-              const node = document.createNode(
-                `${hierarchy.name}_armor_${hardJointIndex}`,
-              );
-              const mesh = document.createMesh(batch["##name"]);
-              const indicesAccessor = document
-                .createAccessor()
-                .setType("SCALAR")
-                .setArray(
-                  new Uint16Array(
-                    polygonGroup.indices.filter(
-                      (index) =>
-                        vertexHardJointIndices.get(index) === hardJointIndex,
-                    ),
-                  ),
-                )
-                .setBuffer(buffer);
-              const primitive = document
-                .createPrimitive()
-                .setIndices(indicesAccessor);
-
-              accessors.forEach((accessor, name) => {
-                primitive.setAttribute(name, accessor);
-              });
-
-              mesh.addPrimitive(primitive);
-              node.setMesh(mesh);
-              parent.addChild(node);
-            });
-
-            break;
-          }
-
-          default:
-            throw new TypeError(
-              `Unhandled component type: ${component["comp.typename"]}`,
-            );
-        }
-      });
+      handler.handle(hierarchy, components, holder);
+      holder.listChildren().forEach((armor) => scene.addChild(armor));
 
       return parent;
     },
@@ -165,17 +82,3 @@ async function extractArmor(vfs: AbstractVFS, fileName: string) {
 
   return document;
 }
-
-export const vertexAttributeGLTFName: Partial<Record<VertexAttribute, string>> =
-  {
-    [VertexAttribute.VERTEX]: "POSITION",
-    [VertexAttribute.NORMAL]: "NORMAL",
-    [VertexAttribute.TEXCOORD0]: "TEXCOORD_0",
-    [VertexAttribute.TEXCOORD1]: "TEXCOORD_1",
-    [VertexAttribute.TEXCOORD2]: "TEXCOORD_2",
-    [VertexAttribute.TEXCOORD3]: "TEXCOORD_3",
-  };
-export const vertexAttributeGltfVectorSizes = {
-  ...vertexAttributeVectorSizes,
-  [VertexAttribute.TANGENT]: 4,
-} as const;
