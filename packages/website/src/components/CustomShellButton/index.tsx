@@ -53,6 +53,7 @@ function NumberField({ value, suffix, onValueChange }: NumberFieldProps) {
       value={text}
       onFocus={(event) => (event.target as HTMLInputElement).select?.()}
       onKeyDown={handleKeyDown}
+      autoWidth
       onChange={(event) => {
         setText(event.target.value);
 
