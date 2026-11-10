@@ -100,6 +100,7 @@ interface Tankopedia {
   disturbed: boolean;
   revealed: boolean;
   showControls: boolean;
+  animate: boolean;
 
   protagonist: TankState;
   antagonist: TankState;
@@ -131,6 +132,7 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
     disturbed: false,
     revealed: false,
     showControls: false,
+    animate: true,
 
     protagonist: createTankState(tank),
     antagonist: createTankState(tank),

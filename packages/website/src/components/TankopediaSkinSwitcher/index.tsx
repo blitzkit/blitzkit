@@ -1,8 +1,10 @@
 import { alias } from "@blitzkit/core";
+import { PauseIcon, PlayIcon } from "@radix-ui/react-icons";
 import { uniqBy } from "lodash-es";
 import { api } from "../../api/dynamic";
 import { SKIN_NUMBER } from "../../constants/skinNumber";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { hasSkinAnimations } from "../../hooks/useSkin";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
@@ -20,6 +22,11 @@ export function TankopediaSkinSwitcher() {
   const skin = Tankopedia.use((state) => state.loaders.skin.requested);
   const showControls = Tankopedia.use((state) => state.showControls);
   const display = Tankopedia.use((state) => state.loaders.display.loaded);
+  const loadedSkin = Tankopedia.use((state) => state.loaders.skin.loaded);
+  const loadedAttachment = Tankopedia.use(
+    (state) => state.loaders.attachment.loaded,
+  );
+  const playing = Tankopedia.use((state) => state.animate);
 
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
@@ -36,6 +43,11 @@ export function TankopediaSkinSwitcher() {
   ].filter((group) => group.length > 0);
 
   const isVisible = showControls && display === TankopediaDisplay.Model;
+  const hasAnimations =
+    hasSkinAnimations(tank.id, loadedSkin) ||
+    hasSkinAnimations(tank.id, loadedAttachment);
+
+  console.log("hasAnimations", hasAnimations);
 
   return (
     <div className={styles["skin-switcher"]} data-visible={isVisible}>
@@ -80,6 +92,26 @@ export function TankopediaSkinSwitcher() {
           })}
         </div>
       ))}
+
+      {hasAnimations && (
+        <Tooltip
+          tooltip={playing ? "Pause animations" : "Play animations"}
+          side="left"
+        >
+          <IconButton
+            color="gray"
+            variant="soft"
+            size="major"
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.animate = !draft.animate;
+              });
+            }}
+          >
+            {playing ? <PauseIcon /> : <PlayIcon />}
+          </IconButton>
+        </Tooltip>
+      )}
     </div>
   );
 }

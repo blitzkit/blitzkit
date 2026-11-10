@@ -79,6 +79,14 @@ function skinPath(id: number, skin: number) {
   return alias("models_legendary", `/${id}/skins/${skin}.glb`);
 }
 
+/** whether an already loaded skin of this tank has animations */
+export function hasSkinAnimations(id: number, skin: number | undefined) {
+  return (
+    skin !== undefined &&
+    loadedSkins.get(skinPath(id, skin))?.mixer !== undefined
+  );
+}
+
 // attachments load the same way as camouflages and can be shown with one
 export function useSkin(id: number, loader: "skin" | "attachment" = "skin") {
   const requested = Tankopedia.use((state) => state.loaders[loader].requested);
