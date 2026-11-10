@@ -40,12 +40,20 @@
   },
 
   "tanks": {
+    "antagonist_control": {
+      "calibrated_shells": "Calibrated shells",
+      "enhanced_armor": "Enhanced armor",
+      "equalize": "Equalize"
+    },
+
     "custom_shell": {
+      "title": "Custom shell",
       "type": "Type",
       "caliber": "Caliber",
       "penetration": "Penetration",
       "normalization": "Normalization",
       "ricochet": "Ricochet",
+      "explosion_radius": "Explosion radius",
       "exit": "Exit",
       "reset": "Reset"
     },

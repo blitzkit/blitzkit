@@ -127,7 +127,7 @@ export function TankopediaAntagonistControl({
       </div>
 
       <div className={styles.group}>
-        <Tooltip tooltip="Calibrated Shells" side="left">
+        <Tooltip tooltip={strings.tanks.antagonist_control.calibrated_shells} side="left">
           <IconButton
             parentListChild="vertical"
             color={hasCalibratedShells ? undefined : "gray"}
@@ -147,13 +147,13 @@ export function TankopediaAntagonistControl({
             }}
           >
             <img
-              alt="Calibrated Shells"
+              alt={strings.tanks.antagonist_control.calibrated_shells}
               src={alias("api", "/icons/equipment/103.webp")}
             />
           </IconButton>
         </Tooltip>
 
-        <Tooltip tooltip="Enhanced Armor" side="left">
+        <Tooltip tooltip={strings.tanks.antagonist_control.enhanced_armor} side="left">
           <IconButton
             parentListChild="vertical"
             color={hasEnhancedArmor ? undefined : "gray"}
@@ -173,14 +173,14 @@ export function TankopediaAntagonistControl({
             }}
           >
             <img
-              alt="Enhanced Armor"
+              alt={strings.tanks.antagonist_control.enhanced_armor}
               src={alias("api", "/icons/equipment/110.webp")}
             />
           </IconButton>
         </Tooltip>
       </div>
 
-      <Tooltip tooltip="Equalize" side="left">
+      <Tooltip tooltip={strings.tanks.antagonist_control.equalize} side="left">
         <IconButton
           color={equalize ? undefined : "gray"}
           variant={equalize ? "solid" : "soft"}

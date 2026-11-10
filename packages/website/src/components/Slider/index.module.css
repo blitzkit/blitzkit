@@ -28,8 +28,8 @@
 
 .Thumb {
   display: block;
-  width: var(--space-5);
-  height: var(--space-5);
+  width: var(--space-4);
+  height: var(--space-4);
 
   border-radius: var(--max-size);
   background-color: var(--gray-12);

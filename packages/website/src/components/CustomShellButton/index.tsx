@@ -12,6 +12,7 @@ import { Select } from "../Select";
 import { Slider } from "../Slider";
 import { Text } from "../Text";
 import { TextField } from "../TextField";
+import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
 interface NumberFieldProps {
@@ -90,17 +91,19 @@ export function CustomShellButton() {
         });
       }}
     >
-      <Popover.Trigger asChild>
-        <IconButton
-          listChild="vertical"
-          color={customShell ? undefined : "gray"}
-          variant={customShell ? "solid" : "soft"}
-          highContrast={customShell !== undefined}
-          size="major"
-        >
-          <img alt="custom shell" src="/assets/images/icons/custom-shell.png" />
-        </IconButton>
-      </Popover.Trigger>
+      <Tooltip tooltip={strings.tanks.custom_shell.title} side="left">
+        <Popover.Trigger asChild>
+          <IconButton
+            listChild="vertical"
+            color={customShell ? undefined : "gray"}
+            variant={customShell ? "solid" : "soft"}
+            highContrast={customShell !== undefined}
+            size="major"
+          >
+            <img alt="custom shell" src="/assets/images/icons/custom-shell.png" />
+          </IconButton>
+        </Popover.Trigger>
+      </Tooltip>
 
       <Popover.Portal>
         <Popover.Content side="left" align="center">
@@ -265,7 +268,7 @@ export function CustomShellButton() {
 
                 {customShell.type === ShellType.SHELL_TYPE_HE && (
                   <div className={styles.row}>
-                    <Text>Explosion radius</Text>
+                    <Text>{strings.tanks.custom_shell.explosion_radius}</Text>
                     <NumberField
                       value={customShell.explosion_radius ?? 0}
                       suffix="m"
