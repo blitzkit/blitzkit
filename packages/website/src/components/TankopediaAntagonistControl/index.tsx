@@ -1,6 +1,5 @@
 import { alias, romanize, uniqueGuns } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { Popover } from "radix-ui";
 import { useMemo } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
@@ -9,10 +8,13 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
 import type { ComputedCharacteristics } from "../../types/characteristics";
+import { CustomShellButton } from "../CustomShellButton";
 import { EqualIcon } from "../EqualIcon";
 import { IconButton } from "../IconButton";
-import { CustomShellButton } from "../TankopediaOptions/components/CustomShellButton";
+
+import { Discriminator } from "../Discriminator";
 import { Text } from "../Text";
+import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
 interface TankopediaAntagonistControlProps {
@@ -25,14 +27,15 @@ export function TankopediaAntagonistControl({
   const strings = useStrings();
   const unwrap = useUnwrapper();
 
-  const requestedDisplay = Tankopedia.use((state) => state.requestedDisplay);
+  const showControls = Tankopedia.use((state) => state.showControls);
+  const display = Tankopedia.use((state) => state.loaders.display.loaded);
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined,
   );
   const equalize = Tankopedia.use((state) => state.environment.equalize);
 
-  const hasCalibratedShells = useEquipment("protagonist", 103);
-  const hasEnhancedArmor = useEquipment("protagonist", 110);
+  const hasCalibratedShells = useEquipment("antagonist", 103);
+  const hasEnhancedArmor = useEquipment("antagonist", 110);
 
   const tank = useDuel("antagonist", DuelModule.Tank);
   const gun = useDuel("antagonist", DuelModule.Gun);
@@ -43,7 +46,7 @@ export function TankopediaAntagonistControl({
     [tank.turrets],
   );
 
-  const isVisible = requestedDisplay === TankopediaDisplay.DynamicArmor;
+  const isVisible = showControls && display === TankopediaDisplay.DynamicArmor;
 
   return (
     <div className={styles["antagonist-control"]} data-visible={isVisible}>
@@ -56,166 +59,143 @@ export function TankopediaAntagonistControl({
       </Text>
 
       {antagonistUniqueGuns.length > 1 && (
-        <Popover.Root>
-          <Popover.Trigger>
-            <IconButton
-              radius="full"
-              variant="soft"
-              color="gray"
-              size={{ initial: "2", sm: "3" }}
-              style={{ position: "relative" }}
-            >
-              <Text
-                size="1"
-                color="gray"
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                }}
-                mr="2"
-                mb="1"
-              >
-                {romanize(gun.tier)}
-              </Text>
+        <div className={styles.group}>
+          {[...antagonistUniqueGuns].reverse().map((entry) => {
+            const selected = entry.gun.id === gun.id;
+            const name = unwrap(entry.gun.name!);
 
-              <img
-                alt="Antagonist Gun"
-                src={alias("api", "/icons/modules/gun.webp")}
-                style={{
-                  width: "65%",
-                  height: "65%",
-                  objectFit: "contain",
-                }}
-              />
-            </IconButton>
-          </Popover.Trigger>
+            return (
+              <Tooltip key={entry.gun.id} tooltip={name} side="left">
+                <IconButton
+                  className={styles["gun-button"]}
+                  parentListChild="vertical"
+                  color={selected ? undefined : "gray"}
+                  variant={selected ? "solid" : "soft"}
+                  highContrast={selected}
+                  size="major"
+                  onClick={() => {
+                    Tankopedia.mutate((draft) => {
+                      draft.antagonist.turret = entry.turret.id;
+                      draft.antagonist.gun = entry.gun.id;
+                      draft.antagonist.shell = entry.gun.shells[0].id;
+                      draft.shot = undefined;
+                      draft.customShell = undefined;
+                    });
+                  }}
+                >
+                  <img alt={name} src={alias("api", "/icons/modules/gun.webp")} />
 
-          <Popover.Content side="left" align="center">
-            <div>
-              {[...antagonistUniqueGuns].reverse().map(({ gun, turret }) => (
-                <IconButton key={gun.id}>
-                  <img src={alias("api", "/icons/modules/gun.webp")} />
+                  <Discriminator>{romanize(entry.gun.tier)}</Discriminator>
                 </IconButton>
-                // <ModuleButton
-                //   module="gun"
-                //   key={gun.id}
-                //   onClick={() => {
-                //     Tankopedia.mutate((draft) => {
-                //       draft.antagonist.turret = turret.id;
-                //       draft.antagonist.gun = gun.id;
-                //       draft.antagonist.shell = gun.shells[0].id;
-                //     });
-                //   }}
-                //   selected={gun.id === antagonistGun.id}
-                //   discriminator={romanize(gun.tier)}
-                //   secondaryDiscriminator={
-                //     <Text style={{ fontSize: "0.75em" }}>
-                //       {literals(strings.common.units.mm, {
-                //         value: gun.shells[0].caliber.toFixed(0),
-                //       })}
-                //     </Text>
-                //   }
-                // />
-              ))}
-            </div>
-          </Popover.Content>
-        </Popover.Root>
+              </Tooltip>
+            );
+          })}
+        </div>
       )}
 
-      <div>
-        {gun.shells.map((thisShell) => (
-          <IconButton
-            key={thisShell.id}
-            selected={thisShell.id === shell.id && !hasCustomShell}
-            alt={unwrap(thisShell.name!)}
-            src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
-            onClick={() => {
-              Tankopedia.mutate((draft) => {
-                draft.antagonist.shell = thisShell.id;
-                draft.shot = undefined;
-                draft.customShell = undefined;
-              });
-            }}
-          />
-        ))}
+      <div className={styles.group}>
+        {gun.shells.map((thisShell) => {
+          const selected = thisShell.id === shell.id && !hasCustomShell;
+          const name = unwrap(thisShell.name!);
+
+          return (
+            <Tooltip key={thisShell.id} tooltip={name} side="left">
+              <IconButton
+                parentListChild="vertical"
+                color={selected ? undefined : "gray"}
+                variant={selected ? "solid" : "soft"}
+                highContrast={selected}
+                size="major"
+                onClick={() => {
+                  Tankopedia.mutate((draft) => {
+                    draft.antagonist.shell = thisShell.id;
+                    draft.shot = undefined;
+                    draft.customShell = undefined;
+                  });
+                }}
+              >
+                <img
+                  alt={name}
+                  src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
+                />
+              </IconButton>
+            </Tooltip>
+          );
+        })}
+
         <CustomShellButton />
       </div>
 
-      <div
-        direction="column"
-        style={{
-          pointerEvents: "auto",
-          borderRadius: "var(--radius-full)",
-        }}
-        overflow="hidden"
-      >
-        <IconButton
-          color={hasCalibratedShells ? undefined : "gray"}
-          variant="soft"
-          size={{ initial: "2", sm: "3" }}
-          radius="none"
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.shot = undefined;
+      <div className={styles.group}>
+        <Tooltip tooltip="Calibrated Shells" side="left">
+          <IconButton
+            parentListChild="vertical"
+            color={hasCalibratedShells ? undefined : "gray"}
+            variant={hasCalibratedShells ? "solid" : "soft"}
+            highContrast={hasCalibratedShells}
+            size="major"
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.shot = undefined;
 
-              if (hasCalibratedShells) {
-                delete draft.protagonist.equipment[0];
-              } else {
-                draft.antagonist.equipment[0] = 1;
-              }
-            });
-          }}
-        >
-          <img
-            src={alias("api", "/icons/equipment/103.webp")}
-            style={{
-              width: "50%",
-              height: "50%",
+                if (hasCalibratedShells) {
+                  delete draft.antagonist.equipment[0];
+                } else {
+                  draft.antagonist.equipment[0] = 1;
+                }
+              });
             }}
-          />
-        </IconButton>
-        <IconButton
-          color={hasEnhancedArmor ? undefined : "gray"}
-          variant="soft"
-          size={{ initial: "2", sm: "3" }}
-          radius="none"
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              if (hasEnhancedArmor) {
-                delete draft.protagonist.equipment[4];
-              } else {
-                draft.antagonist.equipment[4] = 0;
-              }
+          >
+            <img
+              alt="Calibrated Shells"
+              src={alias("api", "/icons/equipment/103.webp")}
+            />
+          </IconButton>
+        </Tooltip>
 
-              draft.shot = undefined;
-            });
-          }}
-        >
-          <img
-            alt="Enhanced Armor"
-            src={alias("api", "/icons/equipment/110.webp")}
-            style={{
-              width: "50%",
-              height: "50%",
+        <Tooltip tooltip="Enhanced Armor" side="left">
+          <IconButton
+            parentListChild="vertical"
+            color={hasEnhancedArmor ? undefined : "gray"}
+            variant={hasEnhancedArmor ? "solid" : "soft"}
+            highContrast={hasEnhancedArmor}
+            size="major"
+            onClick={() => {
+              Tankopedia.mutate((draft) => {
+                draft.shot = undefined;
+
+                if (hasEnhancedArmor) {
+                  delete draft.antagonist.equipment[4];
+                } else {
+                  draft.antagonist.equipment[4] = 0;
+                }
+              });
             }}
-          />
-        </IconButton>
+          >
+            <img
+              alt="Enhanced Armor"
+              src={alias("api", "/icons/equipment/110.webp")}
+            />
+          </IconButton>
+        </Tooltip>
       </div>
 
-      <IconButton
-        variant="soft"
-        size={{ initial: "2", sm: "3" }}
-        color={equalize ? undefined : "gray"}
-        onClick={() => {
-          Tankopedia.mutate((draft) => {
-            draft.environment.equalize = !draft.environment.equalize;
-            draft.shot = undefined;
-          });
-        }}
-      >
-        <EqualIcon />
-      </IconButton>
+      <Tooltip tooltip="Equalize" side="left">
+        <IconButton
+          color={equalize ? undefined : "gray"}
+          variant={equalize ? "solid" : "soft"}
+          highContrast={equalize}
+          size="major"
+          onClick={() => {
+            Tankopedia.mutate((draft) => {
+              draft.environment.equalize = !draft.environment.equalize;
+              draft.shot = undefined;
+            });
+          }}
+        >
+          <EqualIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }

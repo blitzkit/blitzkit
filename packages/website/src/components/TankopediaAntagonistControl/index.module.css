@@ -1,4 +1,6 @@
 .antagonist-control {
+  pointer-events: auto;
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -16,4 +18,13 @@
   &[data-visible="true"] {
     transform: translate(0, -50%);
   }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+.gun-button {
+  position: relative;
 }

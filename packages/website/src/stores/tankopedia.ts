@@ -1,5 +1,5 @@
 import { createDefaultEnvironment, type TankEnvironment } from "@blitzkit/core";
-import type { TankDefinition } from "@blitzkit/protos";
+import type { ShellDefinition, TankDefinition } from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
 import type { Vector3 } from "three";
 import { api } from "../api/dynamic";
@@ -121,7 +121,7 @@ interface Tankopedia {
   // editStatic: boolean;
 
   // xpMultiplier: (typeof XP_MULTIPLIERS)[number];
-  // customShell?: ShellDefinition;
+  customShell?: ShellDefinition;
   // statSearch?: string;
 }
 
