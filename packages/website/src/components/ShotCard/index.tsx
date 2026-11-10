@@ -28,6 +28,7 @@ import {
   type ShotStatus,
 } from "../../stores/tankopedia";
 import { classNames } from "../../ui/classNames";
+import { Card } from "../Card";
 import { ArmorType } from "../SpacedArmorScene";
 import { Text, type TextProps } from "../Text";
 import styles from "./index.module.css";
@@ -187,7 +188,7 @@ function ShotCardHtml({ shot, className, ...props }: ShotCardHtmlProps) {
   );
 
   return (
-    <div className={classNames(styles.card, className)} {...props}>
+    <Card className={classNames(styles.card, className)} {...props}>
       <div className={styles.section}>
         <div className={styles.header}>
           <Text color={shotStatusColors[shot.in.status]} weight="bold">
@@ -230,7 +231,7 @@ function ShotCardHtml({ shot, className, ...props }: ShotCardHtmlProps) {
           </div>
         </>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -250,7 +251,7 @@ export function ShotCard() {
   useEffect(() => {
     if (shot?.splashRadius !== undefined) {
       const outlineGeometry = new BufferGeometry().setFromPoints(
-        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50),
+        new Path().absarc(0, 0, 1, 0, Math.PI * 2).getSpacedPoints(50)
       );
       const outlineMaterial = new LineDashedMaterial({
         color: "orange",
@@ -259,7 +260,7 @@ export function ShotCard() {
       });
       const outline = new Line(
         outlineGeometry,
-        outlineMaterial,
+        outlineMaterial
       ).computeLineDistances();
 
       splashRadiusWrapper.current?.add(outline);
@@ -294,11 +295,11 @@ export function ShotCard() {
   const outLength =
     shot.out && shot.out.layers.length > 0
       ? (shot.in.layers.at(-1) as ShotLayerNonExternal).point.distanceTo(
-          (shot.out.layers.at(-1) as ShotLayerNonExternal).point,
+          (shot.out.layers.at(-1) as ShotLayerNonExternal).point
         )
       : SHOT_DISPLAY_LENGTH_INFINITY;
   const inLast = shot.in.layers.findLast(
-    (layer) => layer.type !== null,
+    (layer) => layer.type !== null
   ) as ShotLayerNonExternal;
   const outTitleColor = shot.out
     ? shotStatusColors[shot.out.status]
@@ -323,7 +324,7 @@ export function ShotCard() {
           position={inLast.point}
           ref={splashRadiusWrapper}
           rotation={new Euler().setFromQuaternion(
-            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal),
+            new Quaternion().setFromUnitVectors(K_HAT, shot.in.surfaceNormal)
           )}
         >
           <mesh>
@@ -379,7 +380,7 @@ export function ShotCard() {
       <group
         position={inLast.point}
         rotation={new Euler().setFromQuaternion(
-          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal),
+          new Quaternion().setFromUnitVectors(J_HAT, shot.in.surfaceNormal)
         )}
       >
         <mesh position={[0, inLength / 2, 0]} renderOrder={2}>
@@ -407,8 +408,8 @@ export function ShotCard() {
           rotation={new Euler().setFromQuaternion(
             new Quaternion().setFromUnitVectors(
               J_HAT,
-              shot.out.surfaceNormal.clone(),
-            ),
+              shot.out.surfaceNormal.clone()
+            )
           )}
         >
           <mesh position={[0, outLength / 2, 0]} renderOrder={2}>
