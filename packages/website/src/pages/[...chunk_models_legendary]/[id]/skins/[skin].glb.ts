@@ -172,13 +172,7 @@ export async function GET({ props }: APIContext<{ skin: number }>) {
       continue;
     }
 
-    const part = await extractModel(vfs, path, true);
-    const partSc2 = new Sc2ReadStream(
-      (await vfs.file(`Data/3d/${path}.sc2`)).buffer as ArrayBuffer,
-    ).sc2();
-
-    Object.assign(states, switcherStates(partSc2, preset, new Map()));
-
+    const part = await extractModel(vfs, path, true, preset);
     const map = mergeDocuments(document, part);
     const partScene = map.get(part.getRoot().listScenes()[0]) as Scene;
     const node = document

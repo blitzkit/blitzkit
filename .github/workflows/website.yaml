@@ -43,9 +43,10 @@ on:
 
         type: choice
         required: true
-        default: steam
+        default: wgc
 
         options:
+          - wgc
           - steam
           - zip
           - wgpkg
@@ -65,10 +66,13 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  # workflow
+  HAS_ROOT_REPO_CONTEXT: ${{ github.event_name != 'pull_request' }}
+
   # client
   STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
   STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-  CLIENT_PROVIDER: ${{ inputs.client_provider || 'steam' }}
+  CLIENT_PROVIDER: ${{ inputs.client_provider || (github.event_name != 'pull_request' && 'steam' || 'wgc') }}
   CLIENT_SOURCE: ${{ inputs.client_source || '444200/windows' }}
   CLIENT_DIR: ../../temp/game
 
@@ -77,11 +81,6 @@ env:
   PUBLIC_PROMOTE_OPENTEST: false
   PUBLIC_STATIC_ASSET_BASE: https://assets.blitzkit.app
   PUBLIC_GUIDE_WEBSITE: https://guidesblitz.com
-
-  # blitz
-  WOTB_GLOSSARY: ${{ secrets.WOTB_GLOSSARY }}
-  WOTB_GLOSSARY_DOMAIN: ${{ secrets.WOTB_GLOSSARY_DOMAIN }}
-  WOTB_GLOSSARY_PATH: ${{ secrets.WOTB_GLOSSARY_PATH }}
 
   # google
   PUBLIC_GOOGLE_TAG_MANAGER_ID: ${{ secrets.PUBLIC_GOOGLE_TAG_MANAGER_ID }}
@@ -107,10 +106,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          # the PR's ref, or the manual input, or production (selected when cron)
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: recursive
+          submodules: false
           token: ${{ secrets.GH_TOKEN || github.token }}
+
+      # Future proofing for Reforged: we'll have both closed and open repos, so
+      # we need to handle them here instead of disabling submodules outright
+      - name: Checkout submodules
+        run: |
+          if [ "$HAS_ROOT_REPO_CONTEXT" = "true" ]; then
+            git submodule update --init --recursive --depth=1
+          else
+            git submodule update --init --recursive --depth=1 -- . ':!packages/closed'
+          fi
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
@@ -125,22 +133,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y aria2 libarchive-tools
 
-      - name: Install dependencies
-        run: bun install
+      - name: Set up script
+        run: scripts/setup.sh
+
+      - name: Lint
+        run: scripts/lint.sh
 
       - name: Build protos
         run: bun run build-protos
 
       - name: Download client
-        run: bun run download-client
+        run: scripts/download-client.sh
 
       - name: Download SmartDLC
-        if: ${{ env.CLIENT_PROVIDER == 'steam' }}
-
-        run: bun run download-smart-dlc
+        if: ${{ env.HAS_ROOT_REPO_CONTEXT == 'true' }}
+        run: scripts/download-smart-dlc.sh
 
       - name: Build
-        run: bun run --bun build
+        run: scripts/build-website.sh
         env:
           CHUNK: ${{ matrix.chunk }}
 
@@ -159,7 +169,8 @@ jobs:
         # - is by manual and is on anything: triggering to anything
         if: >-
           ${{
-            (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
+            env.HAS_ROOT_REPO_CONTEXT == 'true'
+            || (github.event_name == 'schedule' && github.ref == 'refs/heads/main')
             || (github.event_name == 'push' && github.ref == 'refs/heads/production')
             || (github.event_name == 'workflow_dispatch')
           }}

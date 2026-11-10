@@ -1,5 +1,21 @@
 import type { ComponentProps, ReactNode } from "react";
-import { AdditiveBlending, Mesh, MeshStandardMaterial, Object3D } from "three";
+import {
+  AdditiveBlending,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+  type Material,
+} from "three";
+
+export function prepareMaterial(material: Material | Material[]) {
+  if (!(material instanceof MeshStandardMaterial)) return;
+
+  material.depthWrite = true;
+
+  if (material.userData.blending === "additive") {
+    material.blending = AdditiveBlending;
+  }
+}
 
 export function jsxTree(
   node: Object3D,
@@ -14,6 +30,7 @@ export function jsxTree(
       props: ComponentProps<"group">,
       key: string,
     ) => ReactNode;
+    primitive?: (object3d: Object3D, key: string) => ReactNode;
   },
 ): ReactNode {
   if (node instanceof Mesh) {
@@ -25,13 +42,7 @@ export function jsxTree(
       scale: node.scale,
     };
 
-    if (props.material instanceof MeshStandardMaterial) {
-      props.material.depthWrite = true;
-
-      if (props.material.userData.blending === "additive") {
-        props.material.blending = AdditiveBlending;
-      }
-    }
+    prepareMaterial(props.material);
 
     return mergers?.mesh ? (
       mergers.mesh(node, props, node.uuid)
