@@ -26,6 +26,7 @@ import { TankopediaOptions } from "../TankopediaOptions";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import { TankSandboxLoader } from "../TankSandboxLoader";
 import { TankStaticArmor, type ThicknessRange } from "../TankStaticArmor";
+import { Thicknesses } from "../Thicknesses";
 import styles from "./index.module.css";
 
 type TankSandboxProps = MaybeSkeletonComponentProps & {
@@ -176,6 +177,7 @@ export function TankopediaSandbox({
 
       <TankSandboxLoader />
       <TankopediaSkinSwitcher />
+      <Thicknesses thicknessRange={thicknessRange} />
       <TankopediaAntagonistControl
         antagonistCharacteristics={antagonistCharacteristics}
       />
