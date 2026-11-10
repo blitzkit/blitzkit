@@ -23,6 +23,7 @@ import { TankDynamicArmor } from "../TankDynamicArmor";
 import { TankModel } from "../TankModel";
 import { TankopediaAntagonistControl } from "../TankopediaAntagonistControl";
 import { TankopediaOptions } from "../TankopediaOptions";
+import { TankopediaQuickInputs } from "../TankopediaQuickInputs";
 import { TankopediaSkinSwitcher } from "../TankopediaSkinSwitcher";
 import { TankSandboxLoader } from "../TankSandboxLoader";
 import { TankStaticArmor, type ThicknessRange } from "../TankStaticArmor";
@@ -177,6 +178,7 @@ export function TankopediaSandbox({
 
       <TankSandboxLoader />
       <TankopediaSkinSwitcher />
+      <TankopediaQuickInputs />
       <Thicknesses thicknessRange={thicknessRange} />
       <TankopediaAntagonistControl
         antagonistCharacteristics={antagonistCharacteristics}

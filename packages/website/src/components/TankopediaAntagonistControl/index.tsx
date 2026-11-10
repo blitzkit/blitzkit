@@ -1,6 +1,7 @@
 import { alias, romanize, uniqueGuns } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { useMemo } from "react";
+import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useStrings } from "../../hooks/useStrings";
@@ -28,7 +29,9 @@ export function TankopediaAntagonistControl({
   const unwrap = useUnwrapper();
 
   const showControls = Tankopedia.use((state) => state.showControls);
-  const display = Tankopedia.use((state) => state.loaders.display.loaded);
+  const isDynamicArmorDisplay = useAbsoluteDisplay(
+    TankopediaDisplay.DynamicArmor,
+  );
   const hasCustomShell = Tankopedia.use(
     (state) => state.customShell !== undefined,
   );
@@ -46,7 +49,7 @@ export function TankopediaAntagonistControl({
     [tank.turrets],
   );
 
-  const isVisible = showControls && display === TankopediaDisplay.DynamicArmor;
+  const isVisible = showControls && isDynamicArmorDisplay;
 
   return (
     <div className={styles["antagonist-control"]} data-visible={isVisible}>
@@ -83,7 +86,10 @@ export function TankopediaAntagonistControl({
                     });
                   }}
                 >
-                  <img alt={name} src={alias("api", "/icons/modules/gun.webp")} />
+                  <img
+                    alt={name}
+                    src={alias("api", "/icons/modules/gun.webp")}
+                  />
 
                   <Discriminator>{romanize(entry.gun.tier)}</Discriminator>
                 </IconButton>
@@ -127,7 +133,10 @@ export function TankopediaAntagonistControl({
       </div>
 
       <div className={styles.group}>
-        <Tooltip tooltip={strings.tanks.antagonist_control.calibrated_shells} side="left">
+        <Tooltip
+          tooltip={strings.tanks.antagonist_control.calibrated_shells}
+          side="left"
+        >
           <IconButton
             parentListChild="vertical"
             color={hasCalibratedShells ? undefined : "gray"}
@@ -153,7 +162,10 @@ export function TankopediaAntagonistControl({
           </IconButton>
         </Tooltip>
 
-        <Tooltip tooltip={strings.tanks.antagonist_control.enhanced_armor} side="left">
+        <Tooltip
+          tooltip={strings.tanks.antagonist_control.enhanced_armor}
+          side="left"
+        >
           <IconButton
             parentListChild="vertical"
             color={hasEnhancedArmor ? undefined : "gray"}

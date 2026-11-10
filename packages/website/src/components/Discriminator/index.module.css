@@ -3,10 +3,7 @@
   right: var(--space-3);
 
   font-size: var(--font-size-minor);
-  line-height: 1.2;
   text-align: right;
-  text-shadow: 0 0 4px black;
-  color: var(--white-a12);
 
   pointer-events: none;
 

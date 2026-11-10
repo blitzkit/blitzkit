@@ -1,6 +1,7 @@
 import { literals } from "@blitzkit/i18n/src/literals";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { useCallback, type ReactNode } from "react";
+import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
@@ -61,7 +62,9 @@ export interface ThicknessesProps {
 
 export function Thicknesses({ thicknessRange }: ThicknessesProps) {
   const strings = useStrings();
-  const display = Tankopedia.use((state) => state.loaders.display.loaded);
+  const isStaticArmorDisplay = useAbsoluteDisplay(
+    TankopediaDisplay.StaticArmor,
+  );
   const showControls = Tankopedia.use((state) => state.showControls);
   const showPrimaryArmor = TankopediaPersistent.use(
     (state) => state.showPrimaryArmor,
@@ -87,7 +90,7 @@ export function Thicknesses({ thicknessRange }: ThicknessesProps) {
   return (
     <div
       className={styles.thicknesses}
-      data-visible={showControls && display === TankopediaDisplay.StaticArmor}
+      data-visible={showControls && isStaticArmorDisplay}
     >
       <LayerToggle
         visible={showPrimaryArmor}

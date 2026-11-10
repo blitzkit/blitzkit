@@ -1,3 +1,5 @@
+@import "../DropdownMenu/index.module.css";
+
 .Trigger {
   display: flex;
   align-items: center;
@@ -18,45 +20,18 @@
     outline: var(--outline-focus);
     box-shadow: var(--shadow-focus);
   }
-}
 
-.Content {
-  /* above popovers */
-  z-index: 2;
-
-  overflow: hidden;
-  background-color: var(--gray-2);
-  box-shadow: var(--shadow-subtle);
-  border-radius: var(--space-4);
-  outline: var(--outline-interactive) !important;
-}
-
-.Item {
-  position: relative;
-
-  display: flex;
-  align-items: center;
-
-  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5);
-  background-color: var(--gray-3);
-
-  font-size: var(--font-size-minor);
-  cursor: pointer;
-  user-select: none;
-
-  &[data-highlighted] {
-    outline: none;
-    background-color: var(--gray-5);
+  svg,
+  img {
+    width: 1em;
+    height: 1em;
   }
 
-  &:not(:last-child) {
-    border-bottom: var(--space-1) solid var(--gray-2);
+  /*
+   * Another unselectable Radix component, being selected by span instead.
+   */
+  .Icon,
+  span {
+    display: contents;
   }
-}
-
-.ItemIndicator {
-  position: absolute;
-  left: var(--space-3);
-
-  display: flex;
 }

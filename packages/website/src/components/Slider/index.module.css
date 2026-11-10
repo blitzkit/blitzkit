@@ -7,6 +7,10 @@
   height: var(--space-5);
   touch-action: none;
   user-select: none;
+
+  html:active & {
+    cursor: grabbing;
+  }
 }
 
 .Track {
@@ -34,6 +38,12 @@
   border-radius: var(--max-size);
   background-color: var(--gray-12);
   box-shadow: var(--shadow-subtle);
+
+  cursor: grab;
+
+  html:active & {
+    cursor: grabbing;
+  }
 
   &:focus-visible {
     outline: var(--outline-focus);

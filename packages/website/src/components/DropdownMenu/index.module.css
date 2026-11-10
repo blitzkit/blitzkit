@@ -75,6 +75,14 @@
       border-bottom: var(--space-1) solid var(--gray-2);
     }
 
+    /**
+     * This is actually .ItemText, but its class name isn't being passed to the
+     * html, so I am selecting the span instead.
+     */
+    span {
+      display: contents;
+    }
+
     img,
     svg {
       width: 1em;

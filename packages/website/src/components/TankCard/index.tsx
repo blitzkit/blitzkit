@@ -41,7 +41,6 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
       : props.tank.type === TankType.TANK_TYPE_PREMIUM
       ? "amber"
       : "gray";
-  const lowContrast = props.tank.type !== TankType.TANK_TYPE_RESEARCHABLE;
 
   const content = (
     <div
@@ -68,7 +67,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
           justifyContent: "flex-end",
           backgroundImage: `url(${alias(
             "api",
-            `/flags/scratched/${props.tank.nation}.webp`
+            `/flags/scratched/${props.tank.nation}.webp`,
           )})`,
         }}
       >
@@ -78,7 +77,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
         />
       </div>
 
-      <Text className={styles.name} color={color} lowContrast={lowContrast}>
+      <Text className={styles.name} color={color}>
         <ClassIcon class={props.tank.class} className={styles.icon} />
         <span className={styles.text}>{name}</span>
       </Text>

@@ -1,5 +1,8 @@
+import { alias } from "@blitzkit/core";
+import { type Strings } from "@blitzkit/i18n";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { ShellType } from "@blitzkit/protos";
+import { CaretDownIcon, DotFilledIcon } from "@radix-ui/react-icons";
 import { throttle } from "lodash-es";
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
@@ -58,15 +61,24 @@ function NumberField({ value, suffix, onValueChange }: NumberFieldProps) {
           onValueChange(parsed);
         }
       }}
+      childrenAsSuffix
     >
       <Text lowContrast>{suffix}</Text>
     </TextField>
   );
 }
 
+const COMMON_SHELLS: [ShellType, keyof Strings["common"]["shells"]][] = [
+  [ShellType.SHELL_TYPE_AP, "ap"],
+  [ShellType.SHELL_TYPE_APCR, "ap_cr"],
+  [ShellType.SHELL_TYPE_HEAT, "hc"],
+  [ShellType.SHELL_TYPE_HE, "he"],
+];
+
 export function CustomShellButton() {
   const customShell = Tankopedia.use((state) => state.customShell);
   const gun = useDuel("protagonist", DuelModule.Gun);
+  const antagonistGun = useDuel("antagonist", DuelModule.Gun);
   const antagonistShell = useDuel("antagonist", DuelModule.Shell);
   const strings = useStrings();
 
@@ -100,7 +112,10 @@ export function CustomShellButton() {
             highContrast={customShell !== undefined}
             size="major"
           >
-            <img alt="custom shell" src="/assets/images/icons/custom-shell.png" />
+            <img
+              alt={strings.tanks.custom_shell.title}
+              src="/assets/images/icons/custom-shell.png"
+            />
           </IconButton>
         </Popover.Trigger>
       </Tooltip>
@@ -126,18 +141,21 @@ export function CustomShellButton() {
                           modified.explosion_radius = undefined;
                           break;
                         }
+
                         case ShellType.SHELL_TYPE_APCR: {
                           modified.normalization = 2;
                           modified.ricochet = 70;
                           modified.explosion_radius = undefined;
                           break;
                         }
+
                         case ShellType.SHELL_TYPE_HEAT: {
                           modified.normalization = undefined;
                           modified.ricochet = undefined;
                           modified.explosion_radius = undefined;
                           break;
                         }
+
                         case ShellType.SHELL_TYPE_HE: {
                           modified.normalization = undefined;
                           modified.ricochet = undefined;
@@ -156,27 +174,36 @@ export function CustomShellButton() {
                   >
                     <Select.Trigger>
                       <Select.Value />
+
+                      <Select.Icon>
+                        <CaretDownIcon />
+                      </Select.Icon>
                     </Select.Trigger>
 
                     <Select.Portal>
-                      <Select.Content position="popper" sideOffset={8}>
+                      <Select.Content>
                         <Select.Viewport>
-                          {[
-                            [ShellType.SHELL_TYPE_AP, strings.common.shells.ap],
-                            [
-                              ShellType.SHELL_TYPE_APCR,
-                              strings.common.shells.ap_cr,
-                            ],
-                            [
-                              ShellType.SHELL_TYPE_HEAT,
-                              strings.common.shells.hc,
-                            ],
-                            [ShellType.SHELL_TYPE_HE, strings.common.shells.he],
-                          ].map(([type, label]) => (
-                            <Select.Item key={type} value={`${type}`}>
-                              <Select.ItemText>{label}</Select.ItemText>
-                            </Select.Item>
-                          ))}
+                          {COMMON_SHELLS.map(([type, label]) => {
+                            return (
+                              <Select.Item key={type} value={`${type}`}>
+                                <Select.ItemIndicator>
+                                  <DotFilledIcon />
+                                </Select.ItemIndicator>
+
+                                <Select.ItemText className="TEST_CLASS">
+                                  {strings.common.shells[label]}
+
+                                  <img
+                                    alt={strings.common.shells[label]}
+                                    src={alias(
+                                      "api",
+                                      `/icons/shells/${label}.webp`,
+                                    )}
+                                  />
+                                </Select.ItemText>
+                              </Select.Item>
+                            );
+                          })}
                         </Select.Viewport>
                       </Select.Content>
                     </Select.Portal>

@@ -29,12 +29,34 @@
     }
   }
 
+  &[data-size="minor"] {
+    gap: var(--space-1);
+    font-size: var(--font-size-minor);
+
+    &[data-variant="bubble"] input {
+      padding: var(--space-2) var(--space-3);
+    }
+
+    &[data-variant="form"] input {
+      padding: var(--space-1);
+    }
+
+    /* the icon's gap already separates it from the input */
+    &[data-has-icon="true"] input {
+      padding-left: 0;
+    }
+  }
+
   &[data-has-icon="true"] {
     padding-left: var(--space-3);
 
     input {
       padding-left: 0;
     }
+  }
+
+  &[data-has-suffix="true"] {
+    padding-right: var(--space-3);
   }
 
   &:focus-within {
@@ -60,6 +82,7 @@
 
   input {
     min-width: 0;
+    width: auto;
     flex: 1;
 
     background: none;
@@ -83,6 +106,10 @@
     }
     &[data-align="right"] {
       text-align: right;
+    }
+
+    &[data-auto-width="true"] {
+      field-sizing: content;
     }
   }
 }

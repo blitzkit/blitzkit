@@ -3,6 +3,7 @@ import { PauseIcon, PlayIcon } from "@radix-ui/react-icons";
 import { uniqBy } from "lodash-es";
 import { api } from "../../api/dynamic";
 import { SKIN_NUMBER } from "../../constants/skinNumber";
+import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { hasSkinAnimations } from "../../hooks/useSkin";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
@@ -21,7 +22,7 @@ export function TankopediaSkinSwitcher() {
 
   const skin = Tankopedia.use((state) => state.loaders.skin.requested);
   const showControls = Tankopedia.use((state) => state.showControls);
-  const display = Tankopedia.use((state) => state.loaders.display.loaded);
+  const isModelDisplay = useAbsoluteDisplay(TankopediaDisplay.Model);
   const loadedSkin = Tankopedia.use((state) => state.loaders.skin.loaded);
   const loadedAttachment = Tankopedia.use(
     (state) => state.loaders.attachment.loaded,
@@ -42,7 +43,7 @@ export function TankopediaSkinSwitcher() {
     skins.filter((camouflage) => camouflage.attachment),
   ].filter((group) => group.length > 0);
 
-  const isVisible = showControls && display === TankopediaDisplay.Model;
+  const isVisible = showControls && isModelDisplay;
   const hasAnimations =
     hasSkinAnimations(tank.id, loadedSkin) ||
     hasSkinAnimations(tank.id, loadedAttachment);
