@@ -9,6 +9,7 @@ import {
   ShellDefinitionsList,
   ShellKind,
   sluggify,
+  TechTreeLayoutYaml,
   toUniqueId,
   TurretDefinitionsList,
   UnlocksListing,
@@ -20,6 +21,7 @@ import {
   Crew,
   Equalizer,
   GunDefinition,
+  ModulePosition,
   ModuleType,
   ResearchCost,
   TankDefinitions,
@@ -362,11 +364,77 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
         const name_full =
           name === canonicalFullName ? undefined : canonicalFullName;
 
+        // The client lays modules out automatically unless the tank has its own
+        // file, in which case every cell is placed by hand
+        const module_positions: ModulePosition[] = [];
+        const layoutPath = `Data/Configs/TechTree/${nation}/${tankKey}.yaml`;
+        const resolvedLayoutPath = await this.vfs.resolve(layoutPath);
+
+        if (resolvedLayoutPath !== null) {
+          const layout = await this.vfs.yaml<TechTreeLayoutYaml>(layoutPath);
+
+          if (layout.modules) {
+            for (const [moduleKey, { position }] of Object.entries(
+              layout.modules,
+            )) {
+              // keys look like `#vehicleGun:_85mm_S-53`
+              const [kind, name] = moduleKey.replace(/^#/, "").split(":");
+              let rawId: number | undefined;
+              let type: ModuleType;
+
+              switch (kind) {
+                case "vehicle":
+                  rawId = tankList.root[name]?.id;
+                  type = ModuleType.MODULE_TYPE_VEHICLE;
+                  break;
+
+                case "vehicleChassis":
+                  rawId = chassisList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_TRACKS;
+                  break;
+
+                case "vehicleEngine":
+                  rawId = enginesList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_ENGINE;
+                  break;
+
+                case "vehicleGun":
+                  rawId = gunList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_GUN;
+                  break;
+
+                case "vehicleTurret":
+                  rawId = turretList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_TURRET;
+                  break;
+
+                default:
+                  throw new Error(
+                    `Unknown module kind in ${layoutPath}: ${kind}`,
+                  );
+              }
+
+              if (rawId === undefined) {
+                throw new Error(
+                  `Unknown module in ${layoutPath}: ${moduleKey}`,
+                );
+              }
+
+              module_positions.push({
+                id: toUniqueId(nation, rawId),
+                type,
+                position: { x: position[0], y: position[1] },
+              });
+            }
+          }
+        }
+
         tankDefinitions.tanks[tankId] = {
           ancestors: [],
           successors: [],
           id: tankId,
           dev_name: tankKey,
+          module_positions,
           roles: {},
           camouflages: camouflages,
           fixed_camouflage: fixedCamouflage,
@@ -386,8 +454,8 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
           type: tankTags.includes("collectible")
             ? TankType.TANK_TYPE_COLLECTOR
             : (typeof tank.price === "number" ? false : "gold" in tank.price)
-              ? TankType.TANK_TYPE_PREMIUM
-              : TankType.TANK_TYPE_RESEARCHABLE,
+            ? TankType.TANK_TYPE_PREMIUM
+            : TankType.TANK_TYPE_RESEARCHABLE,
           tier: tank.level,
           class: tankClass,
           testing: tankTags.includes("testTank") || tank.level === 11,
@@ -575,24 +643,24 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
                       },
                     }
                   : gunType === "autoReloader"
-                    ? {
-                        $case: "auto_reloader",
-                        value: {
-                          intra_clip: 60 / gun.clip!.rate,
-                          shell_count: gunClipCount,
-                          shell_reloads: gun
-                            .pumpGunReloadTimes!.split(" ")
-                            .map(Number),
-                        },
-                      }
-                    : {
-                        $case: "auto_loader",
-                        value: {
-                          intra_clip: 60 / gun.clip!.rate,
-                          clip_reload: gun.reloadTime,
-                          shell_count: gunClipCount,
-                        },
+                  ? {
+                      $case: "auto_reloader",
+                      value: {
+                        intra_clip: 60 / gun.clip!.rate,
+                        shell_count: gunClipCount,
+                        shell_reloads: gun
+                          .pumpGunReloadTimes!.split(" ")
+                          .map(Number),
                       },
+                    }
+                  : {
+                      $case: "auto_loader",
+                      value: {
+                        intra_clip: 60 / gun.clip!.rate,
+                        clip_reload: gun.reloadTime,
+                        shell_count: gunClipCount,
+                      },
+                    },
             } satisfies GunDefinition);
 
             for (const shellKey in gunListEntry.shots) {
@@ -635,7 +703,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
                 type: blitzShellKindToBlitzkit[shell.kind],
                 explosion_radius:
                   shell.kind === "HIGH_EXPLOSIVE"
-                    ? (shell.explosionRadius ?? 0)
+                    ? shell.explosionRadius ?? 0
                     : undefined,
                 icon: shell.icon,
                 penetration: {

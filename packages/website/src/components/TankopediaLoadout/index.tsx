@@ -3,36 +3,56 @@ import {
   MAX_SKILL_LEVEL,
   permanentSkills,
   romanize,
+  tankIcon,
 } from "@blitzkit/core";
-import type { Consumable, EquipmentSlot, Provision } from "@blitzkit/protos";
+import {
+  ModuleType,
+  type Consumable,
+  type EngineDefinition,
+  type EquipmentSlot,
+  type GunDefinition,
+  type Provision,
+  type TankDefinition,
+  type TrackDefinition,
+  type TurretDefinition,
+  type Unlock,
+} from "@blitzkit/protos";
 import {
   ClockIcon,
+  DoubleArrowDownIcon,
   DoubleArrowUpIcon,
   ResetIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { chunk } from "lodash-es";
+import { useCallback, useMemo } from "react";
 import { api } from "../../api/dynamic";
 import { equipmentColumns } from "../../config/equipment";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
 import { useEquipmentPreset } from "../../hooks/useEquipmentPreset";
+import { useLocale } from "../../hooks/useLocale";
 import { useProvision } from "../../hooks/useProvision";
 import { useStrings } from "../../hooks/useStrings";
 import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
+import { layoutModuleTree } from "../../tankopedia/moduleTreeLayout";
 import { vehicleStatusKeys } from "../../tankopedia/tankState";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Button } from "../Button";
+import { Discriminator } from "../Discriminator";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton";
+import { LinkI18n } from "../LinkI18n";
 import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
+// TODO: across the entire repo, wrap these in Promise.all's
 const equipment = await api.equipment();
 const provisions = await api.provisions();
 const consumables = await api.consumables();
+const tanks = await api.tanks();
 const skills = await api.skills();
 
 interface TankopediaLoadoutProps {
@@ -40,20 +60,335 @@ interface TankopediaLoadoutProps {
 }
 
 export function TankopediaLoadout({ characteristics }: TankopediaLoadoutProps) {
-  // const tank = useDuel("protagonist", DuelModule.Tank);
-  // const showModules = hasUpgrades(tank);
-
   return (
     <>
-      {/* {showModules && <Modules />} */}
+      <Modules />
       <Shells />
       <Equipment />
       <Provisions />
       <Consumables characteristics={characteristics} />
       <CrewSkills />
-      <State />
       <Status />
     </>
+  );
+}
+
+const moduleIconNames: Record<ModuleType, string> = {
+  [ModuleType.MODULE_TYPE_VEHICLE]: "",
+  [ModuleType.MODULE_TYPE_ENGINE]: "engine",
+  [ModuleType.MODULE_TYPE_TRACKS]: "chassis",
+  [ModuleType.MODULE_TYPE_TURRET]: "turret",
+  [ModuleType.MODULE_TYPE_GUN]: "gun",
+};
+
+type AnyModule =
+  | TurretDefinition
+  | GunDefinition
+  | TrackDefinition
+  | EngineDefinition;
+
+function Modules() {
+  const strings = useStrings();
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const hasUpgrades =
+    tank.turrets.length > 1 ||
+    tank.turrets[0].guns.length > 1 ||
+    tank.engines.length > 1 ||
+    tank.tracks.length > 1;
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.header}>
+        <Heading size="4">{strings.tanks.loadout.modules}</Heading>
+
+        {hasUpgrades && (
+          <div className={styles["upgrade-buttons"]}>
+            <IconButton
+              color="gray"
+              variant="soft"
+              onClick={() => {
+                Tankopedia.mutate((draft) => {
+                  const turret = tank.turrets[0];
+                  const gun = turret.guns[0];
+
+                  draft.protagonist.turret = turret.id;
+                  draft.protagonist.gun = gun.id;
+                  draft.protagonist.shell = gun.shells[0].id;
+                  draft.protagonist.engine = tank.engines[0].id;
+                  draft.protagonist.track = tank.tracks[0].id;
+                });
+              }}
+            >
+              <DoubleArrowDownIcon />
+            </IconButton>
+
+            <IconButton
+              color="gray"
+              variant="soft"
+              aria-label={`${strings.tanks.loadout.maximize} ${strings.tanks.loadout.modules}`}
+              onClick={() => {
+                Tankopedia.mutate((draft) => {
+                  const turret = tank.turrets.at(-1)!;
+                  const gun = turret.guns.at(-1)!;
+
+                  draft.protagonist.turret = turret.id;
+                  draft.protagonist.gun = gun.id;
+                  draft.protagonist.shell = gun.shells[0].id;
+                  draft.protagonist.engine = tank.engines.at(-1)!.id;
+                  draft.protagonist.track = tank.tracks.at(-1)!.id;
+                });
+              }}
+            >
+              <DoubleArrowUpIcon />
+            </IconButton>
+          </div>
+        )}
+      </div>
+
+      <ModuleTree />
+    </div>
+  );
+}
+
+function stock(type: ModuleType, id: number) {
+  return { id, type, cost: { type: "xp", value: 0 } } satisfies Unlock;
+}
+
+function ModuleTree() {
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const unwrap = useUnwrapper();
+
+  // The same gun can sit on several turrets; reversing keeps the first one,
+  // which is what a linear find would return
+  const modules = useMemo(
+    () =>
+      new Map<ModuleType, Map<number, AnyModule>>([
+        [
+          ModuleType.MODULE_TYPE_TRACKS,
+          new Map(tank.tracks.map((track) => [track.id, track])),
+        ],
+        [
+          ModuleType.MODULE_TYPE_ENGINE,
+          new Map(tank.engines.map((engine) => [engine.id, engine])),
+        ],
+        [
+          ModuleType.MODULE_TYPE_TURRET,
+          new Map(tank.turrets.map((turret) => [turret.id, turret])),
+        ],
+        [
+          ModuleType.MODULE_TYPE_GUN,
+          new Map(
+            tank.turrets
+              .flatMap((turret) => turret.guns)
+              .toReversed()
+              .map((gun) => [gun.id, gun]),
+          ),
+        ],
+      ]),
+    [tank],
+  );
+
+  const resolve = useCallback(
+    (unlock: Unlock) =>
+      unlock.type === ModuleType.MODULE_TYPE_VEHICLE
+        ? (tanks.tanks[unlock.id] as TankDefinition | undefined)
+        : modules.get(unlock.type)?.get(unlock.id),
+    [modules],
+  );
+
+  const { cells, columns, rows } = useMemo(
+    () =>
+      layoutModuleTree(
+        [
+          stock(ModuleType.MODULE_TYPE_GUN, tank.turrets[0].guns[0].id),
+          stock(ModuleType.MODULE_TYPE_TURRET, tank.turrets[0].id),
+          stock(ModuleType.MODULE_TYPE_ENGINE, tank.engines[0].id),
+          stock(ModuleType.MODULE_TYPE_TRACKS, tank.tracks[0].id),
+        ].filter((unlock) => resolve(unlock) !== undefined),
+        (unlock) => {
+          const module = resolve(unlock);
+          const children =
+            module !== undefined && "unlocks" in module ? module.unlocks : [];
+
+          return children.filter((child) => resolve(child) !== undefined);
+        },
+        tank.module_positions,
+      ),
+    [tank, resolve],
+  );
+
+  return (
+    <div
+      className={styles.tree}
+      style={{
+        gridTemplateColumns: `repeat(${columns}, var(--module-size))`,
+        gridTemplateRows: `repeat(${rows}, var(--module-size))`,
+      }}
+    >
+      {cells.map((cell) => {
+        const module = cell.unlock && resolve(cell.unlock);
+
+        return (
+          <div
+            key={cell.position.join(",")}
+            className={styles.cell}
+            style={{ gridColumn: cell.position[0], gridRow: cell.position[1] }}
+          >
+            {cell.trunkUp && <span className={styles["trunk-up"]} />}
+            {cell.trunkDown && <span className={styles["trunk-down"]} />}
+            {cell.snakeUp && <span className={styles["snake-up"]}></span>}
+            {cell.snakeDown && <span className={styles["snake-down"]}></span>}
+            {cell.right && <span className={styles.right} />}
+            {cell.left && <span className={styles.left}></span>}
+
+            {cell.unlock && module && (
+              <ModuleNode
+                unlock={cell.unlock}
+                module={module}
+                tooltip={unwrap(module.name!)}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+interface ModuleNodeProps {
+  unlock: Unlock;
+  module: AnyModule | TankDefinition;
+  tooltip: string;
+}
+
+function ModuleNode({ unlock, module, tooltip }: ModuleNodeProps) {
+  const locale = useLocale();
+  const tank = useDuel("protagonist", DuelModule.Tank);
+
+  const isTank = unlock.type === ModuleType.MODULE_TYPE_VEHICLE;
+  const topTurret = tank.turrets.at(-1)!;
+
+  const isSelected = Tankopedia.use((state) => {
+    switch (unlock.type) {
+      case ModuleType.MODULE_TYPE_TURRET:
+        return state.protagonist.turret === unlock.id;
+
+      case ModuleType.MODULE_TYPE_GUN:
+        return state.protagonist.gun === unlock.id;
+
+      case ModuleType.MODULE_TYPE_ENGINE:
+        return state.protagonist.engine === unlock.id;
+
+      case ModuleType.MODULE_TYPE_TRACKS:
+        return state.protagonist.track === unlock.id;
+
+      default:
+        return false;
+    }
+  });
+
+  const isTop =
+    (unlock.type === ModuleType.MODULE_TYPE_TURRET &&
+      unlock.id === topTurret.id) ||
+    (unlock.type === ModuleType.MODULE_TYPE_GUN &&
+      unlock.id === topTurret.guns.at(-1)!.id) ||
+    (unlock.type === ModuleType.MODULE_TYPE_ENGINE &&
+      unlock.id === tank.engines.at(-1)!.id) ||
+    (unlock.type === ModuleType.MODULE_TYPE_TRACKS &&
+      unlock.id === tank.tracks.at(-1)!.id);
+
+  const button = (
+    <IconButton
+      aria-label={tooltip}
+      size="major"
+      radius="1"
+      variant={isSelected ? "surface" : "soft"}
+      color={isTop ? "amber" : isSelected ? undefined : "gray"}
+      className={styles.module}
+      onClick={() => {
+        if (isTank) return;
+
+        Tankopedia.mutate((draft) => {
+          switch (unlock.type) {
+            case ModuleType.MODULE_TYPE_TURRET: {
+              const turret = tank.turrets.find((t) => t.id === unlock.id)!;
+              const gun =
+                turret.guns.find((g) => g.id === draft.protagonist.gun) ??
+                turret.guns.at(-1)!;
+
+              draft.protagonist.turret = turret.id;
+              draft.protagonist.gun = gun.id;
+              draft.protagonist.shell = gun.shells[0].id;
+              break;
+            }
+
+            case ModuleType.MODULE_TYPE_GUN: {
+              const turret = tank.turrets
+                .find((t) => t.id === draft.protagonist.turret)!
+                .guns.some((g) => g.id === unlock.id)
+                ? tank.turrets.find((t) => t.id === draft.protagonist.turret)!
+                : tank.turrets.find((t) =>
+                    t.guns.some((g) => g.id === unlock.id),
+                  )!;
+              const gun = turret.guns.find((g) => g.id === unlock.id)!;
+
+              draft.protagonist.turret = turret.id;
+              draft.protagonist.gun = gun.id;
+              draft.protagonist.shell = gun.shells[0].id;
+              break;
+            }
+
+            case ModuleType.MODULE_TYPE_ENGINE:
+              draft.protagonist.engine = unlock.id;
+              break;
+
+            case ModuleType.MODULE_TYPE_TRACKS:
+              draft.protagonist.track = unlock.id;
+              break;
+          }
+        });
+      }}
+    >
+      <Discriminator corner="top-right">{romanize(module.tier)}</Discriminator>
+
+      {/* {unlock.cost!.value > 0 && (
+        <Discriminator>
+          <Text size="minor">{formatCompact(locale, unlock.cost!.value)}</Text>
+          <img
+            alt={unlock.cost!.type}
+            src={alias("api", `/icons/currencies/${unlock.cost!.type}.webp`)}
+          />
+        </Discriminator>
+      )} */}
+
+      <img
+        alt={tooltip}
+        src={
+          isTank
+            ? tankIcon(unlock.id)
+            : alias(
+                "api",
+                `/icons/modules/${moduleIconNames[unlock.type]}.webp`,
+              )
+        }
+        className={styles.icon}
+      />
+    </IconButton>
+  );
+
+  return (
+    <Tooltip tooltip={tooltip}>
+      {isTank ? (
+        <LinkI18n
+          locale={locale}
+          href={`/tanks/${tanks.tanks[unlock.id].slug}`}
+        >
+          {button}
+        </LinkI18n>
+      ) : (
+        button
+      )}
+    </Tooltip>
   );
 }
 
@@ -144,38 +479,6 @@ function CrewSkillEntry({ id, level, permanent }: CrewSkillEntryProps) {
       <img src={alias("api", `/icons/skills/${id}.webp`)} />
       {level > 0 && <span className={styles.level}>{romanize(level)}</span>}
     </IconButton>
-  );
-}
-
-function State() {
-  const strings = useStrings();
-
-  const shell = Tankopedia.use((state) => state.protagonist.shell);
-  const speed = Tankopedia.use((state) => state.protagonist.speed);
-
-  return (
-    <div className={styles.section}>
-      <div className={styles.header}>
-        <Heading size="4">{strings.tanks.loadout.dynamics}</Heading>
-
-        <IconButton
-          color="red"
-          aria-label={`${strings.tanks.loadout.clear} ${strings.tanks.loadout.consumables}`}
-          onClick={() => {
-            Tankopedia.mutate((draft) => {
-              draft.protagonist.consumables = [];
-            });
-          }}
-        >
-          <TrashIcon />
-        </IconButton>
-      </div>
-
-      <div className={styles.state}>
-        <span>shell: {shell}</span>
-        <span>speed: {speed}</span>
-      </div>
-    </div>
   );
 }
 
@@ -623,293 +926,3 @@ function EquipmentOption({
     </Tooltip>
   );
 }
-
-// function Modules() {
-//   const strings = useStrings();
-//   const tank = useDuel("protagonist", DuelModule.Tank);
-//   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
-//   const alternates = Tankopedia.use((state) => state.protagonist.alternates);
-//   const isStock = useMemo(() => {
-//     return tank.tank!.upgrade_lines.every((line) => {
-//       if (isAlternativeLine(line.name)) return true;
-//       return upgrades[line.name] === 0;
-//     });
-//   }, [upgrades]);
-//   const isUpgraded = useMemo(() => {
-//     return tank.tank!.upgrade_lines.every((line) => {
-//       if (isAlternativeLine(line.name)) return true;
-
-//       return (
-//         upgrades[line.name] === line.stages.length - 1 ||
-//         (line.name in alternates && alternates[line.name])
-//       );
-//     });
-//   }, [upgrades]);
-
-//   return (
-//     <div className={styles.section}>
-//       <div className={styles.header}>
-//         <Heading size="4">{strings.tanks.loadout.modules}</Heading>
-
-//         <div className={styles["upgrade-buttons"]}>
-//           <IconButton
-//             variant={isStock ? "solid" : "soft"}
-//             size="minor"
-//             array
-//             onClick={() => {
-//               Tankopedia.mutate((draft) => {
-//                 for (const line of tank.tank!.upgrade_lines) {
-//                   if (isAlternativeLine(line.name)) continue;
-
-//                   draft.protagonist.upgrades[line.name] = 0;
-//                   draft.protagonist.alternates[line.name] = false;
-//                 }
-//               });
-//             }}
-//             color="gray"
-//           >
-//             <DoubleArrowLeftIcon />
-//           </IconButton>
-
-//           <IconButton
-//             variant={isUpgraded ? "solid" : "soft"}
-//             size="minor"
-//             array
-//             onClick={() => {
-//               Tankopedia.mutate((draft) => {
-//                 for (const line of tank.tank!.upgrade_lines) {
-//                   draft.protagonist.upgrades[line.name] =
-//                     line.stages.length - 1;
-
-//                   if (isAlternativeLine(line.name)) {
-//                     const original = originalLineName(line.name)!;
-//                     draft.protagonist.alternates[original] = true;
-//                   }
-//                 }
-//               });
-//             }}
-//             color="gray"
-//           >
-//             <DoubleArrowRightIcon />
-//           </IconButton>
-//         </div>
-//       </div>
-
-//       <div className={styles.lines}>
-//         {/* TODO: hide lines with 1 module except for alts */}
-//         {tank.tank!.upgrade_lines.map((line) => (
-//           <Line
-//             key={line.name}
-//             name={line.name}
-//             lines={tank.tank!.upgrade_lines}
-//           />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// interface LineProps {
-//   name: string;
-//   lines: UpgradeLine[];
-// }
-
-// function Line({ name, lines }: LineProps) {
-//   const combinedLines = useMemo(() => {
-//     const names: string[] = [name];
-
-//     for (const originalLine in alternativeLines) {
-//       const alternativeLine = alternativeLines[originalLine];
-
-//       if (
-//         originalLine === name &&
-//         lines.some((line) => line.name === alternativeLine)
-//       ) {
-//         names.push(alternativeLine);
-//       }
-//     }
-
-//     return names;
-//   }, [name]);
-
-//   return (
-//     <div className={styles.line}>
-//       {!isAlternativeLine(name) &&
-//         combinedLines.map((name) => (
-//           <div className={styles["chunks-wrapper"]}>
-//             <LineInner key={name} name={name} lines={lines} />
-//           </div>
-//         ))}
-//     </div>
-//   );
-// }
-
-// function LineInner({ name, lines }: LineProps) {
-//   const line = lines.find((line) => line.name === name)!;
-
-//   return chunk(line.stages, maxModulesPerRow).map((chunk, wrapIndex) => (
-//     <div className={styles["line-wrap"]}>
-//       {wrapIndex > 0 && (
-//         <Text size="minor" className={styles["wrap-marker"]} lowContrast>
-//           <CornerBottomLeftIcon />
-//         </Text>
-//       )}
-
-//       {chunk.map((stage, elementIndex) => (
-//         <LineElement
-//           key={elementIndex}
-//           index={wrapIndex * maxModulesPerRow + elementIndex}
-//           lineName={name}
-//           stage={stage}
-//         />
-//       ))}
-//     </div>
-//   ));
-// }
-
-// interface LineElementProps {
-//   index: number;
-//   lineName: string;
-//   stage: StageParameters;
-// }
-
-// function LineElement({ index, lineName, stage }: LineElementProps) {
-//   const upgrades = Tankopedia.use((state) => state.protagonist.upgrades);
-//   const alternates = Tankopedia.use((state) => state.protagonist.alternates);
-//   const tank = useDuel("protagonist", DuelModule.Tank);
-//   const strings = useStrings();
-//   const gameStrings = useGameStrings("TankEntity");
-//   const upgradePreset = useUpgradePreset(tank.tank!.tank_upgrade_preset);
-
-//   let price: StandardPrice | undefined;
-
-//   switch (stage.grade) {
-//     case Grade.GRADE_COMMON:
-//       price = upgradePreset.common_grade_price;
-//       break;
-
-//     case Grade.GRADE_RARE:
-//       price = upgradePreset.rare_grade_price;
-//       break;
-
-//     case Grade.GRADE_EPIC:
-//       price = upgradePreset.unique_grade_price;
-//       break;
-
-//     case Grade.GRADE_LEGENDARY:
-//       price = upgradePreset.legendary_grade_price;
-//       break;
-//   }
-
-//   for (const override of upgradePreset.prices_overrides) {
-//     if (override.stage_tech_name !== stage.tech_name) continue;
-//     price = override.price;
-//   }
-
-//   price ??= StandardPrice.create();
-
-//   let isSelected: boolean;
-
-//   if (isAlternativeLine(lineName)) {
-//     const originalLine = originalLineName(lineName);
-//     isSelected = alternates[originalLine!];
-//   } else {
-//     if (alternates[lineName]) {
-//       isSelected = false;
-//     } else {
-//       isSelected = upgrades[lineName] === index;
-//     }
-//   }
-
-//   return (
-//     <div className={styles.wrapper}>
-//       <Tooltip tooltip={gameStrings[stage.display_name]}>
-//         <Button
-//           className={styles.stage}
-//           color={isSelected ? undefined : "gray"}
-//           variant={isSelected ? "surface" : "soft"}
-//           radius="1"
-//           onClick={() => {
-//             // TODO: make minimum selectable upgrade the last free module for tanks like the destiny
-
-//             Tankopedia.mutate((draft) => {
-//               const tankData = tank.tank!;
-
-//               if (isAlternativeLine(lineName)) {
-//                 const originalLine = originalLineName(lineName)!;
-
-//                 draft.protagonist.alternates[originalLine] = true;
-//                 draft.protagonist.upgrades[lineName] = index;
-//               } else {
-//                 draft.protagonist.alternates[lineName] = false;
-//                 draft.protagonist.upgrades[lineName] = index;
-//               }
-
-//               for (const required of stage.required_upgrades) {
-//                 for (const line of tankData.upgrade_lines) {
-//                   let i = 0;
-
-//                   for (const candidateStage of line.stages) {
-//                     if (candidateStage.tech_name === required) {
-//                       draft.protagonist.upgrades[line.name] = Math.max(
-//                         draft.protagonist.upgrades[line.name],
-//                         i,
-//                       );
-//                     }
-
-//                     i++;
-//                   }
-//                 }
-//               }
-
-//               for (const line of tankData.upgrade_lines) {
-//                 if (draft.protagonist.alternates[line.name]) {
-//                   continue;
-//                 }
-
-//                 let i = draft.protagonist.upgrades[line.name];
-
-//                 while (i > 0) {
-//                   const currentStage = line.stages[i];
-
-//                   const valid = currentStage.required_upgrades.every(
-//                     (required) => {
-//                       for (const otherLine of tankData.upgrade_lines) {
-//                         const idx = draft.protagonist.upgrades[otherLine.name];
-
-//                         if (otherLine.stages[idx]?.tech_name === required) {
-//                           return true;
-//                         }
-//                       }
-
-//                       return false;
-//                     },
-//                   );
-
-//                   if (valid) break;
-
-//                   i--;
-//                 }
-
-//                 draft.protagonist.upgrades[line.name] = i;
-//               }
-//             });
-//           }}
-//         >
-//           <img
-//             className={styles.icon}
-//             src={`/media/modules/${stage.stage_type}.webp`}
-//           />
-
-//           <Text weight="light" lowContrast size="minor" className={styles.tier}>
-//             {isAlternativeLine(lineName)
-//               ? strings.tanks.loadout.alternative
-//               : romanize(stage.number)}
-//           </Text>
-//         </Button>
-//       </Tooltip>
-
-//       {<Price className={styles.price} price={price} />}
-//     </div>
-//   );
-// }

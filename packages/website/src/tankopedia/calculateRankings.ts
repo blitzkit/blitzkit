@@ -67,9 +67,15 @@ export function calculateRankings(
 
     if (currentValue === undefined || name[0] === "_") continue;
 
-    const config = characteristicConfigs.get(name)!;
+    const config = characteristicConfigs.get(name);
 
-    if (config.ranking === CharacteristicRankingDirection.None) continue;
+    // characteristics without a render config are never displayed
+    if (
+      config === undefined ||
+      config.ranking === CharacteristicRankingDirection.None
+    ) {
+      continue;
+    }
 
     const lowerIsBetter =
       config.ranking === CharacteristicRankingDirection.LowerIsBetter;

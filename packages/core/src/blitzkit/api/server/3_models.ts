@@ -16,14 +16,14 @@ import {
   VehicleDefinitions,
   VertexAttribute,
 } from "@blitzkit/core";
-import { Armor, Crew, ModelDefinitions, Vector3 } from "@blitzkit/protos";
+import { Armor, Crew, ModelDefinitions, ProtoVector3 } from "@blitzkit/protos";
 import { MathUtils, Vector3 as THREEVector3, Vector3Tuple } from "three";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI2 } from "./2_camouflages";
 
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
-    return { x: tuple[0], y: tuple[1], z: -tuple[2] } satisfies Vector3;
+    return { x: tuple[0], y: tuple[1], z: -tuple[2] } satisfies ProtoVector3;
   }
 
   private async collisionBoundingBoxes(

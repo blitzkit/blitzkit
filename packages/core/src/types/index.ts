@@ -21,6 +21,7 @@ export * from "./squadBattleTypeStylesYaml";
 export * from "./tankmenAvatar";
 export * from "./tankParameters";
 export * from "./tanksStats";
+export * from "./techTreeLayoutYaml";
 export * from "./turretDefinitionsList";
 export * from "./vehicleDefinitionArmor";
 export * from "./vehicleDefinitionList";

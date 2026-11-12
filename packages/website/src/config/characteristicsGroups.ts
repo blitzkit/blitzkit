@@ -81,6 +81,20 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         },
       },
       { name: "dpm", decimals: 0, units: "hp", localize: true },
+      {
+        name: "dpm_effective",
+        decimals: 0,
+        units: "hp",
+        localize: true,
+        indent: true,
+      },
+      {
+        name: "dpm_peekaboo",
+        decimals: 0,
+        units: "hp",
+        localize: true,
+        indent: true,
+      },
       { name: "damage", decimals: 0, units: "hp", localize: true },
       { name: "damage_range", decimals: 0, units: "hp", localize: true },
       { name: "module_damage", decimals: 0, units: "hp", localize: true },
@@ -108,7 +122,7 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     order: [
       { name: "clipping_potential", localize: true, units: "hp" },
       { name: "clip_size" },
-      { name: "optimal_shell" },
+      { name: "optimal_shell", ranking: CharacteristicRanking.None },
       {
         name: "intra_clip",
         decimals: 2,
@@ -156,6 +170,12 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         units: "deg",
         ranking: CharacteristicRanking.None,
       },
+      {
+        name: "explosion_radius",
+        decimals: 2,
+        units: "m",
+        ranking: CharacteristicRanking.None,
+      },
 
       { toy: "ricochet" },
     ],
@@ -178,6 +198,44 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         ranking: CharacteristicRanking.LowerIsBetter,
       },
       { name: "dispersion_angle", decimals: 3, units: "deg" },
+
+      { label: "dispersion_penalties" },
+      {
+        name: "dispersion_moving",
+        decimals: 3,
+        units: "plus",
+        indent: true,
+        ranking: CharacteristicRanking.LowerIsBetter,
+      },
+      {
+        name: "dispersion_hull_traversing",
+        decimals: 3,
+        units: "plus",
+        indent: true,
+        ranking: CharacteristicRanking.LowerIsBetter,
+      },
+      {
+        name: "dispersion_turret_traversing",
+        decimals: 3,
+        units: "plus",
+        indent: true,
+        ranking: CharacteristicRanking.LowerIsBetter,
+      },
+      {
+        name: "dispersion_shooting",
+        decimals: 3,
+        units: "plus",
+        indent: true,
+        ranking: CharacteristicRanking.LowerIsBetter,
+      },
+      {
+        name: "dispersion_gun_damaged",
+        decimals: 1,
+        units: "x",
+        indent: true,
+        ranking: CharacteristicRanking.LowerIsBetter,
+      },
+
       { toy: "aim_time" },
     ],
   },
@@ -215,6 +273,26 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
       },
       { name: "engine_power", units: "bhp" },
       { name: "power_to_weight", decimals: 1, units: "bhp_t" },
+
+      { label: "power_to_weight_on_terrain" },
+      {
+        name: "power_to_weight_hard",
+        decimals: 1,
+        units: "bhp_t",
+        indent: true,
+      },
+      {
+        name: "power_to_weight_medium",
+        decimals: 1,
+        units: "bhp_t",
+        indent: true,
+      },
+      {
+        name: "power_to_weight_soft",
+        decimals: 1,
+        units: "bhp_t",
+        indent: true,
+      },
       // { name: "brake_force", decimals: 1, units: "kN" },
 
       { label: "hull_traverse_speeds" },
@@ -264,9 +342,11 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
       { name: "health", units: "hp" },
       {
         name: "fire_chance",
+        decimals: 0,
         units: "percentage",
         ranking: CharacteristicRanking.LowerIsBetter,
       },
+      { name: "crew_count" },
       // { name: "fire_rate", units: "hp_s" },
       // { name: "ramming_resistance", units: "percentage" },
 
@@ -281,7 +361,38 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
     // render: CharacteristicsGroupRender.Statistical,
     order: [
       { name: "view_range", units: "m" },
-      { name: "camouflage", decimals: 0, units: "percentage" },
+
+      { label: "camouflages" },
+      {
+        name: "camouflage",
+        decimals: 2,
+        units: "percentage",
+        indent: true,
+      },
+      {
+        name: "camouflage_moving",
+        decimals: 2,
+        units: "percentage",
+        indent: true,
+      },
+      {
+        name: "camouflage_shooting_still",
+        decimals: 2,
+        units: "percentage",
+        indent: true,
+      },
+      {
+        name: "camouflage_shooting_moving",
+        decimals: 2,
+        units: "percentage",
+        indent: true,
+      },
+      {
+        name: "camouflage_on_fire",
+        decimals: 2,
+        units: "percentage",
+        indent: true,
+      },
 
       { toy: "view_range" },
 

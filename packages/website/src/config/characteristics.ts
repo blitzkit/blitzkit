@@ -7,10 +7,17 @@ import {
 import { ShellType, TankClass } from "@blitzkit/protos";
 import { hullTraverseSpeed } from "../tankopedia/hullTraverseSpeed";
 import { rawTerrainCoefficient } from "../tankopedia/rawTerrainCoefficient";
+import { tankClassToBlitzTankClass } from "../tankopedia/tankClass";
 import {
   CharacteristicType,
   type Characteristic,
 } from "../types/characteristics";
+
+/**
+ * peek-a-boo assumes at least this many seconds between shots to account for
+ * peeking out, aiming, and retreating
+ */
+const PEEKABOO_MIN_CYCLE = 10;
 
 export const characteristics = {
   gun_type: {
@@ -59,10 +66,11 @@ export const characteristics = {
     },
   },
 
+  // characteristics prefixed with an underscore are compute time only; they are never rendered
   _reload_coefficient: {
     type: CharacteristicType.Number,
 
-    compute({ script, degressive }) {
+    compute({ script, degressive, gun }) {
       let c0 = 1;
 
       script("protagonist", "miscAttrs/gunReloadTimeFactor", (effect) => {
@@ -73,9 +81,12 @@ export const characteristics = {
 
       let c2 = 1;
 
-      script("protagonist", "Berserk", (effect) => {
-        c2 += effect.bonusValues!.gunReloadSpeedIncrease / 100;
-      });
+      // adrenaline only affects regular guns
+      if (gun.gun_type!.$case === "regular") {
+        script("protagonist", "Berserk", (effect) => {
+          c2 += effect.bonusValues!.gunReloadSpeedIncrease / 100;
+        });
+      }
 
       return (c0 * c1) / c2;
     },
@@ -88,7 +99,7 @@ export const characteristics = {
       return gun.gun_type!.$case !== "auto_reloader";
     },
 
-    compute({ gun, characteristic }) {
+    compute({ gun, characteristic }): number {
       if (gun.gun_type!.$case === "auto_reloader") return -Infinity;
 
       const c = characteristic("_reload_coefficient") as number;
@@ -139,10 +150,26 @@ export const characteristics = {
     },
   },
 
-  dpm: {
+  // time per shot when continuously firing the fastest shell of an auto reloader
+  _optimal_shell_cycle: {
     type: CharacteristicType.Number,
 
     compute({ gun, characteristic }) {
+      if (gun.gun_type!.$case !== "auto_reloader") return 0;
+
+      const intraClip = characteristic("intra_clip") as number;
+      const reloads = characteristic("reloads") as number[];
+
+      return Math.min(
+        ...reloads.map((reload, index) => reload + (index > 0 ? intraClip : 0)),
+      );
+    },
+  },
+
+  dpm: {
+    type: CharacteristicType.Number,
+
+    compute({ gun, characteristic }): number {
       const alpha = characteristic("damage") as number;
 
       let dps: number;
@@ -170,29 +197,46 @@ export const characteristics = {
 
         dps = damage / time;
       } else {
-        const intraClip = characteristic("intra_clip") as number;
-        const reloadCoefficient = characteristic(
-          "_reload_coefficient",
-        ) as number;
-
-        const mostOptimalShell =
-          gun.gun_type!.value.shell_reloads.reduce<null | {
-            index: number;
-            reload: number;
-          }>((current, reloadRaw, index) => {
-            const reload =
-              reloadRaw * reloadCoefficient + (index > 0 ? intraClip : 0);
-
-            if (current === null || reload < current.reload) {
-              return { index, reload };
-            }
-            return current;
-          }, null)!;
-
-        dps = alpha / mostOptimalShell?.reload;
+        dps = alpha / (characteristic("_optimal_shell_cycle") as number);
       }
 
       return dps * 60;
+    },
+  },
+
+  dpm_peekaboo: {
+    type: CharacteristicType.Number,
+
+    should_render({ gun }) {
+      return gun.gun_type!.$case === "regular";
+    },
+
+    compute({ characteristic }): number {
+      const damage = characteristic("damage") as number;
+      const reload = characteristic("reload") as number;
+
+      return damage * (60 / Math.max(reload, PEEKABOO_MIN_CYCLE));
+    },
+  },
+
+  dpm_effective: {
+    type: CharacteristicType.Number,
+
+    should_render({ gun }) {
+      return gun.gun_type!.$case === "auto_reloader";
+    },
+
+    compute({ characteristic }): number {
+      const damage = characteristic("damage") as number;
+      const reloads = characteristic("reloads") as number[];
+      const intraClip = characteristic("intra_clip") as number;
+
+      // dump every other shell at the intra clip rate, spend the rest of the
+      // minute cycling the optimal shell; ordering doesn't change the total
+      const rest = reloads.length - 1;
+      const cycle = characteristic("_optimal_shell_cycle") as number;
+
+      return damage * rest + (damage * (60 - rest * intraClip)) / cycle;
     },
   },
 
@@ -233,7 +277,7 @@ export const characteristics = {
       return gun.gun_type!.$case !== "regular";
     },
 
-    compute({ characteristic }) {
+    compute({ characteristic }): number {
       const clipSize = characteristic("clip_size") as number;
       const damage = characteristic("damage") as number;
 
@@ -241,36 +285,35 @@ export const characteristics = {
     },
   },
 
-  // TODO: custom type of shell index
-  // optimal_shell: {
-  //   type: CharacteristicType.Number,
+  /**
+   * 1-indexed so that it can be rendered as-is
+   */
+  optimal_shell: {
+    type: CharacteristicType.Number,
 
-  //   should_render({ gun }) {
-  //     return gun.gun_type!.$case === "auto_reloader";
-  //   },
+    should_render({ gun }) {
+      return gun.gun_type!.$case === "auto_reloader";
+    },
 
-  //   compute({ gun, script, degressive }) {
-  //     if (gun.gun_type!.$case !== "auto_reloader") return -1;
+    compute({ characteristic }): number {
+      const reloads = characteristic("reloads") as number[];
+      const intraClip = characteristic("intra_clip") as number;
 
-  //     const autoReloader = gun.gun_type!.value;
-  //     const coefficient = reloadCoefficient({ script, degressive, gun });
-  //     const intraClip = intraClipCoefficient({ script });
+      let best = 0;
+      let bestTime = Infinity;
 
-  //     return autoReloader.shell_reloads.reduce(
-  //       (bestIndex, reload, index, reloads) => {
-  //         const effectiveReload =
-  //           reload * coefficient +
-  //           (index > 0 ? autoReloader.intra_clip * intraClip : 0);
-  //         const bestReload =
-  //           reloads[bestIndex] * coefficient +
-  //           (bestIndex > 0 ? autoReloader.intra_clip * intraClip : 0);
+      reloads.forEach((reload, index) => {
+        const time = reload + (index > 0 ? intraClip : 0);
 
-  //         return effectiveReload < bestReload ? index : bestIndex;
-  //       },
-  //       0,
-  //     );
-  //   },
-  // },
+        if (time < bestTime) {
+          best = index;
+          bestTime = time;
+        }
+      });
+
+      return best + 1;
+    },
+  },
 
   burst_size: {
     type: CharacteristicType.Number,
@@ -410,41 +453,87 @@ export const characteristics = {
     },
   },
 
+  explosion_radius: {
+    type: CharacteristicType.Number,
+
+    should_render({ shell }) {
+      return shell.explosion_radius !== undefined;
+    },
+
+    compute({ shell }) {
+      return shell.explosion_radius!;
+    },
+  },
+
   speed_forward: {
     type: CharacteristicType.Number,
-    compute({ tank }) {
-      return tank.speed_forwards;
+    compute({ tank, script }) {
+      let bias = 0;
+      let factor = 1;
+
+      script("protagonist", "GearOil", (effect) => {
+        bias += effect.bonusValues?.fwdSpeedLimitBias ?? 0;
+      });
+
+      script("protagonist", "ImprovedAfterburning", (effect) => {
+        bias += effect.fwdSpeedLimitBias ?? 0;
+      });
+
+      script("protagonist", "AttributesModifier", (effect) => {
+        factor *= effect.attributes?.speedLimitsFactor ?? 1;
+      });
+
+      return (tank.speed_forwards + bias) * factor;
     },
   },
 
   speed_backward: {
     type: CharacteristicType.Number,
-    compute({ tank }) {
-      return tank.speed_backwards;
+    compute({ tank, script }) {
+      let bias = 0;
+      let factor = 1;
+
+      script("protagonist", "GearOil", (effect) => {
+        bias += effect.bonusValues?.bkwdSpeedLimitBias ?? 0;
+      });
+
+      script("protagonist", "ImprovedAfterburning", (effect) => {
+        bias += effect.bkwdSpeedLimitBias ?? 0;
+      });
+
+      script("protagonist", "AttributesModifier", (effect) => {
+        factor *= effect.attributes?.speedLimitsFactor ?? 1;
+      });
+
+      return (tank.speed_backwards + bias) * factor;
     },
   },
 
   aim_time: {
     type: CharacteristicType.Number,
-    compute({ gun, turret, track, degressive, script, characteristic }) {
+    compute({ tank, gun, turret, track, degressive, script }): number {
       /*
-      T = (A / C) × ln(√(1 + k² × S)) / (1 − p/100)
+      Mirrors the game's hangar params builder (wotblitz.exe 11.21, aim time
+      at 0x19eb300). Consumables such as FireControlSystem are battle-time
+      only and are not part of it.
+
+      T = (A × C) × ln(√(1 + k² × S)) / (1 − p/100)
 
       S = (turret rotation speed × turret dispersion factor)²
         + (hull rotation speed × hull dispersion factor)²
-        + (min(top speed, 30) × movement dispersion factor)²
+        + (min(raw top speed, 30) × movement dispersion factor)²
+      raw top speed is the vehicle's unmodified forward speed limit; equipment
+      and engine modifiers do not affect it here.
       A: the gun’s raw aimingTime—the time for the reticle to shrink by a factor of e ≈ 2.718.
-      C: gunner crew factor, accounting for training, provisions, and shared crew roles.
+      C: gunner degressive crew factor (the reciprocal of the game's gunner value, which divides the time).
       k: stabilization multiplier; normally 1, reduced by the stabilizer.
       p: signed aiming-drive modifier. For −12%, the displayed time is divided by 1.12, reducing it by approximately 10.7%.
       */
 
-      const topSpeed = characteristic("speed_forward") as number;
-
       const S =
         (turret.traverse_speed * gun.dispersion_traverse) ** 2 +
         (track.traverse_speed * track.dispersion_traverse) ** 2 +
-        (Math.min(topSpeed, 30) * track.dispersion_move) ** 2;
+        (Math.min(tank.speed_forwards, 30) * track.dispersion_move) ** 2;
 
       const A = gun.aim_time;
       const C = degressive("gunner");
@@ -452,7 +541,7 @@ export const characteristics = {
       let p = 0;
 
       script("protagonist", "miscAttrs/gunAimingTimeFactor", (effect) => {
-        p = effect.bonusValues!.percent / 100;
+        p += effect.bonusValues!.percent / 100;
       });
 
       let k = 1;
@@ -465,7 +554,7 @@ export const characteristics = {
         },
       );
 
-      const T = ((A / C) * Math.log(Math.sqrt(1 + k ** 2 * S))) / (1 - p / 100);
+      const T = (A * C * Math.log(Math.sqrt(1 + k ** 2 * S))) / (1 - p);
 
       return T;
     },
@@ -488,28 +577,171 @@ export const characteristics = {
     },
   },
 
+  _stabilizer_coefficient: {
+    type: CharacteristicType.Number,
+    compute({ script }) {
+      let coefficient = 0;
+
+      script(
+        "protagonist",
+        "miscAttrs/additiveShotDispersionFactor",
+        (effect) => {
+          coefficient += effect.bonusValues!.percent / 100;
+        },
+      );
+
+      return coefficient;
+    },
+  },
+
+  _camouflage_bonus: {
+    type: CharacteristicType.Number,
+    compute({ tank, state }) {
+      if (!state.camouflage) return 0;
+
+      switch (tank.class) {
+        case TankClass.TANK_CLASS_TANK_DESTROYER:
+          return 0.04;
+        case TankClass.TANK_CLASS_HEAVY:
+          return 0.03;
+        default:
+          return 0.02;
+      }
+    },
+  },
+
+  _camouflage_net_bonus_still: {
+    type: CharacteristicType.Number,
+    compute({ tank, script }) {
+      let bonus = 0;
+
+      script("protagonist", "CamouflageNet", (effect) => {
+        const base = effect.bonus?.[tankClassToBlitzTankClass[tank.class]] ?? 0;
+
+        bonus += base * (effect.activateBonusFactor ?? 1);
+      });
+
+      return bonus;
+    },
+  },
+
+  _camouflage_net_bonus_moving: {
+    type: CharacteristicType.Number,
+    compute({ tank, script }) {
+      let bonus = 0;
+
+      script("protagonist", "CamouflageNet", (effect) => {
+        const base = effect.bonus?.[tankClassToBlitzTankClass[tank.class]] ?? 0;
+
+        bonus += base * 1;
+      });
+
+      return bonus;
+    },
+  },
+
+  dispersion_moving: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      const skill = (context.environment.skills.smooth_driving ?? 0) / 100;
+
+      return (
+        context.track.dispersion_move *
+        (1 +
+          (context.characteristic("_stabilizer_coefficient") as number) -
+          skill)
+      );
+    },
+  },
+
+  dispersion_hull_traversing: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      const skill = (context.environment.skills.smooth_turn ?? 0) / 100;
+
+      return (
+        context.track.dispersion_traverse *
+        (1 +
+          (context.characteristic("_stabilizer_coefficient") as number) -
+          skill)
+      );
+    },
+  },
+
+  dispersion_turret_traversing: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      const skill = (2 * (context.environment.skills.smooth_turret ?? 0)) / 100;
+
+      return (
+        context.gun.dispersion_traverse *
+        (1 +
+          (context.characteristic("_stabilizer_coefficient") as number) -
+          skill)
+      );
+    },
+  },
+
+  dispersion_shooting: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      const skill = (context.environment.skills.soft_recoil ?? 0) / 100;
+
+      return (
+        context.gun.dispersion_shot *
+        (1 +
+          (context.characteristic("_stabilizer_coefficient") as number) -
+          skill)
+      );
+    },
+  },
+
+  dispersion_gun_damaged: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      return (
+        context.gun.dispersion_damaged *
+        (1 + (context.characteristic("_stabilizer_coefficient") as number))
+      );
+    },
+  },
+
   // dispersion_angle: unavailable,
 
   gun_depression: {
     type: CharacteristicType.Number,
-    compute({ state, turret, gun }) {
+    compute({ state, turret, gun, script }) {
       const turretModel = state.model.turrets[turret.id];
       const gunModel = turretModel.guns[gun.id];
+      let bonus = 0;
+
+      script("protagonist", "ImprovedPitchLimitsSystem", (effect) => {
+        bonus += effect.bonusValues?.lowerPitchLimitIncrease ?? 0;
+      });
 
       return (
-        gunModel.pitch!.max + (state.model.initial_turret_rotation?.pitch ?? 0)
+        gunModel.pitch!.max +
+        (state.model.initial_turret_rotation?.pitch ?? 0) +
+        bonus
       );
     },
   },
 
   gun_elevation: {
     type: CharacteristicType.Number,
-    compute({ state, turret, gun }) {
+    compute({ state, turret, gun, script }) {
       const turretModel = state.model.turrets[turret.id];
       const gunModel = turretModel.guns[gun.id];
+      let bonus = 0;
+
+      script("protagonist", "ImprovedPitchLimitsSystem", (effect) => {
+        bonus += effect.bonusValues?.upperPitchLimitIncrease ?? 0;
+      });
 
       return (
-        -gunModel.pitch!.min - (state.model.initial_turret_rotation?.pitch ?? 0)
+        -gunModel.pitch!.min -
+        (state.model.initial_turret_rotation?.pitch ?? 0) +
+        bonus
       );
     },
   },
@@ -596,22 +828,59 @@ export const characteristics = {
     },
   },
 
+  _engine_power_coefficient: {
+    type: CharacteristicType.Number,
+    compute({ tank, script }) {
+      let coefficient = 1;
+
+      const tankClass = tankClassToBlitzTankClass[tank.class];
+
+      script("protagonist", "RecycledEngine", (effect) => {
+        coefficient +=
+          (effect.enginePowerPercentageBonus?.[tankClass] ?? 0) / 100;
+      });
+
+      script("protagonist", "Afterburning", (effect) => {
+        coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
+      });
+
+      script("protagonist", "ImprovedAfterburning", (effect) => {
+        coefficient += (effect.enginePowerIncrease ?? 1) - 1;
+      });
+
+      script("protagonist", "Fuel", (effect) => {
+        coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
+      });
+
+      script("protagonist", "GearOil", (effect) => {
+        coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
+      });
+
+      script("protagonist", "AttributesModifier", (effect) => {
+        coefficient *= effect.attributes?.enginePowerFactor ?? 1;
+      });
+
+      return coefficient;
+    },
+  },
+
   engine_power: {
     type: CharacteristicType.Number,
-    compute({ engine }) {
-      return engine.power;
+    // explicit return type breaks the circular inference through characteristic()
+    compute({ engine, characteristic }): number {
+      return (
+        engine.power * (characteristic("_engine_power_coefficient") as number)
+      );
     },
   },
 
   power_to_weight: {
     type: CharacteristicType.Number,
-    compute({ engine, characteristic }) {
-      const weight = characteristic("weight");
-      if (typeof weight !== "number") {
-        throw new Error("Weight characteristic must be numeric");
-      }
+    compute({ characteristic }): number {
+      const enginePower = characteristic("engine_power") as number;
+      const weight = characteristic("weight") as number;
 
-      return engine.power / weight;
+      return enginePower / weight;
     },
   },
 
@@ -631,7 +900,7 @@ export const characteristics = {
 
   hard_terrain_coefficient: {
     type: CharacteristicType.Number,
-    compute({ characteristic }) {
+    compute({ characteristic }): number {
       const raw = characteristic("hard_terrain_coefficient_raw") as number;
       return 100 / raw;
     },
@@ -651,7 +920,7 @@ export const characteristics = {
 
   medium_terrain_coefficient: {
     type: CharacteristicType.Number,
-    compute({ characteristic }) {
+    compute({ characteristic }): number {
       const raw = characteristic("medium_terrain_coefficient_raw") as number;
       return 100 / raw;
     },
@@ -671,9 +940,39 @@ export const characteristics = {
 
   soft_terrain_coefficient: {
     type: CharacteristicType.Number,
-    compute({ characteristic }) {
+    compute({ characteristic }): number {
       const raw = characteristic("soft_terrain_coefficient_raw") as number;
       return 100 / raw;
+    },
+  },
+
+  power_to_weight_hard: {
+    type: CharacteristicType.Number,
+    compute({ characteristic }): number {
+      const powerToWeight = characteristic("power_to_weight") as number;
+      const raw = characteristic("hard_terrain_coefficient_raw") as number;
+
+      return powerToWeight / raw;
+    },
+  },
+
+  power_to_weight_medium: {
+    type: CharacteristicType.Number,
+    compute({ characteristic }): number {
+      const powerToWeight = characteristic("power_to_weight") as number;
+      const raw = characteristic("medium_terrain_coefficient_raw") as number;
+
+      return powerToWeight / raw;
+    },
+  },
+
+  power_to_weight_soft: {
+    type: CharacteristicType.Number,
+    compute({ characteristic }): number {
+      const powerToWeight = characteristic("power_to_weight") as number;
+      const raw = characteristic("soft_terrain_coefficient_raw") as number;
+
+      return powerToWeight / raw;
     },
   },
 
@@ -707,17 +1006,32 @@ export const characteristics = {
     },
   },
 
+  _turret_traverse_coefficient: {
+    type: CharacteristicType.Number,
+    compute({ progressive, script }) {
+      let c = 1;
+
+      script("protagonist", "Fuel", (effect) => {
+        c += (effect.bonusValues?.turretRotationSpeedIncrease ?? 0) / 100;
+      });
+
+      return c * progressive("gunner");
+    },
+  },
+
   turret_traverse_speed: {
     type: CharacteristicType.Number,
-    compute({ turret, progressive }) {
-      return turret.traverse_speed * progressive("gunner");
+    compute({ turret, characteristic }): number {
+      const c = characteristic("_turret_traverse_coefficient") as number;
+      return turret.traverse_speed * c;
     },
   },
 
   gun_traverse_speed: {
     type: CharacteristicType.Number,
-    compute({ gun, progressive }) {
-      return gun.rotation_speed * progressive("gunner");
+    compute({ gun, characteristic }): number {
+      const c = characteristic("_turret_traverse_coefficient") as number;
+      return gun.rotation_speed * c;
     },
   },
 
@@ -754,34 +1068,97 @@ export const characteristics = {
 
   fire_chance: {
     type: CharacteristicType.Number,
-    compute({ engine }) {
-      return engine.fire_chance;
+    compute({ engine, script }) {
+      let c = 1;
+
+      script("protagonist", "SafetySet", (effect) => {
+        c -= (effect.bonusValues?.fireProtectionIncrease ?? 0) / 100;
+      });
+
+      return 100 * c * engine.fire_chance;
     },
   },
 
   // fire_rate: unavailable,
   // ramming_resistance: unavailable,
 
-  view_range: {
+  crew_count: {
     type: CharacteristicType.Number,
-    compute({ turret, progressive }) {
-      return turret.view_range * progressive("commander");
+    compute({ tank }) {
+      return tank.crew.length;
     },
   },
 
+  view_range: {
+    type: CharacteristicType.Number,
+    compute({ tank, turret, progressive, script }) {
+      let c = 1;
+
+      script("protagonist", "CoatedOptics", (effect) => {
+        c +=
+          (effect.visionRadiusPercentageBonus?.[
+            tankClassToBlitzTankClass[tank.class]
+          ] ?? 0) / 100;
+      });
+
+      return turret.view_range * c * progressive("commander");
+    },
+  },
+
+  /**
+   * camouflage characteristics are stored as percentages
+   */
   camouflage: {
     type: CharacteristicType.Number,
-    compute({ tank, state }) {
-      const camouflageBonus =
-        tank.class === TankClass.TANK_CLASS_TANK_DESTROYER
-          ? 0.04
-          : tank.class === TankClass.TANK_CLASS_HEAVY
-            ? 0.03
-            : 0.02;
+    compute(context): number {
+      const skill = (3 * (context.environment.skills.camouflage ?? 0)) / 100;
+      const c =
+        1 +
+        (context.characteristic("_camouflage_bonus") as number) +
+        skill +
+        (context.characteristic("_camouflage_net_bonus_still") as number);
 
+      return 100 * context.tank.camouflage_still * c;
+    },
+  },
+
+  camouflage_moving: {
+    type: CharacteristicType.Number,
+    compute(context): number {
+      // light tanks retain their full camouflage while moving
+      if (context.tank.class === TankClass.TANK_CLASS_LIGHT) {
+        return context.characteristic("camouflage") as number;
+      }
+
+      const c =
+        1 +
+        (context.characteristic("_camouflage_bonus") as number) +
+        (context.characteristic("_camouflage_net_bonus_moving") as number);
+
+      return 100 * context.tank.camouflage_moving * c;
+    },
+  },
+
+  camouflage_shooting_still: {
+    type: CharacteristicType.Number,
+    compute({ gun, characteristic }): number {
+      return gun.camouflage_loss * (characteristic("camouflage") as number);
+    },
+  },
+
+  camouflage_shooting_moving: {
+    type: CharacteristicType.Number,
+    compute({ gun, characteristic }): number {
       return (
-        tank.camouflage_still * (1 + (state.camouflage ? camouflageBonus : 0))
+        gun.camouflage_loss * (characteristic("camouflage_moving") as number)
       );
+    },
+  },
+
+  camouflage_on_fire: {
+    type: CharacteristicType.Number,
+    compute({ tank, characteristic }): number {
+      return tank.camouflage_on_fire * (characteristic("camouflage") as number);
     },
   },
 

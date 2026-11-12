@@ -38,7 +38,7 @@ export function TankopediaAntagonistControl({
   const equalize = Tankopedia.use((state) => state.environment.equalize);
 
   const hasCalibratedShells = useEquipment("antagonist", 103);
-  const hasEnhancedArmor = useEquipment("antagonist", 110);
+  const hasEnhancedArmor = useEquipment("protagonist", 110);
 
   const tank = useDuel("antagonist", DuelModule.Tank);
   const gun = useDuel("antagonist", DuelModule.Gun);
@@ -177,9 +177,9 @@ export function TankopediaAntagonistControl({
                 draft.shot = undefined;
 
                 if (hasEnhancedArmor) {
-                  delete draft.antagonist.equipment[4];
+                  delete draft.protagonist.equipment[4];
                 } else {
-                  draft.antagonist.equipment[4] = 0;
+                  draft.protagonist.equipment[4] = 0;
                 }
               });
             }}

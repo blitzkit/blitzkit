@@ -2,43 +2,6 @@ import type {
   CharacteristicContext,
   CharacteristicScript,
 } from "../types/characteristics";
-import { tankClassToBlitzTankClass } from "./tankClass";
-
-function hullTraverseEnginePowerCoefficient(
-  tank: TankDefinition,
-  script: CharacteristicScript,
-) {
-  let coefficient = 1;
-
-  const enginePowerPercentage = tankClassToBlitzTankClass[tank.class];
-
-  script("protagonist", "RecycledEngine", (effect) => {
-    coefficient +=
-      (effect.enginePowerPercentageBonus?.[enginePowerPercentage] ?? 0) / 100;
-  });
-
-  script("protagonist", "Afterburning", (effect) => {
-    coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
-  });
-
-  script("protagonist", "ImprovedAfterburning", (effect) => {
-    coefficient += (effect.enginePowerIncrease ?? 1) - 1;
-  });
-
-  script("protagonist", "Fuel", (effect) => {
-    coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
-  });
-
-  script("protagonist", "GearOil", (effect) => {
-    coefficient += (effect.bonusValues?.enginePowerIncrease ?? 0) / 100;
-  });
-
-  script("protagonist", "AttributesModifier", (effect) => {
-    coefficient *= effect.attributes?.enginePowerFactor ?? 1;
-  });
-
-  return coefficient;
-}
 
 function hullTraverseRotationCoefficient(
   driverCoefficient: number,
@@ -76,6 +39,7 @@ export function hullTraverseSpeed(
     progressive,
     script,
     environment,
+    characteristic,
   } = context;
   const terrainResistance = track.resistance_hard;
   const stockEngine = tank.engines[0];
@@ -91,7 +55,7 @@ export function hullTraverseSpeed(
   const weight =
     tank.weight + engine.weight + track.weight + turret.weight + gun.weight;
   const enginePower =
-    (engine.power * hullTraverseEnginePowerCoefficient(tank, script)) /
+    (engine.power * (characteristic("_engine_power_coefficient") as number)) /
     stockEngine.power;
   const rotationSpeed = hullTraverseRotationCoefficient(
     progressive("driver"),

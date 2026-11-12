@@ -4,6 +4,7 @@ import { Scroller } from "../../../../../components/Scroller";
 import type { ThicknessRange } from "../../../../../components/TankStaticArmor";
 import { TankopediaCharacteristics } from "../../../../../components/TankopediaCharacteristics";
 import { TankopediaGameModeAbilities } from "../../../../../components/TankopediaGameModeAbilities";
+import { TankopediaVideos } from "../../../../../components/TankopediaVideos";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
 import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
 import { defaultEqualizer } from "../../../../../config/equalizer";
@@ -69,6 +70,7 @@ export const Page = withErrorWrapper(
           />
           <TankopediaCharacteristics characteristics={characteristics} />
           <TankopediaGameModeAbilities />
+          <TankopediaVideos />
         </div>
       </div>
     );

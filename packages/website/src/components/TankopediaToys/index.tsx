@@ -1,6 +1,6 @@
 import { alias, isExplosive } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
-import { DoubleArrowRightIcon } from "@radix-ui/react-icons";
+import { DoubleArrowRightIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { times } from "lodash-es";
 import {
   useCallback,
@@ -12,15 +12,25 @@ import {
   type PointerEvent,
 } from "react";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import { api } from "../../api/dynamic";
 import type { ToyProps } from "../../config/toys";
+import {
+  DEFAULT_PITCH_TRANSITION,
+  applyPitchYawLimits,
+} from "../../core/blitz/applyPitchYawLimits";
+import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useEquipment } from "../../hooks/useEquipment";
 import { useStrings } from "../../hooks/useStrings";
+import { Tankopedia } from "../../stores/tankopedia";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Button } from "../Button";
 import { Checkbox } from "../Checkbox";
 import { Code } from "../Code";
 import { SegmentedControl } from "../SegmentedControl";
+import { Slider } from "../Slider";
 import { ShellBorder } from "../Tankopedia/CharacteristicsSection/components/Characteristics/components/ReloadVisualizer/components/ShellBorder";
+import { TankopediaFlexibilityCanvas } from "../TankopediaFlexibilityCanvas";
 import styles from "./index.module.css";
 
 export function RicochetToy({ characteristics }: ToyProps) {
@@ -528,7 +538,9 @@ export function ReloadToy({ characteristics }: ToyProps) {
               className={styles["shell-track"]}
               key={index}
               style={{
-                transform: `rotate(${135 - 7 * (index - (reloadData.shells - 1) / 2)}deg)`,
+                transform: `rotate(${
+                  135 - 7 * (index - (reloadData.shells - 1) / 2)
+                }deg)`,
               }}
             >
               <div className={styles.shell}>
@@ -563,6 +575,336 @@ export function ReloadToy({ characteristics }: ToyProps) {
         {strings.tanks.toys.reload.skip}
         <DoubleArrowRightIcon />
       </Button>
+    </div>
+  );
+}
+
+const viewRangeMaps = [
+  { id: "ghost-factory", string: "ghost_factory", size: 512 },
+  { id: "dead-rail", string: "dead_rail", size: 512 },
+] as const;
+
+export function ViewRangeToy({ characteristics }: ToyProps) {
+  const strings = useStrings();
+  const [mapId, setMapId] = useState<string>(viewRangeMaps[0].id);
+  const [camouflage, setCamouflage] = useState(0);
+  const container = useRef<HTMLDivElement>(null);
+  const range = useRef<HTMLDivElement>(null);
+  const map = viewRangeMaps.find(({ id }) => id === mapId) ?? viewRangeMaps[0];
+  const viewRange = characteristics.get("view_range") as number;
+  const resolvedViewRange = viewRange * (1 - camouflage);
+
+  function follow(event: PointerEvent<HTMLDivElement>) {
+    if (!container.current || !range.current) return;
+
+    const rect = container.current.getBoundingClientRect();
+    range.current.style.left = `${event.clientX - rect.left}px`;
+    range.current.style.top = `${event.clientY - rect.top - 16}px`;
+  }
+
+  return (
+    <div
+      ref={container}
+      className={styles["view-range"]}
+      onPointerMove={follow}
+    >
+      <div
+        className={styles.map}
+        style={{
+          backgroundImage: `url(/assets/images/tankopedia/visualizers/range/${map.id}.png)`,
+        }}
+      />
+
+      <div
+        ref={range}
+        className={styles.range}
+        style={{ width: `${(resolvedViewRange / map.size) * 100}%` }}
+      >
+        <EyeOpenIcon width="1.25rem" height="1.25rem" />
+        {literals(strings.common.units.m, {
+          value: resolvedViewRange.toFixed(0),
+        })}
+      </div>
+
+      <div className={styles.camouflage}>
+        <span>{strings.tanks.toys.view_range.camo}</span>
+
+        <Slider.Root
+          className={styles.slider}
+          value={[camouflage]}
+          min={0}
+          max={0.5}
+          step={0.01}
+          onValueChange={([value]) => setCamouflage(value)}
+        >
+          <Slider.Track>
+            <Slider.Range />
+          </Slider.Track>
+          <Slider.Thumb />
+        </Slider.Root>
+
+        <Code size="minor">
+          {literals(strings.common.units.percentage, {
+            value: Math.round(camouflage * 100),
+          })}
+        </Code>
+      </div>
+
+      <div className={styles.maps}>
+        <SegmentedControl
+          options={viewRangeMaps.map(({ id, string }) => ({
+            value: id,
+            label: strings.tanks.toys.view_range[string],
+          }))}
+          value={mapId}
+          onValueChange={setMapId}
+          variant="underline"
+        />
+      </div>
+    </div>
+  );
+}
+
+const modelDefinitions = await api.models();
+
+const ANGLE_COEFFICIENT = 1 / 10;
+
+function mag(x: number) {
+  return (1 / Math.PI) * Math.atan(ANGLE_COEFFICIENT * x) + 1 / 2;
+}
+
+function magInverse(y: number) {
+  return (1 / ANGLE_COEFFICIENT) * Math.tan(Math.PI * y - Math.PI / 2);
+}
+
+function polar(thetaDeg: number, m = 1) {
+  const theta = degToRad(thetaDeg);
+  return `${m * Math.cos(theta)} ${-m * Math.sin(theta)}`;
+}
+
+export function FlexibilityToy() {
+  const strings = useStrings();
+  const degrees = (value: number) =>
+    literals(strings.common.units.deg, { value: value.toFixed(0) });
+  const tank = useDuel("protagonist", DuelModule.Tank);
+  const turret = useDuel("protagonist", DuelModule.Turret);
+  const gun = useDuel("protagonist", DuelModule.Gun);
+  const modelRequested = Tankopedia.use(
+    (state) => state.loaders.model.requested,
+  );
+  const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
+  const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
+
+  const tankModel = modelDefinitions.models[tank.id];
+  const turretModel = tankModel.turrets[turret.id];
+  const gunModel = turretModel.guns[gun.id];
+  const p = gunModel.pitch!;
+  const y = turretModel.yaw;
+  const f = p.front;
+  const b = p.back;
+  const t = p.transition ?? DEFAULT_PITCH_TRANSITION;
+
+  // the turret's baked-in mount tilt is folded into displayed pitch values
+  const initialTurretPitch = degToRad(
+    tankModel.initial_turret_rotation?.pitch ?? 0,
+  );
+  const tiltDeg = radToDeg(initialTurretPitch);
+  const magTilted = (deg: number) => mag(deg + tiltDeg);
+
+  const defaultMin = -degToRad(f?.max ?? p.max) - initialTurretPitch;
+  const defaultMax = -degToRad(f?.min ?? p.min) - initialTurretPitch;
+
+  const [yaw, setYaw] = useState(0);
+  const [pitch, setPitch] = useState(0);
+  const [minPitch, setMinPitch] = useState(defaultMin);
+  const [maxPitch, setMaxPitch] = useState(defaultMax);
+  const container = useRef<HTMLDivElement>(null);
+
+  // reset when the gun or turret changes
+  useEffect(() => {
+    setYaw(0);
+    setPitch(0);
+    setMinPitch(defaultMin);
+    setMaxPitch(defaultMax);
+    modelTransformEvent.dispatch({ pitch: 0, yaw: 0 });
+  }, [tank.id, turret.id, gun.id]);
+
+  function outline(limit: "max" | "min") {
+    const m = magTilted(p[limit]);
+    let d = "";
+
+    // right
+    if (y) {
+      d += `M 0 0 L ${polar(90 - y.max, m)}`;
+    } else if (b) {
+      d += `M ${polar(-90 + b.range / 2 + t, m)}`;
+    } else {
+      d += `M ${polar(-90, m)}`;
+    }
+    d += f
+      ? `A ${m} ${m} 0 0 0 ${polar(90 - f.range / 2 - t, m)}`
+      : `A ${m} ${m} 0 0 0 ${polar(90, m)}`;
+
+    // front
+    if (f) {
+      const mf = magTilted(f[limit]);
+      d += `L ${polar(90 - f.range / 2, mf)}`;
+      d += `A ${mf} ${mf} 0 0 0 ${polar(90 + f.range / 2, mf)}`;
+    }
+
+    // left
+    d += f ? `L ${polar(90 + f.range / 2 + t, m)}` : `L ${polar(90, m)}`;
+    if (y) {
+      d += `A ${m} ${m} 0 0 0 ${polar(90 - y.min, m)}`;
+    } else if (b) {
+      d += `A ${m} ${m} 0 0 0 ${polar(-90 - b.range / 2 - t, m)}`;
+    } else {
+      d += `A ${m} ${m} 0 0 0 ${polar(-90, m)}`;
+    }
+
+    // back
+    if (!y && b) {
+      const mb = magTilted(b[limit]);
+      d += `L ${polar(-90 - b.range / 2, mb)}`;
+      d += `A ${mb} ${mb} 0 0 0 ${polar(-90 + b.range / 2, mb)}`;
+    }
+
+    return `${d}Z`;
+  }
+
+  const path = outline("max") + outline("min");
+
+  const r = mag(radToDeg(-(pitch - initialTurretPitch)));
+  const dotX = r * Math.sin(yaw);
+  const dotY = r * Math.cos(yaw);
+
+  function update(event: PointerEvent<HTMLDivElement>) {
+    event.preventDefault();
+
+    if (!container.current) return;
+
+    const rect = container.current.getBoundingClientRect();
+    const size = Math.min(rect.width, rect.height);
+    const u = event.clientX - rect.left - rect.width / 2;
+    const v = event.clientY - rect.top - rect.height / 2;
+    let nextYaw = Math.atan2(u, -v);
+
+    const min = applyPitchYawLimits(
+      -Math.PI,
+      nextYaw,
+      p,
+      y,
+      hasImprovedVerticalStabilizer,
+      hasDownImprovedVerticalStabilizer,
+    );
+    const max = applyPitchYawLimits(
+      Math.PI,
+      nextYaw,
+      p,
+      y,
+      hasImprovedVerticalStabilizer,
+      hasDownImprovedVerticalStabilizer,
+    );
+
+    nextYaw = min[1];
+    const distance = clamp(
+      2 * Math.sqrt((u / size) ** 2 + (v / size) ** 2),
+      0,
+      1,
+    );
+    const nextPitch = clamp(
+      degToRad(magInverse(-distance)) + initialTurretPitch,
+      min[0],
+      max[0],
+    );
+
+    setPitch(nextPitch);
+    setYaw(nextYaw);
+    setMinPitch(min[0] - initialTurretPitch);
+    setMaxPitch(max[0] - initialTurretPitch);
+
+    modelTransformEvent.dispatch({ pitch: nextPitch, yaw: nextYaw });
+  }
+
+  return (
+    <div className={styles.flexibility}>
+      <div className={styles.side}>
+        {modelRequested && <TankopediaFlexibilityCanvas />}
+
+        <div
+          className={styles.cone}
+          style={{
+            background: `conic-gradient(
+              at 0 50%,
+              transparent,
+              transparent ${Math.PI / 2 - maxPitch}rad,
+              var(--cyan-a4) ${Math.PI / 2 - maxPitch}rad,
+              var(--jade-a4) ${Math.PI / 2 - minPitch}rad,
+              transparent ${Math.PI / 2 - minPitch}rad,
+              transparent 180deg
+            )`,
+          }}
+        />
+      </div>
+
+      <div ref={container} className={styles.radial} onPointerMove={update}>
+        <div className={styles.texture} />
+
+        <div className={styles.square}>
+          <svg className={styles.limits} viewBox="-1 -1 2 2">
+            <path
+              fillRule="evenodd"
+              fill="var(--gray-5)"
+              stroke="var(--gray-8)"
+              strokeWidth="1px"
+              vectorEffect="non-scaling-stroke"
+              d={path}
+            />
+            <path
+              stroke="var(--gray-10)"
+              fill="transparent"
+              strokeWidth="1px"
+              strokeDasharray="0.5rem 0.5rem"
+              vectorEffect="non-scaling-stroke"
+              d="M 0.5 0 A 0.5 0.5 0 1 1 -0.5 0 A 0.5 0.5 0 1 1 0.5 0 Z"
+            />
+          </svg>
+
+          <div
+            className={styles.dot}
+            style={{
+              left: `${50 * (dotX + 1)}%`,
+              bottom: `${50 * (dotY + 1)}%`,
+            }}
+          />
+        </div>
+
+        <div
+          className={styles.pointer}
+          style={{ transform: `translateX(-50%) rotate(${yaw + Math.PI}rad)` }}
+        />
+
+        <CornerStat
+          label={strings.tanks.toys.flexibility.pitch}
+          value={degrees(radToDeg(pitch - initialTurretPitch))}
+          position={CornerStatPosition.TopLeft}
+        />
+        <CornerStat
+          label={strings.tanks.toys.flexibility.yaw}
+          value={degrees(radToDeg(yaw))}
+          position={CornerStatPosition.TopRight}
+        />
+        <CornerStat
+          label={strings.tanks.toys.flexibility.max}
+          value={degrees(radToDeg(maxPitch))}
+          position={CornerStatPosition.BottomLeft}
+        />
+        <CornerStat
+          label={strings.tanks.toys.flexibility.min}
+          value={degrees(radToDeg(minPitch))}
+          position={CornerStatPosition.BottomRight}
+        />
+      </div>
     </div>
   );
 }

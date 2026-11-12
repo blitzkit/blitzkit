@@ -14,7 +14,7 @@ export abstract class AbstractVFS {
     const path = await import("node:path/posix");
     this.normalizePath = path.normalize;
 
-    await this._init();
+    return await this._init();
   }
 
   protected abstract _init(): Promise<typeof this>;

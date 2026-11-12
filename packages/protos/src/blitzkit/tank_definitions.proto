@@ -3,6 +3,7 @@ syntax = "proto3";
 package blitzkit;
 
 import "i18n.proto";
+import "math.proto";
 
 message TankDefinitions {
   map<uint32, TankDefinition> tanks = 1;
@@ -42,6 +43,15 @@ message TankDefinition {
   string                    dev_name           = 32;
   optional Equalizer        equalizer          = 33;
   optional I18nString       name_full          = 34;
+  repeated ModulePosition   module_positions   = 35;
+}
+
+// Hand-authored cell in the modules screen grid. Tanks without any use the
+// automatic layout.
+message ModulePosition {
+  int32        id       = 1;
+  ModuleType   type     = 2;
+  ProtoVector2 position = 3;
 }
 
 message Equalizer {
@@ -87,6 +97,7 @@ message TrackDefinition {
   float                 resistance_medium   = 10;
   float                 resistance_soft     = 11;
   repeated Unlock       unlocks             = 12;
+  float                 repair_time         = 13;
 }
 
 message EngineDefinition {

@@ -1,11 +1,30 @@
 .discriminator {
   position: absolute;
-  right: var(--space-3);
 
   font-size: var(--font-size-minor);
   text-align: right;
 
   pointer-events: none;
 
-  top: 50%;
+  white-space: nowrap;
+
+  &[data-corner="top-right"],
+  &[data-corner="bottom-right"] {
+    right: var(--space-3);
+  }
+
+  &[data-corner="top-left"],
+  &[data-corner="bottom-left"] {
+    right: var(--space-3);
+  }
+
+  &[data-corner="top-left"],
+  &[data-corner="top-right"] {
+    top: var(--space-3);
+  }
+
+  &[data-corner="bottom-left"],
+  &[data-corner="bottom-right"] {
+    bottom: var(--space-3);
+  }
 }

@@ -1,9 +1,9 @@
-import { BoundingBox, Vector3 } from "../../../protos/src/blitzkit";
+import { BoundingBox, ProtoVector3 } from "../../../protos/src/blitzkit";
 
 export function normalizeBoundingBox(boundingBox: BoundingBox) {
   return {
     x: boundingBox.max!.x - boundingBox.min!.x,
     y: boundingBox.max!.y - boundingBox.min!.y,
     z: boundingBox.max!.z - boundingBox.min!.z,
-  } satisfies Vector3;
+  } satisfies ProtoVector3;
 }
