@@ -119,7 +119,7 @@ function Modules() {
                 });
               }}
             >
-              <DoubleArrowDownIcon />
+              <DoubleArrowUpIcon />
             </IconButton>
 
             <IconButton
@@ -139,7 +139,7 @@ function Modules() {
                 });
               }}
             >
-              <DoubleArrowUpIcon />
+              <DoubleArrowDownIcon />
             </IconButton>
           </div>
         )}
@@ -221,8 +221,9 @@ function ModuleTree() {
     <div
       className={styles.tree}
       style={{
-        gridTemplateColumns: `repeat(${columns}, var(--module-size))`,
-        gridTemplateRows: `repeat(${rows}, var(--module-size))`,
+        // Transposed: the layout's columns (depth) become rows
+        gridTemplateColumns: `repeat(${rows}, var(--module-size))`,
+        gridTemplateRows: `repeat(${columns}, var(--module-size))`,
       }}
     >
       {cells.map((cell) => {
@@ -232,14 +233,14 @@ function ModuleTree() {
           <div
             key={cell.position.join(",")}
             className={styles.cell}
-            style={{ gridColumn: cell.position[0], gridRow: cell.position[1] }}
+            style={{ gridColumn: cell.position[1], gridRow: cell.position[0] }}
           >
-            {cell.trunkUp && <span className={styles["trunk-up"]} />}
-            {cell.trunkDown && <span className={styles["trunk-down"]} />}
-            {cell.snakeUp && <span className={styles["snake-up"]}></span>}
-            {cell.snakeDown && <span className={styles["snake-down"]}></span>}
-            {cell.right && <span className={styles.right} />}
-            {cell.left && <span className={styles.left}></span>}
+            {cell.trunkUp && <span className={styles["trunk-left"]} />}
+            {cell.trunkDown && <span className={styles["trunk-right"]} />}
+            {cell.snakeUp && <span className={styles["snake-left"]} />}
+            {cell.snakeDown && <span className={styles["snake-right"]} />}
+            {cell.right && <span className={styles.bottom} />}
+            {cell.left && <span className={styles.top} />}
 
             {cell.unlock && module && (
               <ModuleNode
@@ -303,7 +304,7 @@ function ModuleNode({ unlock, module, tooltip }: ModuleNodeProps) {
       size="major"
       radius="1"
       variant={isSelected ? "surface" : "soft"}
-      color={isTop ? "amber" : isSelected ? undefined : "gray"}
+      color={isSelected ? (isTop ? "amber" : undefined) : "gray"}
       className={styles.module}
       onClick={() => {
         if (isTank) return;
