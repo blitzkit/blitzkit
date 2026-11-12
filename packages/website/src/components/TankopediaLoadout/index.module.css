@@ -145,6 +145,8 @@
     --line-thickness: var(--space-1);
     --line-border: var(--space-1) solid var(--gray-6);
 
+    margin-bottom: calc(var(--space-2) + var(--font-size-minor));
+
     display: grid;
     gap: var(--depth-gap) var(--sibling-gap);
 
@@ -214,6 +216,33 @@
         .icon {
           width: 2em;
           height: 2em;
+
+          .module[data-major="true"] & {
+            transform: scale(1.25);
+          }
+        }
+
+        .price {
+          display: flex;
+          gap: var(--space-1);
+
+          font-size: var(--font-size-minor);
+
+          position: absolute;
+          top: 100%;
+          left: 50%;
+
+          transform: translateX(-50%);
+
+          margin-top: var(--space-2);
+
+          background-color: var(--gray-2);
+
+          svg,
+          img {
+            width: 1em;
+            height: 1em;
+          }
         }
       }
     }

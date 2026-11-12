@@ -88,7 +88,7 @@
 
   &[data-variant="surface"],
   &[data-variant="soft"] {
-    background-color: var(--accent-a3);
+    background-color: var(--accent-4);
     color: var(--gray-12);
   }
 

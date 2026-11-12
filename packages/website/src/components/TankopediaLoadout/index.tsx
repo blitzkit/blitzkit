@@ -1,5 +1,6 @@
 import {
   alias,
+  formatCompact,
   MAX_SKILL_LEVEL,
   permanentSkills,
   romanize,
@@ -306,6 +307,7 @@ function ModuleNode({ unlock, module, tooltip }: ModuleNodeProps) {
       variant={isSelected ? "surface" : "soft"}
       color={isSelected ? (isTop ? "amber" : undefined) : "gray"}
       className={styles.module}
+      data-major={unlock.type === ModuleType.MODULE_TYPE_VEHICLE}
       onClick={() => {
         if (isTank) return;
 
@@ -350,18 +352,6 @@ function ModuleNode({ unlock, module, tooltip }: ModuleNodeProps) {
         });
       }}
     >
-      <Discriminator corner="top-right">{romanize(module.tier)}</Discriminator>
-
-      {/* {unlock.cost!.value > 0 && (
-        <Discriminator>
-          <Text size="minor">{formatCompact(locale, unlock.cost!.value)}</Text>
-          <img
-            alt={unlock.cost!.type}
-            src={alias("api", `/icons/currencies/${unlock.cost!.type}.webp`)}
-          />
-        </Discriminator>
-      )} */}
-
       <img
         alt={tooltip}
         src={
@@ -374,6 +364,18 @@ function ModuleNode({ unlock, module, tooltip }: ModuleNodeProps) {
         }
         className={styles.icon}
       />
+
+      <Discriminator corner="top-left">{romanize(module.tier)}</Discriminator>
+
+      {unlock.cost!.value > 0 && (
+        <div className={styles.price}>
+          <Text size="minor">{formatCompact(locale, unlock.cost!.value)}</Text>
+          <img
+            alt={unlock.cost!.type}
+            src={alias("api", `/icons/currencies/${unlock.cost!.type}.webp`)}
+          />
+        </div>
+      )}
     </IconButton>
   );
 
