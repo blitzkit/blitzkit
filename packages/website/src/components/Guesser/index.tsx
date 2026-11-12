@@ -76,7 +76,6 @@ export function Guesser() {
   const [results, setResults] = useState<TankDefinition[] | null>(null);
   const [selected, setSelected] = useState<TankDefinition | null>(null);
   const tiers = Guess.use((state) => state.tiers);
-  const status = useRef<HTMLSpanElement>(null);
   const allTiersSelected = tiers.length === TIERS.length;
 
   const requestSearch = useCallback(() => {
@@ -104,22 +103,6 @@ export function Guesser() {
   useEffect(() => {
     if (guessState !== GuessState.NotGuessed) setSelected(null);
   }, [guessState]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!status.current) return;
-
-      status.current.innerText = allTiersSelected
-        ? literals(strings.guesser.stats, {
-            correct: correctGuesses,
-            total: totalGuesses,
-            streak: streak,
-          })
-        : strings.guesser.stats_untracked;
-    }, 1000 / 200);
-
-    return () => clearInterval(interval);
-  }, [correctGuesses, totalGuesses, streak, allTiersSelected]);
 
   return (
     <div className={styles.guesser}>
@@ -167,7 +150,15 @@ export function Guesser() {
         )}
       </div>
 
-      <Text lowContrast ref={status} />
+      <Text lowContrast>
+        {allTiersSelected
+          ? literals(strings.guesser.stats, {
+              correct: correctGuesses,
+              total: totalGuesses,
+              streak,
+            })
+          : strings.guesser.stats_untracked}
+      </Text>
 
       <div className={styles.controls}>
         <DropdownMenu.Root modal={false}>

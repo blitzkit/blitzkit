@@ -6,7 +6,7 @@ export function useSkinAnimation(skins: Skin[]) {
   const animate = Tankopedia.use((state) => state.animate);
 
   useFrame((_, delta) => {
-    if (animate) return;
+    if (!animate) return;
 
     for (const { mixer } of skins) {
       if (!mixer) continue;
