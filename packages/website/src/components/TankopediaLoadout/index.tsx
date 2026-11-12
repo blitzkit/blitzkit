@@ -218,9 +218,19 @@ function ModuleTree() {
     [tank, resolve],
   );
 
+  // Prices hang below the modules, so room is only reserved if the bottom row has one
+  const bottomRow = Math.max(...cells.map((cell) => cell.position[0]));
+  const hasBottomCost = cells.some(
+    (cell) =>
+      cell.position[0] === bottomRow &&
+      cell.unlock !== undefined &&
+      cell.unlock.cost!.value > 0,
+  );
+
   return (
     <div
       className={styles.tree}
+      data-has-bottom-cost={hasBottomCost}
       style={{
         // Transposed: the layout's columns (depth) become rows
         gridTemplateColumns: `repeat(${rows}, var(--module-size))`,
