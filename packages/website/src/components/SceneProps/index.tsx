@@ -8,7 +8,11 @@ const SIZE = 2 ** 4;
 
 export const screenshotReadyEvent = new Quicklime(false);
 
-export function SceneProps() {
+interface SceneProps {
+  color?: string;
+}
+
+export function SceneProps({ color = mauveDark.mauve6 }: SceneProps) {
   const mesh = useRef<Mesh>(null!);
 
   useEffect(() => {
@@ -79,7 +83,7 @@ export function SceneProps() {
     >
       <planeGeometry args={[SIZE, SIZE]} />
       <meshStandardMaterial
-        color={mauveDark.mauve6}
+        color={color}
         roughness={1}
         onBeforeCompile={handleBeforeCompile}
       />

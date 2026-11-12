@@ -2,7 +2,7 @@
   "guesser": {
     "help": {
       "title": "Partially reveal tank?",
-      "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
+      "description": "Reveals the tank without showing the name. This round will be considered incorrect!",
       "cancel": "Cancel",
       "reveal": "Reveal"
     },
@@ -14,6 +14,7 @@
     },
 
     "stats": "{correct} / {total} correct, {streak} streak",
+    "stats_untracked": "The score is not tracked when not all tiers are selected",
     "tier": "Tier {tier}",
     "select_all": "Select all",
     "clear": "Clear"

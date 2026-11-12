@@ -2,7 +2,7 @@
 .SubContent {
   --gutter: var(--space-5);
 
-  min-width: min(calc(100dvw - 2 * var(--space-4)), 16rem);
+  min-width: min(calc(100dvw - 2 * var(--space-4)), var(--drop-down-width));
   max-height: calc(
     var(--radix-dropdown-menu-content-available-height) - var(--space-6)
   );

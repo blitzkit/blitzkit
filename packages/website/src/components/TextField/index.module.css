@@ -10,6 +10,8 @@
   font: inherit;
   color: var(--gray-11);
 
+  font-size: var(--font-size-regular);
+
   &[data-variant="bubble"] {
     border-radius: var(--max-size);
 

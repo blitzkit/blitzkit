@@ -41,7 +41,6 @@ export function TankopediaSandbox({
   antagonistCharacteristics,
 }: TankSandboxProps) {
   const wrapper = useRef<HTMLDivElement>(null);
-  const canvas = useRef<HTMLCanvasElement>(null);
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
   const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
@@ -77,7 +76,7 @@ export function TankopediaSandbox({
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer
+            hasDownImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -91,7 +90,7 @@ export function TankopediaSandbox({
             0,
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
-            hasImprovedVerticalStabilizer
+            hasImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -105,7 +104,7 @@ export function TankopediaSandbox({
             0,
             gunModelDefinition.pitch!,
             turretModelDefinition.yaw,
-            hasImprovedVerticalStabilizer
+            hasImprovedVerticalStabilizer,
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -133,7 +132,7 @@ export function TankopediaSandbox({
       modelTransformEvent.last!.yaw,
       gunModelDefinition.pitch!,
       turretModelDefinition.yaw,
-      hasImprovedVerticalStabilizer
+      hasImprovedVerticalStabilizer,
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });
@@ -158,7 +157,6 @@ export function TankopediaSandbox({
       <SmartCanvas
         className={styles.canvas}
         resize={{ debounce: 0 }}
-        ref={canvas}
         gl={{
           clippingPlanes: [],
           localClippingEnabled: true,
@@ -194,13 +192,15 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
 
   const { hasPbr } = useModel(tank.id);
 
+  // this causes a re-render of the ENTIRE thing, maybe move this elsewhere?
+  const revealed = Tankopedia.use((state) => state.revealed);
   const hideTankModelUnderArmor = TankopediaPersistent.use(
-    (state) => state.hideTankModelUnderArmor
+    (state) => state.hideTankModelUnderArmor,
   );
 
   return (
     <>
-      <Lighting hasPbr={hasPbr} />
+      <Lighting hasPbr={hasPbr} hidden={!revealed} />
 
       <SceneProps />
 

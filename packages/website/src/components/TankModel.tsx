@@ -1,6 +1,5 @@
 import { invalidate, useThree, type ThreeEvent } from "@react-three/fiber";
-import type { QuicklimeEvent } from "quicklime";
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Group, Mesh, MeshStandardMaterial, Vector2 } from "three";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
@@ -10,14 +9,19 @@ import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
 import { useDuelModel } from "../hooks/useDuelModel";
 import { hasEquipment } from "../hooks/useEquipment";
 import { useModel } from "../hooks/useModel";
+import { useSilhouette } from "../hooks/useSilhouette";
 import { useSkin } from "../hooks/useSkin";
 import { useSkinAnimation } from "../hooks/useSkinAnimation";
 import { useTankTransform } from "../hooks/useTankTransform";
 import { Tankopedia } from "../stores/tankopedia";
 import { TankopediaDisplay } from "../stores/tankopediaPersistent/constants";
-import { transitionEvent } from "./Lighting";
 
-export function TankModel() {
+interface TankModelProps {
+  // while the lights are down, draws the tank as a flat light shape
+  silhouette?: boolean;
+}
+
+export function TankModel({ silhouette = false }: TankModelProps) {
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const track = useDuel("protagonist", DuelModule.Track);
   const turret = useDuel("protagonist", DuelModule.Turret);
@@ -32,13 +36,16 @@ export function TankModel() {
   const nodes = Object.values(gltf.nodes);
   const skinGltf = useSkin(protagonist.tank);
   const attachmentGltf = useSkin(protagonist.tank, "attachment");
-  const skins = [skinGltf, attachmentGltf].filter((skin) => skin !== undefined);
+  const skins = useMemo(
+    () => [skinGltf, attachmentGltf].filter((skin) => skin !== undefined),
+    [skinGltf, attachmentGltf],
+  );
 
   useTankTransform(track, turret, turretContainer, gunContainer);
   useSkinAnimation(skins);
 
-  useEffect(() => {
-    const emissiveMaterials = new Set<MeshStandardMaterial>();
+  const materials = useMemo(() => {
+    const collected = new Set<MeshStandardMaterial>();
     const roots = [
       gltf.scene,
       ...skins.flatMap((skin) => [...skin.parts.values()].flat()),
@@ -46,34 +53,21 @@ export function TankModel() {
 
     for (const root of roots) {
       root.traverse((object) => {
-        if (
-          object instanceof Mesh &&
-          object.material instanceof MeshStandardMaterial &&
-          object.material.emissiveMap
-        ) {
-          emissiveMaterials.add(object.material);
+        if (!(object instanceof Mesh)) return;
+
+        for (const material of [object.material].flat()) {
+          if (material instanceof MeshStandardMaterial) {
+            collected.add(material);
+          }
         }
       });
     }
 
-    // emissive parts fade with the lights instead of glowing in the dark
-    function applyIntensity(intensity: number) {
-      for (const material of emissiveMaterials) {
-        material.emissiveIntensity = intensity;
-      }
-    }
+    return [...collected];
+  }, [gltf, skins]);
 
-    function handleTransitionEvent(event: QuicklimeEvent<number>) {
-      applyIntensity(event.data);
-    }
-
-    applyIntensity(transitionEvent.last!);
-    transitionEvent.on(handleTransitionEvent);
-
-    return () => {
-      transitionEvent.off(handleTransitionEvent);
-    };
-  }, [gltf, skinGltf, attachmentGltf]);
+  // also fades emissive parts with the lights
+  useSilhouette(silhouette, materials);
 
   return (
     <>

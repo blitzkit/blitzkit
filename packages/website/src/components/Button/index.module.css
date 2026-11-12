@@ -10,7 +10,7 @@
   border: none;
 
   font-family: var(--font-family-regular);
-  font-size: 0.8em;
+  font-size: var(--font-size-regular);
   color: var(--gray-1);
   font-weight: var(--weight-medium);
 
@@ -21,7 +21,7 @@
   }
 
   &[data-size="minor"] {
-    font-size: 0.7em;
+    font-size: var(--font-size-minor);
     padding: var(--space-2) var(--space-3);
 
     &[data-even-padding] {
@@ -30,7 +30,7 @@
   }
 
   &[data-size="major"] {
-    font-size: 1.25em;
+    font-size: var(--font-size-major);
   }
 
   &[data-list-child="horizontal"]:not(:first-child),

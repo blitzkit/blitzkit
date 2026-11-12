@@ -1,3 +1,5 @@
+import styles from "./index.module.css";
+
 export function Spinner() {
-  return null;
+  return <span className={styles.spinner} />;
 }

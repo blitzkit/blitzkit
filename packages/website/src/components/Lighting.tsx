@@ -39,16 +39,17 @@ export const transitionEvent = new Quicklime<number>(0);
 
 interface Props {
   hasPbr: boolean;
+  // keeps the lights off; toggling fades them out/in
+  hidden?: boolean;
 }
 
-export function Lighting({ hasPbr }: Props) {
+export function Lighting({ hasPbr, hidden = false }: Props) {
   const wrapper = useRef<Group>(null);
 
   const highGraphics = TankopediaPersistent.use((state) => state.highGraphics);
   const requestedDisplay = Tankopedia.use(
     (state) => state.loaders.display.requested,
   );
-  const revealed = Tankopedia.use((state) => state.revealed);
   const skinPending = Tankopedia.use(
     (state) =>
       state.loaders.skin.requested !== state.loaders.skin.loaded ||
@@ -57,7 +58,8 @@ export function Lighting({ hasPbr }: Props) {
 
   const animationTime = useRef(REVEAL_ANIMATION_TIME);
   const t0 = useRef(performance.now() / 1e3 - animationTime.current);
-  const holding = useRef(false);
+  // starts held at the fully-faded point when hidden so there's no fade-in
+  const holding = useRef(hidden);
 
   const isRevealing = useRef(true);
   const isFirstReveal = useRef(true);
@@ -89,7 +91,7 @@ export function Lighting({ hasPbr }: Props) {
       return;
     }
 
-    if (!revealed) {
+    if (hidden) {
       animationTime.current = TRANSITION_ANIMATION_TIME;
       t0.current = performance.now() / 1e3;
       holding.current = true;
@@ -103,7 +105,7 @@ export function Lighting({ hasPbr }: Props) {
 
     setAnimate(true);
     invalidate();
-  }, [revealed]);
+  }, [hidden]);
 
   useEffect(() => {
     if (!skinPending) return;
