@@ -8,6 +8,7 @@ import {
 const sortableCharacteristicTypes = new Set<CharacteristicType>([
   CharacteristicType.Number,
   CharacteristicType.NumberList,
+  CharacteristicType.Interval,
 ]);
 
 export const sortableCharacteristics = new Set<CharacteristicName>();

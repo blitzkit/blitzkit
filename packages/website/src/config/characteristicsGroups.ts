@@ -96,9 +96,21 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         indent: true,
       },
       { name: "damage", decimals: 0, units: "hp", localize: true },
-      { name: "damage_range", decimals: 0, units: "hp", localize: true },
+      {
+        name: "damage_range",
+        decimals: 0,
+        units: "hp",
+        localize: true,
+        indent: true,
+      },
       { name: "module_damage", decimals: 0, units: "hp", localize: true },
-      { name: "module_damage_range", decimals: 0, units: "hp", localize: true },
+      {
+        name: "module_damage_range",
+        decimals: 0,
+        units: "hp",
+        localize: true,
+        indent: true,
+      },
       {
         name: "reload",
         decimals: 1,
@@ -236,7 +248,7 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
         ranking: CharacteristicRanking.LowerIsBetter,
       },
 
-      { toy: "aim_time" },
+      // { toy: "aim_time" },
     ],
   },
 

@@ -11,6 +11,7 @@ import type {
   TurretDefinition,
 } from "@blitzkit/protos";
 import type { ReactNode } from "react";
+import type { Vector2Tuple } from "three";
 import type { characteristics } from "../config/characteristics";
 import type { toys } from "../config/toys";
 import type { DuelSide } from "../hooks/useEquipment";
@@ -30,6 +31,10 @@ export type Characteristic = {
   | {
       type: CharacteristicType.NumberList;
       compute(context: CharacteristicContext): number[];
+    }
+  | {
+      type: CharacteristicType.Interval;
+      compute(context: CharacteristicContext): Vector2Tuple;
     }
 );
 
@@ -68,6 +73,7 @@ export enum CharacteristicType {
   Enum,
   Number,
   NumberList,
+  Interval,
 }
 
 export enum CharacteristicRanking {

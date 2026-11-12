@@ -1,3 +1,4 @@
+import type { Vector2Tuple } from "three";
 import { literalsArray } from "@blitzkit/i18n/src/literals";
 import { Fragment, type ReactNode } from "react";
 import { Text } from "../components/Text";
@@ -58,6 +59,20 @@ export function useCharacteristicRenderer() {
 
       case CharacteristicType.Number:
         return renderNumber(characteristic as number, config.units);
+
+      case CharacteristicType.Interval: {
+        const [low, high] = characteristic as Vector2Tuple;
+        const rendered = literalsArray(strings.units.interval, {
+          min: renderNumber(low, undefined),
+          max: renderNumber(high, undefined),
+        });
+
+        if (config.units === undefined) return rendered;
+
+        return literalsArray(strings.units[config.units], {
+          value: <Text>{rendered}</Text>,
+        });
+      }
 
       case CharacteristicType.NumberList: {
         const values = (characteristic as number[]).map((value, index) => (

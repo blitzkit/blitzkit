@@ -1,3 +1,4 @@
+import type { Vector2Tuple } from "three";
 import {
   blitzkitToBlitzShellKind,
   isExplosive,
@@ -19,6 +20,7 @@ import {
  */
 const PEEKABOO_MIN_CYCLE = 10;
 
+// characteristics prefixed with an underscore are compute time only; they are never rendered
 export const characteristics = {
   gun_type: {
     type: CharacteristicType.Enum,
@@ -66,7 +68,6 @@ export const characteristics = {
     },
   },
 
-  // characteristics prefixed with an underscore are compute time only; they are never rendered
   _reload_coefficient: {
     type: CharacteristicType.Number,
 
@@ -240,7 +241,35 @@ export const characteristics = {
     },
   },
 
-  // damage_range: unavailable,
+  // damage rolls within +-25% unless tungsten tips raise the lower end
+  _damage_spread: {
+    type: CharacteristicType.Interval,
+
+    compute({ script }) {
+      let low = 0.75;
+      let high = 1.25;
+
+      script("protagonist", "TungstenTip", (effect) => {
+        low = effect.minDamageFactor;
+        high = effect.maxDamageFactor;
+      });
+
+      return [low, high] satisfies Vector2Tuple;
+    },
+  },
+
+  damage_range: {
+    type: CharacteristicType.Interval,
+
+    compute({ characteristic }): Vector2Tuple {
+      const [low, high] = characteristic("_damage_spread") as Vector2Tuple;
+
+      // damage already folds in the average of the spread
+      const base = (characteristic("damage") as number) / ((low + high) / 2);
+
+      return [base * low, base * high];
+    },
+  },
 
   module_damage: {
     type: CharacteristicType.Number,
@@ -255,7 +284,17 @@ export const characteristics = {
     },
   },
 
-  // module_damage_range: unavailable,
+  module_damage_range: {
+    type: CharacteristicType.Interval,
+
+    compute({ characteristic }): Vector2Tuple {
+      const [low, high] = characteristic("_damage_spread") as Vector2Tuple;
+      const base =
+        (characteristic("module_damage") as number) / ((low + high) / 2);
+
+      return [base * low, base * high];
+    },
+  },
 
   clip_size: {
     type: CharacteristicType.Number,

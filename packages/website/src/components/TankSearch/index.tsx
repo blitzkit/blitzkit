@@ -1,3 +1,4 @@
+import type { Vector2Tuple } from "three";
 import { metaSortTank, SEARCH_KEYS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import type { TankDefinition } from "@blitzkit/protos";
@@ -130,6 +131,14 @@ export const TankSearch = memo<TankSearchProps>(
         switch (characteristic.type) {
           case CharacteristicType.Number: {
             sortValue = value as number;
+
+            break;
+          }
+
+          case CharacteristicType.Interval: {
+            const [low, high] = value as Vector2Tuple;
+
+            sortValue = (low + high) / 2;
 
             break;
           }

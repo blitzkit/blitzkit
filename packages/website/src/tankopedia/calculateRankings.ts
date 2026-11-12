@@ -1,3 +1,4 @@
+import type { Vector2Tuple } from "three";
 import { characteristics as characteristicDefinitions } from "../config/characteristics";
 import { characteristicsGroups } from "../config/characteristicsGroups";
 import {
@@ -39,6 +40,10 @@ function rankingValue(
 
     case CharacteristicType.Number:
       return value as number;
+
+    case CharacteristicType.Interval:
+      const [a, b] = value as Vector2Tuple;
+      return (a + b) / 2;
 
     case CharacteristicType.NumberList: {
       const values = value as number[];

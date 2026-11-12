@@ -37,7 +37,8 @@
     "hp_s": "{value}hp/s",
     "m3": "{value}m³",
     "plus": "+{value}",
-    "fraction": "{numerator} / {denominator}"
+    "fraction": "{numerator} / {denominator}",
+    "interval": "{min} - {max}"
   },
 
   "tanks": {
@@ -154,7 +155,9 @@
         "dpm_effective": "Effective by 60s",
         "dpm_peekaboo": "Peek-a-boo",
         "damage": "Damage",
+        "damage_range": "Range",
         "module_damage": "Module damage",
+        "module_damage_range": "Range",
         "reload": "Reload",
         "reloads": "Reloads",
         "clipping_potential": "Clipping potential",
