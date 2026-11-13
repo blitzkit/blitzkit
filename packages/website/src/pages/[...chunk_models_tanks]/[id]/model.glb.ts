@@ -28,6 +28,12 @@ import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
+import { addParticleEffect } from "../../../core/blitzkit/particles/gltf";
+import {
+  particleEmitters,
+  readParticleEffect,
+  type ParticleEffect,
+} from "../../../core/blitzkit/particles/read";
 import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
 import {
   bindSocket,
@@ -92,6 +98,15 @@ const omitMeshNames = {
   end: ["_POINT"],
 };
 
+/**
+ * seconds an effect keeps spawning for; whatever starts it replaces the
+ * effect's own repeats, and the game counts them unsigned, so 0 or less never
+ * runs out
+ */
+function effectDuration(effect: ParticleEffect, repeats: number) {
+  return repeats > 0 ? repeats * effect["pe.effectDuration"] : undefined;
+}
+
 export async function extractModel(
   vfs: AbstractVFS,
   path: string,
@@ -117,6 +132,7 @@ export async function extractModel(
     joint: Node,
     skin: Skin,
   ][] = [];
+  const effects: [node: Node, effect: ParticleEffect, repeats: number][] = [];
   const motions = new Map<Hierarchy, Motion>();
   const garage = isPart ? partGarage(sc2, preset) : undefined;
 
@@ -215,6 +231,13 @@ export async function extractModel(
                 : component[`ssc.state${component["ssc.activeState"]}`],
             });
             break;
+
+          case "ParticleEffectComponent": {
+            const repeats = garage?.effects.get(hierarchy);
+
+            if (repeats !== undefined) effects.push([node, component, repeats]);
+            break;
+          }
 
           case "SkeletonJointBindingComponent": {
             const skeleton = skeletons.get(hierarchy);
@@ -359,6 +382,20 @@ export async function extractModel(
     if (!socket) throw new Error(`Missing socket ${entity}`);
 
     bindSocket(socket, joint, skin);
+  }
+
+  const emitters = particleEmitters(sc2);
+
+  for (const [node, effect, repeats] of effects) {
+    const read = readParticleEffect(effect, emitters, true);
+
+    if (read.length === 0) continue;
+
+    await addParticleEffect(document, vfs, node, {
+      delay: 0,
+      duration: effectDuration(effect, repeats),
+      emitters: read,
+    });
   }
 
   scene.addChild(document.createNode("test"));

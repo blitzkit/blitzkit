@@ -63,6 +63,8 @@ export function TankModel() {
       for (const material of emissiveMaterials) {
         material.emissiveIntensity = intensity;
       }
+
+      for (const { particles } of skins) particles.setIntensity(intensity);
     }
 
     function handleTransitionEvent(event: QuicklimeEvent<number>) {

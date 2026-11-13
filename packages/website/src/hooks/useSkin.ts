@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import {
   AnimationMixer,
   Mesh,
+  ShaderMaterial,
   SkinnedMesh,
   type Group,
   type Material,
@@ -11,6 +12,7 @@ import {
 import { GLTFLoader } from "three-stdlib";
 import { TRANSITION_ANIMATION_TIME } from "../components/Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
 import { prepareMaterial } from "../core/blitzkit/jsxTree";
+import { createParticleSystem } from "../core/blitzkit/particles/system";
 import { nameOf } from "../core/blitzkit/skinTree";
 import { Tankopedia } from "../stores/tankopedia";
 
@@ -20,6 +22,7 @@ export interface Skin {
   /** customization parts by the tank node they attach to */
   parts: Map<string, Object3D[]>;
   mixer?: AnimationMixer;
+  particles: ReturnType<typeof createParticleSystem>;
 }
 
 const skins = new Map<string, Promise<Skin>>();
@@ -41,6 +44,7 @@ async function loadSkin(path: string) {
     ),
     mixer:
       gltf.animations.length > 0 ? new AnimationMixer(gltf.scene) : undefined,
+    particles: createParticleSystem(gltf.scene),
   };
 
   // bound now for the same reason, every exported clip loops in the garage
@@ -66,12 +70,15 @@ function preparePart(part: Object3D) {
 
     if (!(object instanceof Mesh)) return;
 
+    // particles draw themselves and cast no shadows
+    if (object.material instanceof ShaderMaterial) return;
+
+    prepareMaterial(object.material);
+
     object.castShadow = true;
     object.receiveShadow = true;
     // bounds are from the bind pose
     if (object instanceof SkinnedMesh) object.frustumCulled = false;
-
-    prepareMaterial(object.material);
   });
 }
 
