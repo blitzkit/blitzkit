@@ -1,4 +1,3 @@
-import { crc32 } from "crc";
 import { decompressBlock } from "lz4js";
 
 /**
@@ -26,7 +25,7 @@ export function readDVPL(buffer: Buffer) {
   if (targetBlock.length !== footerData.cSize) {
     throw new RangeError("DVPL size mismatch");
   }
-  if (crc32(targetBlock) !== footerData.crc32) {
+  if (Bun.hash.crc32(targetBlock) !== footerData.crc32) {
     throw new TypeError("DVPL CRC32 mismatch");
   }
 
