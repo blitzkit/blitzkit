@@ -1,0 +1,25 @@
+.map-search-card {
+  user-select: none;
+  overflow: hidden;
+}
+
+.map-search-card .link {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: inherit;
+}
+
+.map-search-card .image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-3);
+}
+
+.map-search-card .name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
