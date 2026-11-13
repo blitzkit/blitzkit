@@ -1,5 +1,4 @@
 import { times } from "lodash-es";
-import type { Vector3Tuple, Vector4Tuple } from "three";
 import { WindowsReadStream } from "./windows";
 
 enum DxgiFormat {
@@ -127,6 +126,16 @@ enum DxgiFormat {
   FORCE_UINT = 0xffffffff,
 }
 
+enum BlockFormat {
+  BC1,
+  BC2,
+  BC3,
+}
+
+// red, green and blue of a packed 5:6:5 color
+const CHANNEL_SHIFTS = [11, 5, 0];
+const CHANNEL_MAXIMUMS = [31, 63, 31];
+
 enum DdsDimension {
   UNKNOWN = 0,
   BUFFER = 1,
@@ -180,44 +189,18 @@ export class DdsReadStream extends WindowsReadStream {
     switch (dxgiFormat) {
       case DxgiFormat.BC1_TYPELESS:
       case DxgiFormat.BC1_UNORM:
-      case DxgiFormat.BC1_UNORM_SRGB: {
-        return this.iterateBlocks(header.width, header.height, () => {
-          const colorInterpolations = this.bc1ColorInterpolations();
-          const colorKeys = this.bc1ColorKeys();
-          return (index) => colorInterpolations[colorKeys[index]];
-        });
-      }
+      case DxgiFormat.BC1_UNORM_SRGB:
+        return this.decodeBlocks(header.width, header.height, BlockFormat.BC1);
 
       case DxgiFormat.BC2_TYPELESS:
       case DxgiFormat.BC2_UNORM:
-      case DxgiFormat.BC2_UNORM_SRGB: {
-        return this.iterateBlocks(header.width, header.height, () => {
-          const alphaInterpolations = this.bc2AlphaInterpolations();
-          const colorInterpolations = this.bc2ColorInterpolations();
-          const colorKeys = this.bc1ColorKeys();
-          return (index) => {
-            return [
-              ...colorInterpolations[colorKeys[index]],
-              alphaInterpolations[index],
-            ];
-          };
-        });
-      }
+      case DxgiFormat.BC2_UNORM_SRGB:
+        return this.decodeBlocks(header.width, header.height, BlockFormat.BC2);
 
       case DxgiFormat.BC3_TYPELESS:
       case DxgiFormat.BC3_UNORM:
-      case DxgiFormat.BC3_UNORM_SRGB: {
-        return this.iterateBlocks(header.width, header.height, () => {
-          const alphaInterpolations = this.bc3AlphaInterpolations();
-          const alphaKeys = this.bc3AlphaKeys();
-          const colorInterpolations = this.bc2ColorInterpolations();
-          const colorKeys = this.bc1ColorKeys();
-          return (index) => [
-            ...colorInterpolations[colorKeys[index]],
-            alphaInterpolations[alphaKeys[index]],
-          ];
-        });
-      }
+      case DxgiFormat.BC3_UNORM_SRGB:
+        return this.decodeBlocks(header.width, header.height, BlockFormat.BC3);
 
       default:
         throw new TypeError(
@@ -299,189 +282,148 @@ export class DdsReadStream extends WindowsReadStream {
       throw new RangeError("Width and height must be divisible by 4");
     }
   }
-  iterateBlocks(
-    width: number,
-    height: number,
-    blockIterator: () => (index: number) => Vector4Tuple
-  ) {
+  /**
+   * writes each 4x4 block straight into the image; a block's palette is worked
+   * out from 0 to 1 and rounded to bytes once, as each pixel would round it
+   */
+  decodeBlocks(width: number, height: number, format: BlockFormat) {
     this.assetFactor4(width, height);
     const data = Buffer.alloc(width * height * 4);
-    const blocksX = width / 4;
-    const blocksY = height / 4;
+    const bytes = new Uint8Array(this.buffer);
+    // 4 colors of red, green, blue and alpha
+    const colors = new Uint8Array(16);
+    // BC2 has an alpha per pixel, BC3 a palette of 8
+    const alphas = new Uint8Array(16);
 
-    times(blocksX * blocksY, (index) => {
-      const blockPosX = (index % blocksX) * 4;
-      const blockPosY = Math.floor(index / blocksX) * 4;
-      const pixelIterator = blockIterator();
+    for (let blockY = 0; blockY < height; blockY += 4) {
+      for (let blockX = 0; blockX < width; blockX += 4) {
+        let index = this.index;
+        // BC3's 3 bit alpha keys, 8 pixels to each half
+        let alphaKeysLow = 0;
+        let alphaKeysHigh = 0;
 
-      times(16, (pixelIndex) => {
-        const pixelPosX = pixelIndex % 4;
-        const pixelPosY = Math.floor(pixelIndex / 4);
-        const x = blockPosX + pixelPosX;
-        const y = blockPosY + pixelPosY;
-        const bufferIndex = 4 * (y * width + x);
+        if (format === BlockFormat.BC2) {
+          for (let pixel = 0; pixel < 16; pixel++) {
+            const alpha =
+              (bytes[index + (pixel >> 1)] >> ((pixel & 1) * 4)) & 0b1111;
 
-        pixelIterator(pixelIndex).forEach((channel, index) => {
-          data[bufferIndex + index] = Math.round(channel * 255);
-        });
-      });
-    });
+            alphas[pixel] = Math.round((alpha / 15) * 255);
+          }
+
+          index += 8;
+        } else if (format === BlockFormat.BC3) {
+          this.bc3Alphas(bytes[index] / 255, bytes[index + 1] / 255, alphas);
+          alphaKeysLow =
+            bytes[index + 2] |
+            (bytes[index + 3] << 8) |
+            (bytes[index + 4] << 16);
+          alphaKeysHigh =
+            bytes[index + 5] |
+            (bytes[index + 6] << 8) |
+            (bytes[index + 7] << 16);
+          index += 8;
+        }
+
+        const int0 = bytes[index] | (bytes[index + 1] << 8);
+        const int1 = bytes[index + 2] | (bytes[index + 3] << 8);
+        const colorKeys =
+          bytes[index + 4] |
+          (bytes[index + 5] << 8) |
+          (bytes[index + 6] << 16) |
+          (bytes[index + 7] << 24);
+
+        // only BC1 has a transparent color
+        this.blockColors(
+          int0,
+          int1,
+          format === BlockFormat.BC1 && int0 < int1,
+          colors
+        );
+        this.index = index + 8;
+
+        for (let pixel = 0; pixel < 16; pixel++) {
+          const offset =
+            4 * ((blockY + (pixel >> 2)) * width + blockX + (pixel & 3));
+          const color = 4 * ((colorKeys >>> (pixel * 2)) & 0b11);
+
+          data[offset] = colors[color];
+          data[offset + 1] = colors[color + 1];
+          data[offset + 2] = colors[color + 2];
+
+          if (format === BlockFormat.BC1) {
+            data[offset + 3] = colors[color + 3];
+          } else if (format === BlockFormat.BC2) {
+            data[offset + 3] = alphas[pixel];
+          } else {
+            const alphaKey =
+              pixel < 8
+                ? (alphaKeysLow >> (pixel * 3)) & 0b111
+                : (alphaKeysHigh >> ((pixel - 8) * 3)) & 0b111;
+
+            data[offset + 3] = alphas[alphaKey];
+          }
+        }
+      }
+    }
 
     return { data, width, height, channels: 4 as const };
   }
 
-  readR5G6B5Int() {
-    return new DataView(this.read(2)).getUint16(0, true);
-  }
-  R5G6B5() {
-    const buffer = this.consumeUint8Array(2);
-    const r = (buffer[1] & 0b11111000) >>> 3;
-    const g = ((buffer[1] & 0b111) << 3) | ((buffer[0] & 0b11100000) >>> 5);
-    const b = buffer[0] & 0b11111;
+  blockColors(
+    int0: number,
+    int1: number,
+    transparent: boolean,
+    colors: Uint8Array
+  ) {
+    for (let channel = 0; channel < 3; channel++) {
+      const shift = CHANNEL_SHIFTS[channel];
+      const maximum = CHANNEL_MAXIMUMS[channel];
+      const value0 = ((int0 >> shift) & maximum) / maximum;
+      const value1 = ((int1 >> shift) & maximum) / maximum;
 
-    return [r / 31, g / 63, b / 31] as Vector3Tuple;
-  }
-  R5G6B5A0() {
-    return [...this.R5G6B5(), 1] as Vector4Tuple;
-  }
-  A8() {
-    return this.uint8() / 255;
+      colors[channel] = Math.round(value0 * 255);
+      colors[4 + channel] = Math.round(value1 * 255);
+      colors[8 + channel] = Math.round(
+        (transparent ? (value0 + value1) / 2 : (2 * value0 + value1) / 3) * 255
+      );
+      colors[12 + channel] = transparent
+        ? 0
+        : Math.round(((value0 + 2 * value1) / 3) * 255);
+    }
+
+    colors[3] = 255;
+    colors[7] = 255;
+    colors[11] = 255;
+    colors[15] = transparent ? 0 : 255;
   }
 
-  bc1ColorInterpolations() {
-    const int0 = this.readR5G6B5Int();
-    const color0 = this.R5G6B5A0();
-    const int1 = this.readR5G6B5Int();
-    const color1 = this.R5G6B5A0();
-    const alpha = int0 < int1;
-    const color2 = alpha
-      ? (color0.map(
-          (channel0, index) => (channel0 + color1[index]) / 2
-        ) as Vector4Tuple)
-      : (color0.map(
-          (channel0, index) => (2 * channel0 + color1[index]) / 3
-        ) as Vector4Tuple);
-    const color3 = alpha
-      ? ([0, 0, 0, 0] as Vector4Tuple)
-      : (color0.map(
-          (channel0, index) => (channel0 + 2 * color1[index]) / 3
-        ) as Vector4Tuple);
-
-    return {
-      [0b00]: color0,
-      [0b01]: color1,
-      [0b10]: color2,
-      [0b11]: color3,
-    } as Record<number, Vector4Tuple>;
-  }
-  bc1ColorKeys() {
-    const buffer = this.consumeUint8Array(4);
-    const d = (buffer[0] & 0b11000000) >>> 6;
-    const c = (buffer[0] & 0b110000) >>> 4;
-    const b = (buffer[0] & 0b1100) >>> 2;
-    const a = buffer[0] & 0b11;
-    const h = (buffer[1] & 0b11000000) >>> 6;
-    const g = (buffer[1] & 0b110000) >>> 4;
-    const f = (buffer[1] & 0b1100) >>> 2;
-    const e = buffer[1] & 0b11;
-    const l = (buffer[2] & 0b11000000) >>> 6;
-    const k = (buffer[2] & 0b110000) >>> 4;
-    const j = (buffer[2] & 0b1100) >>> 2;
-    const i = buffer[2] & 0b11;
-    const p = (buffer[3] & 0b11000000) >>> 6;
-    const o = (buffer[3] & 0b110000) >>> 4;
-    const n = (buffer[3] & 0b1100) >>> 2;
-    const m = buffer[3] & 0b11;
-
-    return [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p];
-  }
-  bc2AlphaInterpolations() {
-    const buffer = this.consumeUint8Array(8);
-    const d = (buffer[1] & 0b11110000) >>> 4;
-    const c = buffer[1] & 0b1111;
-    const b = (buffer[0] & 0b11110000) >>> 4;
-    const a = buffer[0] & 0b1111;
-    const h = (buffer[3] & 0b11110000) >>> 4;
-    const g = buffer[3] & 0b1111;
-    const f = (buffer[2] & 0b11110000) >>> 4;
-    const e = buffer[2] & 0b1111;
-    const l = (buffer[5] & 0b11110000) >>> 4;
-    const k = buffer[5] & 0b1111;
-    const j = (buffer[4] & 0b11110000) >>> 4;
-    const i = buffer[4] & 0b1111;
-    const p = (buffer[7] & 0b11110000) >>> 4;
-    const o = buffer[7] & 0b1111;
-    const n = (buffer[6] & 0b11110000) >>> 4;
-    const m = buffer[6] & 0b1111;
-
-    return [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p].map(
-      (alpha) => alpha / 15
-    );
-  }
-  bc2ColorInterpolations() {
-    const color0 = this.R5G6B5();
-    const color1 = this.R5G6B5();
-    const color2 = color0.map(
-      (channel0, index) => (2 * channel0 + color1[index]) / 3
-    ) as Vector3Tuple;
-    const color3 = color0.map(
-      (channel0, index) => (channel0 + 2 * color1[index]) / 3
-    ) as Vector3Tuple;
-
-    return {
-      [0b00]: color0,
-      [0b01]: color1,
-      [0b10]: color2,
-      [0b11]: color3,
-    } as Record<number, Vector3Tuple>;
-  }
-  bc3AlphaInterpolations() {
-    const alpha0 = this.A8();
-    const alpha1 = this.A8();
+  bc3Alphas(alpha0: number, alpha1: number, alphas: Uint8Array) {
     const full = alpha0 > alpha1;
+    const values = full
+      ? [
+          alpha0,
+          alpha1,
+          (6 * alpha0 + 1 * alpha1) / 7,
+          (5 * alpha0 + 2 * alpha1) / 7,
+          (4 * alpha0 + 3 * alpha1) / 7,
+          (3 * alpha0 + 4 * alpha1) / 7,
+          (2 * alpha0 + 5 * alpha1) / 7,
+          (1 * alpha0 + 6 * alpha1) / 7,
+        ]
+      : [
+          alpha0,
+          alpha1,
+          (4 * alpha0 + 1 * alpha1) / 5,
+          (3 * alpha0 + 2 * alpha1) / 5,
+          (2 * alpha0 + 3 * alpha1) / 5,
+          (1 * alpha0 + 4 * alpha1) / 5,
+          0,
+          // kept as the decoder always had it, which wraps to 1 as a byte
+          255,
+        ];
 
-    return {
-      [0b000]: alpha0,
-      [0b001]: alpha1,
-
-      ...(full
-        ? {
-            [0b010]: (6 * alpha0 + 1 * alpha1) / 7,
-            [0b011]: (5 * alpha0 + 2 * alpha1) / 7,
-            [0b100]: (4 * alpha0 + 3 * alpha1) / 7,
-            [0b101]: (3 * alpha0 + 4 * alpha1) / 7,
-            [0b110]: (2 * alpha0 + 5 * alpha1) / 7,
-            [0b111]: (1 * alpha0 + 6 * alpha1) / 7,
-          }
-        : {
-            [0b010]: (4 * alpha0 + 1 * alpha1) / 5,
-            [0b011]: (3 * alpha0 + 2 * alpha1) / 5,
-            [0b100]: (2 * alpha0 + 3 * alpha1) / 5,
-            [0b101]: (1 * alpha0 + 4 * alpha1) / 5,
-            [0b110]: 0,
-            [0b111]: 255,
-          }),
-    } as Record<number, number>;
-  }
-  bc3AlphaKeys() {
-    const buffer = this.consumeUint8Array(6);
-    const h = (buffer[2] & 0b11100000) >>> 5;
-    const g = (buffer[2] & 0b11100) >>> 2;
-    const f = ((buffer[2] & 0b11) << 1) | ((buffer[1] & 0b10000000) >>> 7);
-    const e = (buffer[1] & 0b1110000) >>> 4;
-    const d = (buffer[1] & 0b1110) >>> 1;
-    const c = ((buffer[1] & 0b1) << 2) | ((buffer[0] & 0b11000000) >>> 6);
-    const b = (buffer[0] & 0b111000) >>> 3;
-    const a = buffer[0] & 0b111;
-    const p = (buffer[5] & 0b11100000) >>> 5;
-    const o = (buffer[5] & 0b11100) >>> 2;
-    const n = ((buffer[5] & 0b11) << 1) | ((buffer[4] & 0b10000000) >>> 7);
-    const m = (buffer[4] & 0b1110000) >>> 4;
-    const l = (buffer[4] & 0b1110) >>> 1;
-    const k = ((buffer[4] & 0b1) << 2) | ((buffer[3] & 0b11000000) >>> 6);
-    const j = (buffer[3] & 0b111000) >>> 3;
-    const i = buffer[3] & 0b111;
-
-    return [a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p];
+    for (let key = 0; key < 8; key++) {
+      alphas[key] = Math.round(values[key] * 255);
+    }
   }
 }

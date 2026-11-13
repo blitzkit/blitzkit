@@ -574,71 +574,102 @@ export async function extractMaterials(
   return materials;
 }
 
-async function readBaseColor(path: string) {
-  const raw = await readTexture(path);
-  const image = await sharp(raw.data, { raw }).webp().toBuffer();
+/**
+ * the last few textures made, as a camouflage's parts share one atlas and a
+ * tank's camouflages build one after another; it's capped so the build doesn't
+ * keep every texture it ever made
+ */
+const IMAGE_CACHE_SIZE = 64;
+const images = new Map<string, Promise<Buffer>>();
+
+function cachedImage(key: string, read: () => Promise<Buffer>) {
+  let image = images.get(key);
+
+  if (!image) {
+    image = read();
+    images.set(key, image);
+
+    if (images.size > IMAGE_CACHE_SIZE) {
+      images.delete(images.keys().next().value!);
+    }
+  }
 
   return image;
 }
 
-async function readOcclusion(path: string) {
-  const raw = await readTexture(path);
+function readBaseColor(path: string) {
+  return cachedImage(`baseColor:${path}`, async () => {
+    const raw = await readTexture(path);
+    const image = await sharp(raw.data, { raw }).webp().toBuffer();
 
-  const image = await sharp(raw.data, { raw })
-    .extractChannel(3)
-    .webp()
-    .toBuffer();
-
-  return image;
+    return image;
+  });
 }
 
-async function readRoughnessMetallic(path: string) {
-  const raw = await readTexture(path);
-  const blitz = sharp(raw.data, { raw });
-  const metallicness = await blitz?.extractChannel(1).raw().toBuffer();
-  const roughness = await blitz?.extractChannel(3).raw().toBuffer();
+function readOcclusion(path: string) {
+  return cachedImage(`occlusion:${path}`, async () => {
+    const raw = await readTexture(path);
 
-  const combined = Buffer.alloc(raw.width * raw.height * 3);
+    const image = await sharp(raw.data, { raw })
+      .extractChannel(3)
+      .webp()
+      .toBuffer();
 
-  for (let i = 0; i < raw.width * raw.height; i++) {
-    combined[i * 3 + 1] = roughness[i];
-    combined[i * 3 + 2] = metallicness[i];
-  }
-
-  const image = await sharp(combined, {
-    raw: { width: raw.width, height: raw.height, channels: 3 },
-  })
-    .webp()
-    .toBuffer();
-
-  return image;
+    return image;
+  });
 }
 
-async function readNormal(path: string, isBase: boolean) {
-  const raw = await readTexture(path);
+function readRoughnessMetallic(path: string) {
+  return cachedImage(`roughnessMetallic:${path}`, async () => {
+    const raw = await readTexture(path);
+    const blitz = sharp(raw.data, { raw });
+    const metallicness = await blitz?.extractChannel(1).raw().toBuffer();
+    const roughness = await blitz?.extractChannel(3).raw().toBuffer();
 
-  if (!isBase) {
-    return await sharp(raw.data, { raw }).removeAlpha().jpeg().toBuffer();
-  }
+    const combined = Buffer.alloc(raw.width * raw.height * 3);
 
-  const bytes = 4 * raw.width * raw.height;
+    for (let i = 0; i < raw.width * raw.height; i++) {
+      combined[i * 3 + 1] = roughness[i];
+      combined[i * 3 + 2] = metallicness[i];
+    }
 
-  for (let index = 0; index < bytes; index += 4) {
-    /**
-     * Red is always 255 and blue is always 0. Only alpha and green contain any
-     * sort of information.
-     */
-    let x = raw.data[index + 3] * (2 / 255) - 1;
-    let y = raw.data[index + 1] * (2 / 255) - 1;
-    let z = Math.sqrt(Math.max(0, 1 - x ** 2 - y ** 2));
+    const image = await sharp(combined, {
+      raw: { width: raw.width, height: raw.height, channels: 3 },
+    })
+      .webp()
+      .toBuffer();
 
-    raw.data[index] = Math.round((x + 1) * (255 / 2));
-    raw.data[index + 1] = Math.round((y + 1) * (255 / 2));
-    raw.data[index + 2] = Math.round((z + 1) * (255 / 2));
-    raw.data[index + 3] = 255;
-  }
+    return image;
+  });
+}
 
-  return await sharp(raw.data, { raw }).webp().toBuffer();
+function readNormal(path: string, isBase: boolean) {
+  return cachedImage(`normal:${isBase}:${path}`, async () => {
+    const raw = await readTexture(path);
+
+    if (!isBase) {
+      return await sharp(raw.data, { raw }).removeAlpha().jpeg().toBuffer();
+    }
+
+    const bytes = 4 * raw.width * raw.height;
+
+    for (let index = 0; index < bytes; index += 4) {
+      /**
+       * Red is always 255 and blue is always 0. Only alpha and green contain
+       * any sort of information.
+       */
+      let x = raw.data[index + 3] * (2 / 255) - 1;
+      let y = raw.data[index + 1] * (2 / 255) - 1;
+      let z = Math.sqrt(Math.max(0, 1 - x ** 2 - y ** 2));
+
+      raw.data[index] = Math.round((x + 1) * (255 / 2));
+      raw.data[index + 1] = Math.round((y + 1) * (255 / 2));
+      raw.data[index + 2] = Math.round((z + 1) * (255 / 2));
+      raw.data[index + 3] = 255;
+    }
+
+    return await sharp(raw.data, { raw }).webp().toBuffer();
+  });
 }
 
 async function readTexture(path: string) {
