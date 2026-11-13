@@ -8,13 +8,14 @@ import {
   type SC2,
 } from "@blitzkit/core";
 import { times } from "lodash-es";
-import type {
+import {
   ParticleBlending,
-  ParticleEmitterExtras,
-  ParticleForceExtras,
-  ParticleKeys,
-  ParticleLayerExtras,
+  ParticleForceType,
   ParticleShape,
+  type ParticleEmitterExtras,
+  type ParticleForceExtras,
+  type ParticleKeys,
+  type ParticleLayerExtras,
 } from "./types";
 
 export type ParticleEffect = Extract<
@@ -25,11 +26,12 @@ export type ParticleEffect = Extract<
 const CURVE = 2;
 // keys interpolate linearly (1) or cubically (2), or not at all
 const HELD_KEY = 0;
-// by the game's emitter types
-const SHAPES: ParticleShape[] = ["point", "rect", "disc", "circle", "sphere"];
-const FORCES: Partial<
-  Record<ParticleForce["forceType"], ParticleForceExtras["type"]>
-> = { drag: "drag", grav: "gravity", wind: "wind" };
+const FORCES: Partial<Record<ParticleForce["forceType"], ParticleForceType>> =
+  {
+    drag: ParticleForceType.Drag,
+    grav: ParticleForceType.Gravity,
+    wind: ParticleForceType.Wind,
+  };
 const BLENDING_ADDITIVE = 2;
 const BLENDING_ALPHA_ADDITIVE = 3;
 const CAMERA_FACING = 1 << 0;
@@ -141,7 +143,7 @@ function readForces(layer: ParticleLayer) {
     .flatMap((force): ParticleForceExtras[] => {
       const type = FORCES[force.forceType];
 
-      if (!type) return [];
+      if (type === undefined) return [];
 
       return [
         {
@@ -154,10 +156,12 @@ function readForces(layer: ParticleLayer) {
 }
 
 function blending(layer: ParticleLayer): ParticleBlending {
-  if (layer.blending === BLENDING_ADDITIVE) return "additive";
-  if (layer.blending === BLENDING_ALPHA_ADDITIVE) return "alphaAdditive";
+  if (layer.blending === BLENDING_ADDITIVE) return ParticleBlending.Additive;
+  if (layer.blending === BLENDING_ALPHA_ADDITIVE) {
+    return ParticleBlending.AlphaAdditive;
+  }
 
-  return "normal";
+  return ParticleBlending.Normal;
 }
 
 function readLayer(layer: ParticleLayer): ParticleLayerExtras | undefined {
@@ -257,7 +261,10 @@ export function readParticleEffect(
       scale: emitter["emitter.scale"],
       direction: vector(node.emissionVector, [0, 0, 1]),
       range: scalar(node.emissionRange, 0),
-      shape: SHAPES[node.type ?? 0] ?? "point",
+      shape:
+        node.type !== undefined && node.type in ParticleShape
+          ? node.type
+          : ParticleShape.Point,
       radius: scalar(node.radius, 0),
       size: vector(node.size, [0, 0, 0]),
       layers,

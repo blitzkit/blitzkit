@@ -97,14 +97,14 @@ const omitMeshNames = {
   ],
   end: ["_POINT"],
 };
-// seconds, past this an effect might as well last forever
-const ALWAYS = 1000;
 
-// an action's repeats win over the effect's, and 0 repeats forever
-function isLasting(effect: ParticleEffect, repeats: number) {
-  const runs = repeats > 0 ? repeats : effect["pe.repeatsCount"];
-
-  return runs === 0 || runs * effect["pe.effectDuration"] >= ALWAYS;
+/**
+ * seconds an effect keeps spawning for; whatever starts it replaces the
+ * effect's own repeats, and the game counts them unsigned, so 0 or less never
+ * runs out
+ */
+function effectDuration(effect: ParticleEffect, repeats: number) {
+  return repeats > 0 ? repeats * effect["pe.effectDuration"] : undefined;
 }
 
 export async function extractModel(
@@ -132,7 +132,7 @@ export async function extractModel(
     joint: Node,
     skin: Skin,
   ][] = [];
-  const effects: [node: Node, effect: ParticleEffect][] = [];
+  const effects: [node: Node, effect: ParticleEffect, repeats: number][] = [];
   const motions = new Map<Hierarchy, Motion>();
   const garage = isPart ? partGarage(sc2, preset) : undefined;
 
@@ -235,9 +235,7 @@ export async function extractModel(
           case "ParticleEffectComponent": {
             const repeats = garage?.effects.get(hierarchy);
 
-            if (repeats !== undefined && isLasting(component, repeats)) {
-              effects.push([node, component]);
-            }
+            if (repeats !== undefined) effects.push([node, component, repeats]);
             break;
           }
 
@@ -388,12 +386,16 @@ export async function extractModel(
 
   const emitters = particleEmitters(sc2);
 
-  for (const [node, effect] of effects) {
+  for (const [node, effect, repeats] of effects) {
     const read = readParticleEffect(effect, emitters, true);
 
     if (read.length === 0) continue;
 
-    await addParticleEffect(document, vfs, node, { delay: 0, emitters: read });
+    await addParticleEffect(document, vfs, node, {
+      delay: 0,
+      duration: effectDuration(effect, repeats),
+      emitters: read,
+    });
   }
 
   scene.addChild(document.createNode("test"));

@@ -25,7 +25,13 @@ type MotionComponent = Extract<
   Component,
   { "comp.typename": "MotionComponent" }
 >;
-type AccessorType = "SCALAR" | "VEC2" | "VEC3" | "VEC4" | "MAT4";
+enum AccessorType {
+  Scalar = "SCALAR",
+  Vec2 = "VEC2",
+  Vec3 = "VEC3",
+  Vec4 = "VEC4",
+  Mat4 = "MAT4",
+}
 
 const JOINT_ROOT = 0xffffff;
 const MOTION_PATHS = {
@@ -119,7 +125,7 @@ export function createSkeleton(
       createAccessor(
         document,
         buffer,
-        "MAT4",
+        AccessorType.Mat4,
         new Float32Array(
           joints.flatMap((joint) => joint["joint.invBindPose"].flat()),
         ),
@@ -174,7 +180,7 @@ export function createMotionClip(
           createAccessor(
             document,
             buffer,
-            "SCALAR",
+            AccessorType.Scalar,
             new Float32Array(keyTimes),
           ),
         )
@@ -182,7 +188,9 @@ export function createMotionClip(
           createAccessor(
             document,
             buffer,
-            type === MotionChannel.Rotation ? "VEC4" : "VEC3",
+            type === MotionChannel.Rotation
+              ? AccessorType.Vec4
+              : AccessorType.Vec3,
             new Float32Array(keyValues),
           ),
         )
@@ -247,7 +255,7 @@ export function skinPrimitive(
       createAccessor(
         document,
         buffer,
-        "VEC4",
+        AccessorType.Vec4,
         new Uint16Array(
           jointIndices.flatMap((indices) =>
             times(4, (index) => {
@@ -270,7 +278,7 @@ export function skinPrimitive(
       createAccessor(
         document,
         buffer,
-        "VEC4",
+        AccessorType.Vec4,
         new Float32Array(
           weights.flatMap((vertexWeights) => {
             const padded = times(4, (index) => vertexWeights[index] ?? 0);
