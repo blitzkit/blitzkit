@@ -1,4 +1,8 @@
-export type ParticleBlending = "normal" | "additive" | "alphaAdditive";
+export enum ParticleBlending {
+  Normal,
+  Additive,
+  AlphaAdditive,
+}
 
 /**
  * [time, value, hold] keys over a particle's life, time from 0 to 1; a held
@@ -6,8 +10,14 @@ export type ParticleBlending = "normal" | "additive" | "alphaAdditive";
  */
 export type ParticleKeys = number[][];
 
+export enum ParticleForceType {
+  Drag,
+  Gravity,
+  Wind,
+}
+
 export interface ParticleForceExtras {
-  type: "drag" | "gravity" | "wind";
+  type: ParticleForceType;
   /** per axis for drag */
   strength: number[];
   direction: number[];
@@ -48,8 +58,14 @@ export interface ParticleLayerExtras {
   lods: boolean[];
 }
 
-/** where an emitter spawns its particles */
-export type ParticleShape = "point" | "rect" | "disc" | "circle" | "sphere";
+/** where an emitter spawns its particles, by the game's emitter types */
+export enum ParticleShape {
+  Point,
+  Rect,
+  Disc,
+  Circle,
+  Sphere,
+}
 
 export interface ParticleEmitterExtras {
   position: number[];
@@ -67,6 +83,8 @@ export interface ParticleEmitterExtras {
 /** kept on the node a particle effect plays from */
 export interface ParticleEffectExtras {
   delay: number;
+  /** seconds it spawns for after the delay, forever when missing */
+  duration?: number;
   lodDistances?: number[];
   emitters: ParticleEmitterExtras[];
 }

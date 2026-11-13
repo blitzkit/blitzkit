@@ -16,19 +16,19 @@ import {
   type MeshStandardMaterial,
   type Texture,
 } from "three";
-import type {
+import {
   ParticleBlending,
-  ParticleEffectExtras,
-  ParticleEmitterExtras,
-  ParticleKeys,
-  ParticleLayerExtras,
+  ParticleForceType,
+  ParticleShape,
+  type ParticleEffectExtras,
+  type ParticleEmitterExtras,
+  type ParticleKeys,
+  type ParticleLayerExtras,
 } from "./types";
 
-// longest step simulated at once, so a stalled tab doesn't burst
-const MAX_DELTA = 0.1;
-// what the game plays effects at when nothing picks a level by distance
+// effects start at 1 when nothing picks a level by distance; the game only
+// drops them to 0 on its lowest effects quality
 const DEFAULT_LOD = 1;
-const BLENDINGS: ParticleBlending[] = ["normal", "additive", "alphaAdditive"];
 
 const WORLD_DOWN = new Vector3(0, -1, 0);
 
@@ -106,18 +106,20 @@ function spawnOffset({ shape, radius, size }: ParticleEmitterExtras) {
   const angle = Math.random() * Math.PI * 2;
 
   switch (shape) {
-    case "point":
+    case ParticleShape.Point:
       return new Vector3();
 
-    case "rect":
+    case ParticleShape.Rect:
       return new Vector3(
         ...size.map((extent) => (Math.random() - 0.5) * extent),
       );
 
-    case "disc":
-    case "circle": {
+    case ParticleShape.Disc:
+    case ParticleShape.Circle: {
       const distance =
-        shape === "disc" ? radius * Math.sqrt(Math.random()) : radius;
+        shape === ParticleShape.Disc
+          ? radius * Math.sqrt(Math.random())
+          : radius;
 
       return new Vector3(
         distance * Math.cos(angle),
@@ -126,7 +128,7 @@ function spawnOffset({ shape, radius, size }: ParticleEmitterExtras) {
       );
     }
 
-    case "sphere":
+    case ParticleShape.Sphere:
       return new Vector3()
         .randomDirection()
         .multiplyScalar(radius * Math.cbrt(Math.random()));
@@ -217,7 +219,7 @@ const fragmentShader = /* glsl */ `
     vec4 color = texel * vColor;
 
     // plain additive ignores the particle's own alpha
-    if (blending == 1) color.a = texel.a;
+    if (blending == ${ParticleBlending.Additive}) color.a = texel.a;
 
     gl_FragColor = vec4(color.rgb * intensity, color.a * vFresnel);
   }
@@ -257,11 +259,13 @@ function createLayerMeshes(
       depthWrite: false,
       side: DoubleSide,
       blending:
-        layer.blending === "normal" ? NormalBlending : AdditiveBlending,
+        layer.blending === ParticleBlending.Normal
+          ? NormalBlending
+          : AdditiveBlending,
       uniforms: {
         sprite: { value: texture },
         intensity: { value: 1 },
-        blending: { value: BLENDINGS.indexOf(layer.blending) },
+        blending: { value: layer.blending },
         facing: { value: axes !== undefined },
         axisX: { value: new Vector3(...(axes?.[0] ?? [1, 0, 0])) },
         axisY: { value: new Vector3(...(axes?.[1] ?? [0, 1, 0])) },
@@ -392,7 +396,7 @@ export function createParticleSystem(root: Object3D) {
             }
 
             layer.forces.forEach(({ type, strength }, forceIndex) => {
-              if (type === "drag") {
+              if (type === ParticleForceType.Drag) {
                 // a drag given as one value applies to every axis
                 const [x, y = x, z = y] = strength;
 
@@ -401,7 +405,9 @@ export function createParticleSystem(root: Object3D) {
                 velocity.z *= Math.max(0, 1 - z * delta);
               } else {
                 velocity.addScaledVector(
-                  type === "gravity" ? down : winds[forceIndex],
+                  type === ParticleForceType.Gravity
+                    ? down
+                    : winds[forceIndex],
                   strength[0] * delta,
                 );
               }
@@ -411,7 +417,11 @@ export function createParticleSystem(root: Object3D) {
             particle.angle.addScaledVector(particle.spin, delta);
           }
 
-          if (elapsed >= effect.delay) {
+          // once it runs out, what's left lives out its life
+          if (
+            elapsed >= effect.delay &&
+            elapsed < effect.delay + (effect.duration ?? Infinity)
+          ) {
             spawnAccumulator = layer.single
               ? 1
               : spawnAccumulator +
@@ -510,7 +520,7 @@ export function createParticleSystem(root: Object3D) {
       elapsed += delta;
       camera.getWorldPosition(cameraPosition);
 
-      for (const updater of updaters) updater(Math.min(delta, MAX_DELTA));
+      for (const updater of updaters) updater(delta);
     },
     /** scales how bright the particles are, like emissive intensity */
     setIntensity(intensity: number) {

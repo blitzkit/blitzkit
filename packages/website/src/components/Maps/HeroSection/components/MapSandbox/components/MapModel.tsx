@@ -59,6 +59,8 @@ export function MapModel({ id }: { id: number }) {
   const animations = useRef<ReturnType<typeof createAnimations>>(null);
   const reflections = useRef<ReturnType<typeof createReflections>>(null);
   const vegetation = useRef<VegetationVolume[]>([]);
+  // a hidden tab gets no frames, so the first one back carries all that time
+  const resumed = useRef(false);
 
   const info = gltf.scene.userData as MapSceneExtras;
   const [minX, minY, , maxX, maxY] = info.mapBounds ?? [
@@ -92,6 +94,18 @@ export function MapModel({ id }: { id: number }) {
   }, [gltf]);
 
   useEffect(() => {
+    function handleVisibilityChange() {
+      if (!document.hidden) resumed.current = true;
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
     convertMaterials(gltf.scene);
     particles.current = createParticleSystem(gltf.scene);
     vegetation.current = collectVegetation(gltf.scene);
@@ -117,8 +131,12 @@ export function MapModel({ id }: { id: number }) {
   }, [gltf]);
 
   useFrame(({ clock, camera, scene }, delta) => {
+    // picks up where it paused rather than catching up
+    const step = resumed.current ? 0 : delta;
+
+    resumed.current = false;
     mapTime.value = clock.elapsedTime;
-    particles.current?.update(delta, camera);
+    particles.current?.update(step, camera);
 
     for (const volume of vegetation.current) {
       const inside = volume.box.containsPoint(camera.position);
@@ -133,7 +151,7 @@ export function MapModel({ id }: { id: number }) {
     }
 
     if (batches.current?.update(camera)) gl.shadowMap.needsUpdate = true;
-    if (animations.current?.update(delta)) gl.shadowMap.needsUpdate = true;
+    if (animations.current?.update(step)) gl.shadowMap.needsUpdate = true;
 
     camera.updateMatrixWorld();
     scene.updateMatrixWorld();
