@@ -2,7 +2,7 @@ import { alias, romanize, uniqueGuns } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
 import { useMemo } from "react";
 import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
@@ -40,13 +40,11 @@ export function TankopediaAntagonistControl({
   const hasCalibratedShells = useEquipment("antagonist", 103);
   const hasEnhancedArmor = useEquipment("protagonist", 110);
 
-  const tank = useDuel("antagonist", DuelModule.Tank);
-  const gun = useDuel("antagonist", DuelModule.Gun);
-  const shell = useDuel("antagonist", DuelModule.Shell);
+  const protagonist = useDuelModules("antagonist");
 
   const antagonistUniqueGuns = useMemo(
-    () => uniqueGuns(tank.turrets),
-    [tank.turrets],
+    () => uniqueGuns(protagonist.tank.turrets),
+    [protagonist.tank.turrets],
   );
 
   const isVisible = showControls && isDynamicArmorDisplay;
@@ -64,7 +62,7 @@ export function TankopediaAntagonistControl({
       {antagonistUniqueGuns.length > 1 && (
         <div className={styles.group}>
           {[...antagonistUniqueGuns].reverse().map((entry) => {
-            const selected = entry.gun.id === gun.id;
+            const selected = entry.gun.id === protagonist.gun.id;
             const name = unwrap(entry.gun.name!);
 
             return (
@@ -100,8 +98,9 @@ export function TankopediaAntagonistControl({
       )}
 
       <div className={styles.group}>
-        {gun.shells.map((thisShell) => {
-          const selected = thisShell.id === shell.id && !hasCustomShell;
+        {protagonist.gun.shells.map((thisShell) => {
+          const selected =
+            thisShell.id === protagonist.shell.id && !hasCustomShell;
           const name = unwrap(thisShell.name!);
 
           return (

@@ -28,7 +28,7 @@ export interface CharacteristicRank {
   score: number;
 }
 
-function rankingValue(
+export function rankingValue(
   name: CharacteristicName,
   value?: CharacteristicReturnType,
 ) {

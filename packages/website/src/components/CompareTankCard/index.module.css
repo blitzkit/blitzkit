@@ -1,3 +1,47 @@
-.name {
-  max-width: 8rem;
+.card {
+  position: relative;
+
+  padding: var(--space-3);
+  vertical-align: top;
+
+  /* The header is its own stacking context, so it rises above its siblings while dragging */
+  &[data-dragging="true"] {
+    z-index: 2;
+
+    .draggable {
+      position: fixed;
+      cursor: grabbing;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .draggable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-1);
+
+    user-select: none;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .icon {
+    object-fit: contain;
+  }
+
+  .name {
+    max-width: 6rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

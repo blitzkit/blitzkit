@@ -24,7 +24,7 @@ import {
   type ModelTransformEventData,
 } from "../core/blitzkit/modelTransform";
 import { discardClippingPlane } from "../core/three/discardClippingPlane";
-import { DuelModule, useDuel } from "../hooks/useDuel";
+import { useDuelModules } from "../hooks/useDuelModules";
 import { useEquipment } from "../hooks/useEquipment";
 import { Tankopedia } from "../stores/tankopedia";
 import { transitionEvent } from "./Lighting";
@@ -75,9 +75,10 @@ export function StaticArmorSceneComponent({
 }: StaticArmorSceneComponentProps) {
   const camera = useThree((state) => state.camera);
   const hasEnhancedArmor = useEquipment("protagonist", 110);
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const equalize = Tankopedia.use((state) => state.equalize);
-  const equalizer = (equalize ? tank.equalizer : undefined) ?? defaultEqualizer;
+  const protagonist = useDuelModules("protagonist");
+  const equalize = Tankopedia.use((state) => state.environment.equalize);
+  const equalizer =
+    (equalize ? protagonist.tank.equalizer : undefined) ?? defaultEqualizer;
   const thicknessCoefficient = (hasEnhancedArmor ? 1.04 : 1) * equalizer.armor;
   const thickness = thicknessRaw * thicknessCoefficient;
   const x = thickness / thicknessRange.value;

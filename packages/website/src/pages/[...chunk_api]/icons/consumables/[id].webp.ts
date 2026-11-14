@@ -47,8 +47,6 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
         ),
       );
 
-      console.log(consumable);
-
       if (!styleSheet) {
         console.warn(
           `No style sheet found for consumable ${consumable.icon}; skipping...`,

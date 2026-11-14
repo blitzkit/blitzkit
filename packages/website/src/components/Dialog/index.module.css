@@ -1,0 +1,61 @@
+.Overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+
+  background-color: var(--black-a9);
+}
+
+.Content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+  width: calc(100dvw - 2 * var(--space-4));
+  max-width: 40rem;
+  max-height: calc(100dvh - 2 * var(--space-4));
+  overflow: hidden;
+
+  background-color: var(--gray-2);
+  box-shadow: var(--shadow-subtle);
+  border-radius: var(--space-4);
+  outline: var(--outline-interactive) !important;
+}
+
+.Title {
+  margin: 0;
+  font-size: var(--font-size-heading-4);
+  color: var(--gray-12);
+  text-align: left;
+}
+
+.Description {
+  margin: 0;
+  color: var(--gray-11);
+  text-align: left;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  padding: var(--space-4);
+  padding-bottom: 0;
+}
+
+.body {
+  --scroller-curtain-color: var(--gray-2);
+
+  flex: 1;
+
+  .content {
+    padding: var(--space-4);
+  }
+}

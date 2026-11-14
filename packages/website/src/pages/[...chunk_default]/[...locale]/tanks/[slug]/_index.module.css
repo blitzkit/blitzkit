@@ -17,7 +17,6 @@
 
     .content {
       padding: var(--space-5);
-      padding-right: calc(var(--space-5) - var(--scrollbar-width));
 
       display: flex;
       flex-direction: column;

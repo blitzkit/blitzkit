@@ -3,8 +3,7 @@ import { literals } from "@blitzkit/i18n/src/literals";
 import { useRef } from "react";
 import { characteristicsGroups } from "../../config/characteristicsGroups";
 import { toys } from "../../config/toys";
-import { useCharacteristicRenderer } from "../../hooks/useCharacteristicRenderer";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useRankings } from "../../hooks/useRankings";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia, TankopediaRelativeAgainst } from "../../stores/tankopedia";
@@ -19,6 +18,7 @@ import type {
 } from "../../types/characteristics";
 import { Heading } from "../Heading";
 import { SegmentedControl } from "../SegmentedControl";
+import { CharacteristicValue } from "../CharacteristicValue";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
@@ -150,8 +150,6 @@ interface ItemProps {
 
 function Item({ config, value, ranking }: ItemProps) {
   const strings = useStrings();
-  const renderCharacteristic = useCharacteristicRenderer();
-  const hasUnits = config.units !== undefined;
 
   return (
     <span className={styles.item} data-indent={config.indent}>
@@ -164,11 +162,7 @@ function Item({ config, value, ranking }: ItemProps) {
           }
         </Text>
 
-        <Text lowContrast={hasUnits} size={hasUnits ? "minor" : undefined}>
-          <div className={styles.units}>
-            {renderCharacteristic(value, config)}
-          </div>
-        </Text>
+        <CharacteristicValue config={config} value={value} />
       </div>
 
       {ranking && (
@@ -188,7 +182,7 @@ function Item({ config, value, ranking }: ItemProps) {
 }
 
 function CompareOptions() {
-  const tank = useDuel("protagonist", DuelModule.Tank);
+  const protagonist = useDuelModules("protagonist");
   const relativeAgainst = Tankopedia.use((state) => state.relative_against);
 
   const strings = useStrings();
@@ -198,15 +192,18 @@ function CompareOptions() {
       value: `${TankopediaRelativeAgainst.ClassAndTier}`,
       relativeAgainst: TankopediaRelativeAgainst.ClassAndTier,
       label: literals(strings.tanks.characteristics.compare.class, {
-        tier: romanize(tank.tier),
-        class: strings.common.tank_class_short_plural_lowercase[tank.class],
+        tier: romanize(protagonist.tank.tier),
+        class:
+          strings.common.tank_class_short_plural_lowercase[
+            protagonist.tank.class
+          ],
       }),
     },
     {
       value: `${TankopediaRelativeAgainst.Tier}`,
       relativeAgainst: TankopediaRelativeAgainst.Tier,
       label: literals(strings.tanks.characteristics.compare.tier, {
-        tier: romanize(tank.tier),
+        tier: romanize(protagonist.tank.tier),
       }),
     },
     {

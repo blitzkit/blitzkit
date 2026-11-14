@@ -4,17 +4,15 @@ import type { QuicklimeEvent } from "quicklime";
 import { Suspense, useEffect, useRef } from "react";
 import { LineBasicMaterial, MeshBasicMaterial, type Group } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { api } from "../api/dynamic";
 import { jsxTree } from "../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
 } from "../core/blitzkit/modelTransform";
-import { DuelModule, useDuel } from "../hooks/useDuel";
+import { useDuelModels } from "../hooks/useDuelModels";
+import { useDuelModules } from "../hooks/useDuelModules";
 import { useModel } from "../hooks/useModel";
 import { SmartCanvas } from "./SmartCanvas";
-
-const modelDefinitions = await api.models();
 
 const ZOOM = 60;
 
@@ -67,16 +65,13 @@ function CameraPositioner() {
 function Content() {
   const hullWrapper = useRef<Group>(null);
   const gunWrapper = useRef<Group>(null);
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const turret = useDuel("protagonist", DuelModule.Turret);
 
-  const tankModel = modelDefinitions.models[tank.id];
-  const turretModel = tankModel.turrets[turret.id];
+  const models = useDuelModels("protagonist");
 
   // baked-in turret mount tilt, applied as a static base rotation so the live
   // gun pitch composes on top of it
   const initialTurretPitch = -degToRad(
-    tankModel.initial_turret_rotation?.pitch ?? 0,
+    models.tank.initial_turret_rotation?.pitch ?? 0,
   );
 
   useEffect(() => {
@@ -94,7 +89,7 @@ function Content() {
     };
   }, []);
 
-  const origin = turretModel.gun_origin!;
+  const origin = models.turret.gun_origin!;
 
   return (
     <>
@@ -121,22 +116,18 @@ function Content() {
 }
 
 function ModelChunk({ only }: { only: Chunk }) {
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const turret = useDuel("protagonist", DuelModule.Turret);
-  const gun = useDuel("protagonist", DuelModule.Gun);
+  const protagonist = useDuelModules("protagonist");
 
-  const tankModel = modelDefinitions.models[tank.id];
-  const turretModel = tankModel.turrets[turret.id];
-  const gunModel = turretModel.guns[gun.id];
+  const models = useDuelModels("protagonist");
 
-  const originZ = tankModel.turret_origin!.z + turretModel.gun_origin!.z;
-  const originY = tankModel.turret_origin!.y + turretModel.gun_origin!.y;
+  const originZ = models.tank.turret_origin!.z + models.turret.gun_origin!.z;
+  const originY = models.tank.turret_origin!.y + models.turret.gun_origin!.y;
 
-  const { gltf } = useModel(tank.id);
+  const { gltf } = useModel(protagonist.tank.id);
   const nodes = Object.values(gltf.nodes);
 
-  const gunId = gunModel.model_id.toString().padStart(2, "0");
-  const turretId = turretModel.model_id.toString().padStart(2, "0");
+  const gunId = models.gun.model_id.toString().padStart(2, "0");
+  const turretId = models.turret.model_id.toString().padStart(2, "0");
 
   return (
     <group position={[0, -originY, -originZ]}>

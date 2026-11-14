@@ -1,36 +1,44 @@
 .button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-
-  border-radius: var(--max-size);
-  padding: var(--space-3) var(--space-4);
-
   border: none;
 
-  font-family: var(--font-family-regular);
-  font-size: var(--font-size-regular);
-  color: var(--gray-1);
-  font-weight: var(--weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 
   cursor: pointer;
 
-  &[data-even-padding] {
-    padding: var(--space-3);
+  &[data-size="minor"] {
+    --padding: var(--space-2);
+    --content-size: calc(0.85 * var(--font-size-regular));
   }
 
-  &[data-size="minor"] {
-    font-size: var(--font-size-minor);
-    padding: var(--space-2) var(--space-3);
-
-    &[data-even-padding] {
-      padding: var(--space-2);
-    }
+  &[data-size="regular"] {
+    --padding: var(--space-3);
+    --content-size: calc(1 * var(--font-size-regular));
   }
 
   &[data-size="major"] {
-    font-size: var(--font-size-major);
+    --padding: var(--space-3);
+    --content-size: calc(1.5 * var(--font-size-regular));
+  }
+
+  padding: var(--padding) calc(2 * var(--padding));
+  font-size: var(--content-size);
+
+  &[data-even-padding="true"] {
+    padding: var(--padding);
+  }
+
+  &[data-variant="ghost"] {
+    padding: 0;
+  }
+
+  img,
+  svg {
+    width: 1em;
+    height: 1em;
+
+    object-fit: contain;
   }
 
   &[data-list-child="horizontal"]:not(:first-child),
@@ -65,12 +73,10 @@
     border-bottom-width: var(--space-0);
   }
 
-  svg,
-  img {
-    width: 1.25em;
-    height: 1.25em;
-
-    object-fit: contain;
+  &[data-variant="surface"],
+  &[data-variant="soft"] {
+    background-color: var(--accent-a3);
+    color: var(--gray-12);
   }
 
   &[data-light-text="true"] {
@@ -100,11 +106,11 @@
   &[data-variant="ghost"],
   &[data-variant="outline"] {
     background: none;
-    color: var(--accent-12);
-  }
+    color: var(--accent-11);
 
-  &[data-variant="ghost"] {
-    padding: 0;
+    &[data-high-contrast="true"] {
+      color: var(--accent-12);
+    }
   }
 
   &[data-variant="surface"],

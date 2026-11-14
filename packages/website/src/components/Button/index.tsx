@@ -37,7 +37,7 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
-  evenPadding,
+  evenPadding = false,
 
   listChild,
   parentListChild,

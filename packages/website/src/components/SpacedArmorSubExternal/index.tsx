@@ -8,7 +8,7 @@ import {
   ShaderMaterial,
 } from "three";
 import { jsxTree } from "../../core/blitzkit/jsxTree";
-import { DuelModule, getDuel } from "../../hooks/useDuel";
+import { getDuelModules } from "../../hooks/useDuelModules";
 import { hasEquipment } from "../../hooks/useEquipment";
 import { Tankopedia } from "../../stores/tankopedia";
 import { ArmorType } from "../SpacedArmorScene";
@@ -52,12 +52,11 @@ export function SpacedArmorSubExternal({
     function handleShellChange() {
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
-        tankopediaEphemeral.customShell ??
-        getDuel("antagonist", DuelModule.Shell);
+        tankopediaEphemeral.customShell ?? getDuelModules("antagonist").shell;
       material.uniforms.penetration.value = shell.penetration!.near;
     }
     function handleProtagonistEquipmentChange() {
-      const protagonist = getDuel("protagonist", DuelModule.Tank);
+      const protagonist = getDuelModules("protagonist").tank;
 
       const hasEnhancedArmor = hasEquipment(
         110,
@@ -73,12 +72,11 @@ export function SpacedArmorSubExternal({
         thickness * (hasEnhancedArmor ? 1.04 : 1) * equalizer;
     }
     function handleAntagonistEquipmentChange() {
-      const antagonist = getDuel("antagonist", DuelModule.Tank);
+      const antagonist = getDuelModules("antagonist").tank;
 
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
-        tankopediaEphemeral.customShell ??
-        getDuel("antagonist", DuelModule.Shell);
+        tankopediaEphemeral.customShell ?? getDuelModules("antagonist").shell;
       const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,

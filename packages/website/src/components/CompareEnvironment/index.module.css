@@ -1,0 +1,34 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+
+  padding-bottom: var(--space-3);
+
+  .dots {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    .dot-row {
+      display: flex;
+      gap: var(--space-1);
+    }
+
+    .dot {
+      width: var(--space-3);
+      height: var(--space-3);
+      border-radius: var(--space-1);
+      background-color: var(--gray-9);
+
+      &[data-state="permanent"] {
+        background-color: var(--accent-11);
+      }
+
+      &[data-state="temporary"] {
+        background-color: var(--amber-11);
+      }
+    }
+  }
+}

@@ -20,7 +20,7 @@ import {
   SPALL_LINER_PROVISION_ID,
 } from "../core/blitzkit/spallLiner";
 import { discardClippingPlane } from "../core/three/discardClippingPlane";
-import { DuelModule, getDuel } from "../hooks/useDuel";
+import { getDuelModules } from "../hooks/useDuelModules";
 import { hasEquipment } from "../hooks/useEquipment";
 import {
   type Shot,
@@ -118,11 +118,11 @@ export function SpacedArmorSceneComponent({
       remainingPenetrationInput?: number,
       penetrationScale = 1,
     ) => {
-      const protagonist = getDuel("protagonist", DuelModule.Tank);
-      const antagonist = getDuel("antagonist", DuelModule.Tank);
+      const protagonist = getDuelModules("protagonist").tank;
+      const antagonist = getDuelModules("antagonist").tank;
 
       const { customShell } = Tankopedia.state;
-      const shell = customShell ?? getDuel("protagonist", DuelModule.Shell);
+      const shell = customShell ?? getDuelModules("protagonist").shell;
       const { equalize } = Tankopedia.state.environment;
       const protagonistEqualizer =
         (equalize ? protagonist.equalizer : undefined) ?? defaultEqualizer;

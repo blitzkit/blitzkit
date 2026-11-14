@@ -4,7 +4,7 @@ import { uniqBy } from "lodash-es";
 import { api } from "../../api/dynamic";
 import { SKIN_NUMBER } from "../../constants/skinNumber";
 import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { hasSkinAnimations } from "../../hooks/useSkin";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
@@ -18,7 +18,7 @@ const camouflageDefinitions = await api.camouflages();
 export function TankopediaSkinSwitcher() {
   const unwrap = useUnwrapper();
 
-  const tank = useDuel("protagonist", DuelModule.Tank);
+  const protagonist = useDuelModules("protagonist");
 
   const skin = Tankopedia.use((state) => state.loaders.skin.requested);
   const showControls = Tankopedia.use((state) => state.showControls);
@@ -31,7 +31,7 @@ export function TankopediaSkinSwitcher() {
 
   const skins = uniqBy(
     Object.values(camouflageDefinitions.camouflages).filter(
-      (camouflage) => camouflage.tank_id === tank.id,
+      (camouflage) => camouflage.tank_id === protagonist.tank.id,
     ),
     (camouflage) => unwrap(camouflage.name!),
   );
@@ -45,8 +45,8 @@ export function TankopediaSkinSwitcher() {
 
   const isVisible = showControls && isModelDisplay;
   const hasAnimations =
-    hasSkinAnimations(tank.id, loadedSkin) ||
-    hasSkinAnimations(tank.id, loadedAttachment);
+    hasSkinAnimations(protagonist.tank.id, loadedSkin) ||
+    hasSkinAnimations(protagonist.tank.id, loadedAttachment);
 
   return (
     <div className={styles["skin-switcher"]} data-visible={isVisible}>

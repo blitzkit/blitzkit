@@ -2,12 +2,12 @@ import { tankIcon } from "@blitzkit/core";
 import type { TankDefinition } from "@blitzkit/protos";
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
-import { useLocale } from "../../hooks/useLocale";
+import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
-import { InsertionMarker } from "../Compare/IntersectionMarker";
-import { insertionMarkers } from "../Compare/IntersectionMarker/constants";
-import { TankControl } from "../Compare/TankControl";
-import { StickyColumnHeaderCell } from "../StickyColumnHeaderCell";
+import { CompareInsertionMarker } from "../CompareInsertionMarker";
+import { insertionMarkers } from "../CompareInsertionMarker/constants";
+import { CompareTankControl } from "../CompareTankControl";
+import { Table } from "../Table";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
@@ -17,8 +17,9 @@ interface TankCardProps {
 }
 
 export function CompareTankCard({ index, tank }: TankCardProps) {
+  const header = useRef<HTMLTableCellElement>(null);
   const draggable = useRef<HTMLDivElement>(null);
-  const { unwrap } = useLocale();
+  const unwrap = useUnwrapper();
 
   useEffect(() => {
     const initial = new Vector2();
@@ -47,7 +48,7 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
         element.style.opacity = "0";
       });
 
-      const distances = insertionMarkers.map((insertionMarker) => {
+      const distances = Array.from(insertionMarkers, (insertionMarker) => {
         const markerBounds = insertionMarker.element.getBoundingClientRect();
         marker.set(markerBounds.left, markerBounds.top);
 
@@ -57,23 +58,19 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
         };
       });
       const closest = distances.reduce((a, b) =>
-        a.distance < b.distance ? a : b
+        a.distance < b.distance ? a : b,
       );
 
       dropIndex = closest.index;
       closest.element.style.opacity = "1";
-      draggable.current!.style.position = "fixed";
-      draggable.current!.style.cursor = "grabbing";
-      draggable.current!.style.zIndex = "1";
+      header.current!.dataset.dragging = "true";
       draggable.current!.style.left = `${initialRect.left + delta.x}px`;
       draggable.current!.style.top = `${initialRect.top + delta.y}px`;
     }
     function handlePointerUp(event: PointerEvent) {
       event.preventDefault();
 
-      draggable.current!.style.position = "static";
-      draggable.current!.style.zIndex = "unset";
-      draggable.current!.style.cursor = "grab";
+      delete header.current!.dataset.dragging;
 
       insertionMarkers.forEach(({ element }) => {
         element.style.opacity = "0";
@@ -104,48 +101,25 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
   }, [index]);
 
   return (
-    <StickyColumnHeaderCell width="0">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "var(--space-2)",
-        }}
-      >
-        <TankControl index={index} key={tank.id} slug={tank.slug} />
+    <Table.ColumnHeader ref={header} className={styles.card}>
+      <div className={styles.content}>
+        <CompareTankControl index={index} key={tank.id} slug={tank.slug} />
 
-        <div
-          ref={draggable}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "var(--space-2)",
-            userSelect: "none",
-            touchAction: "none",
-            cursor: "grab",
-          }}
-        >
+        <div ref={draggable} className={styles.draggable}>
           <img
             alt={unwrap(tank.name!)}
             src={tankIcon(tank.id)}
             width={64}
             height={64}
             draggable={false}
-            style={{
-              objectFit: "contain",
-            }}
+            className={styles.icon}
           />
 
-          <Text className={styles.name} nowrap overflow="ellipsis">
-            {unwrap(tank.name!)}
-          </Text>
+          <Text className={styles.name}>{unwrap(tank.name!)}</Text>
         </div>
       </div>
-      <InsertionMarker index={index + 1} />
-    </StickyColumnHeaderCell>
+
+      <CompareInsertionMarker index={index + 1} />
+    </Table.ColumnHeader>
   );
 }

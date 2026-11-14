@@ -1,6 +1,6 @@
 import { alias } from "@blitzkit/core";
 import { api } from "../../api/dynamic";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Heading } from "../Heading";
@@ -18,8 +18,8 @@ const [gameDefinitions, consumableDefinitions, provisionDefinitions, tanks] =
 export function TankopediaGameModeAbilities() {
   const unwrap = useUnwrapper();
   const strings = useStrings();
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const roles = Object.entries(tank.roles);
+  const protagonist = useDuelModules("protagonist");
+  const roles = Object.entries(protagonist.tank.roles);
 
   if (roles.length === 0) return null;
 

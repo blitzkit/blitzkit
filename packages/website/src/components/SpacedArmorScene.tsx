@@ -4,8 +4,8 @@ import { nameToArmorId } from "../core/blitzkit/nameToArmorId";
 import { resolveArmor } from "../core/blitzkit/resolveThickness";
 import { useArmor } from "../hooks/useArmor";
 import { useConsumable } from "../hooks/useConsumable";
-import { DuelModule, useDuel } from "../hooks/useDuel";
-import { useDuelModel } from "../hooks/useDuelModel";
+import { useDuelModels } from "../hooks/useDuelModels";
+import { useDuelModules } from "../hooks/useDuelModules";
 import { useModel } from "../hooks/useModel";
 import { useTankTransform } from "../hooks/useTankTransform";
 import { toThreeVector } from "../three/toThreeVector";
@@ -24,28 +24,27 @@ interface SpacedArmorSceneProps {
 export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const track = useDuel("protagonist", DuelModule.Track);
-  const turret = useDuel("protagonist", DuelModule.Turret);
-  const gun = useDuel("protagonist", DuelModule.Gun);
-  const { gltf: armorGltf } = useArmor(tank.id);
-  const { gltf: modelGltf } = useModel(tank.id);
+  const protagonist = useDuelModules("protagonist");
+  const { gltf: armorGltf } = useArmor(protagonist.tank.id);
+  const { gltf: modelGltf } = useModel(protagonist.tank.id);
   const armorNodes = Object.values(armorGltf.nodes);
   const modelNodes = Object.values(modelGltf.nodes);
-  const tankModelDefinition = useDuelModel("protagonist");
-  const trackModelDefinition = tankModelDefinition.tracks[track.id];
-  const turretModelDefinition = tankModelDefinition.turrets[turret.id];
-  const gunModelDefinition = turretModelDefinition.guns[gun.id];
-  const hullOrigin = toThreeVector(trackModelDefinition.origin);
-  const turretOrigin = toThreeVector(tankModelDefinition.turret_origin);
-  const gunOrigin = toThreeVector(turretModelDefinition.gun_origin);
+  const models = useDuelModels("protagonist");
+  const hullOrigin = toThreeVector(models.track.origin);
+  const turretOrigin = toThreeVector(models.tank.turret_origin);
+  const gunOrigin = toThreeVector(models.turret.gun_origin);
   const maskOrigin =
-    gunModelDefinition.mask === undefined
+    models.gun.mask === undefined
       ? undefined
-      : gunModelDefinition.mask + hullOrigin.y + turretOrigin.y + gunOrigin.y;
+      : models.gun.mask + hullOrigin.y + turretOrigin.y + gunOrigin.y;
   const isDynamicArmorActive = useConsumable("protagonist", 73);
 
-  useTankTransform(track, turret, turretContainer, gunContainer);
+  useTankTransform(
+    protagonist.track,
+    protagonist.turret,
+    turretContainer,
+    gunContainer,
+  );
 
   return (
     <>
@@ -55,7 +54,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
           const isVisible = isHull;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
-            tankModelDefinition.armor!,
+            models.tank.armor!,
             armorId,
           );
 
@@ -91,7 +90,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
             scene={scene}
             key={`${node.uuid}-track`}
             type={ArmorType.External}
-            thickness={trackModelDefinition.thickness}
+            thickness={models.track.thickness}
             variant="track"
             node={node}
           />
@@ -101,12 +100,12 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
       <group ref={turretContainer}>
         {armorNodes.map((node) => {
           const isCurrentTurret = node.name.startsWith(
-            `turret_${turretModelDefinition.model_id.toString().padStart(2, "0")}`,
+            `turret_${models.turret.model_id.toString().padStart(2, "0")}`,
           );
           const isVisible = isCurrentTurret;
           const armorId = nameToArmorId(node.name);
           const { spaced, thickness } = resolveArmor(
-            turretModelDefinition.armor!,
+            models.turret.armor!,
             armorId,
           );
 
@@ -136,12 +135,12 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
         <group ref={gunContainer}>
           {armorNodes.map((node) => {
             const isCurrentGun = node.name.startsWith(
-              `gun_${gunModelDefinition.model_id.toString().padStart(2, "0")}`,
+              `gun_${models.gun.model_id.toString().padStart(2, "0")}`,
             );
             const isVisible = isCurrentGun;
             const armorId = nameToArmorId(node.name);
             const { spaced, thickness } = resolveArmor(
-              gunModelDefinition.armor!,
+              models.gun.armor!,
               armorId,
             );
 
@@ -168,10 +167,10 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
           })}
 
           {modelNodes.map((node) => {
-            const gunString = `gun_${gunModelDefinition.model_id
+            const gunString = `gun_${models.gun.model_id
               .toString()
               .padStart(2, "0")}`;
-            const isCurrentGun = gunModelDefinition.mask
+            const isCurrentGun = models.gun.mask
               ? node.name.startsWith(gunString)
               : node.name === gunString;
             const isVisible = isCurrentGun;
@@ -183,7 +182,7 @@ export const SpacedArmorScene = memo<SpacedArmorSceneProps>(({ scene }) => {
                 scene={scene}
                 key={`${node.uuid}-gun-external`}
                 type={ArmorType.External}
-                thickness={gunModelDefinition.thickness}
+                thickness={models.gun.thickness}
                 variant="gun"
                 node={node}
                 clip={

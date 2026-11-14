@@ -5,7 +5,7 @@ import { ShellType } from "@blitzkit/protos";
 import { CaretDownIcon, DotFilledIcon } from "@radix-ui/react-icons";
 import { throttle } from "lodash-es";
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Button } from "../Button";
@@ -78,9 +78,8 @@ const COMMON_SHELLS: [ShellType, keyof Strings["common"]["shells"]][] = [
 
 export function CustomShellButton() {
   const customShell = Tankopedia.use((state) => state.customShell);
-  const gun = useDuel("protagonist", DuelModule.Gun);
-  const antagonistGun = useDuel("antagonist", DuelModule.Gun);
-  const antagonistShell = useDuel("antagonist", DuelModule.Shell);
+  const protagonist = useDuelModules("protagonist");
+  const antagonist = useDuelModules("antagonist");
   const strings = useStrings();
 
   const mm = literals(strings.common.units.mm, { value: "" });
@@ -100,7 +99,7 @@ export function CustomShellButton() {
         if (!open || customShell) return;
 
         Tankopedia.mutate((draft) => {
-          draft.customShell = antagonistShell;
+          draft.customShell = antagonist.shell;
         });
       }}
     >
@@ -161,7 +160,7 @@ export function CustomShellButton() {
                           modified.normalization = undefined;
                           modified.ricochet = undefined;
                           modified.explosion_radius =
-                            gun.shells.find(
+                            protagonist.gun.shells.find(
                               (shell) => shell.type === ShellType.SHELL_TYPE_HE,
                             )?.explosion_radius ?? 1;
                           break;
@@ -321,7 +320,7 @@ export function CustomShellButton() {
                   color="red"
                   onClick={() => {
                     Tankopedia.mutate((draft) => {
-                      draft.customShell = antagonistShell;
+                      draft.customShell = antagonist.shell;
                     });
                   }}
                 >

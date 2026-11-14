@@ -3,7 +3,7 @@ import { api } from "../api/dynamic";
 import { Tankopedia, TankopediaRelativeAgainst } from "../stores/tankopedia";
 import { createTankState } from "../tankopedia/createTankState";
 import { computeCharacteristics } from "./useCharacteristics";
-import { DuelModule, useDuel } from "./useDuel";
+import { useDuelModules } from "./useDuelModules";
 
 const tankDefinitions = await api.tanks();
 
@@ -26,10 +26,10 @@ const candidateStates = new Map(
 export function useComparisonCharacteristics() {
   const environment = Tankopedia.use((state) => state.environment);
 
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const gun = useDuel("protagonist", DuelModule.Gun);
-  const shell = useDuel("protagonist", DuelModule.Shell);
-  const protagonistShellIndex = gun.shells.findIndex((s) => s.id === shell.id);
+  const protagonist = useDuelModules("protagonist");
+  const protagonistShellIndex = protagonist.gun.shells.findIndex(
+    (s) => s.id === protagonist.shell.id,
+  );
 
   const relativeAgainst = Tankopedia.use((state) => state.relative_against);
 
@@ -37,16 +37,19 @@ export function useComparisonCharacteristics() {
     return Object.values(tankDefinitions.tanks).filter((candidate) => {
       switch (relativeAgainst) {
         case TankopediaRelativeAgainst.ClassAndTier:
-          return candidate.tier === tank.tier && candidate.class === tank.class;
+          return (
+            candidate.tier === protagonist.tank.tier &&
+            candidate.class === protagonist.tank.class
+          );
 
         case TankopediaRelativeAgainst.Tier:
-          return candidate.tier === tank.tier;
+          return candidate.tier === protagonist.tank.tier;
 
         case TankopediaRelativeAgainst.All:
           return true;
       }
     });
-  }, [tank, relativeAgainst]);
+  }, [protagonist.tank, relativeAgainst]);
 
   const characteristics = useMemo(() => {
     return candidates.flatMap((candidate) => {

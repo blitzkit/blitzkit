@@ -1,6 +1,6 @@
 import { youtubers } from "@blitzkit/core";
 import { awaitableReviews } from "../../core/awaitables/reviews";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useStrings } from "../../hooks/useStrings";
 import { Heading } from "../Heading";
 import { Text } from "../Text";
@@ -11,8 +11,8 @@ const reviews = await awaitableReviews;
 
 export function TankopediaVideos() {
   const strings = useStrings();
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const videos = reviews.reviews[tank.id]?.videos;
+  const protagonist = useDuelModules("protagonist");
+  const videos = reviews.reviews[protagonist.tank.id]?.videos;
 
   if (videos === undefined || videos.length === 0) return null;
 

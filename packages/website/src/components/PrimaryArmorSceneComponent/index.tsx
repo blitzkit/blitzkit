@@ -15,7 +15,7 @@ import {
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { jsxTree } from "../../core/blitzkit/jsxTree";
-import { DuelModule, getDuel } from "../../hooks/useDuel";
+import { getDuelModules } from "../../hooks/useDuelModules";
 import { hasEquipment } from "../../hooks/useEquipment";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
@@ -82,7 +82,7 @@ export function PrimaryArmorSceneComponent({
   useEffect(() => {
     function handleShellChange() {
       const shell =
-        Tankopedia.state.customShell ?? getDuel("antagonist", DuelModule.Shell);
+        Tankopedia.state.customShell ?? getDuelModules("antagonist").shell;
 
       material.current.uniforms.caliber.value = shell.caliber;
       material.current.uniforms.ricochet.value = degToRad(
@@ -118,7 +118,7 @@ export function PrimaryArmorSceneComponent({
     }
     function handleProtagonistEquipmentChange(noInvalidate = false) {
       const equipment = Tankopedia.state.protagonist.equipment;
-      const protagonist = getDuel("protagonist", DuelModule.Tank);
+      const protagonist = getDuelModules("protagonist").tank;
       const hasEnhancedArmor = hasEquipment(
         110,
         protagonist.equipment_preset,
@@ -135,13 +135,12 @@ export function PrimaryArmorSceneComponent({
       if (!noInvalidate) invalidate();
     }
     function handleAntagonistEquipmentChange(noInvalidate = false) {
-      const antagonist = getDuel("antagonist", DuelModule.Tank);
+      const antagonist = getDuelModules("antagonist").tank;
 
       const equipment = Tankopedia.state.antagonist.equipment;
       const tankopediaEphemeral = Tankopedia.state;
       const shell =
-        tankopediaEphemeral.customShell ??
-        getDuel("antagonist", DuelModule.Shell);
+        tankopediaEphemeral.customShell ?? getDuelModules("antagonist").shell;
       const penetration = shell.penetration!.near;
       const hasCalibratedShells = hasEquipment(
         103,

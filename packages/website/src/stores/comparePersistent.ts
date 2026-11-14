@@ -8,5 +8,5 @@ export interface ComparePersistent {
 
 export const ComparePersistent = new Soapstone<ComparePersistent>(
   { deltaMode: "none" },
-  "compare-2"
+  "compare-2",
 );

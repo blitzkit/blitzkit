@@ -3,7 +3,8 @@ import { Suspense, useEffect, useRef } from "react";
 import { applyPitchYawLimits } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../core/blitzkit/pose";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModels } from "../../hooks/useDuelModels";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useModel } from "../../hooks/useModel";
 import { Tankopedia } from "../../stores/tankopedia";
@@ -44,12 +45,9 @@ export function TankopediaSandbox({
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
   const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
-  const gun = useDuel("protagonist", DuelModule.Gun);
-  const turret = useDuel("protagonist", DuelModule.Turret);
+  const protagonist = useDuelModules("protagonist");
 
-  const model = Tankopedia.use((state) => state.protagonist.model);
-  const turretModelDefinition = model.turrets[turret.id];
-  const gunModelDefinition = turretModelDefinition.guns[gun.id];
+  const { turret, gun } = useDuelModels("protagonist");
   const display = Tankopedia.use((state) => state.loaders.display.loaded);
 
   function handlePointerDown() {
@@ -73,8 +71,8 @@ export function TankopediaSandbox({
           const [pitch, yaw] = applyPitchYawLimits(
             -Infinity,
             0,
-            gunModelDefinition.pitch!,
-            turretModelDefinition.yaw,
+            gun.pitch!,
+            turret.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
@@ -88,8 +86,8 @@ export function TankopediaSandbox({
           const [pitch, yaw] = applyPitchYawLimits(
             Infinity,
             0,
-            gunModelDefinition.pitch!,
-            turretModelDefinition.yaw,
+            gun.pitch!,
+            turret.yaw,
             hasImprovedVerticalStabilizer,
           );
 
@@ -102,8 +100,8 @@ export function TankopediaSandbox({
           const [pitch, yaw] = applyPitchYawLimits(
             0,
             0,
-            gunModelDefinition.pitch!,
-            turretModelDefinition.yaw,
+            gun.pitch!,
+            turret.yaw,
             hasImprovedVerticalStabilizer,
           );
 
@@ -130,13 +128,13 @@ export function TankopediaSandbox({
     const [pitch, yaw] = applyPitchYawLimits(
       modelTransformEvent.last!.pitch,
       modelTransformEvent.last!.yaw,
-      gunModelDefinition.pitch!,
-      turretModelDefinition.yaw,
+      gun.pitch!,
+      turret.yaw,
       hasImprovedVerticalStabilizer,
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });
-  }, [gun, turret]);
+  }, [protagonist.gun, protagonist.turret]);
 
   useEffect(() => {
     if (display !== TankopediaDisplay.DynamicArmor) {
@@ -188,9 +186,9 @@ export function TankopediaSandbox({
 
 function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
   const display = Tankopedia.use((state) => state.loaders.display.loaded);
-  const tank = useDuel("protagonist", DuelModule.Tank);
+  const protagonist = useDuelModules("protagonist");
 
-  const { hasPbr } = useModel(tank.id);
+  const { hasPbr } = useModel(protagonist.tank.id);
 
   // this causes a re-render of the ENTIRE thing, maybe move this elsewhere?
   const revealed = Tankopedia.use((state) => state.revealed);

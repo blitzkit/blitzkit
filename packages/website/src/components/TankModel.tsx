@@ -5,7 +5,7 @@ import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../core/blitzkit/modelTransform";
 import { skinTree } from "../core/blitzkit/skinTree";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
-import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
+import { getDuelModules, useDuelModules } from "../hooks/useDuelModules";
 import { useDuelModel } from "../hooks/useDuelModel";
 import { hasEquipment } from "../hooks/useEquipment";
 import { useModel } from "../hooks/useModel";
@@ -22,26 +22,31 @@ interface TankModelProps {
 }
 
 export function TankModel({ silhouette = false }: TankModelProps) {
-  const protagonist = Tankopedia.use((state) => state.protagonist);
-  const track = useDuel("protagonist", DuelModule.Track);
-  const turret = useDuel("protagonist", DuelModule.Turret);
+  const protagonistState = Tankopedia.use((state) => state.protagonist);
+  const protagonist = useDuelModules("protagonist");
 
   const canvas = useThree((state) => state.gl.domElement);
   const turretContainer = useRef<Group>(null!);
   const gunContainer = useRef<Group>(null!);
   const tankModelDefinition = useDuelModel("protagonist");
-  const turretModelDefinition = tankModelDefinition.turrets[protagonist.turret];
-  const gunModelDefinition = turretModelDefinition.guns[protagonist.gun];
-  const { gltf } = useModel(protagonist.tank);
+  const turretModelDefinition =
+    tankModelDefinition.turrets[protagonistState.turret];
+  const gunModelDefinition = turretModelDefinition.guns[protagonistState.gun];
+  const { gltf } = useModel(protagonistState.tank);
   const nodes = Object.values(gltf.nodes);
-  const skinGltf = useSkin(protagonist.tank);
-  const attachmentGltf = useSkin(protagonist.tank, "attachment");
+  const skinGltf = useSkin(protagonistState.tank);
+  const attachmentGltf = useSkin(protagonistState.tank, "attachment");
   const skins = useMemo(
     () => [skinGltf, attachmentGltf].filter((skin) => skin !== undefined),
     [skinGltf, attachmentGltf],
   );
 
-  useTankTransform(track, turret, turretContainer, gunContainer);
+  useTankTransform(
+    protagonist.track,
+    protagonist.turret,
+    turretContainer,
+    gunContainer,
+  );
   useSkinAnimation(skins);
 
   const materials = useMemo(() => {
@@ -187,7 +192,7 @@ export function TankModel({ silhouette = false }: TankModelProps) {
             window.addEventListener("pointerup", handlePointerUp);
           }
           function handlePointerMove(event: PointerEvent) {
-            const protagonist = getDuel("protagonist", DuelModule.Tank);
+            const protagonist = getDuelModules("protagonist").tank;
 
             const hasImprovedVerticalStabilizer = hasEquipment(
               122,
@@ -281,7 +286,7 @@ export function TankModel({ silhouette = false }: TankModelProps) {
               window.addEventListener("pointerup", handlePointerUp);
             }
             function handlePointerMove(event: PointerEvent) {
-              const protagonist = getDuel("protagonist", DuelModule.Tank);
+              const protagonist = getDuelModules("protagonist").tank;
 
               const hasImprovedVerticalStabilizer = hasEquipment(
                 122,

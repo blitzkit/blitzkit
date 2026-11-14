@@ -1,5 +1,6 @@
 .Content,
 .SubContent {
+  --drop-down-width: 16rem;
   --gutter: var(--space-5);
 
   min-width: min(calc(100dvw - 2 * var(--space-4)), var(--drop-down-width));

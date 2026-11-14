@@ -1,0 +1,111 @@
+.tree {
+  /* The game lays the tree out left to right; here depth runs top to bottom */
+  --depth-gap: var(--space-5);
+  --sibling-gap: var(--space-4);
+  --line-thickness: var(--space-1);
+  --line-border: var(--space-1) solid var(--gray-6);
+
+  &[data-has-bottom-cost="true"] {
+    margin-bottom: calc(var(--space-2) + var(--font-size-minor));
+  }
+
+  display: grid;
+  gap: var(--depth-gap) var(--sibling-gap);
+
+  .cell {
+    position: relative;
+
+    .trunk-left,
+    .trunk-right {
+      position: absolute;
+      top: calc(var(--depth-gap) / -2);
+      width: 100%;
+    }
+
+    .trunk-left,
+    .trunk-right,
+    .snake-left,
+    .snake-right {
+      border-top: var(--line-border);
+      border-bottom: var(--line-border);
+    }
+
+    .trunk-left {
+      right: 50%;
+    }
+
+    .trunk-right {
+      left: 50%;
+    }
+
+    .top,
+    .bottom {
+      position: absolute;
+      left: 50%;
+      height: calc(var(--depth-gap) / 2);
+
+      border-left: var(--line-border);
+      border-right: var(--line-border);
+    }
+
+    .top {
+      bottom: 100%;
+    }
+
+    .bottom {
+      top: 100%;
+    }
+
+    .snake-left,
+    .snake-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: var(--sibling-gap);
+    }
+
+    .snake-left {
+      right: 100%;
+    }
+
+    .snake-right {
+      left: 100%;
+    }
+
+    .module {
+      position: relative;
+
+      .icon {
+        width: 2em;
+        height: 2em;
+
+        .module[data-major="true"] & {
+          transform: scale(1.25);
+        }
+      }
+
+      .price {
+        display: flex;
+        gap: var(--space-1);
+
+        font-size: var(--font-size-minor);
+
+        position: absolute;
+        top: 100%;
+        left: 50%;
+
+        transform: translateX(-50%);
+
+        margin-top: var(--space-2);
+
+        background-color: var(--gray-2);
+
+        svg,
+        img {
+          width: 1em;
+          height: 1em;
+        }
+      }
+    }
+  }
+}

@@ -2,14 +2,14 @@ import { I_HAT, J_HAT } from "@blitzkit/core";
 import { OrbitControls } from "@react-three/drei";
 import { invalidate, useFrame, useThree } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { PerspectiveCamera, Vector3 } from "three";
 import { OrbitControls as OrbitControlsClass } from "three-stdlib";
-import { api } from "../api/dynamic";
 import { applyPitchYawLimits } from "../core/blitz/applyPitchYawLimits";
 import { Pose, poseEvent } from "../core/blitzkit/pose";
 import { controlsEnabledEvent } from "../core/controlsEnabled";
-import { DuelModule, getDuel, useDuel } from "../hooks/useDuel";
+import { useDuelModels } from "../hooks/useDuelModels";
+import { getDuelModules, useDuelModules } from "../hooks/useDuelModules";
 import { hasEquipment } from "../hooks/useEquipment";
 import { Tankopedia } from "../stores/tankopedia";
 
@@ -20,8 +20,6 @@ const poseDistances: Record<Pose, number> = {
 };
 
 const inspectModeInitialPosition = new Vector3(-8, 2, -13);
-
-const modelDefinitions = await api.models();
 
 interface ControlsProps {
   autoRotate?: boolean;
@@ -37,42 +35,46 @@ export function CanvasControl({
   const camera = useThree((state) => state.camera as PerspectiveCamera);
   const canvas = useThree((state) => state.gl.domElement);
   const orbitControls = useRef<OrbitControlsClass>(null);
-  const protagonistTurret = useDuel("protagonist", DuelModule.Turret);
-  const antagonistTurret = useDuel("antagonist", DuelModule.Turret);
-  const protagonistTrack = useDuel("protagonist", DuelModule.Track);
-  const protagonistTank = useDuel("protagonist", DuelModule.Tank);
-  const antagonistTank = useDuel("antagonist", DuelModule.Tank);
-  const protagonistGun = useDuel("protagonist", DuelModule.Gun);
-  const protagonistModelDefinition =
-    modelDefinitions.models[protagonistTank.id];
-  const protagonistTrackModelDefinition =
-    modelDefinitions.models[protagonistTank.id].tracks[protagonistTrack.id];
-  const antagonistModelDefinition = modelDefinitions.models[antagonistTank.id];
-  const protagonistTurretModelDefinition =
-    protagonistModelDefinition.turrets[protagonistTurret.id];
-  const antagonistTurretModelDefinition =
-    antagonistModelDefinition.turrets[antagonistTurret.id];
-  const protagonistGunModelDefinition =
-    protagonistTurretModelDefinition.guns[protagonistGun.id];
-  const protagonistHullOrigin = new Vector3(
-    protagonistTrackModelDefinition.origin!.x,
-    protagonistTrackModelDefinition.origin!.y,
-    -protagonistTrackModelDefinition.origin!.z,
+  const protagonist = useDuelModules("protagonist");
+  const antagonist = useDuelModules("antagonist");
+  const protagonistModels = useDuelModels("protagonist");
+  const antagonistModels = useDuelModels("antagonist");
+
+  const protagonistHullOrigin = useMemo(
+    () =>
+      new Vector3(
+        protagonistModels.track.origin!.x,
+        protagonistModels.track.origin!.y,
+        -protagonistModels.track.origin!.z,
+      ),
+    [protagonistModels.track],
   );
-  const protagonistTurretOrigin = new Vector3(
-    protagonistModelDefinition.turret_origin!.x,
-    protagonistModelDefinition.turret_origin!.y,
-    -protagonistModelDefinition.turret_origin!.z,
+  const protagonistTurretOrigin = useMemo(
+    () =>
+      new Vector3(
+        protagonistModels.tank.turret_origin!.x,
+        protagonistModels.tank.turret_origin!.y,
+        -protagonistModels.tank.turret_origin!.z,
+      ),
+    [protagonistModels.tank],
   );
-  const protagonistGunOrigin = new Vector3(
-    protagonistTurretModelDefinition.gun_origin!.x,
-    protagonistTurretModelDefinition.gun_origin!.y,
-    -protagonistTurretModelDefinition.gun_origin!.z,
+  const protagonistGunOrigin = useMemo(
+    () =>
+      new Vector3(
+        protagonistModels.turret.gun_origin!.x,
+        protagonistModels.turret.gun_origin!.y,
+        -protagonistModels.turret.gun_origin!.z,
+      ),
+    [protagonistModels.turret],
   );
-  const antagonistGunHeight =
-    protagonistTrackModelDefinition.origin!.y +
-    antagonistModelDefinition.turret_origin!.y +
-    antagonistTurretModelDefinition.gun_origin!.y;
+  const antagonistGunHeight = useMemo(
+    () =>
+      protagonistModels.track.origin!.y +
+      antagonistModels.tank.turret_origin!.y +
+      antagonistModels.turret.gun_origin!.y,
+    [protagonistModels.track, antagonistModels.tank, antagonistModels.turret],
+  );
+
   const disturbed = Tankopedia.use((state) => state.disturbed);
   const doAutoRotate = autoRotate && !disturbed;
   const gunHeight =
@@ -89,16 +91,16 @@ export function CanvasControl({
     controlsEnabledEvent.on(handleControlsEnabled);
 
     function handlePoseEvent(event: Pose) {
-      const protagonist = getDuel("protagonist", DuelModule.Tank);
+      const { tank } = getDuelModules("protagonist");
 
       const hasImprovedVerticalStabilizer = hasEquipment(
         122,
-        protagonist.equipment_preset,
+        tank.equipment_preset,
         Tankopedia.state.protagonist.equipment,
       );
       const hasDownImprovedVerticalStabilizer = hasEquipment(
         124,
-        protagonist.equipment_preset,
+        tank.equipment_preset,
         Tankopedia.state.protagonist.equipment,
       );
 
@@ -107,8 +109,8 @@ export function CanvasControl({
           const [pitch] = applyPitchYawLimits(
             -Infinity,
             0,
-            protagonistGunModelDefinition.pitch!,
-            protagonistTurretModelDefinition.yaw,
+            protagonistModels.gun.pitch!,
+            protagonistModels.turret.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
@@ -140,8 +142,8 @@ export function CanvasControl({
           const [pitch] = applyPitchYawLimits(
             0,
             0,
-            protagonistGunModelDefinition.pitch!,
-            protagonistTurretModelDefinition.yaw,
+            protagonistModels.gun.pitch!,
+            protagonistModels.turret.yaw,
             hasImprovedVerticalStabilizer,
             hasDownImprovedVerticalStabilizer,
           );
@@ -190,7 +192,7 @@ export function CanvasControl({
       controlsEnabledEvent.off(handleControlsEnabled);
       poseEvent.off(handlePoseEvent);
     };
-  }, [camera, protagonistTank.id, antagonistTank.id]);
+  }, [camera, protagonist.tank, antagonist.tank]);
 
   useEffect(() => {
     function handleWheel(event: WheelEvent) {

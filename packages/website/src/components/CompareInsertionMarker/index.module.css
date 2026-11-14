@@ -1,0 +1,14 @@
+.marker {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  height: calc(100% - 2 * var(--space-4));
+  width: var(--space-1);
+
+  border-radius: var(--radius-max);
+  background-color: var(--accent-12);
+
+  opacity: 0;
+}

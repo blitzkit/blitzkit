@@ -20,6 +20,37 @@
     "clear": "Clear"
   },
 
+  "compare": {
+    "no_tanks": {
+      "title": "No tanks to compare",
+      "body": "Add a tank to get started"
+    },
+    "add": {
+      "button": "Add",
+      "title": "Add tank",
+      "description": "Select a tank to add to the comparison"
+    },
+    "swap_dialog": {
+      "title": "Swap tank",
+      "description": "Select a tank to replace this one"
+    },
+    "clear": "Clear",
+    "deltas": {
+      "label": "Deltas",
+      "none": "No deltas",
+      "percentage": "Percentage",
+      "absolute": "Absolute"
+    },
+    "sync_shells": "Sync shells",
+    "equalize": "Equalize",
+    "loadout": "Loadout",
+    "stock": "Stock",
+    "apply_to_all": "Apply to all",
+    "remove": "Remove",
+    "swap": "Swap",
+    "open": "Open in Tankopedia"
+  },
+
   "units": {
     "m": "{value}m",
     "mm": "{value}mm",
@@ -257,10 +288,18 @@
       "consumables": "Consumables",
       "provisions": "Provisions",
       "modules": "Modules",
+      "camouflage": "Camouflage",
+      "module_types": {
+        "turret": "Turret",
+        "gun": "Gun",
+        "engine": "Engine",
+        "chassis": "Chassis"
+      },
       "equipment": "Equipment",
       "shells": "Shells",
       "clear": "Clear",
       "maximize": "Maximize",
+      "stock": "Stock",
       "skills": "Crew skills",
       "alternative": "Alt"
     },

@@ -11,7 +11,7 @@ import { CharacteristicType } from "../types/characteristics";
 import { useLocale } from "./useLocale";
 import { useStrings } from "./useStrings";
 
-export function useCharacteristicRenderer() {
+export function useCharacteristicRenderer(units = true) {
   const locale = useLocale();
   const strings = useStrings();
 
@@ -20,6 +20,8 @@ export function useCharacteristicRenderer() {
     config: CharacteristicRenderConfig,
   ): ReactNode {
     if (characteristic === null) return null;
+
+    const unit = units ? config.units : undefined;
 
     if (config.render)
       return config.render({ output: characteristic, strings });
@@ -58,7 +60,7 @@ export function useCharacteristicRenderer() {
         return characteristic as string;
 
       case CharacteristicType.Number:
-        return renderNumber(characteristic as number, config.units);
+        return renderNumber(characteristic as number, unit);
 
       case CharacteristicType.Interval: {
         const [low, high] = characteristic as Vector2Tuple;
@@ -67,9 +69,9 @@ export function useCharacteristicRenderer() {
           max: renderNumber(high, undefined),
         });
 
-        if (config.units === undefined) return rendered;
+        if (unit === undefined) return rendered;
 
-        return literalsArray(strings.units[config.units], {
+        return literalsArray(strings.units[unit], {
           value: <Text>{rendered}</Text>,
         });
       }
@@ -82,11 +84,11 @@ export function useCharacteristicRenderer() {
           </Fragment>
         ));
 
-        if (config.units === undefined) return values;
+        if (unit === undefined) return values;
 
         return (
           <>
-            {literalsArray(strings.units[config.units], {
+            {literalsArray(strings.units[unit], {
               value: <Text>{values}</Text>,
             })}
           </>

@@ -1,12 +1,15 @@
 import { useMemo } from "react";
 import { api } from "../../../../../api/dynamic";
-import { Scroller } from "../../../../../components/Scroller";
+import {
+  Scroller,
+  ScrollerOrientation,
+} from "../../../../../components/Scroller";
 import type { ThicknessRange } from "../../../../../components/TankStaticArmor";
 import { TankopediaCharacteristics } from "../../../../../components/TankopediaCharacteristics";
 import { TankopediaGameModeAbilities } from "../../../../../components/TankopediaGameModeAbilities";
-import { TankopediaVideos } from "../../../../../components/TankopediaVideos";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
 import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
+import { TankopediaVideos } from "../../../../../components/TankopediaVideos";
 import { defaultEqualizer } from "../../../../../config/equalizer";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
@@ -37,7 +40,7 @@ export const Page = withErrorWrapper(
     const thicknessRange = useMemo(() => {
       const entries = Object.values(tanks.tanks);
       const filtered = entries.filter(
-        (thisTank) => thisTank.tier === protagonistTank.tier,
+        (thisTank) => thisTank.tier === protagonistTank.tier
       );
       const value =
         (filtered.reduce((accumulator, thisTank) => {
@@ -56,9 +59,12 @@ export const Page = withErrorWrapper(
 
     return (
       <div className={styles.page}>
-        <Scroller className={styles.loadout} orientation="vertical">
+        <Scroller
+          className={styles.loadout}
+          orientation={ScrollerOrientation.Vertical}
+        >
           <div className={styles.content}>
-            <TankopediaLoadout characteristics={characteristics} />
+            <TankopediaLoadout />
           </div>
         </Scroller>
 
@@ -74,5 +80,5 @@ export const Page = withErrorWrapper(
         </div>
       </div>
     );
-  }),
+  })
 );

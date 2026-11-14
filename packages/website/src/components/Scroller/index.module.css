@@ -1,5 +1,6 @@
 .scroller {
   --scroller-curtain-color: var(--gray-1);
+  --scroller-curtain-size: min(25%, var(--space-6));
 
   display: flex;
   flex-direction: column;
@@ -10,30 +11,55 @@
   .content {
     overflow: auto;
 
-    padding-bottom: var(--space-4);
+    /* Contains children's stacking so the bars always sit above them */
+    isolation: isolate;
 
-    transition: scrollbar-color var(--duration-brief);
-    scrollbar-color: transparent transparent;
+    /* The custom bars overlay the content instead of taking a gutter */
+    scrollbar-width: none;
 
-    &:hover {
-      scrollbar-color: var(--gray-7) var(--gray-3);
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 
   &:hover,
-  &:focus-within {
-    .bar-wrapper {
+  &:focus-within,
+  &:has([data-dragging="true"]) {
+    .bar {
       opacity: 1;
     }
   }
 
-  &[data-orientation="horizontal"] {
-    .curtain {
-      width: min(25%, var(--space-7));
-      height: calc(100% - var(--space-3) - 2 * var(--space-1));
+  &[data-orientation="vertical"],
+  &[data-orientation="both"] {
+    min-height: 0;
 
-      position: absolute;
+    .content {
+      flex: 1 1 auto;
+      min-height: 0;
+
+      padding-bottom: 0;
+    }
+  }
+
+  &[data-orientation="vertical"] {
+    .content {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+  }
+
+  .curtain {
+    position: absolute;
+
+    opacity: 0;
+    pointer-events: none;
+
+    &[data-axis="x"] {
       top: 0;
+
+      width: var(--scroller-curtain-size);
+      height: 100%;
 
       &[data-side="start"] {
         left: 0;
@@ -53,27 +79,12 @@
         );
       }
     }
-  }
 
-  &[data-orientation="vertical"] {
-    min-height: 0;
-
-    .content {
-      flex: 1 1 auto;
-      min-height: 0;
-
-      overflow-x: hidden;
-      overflow-y: auto;
-
-      padding-bottom: 0;
-    }
-
-    .curtain {
-      width: calc(100% - var(--space-3) - 2 * var(--space-1));
-      height: min(25%, var(--space-7));
-
-      position: absolute;
+    &[data-axis="y"] {
       left: 0;
+
+      width: 100%;
+      height: var(--scroller-curtain-size);
 
       &[data-side="start"] {
         top: 0;
@@ -95,8 +106,62 @@
     }
   }
 
-  .curtain {
+  .bar {
+    position: absolute;
+
     opacity: 0;
-    pointer-events: none;
+    transition: opacity var(--duration-brief);
+
+    &[data-hidden="true"] {
+      display: none;
+    }
+
+    &[data-axis="x"] {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--space-4);
+    }
+
+    &[data-axis="y"] {
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: var(--space-4);
+    }
+
+    .thumb {
+      position: absolute;
+
+      border-radius: var(--max-size);
+      background-color: var(--gray-a8);
+      touch-action: none;
+
+      &:hover,
+      &[data-dragging="true"] {
+        background-color: var(--gray-a10);
+      }
+    }
+
+    &[data-axis="x"] .thumb {
+      top: var(--space-2);
+      height: var(--space-3);
+    }
+
+    &[data-axis="y"] .thumb {
+      left: var(--space-2);
+      width: var(--space-3);
+    }
+  }
+
+  /* Leaves the shared corner to neither bar */
+  &[data-orientation="both"] {
+    .bar[data-axis="x"] {
+      right: var(--space-4);
+    }
+
+    .bar[data-axis="y"] {
+      bottom: var(--space-4);
+    }
   }
 }

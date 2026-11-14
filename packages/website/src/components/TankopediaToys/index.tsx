@@ -12,14 +12,14 @@ import {
   type PointerEvent,
 } from "react";
 import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
-import { api } from "../../api/dynamic";
 import type { ToyProps } from "../../config/toys";
 import {
   DEFAULT_PITCH_TRANSITION,
   applyPitchYawLimits,
 } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
-import { DuelModule, useDuel } from "../../hooks/useDuel";
+import { useDuelModels } from "../../hooks/useDuelModels";
+import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
@@ -35,7 +35,7 @@ import styles from "./index.module.css";
 
 export function RicochetToy({ characteristics }: ToyProps) {
   const strings = useStrings();
-  const shell = useDuel("protagonist", DuelModule.Shell);
+  const protagonist = useDuelModules("protagonist");
   const container = useRef<HTMLDivElement>(null);
   const normalizationValue = characteristics.get("normalization");
   const ricochetValue = characteristics.get("ricochet");
@@ -45,7 +45,7 @@ export function RicochetToy({ characteristics }: ToyProps) {
   const ricochet = degToRad(
     typeof ricochetValue === "number" ? ricochetValue : 90,
   );
-  const explodes = isExplosive(shell.type);
+  const explodes = isExplosive(protagonist.shell.type);
   const [rawAngle, setAngle] = useState(degToRad(-25));
   const angle = explodes ? degToRad(-70) : rawAngle;
   const doesRicochet = Math.abs(angle) >= ricochet;
@@ -98,7 +98,7 @@ export function RicochetToy({ characteristics }: ToyProps) {
         <div className={styles.line} />
         <img
           className={styles.shell}
-          src={alias("api", `/icons/shells/${shell.icon}.webp`)}
+          src={alias("api", `/icons/shells/${protagonist.shell.icon}.webp`)}
         />
       </div>
 
@@ -328,7 +328,7 @@ interface ReloadData {
 }
 
 export function ReloadToy({ characteristics }: ToyProps) {
-  const gun = useDuel("protagonist", DuelModule.Gun);
+  const protagonist = useDuelModules("protagonist");
   const strings = useStrings();
 
   const reloadData = useMemo<ReloadData>(() => {
@@ -336,14 +336,14 @@ export function ReloadToy({ characteristics }: ToyProps) {
       "_reload_coefficient",
     ) as number;
     const intraClip =
-      gun.gun_type!.$case === "regular"
+      protagonist.gun.gun_type!.$case === "regular"
         ? 0
         : (characteristics.get("intra_clip") as number);
 
     let reloads: number[];
     let shells: number;
 
-    switch (gun.gun_type!.$case) {
+    switch (protagonist.gun.gun_type!.$case) {
       case "regular":
         reloads = [characteristics.get("reload") as number];
         shells = 1;
@@ -351,14 +351,14 @@ export function ReloadToy({ characteristics }: ToyProps) {
 
       case "auto_loader":
         reloads = [characteristics.get("reload") as number];
-        shells = gun.gun_type!.value.shell_count;
+        shells = protagonist.gun.gun_type!.value.shell_count;
         break;
 
       case "auto_reloader":
-        reloads = gun.gun_type!.value.shell_reloads.map(
+        reloads = protagonist.gun.gun_type!.value.shell_reloads.map(
           (reload) => reload * reloadCoefficient,
         );
-        shells = gun.gun_type!.value.shell_count;
+        shells = protagonist.gun.gun_type!.value.shell_count;
         break;
     }
 
@@ -366,10 +366,10 @@ export function ReloadToy({ characteristics }: ToyProps) {
       reloads,
       shells,
       intraClip,
-      burstShells: gun.burst?.count ?? 1,
-      burstInterShell: gun.burst?.interval,
+      burstShells: protagonist.gun.burst?.count ?? 1,
+      burstInterShell: protagonist.gun.burst?.interval,
     };
-  }, [characteristics, gun]);
+  }, [characteristics, protagonist.gun]);
 
   const glow = useRef<HTMLDivElement>(null);
   const ring = useRef<HTMLDivElement>(null);
@@ -567,7 +567,6 @@ export function ReloadToy({ characteristics }: ToyProps) {
         variant="outline"
         color="gray"
         highContrast
-        aria-label={strings.tanks.toys.reload.skip}
         onClick={() => {
           state.current = Math.floor(state.current + 1);
         }}
@@ -665,8 +664,6 @@ export function ViewRangeToy({ characteristics }: ToyProps) {
   );
 }
 
-const modelDefinitions = await api.models();
-
 const ANGLE_COEFFICIENT = 1 / 10;
 
 function mag(x: number) {
@@ -686,27 +683,23 @@ export function FlexibilityToy() {
   const strings = useStrings();
   const degrees = (value: number) =>
     literals(strings.common.units.deg, { value: value.toFixed(0) });
-  const tank = useDuel("protagonist", DuelModule.Tank);
-  const turret = useDuel("protagonist", DuelModule.Turret);
-  const gun = useDuel("protagonist", DuelModule.Gun);
+  const protagonist = useDuelModules("protagonist");
   const modelRequested = Tankopedia.use(
     (state) => state.loaders.model.requested,
   );
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
   const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
-  const tankModel = modelDefinitions.models[tank.id];
-  const turretModel = tankModel.turrets[turret.id];
-  const gunModel = turretModel.guns[gun.id];
-  const p = gunModel.pitch!;
-  const y = turretModel.yaw;
+  const models = useDuelModels("protagonist");
+  const p = models.gun.pitch!;
+  const y = models.turret.yaw;
   const f = p.front;
   const b = p.back;
   const t = p.transition ?? DEFAULT_PITCH_TRANSITION;
 
   // the turret's baked-in mount tilt is folded into displayed pitch values
   const initialTurretPitch = degToRad(
-    tankModel.initial_turret_rotation?.pitch ?? 0,
+    models.tank.initial_turret_rotation?.pitch ?? 0,
   );
   const tiltDeg = radToDeg(initialTurretPitch);
   const magTilted = (deg: number) => mag(deg + tiltDeg);
@@ -727,7 +720,7 @@ export function FlexibilityToy() {
     setMinPitch(defaultMin);
     setMaxPitch(defaultMax);
     modelTransformEvent.dispatch({ pitch: 0, yaw: 0 });
-  }, [tank.id, turret.id, gun.id]);
+  }, [protagonist.tank.id, protagonist.turret.id, protagonist.gun.id]);
 
   function outline(limit: "max" | "min") {
     const m = magTilted(p[limit]);

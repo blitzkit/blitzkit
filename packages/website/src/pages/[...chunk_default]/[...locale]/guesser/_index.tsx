@@ -5,7 +5,7 @@ import { GuessRenderer } from "../../../../components/GuessRenderer";
 import { GuessRendererLoader } from "../../../../components/GuessRendererLoader";
 import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../hocs/withLocale";
-import { DuelModule, useDuel } from "../../../../hooks/useDuel";
+import { useDuelModules } from "../../../../hooks/useDuelModules";
 import { Guess, GuessState } from "../../../../stores/guess";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import { createTankState } from "../../../../tankopedia/createTankState";
@@ -42,12 +42,11 @@ function Container({ skeleton }: MaybeSkeletonComponentProps) {
 }
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
-  const tank = useDuel("protagonist", DuelModule.Tank);
-
+  const protagonist = useDuelModules("protagonist");
   const tiers = Guess.use((state) => state.tiers);
 
   useEffect(() => {
-    const isTankAlreadyCompliant = tiers.includes(tank.tier);
+    const isTankAlreadyCompliant = tiers.includes(protagonist.tank.tier);
 
     if (isTankAlreadyCompliant) return;
 
