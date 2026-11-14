@@ -116,9 +116,6 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     const { existsSync } = await import("fs");
     const { readFile, writeFile, mkdir } = await import("fs/promises");
 
-    console.log("Initializing virtual file system...");
-    await this.vfs.init();
-
     console.log("Fetching game data...");
     this.nationsDir = await this.vfs
       .dir("Data/XML/item_defs/vehicles")
