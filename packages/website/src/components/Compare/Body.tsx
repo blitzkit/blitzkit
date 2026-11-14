@@ -29,6 +29,8 @@ export function Body({ stats }: BodyProps) {
             </Flex>
           </StickyColumnHeaderCell>
 
+          {members.length > 1 && <StickyColumnHeaderCell top={137} />}
+
           {members.map(({ gun, shell, key }, index) => (
             <StickyColumnHeaderCell key={key} top={137}>
               <Flex justify="center">
