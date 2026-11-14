@@ -409,6 +409,29 @@
         "tier": "Tier {tier}"
       },
 
+      "tankle": {
+        "name": "Tankle",
+        "button": "Start guessing",
+        "description": "Guess the tank in 9 tries",
+        "seo_description": "Guess the World of Tanks Blitz tank in 9 tries using stat hints",
+        "guesses": "{count} / {max} guesses",
+        "answer": "The tank was {tank}",
+        "correct": "Correct! Solved in {count} guesses",
+        "correct_single": "Correct! Solved in 1 guess",
+        "seconds": "{value}s",
+        "columns": {
+          "tank": "Tank",
+          "tier": "Tier",
+          "class": "Class",
+          "nation": "Nation",
+          "type": "Type",
+          "gun_type": "Gun",
+          "health": "HP",
+          "damage": "Alpha",
+          "reload": "Reload / Intraclip"
+        }
+      },
+
       "tankopedia": {
         "search": "Search a stat...",
 
