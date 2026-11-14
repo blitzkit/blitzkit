@@ -15,7 +15,7 @@ export interface ConsumablesCommon {
     script: {
       "#text": string;
       automatic?: boolean;
-      cooldown: number;
+      cooldown?: number;
       duration?: number;
       shotEffect?: string;
       bonusValues?: { [key: string]: number };

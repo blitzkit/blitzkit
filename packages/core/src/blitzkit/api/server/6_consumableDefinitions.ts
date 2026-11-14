@@ -15,7 +15,7 @@ export abstract class ServerBlitzKitAPI6 extends ServerBlitzKitAPI5 {
       const entry: Consumable = {
         id: consumable.id,
         game_mode_exclusive: "gameModeFilter" in consumable,
-        cooldown: consumable.script.cooldown,
+        cooldown: consumable.script.cooldown ?? 0,
         duration: consumable.script.duration,
         name: this.getString(consumable.userString),
         exclude: [],
