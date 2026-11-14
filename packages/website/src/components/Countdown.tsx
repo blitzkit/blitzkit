@@ -3,7 +3,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { InlineSkeleton } from "./InlineSkeleton";
 
-const TIME = 1793898000 * 1000;
+const TIME = 1794675600 * 1000;
 const HREF = "https://preview.blitzkit.app/tanks";
 
 export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
@@ -76,11 +76,11 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
 
           <Flex direction="column">
             <Heading size={{ initial: "4", sm: "6" }}>
-              More Tier XIs {!skeleton && string}{" "}
+              All 9 Tier XIs {!skeleton && string}{" "}
               {skeleton && <InlineSkeleton width="10rem" />}
             </Heading>
             <Text size={{ initial: "2", sm: "3" }}>
-              Catch the next 3 tanks on BlitzKit Preview
+              Catch all 9 tanks on BlitzKit Preview
             </Text>
           </Flex>
         </Flex>
