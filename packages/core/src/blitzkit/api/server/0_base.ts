@@ -104,6 +104,7 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
   protected gameTypeSelectorStyles?: SquadBattleTypeStylesYaml;
   protected combatRoles?: CombatRolesYaml;
   protected tierEqualizer?: string[][];
+  protected version?: string;
 
   constructor(vfs: AbstractVFS) {
     super();
@@ -115,14 +116,10 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
     const { existsSync } = await import("fs");
     const { readFile, writeFile, mkdir } = await import("fs/promises");
 
-    console.log("Initializing virtual file system...");
-
     const path = await import("node:path");
 
     this.extname = path.extname;
     this.parsePath = path.parse;
-
-    await this.vfs.init();
 
     console.log("Fetching game data...");
     this.nationsDir = await this.vfs
@@ -161,11 +158,13 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
       { delimiter: ";" },
     );
 
+    this.version = (await this.vfs.text("Data/version.txt")).split(" ")[0];
+
     console.log("Fetching game localizations...");
 
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
-        const root = "../../temp/game-strings";
+        const root = `../../temp/game-strings/${this.version}`;
         const cachePath = `${root}/${locale}.json`;
 
         if (existsSync(cachePath)) {

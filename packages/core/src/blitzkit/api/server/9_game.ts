@@ -20,9 +20,7 @@ export abstract class ServerBlitzKitAPI9 extends ServerBlitzKitAPI8 {
       provisionNativeNames[key] = provision.id;
     });
 
-    const version = (await this.vfs.text("Data/version.txt")).split(" ")[0];
-
-    gameDefinitions.version = version;
+    gameDefinitions.version = this.version!;
     gameDefinitions.nations = (
       await this.vfs.yaml<AvailableNationsYaml>("Data/available_nations.yaml")
     ).available_nations;

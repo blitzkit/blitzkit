@@ -3,7 +3,6 @@ import { mkdir, rm } from "node:fs/promises";
 import { downloadSteamClient } from "./steam";
 import { downloadWGCClient } from "./wgc";
 import { downloadWGPKGClient } from "./wgpkg";
-import { downloadZipClient } from "./zip";
 
 export const DEPOT_DOWNLOADER_RETRY_TIME = 30_000;
 
@@ -20,9 +19,9 @@ switch (provider) {
     await downloadSteamClient();
     break;
 
-  // from zip, usually has a root directory for opentest
+  // from zip, read remotely by ZipVFS at build time; nothing to download
   case "zip":
-    await downloadZipClient();
+    console.log("Zip client provider; skipping download in favor of ZipVFS");
     break;
 
   // effectively the same as wgc, but direct for preview
