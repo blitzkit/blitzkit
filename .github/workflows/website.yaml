@@ -107,23 +107,9 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || inputs.branch || 'production' }}
-          submodules: false
+          # the only submodule is closed, which needs secrets
+          submodules: ${{ env.HAS_ROOT_REPO_CONTEXT == 'true' && 'recursive' || 'false' }}
           token: ${{ secrets.GH_TOKEN || github.token }}
-
-      # Future proofing for Reforged: we'll have both closed and open repos, so
-      # we need to handle them here instead of disabling submodules outright
-      # checkout's persisted credentials are scoped to the root .git, so submodule clones need the token passed explicitly
-      - name: Checkout submodules
-        env:
-          TOKEN: ${{ secrets.GH_TOKEN || github.token }}
-        run: |
-          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)"
-
-          if [ "$HAS_ROOT_REPO_CONTEXT" = "true" ]; then
-            git -c "http.https://github.com/.extraheader=$AUTH" submodule update --init --recursive --depth=1
-          else
-            git -c "http.https://github.com/.extraheader=$AUTH" submodule update --init --recursive --depth=1 -- . ':!packages/closed'
-          fi
 
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
