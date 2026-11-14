@@ -106,6 +106,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
   protected gameTypeSelectorStyles?: SquadBattleTypeStylesYaml;
   protected combatRoles?: CombatRolesYaml;
   protected tierEqualizer?: string[][];
+  protected version?: string;
 
   constructor(vfs: AbstractVFS) {
     super();
@@ -153,11 +154,13 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
       { delimiter: ";" },
     );
 
+    this.version = (await this.vfs.text("Data/version.txt")).split(" ")[0];
+
     console.log("Fetching game localizations...");
 
     await Promise.all(
       locales.supported.map(async ({ locale }) => {
-        const root = "../../temp/game-strings";
+        const root = `../../temp/game-strings/${this.version}`;
         const cachePath = `${root}/${locale}.json`;
 
         if (existsSync(cachePath)) {
