@@ -1,7 +1,8 @@
-import { TankType } from "@blitzkit/core";
+import { type TankDescription, TankType } from "@blitzkit/core";
 import { PageWrapper } from "../../../../../components/PageWrapper";
 import { CalloutsSection } from "../../../../../components/Tankopedia/CalloutsSection";
 import { CharacteristicsSection } from "../../../../../components/Tankopedia/CharacteristicsSection";
+import { DescriptionSection } from "../../../../../components/Tankopedia/DescriptionSection";
 import { GameModeSection } from "../../../../../components/Tankopedia/GameModeSection";
 import { GuideSection } from "../../../../../components/Tankopedia/GuideSection";
 import { HeroSection } from "../../../../../components/Tankopedia/HeroSection";
@@ -22,6 +23,7 @@ type PageProps = MaybeSkeletonComponentProps &
   LocaleAcceptorProps & {
     id: number;
     guide?: TankGuide;
+    description?: TankDescription;
   };
 
 const [tankDefinitions, modelDefinitions] = await Promise.all([
@@ -29,7 +31,7 @@ const [tankDefinitions, modelDefinitions] = await Promise.all([
   api.modelDefinitions(),
 ]);
 
-export function Page({ id, skeleton, locale, guide }: PageProps) {
+export function Page({ id, skeleton, locale, guide, description }: PageProps) {
   const tank = tankDefinitions.tanks[id];
   const model = modelDefinitions.models[id];
 
@@ -49,6 +51,7 @@ export function Page({ id, skeleton, locale, guide }: PageProps) {
         <GameModeSection />
         {guide && <GuideSection guide={guide} />}
         <VideoSection skeleton={skeleton} />
+        {description && <DescriptionSection description={description} />}
       </PageWrapper>
     </LocaleProvider>
   );
