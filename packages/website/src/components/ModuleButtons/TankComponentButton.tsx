@@ -1,5 +1,6 @@
-import { Button, Text, Tooltip } from '@radix-ui/themes';
+import { Button, Tooltip } from '@radix-ui/themes';
 import type { ComponentProps, ReactNode } from 'react';
+import { Discriminator } from '../Discriminator';
 
 export interface TankComponentButtonProps
   extends ComponentProps<typeof Button> {
@@ -61,35 +62,13 @@ export function TankComponentButton({
       {children}
 
       {discriminator !== undefined && (
-        <Text
-          size="1"
-          style={{
-            textShadow: '0 0 4px black',
-            position: 'absolute',
-            top: '50%',
-            right: 8,
-            textAlign: 'right',
-          }}
-          color={variant === 'ghost' ? 'gray' : undefined}
-        >
-          {discriminator}
-        </Text>
+        <Discriminator>{discriminator}</Discriminator>
       )}
 
       {secondaryDiscriminator !== undefined && (
-        <Text
-          size="1"
-          style={{
-            textShadow: '0 0 4px black',
-            position: 'absolute',
-            bottom: '50%',
-            right: 8,
-            textAlign: 'right',
-          }}
-          color={variant === 'ghost' ? 'gray' : undefined}
-        >
+        <Discriminator>
           {secondaryDiscriminator}
-        </Text>
+        </Discriminator>
       )}
     </Button>
   );

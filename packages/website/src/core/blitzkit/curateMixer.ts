@@ -1,7 +1,7 @@
-import { api } from "./api";
+import { api } from "../../api/dynamic";
 
-const tankDefinitions = await api.tankDefinitions();
-const modelDefinitions = await api.modelDefinitions();
+const tankDefinitions = await api.tanks();
+const modelDefinitions = await api.models();
 
 const tanks = Object.values(tankDefinitions.tanks).filter((tank) => {
   const tankModel = modelDefinitions.models[tank.id];

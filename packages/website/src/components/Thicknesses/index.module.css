@@ -1,0 +1,67 @@
+.thicknesses {
+  pointer-events: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-4);
+
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+
+  user-select: none;
+  transition: var(--duration-brief);
+
+  /* slides off the right edge when the static armor view isn't active */
+  transform: translate(calc(100% + var(--space-4)), -50%);
+
+  &[data-visible="true"] {
+    transform: translate(0, -50%);
+  }
+}
+
+.toggle {
+  display: flex;
+  gap: var(--space-3);
+
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+
+  cursor: pointer;
+  opacity: 0.5;
+
+  &[data-visible="true"] {
+    opacity: 1;
+  }
+
+  &[data-scaled="true"] {
+    height: 4rem;
+  }
+}
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1rem;
+  border-radius: var(--radius-max);
+  overflow: hidden;
+
+  color: black;
+
+  /* the unscaled swatch is just an icon-sized dot */
+  .toggle:not([data-scaled="true"]) & {
+    height: 1rem;
+  }
+}

@@ -1,4 +1,4 @@
-import { VertexAttribute, type Component } from "@blitzkit/core";
+import { VertexAttribute, type ComponentOf } from "@blitzkit/core";
 import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import {
   MathUtils,
@@ -15,16 +15,21 @@ import {
 import { isEqual, times } from "lodash-es";
 import { dirname, normalize } from "path/posix";
 import { Matrix4 } from "three";
+import {
+  sc2ToGltfMatrix,
+  sc2ToGltfQuaternion,
+  sc2ToGltfQuaternions,
+  sc2ToGltfVector,
+  sc2ToGltfVectors,
+} from "../sc2Axes";
 import { MotionChannel, MotionReadStream, type Motion } from "./motion";
 
-type SkeletonComponent = Extract<
-  Component,
-  { "comp.typename": "SkeletonComponent" }
->;
-type MotionComponent = Extract<
-  Component,
-  { "comp.typename": "MotionComponent" }
->;
+export interface Skeleton {
+  skin: Skin;
+  /** joint uid -> joint node */
+  joints: Map<string, Node>;
+}
+
 type AccessorType = "SCALAR" | "VEC3" | "VEC4" | "MAT4";
 
 const JOINT_ROOT = 0xffffff;
@@ -50,7 +55,7 @@ function createAccessor(
 export async function loadMotion(
   vfs: AbstractVFS,
   path: string,
-  component: MotionComponent,
+  component: ComponentOf<"MotionComponent">,
 ) {
   const file = await vfs.file(
     normalize(`Data/3d/${dirname(path)}/${component["motion.filepath"]}`),
@@ -68,9 +73,9 @@ export function createSkeleton(
   document: Document,
   buffer: Buffer,
   node: Node,
-  skeleton: SkeletonComponent,
+  skeleton: ComponentOf<"SkeletonComponent">,
   motion: Motion | undefined,
-) {
+): Skeleton {
   const joints = times(
     skeleton.jointsCount,
     (index) => skeleton.joints[index.toString().padStart(4, "0")],
@@ -81,9 +86,15 @@ export function createSkeleton(
     const scale: vec3 = [1, 1, 1];
     const track = motion?.tracks.get(joint["joint.uid"]);
     const trackScale = track?.get(MotionChannel.Scale)?.values[0];
+    const trackTranslation = track
+      ?.get(MotionChannel.Translation)
+      ?.values.slice(0, 3);
+    const trackRotation = track
+      ?.get(MotionChannel.Rotation)
+      ?.values.slice(0, 4);
 
     MathUtils.decompose(
-      joint["joint.bindPose"].flat() as mat4,
+      sc2ToGltfMatrix(joint["joint.bindPose"].flat()),
       translation,
       rotation,
       scale,
@@ -93,12 +104,10 @@ export function createSkeleton(
     return document
       .createNode(joint["joint.name"])
       .setTranslation(
-        (track?.get(MotionChannel.Translation)?.values.slice(0, 3) as vec3) ??
-          translation,
+        trackTranslation ? sc2ToGltfVector(trackTranslation) : translation,
       )
       .setRotation(
-        (track?.get(MotionChannel.Rotation)?.values.slice(0, 4) as vec4) ??
-          rotation,
+        trackRotation ? sc2ToGltfQuaternion(trackRotation) : rotation,
       )
       .setScale(
         trackScale === undefined ? scale : [trackScale, trackScale, trackScale],
@@ -121,7 +130,9 @@ export function createSkeleton(
         buffer,
         "MAT4",
         new Float32Array(
-          joints.flatMap((joint) => joint["joint.invBindPose"].flat()),
+          joints.flatMap((joint) =>
+            sc2ToGltfMatrix(joint["joint.invBindPose"].flat()),
+          ),
         ),
       ),
     );
@@ -133,7 +144,7 @@ export function createSkeleton(
     joints: new Map(
       joints.map((joint, index) => [joint["joint.uid"], jointNodes[index]]),
     ),
-  };
+  } satisfies Skeleton;
 }
 
 export function createMotionClip(
@@ -142,7 +153,7 @@ export function createMotionClip(
   clip: string,
   joints: Map<string, Node>,
   motion: Motion,
-  component: MotionComponent,
+  component: ComponentOf<"MotionComponent">,
 ) {
   const animation = document.createAnimation(clip);
   const playbackRate = component["motion.playbackRate"];
@@ -155,10 +166,13 @@ export function createMotionClip(
 
     for (const [type, { times, values }] of track) {
       const keyTimes = times.map((time) => time / playbackRate);
+      // scale keys are uniform, so they need no axis conversion
       const keyValues =
         type === MotionChannel.Scale
           ? values.flatMap((value) => [value, value, value])
-          : [...values];
+          : type === MotionChannel.Rotation
+            ? sc2ToGltfQuaternions([...values])
+            : sc2ToGltfVectors([...values]);
 
       // the game loops over the clip's duration, which can outlast its keys
       if (keyTimes[keyTimes.length - 1] < duration) {

@@ -1,15 +1,15 @@
 import type { CamouflagesXml } from "@blitzkit/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
+import { api } from "../../../../api/dynamic";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { extractPackedIcon } from "../../../../core/blitz/extractPackedIcon";
 import { parsePackedSpriteRect } from "../../../../core/blitz/parsePackedSpriteRect";
-import { api } from "../../../../core/blitzkit/api";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
-  const camouflageDefinitions = await api.camouflageDefinitions();
+  const camouflageDefinitions = await api.camouflages();
   const camouflagesXml = await vfs.xml<{ root: CamouflagesXml }>(
     "Data/XML/item_defs/vehicles/common/camouflages.xml",
   );

@@ -1,0 +1,41 @@
+.logo {
+  margin: auto;
+  color: var(--gray-a5);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  white-space: nowrap;
+
+  &[data-indent="true"] {
+    padding-left: var(--space-4);
+  }
+
+  .sort {
+    transform: rotate(90deg);
+  }
+}
+
+.loadout {
+  vertical-align: top;
+}
+
+.shell-cell {
+  vertical-align: middle;
+
+  .shells {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  white-space: nowrap;
+}

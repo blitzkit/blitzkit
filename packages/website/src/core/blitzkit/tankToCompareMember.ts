@@ -1,14 +1,11 @@
-import type { ProvisionDefinitions, TankDefinition } from '@blitzkit/core';
-import { uniqueId } from 'lodash-es';
-import type { CompareMember } from '../../stores/compareEphemeral';
-import { tankToDuelMember } from './tankToDuelMember';
+import type { TankDefinition } from "@blitzkit/protos";
+import { uniqueId } from "lodash-es";
+import type { CompareMember } from "../../stores/compareEphemeral";
+import { createTankState } from "../../tankopedia/createTankState";
 
-export function tankToCompareMember(
-  tank: TankDefinition,
-  provisionDefinitions: ProvisionDefinitions,
-) {
+export function tankToCompareMember(tank: TankDefinition) {
   return {
-    ...tankToDuelMember(tank, provisionDefinitions),
     key: uniqueId(),
+    state: createTankState(tank),
   } satisfies CompareMember;
 }

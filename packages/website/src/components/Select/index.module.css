@@ -1,0 +1,37 @@
+@import "../DropdownMenu/index.module.css";
+
+.Trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-radius: var(--max-size);
+
+  background-color: var(--gray-1);
+  outline: var(--outline-interactive);
+  color: var(--gray-12);
+  font: inherit;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--outline-focus);
+    box-shadow: var(--shadow-focus);
+  }
+
+  svg,
+  img {
+    width: 1em;
+    height: 1em;
+  }
+
+  /*
+   * Another unselectable Radix component, being selected by span instead.
+   */
+  .Icon,
+  span {
+    display: contents;
+  }
+}

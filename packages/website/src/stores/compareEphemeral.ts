@@ -1,35 +1,38 @@
-import { Varuna } from "varuna";
-import type { DuelMember } from "./duel";
+import type { TankEnvironment } from "@blitzkit/core";
+import { Soapstone } from "soapstone";
+import { resolveTankModules } from "../tankopedia/resolveTankModules";
+import type { TankState } from "../tankopedia/tankState";
+import { TankopediaSortDirection } from "./tankopediaPersistent";
+import type { TankSort } from "./tankopediaSort";
 
-export interface CompareMember extends DuelMember {
+export interface CompareMember {
   key: string;
+  state: TankState;
 }
 
 export interface CompareEphemeral {
-  crewSkills: Record<string, number>;
-  equalize: boolean;
+  environment: TankEnvironment;
   syncShells: boolean;
   members: CompareMember[];
-  sorting?: {
-    direction: "ascending" | "descending";
-    by: number;
-  };
+  sorting: TankSort;
 }
 
-export const CompareEphemeral = new Varuna<
+export const CompareEphemeral = new Soapstone<
   CompareEphemeral,
-  Record<string, number>
->((crewSkills) => ({
-  crewSkills,
-  equalize: false,
+  [TankEnvironment]
+>((environment) => ({
+  environment,
   syncShells: false,
   members: [],
+  sorting: { by: null, direction: TankopediaSortDirection.Descending },
 }));
 
+// Picks the shell at the same slot on every member, where one exists
 export function syncShellSlot(members: CompareMember[], slot: number) {
   for (const member of members) {
-    const shell = member.gun.shells[slot];
+    const { gun } = resolveTankModules(member.state);
+    const shell = gun.shells[slot];
 
-    if (shell) member.shell = shell;
+    if (shell) member.state.shell = shell.id;
   }
 }

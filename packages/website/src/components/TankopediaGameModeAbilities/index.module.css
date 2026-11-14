@@ -1,0 +1,64 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4);
+
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    width: 100%;
+
+    .card {
+      width: 16rem;
+      height: 20rem;
+      display: flex;
+      flex: 0 0 auto;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: var(--space-3);
+      background-size: cover;
+      background-position: center;
+
+      .banner {
+        flex: 1;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .info {
+        display: flex;
+        min-height: 6.125rem;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        padding: var(--space-3);
+        backdrop-filter: blur(4rem);
+        -webkit-backdrop-filter: blur(4rem);
+
+        .abilities {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+
+          .ability {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            white-space: nowrap;
+
+            img {
+              width: 1.5em;
+              height: 1.5em;
+              object-fit: contain;
+            }
+          }
+        }
+      }
+    }
+  }
+}

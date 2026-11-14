@@ -1,0 +1,22 @@
+.quick-inputs {
+  pointer-events: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  min-width: 5rem;
+
+  transition: var(--duration-brief);
+
+  position: absolute;
+  top: 50%;
+  left: var(--space-4);
+
+  transform: translate(calc(-100% - var(--space-4) - var(--space-0)), -50%);
+
+  &[data-visible="true"],
+  &:focus-within {
+    transform: translate(0, -50%);
+  }
+}

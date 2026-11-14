@@ -1,9 +1,9 @@
-import type { GunDefinition } from '@blitzkit/core';
+import type { GunDefinition } from "@blitzkit/protos";
 
 export function resolveReload(gun: GunDefinition) {
-  if (gun.gun_type!.$case === 'regular') {
+  if (gun.gun_type!.$case === "regular") {
     return gun.gun_type!.value.reload;
-  } else if (gun.gun_type!.$case === 'auto_loader') {
+  } else if (gun.gun_type!.$case === "auto_loader") {
     return (
       gun.gun_type!.value.clip_reload +
       (gun.gun_type!.value.shell_count - 1) * gun.gun_type!.value.intra_clip

@@ -130,6 +130,9 @@ jobs:
       - name: Lint
         run: scripts/lint.sh
 
+      - name: Build protos
+        run: bun run build-protos
+
       - name: Download client
         run: scripts/download-client.sh
 

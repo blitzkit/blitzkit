@@ -1,0 +1,17 @@
+---
+import ColorScale from "../../../../components/ColorScale.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout accent="blue" {locale}>
+  <ColorScale color="red" />
+
+  <Page {locale} client:only="react">
+    <Page {locale} skeleton slot="fallback" />
+  </Page>
+</BaseLayout>

@@ -1,9 +1,5 @@
-import {
-  alias,
-  TankPriceType,
-  TankType,
-  TIER_ROMAN_NUMERALS,
-} from "@blitzkit/core";
+import { alias, romanize } from "@blitzkit/core";
+import { TankPriceType, TankType } from "@blitzkit/protos";
 import { Box, Flex } from "@radix-ui/themes";
 import { Var } from "../../../core/radix/var";
 import { useLocale } from "../../../hooks/useLocale";
@@ -84,7 +80,7 @@ export function MetaSection() {
                     </Flex>
                   </Listing>
                   <Listing label={strings.website.tools.tankopedia.meta.tier}>
-                    {TIER_ROMAN_NUMERALS[protagonist.tier]}
+                    {romanize(protagonist.tier)}
                   </Listing>
                   <Listing
                     label={strings.website.tools.tankopedia.meta.type}

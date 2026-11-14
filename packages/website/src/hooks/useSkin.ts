@@ -9,7 +9,7 @@ import {
   type Object3D,
 } from "three";
 import { GLTFLoader } from "three-stdlib";
-import { TRANSITION_ANIMATION_TIME } from "../components/Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
+import { TRANSITION_ANIMATION_TIME } from "../components/Lighting";
 import { prepareMaterial } from "../core/blitzkit/jsxTree";
 import { nameOf } from "../core/blitzkit/skinTree";
 import { Tankopedia } from "../stores/tankopedia";
@@ -77,6 +77,14 @@ function preparePart(part: Object3D) {
 
 function skinPath(id: number, skin: number) {
   return alias("models_legendary", `/${id}/skins/${skin}.glb`);
+}
+
+/** whether an already loaded skin of this tank has animations */
+export function hasSkinAnimations(id: number, skin: number | undefined) {
+  return (
+    skin !== undefined &&
+    loadedSkins.get(skinPath(id, skin))?.mixer !== undefined
+  );
 }
 
 // attachments load the same way as camouflages and can be shown with one

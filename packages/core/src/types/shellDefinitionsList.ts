@@ -11,7 +11,7 @@ export type ShellDefinitionsList = Record<
     ricochetAngle?: number;
     explosionRadius?: number;
     speed: number;
-    maxDistance?: number;
+    maxDistance: number;
     piercingPower: string;
   }
 > & {

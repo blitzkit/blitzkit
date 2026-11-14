@@ -1,6 +1,5 @@
-import { type TankDefinition } from "@blitzkit/core";
+import type { TankDefinition } from "@blitzkit/protos";
 import { CaretRightIcon } from "@radix-ui/react-icons";
-import { Button, TextField } from "@radix-ui/themes";
 import { useLocale } from "../../../hooks/useLocale";
 import { TankFilters } from "../../../stores/tankFilters";
 import { LinkI18n } from "../../LinkI18n";

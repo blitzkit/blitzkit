@@ -1,7 +1,7 @@
 import { PageWrapper } from "../../../../components/PageWrapper";
 import { PlayerCountControl } from "../../../../components/Performance/PlayerCountControl";
 import { TankTable } from "../../../../components/Performance/Table";
-import { FilterControl } from "../../../../components/TankSearch/components/FilterControl";
+import { TankSearchFilters } from "../../../../components/TankSearchFilters";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
@@ -21,7 +21,7 @@ export function Page({ skeleton, locale }: PageProps) {
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
   return (
     <PageWrapper pb="0" px="0" color="jade" maxWidth="100%">
-      <FilterControl />
+      <TankSearchFilters />
       <PlayerCountControl />
 
       <TankTable skeleton={skeleton} />

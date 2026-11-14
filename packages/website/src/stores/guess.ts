@@ -1,31 +1,33 @@
-import type { TankDefinition } from "@blitzkit/core";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 import { awaitableTiers } from "../core/awaitables/tiers";
 
 const tiers = await awaitableTiers;
 
 export enum GuessState {
-  Correct,
-  Incorrect,
-  NotGuessed,
+  Correct = "correct",
+  Incorrect = "incorrect",
+  NotGuessed = "not-guessed",
 }
 
 export interface Guess {
-  tank: TankDefinition;
+  tank: number;
   guessState: GuessState;
   totalGuesses: number;
   correctGuesses: number;
   streak: number;
   helpingReveal: boolean;
+  // lights are receding before the next tank loads
+  advancing: boolean;
   tiers: number[];
 }
 
-export const Guess = new Varuna<Guess, TankDefinition>((tank) => ({
+export const Guess = new Soapstone<Guess, [number]>((tank) => ({
   tank,
   guessState: GuessState.NotGuessed,
   totalGuesses: 0,
   correctGuesses: 0,
   streak: 0,
   helpingReveal: false,
+  advancing: false,
   tiers,
 }));

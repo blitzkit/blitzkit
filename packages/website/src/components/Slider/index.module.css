@@ -1,0 +1,52 @@
+.Root {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  height: var(--space-5);
+  touch-action: none;
+  user-select: none;
+
+  html:active & {
+    cursor: grabbing;
+  }
+}
+
+.Track {
+  position: relative;
+  flex: 1;
+  height: var(--space-2);
+
+  border-radius: var(--max-size);
+  background-color: var(--gray-5);
+}
+
+.Range {
+  position: absolute;
+  height: 100%;
+
+  border-radius: var(--max-size);
+  background-color: var(--accent-8);
+}
+
+.Thumb {
+  display: block;
+  width: var(--space-4);
+  height: var(--space-4);
+
+  border-radius: var(--max-size);
+  background-color: var(--gray-12);
+  box-shadow: var(--shadow-subtle);
+
+  cursor: grab;
+
+  html:active & {
+    cursor: grabbing;
+  }
+
+  &:focus-visible {
+    outline: var(--outline-focus);
+    box-shadow: var(--shadow-focus);
+  }
+}

@@ -5,7 +5,7 @@ export function Target() {
     <Box
       style={{
         background:
-          'url(/assets/images/tankopedia/visualizers/reload/background.jpg)',
+          'url(/media/toys/background.jpg)',
         backgroundSize: '25rem',
         backgroundPosition: 'center',
         position: 'absolute',

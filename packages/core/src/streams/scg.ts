@@ -1,8 +1,8 @@
-import { ScpgReadStream, VertexAttribute } from './scpg';
+import { ScpgReadStream, VertexAttribute } from "./scpg";
 
 interface PolygonGroupRaw {
-  '##name': 'PolygonGroup';
-  '#id': ArrayBuffer;
+  "##name": "PolygonGroup";
+  "#id": ArrayBuffer;
   cubeTextureCoordCount: number;
   indexCount: number;
   indexFormat: 0 | 1;
@@ -16,15 +16,18 @@ interface PolygonGroupRaw {
   vertices: ArrayBuffer;
 }
 
-type BlitzkitVertex = { attribute: VertexAttribute; value: number[] }[];
+export type Vertex = { attribute: VertexAttribute; value: number[] }[];
 
-interface BlitzkitPolygonGroup {
-  vertices: BlitzkitVertex[];
+export interface PolygonGroup {
+  vertices: Vertex[];
   indices: number[];
 }
 
+/** polygon group id -> polygon group */
+export type ScgPolygonGroups = Map<bigint, PolygonGroup>;
+
 const vertexAttributesArray = Object.values(VertexAttribute).filter(
-  (value) => typeof value === 'number',
+  (value) => typeof value === "number",
 );
 
 export const vertexAttributeVectorSizes = {
@@ -63,7 +66,7 @@ export class ScgReadStream extends ScpgReadStream {
   scg() {
     const header = this.header();
     const polygonGroupsRaw: PolygonGroupRaw[] = [];
-    const polygonGroups = new Map<bigint, BlitzkitPolygonGroup>();
+    const polygonGroups = new Map<bigint, PolygonGroup>();
 
     for (let index = 0; index < header.nodeCount; index++) {
       const polygonGroupRaw = this.ka() as PolygonGroupRaw;
@@ -83,7 +86,7 @@ export class ScgReadStream extends ScpgReadStream {
       }
 
       const verticesStream = new ScpgReadStream(polygonGroupRaw.vertices);
-      const vertices: BlitzkitVertex[] = [];
+      const vertices: Vertex[] = [];
       const { format, stride } = ScgReadStream.parseVertexFormat(
         polygonGroupRaw.vertexFormat,
       );
@@ -105,15 +108,12 @@ export class ScgReadStream extends ScpgReadStream {
       }
 
       polygonGroups.set(
-        new DataView(polygonGroupRaw['#id']).getBigUint64(0, true),
-        {
-          vertices,
-          indices,
-        },
+        new DataView(polygonGroupRaw["#id"]).getBigUint64(0, true),
+        { vertices, indices },
       );
     });
 
-    return polygonGroups;
+    return polygonGroups satisfies ScgPolygonGroups;
   }
 
   static parseVertexFormat(formatInt: number) {

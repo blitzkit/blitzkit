@@ -6,10 +6,9 @@ import {
   Sc2ReadStream,
   ScgReadStream,
   toUniqueId,
-  VertexAttribute,
   type ConfigArchive,
-  type Hierarchy,
   type TankParameters,
+  type SC2,
   type Textures,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
@@ -20,7 +19,6 @@ import {
   Node,
   NodeIO,
   Scene,
-  type Skin,
 } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, prune } from "@gltf-transform/functions";
@@ -28,20 +26,12 @@ import type { APIContext } from "astro";
 import { isEqual, times } from "lodash-es";
 import { dirname } from "path";
 import sharp from "sharp";
-import type { Motion } from "../../../core/blitzkit/skinAnimations/motion";
 import {
-  bindSocket,
-  createMotionClip,
-  createSkeleton,
-  loadMotion,
-  skinPrimitive,
-} from "../../../core/blitzkit/skinAnimations/skeleton";
+  loadHierarchyMotions,
+  Sc2ComponentHandler,
+} from "../../../core/blitzkit/sc2Components";
 import { partGarage } from "../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../core/blitzkit/vfs";
-import {
-  vertexAttributeGLTFName,
-  vertexAttributeGltfVectorSizes,
-} from "./collision.glb";
 
 export { getStaticPaths } from "./_index";
 
@@ -110,35 +100,17 @@ export async function extractModel(
   const scene = document.createScene();
   const buffer = document.createBuffer();
   const materials = await extractMaterials(document, sc2, path);
-  const skeletons = new Map<Hierarchy, ReturnType<typeof createSkeleton>>();
-  const jointBindings: [
-    owner: Node,
-    entity: string,
-    joint: Node,
-    skin: Skin,
-  ][] = [];
-  const motions = new Map<Hierarchy, Motion>();
   const garage = isPart ? partGarage(sc2, preset) : undefined;
-
-  if (isPart) {
-    const loading: Promise<void>[] = [];
-
-    parseHierarchies(sc2["#hierarchy"], null, (hierarchy, components) => {
-      for (const component of components) {
-        if (component["comp.typename"] !== "MotionComponent") continue;
-
-        loading.push(
-          loadMotion(vfs, path, component).then((motion) => {
-            motions.set(hierarchy, motion);
-          }),
-        );
-      }
-
-      return null;
-    });
-
-    await Promise.all(loading);
-  }
+  const handler = new Sc2ComponentHandler({
+    document,
+    buffer,
+    scg,
+    render: { kind: "visual", materials, isPart },
+    skeleton: isPart
+      ? { motions: await loadHierarchyMotions(vfs, path, sc2), garage }
+      : undefined,
+    strict: ERROR_ON_UNKNOWN_COMPONENT,
+  });
 
   parseHierarchies<Scene | Node>(
     sc2["#hierarchy"],
@@ -152,214 +124,14 @@ export async function extractModel(
 
       const node = document.createNode(hierarchy.name);
 
-      if (isPart) {
-        const skeleton = components.find(
-          (component) => component["comp.typename"] === "SkeletonComponent",
-        );
-        const motionComponent = components.find(
-          (component) => component["comp.typename"] === "MotionComponent",
-        );
-        const motion = motions.get(hierarchy);
-
-        if (skeleton) {
-          const created = createSkeleton(
-            document,
-            buffer,
-            node,
-            skeleton,
-            motion,
-          );
-
-          skeletons.set(hierarchy, created);
-
-          // only what loops in the garage is exported
-          if (motion && motionComponent && garage?.motions.has(hierarchy)) {
-            createMotionClip(
-              document,
-              buffer,
-              `motion${document.getRoot().listAnimations().length}`,
-              created.joints,
-              motion,
-              motionComponent,
-            );
-          }
-        }
-      }
-
-      components.forEach((component) => {
-        switch (component["comp.typename"]) {
-          case "LodComponent":
-            // found and used later by transform component
-            // TODO: lod component always shows up before transform component; cache it before parsing transform
-            break;
-
-          case "TransformComponent": {
-            const localTranslation = component["tc.localTranslation"];
-            // The game resets top-level node translation to [0, 0, 0] on load.
-            // Child nodes and customization parts must keep their authored
-            // local offsets.
-            node.setTranslation(
-              parent instanceof Scene && !isPart ? [0, 0, 0] : localTranslation,
-            );
-            node.setRotation(component["tc.localRotation"]);
-            node.setScale(component["tc.localScale"]);
-
-            break;
-          }
-
-          case "StateSwitcherComponent":
-            node.setExtras({
-              // a part's scenarios can pick its state as it loads
-              state: garage
-                ? (garage.states.get(hierarchy) ?? null)
-                : component[`ssc.state${component["ssc.activeState"]}`],
-            });
-            break;
-
-          case "SkeletonJointBindingComponent": {
-            const skeleton = skeletons.get(hierarchy);
-
-            if (!skeleton) break;
-
-            times(component.count, (index) => {
-              const binding = component.map[
-                index.toString().padStart(4, "0")
-              ] as unknown as { entityUid: string; jointUid: string };
-              const joint = skeleton.joints.get(binding.jointUid);
-
-              if (!joint) throw new Error(`Missing joint ${binding.jointUid}`);
-
-              jointBindings.push([
-                node,
-                binding.entityUid,
-                joint,
-                skeleton.skin,
-              ]);
-            });
-            break;
-          }
-
-          case "RenderComponent": {
-            const renderObject = component["rc.renderObj"];
-
-            times(renderObject["ro.batchCount"], (batchIndex): void => {
-              const lodIndex = renderObject[`rb${batchIndex}.lodIndex`];
-
-              // -1 means the batch has no lods and is always drawn
-              if (lodIndex !== 0 && !(isPart && lodIndex === -1)) return;
-
-              const batchKey = batchIndex.toString().padStart(4, "0");
-              const batch = renderObject["ro.batches"][batchKey];
-              const material = materials.get(batch["rb.nmatname"]);
-              const polygonGroup = scg.get(batch["rb.datasource"]);
-
-              if (!(material instanceof Material)) {
-                // probably shadow material
-                return;
-              }
-              if (polygonGroup === undefined) {
-                throw new Error(
-                  `Missing polygon group ${batch["rb.datasource"]}`,
-                );
-              }
-
-              const lodNode = document.createNode(batchKey);
-              const indicesAccessor = document
-                .createAccessor()
-                .setType("SCALAR")
-                .setArray(new Uint16Array(polygonGroup.indices))
-                .setBuffer(buffer);
-              const primitive = document
-                .createPrimitive()
-                .setIndices(indicesAccessor)
-                .setMaterial(material)
-                .setName(batchKey);
-
-              const attributes = new Map<VertexAttribute, number[][]>();
-
-              polygonGroup.vertices.forEach((vertex) => {
-                vertex.forEach(({ attribute, value }) => {
-                  if (!attributes.has(attribute)) {
-                    attributes.set(attribute, []);
-                  }
-
-                  attributes.get(attribute)!.push(value);
-                });
-              });
-
-              attributes.forEach((value, attribute) => {
-                const name = vertexAttributeGLTFName[attribute];
-
-                if (
-                  name === undefined ||
-                  primitive.getAttribute(name) !== null
-                ) {
-                  return;
-                }
-
-                const vertexSize = vertexAttributeGltfVectorSizes[attribute];
-                const attributeAccessor = document
-                  .createAccessor(name)
-                  .setType(vertexSize === 1 ? "SCALAR" : `VEC${vertexSize}`)
-                  .setArray(new Float32Array(value.flat()))
-                  .setBuffer(buffer);
-
-                primitive.setAttribute(name, attributeAccessor);
-              });
-
-              const skeleton = skeletons.get(hierarchy);
-              const mesh = document
-                .createMesh(batch["##name"])
-                .addPrimitive(primitive);
-              lodNode.setMesh(mesh);
-
-              if (
-                skeleton &&
-                skinPrimitive(
-                  document,
-                  buffer,
-                  primitive,
-                  attributes,
-                  renderObject[`skinnedObject.batch${batchIndex}.targetsData`],
-                )
-              ) {
-                lodNode.setSkin(skeleton.skin);
-              }
-              node.addChild(lodNode);
-            });
-
-            break;
-          }
-
-          default: {
-            if (ERROR_ON_UNKNOWN_COMPONENT) {
-              throw new Error(
-                `Unhandled component type: ${component["comp.typename"]}`,
-              );
-            }
-          }
-        }
-      });
-
+      handler.handle(hierarchy, components, node);
       parent.addChild(node);
 
       return node;
     },
   );
 
-  for (const [owner, entity, joint, skin] of jointBindings) {
-    // the game only binds the skeleton entity's own children
-    const socket = owner
-      .listChildren()
-      .find(
-        (child) =>
-          child.getName() === entity && !skin.listJoints().includes(child),
-      );
-
-    if (!socket) throw new Error(`Missing socket ${entity}`);
-
-    bindSocket(socket, joint, skin);
-  }
+  handler.resolveJointBindings();
 
   scene.addChild(document.createNode("test"));
 
@@ -370,7 +142,7 @@ export async function extractModel(
 
 export async function extractMaterials(
   document: Document,
-  sc2: ReturnType<Sc2ReadStream["sc2"]>,
+  sc2: SC2,
   path: string,
   config?: string,
 ) {

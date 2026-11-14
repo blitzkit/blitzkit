@@ -1,0 +1,32 @@
+.consumables {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  gap: var(--space-3);
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+
+    .tooltip {
+      width: 100%;
+
+      .consumable {
+        width: 100%;
+
+        font-size: var(--space-5);
+
+        .info {
+          display: flex;
+          flex-direction: column;
+
+          .entry {
+            display: flex;
+            gap: var(--space-2);
+          }
+        }
+      }
+    }
+  }
+}

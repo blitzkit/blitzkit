@@ -1,114 +1,55 @@
-import { createDefaultSkills } from "@blitzkit/core";
-import { Flex, Heading, Text } from "@radix-ui/themes";
-import { useEffect, useMemo, useState } from "react";
-import { CompareTable } from "../../../../components/Compare/CompareTable";
-import { Controls } from "../../../../components/Compare/Controls";
-import { DamageWarning } from "../../../../components/DamageWarning";
-import { PageWrapper } from "../../../../components/PageWrapper";
-import { api } from "../../../../core/blitzkit/api";
-import { tankCharacteristics } from "../../../../core/blitzkit/tankCharacteristics";
+import { createDefaultEnvironment } from "@blitzkit/core";
+import { useEffect } from "react";
+import { api } from "../../../../api/dynamic";
+import { CompareControls } from "../../../../components/CompareControls";
+import { CompareTable } from "../../../../components/CompareTable";
+import { EmptyState } from "../../../../components/EmptyState";
 import { tankToCompareMember } from "../../../../core/blitzkit/tankToCompareMember";
-import {
-  type LocaleAcceptorProps,
-  LocaleProvider,
-  useLocale,
-} from "../../../../hooks/useLocale";
+import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../hocs/withLocale";
+import { useStrings } from "../../../../hooks/useStrings";
 import { CompareEphemeral } from "../../../../stores/compareEphemeral";
+import styles from "./_index.module.css";
 
-const [
-  modelDefinitions,
-  equipmentDefinitions,
-  provisionDefinitions,
-  skillDefinitions,
-  tankDefinitions,
-] = await Promise.all([
-  api.modelDefinitions(),
-  api.equipmentDefinitions(),
-  api.provisionDefinitions(),
-  api.skillDefinitions(),
-  api.tankDefinitions(),
+const [skillDefinitions, tankDefinitions] = await Promise.all([
+  api.skills(),
+  api.tanks(),
 ]);
 
-export function Page({ locale }: LocaleAcceptorProps) {
-  CompareEphemeral.useInitialization(createDefaultSkills(skillDefinitions));
+export const Page = withLocale(
+  withErrorWrapper(() => {
+    CompareEphemeral.useInitialization(
+      createDefaultEnvironment(skillDefinitions),
+    );
 
-  return (
-    <LocaleProvider locale={locale}>
-      <Content />
-    </LocaleProvider>
-  );
-}
+    return <Content />;
+  }),
+);
 
 function Content() {
+  const strings = useStrings();
   const members = CompareEphemeral.use((state) => state.members);
-  const equalize = CompareEphemeral.use((state) => state.equalize);
-  const [addTankDialogOpen, setAddTankDialogOpen] = useState(false);
-  const crewSkills = CompareEphemeral.use((state) => state.crewSkills);
-  const { strings } = useLocale();
-  const stats = useMemo<ReturnType<typeof tankCharacteristics>[]>(
-    () =>
-      members.map((thisMember) =>
-        tankCharacteristics(
-          {
-            ...thisMember,
-            crewSkills,
-            stockEngine: thisMember.tank.engines[0],
-            stockGun: thisMember.tank.turrets[0].guns[0],
-            stockTrack: thisMember.tank.tracks[0],
-            stockTurret: thisMember.tank.turrets[0],
-            applyReactiveArmor: members.some(
-              (member) =>
-                member.key !== thisMember.key &&
-                member.consumables.includes(33),
-            ),
-            applyDynamicArmor: members.some(
-              (member) =>
-                member.key !== thisMember.key &&
-                member.consumables.includes(73),
-            ),
-            applySpallLiner: members.some(
-              (member) =>
-                member.key !== thisMember.key &&
-                member.provisions.includes(101),
-            ),
-            assaultDistance: thisMember.assaultDistance,
-            equalize,
-          },
-          {
-            equipmentDefinitions: equipmentDefinitions,
-            provisionDefinitions: provisionDefinitions,
-            tankModelDefinition: modelDefinitions.models[thisMember.tank.id],
-          },
-        ),
-      ),
-    [members, crewSkills, equalize],
-  );
 
+  // Tanks come from the url on load
   useEffect(() => {
-    const search = new URLSearchParams(window.location.search);
-    const tanksQuery = search.get("tanks");
+    const tanks = new URLSearchParams(window.location.search).get("tanks");
 
-    if (tanksQuery === null) return;
-
-    const tanks = tanksQuery.split(",").map(Number);
+    if (tanks === null) return;
 
     CompareEphemeral.mutate((draft) => {
-      draft.members = [];
-
-      tanks.forEach((id) => {
-        const tank = tankDefinitions.tanks[id];
-
-        if (tank === undefined) return;
-
-        draft.members.push(tankToCompareMember(tank, provisionDefinitions));
-      });
+      draft.members = tanks
+        .split(",")
+        .map((id) => tankDefinitions.tanks[Number(id)])
+        .filter((tank) => tank !== undefined)
+        .map(tankToCompareMember);
     });
   }, []);
 
+  // ...and are written back whenever they change
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
 
-    search.set("tanks", members.map((member) => member.tank.id).join(","));
+    search.set("tanks", members.map(({ state }) => state.tank).join(","));
 
     window.history.replaceState(
       {},
@@ -118,36 +59,23 @@ function Content() {
   }, [members]);
 
   return (
-    <PageWrapper color="crimson" maxWidth="100%" px="0" pb="0">
-      <Flex justify="center" gap="4" align="center" direction="column">
-        <DamageWarning />
-        <Controls
-          addTankDialogOpen={addTankDialogOpen}
-          onAddTankDialogOpenChange={setAddTankDialogOpen}
-        />
-      </Flex>
+    <div className={styles.page}>
+      <div className={styles.top}>
+        <CompareControls />
+      </div>
 
       {members.length > 0 && (
-        <Flex justify="center" flexGrow="1" position="relative">
-          <CompareTable stats={stats} />
-        </Flex>
+        <div className={styles.table}>
+          <CompareTable />
+        </div>
       )}
 
       {members.length === 0 && (
-        <Flex
-          align="center"
-          justify="center"
-          direction="column"
-          style={{ flex: 1 }}
-        >
-          <Heading color="gray">
-            {strings.website.tools.compare.no_tanks.title}
-          </Heading>
-          <Text color="gray">
-            {strings.website.tools.compare.no_tanks.body}
-          </Text>
-        </Flex>
+        <EmptyState
+          title={strings.compare.no_tanks.title}
+          body={strings.compare.no_tanks.body}
+        />
       )}
-    </PageWrapper>
+    </div>
   );
 }

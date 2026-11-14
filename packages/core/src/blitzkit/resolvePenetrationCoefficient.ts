@@ -1,4 +1,4 @@
-import { Equalizer, ShellType } from "../protos";
+import { Equalizer, ShellType } from "@blitzkit/protos";
 
 export function resolvePenetrationCoefficient(
   calibratedShells: boolean,

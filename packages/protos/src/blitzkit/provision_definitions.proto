@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "consumable_definitions.proto";
+import "i18n.proto";
+
+message ProvisionDefinitions {
+  map<uint32, Provision> provisions = 1;
+}
+
+message Provision {
+
+  uint32                         id                  = 1;
+  I18nString                     name                = 2;
+  bool                           game_mode_exclusive = 3;
+  repeated TankInclusivityFilter include             = 4;
+  repeated TankInclusivityFilter exclude             = 5;
+}

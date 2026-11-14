@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message ProtoVector2 {
+  float x = 1;
+  float y = 2;
+}
+
+message ProtoVector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}

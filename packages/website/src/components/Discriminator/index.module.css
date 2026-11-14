@@ -1,0 +1,40 @@
+.discriminator {
+  --inset: var(--space-3);
+
+  &[data-inset="small"] {
+    --inset: var(--space-2);
+  }
+
+  position: absolute;
+
+  font-size: var(--font-size-minor);
+  text-align: right;
+
+  pointer-events: none;
+
+  white-space: nowrap;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  &[data-corner="top-right"],
+  &[data-corner="bottom-right"] {
+    right: var(--inset);
+  }
+
+  &[data-corner="top-left"],
+  &[data-corner="bottom-left"] {
+    left: var(--inset);
+  }
+
+  &[data-corner="top-left"],
+  &[data-corner="top-right"] {
+    top: var(--inset);
+  }
+
+  &[data-corner="bottom-left"],
+  &[data-corner="bottom-right"] {
+    bottom: var(--inset);
+  }
+}
