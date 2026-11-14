@@ -1,4 +1,3 @@
-import { assertSecret } from "@blitzkit/core";
-import { LocalVFS } from "@blitzkit/core/src/blitzkit/vfs/local";
+import { createClientVFS } from "@blitzkit/core/src/blitzkit/vfs/client";
 
-export const vfs = new LocalVFS(assertSecret(import.meta.env.CLIENT_DIR));
+export const vfs = createClientVFS();
