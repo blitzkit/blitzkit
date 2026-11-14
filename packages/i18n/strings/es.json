@@ -19,7 +19,7 @@
     "shells": {
       "ap": "AP",
       "ap_cr": "APCR",
-      "hc": "HEAT",
+      "hc": "AEAC",
       "he": "AE"
     },
     "player_count_period": {
@@ -187,7 +187,7 @@
     },
     "settings": {
       "title": "Settings",
-      "description": "Change BlitzKit settings",
+      "description": "Cambiar configuración de BlitzKit",
       "dev_mode": "Modo de desarrollador",
       "auto_load_models": "Auto-load models",
       "language": "Idioma"
@@ -311,7 +311,7 @@
       "playlist": {
         "reset": "Restablecer",
         "shuffle": "Shuffle",
-        "remove": "Remove played",
+        "remove": "Eliminar jugados",
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
           "button": "Ordenar por",
@@ -334,8 +334,8 @@
           "proceed": "Proceed"
         },
         "generate": "Generate playlist",
-        "name": "Playlist",
-        "description": "Tank playlist generator",
+        "name": "Lista de reproducción",
+        "description": "Lista de reproducción del generador de tanques",
         "seo_description": "Don't know what to play in World of Tanks Blitz? Use BlitzKit Playlist to get suggestions!",
         "button": "Generate",
         "pool_size": "{count} possible tanks"
@@ -679,7 +679,8 @@
             "none": "Sin deltas",
             "percentage": "Porcentaje",
             "absolute": "Absoluto"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "No hay tanques seleccionados",
@@ -920,7 +921,7 @@
     },
     "footer": {
       "motto": "Todo sobre World of Tanks Blitz",
-      "copyright": "No afiliado con Wargaming u otros servicios",
+      "association": "An Open Collective Project",
       "about": {
         "title": "About",
         "discord": "Discord",

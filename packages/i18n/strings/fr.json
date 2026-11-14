@@ -32,10 +32,10 @@
       "d_1": "Hier"
     },
     "branches": {
-      "beta": "Beta",
+      "beta": "Bêta",
       "development": "Development",
-      "opentest": "OpenTest",
-      "preview": "Preview",
+      "opentest": "Test ouvert",
+      "preview": "Aperçu",
       "production": "Production"
     },
     "locales": {
@@ -189,7 +189,7 @@
       "title": "Paramètres",
       "description": "Modifier les paramètres de BlitzKit",
       "dev_mode": "Mode développement",
-      "auto_load_models": "Auto-load models",
+      "auto_load_models": "Modèles à chargement automatique",
       "language": "Langue"
     },
     "common": {
@@ -236,76 +236,76 @@
           "fire.caliber": "calibration",
           "fire.standardPenetration": "pénétration standard",
           "fire.premiumPenetration": "pénétration premium",
-          "fire.tertiaryPenetration": "tertiary penetration",
-          "fire.damage": "damage",
-          "fire.moduleDamage": "module damage",
-          "fire.shellVelocity": "shell velocity",
-          "fire.shellRange": "shell range",
-          "fire.shellCapacity": "shell capacity",
-          "fire.aimTime": "aim time",
-          "fire.dispersionStill": "dispersion still",
-          "fire.dispersionMoving": "dispersion moving",
-          "fire.gunDepression": "gun depression",
-          "fire.gunElevation": "gun elevation",
-          "maneuverability.forwardsSpeed": "forwards speed",
-          "maneuverability.backwardsSpeed": "backwards speed",
-          "maneuverability.power": "power",
-          "maneuverability.powerToWeight": "power to weight",
-          "maneuverability.weight": "weight",
-          "maneuverability.traverseSpeed": "traverse speed"
+          "fire.tertiaryPenetration": "pénétration tertiaire",
+          "fire.damage": "dégât",
+          "fire.moduleDamage": "Dégâts aux modules",
+          "fire.shellVelocity": "Vitesse des obus",
+          "fire.shellRange": "Portée des obus",
+          "fire.shellCapacity": "Capacité d'obus",
+          "fire.aimTime": "Temps de visé",
+          "fire.dispersionStill": "Dispersion à l'arrêt",
+          "fire.dispersionMoving": "Dispersion en mouvement",
+          "fire.gunDepression": "Dépression du canon",
+          "fire.gunElevation": "élévation du canon",
+          "maneuverability.forwardsSpeed": "Vitesse en marche avant",
+          "maneuverability.backwardsSpeed": "Vitesse en marche arrière",
+          "maneuverability.power": "Puissance",
+          "maneuverability.powerToWeight": "Rapport puissance/poids",
+          "maneuverability.weight": "Poids",
+          "maneuverability.traverseSpeed": "vitesse de traverse"
         },
         "sort_dropdown": {
-          "label": "Sort",
+          "label": "Trier",
           "groups": {
             "sort": {
-              "no_sort": "No sort",
-              "label": "Sort by",
-              "fire": "Fire",
-              "maneuverability": "Maneuverability",
-              "survivability": "Survivability"
+              "no_sort": "Pas trier",
+              "label": "Trier par",
+              "fire": "Feu",
+              "maneuverability": "Manœuvrabilité",
+              "survivability": "Survivabilité"
             },
             "direction": {
               "label": "Direction",
-              "ascending": "Ascending",
-              "descending": "Descending"
+              "ascending": "Croissant",
+              "descending": "Décroissant"
             }
           }
         }
       },
       "warnings": {
-        "test": "Tanks in testing are subject to change and may not represent the final product."
+        "test": "Les chars en phase de test sont susceptibles de changer et peuvent ne pas représenter le produit final."
       }
     },
     "home": {
       "discord": {
-        "join_short": "Join cool people!",
-        "join_long": "Join super duper cool people!",
+        "join_short": "Rejoins des gens géniaux",
+        "join_long": "Rejoins des gens super géniaux",
         "action": "Discord"
       },
       "hero": {
-        "credit": "By {name} ❤️"
+        "credit": "Par {name}❤️"
       },
       "hot_tanks": {
-        "title": "Popular tanks",
-        "subtitle": "Last {days} days"
+        "title": "Chars populaire",
+        "subtitle": "Dernier {days} jours"
       },
       "other_projects": {
-        "title": "Other cool projects"
+        "title": "Autres projets géniaux"
       },
-      "help_translate": "Please help translate {name} to {language}!",
-      "seo_description": "Tools for everything World of Tanks Blitz"
+      "help_translate": "Aidez-nous à traduire {name} en {language} !",
+      "seo_description": "Outils pour tout World of Tanks Blitz"
     },
     "docs": {
       "patches": {
-        "name": "BlitzKit Changelogs",
-        "seo_description": "Changelogs for BlitzKit Discord bot and website"
+        "name": "Journal des modifications",
+        "seo_description": "Changelogs pour le bot Discord BlitzKit et site Web"
       }
     },
     "tools": {
       "credits": {
         "name": "Credits",
         "button": "View people",
-        "description": "Contributors of BlitzKit",
+        "description": "Les contributeurs de BlitzKit",
         "seo_description": "BlitzKit is the work of many"
       },
       "playlist": {
@@ -314,22 +314,22 @@
         "remove": "Remove played",
         "tracking": "BlitzKit is tracking your battles",
         "sort": {
-          "button": "Sort by",
-          "last_played": "Last played",
+          "button": "Trier par",
+          "last_played": "Dernier joué",
           "least_played": "Least played"
         },
         "table": {
           "index": "#",
-          "never": "Never",
-          "tank": "Tank",
-          "last_played": "Last played",
+          "never": "Jamais",
+          "tank": "Char d'assaut",
+          "last_played": "Dernier joué",
           "battles": "Career battles",
           "unrecorded": "--",
           "wins": "Victoires"
         },
         "large_warning": {
-          "title": "That's a lot of tanks!",
-          "description": "Are you sure you want to create a playlist of {count} tanks? That's {time} hours of gameplay at 50% winrate!",
+          "title": "Ça fait beaucoup de chars !",
+          "description": "Êtes-vous sûr de vouloir créer une playlist de {count} chars ? C'est {time} heures de jeu à 50% de taux de victoire !",
           "cancel": "Cancel",
           "proceed": "Proceed"
         },
@@ -362,7 +362,7 @@
         },
         "stats": "{correct} / {total} guessed correctly",
         "help": {
-          "title": "Partially reveal tank?",
+          "title": "Révéler partiellement le char ?",
           "description": "Reveals the tank without showing the name. This round will be considered incorrect and break your streak!",
           "cancel": "Cancel",
           "reveal": "Reveal"
@@ -373,7 +373,7 @@
       },
       "tankopedia": {
         "search": "Search a stat...",
-        "name": "Tankopedia",
+        "name": "Tankopédie",
         "button": "Find tanks",
         "description": "Blitz tank encyclopedia",
         "seo_description": "Statistics, armor, and more for all tanks in World of Tanks Blitz",
@@ -657,10 +657,10 @@
           "loader": "Loader"
         },
         "maneuverability": {
-          "title": "Maneuverability"
+          "title": "Manœuvrabilité"
         },
         "survivability": {
-          "title": "Survivability"
+          "title": "Survivabilité"
         }
       },
       "compare": {
@@ -679,7 +679,8 @@
             "none": "No deltas",
             "percentage": "Percentage",
             "absolute": "Absolute"
-          }
+          },
+          "sync_shells": "Sync shells"
         },
         "no_tanks": {
           "title": "No tanks selected",
@@ -920,7 +921,7 @@
     },
     "footer": {
       "motto": "Everything World of Tanks Blitz",
-      "copyright": "Unaffiliated with Wargaming or any service",
+      "association": "An Open Collective Project",
       "about": {
         "title": "About",
         "discord": "Discord",
