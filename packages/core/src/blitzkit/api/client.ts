@@ -16,12 +16,15 @@ import { fetchPB } from "../../api";
 import { fetchJSON } from "../../api/fetchJSON";
 import { BlitzScripts } from "../../types/blitzScripts";
 import { AbstractBlitzKitAPI } from "./abstract";
+import { Cache } from "./server/0_base";
 
 export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
+  @Cache()
   game() {
     return fetchPB(alias("api", "/definitions/game.pb"), GameDefinitions);
   }
 
+  @Cache()
   consumables() {
     return fetchPB(
       alias("api", "/definitions/consumables.pb"),
@@ -29,10 +32,12 @@ export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
     );
   }
 
+  @Cache()
   tanks() {
     return fetchPB(alias("api", "/definitions/tanks.pb"), TankDefinitions);
   }
 
+  @Cache()
   camouflages() {
     return fetchPB(
       alias("api", "/definitions/camouflage.pb"),
@@ -40,6 +45,7 @@ export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
     );
   }
 
+  @Cache()
   provisions() {
     return fetchPB(
       alias("api", "/definitions/provisions.pb"),
@@ -47,14 +53,17 @@ export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
     );
   }
 
+  @Cache()
   models() {
     return fetchPB(alias("api", "/definitions/models.pb"), ModelDefinitions);
   }
 
+  @Cache()
   skills() {
     return fetchPB(alias("api", "/definitions/skills.pb"), SkillDefinitions);
   }
 
+  @Cache()
   equipment() {
     return fetchPB(
       alias("api", "/definitions/equipment.pb"),
@@ -62,18 +71,22 @@ export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
     );
   }
 
+  @Cache()
   gallery() {
     return fetchPB(alias("api", "/definitions/gallery.pb"), Gallery);
   }
 
+  @Cache()
   maps() {
     return fetchPB(alias("api", "/definitions/maps.pb"), MapDefinitions);
   }
 
+  @Cache()
   scripts() {
     return fetchJSON<BlitzScripts>(alias("api", "/definitions/scripts.json"));
   }
 
+  @Cache()
   strings(locale: string) {
     return fetchJSON<Strings>(alias("api", `/strings/${locale}.json`));
   }

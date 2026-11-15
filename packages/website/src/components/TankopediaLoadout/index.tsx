@@ -1,7 +1,9 @@
 import { MAX_SKILL_LEVEL } from "@blitzkit/core";
+import { useCallback } from "react";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { Tankopedia } from "../../stores/tankopedia";
 import { selectModule } from "../../tankopedia/selectModule";
+import { createAugments, toggleAugment } from "../../tankopedia/augments";
 import { LoadoutConsumables } from "../LoadoutConsumables";
 import { LoadoutEquipment } from "../LoadoutEquipment";
 import { LoadoutModules } from "../LoadoutModules";
@@ -9,11 +11,13 @@ import { LoadoutProvisions } from "../LoadoutProvisions";
 import { LoadoutShells } from "../LoadoutShells";
 import { LoadoutSkills } from "../LoadoutSkills";
 import { LoadoutStatus } from "../LoadoutStatus";
+import { LoadoutAugments } from "../LoadoutAugments";
 
 export function TankopediaLoadout() {
   return (
     <>
       <Modules />
+      <Augments />
       <Shells />
       <Equipment />
       <Provisions />
@@ -54,6 +58,47 @@ function Modules() {
       }}
       onStock={() => setAll("first")}
       onMaximize={() => setAll("last")}
+    />
+  );
+}
+
+function Augments() {
+  const protagonist = useDuelModules("protagonist");
+  const selected = Tankopedia.use((state) => state.protagonist.augments);
+  const progression = protagonist.tank.augment_progression;
+
+  const handleToggle = useCallback(
+    (id: number) => {
+      if (progression === undefined) return;
+
+      Tankopedia.mutate((draft) => {
+        toggleAugment(draft.protagonist, progression, id);
+      });
+    },
+    [progression],
+  );
+
+  const handleStock = useCallback(() => {
+    Tankopedia.mutate((draft) => {
+      draft.protagonist.augments = [];
+    });
+  }, []);
+
+  const handleMaximize = useCallback(() => {
+    Tankopedia.mutate((draft) => {
+      draft.protagonist.augments = createAugments(progression);
+    });
+  }, [progression]);
+
+  if (progression === undefined) return null;
+
+  return (
+    <LoadoutAugments
+      progression={progression}
+      selected={selected}
+      onToggle={handleToggle}
+      onStock={handleStock}
+      onMaximize={handleMaximize}
     />
   );
 }

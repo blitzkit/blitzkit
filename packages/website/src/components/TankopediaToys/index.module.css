@@ -541,3 +541,85 @@
     }
   }
 }
+
+.assault {
+  --axis-width: var(--space-8);
+  --axis-height: var(--space-7);
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4) var(--space-5) var(--axis-height) var(--axis-width);
+  border-radius: inherit;
+  background-color: var(--gray-2);
+  user-select: none;
+
+  .assault-damage {
+    position: absolute;
+    top: var(--space-4);
+    bottom: var(--axis-height);
+    left: var(--space-2);
+
+    span {
+      position: absolute;
+      left: 0;
+      transform: translateY(50%);
+      color: var(--gray-11);
+      font-size: var(--font-size-minor);
+      white-space: nowrap;
+    }
+  }
+
+  .assault-plot {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    cursor: ew-resize;
+    touch-action: none;
+  }
+
+  .assault-sector {
+    background: linear-gradient(
+      45deg,
+      color-mix(in hsl, var(--tomato-7), var(--jade-7) var(--mix)),
+      color-mix(in hsl, var(--tomato-9), var(--jade-9) var(--mix))
+    );
+    border-top: 1px solid var(--gray-11);
+  }
+
+  .assault-cursor {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    transform: translateX(-50%);
+    background-color: var(--accent-11);
+    pointer-events: none;
+  }
+
+  .assault-distances {
+    position: absolute;
+    bottom: 0;
+    left: var(--axis-width);
+    right: var(--space-5);
+    display: flex;
+    height: var(--axis-height);
+
+    div {
+      position: relative;
+      height: 100%;
+    }
+
+    span {
+      position: absolute;
+      right: 0;
+      margin-top: var(--space-2);
+      transform: translateX(50%);
+      color: var(--gray-11);
+      font-size: var(--font-size-minor);
+      writing-mode: vertical-rl;
+    }
+  }
+}

@@ -19,7 +19,7 @@
 
   &[data-size="major"] {
     --padding: var(--space-3);
-    --content-size: calc(1.5 * var(--font-size-regular));
+    --content-size: calc(1.75 * var(--font-size-regular));
   }
 
   padding: var(--padding) calc(2 * var(--padding));

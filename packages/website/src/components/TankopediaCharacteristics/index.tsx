@@ -1,6 +1,6 @@
 import { romanize } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { characteristicsGroups } from "../../config/characteristicsGroups";
 import { toys } from "../../config/toys";
 import { useDuelModules } from "../../hooks/useDuelModules";
@@ -15,6 +15,7 @@ import type {
   CharacteristicsGroup,
   ComputedCharacteristics,
   ToyName,
+  ToyRenderConfig,
 } from "../../types/characteristics";
 import { Heading } from "../Heading";
 import { SegmentedControl } from "../SegmentedControl";
@@ -36,26 +37,33 @@ export function TankopediaCharacteristics({
       <CompareOptions />
 
       <div className={styles.characteristics}>
-        {characteristicsGroups.map((group) => {
-          const items = group.order.filter(
-            (item) => "name" in item && characteristics.has(item.name),
-          ).length;
-          const shouldRender = items > 0;
-
-          if (!shouldRender) return null;
-
-          return (
-            <Group
-              key={group.name}
-              group={group}
-              characteristics={characteristics}
-              rankings={rankings}
-            />
-          );
-        })}
+        {characteristicsGroups.map((group) => (
+          <Group
+            key={group.name}
+            group={group}
+            characteristics={characteristics}
+            rankings={rankings}
+          />
+        ))}
       </div>
     </div>
   );
+}
+
+type GroupItem = CharacteristicsGroup["order"][number];
+
+// A toy that needs a characteristic only shows for the tanks that have it
+function hasToy(
+  { requires }: ToyRenderConfig,
+  characteristics: ComputedCharacteristics,
+) {
+  return requires === undefined || characteristics.has(requires);
+}
+
+function itemKey(item: GroupItem) {
+  if ("toy" in item) return `toy:${item.toy}`;
+  if ("label" in item) return `label:${item.label}`;
+  return item.name;
 }
 
 interface GroupProps {
@@ -66,15 +74,25 @@ interface GroupProps {
 
 function Group({ group, characteristics, rankings }: GroupProps) {
   const strings = useStrings();
-  const toys = group.order.filter((item) => "toy" in item).length;
-  const characteristicsCount = group.order.filter(
-    (item) => "name" in item && characteristics.has(item.name),
-  ).length;
-  const labelsCount =
-    characteristicsCount > 0
-      ? group.order.filter((item) => "label" in item).length
-      : 0;
-  const items = characteristicsCount + labelsCount;
+  let toys = 0;
+  let characteristicsCount = 0;
+  let labelsCount = 0;
+
+  for (const item of group.order) {
+    if ("toy" in item) {
+      if (hasToy(item, characteristics)) toys++;
+    } else if ("label" in item) {
+      labelsCount++;
+    } else if (characteristics.has(item.name)) {
+      characteristicsCount++;
+    }
+  }
+
+  if (toys + characteristicsCount === 0) return null;
+
+  // Labels only head characteristics, so they go when there are none
+  const hasLabels = characteristicsCount > 0;
+  const items = characteristicsCount + (hasLabels ? labelsCount : 0);
   const groupSpan = `calc(${toys} * var(--group-span) + ${items} + 2)`;
   const contentSpan = `calc(${toys} * var(--group-span) + ${items})`;
 
@@ -105,11 +123,11 @@ function Group({ group, characteristics, rankings }: GroupProps) {
         }}
       >
         {group.order.map((item) => (
-          <>
-            {"toy" in item && (
-              <ToyAssigner characteristics={characteristics} {...item} />
+          <Fragment key={itemKey(item)}>
+            {"toy" in item && hasToy(item, characteristics) && (
+              <ToyAssigner characteristics={characteristics} toy={item.toy} />
             )}
-            {"label" in item && <Label {...item} />}
+            {"label" in item && hasLabels && <Label {...item} />}
             {"name" in item && characteristics.has(item.name) && (
               <Item
                 config={item}
@@ -117,7 +135,7 @@ function Group({ group, characteristics, rankings }: GroupProps) {
                 ranking={rankings.get(item.name)}
               />
             )}
-          </>
+          </Fragment>
         ))}
 
         <div className={styles.dead} />
@@ -165,18 +183,18 @@ function Item({ config, value, ranking }: ItemProps) {
         <CharacteristicValue config={config} value={value} />
       </div>
 
-      {ranking && (
-        <div className={styles.ranking}>
-          <Bar value={ranking.score} />
+      <div className={styles.ranking}>
+        {ranking ? <Bar value={ranking.score} /> : <BarStub />}
 
+        {ranking && (
           <Text lowContrast size="minor" className={styles.number}>
             {literals(strings.units.fraction, {
               numerator: ranking.rank,
               denominator: ranking.total,
             })}
           </Text>
-        </div>
-      )}
+        )}
+      </div>
     </span>
   );
 }
@@ -224,6 +242,18 @@ function CompareOptions() {
             draft.relative_against = Number(value);
           });
         }}
+      />
+    </div>
+  );
+}
+
+// Unranked items get a full neutral bar
+function BarStub() {
+  return (
+    <div className={styles["bar-wrapper"]}>
+      <div
+        className={styles.bar}
+        style={{ backgroundColor: "var(--gray-3)", width: "100%" }}
       />
     </div>
   );

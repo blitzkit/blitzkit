@@ -18,6 +18,7 @@ export interface TankState {
 
   consumables: number[];
   provisions: number[];
+  augments: number[];
   camouflage: boolean;
   cooldown_booster: number;
 }

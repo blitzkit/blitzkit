@@ -6,10 +6,12 @@ import {
 } from "@blitzkit/core";
 import type { BlitzEffectScript } from "@blitzkit/core/src/types/blitzEffectScript";
 import { CrewType, type TankDefinition } from "@blitzkit/protos";
+import { useMemo } from "react";
 import { api } from "../api/dynamic";
 import { characteristics } from "../config/characteristics";
 import { defaultEqualizer } from "../config/equalizer";
 import { Tankopedia } from "../stores/tankopedia";
+import { augmentAttributes } from "../tankopedia/augments";
 import { createTankState } from "../tankopedia/createTankState";
 import type { TankState } from "../tankopedia/tankState";
 import type {
@@ -152,6 +154,13 @@ export function computeCharacteristics(
     }
   }
 
+  const augments = augmentAttributes(tank, states.protagonist);
+
+  function augment(name: string, callback: (value: number) => void) {
+    if (!augments.has(name)) return;
+    for (const value of augments.get(name)!) callback(value);
+  }
+
   const context = {
     state: states.protagonist,
     environment,
@@ -170,6 +179,7 @@ export function computeCharacteristics(
 
     characteristic,
     script,
+    augment,
   } satisfies CharacteristicContext;
 
   for (const name in characteristics) {
@@ -198,7 +208,12 @@ export function useCharacteristics(side: DuelSide) {
   );
   const environment = Tankopedia.use((state) => state.environment);
 
-  return computeCharacteristics({ protagonist: A, antagonist: B }, environment);
+  // A stable map, so what reads it only recomputes when the loadout changes
+  return useMemo(
+    () =>
+      computeCharacteristics({ protagonist: A, antagonist: B }, environment),
+    [A, B, environment],
+  );
 }
 
 export function computeDefaultCharacteristics(tank: TankDefinition) {

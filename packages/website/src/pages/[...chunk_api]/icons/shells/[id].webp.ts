@@ -1,6 +1,9 @@
 import type { APIContext, GetStaticPathsItem } from "astro";
-import sharp from "sharp";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import {
+  readDiscreteSprite,
+  type DiscreteSpriteProps,
+} from "../../../../core/blitz/readSprite";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -13,38 +16,21 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
   for (const file of files) {
     const id = file.match(/(.+)_l\.txt/)![1];
-    const sizes = (
-      await vfs.text(`Data/Gfx/Shared/tank-supply/ammunition/big/${file}`)
-    )
-      .split("\n")[4]
-      .split(" ")
-      .map(Number);
 
     paths.push({
       params: { id },
-      props: { sizes },
+      props: {
+        descriptor: `Data/Gfx/Shared/tank-supply/ammunition/big/${file}`,
+        texture: `Data/Gfx/Shared/tank-supply/ammunition/big/texture0.packed.webp`,
+      },
     });
   }
 
   return paths;
 });
 
-export async function GET({ props }: APIContext<{ sizes: number[] }>) {
-  const image = sharp(
-    await vfs.file(
-      `Data/Gfx/Shared/tank-supply/ammunition/big/texture0.packed.webp`,
-    ),
+export async function GET({ props }: APIContext<DiscreteSpriteProps>) {
+  return new Response(
+    await readDiscreteSprite(props.descriptor, props.texture)
   );
-  const buffer = await image
-    .clone()
-    .extract({
-      left: props.sizes[0],
-      top: props.sizes[1],
-      width: props.sizes[2],
-      height: props.sizes[3],
-    })
-    .toBuffer();
-  const bytes = new Uint8Array(buffer);
-
-  return new Response(bytes);
 }

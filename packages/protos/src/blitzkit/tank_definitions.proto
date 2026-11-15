@@ -10,40 +10,41 @@ message TankDefinitions {
 }
 
 message TankDefinition {
-  uint32                    id                 = 1;
-  string                    slug               = 2;
-  map<string, uint32>       roles              = 3;
-  bool                      fixed_camouflage   = 5;
-  repeated int32            camouflages        = 6;
-  repeated int32            ancestors          = 7;
-  repeated int32            successors         = 8;
-  repeated Crew             crew               = 9;
-  uint32                    health             = 10;
-  string                    nation             = 11;
-  I18nString                name               = 12;
-  TankType                  type               = 13;
-  uint32                    max_consumables    = 14;
-  uint32                    max_provisions     = 15;
-  uint32                    tier               = 16;
-  TankClass                 class              = 17;
-  bool                      testing            = 18;
-  bool                      deprecated         = 19;
-  repeated TurretDefinition turrets            = 20;
-  repeated EngineDefinition engines            = 21;
-  repeated TrackDefinition  tracks             = 22;
-  TankPrice                 price              = 23;
-  optional ResearchCost     research_cost      = 24;
-  float                     speed_forwards     = 25;
-  float                     speed_backwards    = 26;
-  float                     camouflage_still   = 27;
-  float                     camouflage_moving  = 28;
-  float                     camouflage_on_fire = 29;
-  string                    equipment_preset   = 30;
-  uint32                    weight             = 31;
-  string                    dev_name           = 32;
-  optional Equalizer        equalizer          = 33;
-  optional I18nString       name_full          = 34;
-  repeated ModulePosition   module_positions   = 35;
+  uint32                      id                  = 1;
+  string                      slug                = 2;
+  map<string, uint32>         roles               = 3;
+  bool                        fixed_camouflage    = 5;
+  repeated int32              camouflages         = 6;
+  repeated int32              ancestors           = 7;
+  repeated int32              successors          = 8;
+  repeated Crew               crew                = 9;
+  uint32                      health              = 10;
+  string                      nation              = 11;
+  I18nString                  name                = 12;
+  TankType                    type                = 13;
+  uint32                      max_consumables     = 14;
+  uint32                      max_provisions      = 15;
+  uint32                      tier                = 16;
+  TankClass                   class               = 17;
+  bool                        testing             = 18;
+  bool                        deprecated          = 19;
+  repeated TurretDefinition   turrets             = 20;
+  repeated EngineDefinition   engines             = 21;
+  repeated TrackDefinition    tracks              = 22;
+  TankPrice                   price               = 23;
+  optional ResearchCost       research_cost       = 24;
+  float                       speed_forwards      = 25;
+  float                       speed_backwards     = 26;
+  float                       camouflage_still    = 27;
+  float                       camouflage_moving   = 28;
+  float                       camouflage_on_fire  = 29;
+  string                      equipment_preset    = 30;
+  uint32                      weight              = 31;
+  string                      dev_name            = 32;
+  optional Equalizer          equalizer           = 33;
+  optional I18nString         name_full           = 34;
+  repeated ModulePosition     module_positions    = 35;
+  optional AugmentProgression augment_progression = 36;
 }
 
 // Hand-authored cell in the modules screen grid. Tanks without any use the
@@ -52,6 +53,63 @@ message ModulePosition {
   int32        id       = 1;
   ModuleType   type     = 2;
   ProtoVector2 position = 3;
+}
+
+// Tier 11 augment tree (`upgradeProgression` in the game files). Cells are
+// placed by hand on a 1-based grid and the connectors are routed by the
+// client, see the loadout augments layout.
+message AugmentProgression {
+  uint32                rows    = 1;
+  uint32                columns = 2;
+  repeated AugmentNode  nodes   = 3;
+  optional AugmentGroup group   = 4;
+}
+
+// TODO: render these differently in the browser
+enum AugmentNodeType {
+  AUGMENT_NODE_TYPE_COMMON      = 0;
+  AUGMENT_NODE_TYPE_MECHANIC    = 1;
+  AUGMENT_NODE_TYPE_ALTERNATIVE = 2;
+}
+
+message AugmentNode {
+  int32           id        = 1;
+  string          tech_name = 2;
+  AugmentNodeType type      = 3;
+  // Alternative nodes live in their group and cost nothing on their own
+  int32 xp_cost = 4;
+  // Missing for alternative nodes
+  optional ProtoVector2       position   = 5;
+  repeated AugmentRequirement requires   = 6;
+  repeated AugmentAttribute   attributes = 7;
+  optional I18nString         name       = 8;
+}
+
+message AugmentRequirement {
+  string tech_name = 1;
+  // Route the connector along the column before the row
+  bool vertical_first = 2;
+}
+
+message AugmentAttribute {
+  string name = 1;
+  // Switches are stored as 0 or 1
+  float value = 2;
+  // Icon file name, missing for attributes the client has no art for
+  optional string     icon  = 3;
+  optional I18nString title = 4;
+}
+
+// Mutually exclusive final choice that all of its requirements lead into
+message AugmentGroup {
+  string                      tech_name    = 1;
+  I18nString                  name         = 2;
+  I18nString                  description  = 3;
+  optional string             icon         = 4;
+  int32                       xp_cost      = 5;
+  ProtoVector2                position     = 6;
+  repeated AugmentRequirement requires     = 7;
+  repeated AugmentNode        alternatives = 8;
 }
 
 message Equalizer {

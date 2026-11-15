@@ -5,9 +5,8 @@ import {
 } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import type { APIContext, GetStaticPathsItem } from "astro";
-import sharp from "sharp";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
-import { vfs } from "../../../../core/blitzkit/vfs";
+import { readPackedSprite } from "../../../../core/blitz/readSprite";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
 const ICONS = [
@@ -36,13 +35,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   }
 
   const glossary = await fetch(
-    `${WOTB_GLOSSARY_DOMAIN}/${locales.default}/${WOTB_GLOSSARY_PATH}`,
+    `${WOTB_GLOSSARY_DOMAIN}/${locales.default}/${WOTB_GLOSSARY_PATH}`
   )
     .then((response) => response.json() as Promise<BlitzGlossary>)
     .then((glossary) =>
-      Object.values(glossary)
-        .entries()
-        .filter(([key]) => /^prx_season_\d+$/.test(`${key}`)),
+      Object.entries(glossary).filter(([key]) => /^prx_season_\d+$/.test(key))
     );
 
   for (const [id, item] of glossary) {
@@ -63,25 +60,12 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 export async function GET({
   props,
 }: APIContext<{ local: boolean; source: string }>) {
-  let buffer: Buffer;
-
   if (props.local) {
-    buffer = await sharp(await vfs.file(props.source))
-      .trim()
-      .toBuffer();
-  } else {
-    const imageRaw = await fetch(props.source).then((response) =>
-      response.arrayBuffer(),
-    );
-    buffer = await sharp(imageRaw)
-      .trim({
-        threshold: 100,
-        background: { r: 0, g: 0, b: 0, alpha: 0 },
-      })
-      .toBuffer();
+    return new Response(await readPackedSprite(props.source));
   }
 
-  const bytes = new Uint8Array(buffer);
-
-  return new Response(bytes);
+  // The glossary already serves these cropped
+  return new Response(
+    await fetch(props.source).then((response) => response.arrayBuffer())
+  );
 }

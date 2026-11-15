@@ -1,9 +1,10 @@
 import { ModuleType, type ModulePosition, type Unlock } from "@blitzkit/protos";
 import type { Vector2Tuple } from "three";
+import { CellGrid } from "./cellGrid";
 
 /**
- * Port of the game client's modules screen layout (wotblitz.exe 11.21,
- * `ModulesTreeInfoCache` auto-layout + `TankModulesTreeController` arrows).
+ * Follows how the game lays out its modules screen: automatic placement and
+ * the arrows.
  *
  * Every node lives on one shared grid: depth is the column, and leaves take
  * consecutive rows with each parent centered over its children. Connectors are
@@ -58,13 +59,6 @@ function key(unlock: Unlock) {
   return `${unlock.type}:${unlock.id}`;
 }
 
-// Cells are indexed column first, then row
-type CellGrid = Map<number, Map<number, ModuleTreeCell>>;
-
-function flattenGrid(grid: CellGrid) {
-  return [...grid.values()].flatMap((column) => [...column.values()]);
-}
-
 function emptyCell(x: number, y: number) {
   return {
     position: [x, y],
@@ -93,7 +87,7 @@ function layoutSnake(placements: Placement[]) {
   // The client takes this from whichever deep module sorts last
   const lastOnFirstRow = deep.length > 0 && deep.at(-1)!.position[1] === 1;
 
-  const grid: CellGrid = new Map();
+  const grid = new CellGrid<ModuleTreeCell>(emptyCell);
 
   for (const {
     unlock,
@@ -113,17 +107,10 @@ function layoutSnake(placements: Placement[]) {
           : offset + 1;
     }
 
-    let columnCells = grid.get(column);
-
-    if (columnCells === undefined) {
-      columnCells = new Map();
-      grid.set(column, columnCells);
-    }
-
-    columnCells.set(row, { ...emptyCell(column, row), unlock });
+    grid.cellAt(column, row).unlock = unlock;
   }
 
-  const cells = flattenGrid(grid);
+  const cells = grid.cells();
   const width = Math.ceil(ordered.length / height);
 
   for (const cell of cells) {
@@ -149,15 +136,11 @@ function layoutSnake(placements: Placement[]) {
     }
   }
 
-  let columns = width;
-  let rows = height;
-
-  for (const cell of cells) {
-    columns = Math.max(columns, cell.position[0]);
-    rows = Math.max(rows, cell.position[1]);
-  }
-
-  return { cells, columns, rows };
+  return {
+    cells,
+    columns: Math.max(width, grid.columns),
+    rows: Math.max(height, grid.rows),
+  };
 }
 
 function sortSiblings(unlocks: Unlock[]) {
@@ -259,29 +242,8 @@ export function layoutModuleTree(
 
   if (isSnake) return layoutSnake([...placements.values()]);
 
-  const grid: CellGrid = new Map();
-  let columns = 0;
-  let rows = 0;
-
-  const cellAt = (x: number, y: number) => {
-    let columnCells = grid.get(x);
-
-    if (columnCells === undefined) {
-      columnCells = new Map();
-      grid.set(x, columnCells);
-    }
-
-    let cell = columnCells.get(y);
-
-    if (cell === undefined) {
-      cell = emptyCell(x, y);
-      columnCells.set(y, cell);
-      columns = Math.max(columns, x);
-      rows = Math.max(rows, y);
-    }
-
-    return cell;
-  };
+  const grid = new CellGrid<ModuleTreeCell>(emptyCell);
+  const { cellAt } = grid;
 
   for (const {
     unlock,
@@ -316,5 +278,5 @@ export function layoutModuleTree(
     }
   }
 
-  return { cells: flattenGrid(grid), columns, rows };
+  return { cells: grid.cells(), columns: grid.columns, rows: grid.rows };
 }

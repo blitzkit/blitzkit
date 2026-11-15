@@ -178,7 +178,9 @@
         "flexibility": "Flexibility",
         "maneuverability": "Maneuverability",
         "survivability": "Survivability",
-        "concealment": "Concealment"
+        "concealment": "Concealment",
+
+        "assault_shells": "Assault shells"
       },
 
       "items": {
@@ -225,8 +227,8 @@
         "gun_rear_elevation": "Rear elevation",
         "azimuth_left": "Azimuth left",
         "azimuth_right": "Azimuth right",
-        "speed_forward": "Forward",
-        "speed_backward": "Backward",
+        "speed_forward": "Top speed",
+        "speed_backward": "Reverse speed",
         "speeds": "Speed",
         "engine_power": "Engine power",
         "brake_force": "Brake force",
@@ -288,6 +290,7 @@
       "consumables": "Consumables",
       "provisions": "Provisions",
       "modules": "Modules",
+      "augments": "Augments",
       "camouflage": "Camouflage",
       "module_types": {
         "turret": "Turret",

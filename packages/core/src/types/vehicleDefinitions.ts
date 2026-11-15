@@ -1,4 +1,4 @@
-import { BlitzModuleType } from "@blitzkit/core";
+import { BlitzModuleType, VehicleDefinitionArmor } from "@blitzkit/core";
 
 export interface VehicleDefinitions {
   invisibility: {
@@ -13,6 +13,8 @@ export interface VehicleDefinitions {
   };
   consumableSlots: number;
   provisionSlots: number;
+  // Tier 11 tanks only, parsed separately because it needs attributes
+  upgradeProgression?: object;
   optDevicePreset: string | string[];
   hull: {
     armor: VehicleDefinitionArmor;

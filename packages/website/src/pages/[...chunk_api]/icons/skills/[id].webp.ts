@@ -1,7 +1,10 @@
 import type { TankmenAvatar } from "@blitzkit/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
-import sharp from "sharp";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import {
+  readPackedSprite,
+  type PackedSpriteProps,
+} from "../../../../core/blitz/readSprite";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -9,7 +12,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const paths: GetStaticPathsItem[] = [];
 
   const avatar = await vfs.xml<{ root: TankmenAvatar }>(
-    `Data/XML/item_defs/tankmen/avatar.xml`,
+    `Data/XML/item_defs/tankmen/avatar.xml`
   );
 
   for (const key in avatar.root.skills) {
@@ -20,18 +23,13 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
     paths.push({
       params: { id },
-      props: { path },
+      props: { packed: path },
     });
   }
 
   return paths;
 });
 
-export async function GET({ props }: APIContext<{ path: string }>) {
-  const buffer = await sharp(await vfs.file(props.path))
-    .trim()
-    .toBuffer();
-  const bytes = new Uint8Array(buffer);
-
-  return new Response(bytes);
+export async function GET({ props }: APIContext<PackedSpriteProps>) {
+  return new Response(await readPackedSprite(props.packed));
 }

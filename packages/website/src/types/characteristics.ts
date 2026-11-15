@@ -65,6 +65,10 @@ export interface CharacteristicContext {
   ): ReturnType<Characteristic["compute"]>;
 
   script: CharacteristicScript;
+
+  // Like scripts, but for each value the installed augments give an attribute,
+  // named without the `ATTRIBUTE_NAME_` prefix
+  augment(name: string, callback: (value: number) => void): void;
 }
 
 export type CrewStatRole = "commander" | "loader" | "gunner" | "driver";
@@ -83,6 +87,11 @@ export enum CharacteristicRanking {
 }
 
 export type CharacteristicName = keyof typeof characteristics;
+// The ones with strings; underscored characteristics are compute time only
+export type RenderedCharacteristicName = Exclude<
+  CharacteristicName,
+  `_${string}`
+>;
 export type CharacteristicReturnType = ReturnType<Characteristic["compute"]>;
 
 export type ComputedCharacteristics = Map<
@@ -91,7 +100,7 @@ export type ComputedCharacteristics = Map<
 >;
 
 export interface CharacteristicRenderConfig {
-  name: CharacteristicName;
+  name: RenderedCharacteristicName;
 
   decimals?: number;
   units?: keyof Strings["units"];
@@ -108,6 +117,8 @@ export interface CharacteristicRenderConfig {
 
 export interface ToyRenderConfig {
   toy: string;
+  // Only shown when this characteristic is computed for the tank
+  requires?: CharacteristicName;
 }
 
 export interface LabelRenderConfig {
@@ -118,5 +129,7 @@ export type ToyName = keyof typeof toys;
 
 export type CharacteristicsGroup = {
   name: string;
+  // Groups that only some tanks have are no use as a sort key
+  sortable?: boolean;
   order: (CharacteristicRenderConfig | LabelRenderConfig | ToyRenderConfig)[];
 };

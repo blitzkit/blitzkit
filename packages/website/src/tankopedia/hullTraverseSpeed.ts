@@ -1,30 +1,4 @@
-import type {
-  CharacteristicContext,
-  CharacteristicScript,
-} from "../types/characteristics";
-
-function hullTraverseRotationCoefficient(
-  driverCoefficient: number,
-  virtuosoSkill: number,
-  script: CharacteristicScript,
-) {
-  let coefficient = 1 + virtuosoSkill / 100;
-  let rotationSpeedFactor = 1;
-
-  script("protagonist", "StaticPhysicsAttrsModifier", (effect) => {
-    coefficient += (effect.bonusPercentage?.rotationSpeedFactor ?? 0) / 100;
-  });
-
-  script("protagonist", "ImprovedAfterburning", (effect) => {
-    rotationSpeedFactor *= effect.rotationSpeedFactor ?? 1;
-  });
-
-  script("protagonist", "AfterburnerAbility", (effect) => {
-    rotationSpeedFactor *= effect.bonusValues?.rotationSpeedFactor ?? 1;
-  });
-
-  return driverCoefficient * coefficient * rotationSpeedFactor;
-}
+import type { CharacteristicContext } from "../types/characteristics";
 
 export function hullTraverseSpeed(
   rawTerrainResistance: number,
@@ -38,6 +12,7 @@ export function hullTraverseSpeed(
     gun,
     progressive,
     script,
+    augment,
     environment,
     characteristic,
   } = context;
@@ -54,14 +29,32 @@ export function hullTraverseSpeed(
     stockGun.weight;
   const weight =
     tank.weight + engine.weight + track.weight + turret.weight + gun.weight;
+  // Engine augments are flat, so this goes through the finished stat
   const enginePower =
-    (engine.power * (characteristic("_engine_power_coefficient") as number)) /
-    stockEngine.power;
-  const rotationSpeed = hullTraverseRotationCoefficient(
-    progressive("driver"),
-    environment.skills.virtuoso ?? 0,
-    script,
-  );
+    (characteristic("engine_power") as number) / stockEngine.power;
+  const virtuosoSkill = environment.skills.virtuoso ?? 0;
+  let rotationCoefficient = 1 + virtuosoSkill / 100;
+  let rotationSpeedFactor = 1;
+
+  augment("HULL_ROTATION_SPEED_FACTOR_BONUS", (value) => {
+    rotationCoefficient += value;
+  });
+
+  script("protagonist", "StaticPhysicsAttrsModifier", (effect) => {
+    rotationCoefficient +=
+      (effect.bonusPercentage?.rotationSpeedFactor ?? 0) / 100;
+  });
+
+  script("protagonist", "ImprovedAfterburning", (effect) => {
+    rotationSpeedFactor *= effect.rotationSpeedFactor ?? 1;
+  });
+
+  script("protagonist", "AfterburnerAbility", (effect) => {
+    rotationSpeedFactor *= effect.bonusValues?.rotationSpeedFactor ?? 1;
+  });
+
+  const rotationSpeed =
+    progressive("driver") * rotationCoefficient * rotationSpeedFactor;
 
   return (
     enginePower *

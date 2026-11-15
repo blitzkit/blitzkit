@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  AssaultShellsToy,
   FlexibilityToy,
   ReloadToy,
   RicochetToy,
@@ -18,4 +19,5 @@ export const toys: Record<string, (props: ToyProps) => ReactNode> = {
   reload: ReloadToy,
   view_range: ViewRangeToy,
   flexibility: FlexibilityToy,
+  assault_shells: AssaultShellsToy,
 };

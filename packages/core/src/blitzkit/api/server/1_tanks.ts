@@ -13,11 +13,20 @@ import {
   toUniqueId,
   TurretDefinitionsList,
   UnlocksListing,
+  UpgradeAttributesXml,
+  UpgradeProgressionXml,
+  UpgradeProgressionXmlNode,
+  UpgradeProgressionXmlRequirement,
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
 import {
   AssaultRanges,
+  AugmentAttribute,
+  AugmentNode,
+  AugmentNodeType,
+  AugmentProgression,
+  AugmentRequirement,
   Crew,
   Equalizer,
   GunDefinition,
@@ -31,6 +40,14 @@ import {
   Unlock,
 } from "@blitzkit/protos";
 import { Cache, ServerBlitzKitAPI0 } from "./0_base";
+
+// What an augment attribute shows, by attribute name
+interface AugmentAttributeDefinition {
+  icon: string;
+  title: string;
+}
+
+type AugmentAttributeDefinitions = Map<string, AugmentAttributeDefinition>;
 
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   private parseResearchCost(raw: number | string) {
@@ -49,6 +66,129 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
         },
       } satisfies ResearchCost;
     }
+  }
+
+  private parseAugmentProgression(
+    xml: UpgradeProgressionXml,
+    attributeDefinitions: AugmentAttributeDefinitions,
+  ) {
+    const iconName = (path?: string) => path?.split("/").at(-1);
+
+    const types = {
+      NODETYPE_COMMON: AugmentNodeType.AUGMENT_NODE_TYPE_COMMON,
+      NODETYPE_MECHANIC: AugmentNodeType.AUGMENT_NODE_TYPE_MECHANIC,
+      NODETYPE_ALTERNATIVE_MECHANIC:
+        AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE,
+    } satisfies Record<UpgradeProgressionXmlNode["nodeType"], AugmentNodeType>;
+
+    const parseRequirements = (
+      requiredNodes: UpgradeProgressionXmlNode["requiredNodes"],
+    ) =>
+      (requiredNodes === undefined || requiredNodes === ""
+        ? []
+        : requiredNodes.node
+      ).map((requirement: UpgradeProgressionXmlRequirement) =>
+        typeof requirement === "string"
+          ? ({
+              tech_name: requirement,
+              vertical_first: false,
+            } satisfies AugmentRequirement)
+          : ({
+              tech_name: requirement["#text"],
+              vertical_first: requirement["@_verticalFirst"] === "true",
+            } satisfies AugmentRequirement),
+      );
+
+    const parseNode = (node: UpgradeProgressionXmlNode) =>
+      ({
+        id: node.id,
+        tech_name: node.techName,
+        type: types[node.nodeType],
+        xp_cost: node.xpCost ?? 0,
+        position:
+          node.gridPosition === undefined
+            ? undefined
+            : { x: node.gridPosition.column, y: node.gridPosition.row },
+        requires: parseRequirements(node.requiredNodes),
+        attributes: (node.attributes?.attribute ?? []).map(
+          ({ attributeName, value }) => {
+            const definition = attributeDefinitions.get(attributeName);
+
+            return {
+              name: attributeName,
+              value: typeof value === "boolean" ? Number(value) : value,
+              icon: iconName(definition?.icon),
+              title:
+                definition === undefined
+                  ? undefined
+                  : this.getString(definition.title),
+            } satisfies AugmentAttribute;
+          },
+        ),
+        name:
+          node.displayName === undefined
+            ? undefined
+            : this.getString(node.displayName),
+      } satisfies AugmentNode);
+
+    const parsedNodes = xml.nodes.node.map(parseNode);
+    const byTechName = new Map(
+      parsedNodes.map((node) => [node.tech_name, node]),
+    );
+    const groups =
+      xml.alternativeMechanicGroups?.alternativeMechanicGroup ?? [];
+
+    if (groups.length > 1) {
+      throw new Error(
+        "Upgrade progression with more than one alternative group",
+      );
+    }
+
+    const group = groups.at(0);
+    const alternativeNames = new Set(group?.alternativeNodes.node);
+
+    for (const node of parsedNodes) {
+      if (
+        node.type === AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE &&
+        !alternativeNames.has(node.tech_name)
+      ) {
+        throw new Error(
+          `Alternative upgrade ${node.tech_name} belongs to no group`,
+        );
+      }
+    }
+
+    return {
+      rows: xml.matrix.rows,
+      columns: xml.matrix.columns,
+      nodes: parsedNodes.filter(
+        (node) => node.type !== AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE,
+      ),
+      group:
+        group === undefined
+          ? undefined
+          : {
+              tech_name: group.techName,
+              name: this.getString(group.displayName),
+              description: this.getString(group.description),
+              icon: iconName(group.icon),
+              xp_cost: group.xpCost,
+              position: {
+                x: group.gridPosition.column,
+                y: group.gridPosition.row,
+              },
+              requires: parseRequirements(group.requiredNodes),
+              alternatives: group.alternativeNodes.node.map((techName) => {
+                const node = byTechName.get(techName);
+
+                if (node === undefined) {
+                  throw new Error(`Unknown alternative upgrade ${techName}`);
+                }
+
+                return node;
+              }),
+            },
+    } satisfies AugmentProgression;
   }
 
   @Cache()
@@ -163,6 +303,23 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
     });
 
     const tankXps = new Map<number, ResearchCost>();
+
+    // Only some builds ship augment trees
+    const upgradeAttributesPath =
+      "Data/XML/item_defs/vehicles/common/tank_upgrade_attributes.xml";
+    const upgradeAttributeDefinitions: AugmentAttributeDefinitions = new Map();
+
+    if ((await this.vfs.resolve(upgradeAttributesPath)) !== null) {
+      const upgradeAttributes =
+        await this.vfs.xmlWithAttributes<UpgradeAttributesXml>(
+          upgradeAttributesPath,
+        );
+
+      for (const { attributeName, icon, title } of upgradeAttributes.root
+        .attributes.attribute) {
+        upgradeAttributeDefinitions.set(attributeName, { icon, title });
+      }
+    }
 
     for (const nation of this.nationsDir!) {
       const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
@@ -429,12 +586,25 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
           }
         }
 
+        const augment_progression =
+          tankDefinition.root.upgradeProgression === undefined
+            ? undefined
+            : this.parseAugmentProgression(
+                (
+                  await this.vfs.xmlWithAttributes<{
+                    root: { upgradeProgression: UpgradeProgressionXml };
+                  }>(`Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`)
+                ).root.upgradeProgression,
+                upgradeAttributeDefinitions,
+              );
+
         tankDefinitions.tanks[tankId] = {
           ancestors: [],
           successors: [],
           id: tankId,
           dev_name: tankKey,
           module_positions,
+          augment_progression,
           roles: {},
           camouflages: camouflages,
           fixed_camouflage: fixedCamouflage,

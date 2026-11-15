@@ -21,6 +21,13 @@ import { MathUtils, Vector3 as THREEVector3, Vector3Tuple } from "three";
 import { Cache } from "./0_base";
 import { ServerBlitzKitAPI2 } from "./2_camouflages";
 
+// The `front` and `back` tags hold "min max range" in degrees
+function parseExtraPitchLimitValues(raw: string | undefined) {
+  if (raw === undefined) return undefined;
+
+  return raw.trim().split(/\s+/).map(Number);
+}
+
 export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
   private vector3TupleToBlitzkit(tuple: Vector3Tuple) {
     return { x: tuple[0], y: tuple[1], z: -tuple[2] } satisfies ProtoVector3;
@@ -350,17 +357,21 @@ export abstract class ServerBlitzKitAPI3 extends ServerBlitzKitAPI2 {
               gunModel = 2;
             }
 
-            const front = gun.extraPitchLimits?.front
-              ? gun.extraPitchLimits.front.split(" ").map(Number)
-              : undefined;
-            const back = gun.extraPitchLimits?.back
-              ? gun.extraPitchLimits.back.split(" ").map(Number)
-              : undefined;
-            const transition = gun.extraPitchLimits?.transition
-              ? typeof gun.extraPitchLimits.transition === "number"
-                ? gun.extraPitchLimits.transition
-                : gun.extraPitchLimits.transition.at(-1)!
-              : undefined;
+            // The client merges shared and per-tank values one field at a time:
+            // front, back and transition each fall back on the shared gun
+            const extraPitchLimits = {
+              ...gunListEntry.extraPitchLimits,
+              ...gun.extraPitchLimits,
+            };
+            const front = parseExtraPitchLimitValues(extraPitchLimits.front);
+            const back = parseExtraPitchLimitValues(extraPitchLimits.back);
+            // A repeated tag overwrites the last one, and one value covers both
+            const transition =
+              extraPitchLimits.transition === undefined
+                ? undefined
+                : typeof extraPitchLimits.transition === "number"
+                  ? extraPitchLimits.transition
+                  : extraPitchLimits.transition.at(-1)!;
             const gunArmor: Armor = { thickness: {}, spaced: [] };
             const maskName = `gun_${gunModel.toString().padStart(2, "0")}`;
             const maskEnabled =

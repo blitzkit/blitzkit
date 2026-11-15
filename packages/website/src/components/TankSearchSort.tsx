@@ -8,12 +8,12 @@ import { useStrings } from "../hooks/useStrings";
 import { TankopediaSortDirection } from "../stores/tankopediaPersistent";
 import { TankSort } from "../stores/tankopediaSort";
 import { sortableCharacteristics } from "../tankopedia/sortableCharacteristics";
-import type { CharacteristicName } from "../types/characteristics";
+import type { RenderedCharacteristicName } from "../types/characteristics";
 import { Button } from "./Button";
 import { DropdownMenu } from "./DropdownMenu";
 
 interface ItemProps {
-  by: CharacteristicName;
+  by: RenderedCharacteristicName;
 }
 
 function Item({ by }: ItemProps) {
@@ -76,6 +76,8 @@ export function TankSearchSort() {
           const items = group.order.filter(
             (item) => "name" in item && sortableCharacteristics.has(item.name),
           );
+
+          if (items.length === 0) return null;
 
           return (
             <DropdownMenu.Sub key={group.name}>

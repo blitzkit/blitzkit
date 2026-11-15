@@ -1,5 +1,5 @@
 .discriminator {
-  --inset: var(--space-3);
+  --inset: var(--space-2);
 
   &[data-inset="small"] {
     --inset: var(--space-2);

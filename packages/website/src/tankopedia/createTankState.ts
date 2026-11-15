@@ -1,6 +1,7 @@
 import { createDefaultProvisions } from "@blitzkit/core";
 import type { TankDefinition } from "@blitzkit/protos";
 import { api } from "../api/dynamic";
+import { createAugments } from "./augments";
 import { createTankEquipment } from "./createTankEquipment";
 import { createTankStatus } from "./createTankStatus";
 import type { TankState } from "./tankState";
@@ -36,6 +37,7 @@ export function createTankState(tank: TankDefinition) {
     model: models.models[tank.id],
 
     consumables: [],
+    augments: createAugments(tank.augment_progression),
     provisions: createDefaultProvisions(tank, gun, provisions, scripts),
     camouflage: true,
     cooldown_booster: 0,

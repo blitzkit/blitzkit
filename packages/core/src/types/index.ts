@@ -23,6 +23,7 @@ export * from "./tankParameters";
 export * from "./tanksStats";
 export * from "./techTreeLayoutYaml";
 export * from "./turretDefinitionsList";
+export * from "./upgradeProgressionXml";
 export * from "./vehicleDefinitionArmor";
 export * from "./vehicleDefinitionList";
 export * from "./vehicleDefinitions";

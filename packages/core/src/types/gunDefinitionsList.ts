@@ -17,6 +17,11 @@ export interface GunDefinitionsList {
       tags: string;
       level: number;
       pitchLimits: string;
+      extraPitchLimits?: {
+        front?: string;
+        back?: string;
+        transition?: number | number[];
+      };
       burst?: { count: number; rate: number };
       clip?: { count: number; rate: number };
       shots: {

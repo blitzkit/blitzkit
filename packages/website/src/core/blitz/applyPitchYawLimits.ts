@@ -1,9 +1,10 @@
 import { normalizeAngleRad } from "@blitzkit/core";
 import type { PitchLimits, YawLimits } from "@blitzkit/protos";
 import { clamp } from "lodash-es";
-import { degToRad } from "three/src/math/MathUtils.js";
+import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
 
-export const DEFAULT_PITCH_TRANSITION = 20;
+// The game's default is 0.4 rad
+export const DEFAULT_PITCH_TRANSITION = radToDeg(0.4);
 
 export function applyPitchYawLimits(
   pitch: number, // rad

@@ -4,9 +4,21 @@ import { XMLParser } from "fast-xml-parser";
 import type { normalize } from "node:path/posix";
 import { parse as parseYaml } from "yaml";
 
+// Tags of an upgrade progression that are lists even with a single child
+const UPGRADE_PROGRESSION_LIST_TAGS = new Set([
+  "node",
+  "attribute",
+  "alternativeMechanicGroup",
+]);
+
 export abstract class AbstractVFS {
   textDecoder = new TextDecoder();
   private xmlParser = new XMLParser();
+  private attributeXmlParser = new XMLParser({
+    ignoreAttributes: false,
+    // A lone child would otherwise parse to an object instead of a list
+    isArray: (name) => UPGRADE_PROGRESSION_LIST_TAGS.has(name),
+  });
 
   protected normalizePath?: typeof normalize;
 
@@ -78,6 +90,12 @@ export abstract class AbstractVFS {
   async xml<Type>(path: string) {
     const file = await this.text(path);
     return this.xmlParser.parse(file) as Type;
+  }
+
+  // Keeps attributes as `@_name` and lists as arrays, which `xml` drops
+  async xmlWithAttributes<Type>(path: string) {
+    const file = await this.text(path);
+    return this.attributeXmlParser.parse(file) as Type;
   }
 
   protected async _csv(text: string, options: Options = {}) {

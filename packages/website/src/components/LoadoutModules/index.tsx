@@ -16,10 +16,12 @@ import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { layoutModuleTree } from "../../tankopedia/moduleTreeLayout";
 import type { TankState } from "../../tankopedia/tankState";
+import { classNames } from "../../ui/classNames";
 import { Discriminator } from "../Discriminator";
 import { IconButton } from "../IconButton";
 import { LinkI18n } from "../LinkI18n";
 import { LoadoutSection } from "../LoadoutSection";
+import shared from "../LoadoutTree/index.module.css";
 import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
@@ -76,11 +78,11 @@ function Content({ tank, selected, onSelect }: ContentProps) {
             tank.turrets
               .flatMap((turret) => turret.guns)
               .toReversed()
-              .map((gun) => [gun.id, gun])
+              .map((gun) => [gun.id, gun]),
           ),
         ],
       ]),
-    [tank]
+    [tank],
   );
 
   const resolve = useCallback(
@@ -88,7 +90,7 @@ function Content({ tank, selected, onSelect }: ContentProps) {
       unlock.type === ModuleType.MODULE_TYPE_VEHICLE
         ? (tanks.tanks[unlock.id] as TankDefinition | undefined)
         : modules.get(unlock.type)?.get(unlock.id),
-    [modules]
+    [modules],
   );
 
   const { cells, columns, rows } = useMemo(
@@ -107,9 +109,9 @@ function Content({ tank, selected, onSelect }: ContentProps) {
 
           return children.filter((child) => resolve(child) !== undefined);
         },
-        tank.module_positions
+        tank.module_positions,
       ),
-    [tank, resolve]
+    [tank, resolve],
   );
 
   // Prices hang below the modules, so room is only reserved if the bottom row has one
@@ -118,12 +120,12 @@ function Content({ tank, selected, onSelect }: ContentProps) {
     (cell) =>
       cell.position[0] === bottomRow &&
       cell.unlock !== undefined &&
-      cell.unlock.cost!.value > 0
+      cell.unlock.cost!.value > 0,
   );
 
   return (
     <div
-      className={styles.tree}
+      className={classNames(shared.tree, styles.tree)}
       data-has-bottom-cost={hasBottomCost}
       style={{
         // Transposed: the layout's columns (depth) become rows
@@ -137,7 +139,7 @@ function Content({ tank, selected, onSelect }: ContentProps) {
         return (
           <div
             key={cell.position.join(",")}
-            className={styles.cell}
+            className={classNames(shared.cell, styles.cell)}
             style={{ gridColumn: cell.position[1], gridRow: cell.position[0] }}
           >
             {cell.trunkUp && <span className={styles["trunk-left"]} />}
@@ -209,9 +211,10 @@ function ModuleNode({
   const button = (
     <IconButton
       radius="1"
+      size="major"
       variant={isSelected ? "surface" : "soft"}
       color={isSelected ? (isTop ? "amber" : undefined) : "gray"}
-      className={styles.module}
+      className={shared.node}
       data-major={unlock.type === ModuleType.MODULE_TYPE_VEHICLE}
       onClick={() => {
         if (!isTank) onSelect(unlock);
@@ -224,16 +227,15 @@ function ModuleNode({
             ? tankIcon(unlock.id)
             : alias(
                 "api",
-                `/icons/modules/${moduleIconNames[unlock.type]}.webp`
+                `/icons/modules/${moduleIconNames[unlock.type]}.webp`,
               )
         }
-        className={styles.icon}
       />
 
       <Discriminator corner="top-left">{romanize(module.tier)}</Discriminator>
 
       {unlock.cost!.value > 0 && (
-        <div className={styles.price}>
+        <div className={shared.price}>
           <Text size="minor">{formatCompact(locale, unlock.cost!.value)}</Text>
           <img
             alt={unlock.cost!.type}

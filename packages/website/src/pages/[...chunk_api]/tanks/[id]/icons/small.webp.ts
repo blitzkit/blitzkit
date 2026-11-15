@@ -4,8 +4,8 @@ import {
   type VehicleDefinitionList,
 } from "@blitzkit/core";
 import type { APIContext } from "astro";
+import { readPackedSprite } from "../../../../../core/blitz/readSprite";
 import { vfs } from "../../../../../core/blitzkit/vfs";
-import { extractPackedTankIcon } from "./big.webp";
 
 export { getStaticPaths } from "../_index";
 
@@ -32,12 +32,11 @@ export async function GET({ props }: APIContext<{ id: number }>) {
       const parameters = await vfs.yaml<TankParameters>(
         `Data/3d/Tanks/Parameters/${nation}/${tankKey}.yaml`,
       );
-      const bigPath = `Data/${parameters.resourcesPath.smallIconPath
+      const packed = `Data/${parameters.resourcesPath.smallIconPath
         .replace(/~res:\//, "")
         .replace(/\..+/, "")}.packed.webp`;
-      const big = await extractPackedTankIcon(await vfs.file(bigPath));
 
-      return new Response(big);
+      return new Response(await readPackedSprite(packed));
     }
   }
 }

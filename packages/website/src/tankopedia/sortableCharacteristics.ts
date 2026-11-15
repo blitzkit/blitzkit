@@ -2,7 +2,7 @@ import { characteristics } from "../config/characteristics";
 import { characteristicsGroups } from "../config/characteristicsGroups";
 import {
   CharacteristicType,
-  type CharacteristicName,
+  type RenderedCharacteristicName,
 } from "../types/characteristics";
 
 const sortableCharacteristicTypes = new Set<CharacteristicType>([
@@ -11,9 +11,11 @@ const sortableCharacteristicTypes = new Set<CharacteristicType>([
   CharacteristicType.Interval,
 ]);
 
-export const sortableCharacteristics = new Set<CharacteristicName>();
+export const sortableCharacteristics = new Set<RenderedCharacteristicName>();
 
 for (const group of characteristicsGroups) {
+  if (!group.sortable) continue;
+
   for (const config of group.order) {
     if (!("name" in config)) continue;
 

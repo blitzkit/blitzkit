@@ -1,9 +1,7 @@
 import type { ProvisionsCommon } from "@blitzkit/core";
 import type { APIContext, GetStaticPathsItem } from "astro";
-import sharp from "sharp";
-import { extractPackedIcon } from "../../../../core/blitz/extractPackedIcon";
-import { parsePackedSpriteRect } from "../../../../core/blitz/parsePackedSpriteRect";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import { readStyleSprite } from "../../../../core/blitz/readSprite";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -70,43 +68,5 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 });
 
 export async function GET({ props }: APIContext<{ path: string }>) {
-  let buffer: Buffer;
-
-  if (await vfs.resolve(`Data/${props.path}.packed.webp`)) {
-    const packedBuffer = await vfs.file(`Data/${props.path}.packed.webp`);
-    const provisionsTexture = sharp(packedBuffer);
-    const sizes = parsePackedSpriteRect(packedBuffer);
-
-    if (sizes) {
-      buffer = await extractPackedIcon(provisionsTexture, sizes);
-    } else {
-      buffer = await provisionsTexture.trim({ threshold: 80 }).toBuffer();
-    }
-  } else {
-    const provisionsTexture = sharp(
-      await vfs.file(
-        `${`Data/${props.path}`
-          .split("/")
-          .slice(0, -1)
-          .join("/")}/texture0.packed.webp`,
-      ),
-    );
-    const sizes = (await vfs.text(`Data/${props.path}.txt`))
-      .split("\n")[4]
-      .split(" ")
-      .map(Number);
-    buffer = await provisionsTexture
-      .clone()
-      .extract({
-        left: sizes[0],
-        top: sizes[1],
-        width: sizes[2],
-        height: sizes[3],
-      })
-      .toBuffer();
-  }
-
-  const bytes = new Uint8Array(buffer);
-
-  return new Response(bytes);
+  return new Response(await readStyleSprite(`Data/${props.path}`));
 }

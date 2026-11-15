@@ -22,6 +22,11 @@ import { useDuelModels } from "../../hooks/useDuelModels";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useStrings } from "../../hooks/useStrings";
+import {
+  fakeLogSquishyHigh,
+  fakeLogSquishyHighInverse,
+  fakeLogSquishyLow,
+} from "../../core/blitzkit/fakeLog";
 import { Tankopedia } from "../../stores/tankopedia";
 import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Button } from "../Button";
@@ -897,6 +902,134 @@ export function FlexibilityToy() {
           value={degrees(radToDeg(minPitch))}
           position={CornerStatPosition.BottomRight}
         />
+      </div>
+    </div>
+  );
+}
+
+// Where the pointer is across the plot, from 0 to 1
+function plotFraction(event: PointerEvent<HTMLDivElement>) {
+  const rect = event.currentTarget.getBoundingClientRect();
+
+  return clamp((event.clientX - rect.left) / rect.width, 0, 1);
+}
+
+export function AssaultShellsToy({ characteristics }: ToyProps) {
+  const strings = useStrings();
+  const distance = Tankopedia.use((state) => state.environment.distance);
+  // Where the cursor is while it is dragged, as a fraction of the plot
+  const [dragged, setDragged] = useState<number>();
+
+  const distances = characteristics.get("_assault_distances") as number[];
+  const factors = characteristics.get("_assault_factors") as number[];
+  const baseDamage = characteristics.get("_base_damage") as number;
+  const maxDistance = distances.at(-1)!;
+
+  // Sector widths are stretched so the near ones stay readable. The last one
+  // always ends at the far edge
+  const sectors = useMemo(() => {
+    const maxFactor = Math.max(...factors);
+    let start = 0;
+
+    return distances.map((sectorDistance, index) => {
+      const end = fakeLogSquishyHigh(sectorDistance / maxDistance);
+      const relative = factors[index] / maxFactor;
+      const sector = {
+        distance: sectorDistance,
+        factor: factors[index],
+        width: `${(end - start) * 100}%`,
+        height: `${fakeLogSquishyLow(relative) * 100}%`,
+        mix: `${clamp(2 * relative - 1, 0, 1) * 100}%`,
+      };
+
+      start = end;
+
+      return sector;
+    });
+  }, [distances, factors, maxDistance]);
+
+  const cursor =
+    dragged ??
+    fakeLogSquishyHigh(Math.min(distance, maxDistance) / maxDistance);
+
+  const handlePointerDown = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDragged(plotFraction(event));
+    },
+    [],
+  );
+
+  const handlePointerMove = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+
+      setDragged(plotFraction(event));
+    },
+    [],
+  );
+
+  // Only the release writes the distance, so dragging recomputes nothing
+  const handlePointerUp = useCallback(
+    (event: PointerEvent<HTMLDivElement>) => {
+      if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+
+      const fraction = plotFraction(event);
+
+      Tankopedia.mutate((draft) => {
+        draft.environment.distance =
+          fakeLogSquishyHighInverse(fraction) * maxDistance;
+      });
+      setDragged(undefined);
+    },
+    [maxDistance],
+  );
+
+  const handlePointerCancel = useCallback(() => setDragged(undefined), []);
+
+  return (
+    <div className={styles.assault}>
+      <div className={styles["assault-damage"]}>
+        {sectors.map(({ distance: sectorDistance, factor, height }) => (
+          <span key={sectorDistance} style={{ bottom: height }}>
+            {literals(strings.common.units.hp, {
+              value: Math.round(baseDamage * factor),
+            })}
+          </span>
+        ))}
+      </div>
+
+      <div
+        className={styles["assault-plot"]}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+      >
+        {sectors.map(({ distance: sectorDistance, width, height, mix }) => (
+          <div
+            key={sectorDistance}
+            className={styles["assault-sector"]}
+            style={{ width, height, "--mix": mix } as CSSProperties}
+          />
+        ))}
+
+        <div
+          className={styles["assault-cursor"]}
+          style={{ left: `${cursor * 100}%` }}
+        />
+      </div>
+
+      <div className={styles["assault-distances"]}>
+        {sectors.map(({ distance: sectorDistance, width }) => (
+          <div key={sectorDistance} style={{ width }}>
+            <span>
+              {literals(strings.common.units.m, {
+                value: Math.round(sectorDistance),
+              })}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

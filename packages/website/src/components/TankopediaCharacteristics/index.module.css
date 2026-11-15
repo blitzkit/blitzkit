@@ -88,6 +88,10 @@
             align-items: center;
             gap: var(--space-3);
 
+            /* Same height with or without the number, so the bars line up */
+            font-size: var(--font-size-minor);
+            height: 1em;
+
             .bar-wrapper {
               flex: 1;
               height: var(--space-1);
