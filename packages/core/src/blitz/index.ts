@@ -4,6 +4,7 @@ export * from "./classes";
 export * from "./constants";
 export * from "./equipmentPrice";
 export * from "./fetchBlitz";
+export * from "./fetchEncyclopedia";
 export * from "./fetchGlossary";
 export * from "./generateStats";
 export * from "./getAccountAchievements";

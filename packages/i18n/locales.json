@@ -9,6 +9,6 @@
     { "locale": "pt" },
     { "locale": "ru" },
     { "locale": "uk" },
-    { "locale": "zh", "blitz": "zh_Hans_SG" }
+    { "locale": "zh", "blitz": "zh_Hans_SG", "variant_wg_api": "zh-cn" }
   ]
 }
