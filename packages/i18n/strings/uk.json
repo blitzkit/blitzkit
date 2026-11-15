@@ -572,7 +572,7 @@
             "crewCount": "Розмір екіпажу",
             "shellNormalization": "Нормалізація",
             "shellRicochet": "Рикошет",
-            "dpm": "DPM",
+            "dpm": "Шкода на хвилину",
             "dpmEffective": "Effective at 60s",
             "peekabooDpm": "Peekaboo DPM",
             "peekabooDpmInfo": "Шкода на хвилину за умови пострілу тільки після повторного маскування (або після повного перезаряджання, якщо воно триваліше) — не менше 10 секунд між пострілами.",
