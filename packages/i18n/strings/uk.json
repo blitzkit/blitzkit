@@ -18,8 +18,8 @@
     },
     "shells": {
       "ap": "ББ",
-      "ap_cr": "",
-      "hc": "HEAT",
+      "ap_cr": "ПБ",
+      "hc": "КБ",
       "he": "ОФ"
     },
     "player_count_period": {
@@ -453,7 +453,7 @@
                 "spaced": "Spaced",
                 "external": "External",
                 "gap": "Gap",
-                "gun": "Пушка",
+                "gun": "Гармата",
                 "track": "Гусениці"
               },
               "status": {
@@ -553,7 +553,7 @@
           "compare": {
             "label": "Compare against",
             "class": "{tier} {class}",
-            "tier": "Весь рівень{tier}",
+            "tier": "Всі {tier} рівня",
             "all": "Усі танки"
           },
           "values": {
