@@ -1,4 +1,4 @@
-import { useLocale } from "../../hooks/useLocale";
+import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import { Link } from "../Link";
 import { Text } from "../Text";
@@ -9,7 +9,7 @@ interface NoResultsProps {
 }
 
 export function TankSearchNoResults({ type = "filters" }: NoResultsProps) {
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
     <div
