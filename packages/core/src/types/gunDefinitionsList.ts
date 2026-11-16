@@ -5,6 +5,7 @@ export interface GunDefinitionsList {
     [key: string]: {
       rotationSpeed: number;
       weight: number;
+      reloadTime?: number;
       shotDispersionFactors: {
         turretRotation: number;
         afterShot: number;

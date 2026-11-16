@@ -1,5 +1,8 @@
+export * from "./augmentAttributeDefinitions";
 export * from "./availableNationsYaml";
+export * from "./blitzEffectScript";
 export * from "./blitzModuleType";
+export * from "./blitzScripts";
 export * from "./blitzStrings";
 export * from "./blitzTankFilterDefinitionCategory";
 export * from "./camouflagesXml";
@@ -24,6 +27,8 @@ export * from "./tanksStats";
 export * from "./techTreeLayoutYaml";
 export * from "./turretDefinitionsList";
 export * from "./upgradeProgressionXml";
+export * from "./vehicleAbilityItem";
 export * from "./vehicleDefinitionArmor";
 export * from "./vehicleDefinitionList";
 export * from "./vehicleDefinitions";
+export * from "./vehicleFilter";

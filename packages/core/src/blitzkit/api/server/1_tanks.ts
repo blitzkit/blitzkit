@@ -1,9 +1,11 @@
 import {
+  type AugmentAttributeDefinitions,
   BlitzCrewType,
   BlitzModuleType,
   blitzShellKindToBlitzkit,
   BlitzTankClass,
   ChassisDefinitionsList,
+  type ConsumablesVehicleFilter,
   EngineDefinitionsList,
   GunDefinitionsList,
   ShellDefinitionsList,
@@ -17,10 +19,13 @@ import {
   UpgradeProgressionXml,
   UpgradeProgressionXmlNode,
   UpgradeProgressionXmlRequirement,
+  type VehicleAbilityItem,
+  type VehicleDefinitionGun,
   VehicleDefinitionList,
   VehicleDefinitions,
 } from "@blitzkit/core";
 import {
+  AbilitySource,
   AssaultRanges,
   AugmentAttribute,
   AugmentNode,
@@ -33,23 +38,282 @@ import {
   ModulePosition,
   ModuleType,
   ResearchCost,
+  ShellDefinition,
   TankDefinitions,
   TankPrice,
   TankPriceType,
   TankType,
   Unlock,
+  type VehicleAbility,
 } from "@blitzkit/protos";
 import { Cache, ServerBlitzKitAPI0 } from "./0_base";
 
-// What an augment attribute shows, by attribute name
-interface AugmentAttributeDefinition {
-  icon: string;
-  title: string;
-}
-
-type AugmentAttributeDefinitions = Map<string, AugmentAttributeDefinition>;
-
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
+  // A gun the way a tank's turret or a vehicle ability builds it. `gun`
+  // overrides the shared gun entry, which is all an ability has
+  private parseGun(
+    nation: string,
+    gunKey: string,
+    gunList: GunDefinitionsList,
+    shellList: ShellDefinitionsList,
+    gun: Partial<VehicleDefinitionGun>,
+    unlocks: GunDefinition["unlocks"],
+  ) {
+    const gunListEntry = gunList.shared[gunKey];
+    const gunType =
+      gun.clip === undefined
+        ? "regular"
+        : gun.pumpGunMode
+        ? "auto_reloader"
+        : "auto_loader";
+    const gunClipCount = gunType === "regular" ? 1 : gun.clip!.count;
+    const shotDispersionFactors =
+      gun.shotDispersionFactors ?? gunListEntry.shotDispersionFactors;
+    let assault_ranges: AssaultRanges | undefined;
+
+    if (gun.extras?.trayShell) {
+      const types = gun.extras.trayShell.kinds.split(" ").map((string) => {
+        const trimmed = string.trim();
+
+        if (trimmed in blitzShellKindToBlitzkit) {
+          return blitzShellKindToBlitzkit[trimmed as ShellKind];
+        }
+
+        throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
+      });
+      const sectorNames = Object.keys(gun.extras.trayShell.sectors);
+
+      if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
+        throw new SyntaxError("Invalid tray shell sector");
+      }
+
+      const sector = gun.extras.trayShell.sectors.sector;
+
+      assault_ranges = {
+        types,
+        ranges: sector.map((value) => ({
+          factor: value.factor,
+          distance: value.distance,
+        })),
+      };
+    }
+
+    return {
+      id: toUniqueId(nation, gunList.ids[gunKey]),
+      weight: gunListEntry.weight,
+      rotation_speed: gunListEntry.rotationSpeed,
+      name: this.getString(gunListEntry.userString),
+      tier: gunListEntry.level,
+      shells: this.parseShells(nation, gunListEntry, shellList),
+      camouflage_loss:
+        gun.invisibilityFactorAtShot === undefined
+          ? 0
+          : typeof gun.invisibilityFactorAtShot === "number"
+          ? gun.invisibilityFactorAtShot
+          : gun.invisibilityFactorAtShot.at(-1)!,
+      aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
+      dispersion_base:
+        gun.shotDispersionRadius ?? gunListEntry.shotDispersionRadius,
+      dispersion_damaged: shotDispersionFactors.whileGunDamaged,
+      dispersion_shot: shotDispersionFactors.afterShot,
+      dispersion_traverse: shotDispersionFactors.turretRotation,
+      unlocks,
+      shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
+      assault_ranges,
+      burst:
+        gun.burst && gun.burst.count > 1
+          ? {
+              count: gun.burst.count,
+              interval: 60 / gun.burst.rate,
+            }
+          : undefined,
+      gun_type:
+        gunType === "regular"
+          ? {
+              $case: "regular",
+              value: {
+                reload: gun.reloadTime ?? 0,
+              },
+            }
+          : gunType === "auto_reloader"
+          ? {
+              $case: "auto_reloader",
+              value: {
+                intra_clip: 60 / gun.clip!.rate,
+                shell_count: gunClipCount,
+                shell_reloads: gun.pumpGunReloadTimes!.split(" ").map(Number),
+              },
+            }
+          : {
+              $case: "auto_loader",
+              value: {
+                intra_clip: 60 / gun.clip!.rate,
+                clip_reload: gun.reloadTime ?? 0,
+                shell_count: gunClipCount,
+              },
+            },
+    } satisfies GunDefinition;
+  }
+
+  // The shells a gun fires. Its shots may override a shell's speed, range and
+  // penetration, and otherwise the shell's own values hold
+  private parseShells(
+    nation: string,
+    gunListEntry: GunDefinitionsList["shared"][string],
+    shellList: ShellDefinitionsList,
+  ) {
+    return Object.keys(gunListEntry.shots ?? {}).map((shellKey) => {
+      const gunShellEntry = gunListEntry.shots[shellKey];
+      const shell = shellList[shellKey];
+
+      // Newer client data stores shot properties on the shell rather than
+      // repeating them under every gun's <shots> entry
+      const speed =
+        typeof gunShellEntry === "string" ? shell.speed : gunShellEntry.speed;
+      const maxDistance =
+        typeof gunShellEntry === "string"
+          ? shell.maxDistance
+          : gunShellEntry.maxDistance;
+      const piercingPower =
+        typeof gunShellEntry === "string"
+          ? shell.piercingPower
+          : gunShellEntry.piercingPower;
+
+      const penetrationRaw = piercingPower
+        .split(" ")
+        .filter((penetrationString) => penetrationString !== "")
+        .map(Number);
+
+      return {
+        id: toUniqueId(nation, shell.id),
+        name: this.getString(shell.userString),
+        velocity: speed,
+        armor_damage: shell.damage.armor,
+        module_damage: shell.damage.devices,
+        caliber: shell.caliber,
+        normalization: shell.normalizationAngle,
+        ricochet: shell.ricochetAngle,
+        type: blitzShellKindToBlitzkit[shell.kind],
+        explosion_radius:
+          shell.kind === "HIGH_EXPLOSIVE"
+            ? shell.explosionRadius ?? 0
+            : undefined,
+        icon: shell.icon,
+        penetration: {
+          near: penetrationRaw[0],
+          far: penetrationRaw[1],
+        },
+        range: maxDistance,
+        acceleration: shell.acceleration,
+        max_speed: shell.maxSpeed,
+      } satisfies ShellDefinition;
+    });
+  }
+
+  // A vehicle ability's placeholder gun as `nation:gun`, built like a tank's own
+  // guns. An ability's gun has no turret, so its shared entry is all its data
+  private async placeholderGun(reference: string) {
+    const [nation, gunKey] = reference.trim().split(":");
+    const base = `Data/XML/item_defs/vehicles/${nation}/components`;
+    const { root: gunList } = await this.vfs.xml<{
+      root: GunDefinitionsList;
+    }>(`${base}/guns.xml`);
+    const { root: shellList } = await this.vfs.xml<{
+      root: ShellDefinitionsList;
+    }>(`${base}/shells.xml`);
+    const shared = gunList.shared[gunKey];
+
+    if (shared === undefined) {
+      throw new Error(`Vehicle ability gun ${reference} is not in guns.xml`);
+    }
+
+    return this.parseGun(nation, gunKey, gunList, shellList, shared, []);
+  }
+
+  // The hidden provisions and consumables the game marks as vehicle abilities,
+  // by the key a tank's `extras` names them with
+  private vehicleAbilityItems() {
+    const items = new Map<string, VehicleAbilityItem>();
+    const groups = [
+      [AbilitySource.ABILITY_SOURCE_CONSUMABLE, this.consumablesCommon],
+      [AbilitySource.ABILITY_SOURCE_PROVISION, this.provisionsCommon],
+    ] as const;
+
+    for (const [source, group] of groups) {
+      for (const [key, item] of Object.entries(group)) {
+        if (!("isVehicleAbility" in item)) continue;
+
+        // The names in the filter's `include`, or nothing when it doesn't name tanks
+        const vehicle = item.vehicleFilter?.include.vehicle;
+
+        items.set(key, {
+          source,
+          id: item.id,
+          vehicleNames:
+            vehicle !== undefined && "name" in vehicle
+              ? vehicle.name.trim().split(/\s+/)
+              : undefined,
+          gun: item.script?.gun,
+        });
+      }
+    }
+
+    return items;
+  }
+
+  // The abilities a tank has, from the hidden items its own `extras` names.
+  // Guns name none in the game files today, so one is an error, not a gap
+  private async vehicleAbilitiesOf(
+    nation: string,
+    tankKey: string,
+    root: {
+      extras?: Record<string, unknown>;
+      turrets0?: Record<
+        string,
+        { guns: Record<string, { extras?: Record<string, unknown> }> }
+      >;
+    },
+    items: Map<string, VehicleAbilityItem>,
+  ) {
+    const name = `${nation}:${tankKey}`;
+
+    for (const turret of Object.values(root.turrets0 ?? {})) {
+      for (const gun of Object.values(turret.guns ?? {})) {
+        for (const key of Object.keys(gun.extras ?? {})) {
+          if (items.has(key)) {
+            throw new Error(
+              `Gun extra ${key} on ${name} is a vehicle ability, which is only linked for tanks`,
+            );
+          }
+        }
+      }
+    }
+
+    const abilities: VehicleAbility[] = [];
+
+    for (const key of Object.keys(root.extras ?? {})) {
+      const item = items.get(key);
+      if (item === undefined) continue;
+
+      if (item.vehicleNames && !item.vehicleNames.includes(name)) {
+        throw new Error(
+          `${key} is on ${name}, which its vehicle filter does not include`,
+        );
+      }
+
+      abilities.push({
+        source: item.source,
+        id: item.id,
+        gun:
+          item.gun === undefined
+            ? undefined
+            : await this.placeholderGun(item.gun),
+      });
+    }
+
+    return abilities;
+  }
+
   private parseResearchCost(raw: number | string) {
     if (typeof raw === "number") {
       return {
@@ -194,6 +458,7 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   @Cache()
   async tanks() {
     const tankDefinitions = TankDefinitions.create();
+    const abilityItems = this.vehicleAbilityItems();
 
     const gameModeNativeNames: Record<string, string> = {};
 
@@ -605,6 +870,12 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
           dev_name: tankKey,
           module_positions,
           augment_progression,
+          vehicle_abilities: await this.vehicleAbilitiesOf(
+            nation,
+            tankKey,
+            tankDefinition.root,
+            abilityItems,
+          ),
           roles: {},
           camouflages: camouflages,
           fixed_camouflage: fixedCamouflage,
@@ -726,165 +997,20 @@ export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
             ),
           });
 
-          let gunIndex = 0;
           for (const gunKey in turret.guns) {
             const gun = turret.guns[gunKey];
-            const gunId = toUniqueId(nation, gunList.root.ids[gunKey]);
-            const gunListEntry = gunList.root.shared[gunKey];
-            const gunName = this.getString(gunListEntry.userString);
-            const gunType =
-              "clip" in gun
-                ? gun.pumpGunMode
-                  ? "autoReloader"
-                  : "autoLoader"
-                : "regular";
-            const gunClipCount = gunType === "regular" ? 1 : gun.clip!.count;
-            const shotDispersionFactors =
-              gun.shotDispersionFactors ?? gunListEntry.shotDispersionFactors;
-            let assault_ranges: AssaultRanges | undefined;
-
-            if (gun.extras?.trayShell) {
-              const types = gun.extras.trayShell.kinds
-                .split(" ")
-                .map((string) => {
-                  const trimmed = string.trim();
-
-                  if (trimmed in blitzShellKindToBlitzkit) {
-                    return blitzShellKindToBlitzkit[trimmed as ShellKind];
-                  }
-
-                  throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
-                });
-              const sectorNames = Object.keys(gun.extras.trayShell.sectors);
-
-              if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
-                throw new SyntaxError("Invalid tray shell sector");
-              }
-
-              const sector = gun.extras.trayShell.sectors.sector;
-
-              assault_ranges = {
-                types,
-                ranges: sector.map((value) => ({
-                  factor: value.factor,
-                  distance: value.distance,
-                })),
-              };
-            }
 
             totalUnlocks.push(gun.unlocks);
-
-            tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push({
-              id: gunId,
-              weight: gunListEntry.weight,
-              rotation_speed: gunListEntry.rotationSpeed,
-              name: gunName,
-              tier: gunListEntry.level,
-              shells: [],
-              camouflage_loss:
-                typeof gun.invisibilityFactorAtShot === "number"
-                  ? gun.invisibilityFactorAtShot
-                  : gun.invisibilityFactorAtShot.at(-1)!,
-              aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
-              dispersion_base:
-                gun.shotDispersionRadius ?? gunListEntry.shotDispersionRadius,
-              dispersion_damaged: shotDispersionFactors.whileGunDamaged,
-              dispersion_shot: shotDispersionFactors.afterShot,
-              dispersion_traverse: shotDispersionFactors.turretRotation,
-              unlocks: resolveUnlocks(
-                this.blitzModuleTypeToBlitzkit,
-                gun.unlocks,
+            tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push(
+              this.parseGun(
+                nation,
+                gunKey,
+                gunList.root,
+                shellList.root,
+                gun,
+                resolveUnlocks(this.blitzModuleTypeToBlitzkit, gun.unlocks),
               ),
-              shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
-              assault_ranges,
-              burst:
-                gun.burst && gun.burst.count > 1
-                  ? {
-                      count: gun.burst.count,
-                      interval: 60 / gun.burst.rate,
-                    }
-                  : undefined,
-              gun_type:
-                gunType === "regular"
-                  ? {
-                      $case: "regular",
-                      value: {
-                        reload: gun.reloadTime,
-                      },
-                    }
-                  : gunType === "autoReloader"
-                  ? {
-                      $case: "auto_reloader",
-                      value: {
-                        intra_clip: 60 / gun.clip!.rate,
-                        shell_count: gunClipCount,
-                        shell_reloads: gun
-                          .pumpGunReloadTimes!.split(" ")
-                          .map(Number),
-                      },
-                    }
-                  : {
-                      $case: "auto_loader",
-                      value: {
-                        intra_clip: 60 / gun.clip!.rate,
-                        clip_reload: gun.reloadTime,
-                        shell_count: gunClipCount,
-                      },
-                    },
-            } satisfies GunDefinition);
-
-            for (const shellKey in gunListEntry.shots) {
-              const gunShellEntry = gunListEntry.shots[shellKey];
-              const shell = shellList.root[shellKey];
-
-              // Newer client data stores shot properties on the shell rather
-              // than repeating them under every gun's <shots> entry.
-              const speed =
-                typeof gunShellEntry === "string"
-                  ? shell.speed
-                  : gunShellEntry.speed;
-              const maxDistance =
-                typeof gunShellEntry === "string"
-                  ? shell.maxDistance
-                  : gunShellEntry.maxDistance;
-              const piercingPower =
-                typeof gunShellEntry === "string"
-                  ? shell.piercingPower
-                  : gunShellEntry.piercingPower;
-
-              const shellId = toUniqueId(nation, shell.id);
-              const shellName = this.getString(shell.userString);
-              const penetrationRaw = piercingPower
-                .split(" ")
-                .filter((penetrationString) => penetrationString !== "")
-                .map(Number);
-
-              tankDefinitions.tanks[tankId].turrets[turretIndex].guns[
-                gunIndex
-              ].shells.push({
-                id: shellId,
-                name: shellName,
-                velocity: speed,
-                armor_damage: shell.damage.armor,
-                module_damage: shell.damage.devices,
-                caliber: shell.caliber,
-                normalization: shell.normalizationAngle,
-                ricochet: shell.ricochetAngle,
-                type: blitzShellKindToBlitzkit[shell.kind],
-                explosion_radius:
-                  shell.kind === "HIGH_EXPLOSIVE"
-                    ? shell.explosionRadius ?? 0
-                    : undefined,
-                icon: shell.icon,
-                penetration: {
-                  near: penetrationRaw[0],
-                  far: penetrationRaw[1],
-                },
-                range: maxDistance,
-              });
-            }
-
-            gunIndex++;
+            );
           }
 
           turretIndex++;

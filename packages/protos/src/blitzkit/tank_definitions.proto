@@ -45,6 +45,7 @@ message TankDefinition {
   optional I18nString         name_full           = 34;
   repeated ModulePosition     module_positions    = 35;
   optional AugmentProgression augment_progression = 36;
+  repeated VehicleAbility     vehicle_abilities   = 37;
 }
 
 // Hand-authored cell in the modules screen grid. Tanks without any use the
@@ -63,6 +64,20 @@ message AugmentProgression {
   uint32                columns = 2;
   repeated AugmentNode  nodes   = 3;
   optional AugmentGroup group   = 4;
+}
+
+// A hidden provision or consumable the tank has, which the game turns into an
+// ability. The script itself lives in `scripts.json` under `id`. `gun` is the
+// placeholder gun the ability fires, when it fires one
+message VehicleAbility {
+  AbilitySource          source = 1;
+  uint32                 id     = 2;
+  optional GunDefinition gun    = 3;
+}
+
+enum AbilitySource {
+  ABILITY_SOURCE_PROVISION  = 0;
+  ABILITY_SOURCE_CONSUMABLE = 1;
 }
 
 // TODO: render these differently in the browser
@@ -253,6 +268,8 @@ message ShellDefinition {
   optional float   ricochet         = 11;
   optional float   explosion_radius = 12;
   uint32           range            = 13;
+  optional float   acceleration     = 14;
+  optional float   max_speed        = 15;
 }
 
 enum ShellType {

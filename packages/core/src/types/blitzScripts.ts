@@ -1,4 +1,4 @@
-import { BlitzEffectScript } from "./blitzEffectScript";
+import type { BlitzEffectScript } from "./blitzEffectScript";
 
 export interface BlitzScripts {
   consumables: Record<number, BlitzEffectScript>;

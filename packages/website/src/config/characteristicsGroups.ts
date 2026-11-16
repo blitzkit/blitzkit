@@ -1,5 +1,6 @@
 import type { CaseType } from "@blitzkit/core";
 import type { GunDefinition } from "@blitzkit/protos";
+import { humanBoolean } from "./characteristicsPresets";
 import {
   CharacteristicRanking,
   type CharacteristicName,
@@ -67,6 +68,263 @@ export const characteristicsGroups: CharacteristicsGroup[] = [
   //     // TODO: investigate ATTRIBUTE_NAME_CREW_XP_MULTIPLIER
   //   ],
   // },
+
+  // Abilities, which only show on the tanks that have them
+  {
+    name: "steady_aim_system",
+    sortable: false,
+    order: [
+      {
+        name: "steady_aim_system_duration",
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "steady_aim_system_aiming_speed",
+        decimals: 1,
+        units: "percentage",
+      },
+      {
+        name: "steady_aim_system_dispersion",
+        ranking: CharacteristicRanking.None,
+        decimals: 1,
+        units: "percentage",
+      },
+      {
+        ...humanBoolean,
+
+        name: "steady_aim_system_activation_condition",
+      },
+    ],
+  },
+
+  {
+    name: "burst_mode",
+    sortable: false,
+    order: [
+      {
+        name: "burst_mode_count",
+        decimals: 0,
+      },
+      {
+        name: "burst_mode_interval",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "burst_mode_penetrations",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 0,
+      },
+      {
+        ...humanBoolean,
+
+        name: "burst_mode_target_order",
+      },
+    ],
+  },
+
+  {
+    name: "combat_frenzy",
+    sortable: false,
+    order: [
+      {
+        name: "combat_frenzy_reload_bonus",
+        decimals: 0,
+        units: "percentage",
+      },
+      {
+        name: "combat_frenzy_max_stacks",
+        decimals: 0,
+      },
+      {
+        ...humanBoolean,
+
+        name: "combat_frenzy_keep_stacks",
+      },
+    ],
+  },
+
+  {
+    name: "external_ammo_module",
+    sortable: false,
+    order: [
+      {
+        name: "external_ammo_module_clip_bonus",
+        decimals: 0,
+      },
+      {
+        name: "external_ammo_module_transformation",
+        ranking: CharacteristicRanking.None,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "external_ammo_module_timeout",
+        ranking: CharacteristicRanking.None,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        ...humanBoolean,
+
+        name: "external_ammo_module_activation_condition",
+      },
+    ],
+  },
+
+  {
+    name: "ramming_configuration",
+    sortable: false,
+    order: [
+      {
+        name: "ramming_configuration_damage_bonus",
+        decimals: 0,
+        units: "percentage",
+      },
+      {
+        name: "ramming_configuration_track_damage_bonus",
+        decimals: 0,
+        units: "percentage",
+      },
+      {
+        name: "ramming_configuration_damage_reduction",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 0,
+        units: "percentage",
+      },
+    ],
+  },
+
+  {
+    name: "nitro",
+    sortable: false,
+    order: [
+      {
+        name: "nitro_duration",
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "nitro_cooling_duration",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "nitro_cooldown",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "nitro_engine_power",
+        decimals: 0,
+        units: "bhp",
+      },
+      {
+        name: "nitro_top_speed",
+        decimals: 0,
+        units: "km_h",
+      },
+      {
+        name: "nitro_rotation_speed",
+        decimals: 1,
+        units: "deg_s",
+      },
+    ],
+  },
+
+  {
+    name: "shell_overheat",
+    sortable: false,
+    order: [
+      {
+        name: "shell_overheat_boost",
+        decimals: 1,
+        units: "percentage",
+      },
+      {
+        name: "shell_overheat_charge_time",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "shell_overheat_activation_delay",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "shell_overheat_decay_time",
+        ranking: CharacteristicRanking.None,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "shell_overheat_min_speed",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 0,
+        units: "km_h",
+      },
+      {
+        name: "shell_overheat_max_speed",
+        ranking: CharacteristicRanking.None,
+        decimals: 0,
+        units: "km_h",
+      },
+    ],
+  },
+
+  {
+    name: "auxiliary_weapons",
+    sortable: false,
+    order: [
+      { name: "auxiliary_weapons_shots", decimals: 0 },
+      { name: "auxiliary_weapons_damage", decimals: 0 },
+      { name: "auxiliary_weapons_penetration", decimals: 0, units: "mm" },
+      { name: "auxiliary_weapons_shell_speed", decimals: 0, units: "m_s" },
+      {
+        name: "auxiliary_weapons_interval",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 2,
+        units: "s",
+      },
+      {
+        name: "auxiliary_weapons_cooldown",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 2,
+        units: "s",
+      },
+    ],
+  },
+
+  {
+    name: "unguided_rocket",
+    sortable: false,
+    order: [
+      { name: "unguided_rocket_count", decimals: 0 },
+      { name: "unguided_rocket_damage", decimals: 0 },
+      { name: "unguided_rocket_penetration", decimals: 0, units: "mm" },
+      { name: "unguided_rocket_initial_speed", decimals: 0, units: "m_s" },
+      { name: "unguided_rocket_acceleration", decimals: 1, units: "m_s2" },
+      { name: "unguided_rocket_max_distance", decimals: 0, units: "m" },
+      {
+        name: "unguided_rocket_intra_clip",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+      {
+        name: "unguided_rocket_container_reload",
+        ranking: CharacteristicRanking.LowerIsBetter,
+        decimals: 1,
+        units: "s",
+      },
+    ],
+  },
 
   {
     name: "assault_shells",

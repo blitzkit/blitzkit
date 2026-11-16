@@ -87,7 +87,7 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
 
   protected botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
 
-  protected stringsI18n: Record<string, Record<string, string>> = {};
+  private stringsI18n: Record<string, Record<string, string>> = {};
   protected nationsDir?: string[];
   protected tankStringIdMap: Record<string, number> = {};
   protected consumablesCommon: ConsumablesCommon = {};

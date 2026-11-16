@@ -4,6 +4,14 @@ export type BlitzEffectScript = RSN & {
 
   cooldown?: number;
   duration?: number;
+  aimingSpeed?: number;
+  gunDispersionModifier?: number;
+  activateWithoutDamage?: boolean;
+  targetOrder?: boolean;
+  // A placeholder gun the ability fires, as `nation:gun`, and what it resolves to
+  gun?: string;
+  allowSwitchAfterKill?: boolean;
+  allowNonDamagingHits?: boolean;
   startCooldown?: number;
 
   automatic?: boolean;
@@ -50,10 +58,6 @@ type BonusValues = RSN & {
 
 interface ModuleConstants {
   modules: Record<string, number | number[]>;
-}
-
-interface ModulesMaxHPFactorsModules {
-  ammoBayHealth: number;
 }
 
 interface ChangesToHit {

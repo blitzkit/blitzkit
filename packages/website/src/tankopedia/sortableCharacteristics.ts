@@ -14,7 +14,9 @@ const sortableCharacteristicTypes = new Set<CharacteristicType>([
 export const sortableCharacteristics = new Set<RenderedCharacteristicName>();
 
 for (const group of characteristicsGroups) {
-  if (!group.sortable) continue;
+  // Only groups that are explicitly unsortable are left out, which is different from undefined
+  // yes, it's meant to be === false and not !sortable
+  if (group.sortable === false) continue;
 
   for (const config of group.order) {
     if (!("name" in config)) continue;

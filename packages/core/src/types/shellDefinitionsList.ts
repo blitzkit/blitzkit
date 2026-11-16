@@ -1,20 +1,22 @@
-export type ShellDefinitionsList = Record<
-  string,
-  {
-    id: number;
-    userString: string;
-    icon: string;
-    kind: ShellKind;
-    caliber: number;
-    damage: { armor: number; devices: number };
-    normalizationAngle?: number;
-    ricochetAngle?: number;
-    explosionRadius?: number;
-    speed: number;
-    maxDistance: number;
-    piercingPower: string;
-  }
-> & {
+// A shell as its shells.xml entry lists it
+export interface ShellDefinitionXml {
+  id: number;
+  userString: string;
+  icon: string;
+  kind: ShellKind;
+  caliber: number;
+  damage: { armor: number; devices: number };
+  normalizationAngle?: number;
+  ricochetAngle?: number;
+  explosionRadius?: number;
+  speed: number;
+  maxDistance: number;
+  acceleration?: number;
+  maxSpeed?: number;
+  piercingPower: string;
+}
+
+export type ShellDefinitionsList = Record<string, ShellDefinitionXml> & {
   icons: Record<string, string>;
 };
 

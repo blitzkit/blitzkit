@@ -5,7 +5,12 @@ import {
   type TankEnvironment,
 } from "@blitzkit/core";
 import type { BlitzEffectScript } from "@blitzkit/core/src/types/blitzEffectScript";
-import { CrewType, type TankDefinition } from "@blitzkit/protos";
+import {
+  AbilitySource,
+  CrewType,
+  type GunDefinition,
+  type TankDefinition,
+} from "@blitzkit/protos";
 import { useMemo } from "react";
 import { api } from "../api/dynamic";
 import { characteristics } from "../config/characteristics";
@@ -51,6 +56,10 @@ export function computeCharacteristics(
     protagonist: new Map(),
     antagonist: new Map(),
   };
+  const scriptGunMap: Record<DuelSide, Map<string, GunDefinition>> = {
+    protagonist: new Map(),
+    antagonist: new Map(),
+  };
 
   function addScript(side: DuelSide, name: string, script: BlitzEffectScript) {
     if (!scriptsMap[side].has(name)) {
@@ -78,6 +87,25 @@ export function computeCharacteristics(
       const script = scripts.provisions[id];
 
       addScript(side, script["#text"], script);
+    }
+
+    // A tank's vehicle abilities are hidden provisions or consumables, which
+    // count like any other script
+    for (const ability of sideTank.vehicle_abilities) {
+      const script =
+        scripts[
+          ability.source === AbilitySource.ABILITY_SOURCE_PROVISION
+            ? "provisions"
+            : "consumables"
+        ][ability.id];
+
+      if (script === undefined) continue;
+
+      addScript(side, script["#text"], script);
+
+      if (ability.gun !== undefined) {
+        scriptGunMap[side].set(script["#text"], ability.gun);
+      }
     }
 
     for (const index in states[side].equipment) {
@@ -140,18 +168,24 @@ export function computeCharacteristics(
 
   // console.log(scriptsMap);
 
+  // The gun is the script's placeholder gun when it is a vehicle ability with one
   function script(
     side: DuelSide,
     name: string,
-    callback: (effect: BlitzEffectScript) => void,
+    callback: (effect: BlitzEffectScript, gun?: GunDefinition) => void,
   ) {
     if (!scriptsMap[side].has(name)) return;
 
     const scripts = scriptsMap[side].get(name)!;
+    const gun = scriptGunMap[side].get(name);
 
     for (const script of scripts) {
-      callback(script);
+      callback(script, gun);
     }
+  }
+
+  function hasScript(name: string) {
+    return scriptsMap.protagonist.has(name);
   }
 
   const augments = augmentAttributes(tank, states.protagonist);
@@ -179,6 +213,7 @@ export function computeCharacteristics(
 
     characteristic,
     script,
+    hasScript,
     augment,
   } satisfies CharacteristicContext;
 

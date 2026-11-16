@@ -15,8 +15,12 @@ const characteristicConfigs = new Map<
   CharacteristicRenderConfig
 >();
 
-for (const { order } of characteristicsGroups) {
-  for (const item of order) {
+for (const group of characteristicsGroups) {
+  // Special groups only some tanks have, so there is no other tank to rank
+  // them against
+  if (group.sortable === false) continue;
+
+  for (const item of group.order) {
     if (!("name" in item)) continue;
     characteristicConfigs.set(item.name, item);
   }

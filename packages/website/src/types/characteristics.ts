@@ -41,7 +41,7 @@ export type Characteristic = {
 export type CharacteristicScript = (
   side: DuelSide,
   name: string,
-  effect: (effect: BlitzEffectScript) => void,
+  effect: (effect: BlitzEffectScript, gun?: GunDefinition) => void,
 ) => void;
 
 export interface CharacteristicContext {
@@ -64,10 +64,9 @@ export interface CharacteristicContext {
     name: CharacteristicName,
   ): ReturnType<Characteristic["compute"]>;
 
+  hasScript(name: string): boolean;
   script: CharacteristicScript;
 
-  // Like scripts, but for each value the installed augments give an attribute,
-  // named without the `ATTRIBUTE_NAME_` prefix
   augment(name: string, callback: (value: number) => void): void;
 }
 
