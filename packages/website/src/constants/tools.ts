@@ -4,6 +4,8 @@ export interface Tool {
   path?: string;
   href?: string;
 
+  disabled?: boolean;
+
   banner_background_position: "top" | "center" | "bottom";
 }
 
@@ -13,6 +15,7 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "top",
   },
   players: {
+    disabled: true,
     id: "players",
     banner_background_position: "top",
   },
@@ -21,14 +24,17 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   performance: {
+    disabled: true,
     id: "performance",
     banner_background_position: "bottom",
   },
   playlist: {
+    disabled: true,
     id: "playlist",
     banner_background_position: "bottom",
   },
   mixer: {
+    disabled: true,
     id: "mixer",
     banner_background_position: "bottom",
   },
@@ -37,14 +43,17 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   avatars: {
+    disabled: true,
     id: "avatars",
     banner_background_position: "bottom",
   },
   backgrounds: {
+    disabled: true,
     id: "backgrounds",
     banner_background_position: "bottom",
   },
   session: {
+    disabled: true,
     id: "session",
     banner_background_position: "bottom",
   },
@@ -62,19 +71,22 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   api: {
+    disabled: true,
     id: "api",
     banner_background_position: "bottom",
   },
   changelogs: {
+    disabled: true,
     id: "changelogs",
     banner_background_position: "bottom",
   },
   settings: {
-    id: "changelogs",
+    id: "settings",
     banner_background_position: "center",
   },
   credits: {
+    disabled: true,
     id: "credits",
-    button: "bronze",
+    banner_background_position: "center",
   },
 };
