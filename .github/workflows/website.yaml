@@ -127,11 +127,11 @@ jobs:
       - name: Set up script
         run: scripts/setup.sh
 
-      - name: Lint
-        run: scripts/lint.sh
-
       - name: Build protos
         run: bun run build-protos
+
+      - name: Lint
+        run: scripts/lint.sh
 
       - name: Download client
         run: scripts/download-client.sh
