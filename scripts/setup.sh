@@ -1,5 +1,5 @@
 chmod +x scripts/*.sh
 
-scripts/build-protos.sh
-
 bun install
+
+scripts/build-protos.sh
