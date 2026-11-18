@@ -24,7 +24,6 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   performance: {
-    disabled: true,
     id: "performance",
     banner_background_position: "bottom",
   },

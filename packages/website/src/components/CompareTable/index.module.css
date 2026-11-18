@@ -1,8 +1,3 @@
-.logo {
-  margin: auto;
-  color: var(--gray-a5);
-}
-
 .label {
   display: flex;
   align-items: center;

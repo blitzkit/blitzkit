@@ -2,7 +2,7 @@ import type { TankEnvironment } from "@blitzkit/core";
 import { Soapstone } from "soapstone";
 import { resolveTankModules } from "../tankopedia/resolveTankModules";
 import type { TankState } from "../tankopedia/tankState";
-import { TankopediaSortDirection } from "./tankopediaPersistent";
+import { SortDirection } from "./tankopediaPersistent";
 import type { TankSort } from "./tankopediaSort";
 
 export interface CompareMember {
@@ -24,7 +24,7 @@ export const CompareEphemeral = new Soapstone<
   environment,
   syncShells: false,
   members: [],
-  sorting: { by: null, direction: TankopediaSortDirection.Descending },
+  sorting: { by: null, direction: SortDirection.Descending },
 }));
 
 // Picks the shell at the same slot on every member, where one exists

@@ -1,6 +1,6 @@
 import { Soapstone } from "soapstone";
 
-export enum TankopediaSortDirection {
+export enum SortDirection {
   Ascending = "ascending",
   Descending = "descending",
 }

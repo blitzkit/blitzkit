@@ -26,7 +26,7 @@ const tankDefinitions = await api.tanks();
 
 export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
   if (props.skeleton) {
-    return <TankCardSkeleton />;
+    return <TankCardSkeleton onIntersection={props.onIntersection} />;
   }
 
   const unwrap = useUnwrapper();

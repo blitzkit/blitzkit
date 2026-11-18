@@ -51,6 +51,16 @@
     "open": "Open in Tankopedia"
   },
 
+  "performance": {
+    "player_count": "Player count",
+    "tank": "Tank",
+    "total": "Total",
+    "no_tanks": {
+      "title": "No tanks found",
+      "body": "No tanks with statistics match these filters"
+    }
+  },
+
   "units": {
     "m": "{value}m",
     "mm": "{value}mm",
@@ -498,6 +508,22 @@
       "d_30": "Past month",
       "d_7": "Past week",
       "d_1": "Yesterday"
+    },
+
+    "stats": {
+      "winrate": "Winrate",
+      "players": "Players",
+      "damage": "Damage",
+      "survival": "Survival",
+      "xp": "XP",
+      "kills": "Kills",
+      "spots": "Spots",
+      "accuracy": "Accuracy",
+      "shots": "Shots",
+      "hits": "Hits",
+      "damage_ratio": "Dmg. ratio",
+      "damage_taken": "Dmg. taken",
+      "capture_points": "Cap points"
     },
 
     "branches": {

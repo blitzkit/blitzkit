@@ -1,0 +1,60 @@
+/* Spans the page even when the columns would fit in less */
+.root {
+  --tank-width: 15rem;
+
+  width: 100%;
+
+  /* Fixed layout keeps stat columns equal. Fixed tables ignore cell minimums, so the table holds 8rem per stat column and scrolls past that */
+  table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: calc(var(--tank-width) + var(--columns) * 8rem);
+  }
+}
+
+.corner {
+  box-sizing: border-box;
+  width: var(--tank-width);
+}
+
+.value {
+  white-space: nowrap;
+}
+
+.value-skeleton {
+  width: 100%;
+}
+
+/* Table cells ignore max-width, so the link inside caps the column instead */
+.tank {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  white-space: nowrap;
+
+  .icon {
+    flex-shrink: 0;
+    /* Bleeds into the cell's padding so rows stay as tall as their text */
+    height: calc(1em + 2 * var(--space-3));
+    margin: calc(-1 * var(--space-3)) 0;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .glyph {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+  }
+
+  .name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.tank-skeleton {
+  width: 100%;
+}

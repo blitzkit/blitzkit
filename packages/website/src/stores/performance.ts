@@ -1,12 +1,24 @@
 import type { Samples } from "@blitzkit/protos";
 import { Soapstone } from "soapstone";
-
-export interface Performance {
-  playerCountPeriod: PlayerCountPeriod;
-}
+import type { PerformanceStatName } from "../config/performanceStats";
+import { SortDirection } from "./tankopediaPersistent";
 
 export type PlayerCountPeriod = keyof Samples;
 
+export interface PerformanceSort {
+  by: PerformanceStatName;
+  direction: SortDirection;
+}
+
+export interface Performance {
+  player_count_period: PlayerCountPeriod;
+  sorting: PerformanceSort;
+}
+
 export const Performance = new Soapstone<Performance>({
-  playerCountPeriod: "total",
+  player_count_period: "total",
+  sorting: {
+    by: "winrate",
+    direction: SortDirection.Descending,
+  },
 });

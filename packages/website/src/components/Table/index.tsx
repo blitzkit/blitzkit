@@ -1,4 +1,17 @@
-import { useEffect, useRef, type ComponentProps } from "react";
+import {
+  CaretDownIcon,
+  CaretSortIcon,
+  CaretUpIcon,
+} from "@radix-ui/react-icons";
+import {
+  useEffect,
+  useRef,
+  type ComponentProps,
+  type CSSProperties,
+} from "react";
+import { Logo } from "../../icons/Logo";
+import { SortDirection } from "../../stores/tankopediaPersistent";
+import { CharacteristicRanking } from "../../types/characteristics";
 import { classNames } from "../../ui/classNames";
 import { Scroller, ScrollerOrientation } from "../Scroller";
 import styles from "./index.module.css";
@@ -21,7 +34,7 @@ function Root({ children, className, scrollable, ...props }: RootProps) {
     const observer = new ResizeObserver(() => {
       table.current!.style.setProperty(
         "--head-height",
-        `${head.offsetHeight}px`
+        `${head.offsetHeight}px`,
       );
     });
 
@@ -78,9 +91,59 @@ function Corner({ className, ...props }: ComponentProps<"th">) {
   );
 }
 
+function IconCorner({ children, ...props }: ComponentProps<"th">) {
+  return (
+    <Corner {...props}>
+      <Logo className={styles.logo} />
+      {children}
+    </Corner>
+  );
+}
+
 function ColumnHeader({ className, ...props }: ComponentProps<"th">) {
   return (
     <th className={classNames(styles["column-header"], className)} {...props} />
+  );
+}
+
+interface ColumnHeaderSortableProps extends ComponentProps<"th"> {
+  // Unsorted when undefined
+  direction: SortDirection | undefined;
+  onSort: () => void;
+}
+
+// The whole header toggles sorting, inheriting the header's font rather than a button's
+function ColumnHeaderSortable({
+  className,
+  children,
+  direction,
+  onSort,
+  ...props
+}: ColumnHeaderSortableProps) {
+  return (
+    <th
+      className={classNames(styles["column-header"], className)}
+      onClick={onSort}
+      data-sortable
+      data-sorted={direction !== undefined}
+      aria-sort={
+        direction === undefined
+          ? undefined
+          : direction === SortDirection.Ascending
+          ? "ascending"
+          : "descending"
+      }
+      {...props}
+    >
+      {/* The cell stays a table cell, so its content lays out in here instead */}
+      <span className={styles.sortable}>
+        {children}
+
+        {direction === undefined && <CaretSortIcon />}
+        {direction === SortDirection.Ascending && <CaretUpIcon />}
+        {direction === SortDirection.Descending && <CaretDownIcon />}
+      </span>
+    </th>
   );
 }
 
@@ -124,15 +187,56 @@ function Cell({ className, align, ...props }: CellProps) {
   );
 }
 
+interface CellRankedProps extends CellProps {
+  ranking: CharacteristicRanking | undefined;
+  value: number | undefined;
+  truth: number | undefined;
+}
+
+// Tints by how far the value strays from the truth, jade when better and red when worse
+function CellRanked({
+  ranking,
+  value,
+  truth,
+  style,
+  ...props
+}: CellRankedProps) {
+  const isRanked =
+    ranking !== CharacteristicRanking.None &&
+    value !== undefined &&
+    truth !== undefined &&
+    value !== truth &&
+    Number.isFinite(value) &&
+    Number.isFinite(truth);
+
+  if (!isRanked) return <Cell style={style} {...props} />;
+
+  const higherIsBetter = ranking !== CharacteristicRanking.LowerIsBetter;
+  const better = higherIsBetter === value > truth;
+  const change = truth === 0 ? 1 : Math.abs(value / truth - 1);
+  const intensity = Math.round(Math.min(100, change * 2 * 100 + 25));
+
+  return (
+    <Cell
+      data-delta={better ? "better" : "worse"}
+      style={{ "--intensity": `${intensity}%`, ...style } as CSSProperties}
+      {...props}
+    />
+  );
+}
+
 export const Table = {
   Root,
   Head,
   Body,
   Row,
   Corner,
+  IconCorner,
   ColumnHeader,
+  ColumnHeaderSortable,
   RowHeader,
   GroupTitle,
   GroupCell,
   Cell,
+  CellRanked,
 };

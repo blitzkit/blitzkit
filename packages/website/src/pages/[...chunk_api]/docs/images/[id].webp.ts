@@ -1,10 +1,10 @@
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import {
   docImageId,
   externalDocImages,
 } from "../../../../core/blitzkit/docImages";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
@@ -20,7 +20,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
       ({
         params: { id: docImageId(url) },
         props: { url },
-      }) satisfies GetStaticPathsItem,
+      } satisfies GetStaticPathsItem),
   );
 });
 

@@ -10,18 +10,16 @@ import { characteristicsGroups } from "../../config/characteristicsGroups";
 import { computeCharacteristics } from "../../hooks/useCharacteristics";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
-import { Logo } from "../../icons/Logo";
 import {
   CompareEphemeral,
   syncShellSlot,
   type CompareMember,
 } from "../../stores/compareEphemeral";
 import { ComparePersistent } from "../../stores/comparePersistent";
-import { TankopediaSortDirection } from "../../stores/tankopediaPersistent";
+import { SortDirection } from "../../stores/tankopediaPersistent";
 import { rankingValue } from "../../tankopedia/calculateRankings";
 import { resolveTankModules } from "../../tankopedia/resolveTankModules";
 import {
-  CharacteristicRanking,
   type CharacteristicName,
   type CharacteristicRenderConfig,
   type ComputedCharacteristics,
@@ -79,10 +77,9 @@ export function CompareTable() {
     <Table.Root scrollable>
       <Table.Head>
         <Table.Row>
-          <Table.Corner>
-            <Logo className={styles.logo} width={64} height={64} />
+          <Table.IconCorner>
             <CompareInsertionMarker index={0} />
-          </Table.Corner>
+          </Table.IconCorner>
 
           {members.map(({ key, state }, index) => (
             <CompareTankCard
@@ -255,14 +252,12 @@ function Row({ config, characteristics }: RowProps) {
             onClick={() => sort(config.name, values, members)}
           >
             {!isSorted && <CaretSortIcon className={styles.sort} />}
-            {isSorted &&
-              sorting.direction === TankopediaSortDirection.Ascending && (
-                <CaretRightIcon />
-              )}
-            {isSorted &&
-              sorting.direction === TankopediaSortDirection.Descending && (
-                <CaretLeftIcon />
-              )}
+            {isSorted && sorting.direction === SortDirection.Ascending && (
+              <CaretRightIcon />
+            )}
+            {isSorted && sorting.direction === SortDirection.Descending && (
+              <CaretLeftIcon />
+            )}
           </IconButton>
 
           <Text>{label}</Text>
@@ -282,10 +277,12 @@ function Row({ config, characteristics }: RowProps) {
           value !== undefined && truth !== undefined ? value - truth : 0;
 
         return (
-          <Table.Cell
+          <Table.CellRanked
             key={members[index].key}
             align="end"
-            style={{ backgroundColor: cellColor(config, value, truth) }}
+            ranking={config.ranking}
+            value={value}
+            truth={truth}
           >
             <div className={styles.value}>
               {output && (
@@ -314,7 +311,7 @@ function Row({ config, characteristics }: RowProps) {
                 </>
               )}
             </div>
-          </Table.Cell>
+          </Table.CellRanked>
         );
       })}
     </Table.Row>
@@ -331,7 +328,7 @@ function sort(
   CompareEphemeral.mutate((draft) => {
     const ascending =
       draft.sorting?.by === name &&
-      draft.sorting.direction === TankopediaSortDirection.Descending;
+      draft.sorting.direction === SortDirection.Descending;
 
     // Missing values always sink to the end
     draft.members.sort((a, b) => {
@@ -347,34 +344,7 @@ function sort(
 
     draft.sorting = {
       by: name,
-      direction: ascending
-        ? TankopediaSortDirection.Ascending
-        : TankopediaSortDirection.Descending,
+      direction: ascending ? SortDirection.Ascending : SortDirection.Descending,
     };
   });
-}
-
-function cellColor(
-  config: CharacteristicRenderConfig,
-  value: number | undefined,
-  truth: number | undefined,
-) {
-  if (
-    config.ranking === CharacteristicRanking.None ||
-    value === undefined ||
-    truth === undefined ||
-    value === truth ||
-    !Number.isFinite(value) ||
-    !Number.isFinite(truth)
-  ) {
-    return undefined;
-  }
-
-  const higherIsBetter = config.ranking !== CharacteristicRanking.LowerIsBetter;
-  const better = higherIsBetter === value > truth;
-  const change = truth === 0 ? 1 : Math.abs(value / truth - 1);
-  const intensity = Math.round(Math.min(100, change * 2 * 100 + 25));
-  const color = better ? "jade" : "red";
-
-  return `color-mix(in srgb, var(--${color}-7) ${intensity}%, var(--${color}-3))`;
 }

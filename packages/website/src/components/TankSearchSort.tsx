@@ -5,7 +5,7 @@ import {
 } from "@radix-ui/react-icons";
 import { characteristicsGroups } from "../config/characteristicsGroups";
 import { useStrings } from "../hooks/useStrings";
-import { TankopediaSortDirection } from "../stores/tankopediaPersistent";
+import { SortDirection } from "../stores/tankopediaPersistent";
 import { TankSort } from "../stores/tankopediaSort";
 import { sortableCharacteristics } from "../tankopedia/sortableCharacteristics";
 import type { RenderedCharacteristicName } from "../types/characteristics";
@@ -112,8 +112,8 @@ export function TankSearchSort() {
           value={direction}
           onValueChange={(value) => {
             if (
-              value !== TankopediaSortDirection.Ascending &&
-              value !== TankopediaSortDirection.Descending
+              value !== SortDirection.Ascending &&
+              value !== SortDirection.Descending
             ) {
               throw new Error(`Unknown tankopedia sort direction: ${value}`);
             }
@@ -123,14 +123,14 @@ export function TankSearchSort() {
             });
           }}
         >
-          <DropdownMenu.RadioItem value={TankopediaSortDirection.Ascending}>
+          <DropdownMenu.RadioItem value={SortDirection.Ascending}>
             <DropdownMenu.ItemIndicator>
               <DotFilledIcon />
             </DropdownMenu.ItemIndicator>
 
             {strings.website.common.tank_search.sort.direction.ascending}
           </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem value={TankopediaSortDirection.Descending}>
+          <DropdownMenu.RadioItem value={SortDirection.Descending}>
             <DropdownMenu.ItemIndicator>
               <DotFilledIcon />
             </DropdownMenu.ItemIndicator>

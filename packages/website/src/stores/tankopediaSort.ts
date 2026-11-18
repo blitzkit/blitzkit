@@ -1,13 +1,13 @@
 import { Soapstone } from "soapstone";
 import type { RenderedCharacteristicName } from "../types/characteristics";
-import { TankopediaSortDirection } from "./tankopediaPersistent";
+import { SortDirection } from "./tankopediaPersistent";
 
 export interface TankSort {
   by: RenderedCharacteristicName | null;
-  direction: TankopediaSortDirection;
+  direction: SortDirection;
 }
 
 export const TankSort = new Soapstone<TankSort>({
   by: null,
-  direction: TankopediaSortDirection.Descending,
+  direction: SortDirection.Descending,
 });

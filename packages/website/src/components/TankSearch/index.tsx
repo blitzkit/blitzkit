@@ -1,4 +1,3 @@
-import type { Vector2Tuple } from "three";
 import { metaSortTank, SEARCH_KEYS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import type { TankDefinition } from "@blitzkit/protos";
@@ -6,6 +5,7 @@ import fuzzysort from "fuzzysort";
 import { uniq } from "lodash-es";
 import { memo, useMemo } from "react";
 import usePromise from "react-promise-suspense";
+import type { Vector2Tuple } from "three";
 import { api } from "../../api/dynamic";
 import { characteristics } from "../../config/characteristics";
 import { characteristicRenderConfigs } from "../../config/characteristicsGroups";
@@ -18,8 +18,8 @@ import { useStrings } from "../../hooks/useStrings";
 import { App } from "../../stores/app";
 import { TankFilters } from "../../stores/tankFilters";
 import {
+  SortDirection,
   TankopediaPersistent,
-  TankopediaSortDirection,
 } from "../../stores/tankopediaPersistent";
 import { TankSort } from "../../stores/tankopediaSort";
 import { sortableCharacteristics } from "../../tankopedia/sortableCharacteristics";
@@ -108,7 +108,7 @@ export const TankSearch = memo<TankSearchProps>(
       ) {
         const byMeta = metaSortTank([...filtered], gameDefinitions);
 
-        return tankopediaSort.direction === TankopediaSortDirection.Ascending
+        return tankopediaSort.direction === SortDirection.Ascending
           ? byMeta
           : byMeta.reverse();
       }
@@ -171,7 +171,7 @@ export const TankSearch = memo<TankSearchProps>(
       }
 
       const direction =
-        tankopediaSort.direction === TankopediaSortDirection.Ascending ? 1 : -1;
+        tankopediaSort.direction === SortDirection.Ascending ? 1 : -1;
 
       return [...filtered].sort((a, b) => {
         const aValue = values.get(a.id);
