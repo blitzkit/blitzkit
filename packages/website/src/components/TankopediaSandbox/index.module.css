@@ -1,20 +1,17 @@
 .wrapper {
-  background-color: black;
-
   height: calc(100dvh - 16rem);
-  position: relative;
+  padding: var(--space-4);
+  padding-bottom: 0;
 
-  overflow: hidden;
+  .cavity {
+    overflow: hidden;
 
-  .sandbox {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+
     width: 100%;
     height: 100%;
+    background-color: black;
 
-    .canvas {
-      background-color: black;
-    }
+    border-radius: var(--space-4);
   }
 }

@@ -3,19 +3,22 @@ import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
+import Navbar from "../components/Navbar.astro";
+import SystemTheme from "../components/SystemTheme.astro";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
 import type { Color } from "../ui/color";
 
-interface Props {
-  locale: string;
+type Props = LocaleAcceptorProps & {
   accent: Color;
-}
+};
 
-const { accent, locale } = Astro.props;
+const { locale, accent } = Astro.props;
 ---
 
 <html lang={locale} class="dark">
   <head>
     <BaseMeta />
+    <SystemTheme />
 
     <ColorScale color="mauve" />
     <ColorScale color="mauve" alpha />
@@ -33,52 +36,36 @@ const { accent, locale } = Astro.props;
     <BaseStyles />
 
     <style>
+      :root {
+        interpolate-size: allow-keywords;
+
+        background-color: var(--gray-1);
+      }
+
       body {
         margin: 0;
+
+        width: 100dvw;
+        height: 100dvh;
+
         display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
 
         background-color: var(--gray-1);
         color: var(--gray-12);
         font-family: var(--font-family-regular);
 
-        main {
-          display: flex;
+        .main {
           flex: 1;
-          flex-direction: column;
-
-          background-color: var(--gray-1);
-
-          /* padding: var(--space-4); */
-          gap: var(--space-6);
         }
       }
     </style>
-
-    <script>
-      const root = document.documentElement;
-      const media = window.matchMedia("(prefers-color-scheme: dark)");
-
-      function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
-        root.classList.toggle("dark", e.matches);
-        root.classList.toggle("light", !e.matches);
-      }
-
-      applyTheme(media);
-      media.addEventListener("change", applyTheme);
-    </script>
-
-    <slot name="head" />
   </head>
 
   <body>
-    <slot name="pre-app" />
+    <Navbar {locale} />
 
-    <main>
+    <main class="main">
       <slot />
     </main>
-
-    <!-- <Footer {locale} /> -->
   </body>
 </html>

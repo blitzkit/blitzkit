@@ -1,0 +1,18 @@
+---
+import locales from "@blitzkit/i18n/locales.json";
+import BaseLayout2 from "../../../layouts/BaseLayout2.astro";
+import { getStaticPaths as _getStaticPaths } from "../_index";
+
+import { mixStaticPaths } from "../../../astro/mixStaticPaths";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
+  return locales.supported.map(({ locale }) => ({
+    props: { locale },
+    params: { locale: locale === locales.default ? undefined : locale },
+  }));
+});
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout2 {locale} />

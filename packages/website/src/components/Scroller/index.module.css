@@ -107,6 +107,9 @@
   }
 
   .bar {
+    /* TODO: temporarily hidden */
+    display: none !important;
+
     position: absolute;
 
     opacity: 0;

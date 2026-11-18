@@ -23,6 +23,10 @@ type PageProps = MaybeSkeletonComponentProps & {
   id: number;
 };
 
+type SandboxProps = MaybeSkeletonComponentProps & {
+  tier: number;
+};
+
 const tanks = await api.tanks();
 
 export const Page = withErrorWrapper(
@@ -31,54 +35,66 @@ export const Page = withErrorWrapper(
 
     Tankopedia.useInitialization(protagonistTank);
 
-    const protagonist = Tankopedia.use((state) => state.protagonist);
-    const equalize = Tankopedia.use((state) => state.environment.equalize);
-
-    const characteristics = useCharacteristics("protagonist");
-    const antagonistCharacteristics = useCharacteristics("antagonist");
-
-    const thicknessRange = useMemo(() => {
-      const entries = Object.values(tanks.tanks);
-      const filtered = entries.filter(
-        (thisTank) => thisTank.tier === protagonistTank.tier
-      );
-      const value =
-        (filtered.reduce((accumulator, thisTank) => {
-          return (
-            accumulator +
-            thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
-              ((equalize ? thisTank.equalizer : undefined) ?? defaultEqualizer)
-                .penetration
-          );
-        }, 0) /
-          filtered.length) *
-        (3 / 4);
-
-      return { value } satisfies ThicknessRange;
-    }, [protagonist, equalize]);
-
     return (
       <div className={styles.page}>
-        <Scroller
-          className={styles.loadout}
-          orientation={ScrollerOrientation.Vertical}
-        >
-          <div className={styles.content}>
-            <TankopediaLoadout />
-          </div>
-        </Scroller>
-
-        <div className={styles.sandbox}>
-          <TankopediaSandbox
-            antagonistCharacteristics={antagonistCharacteristics}
-            skeleton={skeleton}
-            thicknessRange={thicknessRange}
-          />
-          <TankopediaCharacteristics characteristics={characteristics} />
-          <TankopediaGameModeAbilities />
-          <TankopediaVideos />
-        </div>
+        <Sandbox skeleton={skeleton} tier={protagonistTank.tier} />
+        <Loadout />
       </div>
     );
-  })
+  }),
 );
+
+function Loadout() {
+  return (
+    <Scroller
+      className={styles.loadout}
+      orientation={ScrollerOrientation.Vertical}
+    >
+      <div className={styles.content}>
+        <TankopediaLoadout />
+      </div>
+    </Scroller>
+  );
+}
+
+function Sandbox({ skeleton, tier }: SandboxProps) {
+  const protagonist = Tankopedia.use((state) => state.protagonist);
+  const equalize = Tankopedia.use((state) => state.environment.equalize);
+
+  const characteristics = useCharacteristics("protagonist");
+  const antagonistCharacteristics = useCharacteristics("antagonist");
+
+  const thicknessRange = useMemo(() => {
+    const entries = Object.values(tanks.tanks);
+    const filtered = entries.filter((thisTank) => thisTank.tier === tier);
+    const value =
+      (filtered.reduce((accumulator, thisTank) => {
+        return (
+          accumulator +
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+            ((equalize ? thisTank.equalizer : undefined) ?? defaultEqualizer)
+              .penetration
+        );
+      }, 0) /
+        filtered.length) *
+      (3 / 4);
+
+    return { value } satisfies ThicknessRange;
+  }, [protagonist, equalize]);
+
+  return (
+    <Scroller
+      className={styles.sandbox}
+      orientation={ScrollerOrientation.Vertical}
+    >
+      <TankopediaSandbox
+        antagonistCharacteristics={antagonistCharacteristics}
+        skeleton={skeleton}
+        thicknessRange={thicknessRange}
+      />
+      <TankopediaCharacteristics characteristics={characteristics} />
+      <TankopediaGameModeAbilities />
+      <TankopediaVideos />
+    </Scroller>
+  );
+}

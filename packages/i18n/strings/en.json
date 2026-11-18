@@ -1,4 +1,8 @@
 {
+  "navbar": {
+    "settings": "Settings"
+  },
+
   "guesser": {
     "help": {
       "title": "Partially reveal tank?",
@@ -447,6 +451,26 @@
     },
     "settings": {
       "name": "Settings",
+      "slogan": "",
+      "action": ""
+    },
+    "tier_list": {
+      "name": "Tier list",
+      "slogan": "Rank tanks your way",
+      "action": "Make a list"
+    },
+    "embed": {
+      "name": "Embed",
+      "slogan": "Stream overlays and widgets",
+      "action": "Customize"
+    },
+    "more": {
+      "name": "More",
+      "slogan": "Suggest a tool on Discord",
+      "action": "Join Discord"
+    },
+    "credits": {
+      "name": "Credits",
       "slogan": "",
       "action": ""
     }

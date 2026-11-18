@@ -1,12 +1,13 @@
 export interface Tool {
   id: string;
 
-  path?: string;
+  slug?: string;
   href?: string;
 
   disabled?: boolean;
 
   banner_background_position: "top" | "center" | "bottom";
+  navbar?: boolean;
 }
 
 export const tools: Record<string, Tool> = {
@@ -58,6 +59,7 @@ export const tools: Record<string, Tool> = {
   },
   tier_list: {
     id: "tier_list",
+    slug: "tier-list",
     banner_background_position: "bottom",
   },
   embed: {
@@ -82,10 +84,12 @@ export const tools: Record<string, Tool> = {
   settings: {
     id: "settings",
     banner_background_position: "center",
+    navbar: false,
   },
   credits: {
     disabled: true,
     id: "credits",
     banner_background_position: "center",
+    navbar: false,
   },
 };

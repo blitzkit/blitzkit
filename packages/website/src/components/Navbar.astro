@@ -1,226 +1,183 @@
 ---
-import {
-  Cross1Icon,
-  DiscordLogoIcon,
-  GearIcon,
-  HamburgerMenuIcon,
-} from "@radix-ui/react-icons";
-import { Box, Code, Flex, Grid, IconButton, Link } from "@radix-ui/themes";
-import { resolveBranchName } from "../core/blitzkit/branches";
-import { getStrings } from "../core/i18n/getStrings";
-import { Var } from "../core/radix/var";
-import { LinkI18n } from "./LinkI18n";
+import { GearIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
 import { tools } from "../constants/tools";
-import { NavbarAccount } from "./NavbarAccount";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import { Logo } from "../icons/Logo";
+import { LinkI18nWrapper } from "./LinkI18nWrapper";
+import { Text } from "./Text";
 
-export interface Props {
-  integrated?: boolean;
-  locale: string;
-}
+type Props = LocaleAcceptorProps;
 
-const { integrated = false } = Astro.props;
-const toolsFiltered = Object.entries(tools).filter(([, tool]) => !tool.href);
 const { locale } = Astro.props;
-const branchName = resolveBranchName(locale);
-const isBranchNamed = branchName !== undefined;
-const strings = getStrings(locale);
+
+const strings = await api.strings(locale);
+
+const filtered = Object.values(tools).filter(
+  (tool) => !tool.href && (tool.navbar ?? true),
+);
 ---
 
 <style>
-  .navbar {
-    transition-duration: 1s;
-  }
+  #navbar {
+    --icon-size: 1.5rem;
+    --padding: var(--space-4);
+    --min-content-width: calc(var(--icon-size) + 2 * var(--padding));
 
-  body.no-navbar .navbar {
-    transform: translateY(-100%);
-  }
+    width: var(--min-content-width);
 
-  body.no-navbar {
-    height: 0;
-  }
+    .expander {
+      background-color: var(--gray-1);
 
-  .navbar[data-expanded="false"] *[data-expanded] {
-    display: none;
-  }
+      z-index: 1;
 
-  .navbar[data-expanded="true"] {
-    height: 100%;
-  }
+      position: relative;
+      left: 0;
 
-  .navbar[data-expanded="false"][data-integrated="false"] .content {
-    background-color: var(--black-a8);
-    backdrop-filter: blur(4rem);
-    box-shadow: var(--shadow-3);
-  }
+      padding: var(--padding);
+      padding-top: calc(var(--padding) + var(--space-3));
 
-  body.halloween .navbar[data-expanded="false"] .content {
-    background-color: var(--red-a8);
-  }
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
-  .halloween-blood {
-    display: none;
-  }
+      box-sizing: border-box;
 
-  body.halloween .halloween-blood {
-    display: block;
-  }
+      transition-duration: var(--duration-brief);
 
-  .navbar[data-expanded="true"] .content {
-    background-color: var(--gray-1);
-  }
+      height: 100%;
+      width: var(--min-content-width);
+      overflow: hidden;
 
-  .navbar[data-expanded="true"] *[data-closed] {
-    display: none;
+      &:hover {
+        width: fit-content;
+
+        padding-right: calc(2 * var(--padding));
+      }
+
+      .logo {
+        width: var(--icon-size);
+        height: var(--icon-size);
+      }
+
+      .named-link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+
+        .icon {
+          flex-shrink: 0;
+
+          width: var(--icon-size);
+          height: var(--icon-size);
+
+          color: var(--gray-11);
+
+          transition-duration: var(--duration-brief);
+
+          .expander:hover & {
+            color: var(--gray-12);
+          }
+        }
+      }
+
+      .name {
+        transition-duration: var(--duration-brief);
+        white-space: nowrap;
+
+        .expander:not(:hover) & {
+          opacity: 0;
+        }
+      }
+
+      .tools {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+
+        .tool {
+          display: flex;
+          align-items: center;
+          gap: var(--space-3);
+
+          .logo {
+            flex-shrink: 0;
+
+            transition-duration: var(--duration-brief);
+
+            width: var(--icon-size);
+            height: var(--icon-size);
+
+            filter: saturate(0.5);
+            background-size: cover;
+            background-position: center;
+
+            border-radius: var(--radius-max);
+
+            .expander:hover & {
+              width: calc(2 * var(--icon-size));
+              border-radius: var(--radius-max);
+
+              filter: saturate(1);
+            }
+          }
+        }
+      }
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+
+      z-index: 1;
+      pointer-events: none;
+
+      background-color: transparent;
+
+      transition-duration: var(--duration-brief);
+
+      #navbar:hover & {
+        background-color: var(--black-a8);
+      }
+    }
   }
 </style>
 
-<script>
-  const navbar = document.querySelector<HTMLDivElement>(".navbar");
-  const hamburger = document.querySelector<HTMLButtonElement>(".hamburger");
+<nav id="navbar">
+  <div class="overlay" />
 
-  navbar?.addEventListener("click", () => {
-    navbar.dataset.expanded = "false";
-  });
-  hamburger?.addEventListener("click", (event) => {
-    if (!navbar) return;
+  <div class="expander">
+    <LinkI18nWrapper {locale} href="/settings">
+      <div class="named-link">
+        <Logo className="icon" />
+        <Text className="name">{strings.common.name}</Text>
+      </div>
+    </LinkI18nWrapper>
 
-    event.stopPropagation();
-    navbar.dataset.expanded = `${navbar.dataset.expanded === "false"}`;
-  });
-</script>
+    <div class="tools">
+      {filtered.map((tool) => (
+        <>
+          <LinkI18nWrapper {locale} href={`/${tool.slug ?? tool.id}`}>
+            <div class="tool">
+              <div
+                style={`background-image: url(/media/tools/banners/${tool.slug ?? tool.id}.webp)`}
+                class="logo"
+              />
 
-<Flex
-  direction="column"
-  align="center"
-  data-expanded="false"
-  data-integrated={`${integrated}`}
-  className="navbar"
-  width="100%"
-  top="0"
-  position="sticky"
-  style={{ zIndex: 1, backdropFilter: "blur(4rem)" }}
->
-  <Flex
-    className="content"
-    width="100%"
-    p="3"
-    direction="column"
-    align="center"
-  >
-    <Flex gap="4" direction="column" maxWidth="80rem" width="100%">
-      <Flex align="center">
-        <LinkI18n
-          {locale}
-          color="gray"
-          highContrast
-          href="/"
-          underline="hover"
-          weight="medium"
-        >
-          <Flex align="center" gap="1">
-            BlitzKit
-            {
-              isBranchNamed && (
-                <Code color="gray" size="1" variant="outline">
-                  {branchName}
-                </Code>
-              )
-            }
-          </Flex>
-        </LinkI18n>
+              <Text className="name">
+                {strings.tools[tool.id as keyof typeof strings.tools].name}
+              </Text>
+            </div>
+          </LinkI18nWrapper>
+        </>
+      ))}
+    </div>
 
-        <Box flexGrow="1" />
-
-        <Flex align="center" gap="4">
-          <Link
-            style={{ display: "flex", alignContent: "center" }}
-            color="gray"
-            href="https://discord.gg/nDt7AjGJQH"
-            underline="none"
-            target="_blank"
-          >
-            <DiscordLogoIcon width="1em" height="1em" />
-          </Link>
-
-          <LinkI18n
-            {locale}
-            style={{ display: "flex", alignContent: "center" }}
-            color="gray"
-            href="/settings"
-            underline="none"
-          >
-            <GearIcon width="1em" height="1em" />
-          </LinkI18n>
-
-          <NavbarAccount {locale} client:idle />
-
-          <Flex align="center">
-            <IconButton variant="ghost" color="gray" className="hamburger">
-              <Cross1Icon data-expanded />
-              <HamburgerMenuIcon data-closed />
-            </IconButton>
-          </Flex>
-        </Flex>
-      </Flex>
-
-      <Grid
-        data-expanded
-        columns="repeat(auto-fill, minmax(30rem, 1fr))"
-        gap="3"
-      >
-        {
-          toolsFiltered.map(([id, tool]) => {
-            const toolStrings =
-              strings.website.tools[
-                (tool.strings ?? id) as keyof typeof strings.website.tools
-              ];
-
-            return (
-              <Link
-                color="gray"
-                highContrast
-                style={{ display: "contents" }}
-                href={`/${tool.path ?? id}`}
-              >
-                <Box
-                  style={{
-                    borderRadius: Var("radius-2"),
-                    backgroundImage: `url(/assets/images/tools/${id}.webp)`,
-                    backgroundSize: "200%",
-                    backgroundPosition: "right center",
-                  }}
-                >
-                  <Flex
-                    p="6"
-                    justify="end"
-                    flexGrow="1"
-                    style={{
-                      background: `linear-gradient(90deg, transparent, ${Var("gray-1")} 90%)`,
-                    }}
-                  >
-                    {toolStrings.name}
-                  </Flex>
-                </Box>
-              </Link>
-            );
-          })
-        }
-      </Grid>
-    </Flex>
-  </Flex>
-
-  <Box
-    className="halloween-blood"
-    position="absolute"
-    left="0"
-    top="100%"
-    width="100%"
-    height="4rem"
-    style={{
-      backgroundImage: "url(/assets/images/halloween-blood.svg)",
-      backgroundRepeat: "repeat-x",
-      backgroundSize: "8rem",
-      pointerEvents: "none",
-    }}
-  />
-</Flex>
+    <LinkI18nWrapper {locale} href="/settings">
+      <div class="named-link">
+        <GearIcon className="icon" />
+        <Text className="name">{strings.navbar.settings}</Text>
+      </div>
+    </LinkI18nWrapper>
+  </div>
+</nav>

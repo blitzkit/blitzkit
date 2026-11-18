@@ -6,7 +6,7 @@
   .sandbox {
     flex-grow: 1;
 
-    overflow-y: auto;
+    margin-left: calc(-1 * var(--space-4));
   }
 
   .loadout {

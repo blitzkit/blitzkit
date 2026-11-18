@@ -152,34 +152,35 @@ export function TankopediaSandbox({
 
   return (
     <div className={styles.wrapper} ref={wrapper}>
-      <SmartCanvas
-        className={styles.canvas}
-        resize={{ debounce: 0 }}
-        gl={{
-          clippingPlanes: [],
-          localClippingEnabled: true,
-          preserveDrawingBuffer: true,
-        }}
-        shadows="soft"
-        onPointerDown={handlePointerDown}
-        onPointerMissed={() => {
-          Tankopedia.mutate((draft) => {
-            draft.shot = undefined;
-            draft.highlightArmor = undefined;
-          });
-        }}
-      >
-        {!skeleton && <Content thicknessRange={thicknessRange} />}
-      </SmartCanvas>
+      <div className={styles.cavity}>
+        <SmartCanvas
+          resize={{ debounce: 0 }}
+          gl={{
+            clippingPlanes: [],
+            localClippingEnabled: true,
+            preserveDrawingBuffer: true,
+          }}
+          shadows="soft"
+          onPointerDown={handlePointerDown}
+          onPointerMissed={() => {
+            Tankopedia.mutate((draft) => {
+              draft.shot = undefined;
+              draft.highlightArmor = undefined;
+            });
+          }}
+        >
+          {!skeleton && <Content thicknessRange={thicknessRange} />}
+        </SmartCanvas>
 
-      <TankSandboxLoader />
-      <TankopediaSkinSwitcher />
-      <TankopediaQuickInputs />
-      <Thicknesses thicknessRange={thicknessRange} />
-      <TankopediaAntagonistControl
-        antagonistCharacteristics={antagonistCharacteristics}
-      />
-      <TankopediaOptions />
+        <TankSandboxLoader />
+        <TankopediaSkinSwitcher />
+        <TankopediaQuickInputs />
+        <Thicknesses thicknessRange={thicknessRange} />
+        <TankopediaAntagonistControl
+          antagonistCharacteristics={antagonistCharacteristics}
+        />
+        <TankopediaOptions />
+      </div>
     </div>
   );
 }
