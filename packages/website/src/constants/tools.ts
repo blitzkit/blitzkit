@@ -93,3 +93,13 @@ export const tools: Record<string, Tool> = {
     navbar: false,
   },
 };
+
+export enum ToolBannerSize {
+  Thumbnail = "thumbnail",
+  Full = "full",
+}
+
+export const TOOL_BANNER_HEIGHTS: Record<ToolBannerSize, number | null> = {
+  [ToolBannerSize.Thumbnail]: 128,
+  [ToolBannerSize.Full]: null,
+};

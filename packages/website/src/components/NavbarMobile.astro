@@ -1,4 +1,5 @@
 ---
+import { alias } from "@blitzkit/core";
 import { CaretUpIcon, GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
 import { Logo } from "../icons/Logo";
@@ -101,7 +102,7 @@ const strings = await api.strings(locale);
 
           border-radius: var(--radius-max);
 
-          margin-right: var(--space-4);
+          margin-right: var(--space-3);
         }
 
         .icon {
@@ -209,7 +210,10 @@ const strings = await api.strings(locale);
         <LinkI18nWrapper {locale} href={`/${tool.slug ?? tool.id}`}>
           <div class="tool">
             <div
-              style={`background-image: url(/media/tools/banners/${tool.slug ?? tool.id}.webp)`}
+              style={`background-image: url(${alias(
+                "api",
+                `/tools/${tool.id}/banners/thumbnail.webp`,
+              )})`}
               class="logo"
             />
 
@@ -229,7 +233,10 @@ const strings = await api.strings(locale);
 
     <div class="tool" id="current-tool">
       <div
-        style={`background-image: url(/media/tools/banners/${tool.slug ?? tool.id}.webp)`}
+        style={`background-image: url(${alias(
+          "api",
+          `/tools/${tool.id}/banners/thumbnail.webp`,
+        )})`}
         class="logo"
       />
 
