@@ -175,19 +175,26 @@ const strings = await api.strings(locale);
   const navbar = document.getElementById("navbar-mobile")!;
   const tool = document.getElementById("current-tool")!;
   const overlay = document.getElementById("navbar-mobile-overlay")!;
-  let lastScrollY = window.scrollY;
+  const lastScrollTops = new WeakMap<Element, number>();
 
-  window.addEventListener(
+  // Scroll doesn't bubble, so capturing also catches nested scrollers like tables
+  document.addEventListener(
     "scroll",
-    () => {
-      const scrollY = window.scrollY;
+    (event) => {
+      const target =
+        event.target instanceof Element
+          ? event.target
+          : document.scrollingElement!;
+      const scrollTop = target.scrollTop;
+      const lastScrollTop = lastScrollTops.get(target) ?? 0;
 
-      if (scrollY === lastScrollY) return;
+      // Horizontal scrolling leaves scrollTop unchanged, so it's ignored
+      if (scrollTop === lastScrollTop) return;
 
-      navbar.dataset.visible = `${scrollY < lastScrollY}`;
-      lastScrollY = scrollY;
+      navbar.dataset.visible = `${scrollTop < lastScrollTop}`;
+      lastScrollTops.set(target, scrollTop);
     },
-    { passive: true },
+    { capture: true, passive: true },
   );
 
   tool.addEventListener("click", () => {

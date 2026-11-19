@@ -17,8 +17,6 @@
   }
 
   .table {
-    flex: 1;
-    min-height: 0;
     align-self: stretch;
     overflow: hidden;
 

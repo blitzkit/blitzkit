@@ -1,12 +1,13 @@
 <script>
-  const root = document.documentElement;
-  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  // TODO: implement light mode here
+  // const root = document.documentElement;
+  // const media = window.matchMedia("(prefers-color-scheme: dark)");
 
-  function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
-    root.classList.toggle("dark", e.matches);
-    root.classList.toggle("light", !e.matches);
-  }
+  // function applyTheme(e: MediaQueryList | MediaQueryListEvent) {
+  //   root.classList.toggle("dark", e.matches);
+  //   root.classList.toggle("light", !e.matches);
+  // }
 
-  applyTheme(media);
-  media.addEventListener("change", applyTheme);
+  // applyTheme(media);
+  // media.addEventListener("change", applyTheme);
 </script>

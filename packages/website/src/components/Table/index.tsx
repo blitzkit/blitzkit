@@ -42,7 +42,6 @@ function Root({ children, className, scrollable, ...props }: RootProps) {
 
     return () => observer.disconnect();
   }, []);
-
   const content = (
     <table ref={table} className={styles.table}>
       {children}
