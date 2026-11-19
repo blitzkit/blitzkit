@@ -1,19 +1,21 @@
 ---
 import { GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
-import { tools } from "../constants/tools";
+import { tools, type Tool } from "../constants/tools";
 import type { LocaleAcceptorProps } from "../hooks/useLocale";
 import { Logo } from "../icons/Logo";
 import { LinkI18nWrapper } from "./LinkI18nWrapper";
 import { Text } from "./Text";
 
-type Props = LocaleAcceptorProps;
+export type Props = LocaleAcceptorProps & {
+  tool: Tool;
+};
 
 const { locale } = Astro.props;
 
 const strings = await api.strings(locale);
 
-const filtered = Object.values(tools).filter(
+export const filtered = Object.values(tools).filter(
   (tool) => !tool.href && (tool.navbar ?? true),
 );
 ---
