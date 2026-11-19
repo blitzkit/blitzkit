@@ -2,29 +2,33 @@
 import { AstroSeo } from "@astrolib/seo";
 import {
   alias,
-  assertSecret,
   createDefaultProvisions,
   createDefaultSkills,
   TIER_ROMAN_NUMERALS,
 } from "@blitzkit/core";
 import { unwrapper } from "@blitzkit/i18n";
 import { literals } from "@blitzkit/i18n/src/literals";
-import { load } from "cheerio";
 import { api } from "../../../../../core/blitzkit/api";
 import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
+import {
+  prefetchTankGuides,
+  tankGuide,
+} from "../../../../../core/blitzkit/tankGuide";
 import { defaultTankWeapon } from "../../../../../core/blitzkit/tankToDuelMember";
 import { getStrings } from "../../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { genericDefaultEquipmentMatrix } from "../../../../../stores/duel/constants";
-import type { TankGuide } from "../../../../../types/tankGuide";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const tankDefinitions = await api.tankDefinitions();
+  const tanks = Object.values(tankDefinitions.tanks);
 
-  return Object.values(tankDefinitions.tanks).map((tank) => ({
+  prefetchTankGuides(tanks.map((tank) => tank.slug));
+
+  return tanks.map((tank) => ({
     params: { slug: tank.slug },
     props: { id: tank.id },
   }));
@@ -91,24 +95,7 @@ const description = literals(
     health: Math.round(characteristics.health).toLocaleString(locale),
   },
 );
-
-const guideUrl = `${assertSecret(import.meta.env.PUBLIC_GUIDE_WEBSITE)}/${tank.slug}`;
-let guide: TankGuide | undefined = undefined;
-const guideResponse = await fetch(guideUrl);
-
-if (guideResponse.ok) {
-  const $ = await guideResponse.text().then(load);
-  const description = $(".entry-content p").first().text();
-  const image = $(".entry-content img").first().attr("src")?.toString();
-
-  if (description !== undefined || image !== undefined) {
-    guide = {
-      url: guideUrl,
-      description,
-      image,
-    };
-  }
-}
+const guide = await tankGuide(tank.slug);
 ---
 
 <AstroSeo
