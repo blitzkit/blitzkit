@@ -48,6 +48,19 @@
     }
   }
 
+  &[data-variant="overline"] {
+    border-radius: 0;
+
+    .indicator {
+      background: linear-gradient(var(--accent-a2), transparent);
+
+      outline: none;
+      border-radius: 0;
+
+      border-top: var(--space-1) solid var(--accent-9);
+    }
+  }
+
   .option {
     position: relative;
 

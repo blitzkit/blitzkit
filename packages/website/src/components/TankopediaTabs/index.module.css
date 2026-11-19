@@ -1,0 +1,13 @@
+.tabs {
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: none;
+
+  @media screen and (max-width: 80rem) {
+    display: flex;
+  }
+}

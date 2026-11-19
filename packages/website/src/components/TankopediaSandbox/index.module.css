@@ -1,7 +1,5 @@
 .wrapper {
   height: calc(100dvh - 16rem);
-  padding: var(--space-4);
-  padding-bottom: 0;
 
   .cavity {
     overflow: hidden;
@@ -13,5 +11,9 @@
     background-color: black;
 
     border-radius: var(--space-4);
+
+    @media screen and (max-width: 80rem) {
+      border-radius: 0;
+    }
   }
 }

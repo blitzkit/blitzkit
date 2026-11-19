@@ -9,13 +9,14 @@ import { TankopediaCharacteristics } from "../../../../../components/TankopediaC
 import { TankopediaGameModeAbilities } from "../../../../../components/TankopediaGameModeAbilities";
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
 import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
+import { TankopediaTabs } from "../../../../../components/TankopediaTabs";
 import { TankopediaVideos } from "../../../../../components/TankopediaVideos";
 import { defaultEqualizer } from "../../../../../config/equalizer";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
 import { useCharacteristics } from "../../../../../hooks/useCharacteristics";
-import { Tankopedia } from "../../../../../stores/tankopedia";
+import { Tankopedia, TankopediaTab } from "../../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import styles from "./_index.module.css";
 
@@ -45,9 +46,12 @@ export const Page = withErrorWrapper(
 );
 
 function Loadout() {
+  const tabbed = Tankopedia.use((state) => state.tab === TankopediaTab.Loadout);
+
   return (
     <Scroller
       className={styles.loadout}
+      data-tabbed={tabbed}
       orientation={ScrollerOrientation.Vertical}
     >
       <div className={styles.content}>
@@ -82,11 +86,10 @@ function Sandbox({ skeleton, tier }: SandboxProps) {
     return { value } satisfies ThicknessRange;
   }, [protagonist, equalize]);
 
+  const tabbed = Tankopedia.use((state) => state.tab === TankopediaTab.Sandbox);
+
   return (
-    <Scroller
-      className={styles.sandbox}
-      orientation={ScrollerOrientation.Vertical}
-    >
+    <div className={styles.sandbox}>
       <TankopediaSandbox
         antagonistCharacteristics={antagonistCharacteristics}
         skeleton={skeleton}
@@ -95,6 +98,18 @@ function Sandbox({ skeleton, tier }: SandboxProps) {
       <TankopediaCharacteristics characteristics={characteristics} />
       <TankopediaGameModeAbilities />
       <TankopediaVideos />
-    </Scroller>
+
+      <TankopediaTabs />
+    </div>
   );
+
+  // return (
+  // <Scroller
+  //   id="main"
+  //   className={styles.sandbox}
+  //   data-tabbed={tabbed}
+  //   orientation={ScrollerOrientation.Vertical}
+  // >
+  // </Scroller>
+  // );
 }

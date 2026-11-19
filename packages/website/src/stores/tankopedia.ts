@@ -102,6 +102,8 @@ interface Tankopedia {
   showControls: boolean;
   animate: boolean;
 
+  tab: TankopediaTab;
+
   protagonist: TankState;
   antagonist: TankState;
   environment: TankEnvironment;
@@ -125,6 +127,11 @@ interface Tankopedia {
   // statSearch?: string;
 }
 
+export enum TankopediaTab {
+  Sandbox = "sandbox",
+  Loadout = "loadout",
+}
+
 const skills = await api.skills();
 
 export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
@@ -133,6 +140,8 @@ export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
     revealed: false,
     showControls: false,
     animate: true,
+
+    tab: TankopediaTab.Sandbox,
 
     protagonist: createTankState(tank),
     antagonist: createTankState(tank),

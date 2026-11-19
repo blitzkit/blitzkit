@@ -3,8 +3,10 @@ import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
-import Navbar from "../components/Navbar.astro";
+import NavbarDesktop from "../components/NavbarDesktop.astro";
+import NavbarMobile from "../components/NavbarMobile.astro";
 import SystemTheme from "../components/SystemTheme.astro";
+import { tools } from "../constants/tools";
 import type { LocaleAcceptorProps } from "../hooks/useLocale";
 import type { Color } from "../ui/color";
 
@@ -13,6 +15,8 @@ type Props = LocaleAcceptorProps & {
 };
 
 const { locale, accent } = Astro.props;
+
+const tool = tools.tanks;
 ---
 
 <html lang={locale} class="dark">
@@ -40,13 +44,15 @@ const { locale, accent } = Astro.props;
         interpolate-size: allow-keywords;
 
         background-color: var(--gray-1);
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
 
       body {
         margin: 0;
-
-        width: 100dvw;
-        height: 100dvh;
 
         display: flex;
 
@@ -57,12 +63,17 @@ const { locale, accent } = Astro.props;
         .main {
           flex: 1;
         }
+
+        @media screen and (max-width: 80rem) {
+          flex-direction: column-reverse;
+        }
       }
     </style>
   </head>
 
   <body>
-    <Navbar {locale} />
+    <NavbarDesktop {locale} {tool} />
+    <NavbarMobile {locale} {tool} />
 
     <main class="main">
       <slot />

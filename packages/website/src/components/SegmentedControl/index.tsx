@@ -1,4 +1,5 @@
-import { type ReactNode } from "react";
+import { type ComponentProps, type ReactNode } from "react";
+import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
 export interface SegmentedControlOption {
@@ -6,12 +7,12 @@ export interface SegmentedControlOption {
   label: ReactNode;
 }
 
-export interface SegmentedControlProps {
+export interface SegmentedControlProps extends ComponentProps<"div"> {
   options: readonly SegmentedControlOption[];
   value: string;
   onValueChange(value: string): void;
   size?: "regular" | "minor";
-  variant?: "solid" | "underline";
+  variant?: "solid" | "underline" | "overline";
 }
 
 export function SegmentedControl({
@@ -20,19 +21,24 @@ export function SegmentedControl({
   onValueChange,
   size = "regular",
   variant = "solid",
+  className,
+  style,
+  ...props
 }: SegmentedControlProps) {
   const selectedIndex = options.findIndex((option) => option.value === value);
   const segmentWidth = 100 / options.length;
 
   return (
     <div
-      className={styles.options}
+      className={classNames(styles.options, className)}
       role="radiogroup"
       data-size={size}
       data-variant={variant}
       style={{
         gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
+        ...style,
       }}
+      {...props}
     >
       <div
         className={styles.indicator}

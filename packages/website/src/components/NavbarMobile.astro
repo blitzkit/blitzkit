@@ -1,0 +1,121 @@
+---
+import { CaretUpIcon, GearIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
+import type { Tool } from "../constants/tools";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import { Logo } from "../icons/Logo";
+import { Text } from "./Text";
+
+type Props = LocaleAcceptorProps & {
+  tool: Tool;
+};
+
+const { locale, tool } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<style>
+  #navbar-mobile {
+    --icon-size: 1.5rem;
+
+    position: fixed;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    padding: var(--space-4);
+    box-sizing: border-box;
+
+    justify-content: space-between;
+
+    z-index: 1;
+
+    background-color: var(--black-a9);
+    backdrop-filter: var(--blur-tint);
+
+    border-top: var(--space-0) solid var(--white-a4);
+
+    transition-duration: var(--duration-brief);
+
+    display: none;
+
+    @media screen and (max-width: 80rem) {
+      display: flex;
+    }
+
+    &[data-visible="false"] {
+      transform: translateY(100%);
+      border-top: 0 solid var(--white-a3);
+    }
+
+    .icon {
+      color: var(--gray-11);
+
+      width: var(--icon-size);
+      height: var(--icon-size);
+    }
+
+    .tool {
+      display: flex;
+      align-items: center;
+
+      .logo {
+        flex-shrink: 0;
+
+        width: var(--icon-size);
+        height: var(--icon-size);
+
+        background-size: cover;
+        background-position: center;
+
+        border-radius: var(--radius-max);
+
+        margin-right: var(--space-4);
+      }
+
+      .icon {
+        margin-left: var(--space-2);
+        color: var(--gray-12);
+      }
+    }
+  }
+</style>
+
+<script>
+  const navbar = document.getElementById("navbar-mobile")!;
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      const scrollY = window.scrollY;
+
+      if (scrollY === lastScrollY) return;
+
+      navbar.dataset.visible = `${scrollY < lastScrollY}`;
+      lastScrollY = scrollY;
+    },
+    { passive: true },
+  );
+</script>
+
+<nav id="navbar-mobile" data-visible="true">
+  <Logo className="icon" />
+
+  <div class="tool">
+    <div
+      style={`background-image: url(/media/tools/banners/${tool.slug ?? tool.id}.webp)`}
+      class="logo"
+    />
+
+    <Text className="name">
+      {strings.tools[tool.id as keyof typeof strings.tools].name}
+    </Text>
+
+    <CaretUpIcon className="icon" />
+  </div>
+
+  <GearIcon className="icon" />
+</nav>

@@ -19,12 +19,22 @@ const filtered = Object.values(tools).filter(
 ---
 
 <style>
-  #navbar {
+  #navbar-desktop {
     --icon-size: 1.5rem;
     --padding: var(--space-4);
     --min-content-width: calc(var(--icon-size) + 2 * var(--padding));
 
+    @media screen and (max-width: 80rem) {
+      display: none;
+    }
+
     width: var(--min-content-width);
+    height: 100dvh;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1;
 
     .expander {
       background-color: var(--gray-1);
@@ -51,7 +61,6 @@ const filtered = Object.values(tools).filter(
 
       &:hover {
         width: fit-content;
-
         padding-right: calc(2 * var(--padding));
       }
 
@@ -116,7 +125,6 @@ const filtered = Object.values(tools).filter(
 
             .expander:hover & {
               width: calc(2 * var(--icon-size));
-              border-radius: var(--radius-max);
 
               filter: saturate(1);
             }
@@ -136,14 +144,14 @@ const filtered = Object.values(tools).filter(
 
       transition-duration: var(--duration-brief);
 
-      #navbar:hover & {
+      #navbar-desktop:hover & {
         background-color: var(--black-a8);
       }
     }
   }
 </style>
 
-<nav id="navbar">
+<nav id="navbar-desktop">
   <div class="overlay" />
 
   <div class="expander">
