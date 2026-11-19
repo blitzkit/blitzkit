@@ -47,9 +47,6 @@ export const filtered = Object.values(tools).filter(
       position: relative;
       left: 0;
 
-      padding: var(--padding);
-      padding-top: calc(var(--padding) + var(--space-3));
-
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -62,9 +59,16 @@ export const filtered = Object.values(tools).filter(
       width: var(--min-content-width);
       overflow: hidden;
 
+      padding: calc(var(--padding) + 2 * var(--space-2)) var(--padding);
+
+      border-right: 0 solid var(--gray-4);
+
       &:hover {
         width: fit-content;
-        padding-right: calc(2 * var(--padding));
+        padding: calc(var(--padding) + 2 * var(--space-2))
+          calc(4 * var(--padding));
+
+        border-right: var(--space-0) solid var(--gray-4);
       }
 
       .logo {
@@ -120,7 +124,7 @@ export const filtered = Object.values(tools).filter(
             width: var(--icon-size);
             height: var(--icon-size);
 
-            filter: saturate(0.5);
+            filter: opacity(0.75);
             background-size: cover;
             background-position: center;
 
@@ -129,7 +133,7 @@ export const filtered = Object.values(tools).filter(
             .expander:hover & {
               width: calc(2 * var(--icon-size));
 
-              filter: saturate(1);
+              filter: opacity(1);
             }
           }
         }
@@ -161,7 +165,7 @@ export const filtered = Object.values(tools).filter(
     <LinkI18nWrapper {locale} href="/">
       <div class="named-link">
         <Logo className="icon" />
-        <Text className="name">{strings.common.name}</Text>
+        <Text className="name">{strings.navbar.home}</Text>
       </div>
     </LinkI18nWrapper>
 
