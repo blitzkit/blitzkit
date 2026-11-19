@@ -1,4 +1,5 @@
 ---
+import { alias } from "@blitzkit/core";
 import { api } from "../api/dynamic";
 import type { Tool } from "../constants/tools";
 import { Heading } from "./Heading";
@@ -79,7 +80,9 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 </style>
 
 <div
-  style={{ backgroundImage: `url(/media/tools/banners/${tool.id}.webp)` }}
+  style={{
+    backgroundImage: `url(${alias("api", `/tools/${tool.id}/banners/poster.webp`)})`,
+  }}
   class="container"
   data-disabled={String(tool.disabled ?? false)}
 >
@@ -92,7 +95,9 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
   >
     <div
       class="background"
-      style={{ backgroundImage: `url(/media/tools/banners/${tool.id}.webp)` }}
+      style={{
+        backgroundImage: `url(${alias("api", `/tools/${tool.id}/banners/poster.webp`)})`,
+      }}
     ></div>
 
     <div class="content" data-minor={minor}>

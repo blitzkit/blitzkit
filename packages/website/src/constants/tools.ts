@@ -96,10 +96,12 @@ export const tools: Record<string, Tool> = {
 
 export enum ToolBannerSize {
   Thumbnail = "thumbnail",
+  Poster = "poster",
   Full = "full",
 }
 
 export const TOOL_BANNER_HEIGHTS: Record<ToolBannerSize, number | null> = {
   [ToolBannerSize.Thumbnail]: 128,
+  [ToolBannerSize.Poster]: 480 * 1.5,
   [ToolBannerSize.Full]: null,
 };

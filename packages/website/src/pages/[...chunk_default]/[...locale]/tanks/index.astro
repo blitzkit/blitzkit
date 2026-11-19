@@ -16,7 +16,7 @@ const { locale } = Astro.props;
   <ColorScale color="amber" />
   <ColorScale color="red" />
 
-  <ToolBanner {locale} tool={tools.tanks} slot="pre-app" />
+  <ToolBanner {locale} tool={tools.tanks} />
 
   <Section>
     <Page {locale} client:only="react">
