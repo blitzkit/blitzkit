@@ -12,9 +12,10 @@ import type { Color } from "../ui/color";
 
 type Props = LocaleAcceptorProps & {
   accent: Color;
+  solidNavbar?: boolean;
 };
 
-const { locale, accent } = Astro.props;
+const { locale, accent, solidNavbar = false } = Astro.props;
 
 const tool = tools.tanks;
 ---
@@ -53,6 +54,7 @@ const tool = tools.tanks;
 
       body {
         margin: 0;
+        min-height: 100dvh;
 
         display: flex;
 
@@ -74,7 +76,7 @@ const tool = tools.tanks;
 
   <body>
     <NavbarDesktop {locale} {tool} />
-    <NavbarMobile {locale} {tool} />
+    <NavbarMobile {locale} {tool} solid={solidNavbar} />
 
     <main class="main">
       <slot />

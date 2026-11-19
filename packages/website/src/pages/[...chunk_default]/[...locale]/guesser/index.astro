@@ -8,7 +8,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<BaseLayout accent="blue" {locale}>
+<BaseLayout accent="blue" {locale} solidNavbar>
   <ColorScale color="red" />
 
   <Page {locale} client:only="react">

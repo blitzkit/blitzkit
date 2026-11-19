@@ -17,7 +17,7 @@ const { locale } = Astro.props;
 const strings = await api.strings(locale);
 
 export const filtered = Object.values(tools).filter(
-  (tool) => !tool.href && (tool.navbar ?? true),
+  (tool) => !tool.href && (tool.navbar ?? true) && !tool.disabled,
 );
 ---
 

@@ -4,12 +4,17 @@ import { CaretUpIcon, GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
 import { Logo } from "../icons/Logo";
 import { LinkI18nWrapper } from "./LinkI18nWrapper";
+import type { Props as NavbarDesktopProps } from "./NavbarDesktop.astro";
 import { filtered } from "./NavbarDesktop.astro";
+import NavbarMobileAutoHide from "./NavbarMobileAutoHide.astro";
 import { Scroller, ScrollerOrientation } from "./Scroller";
 import { Text } from "./Text";
-export { type Props } from "./NavbarDesktop.astro";
 
-const { locale, tool } = Astro.props;
+export type Props = NavbarDesktopProps & {
+  solid?: boolean;
+};
+
+const { locale, tool, solid = false } = Astro.props;
 
 const strings = await api.strings(locale);
 ---
@@ -175,27 +180,6 @@ const strings = await api.strings(locale);
   const navbar = document.getElementById("navbar-mobile")!;
   const tool = document.getElementById("current-tool")!;
   const overlay = document.getElementById("navbar-mobile-overlay")!;
-  const lastScrollTops = new WeakMap<Element, number>();
-
-  // Scroll doesn't bubble, so capturing also catches nested scrollers like tables
-  document.addEventListener(
-    "scroll",
-    (event) => {
-      const target =
-        event.target instanceof Element
-          ? event.target
-          : document.scrollingElement!;
-      const scrollTop = target.scrollTop;
-      const lastScrollTop = lastScrollTops.get(target) ?? 0;
-
-      // Horizontal scrolling leaves scrollTop unchanged, so it's ignored
-      if (scrollTop === lastScrollTop) return;
-
-      navbar.dataset.visible = `${scrollTop < lastScrollTop}`;
-      lastScrollTops.set(target, scrollTop);
-    },
-    { capture: true, passive: true },
-  );
 
   tool.addEventListener("click", () => {
     navbar.dataset.expanded = `${navbar.dataset.expanded !== "true"}`;
@@ -261,3 +245,5 @@ const strings = await api.strings(locale);
 </nav>
 
 <div id="navbar-mobile-overlay" />
+
+{!solid && <NavbarMobileAutoHide />}
