@@ -1,10 +1,10 @@
-import type { TextProps } from "@radix-ui/themes";
 import { EmbedState, type EmbedConfig, type ExtractEmbedConfigTypes } from ".";
 import {
   breakdownConfig,
   extractEmbedConfigDefaults,
 } from "../../constants/embeds";
 import type { EmbedConfigItemType, EmbedItemType } from "./constants";
+import { embedText } from "./tokens";
 
 export function useEmbedStateCurry<Config extends EmbedConfig>() {
   // TODO: find a way to initialize with the correct state preset
@@ -23,14 +23,11 @@ export function useEmbedStateCurry<Config extends EmbedConfig>() {
         : never;
     }[keyof Config],
   >(key: Key) {
-    const { color, ...state } = useEmbedState(
+    const state = useEmbedState(
       key,
     ) as EmbedConfigItemType<EmbedItemType.RichText>["default"];
 
-    return {
-      style: { color },
-      ...state,
-    } satisfies TextProps;
+    return embedText(state);
   }
 
   return { useEmbedState, useRichText };

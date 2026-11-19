@@ -2,6 +2,7 @@ import { assertSecret } from '@blitzkit/core';
 import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Box, Button, Flex, Link, Text } from '@radix-ui/themes';
 import { times } from 'lodash-es';
+import { discordLink } from '../../config/socials';
 import { getStrings } from '../../core/i18n/getStrings';
 import { Var } from '../../core/radix/var';
 import type { LocaleAcceptorProps } from '../../hooks/useLocale';
@@ -161,7 +162,7 @@ export function DiscordPlug({
     <Flex justify="center" flexGrow="1" flexShrink="0">
       <Link
         style={{ display: 'contents' }}
-        href="https://discord.gg/nDt7AjGJQH"
+        href={discordLink}
         target="_blank"
       >
         <Flex

@@ -88,7 +88,8 @@ export function Header({ index }: HeaderProps) {
                 }}
               >
                 <Button variant="outline" color="red" style={{ flex: 1 }}>
-                  <Cross1Icon /> Cancel
+                  <Cross1Icon />
+                  Cancel
                 </Button>
               </Popover.Close>
 
@@ -100,7 +101,8 @@ export function Header({ index }: HeaderProps) {
                   input.current.blur();
                 }}
               >
-                <CheckIcon /> Apply
+                <CheckIcon />
+                Apply
               </Button>
             </Flex>
           </Flex>

@@ -1,4 +1,4 @@
-import { Slider } from '@radix-ui/themes';
+import { RangeSlider } from "./RangeSlider";
 
 interface ColorControllerRawProps {
   value: string;
@@ -20,17 +20,16 @@ export function ColorControllerRaw({
         value={value.slice(0, 7)}
         onChange={(event) => {
           let alpha = value.slice(7, 9);
-          if (alpha.length === 0) alpha = 'ff';
+          if (alpha.length === 0) alpha = "ff";
           onValueChange(`${event.target.value}${alpha}`);
         }}
       />
-      <Slider
-        variant="classic"
+      <RangeSlider
         min={0}
         max={255}
-        value={[alpha]}
-        onValueChange={([value]) => {
-          onValueChange(`${tintString}${value.toString(16)}`);
+        value={alpha}
+        onValueChange={(value) => {
+          onValueChange(`${tintString}${value.toString(16).padStart(2, "0")}`);
         }}
       />
     </>

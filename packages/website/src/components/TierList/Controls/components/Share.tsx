@@ -15,7 +15,8 @@ export function Share() {
         `${location.origin}/tier-list?${generateTierListParams(rows)}`
       }
     >
-      <Share2Icon /> {strings.website.tools.tier_list.buttons.share}
+      <Share2Icon />
+      {strings.website.tools.tier_list.buttons.share}
     </CopyButton>
   );
 }

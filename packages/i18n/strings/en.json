@@ -25,6 +25,83 @@
     "clear": "Clear"
   },
 
+  "embed": {
+    "coming_soon": "More embeds coming soon.",
+    "suggest": "Suggest ideas.",
+    "preview": {
+      "title": "Example preview",
+      "upload": "Upload test background"
+    },
+    "configuration": {
+      "import": {
+        "title": "Import",
+        "description": "Paste your current URL if you have one already to import your settings",
+        "hint": "Paste URL...",
+        "apply": "Apply",
+        "applied": "Applied!",
+        "idiot_title": "Invalid URL",
+        "idiot_description": "Try pasting the URL that BlitzKit previously generated, you silly goose!",
+        "idiot_button": "Okay, my bad"
+      },
+      "export": {
+        "title": "Export",
+        "description": "Copy all properties for you streaming software",
+        "generate": {
+          "button": "Generate URL",
+          "title": "Generate URL",
+          "subtitle": "Search an account to track",
+          "cancel": "Cancel",
+          "success": {
+            "title": "Copy URL",
+            "info": "Generated the URL for {name}. The embed will start tracking as soon as the URL is pasted. Reset at any time by right-clicking on PC or long-pressing on mobile and then selecting \"Reset\".",
+            "back": "Back",
+            "copy": "Copy URL"
+          }
+        },
+        "css": "Copy CSS",
+        "width": "Copy Width",
+        "height": "Copy Height",
+        "framerate": "Copy Framerate"
+      },
+      "customize": {
+        "title": "Customize",
+        "reset": "Reset",
+        "description": "Bells and whistles of your embed"
+      }
+    },
+    "types": {
+      "breakdown": {
+        "name": "Breakdown",
+        "reset": "Reset",
+        "options": {
+          "width": "Width",
+          "height": "Height",
+          "show_total": "Show total",
+          "list_gap": "List gap",
+          "list_max_tanks": "Max tanks",
+          "card_radius": "Card radius",
+          "card_header_background_color": "Card header background color",
+          "card_header_padding": "Card header padding",
+          "card_title": "Card title",
+          "card_title_type_color": "Card title type color",
+          "card_title_class_icon": "Card title class icon",
+          "card_body_background_color": "Card body background color",
+          "card_body_padding": "Card body padding",
+          "column_gap": "Column gap",
+          "column_value": "Column value",
+          "column_label": "Column label",
+          "column_1": "Column 1",
+          "column_2": "Column 2",
+          "column_3": "Column 3",
+          "column_4": "Column 4",
+          "column_1_custom_label": "Column 1 label",
+          "column_2_custom_label": "Column 2 label",
+          "column_3_custom_label": "Column 3 label"
+        }
+      }
+    }
+  },
+
   "compare": {
     "no_tanks": {
       "title": "No tanks to compare",

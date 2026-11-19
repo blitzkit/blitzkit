@@ -6,8 +6,8 @@ import {
   TimerIcon,
   WidthIcon,
 } from "@radix-ui/react-icons";
-import { Box, Button, Flex, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Button } from "../../../../../components/Button";
 import { CopyButton } from "../../../../../components/CopyButton";
 import { Boolean } from "../../../../../components/Embeds/Boolean";
 import { Color } from "../../../../../components/Embeds/Color";
@@ -21,19 +21,25 @@ import { Size } from "../../../../../components/Embeds/Size";
 import { SizeWithout0 } from "../../../../../components/Embeds/SizeWithout0";
 import { Slider } from "../../../../../components/Embeds/Slider";
 import { TextController } from "../../../../../components/Embeds/TextController";
-import { PageWrapper } from "../../../../../components/PageWrapper";
+import { Heading } from "../../../../../components/Heading";
+import { IconButton } from "../../../../../components/IconButton";
+import {
+  Scroller,
+  ScrollerOrientation,
+} from "../../../../../components/Scroller";
+import { Text } from "../../../../../components/Text";
 import {
   embedConfigurations,
   extractEmbedConfigDefaults,
 } from "../../../../../constants/embeds";
-import { NAVBAR_HEIGHT } from "../../../../../constants/navbar";
 import {
   LocaleProvider,
-  useLocale,
   type LocaleAcceptorProps,
 } from "../../../../../hooks/useLocale";
+import { useStrings } from "../../../../../hooks/useStrings";
 import { EmbedState, type EmbedConfig } from "../../../../../stores/embedState";
 import { EmbedItemType } from "../../../../../stores/embedState/constants";
+import styles from "./_index.module.css";
 
 export interface EmbedPreviewControllerProps {
   configKey: string;
@@ -58,10 +64,10 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
 function Content({ embed }: PageProps) {
   const config = embedConfigurations[embed] as EmbedConfig;
   const [backgroundImage, setBackgroundImage] = useState(
-    "/assets/images/backgrounds/embed-default.webp",
+    "/media/embed-default.webp",
   );
   const fileInput = useRef<HTMLInputElement>(null!);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   useEffect(() => {
     fileInput.current = document.createElement("input");
@@ -76,213 +82,179 @@ function Content({ embed }: PageProps) {
   }, []);
 
   return (
-    <PageWrapper padding="0" maxWidth="104rem" color="red">
-      <Flex>
-        <ScrollArea
-          scrollbars="vertical"
-          style={{ height: "100%", maxWidth: 320 }}
-        >
-          <Flex direction="column" gap="2" p="4">
-            <Import />
+    <div className={styles.page}>
+      <div className={styles.stage}>
+        <div className={styles.window}>
+          <div className={styles.toolbar}>
+            <Text lowContrast>{strings.embed.preview.title}</Text>
 
-            <Heading>
-              {strings.website.tools.embed.configuration.export.title}
-            </Heading>
-            <Text size="2" color="gray" mb="2">
-              {strings.website.tools.embed.configuration.export.description}
-            </Text>
+            <Button
+              variant="outline"
+              color="gray"
+              onClick={() => fileInput.current?.click()}
+            >
+              <ImageIcon />
+              {strings.embed.preview.upload}
+            </Button>
+          </div>
 
-            <Flex mb="6" gap="2" wrap="wrap">
-              <GenerateURL embed={embed} />
-
-              <CopyButton
-                variant="outline"
-                copy={() =>
-                  "body { margin: 0; background-color: transparent; overflow: hidden; }"
-                }
-              >
-                <CodeIcon />
-                {strings.website.tools.embed.configuration.export.css}
-              </CopyButton>
-              <CopyButton
-                variant="outline"
-                copy={() => `${EmbedState.state.width}`}
-              >
-                <WidthIcon />
-                {strings.website.tools.embed.configuration.export.width}
-              </CopyButton>
-              <CopyButton
-                variant="outline"
-                copy={() => `${EmbedState.state.height}`}
-              >
-                <HeightIcon />
-                {strings.website.tools.embed.configuration.export.height}
-              </CopyButton>
-              <CopyButton variant="outline" copy={() => "1"}>
-                <TimerIcon />
-                {strings.website.tools.embed.configuration.export.framerate}
-              </CopyButton>
-            </Flex>
-
-            <Flex justify="between" align="center">
-              <Heading>
-                {strings.website.tools.embed.configuration.customize.title}
-              </Heading>
-              <Button
-                color="red"
-                variant="ghost"
-                onClick={() => {
-                  EmbedState.set(EmbedState.initial);
-                }}
-              >
-                <ResetIcon />{" "}
-                {strings.website.tools.embed.configuration.customize.reset}
-              </Button>
-            </Flex>
-            <Text size="2" color="gray" mb="2">
-              {strings.website.tools.embed.configuration.customize.description}
-            </Text>
-
-            {Object.keys(config).map((configKey) => {
-              const item = config[configKey];
-              let control: ReactNode;
-              let oneLiner = false;
-
-              switch (item.type) {
-                case EmbedItemType.Boolean: {
-                  control = <Boolean configKey={configKey} />;
-                  oneLiner = true;
-                  break;
-                }
-
-                case EmbedItemType.Color: {
-                  control = <Color configKey={configKey} />;
-                  break;
-                }
-
-                case EmbedItemType.Radius: {
-                  control = <Radius configKey={configKey} />;
-                  oneLiner = true;
-                  break;
-                }
-
-                case EmbedItemType.Size: {
-                  control = <Size configKey={configKey} />;
-                  oneLiner = true;
-                  break;
-                }
-
-                case EmbedItemType.SizeWithout0: {
-                  control = <SizeWithout0 configKey={configKey} />;
-                  oneLiner = true;
-                  break;
-                }
-
-                case EmbedItemType.Slider: {
-                  control = <Slider configKey={configKey} config={item} />;
-                  oneLiner = true;
-                  break;
-                }
-
-                case EmbedItemType.String: {
-                  control = <TextController configKey={configKey} />;
-                  break;
-                }
-
-                case EmbedItemType.RichText: {
-                  control = <RichText configKey={configKey} />;
-                  break;
-                }
-
-                case EmbedItemType.Enum: {
-                  control = <Enum configKey={configKey} config={item} />;
-                  oneLiner = true;
-                  break;
-                }
-              }
-
-              return (
-                <Flex
-                  key={configKey}
-                  direction={oneLiner ? undefined : "column"}
-                  gap={oneLiner ? "2" : "1"}
-                  justify={oneLiner ? "between" : undefined}
-                  mb={oneLiner ? "2" : "4"}
-                  pb={item.pad ? "6" : undefined}
-                >
-                  <Text>
-                    {
-                      (
-                        strings.website.tools.embed.types[embed]
-                          .options as Record<string, string>
-                      )[configKey]
-                    }
-                  </Text>
-                  <Flex
-                    gap="2"
-                    align="center"
-                    flexGrow="1"
-                    justify={oneLiner ? "end" : undefined}
-                  >
-                    {control}
-                  </Flex>
-                </Flex>
-              );
-            })}
-          </Flex>
-        </ScrollArea>
-
-        <Box
-          p="4"
-          flexGrow="1"
-          position="sticky"
-          top={`${NAVBAR_HEIGHT}px`}
-          height={`calc(100vh - ${NAVBAR_HEIGHT}px)`}
-        >
-          <Flex
-            direction="column"
-            height="100%"
+          <div
+            className={styles.preview}
             style={{
-              borderRadius: "var(--radius-3)",
-              overflow: "hidden",
-              boxShadow: "var(--shadow-3)",
+              background: `url(${backgroundImage}) center / cover no-repeat`,
             }}
           >
-            <Flex
-              justify="between"
-              align="center"
-              p="2"
-              pl="3"
-              style={{
-                backgroundColor: "var(--color-panel-solid)",
+            <PreviewWrapper name={embed} />
+          </div>
+        </div>
+      </div>
+
+      <Scroller
+        orientation={ScrollerOrientation.Vertical}
+        className={styles.sidebar}
+      >
+        <div className={styles.controls}>
+          <Import />
+
+          <Heading size="3" weight="bold">
+            {strings.embed.configuration.export.title}
+          </Heading>
+          <Text size="minor" lowContrast className={styles.description}>
+            {strings.embed.configuration.export.description}
+          </Text>
+
+          <div className={styles.exports}>
+            <GenerateURL embed={embed} />
+
+            <CopyButton
+              variant="outline"
+              copy={() =>
+                "body { margin: 0; background-color: transparent; overflow: hidden; }"
+              }
+            >
+              <CodeIcon />
+              {strings.embed.configuration.export.css}
+            </CopyButton>
+            <CopyButton
+              variant="outline"
+              copy={() => `${EmbedState.state.width}`}
+            >
+              <WidthIcon />
+              {strings.embed.configuration.export.width}
+            </CopyButton>
+            <CopyButton
+              variant="outline"
+              copy={() => `${EmbedState.state.height}`}
+            >
+              <HeightIcon />
+              {strings.embed.configuration.export.height}
+            </CopyButton>
+            <CopyButton variant="outline" copy={() => "1"}>
+              <TimerIcon />
+              {strings.embed.configuration.export.framerate}
+            </CopyButton>
+          </div>
+
+          <div className={styles.customize}>
+            <Heading size="3" weight="bold">
+              {strings.embed.configuration.customize.title}
+            </Heading>
+            <IconButton
+              color="red"
+              variant="ghost"
+              size="minor"
+              onClick={() => {
+                EmbedState.set(EmbedState.initial);
               }}
             >
-              <Text color="gray">
-                {strings.website.tools.embed.preview.title}
-              </Text>
+              <ResetIcon />
+            </IconButton>
+          </div>
+          <Text size="minor" lowContrast className={styles.description}>
+            {strings.embed.configuration.customize.description}
+          </Text>
 
-              <Button
-                variant="outline"
-                color="gray"
-                onClick={() => fileInput.current?.click()}
+          {Object.keys(config).map((configKey) => {
+            const item = config[configKey];
+            let control: ReactNode;
+            let oneLiner = false;
+
+            switch (item.type) {
+              case EmbedItemType.Boolean: {
+                control = <Boolean configKey={configKey} />;
+                oneLiner = true;
+                break;
+              }
+
+              case EmbedItemType.Color: {
+                control = <Color configKey={configKey} />;
+                break;
+              }
+
+              case EmbedItemType.Radius: {
+                control = <Radius configKey={configKey} />;
+                oneLiner = true;
+                break;
+              }
+
+              case EmbedItemType.Size: {
+                control = <Size configKey={configKey} />;
+                oneLiner = true;
+                break;
+              }
+
+              case EmbedItemType.SizeWithout0: {
+                control = <SizeWithout0 configKey={configKey} />;
+                oneLiner = true;
+                break;
+              }
+
+              case EmbedItemType.Slider: {
+                control = <Slider configKey={configKey} config={item} />;
+                oneLiner = true;
+                break;
+              }
+
+              case EmbedItemType.String: {
+                control = <TextController configKey={configKey} />;
+                break;
+              }
+
+              case EmbedItemType.RichText: {
+                control = <RichText configKey={configKey} />;
+                break;
+              }
+
+              case EmbedItemType.Enum: {
+                control = <Enum configKey={configKey} config={item} />;
+                oneLiner = true;
+                break;
+              }
+            }
+
+            return (
+              <div
+                key={configKey}
+                className={styles.option}
+                data-one-liner={oneLiner}
+                data-pad={item.pad}
               >
-                <ImageIcon /> {strings.website.tools.embed.preview.upload}
-              </Button>
-            </Flex>
-
-            <Box
-              flexGrow="1"
-              style={{
-                background: `url(${backgroundImage}) center / cover no-repeat`,
-              }}
-              position="relative"
-              overflow="hidden"
-            >
-              <PreviewWrapper name={embed} />
-            </Box>
-          </Flex>
-        </Box>
-      </Flex>
-    </PageWrapper>
+                <Text>
+                  {
+                    (
+                      strings.embed.types[embed].options as Record<
+                        string,
+                        string
+                      >
+                    )[configKey]
+                  }
+                </Text>
+                <div className={styles.control}>{control}</div>
+              </div>
+            );
+          })}
+        </div>
+      </Scroller>
+    </div>
   );
 }

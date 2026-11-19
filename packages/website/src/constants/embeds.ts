@@ -16,10 +16,10 @@ export const breakdownConfig = {
   width: { type: EmbedItemType.Slider, default: 320, min: 128, max: 640 },
   height: { type: EmbedItemType.Slider, default: 492, min: 128, max: 1024 },
 
-  showTotal: { type: EmbedItemType.Boolean, default: true, pad: true },
+  show_total: { type: EmbedItemType.Boolean, default: true, pad: true },
 
-  listGap: { type: EmbedItemType.Size, default: "2" },
-  listMaxTanks: {
+  list_gap: { type: EmbedItemType.Size, default: "3" },
+  list_max_tanks: {
     type: EmbedItemType.Slider,
     default: 4,
     min: 0,
@@ -27,63 +27,63 @@ export const breakdownConfig = {
     pad: true,
   },
 
-  cardRadius: { type: EmbedItemType.Radius, default: "2" },
-  cardHeaderBackgroundColor: {
+  card_radius: { type: EmbedItemType.Radius, default: "2" },
+  card_header_background_color: {
     type: EmbedItemType.Color,
     default: grayDarkA.grayA3,
   },
-  cardHeaderPadding: { type: EmbedItemType.Size, default: "1" },
-  cardTitle: {
+  card_header_padding: { type: EmbedItemType.Size, default: "2" },
+  card_title: {
     type: EmbedItemType.RichText,
-    default: { color: grayDark.gray12, weight: "bold", size: "3" },
+    default: { color: grayDark.gray12, weight: "bold", size: "4" },
   },
-  cardTitleTypeColor: { type: EmbedItemType.Boolean, default: true },
-  cardTitleClassIcon: { type: EmbedItemType.Boolean, default: true },
-  cardBodyBackgroundColor: {
+  card_title_type_color: { type: EmbedItemType.Boolean, default: true },
+  card_title_class_icon: { type: EmbedItemType.Boolean, default: true },
+  card_body_background_color: {
     type: EmbedItemType.Color,
     default: grayA.grayA11,
   },
-  cardBodyPadding: {
+  card_body_padding: {
     type: EmbedItemType.Size,
-    default: "2",
+    default: "3",
     pad: true,
   },
 
-  columnGap: { type: EmbedItemType.Size, default: "0" },
-  columnValue: {
+  column_gap: { type: EmbedItemType.Size, default: "1" },
+  column_value: {
     type: EmbedItemType.RichText,
-    default: { color: grayDark.gray12, size: "3", weight: "regular" },
+    default: { color: grayDark.gray12, size: "4", weight: "regular" },
   },
-  columnLabel: {
+  column_label: {
     type: EmbedItemType.RichText,
-    default: { color: grayDark.gray11, size: "2", weight: "regular" },
+    default: { color: grayDark.gray11, size: "4", weight: "regular" },
     pad: true,
   },
 
-  column1: {
+  column_1: {
     type: EmbedItemType.Enum,
     default: "cumulative_battles" satisfies CompositeStatsKey,
     options: compositeStatsKeysOptions,
   },
-  column2: {
+  column_2: {
     type: EmbedItemType.Enum,
     default: "normalized_wins" satisfies CompositeStatsKey,
     options: compositeStatsKeysOptions,
   },
-  column3: {
+  column_3: {
     type: EmbedItemType.Enum,
     default: "cumulative_wn8" satisfies CompositeStatsKey,
     options: compositeStatsKeysOptions,
   },
-  column4: {
+  column_4: {
     type: EmbedItemType.Enum,
     default: "normalized_damage_dealt" satisfies CompositeStatsKey,
     options: compositeStatsKeysOptions,
   },
-  column1CustomLabel: { type: EmbedItemType.String, default: "" },
-  column2CustomLabel: { type: EmbedItemType.String, default: "" },
-  column3CustomLabel: { type: EmbedItemType.String, default: "" },
-  column4CustomLabel: { type: EmbedItemType.String, default: "" },
+  column_1_custom_label: { type: EmbedItemType.String, default: "" },
+  column_2_custom_label: { type: EmbedItemType.String, default: "" },
+  column_3_custom_label: { type: EmbedItemType.String, default: "" },
+  column_4_custom_label: { type: EmbedItemType.String, default: "" },
 } satisfies EmbedConfig;
 
 export const embedConfigurations = {
@@ -95,10 +95,10 @@ export const embedPreviews = {
 } satisfies Record<string, () => ReactNode>;
 
 export function extractEmbedConfigDefaults<Config extends EmbedConfig>(
-  config: Config,
+  config: Config
 ) {
   return Object.fromEntries(
-    Object.entries(config).map(([key, value]) => [key, value.default]),
+    Object.entries(config).map(([key, value]) => [key, value.default])
   ) as ExtractEmbedConfigTypes<Config>;
 }
 

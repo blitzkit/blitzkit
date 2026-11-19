@@ -3,6 +3,7 @@
 
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-3);
 
   cursor: pointer;
@@ -116,6 +117,7 @@
   &[data-variant="surface"],
   &[data-variant="outline"] {
     outline: var(--space-1) solid var(--accent-5);
+    outline-offset: calc(-1 * var(--space-1));
 
     &[data-high-contrast="true"] {
       outline: var(--space-1) solid var(--accent-11);

@@ -1,21 +1,27 @@
 ---
 import "@fontsource-variable/jetbrains-mono";
 import "@fontsource-variable/roboto-flex";
+import { spaces, weights } from "../config/styles";
+
+let styles = "";
+
+styles += ":root{";
+
+spaces.forEach((space, index) => {
+  styles += `--space-${index}:${space}rem;`;
+});
+
+for (const weight in weights) {
+  styles += `--weight-${weight}:${weights[weight as keyof typeof weights]};`;
+}
+
+styles += "}";
 ---
+
+<style set:html={styles}></style>
 
 <style>
   :root {
-    --space-0: 0.0625rem;
-    --space-1: 0.125rem;
-    --space-2: 0.25rem;
-    --space-3: 0.5rem;
-    --space-4: 1rem;
-    --space-5: 2rem;
-    --space-6: 4rem;
-    --space-7: 8rem;
-    --space-8: 16rem;
-    --space-9: 32rem;
-
     --page-width: 64rem;
 
     --max-size: max(100vw, 100vh);
@@ -38,20 +44,8 @@ import "@fontsource-variable/roboto-flex";
     --color-regular: var(--gray-12);
     --color-low-contrast: var(--gray-11);
 
-    --weight-light: 300;
-    --weight-regular: 400;
-    --weight-medium: 500;
-    --weight-bold: 700;
-    --weight-black: 900;
-
     --outline-interactive: var(--space-1) solid var(--gray-4);
     --outline-focus: var(--space-1) solid var(--accent-6);
-
-    /* --shadow-cavity:
-      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
-        var(--space-1) var(--black-a3),
-      inset calc(var(--space-1) * sin(45deg) * -1)
-        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--white-a1); */
 
     --shadow-bump:
       inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
@@ -61,17 +55,6 @@ import "@fontsource-variable/roboto-flex";
 
     --shadow-outline-width: 1.5px;
     --shadow-outline-width-negative: calc(var(--shadow-outline-width) * -1);
-
-    /* --shadow-interactive-background: 0 0 0 var(--shadow-outline-width)
-      var(--gray-6);
-    --shadow-interactive-shine: var(--shadow-outline-width-negative)
-      var(--shadow-outline-width-negative) var(--shadow-outline-width)
-      var(--white-a1);
-    --shadow-interactive-shadow: var(--shadow-outline-width)
-      var(--shadow-outline-width) var(--shadow-outline-width) var(--black-a4);
-    --shadow-interactive:
-      var(--shadow-interactive-shine), var(--shadow-interactive-shadow),
-      var(--shadow-interactive-background); */
 
     --shadow-aggressive: var(--space-1) var(--space-1) var(--space-4)
       var(--black-a11);

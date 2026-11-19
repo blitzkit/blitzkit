@@ -1,0 +1,16 @@
+---
+import ToolBanner from "../../../../components/ToolBanner.astro";
+import { tools } from "../../../../constants/tools";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout {locale} accent="red">
+  <ToolBanner {locale} tool={tools.embed} />
+
+  <Page {locale} />
+</BaseLayout>

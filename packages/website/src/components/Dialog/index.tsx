@@ -11,19 +11,13 @@ function Header({ className, ...props }: ComponentProps<"div">) {
 }
 
 // Scrolls the content that follows the header
-function Body({
-  className,
-  children,
-  ...props
-}: ComponentProps<typeof Scroller>) {
+function Body({ className, ...props }: ComponentProps<typeof Scroller>) {
   return (
     <Scroller
       orientation={ScrollerOrientation.Vertical}
       className={classNames(styles.body, className)}
       {...props}
-    >
-      <div className={styles.content}>{children}</div>
-    </Scroller>
+    />
   );
 }
 

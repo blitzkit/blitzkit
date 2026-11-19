@@ -107,7 +107,8 @@ export function PlaylistGenerator({ skeleton }: MaybeSkeletonComponentProps) {
               }}
               size="3"
             >
-              {strings.website.tools.playlist.generate} <ChevronRightIcon />
+              {strings.website.tools.playlist.generate}
+              <ChevronRightIcon />
             </Button>
           </Flex>
 

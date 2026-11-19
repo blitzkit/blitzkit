@@ -1,8 +1,6 @@
 ---
-import { AstroSeo } from "@astrolib/seo";
 import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
-import { api } from "../../../api/dynamic";
 import { mixStaticPaths } from "../../../astro/mixStaticPaths";
 import { AesonPlug } from "../../../components/AesonPlug";
 import HelpTranslate from "../../../components/HelpTranslate.astro";
@@ -20,7 +18,6 @@ const MAX_TOOLS_PER_ROW = 2;
 
 const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 const { locale } = Astro.props;
-const strings = await api.strings(locale);
 const rows: Tool[][] = [];
 
 for (const id in tools) {
@@ -48,19 +45,6 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
   }));
 });
 ---
-
-<AstroSeo
-  title="BlitzKit"
-  description={strings.website.home.seo_description}
-  canonical={Astro.url.href}
-  openGraph={{
-    url: Astro.url.href,
-    title: "BlitzKit",
-    description: strings.website.home.seo_description,
-    site_name: "BlitzKit",
-  }}
-  twitter={{ cardType: "summary_large_image" }}
-/>
 
 <BaseLayout accent="blue" {locale}>
   <!-- <HomeHero {locale} /> -->

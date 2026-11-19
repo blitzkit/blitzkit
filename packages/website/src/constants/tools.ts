@@ -1,3 +1,5 @@
+import { discordLink } from "../config/socials";
+
 export interface Tool {
   id: string;
 
@@ -70,11 +72,11 @@ export const tools: Record<string, Tool> = {
   },
   embed: {
     id: "embed",
-    banner_background_position: "bottom",
+    banner_background_position: "top",
   },
   more: {
     id: "more",
-    href: "https://discord.gg/nDt7AjGJQH",
+    href: discordLink,
     banner_background_position: "bottom",
   },
   api: {

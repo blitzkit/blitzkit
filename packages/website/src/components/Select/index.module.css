@@ -1,5 +1,12 @@
 @import "../DropdownMenu/index.module.css";
 
+.Content,
+.SubContent {
+  max-height: calc(
+    var(--radix-select-content-available-height) - var(--space-6)
+  );
+}
+
 .Trigger {
   display: flex;
   align-items: center;
@@ -8,10 +15,11 @@
 
   padding: var(--space-3) var(--space-4);
   border: none;
-  border-radius: var(--max-size);
+  border-radius: var(--radius-max);
 
   background-color: var(--gray-1);
   outline: var(--outline-interactive);
+  outline-offset: calc(-1 * var(--space-1));
   color: var(--gray-12);
   font: inherit;
   cursor: pointer;

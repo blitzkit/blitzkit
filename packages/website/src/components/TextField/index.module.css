@@ -6,6 +6,7 @@
   gap: var(--space-3);
 
   cursor: text;
+  outline-offset: calc(-1 * var(--space-1));
 
   font: inherit;
   color: var(--gray-11);
@@ -13,7 +14,7 @@
   font-size: var(--font-size-regular);
 
   &[data-variant="bubble"] {
-    border-radius: var(--max-size);
+    border-radius: var(--radius-max);
 
     background-color: var(--gray-1);
     outline: var(--outline-interactive);

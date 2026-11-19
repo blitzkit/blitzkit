@@ -1,19 +1,23 @@
-import { Button, type ButtonProps, Tooltip } from '@radix-ui/themes';
-import { useState } from 'react';
-import { useLocale } from '../hooks/useLocale';
+import { useState } from "react";
+import { useStrings } from "../hooks/useStrings";
+import { Button, type ButtonProps } from "./Button";
+import { Tooltip } from "./Tooltip";
+
+const COPIED_TOOLTIP_DURATION = 2000;
 
 interface CopyButtonProps extends ButtonProps {
   copy: () => string | undefined;
 }
 
-export function CopyButton({ copy, ...props }: CopyButtonProps) {
+export function CopyButton({ copy, style, ...props }: CopyButtonProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
     <Tooltip
       open={tooltipOpen}
-      content={strings.website.common.copy_button.copied}
+      tooltip={strings.website.common.copy_button.copied}
+      style={style}
     >
       <Button
         {...props}
@@ -24,7 +28,7 @@ export function CopyButton({ copy, ...props }: CopyButtonProps) {
 
           navigator.clipboard.writeText(content);
           setTooltipOpen(true);
-          setTimeout(() => setTooltipOpen(false), 2000);
+          setTimeout(() => setTooltipOpen(false), COPIED_TOOLTIP_DURATION);
         }}
       />
     </Tooltip>

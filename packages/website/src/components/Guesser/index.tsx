@@ -27,6 +27,7 @@ import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { IconButton } from "../IconButton";
 import { TRANSITION_ANIMATION_TIME, transitionEvent } from "../Lighting";
+import { SearchResults } from "../SearchResults";
 import { Text } from "../Text";
 import { TextField } from "../TextField";
 import styles from "./index.module.css";
@@ -96,7 +97,7 @@ export function Guesser() {
     });
 
     setResults(
-      searchResults.map((result) => tankDefinitions.tanks[result.obj.id]),
+      searchResults.map((result) => tankDefinitions.tanks[result.obj.id])
     );
   }, []);
 
@@ -115,37 +116,36 @@ export function Guesser() {
               </div>
             )}
 
-            <div className={styles.list}>
-              {results.map((result) => {
-                return (
-                  <button
-                    key={result.id}
-                    className={styles.item}
-                    onClick={() => {
-                      if (!input.current) return;
-
-                      input.current.value = unwrap(result.name!);
-                      setSelected(result);
-                      setResults(null);
-                    }}
-                  >
+            <SearchResults.Root>
+              {results.map((result) => (
+                <SearchResults.Item
+                  key={result.id}
+                  text={unwrap(result.name!)}
+                  prefix={
                     <img
-                      className={styles.flag}
                       src={alias("api", `/flags/circle/${result.nation}.webp`)}
                     />
-                    <Text className={styles.name}>{unwrap(result.name!)}</Text>
-                    <span className={styles.discriminator}>
+                  }
+                  discriminator={
+                    <>
                       <ClassIcon
                         class={result.class}
                         width="1em"
                         height="1em"
                       />
                       {romanize(result.tier)}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    </>
+                  }
+                  onClick={() => {
+                    if (!input.current) return;
+
+                    input.current.value = unwrap(result.name!);
+                    setSelected(result);
+                    setResults(null);
+                  }}
+                />
+              ))}
+            </SearchResults.Root>
           </Card>
         )}
       </div>
@@ -314,7 +314,7 @@ export function Guesser() {
                 return tiers.includes(tank.tier);
               });
               const id = Number(
-                filteredIds[Math.floor(Math.random() * filteredIds.length)],
+                filteredIds[Math.floor(Math.random() * filteredIds.length)]
               );
               const tank = tankDefinitions.tanks[id];
 

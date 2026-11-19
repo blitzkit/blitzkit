@@ -32,9 +32,8 @@
     }
   }
 
-  &:hover {
-    .text {
-      display: block;
-    }
+  &[data-controlled="false"]:hover .text,
+  .text[data-open="true"] {
+    display: block;
   }
 }

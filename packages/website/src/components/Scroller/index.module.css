@@ -136,7 +136,7 @@
     .thumb {
       position: absolute;
 
-      border-radius: var(--max-size);
+      border-radius: var(--radius-max);
       background-color: var(--gray-a8);
       touch-action: none;
 

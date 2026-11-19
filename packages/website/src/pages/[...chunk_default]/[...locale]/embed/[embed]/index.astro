@@ -1,0 +1,22 @@
+---
+import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
+import { embedConfigurations } from "../../../../../constants/embeds";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import { getStaticPaths as _getStaticPaths } from "../index.astro";
+import { Page } from "./_index";
+
+export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
+  return (
+    Object.keys(embedConfigurations) as (keyof typeof embedConfigurations)[]
+  ).map((embed) => ({
+    params: { embed },
+    props: { embed },
+  }));
+});
+
+const { locale, embed } = Astro.props;
+---
+
+<BaseLayout {locale} accent="red">
+  <Page {locale} client:load {embed} />
+</BaseLayout>

@@ -1,5 +1,4 @@
 ---
-import { AstroSeo } from "@astrolib/seo";
 import { readFile } from "fs/promises";
 import { mixStaticPaths } from "../../../../../../core/blitzkit/mixStaticPaths";
 import BaseLayout from "../../../../../../layouts/BaseLayout.astro";
@@ -29,22 +28,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 });
 
 const { content, locale } = Astro.props;
-
-const title = content.split("\n")[0].replace("# ", "");
 ---
-
-<AstroSeo
-  title={title}
-  description={title}
-  canonical={Astro.url.href}
-  openGraph={{
-    url: Astro.url.href,
-    title,
-    description: title,
-    site_name: "BlitzKit",
-  }}
-  twitter={{ cardType: "summary_large_image" }}
-/>
 
 <BaseLayout {locale}>
   <Page content={content} />

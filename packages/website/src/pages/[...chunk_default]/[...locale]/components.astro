@@ -1,0 +1,137 @@
+---
+import { CheckIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { Badge } from "../../../components/Badge";
+import ColorScale from "../../../components/ColorScale.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import type { Color } from "../../../ui/color";
+
+export { getStaticPaths } from "./index.astro";
+
+const { locale } = Astro.props;
+
+const variants = ["solid", "soft", "surface", "outline"] as const;
+const sizes = ["minor", "regular"] as const;
+const colors = [undefined, "gray", "red", "amber", "green"] as const;
+const iconLayouts = ["leading", "trailing", "both", "icon only"] as const;
+const extraColors = ["red", "amber", "green"] satisfies Color[];
+---
+
+<BaseLayout accent="blue" {locale}>
+  {
+    extraColors.map((color) => (
+      <>
+        <ColorScale {color} />
+        <ColorScale {color} alpha />
+      </>
+    ))
+  }
+
+  <div class="page">
+    <h1>Badge</h1>
+
+    {
+      sizes.map((size) => (
+        <section>
+          <h2>size="{size}"</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th />
+                {variants.map((variant) => (
+                  <th>{variant}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {colors.map((color) => (
+                <tr>
+                  <th>{color ?? "accent"}</th>
+                  {variants.map((variant) => (
+                    <td>
+                      <Badge {color} {variant} {size}>
+                        Badge
+                      </Badge>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ))
+    }
+
+    {
+      sizes.map((size) => (
+        <section>
+          <h2>size="{size}" with icons</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th />
+                {iconLayouts.map((layout) => (
+                  <th>{layout}</th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {variants.map((variant) => (
+                <tr>
+                  <th>{variant}</th>
+
+                  <td>
+                    <Badge {variant} {size}>
+                      <StarFilledIcon />
+                      Badge
+                    </Badge>
+                  </td>
+
+                  <td>
+                    <Badge {variant} {size}>
+                      Badge
+                      <CheckIcon />
+                    </Badge>
+                  </td>
+
+                  <td>
+                    <Badge {variant} {size}>
+                      <StarFilledIcon />
+                      Badge
+                      <CheckIcon />
+                    </Badge>
+                  </td>
+
+                  <td>
+                    <Badge {variant} {size}>
+                      <StarFilledIcon />
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    padding: var(--space-7);
+  }
+
+  table {
+    border-spacing: var(--space-5) var(--space-4);
+  }
+
+  th {
+    text-align: left;
+    font-weight: normal;
+    color: var(--gray-11);
+  }
+</style>

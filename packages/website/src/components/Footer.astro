@@ -3,6 +3,7 @@ import { assertSecret } from "@blitzkit/core";
 import { Box, Code, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import packageJson from "../../../../package.json";
 import { api } from "../api/dynamic";
+import { discordLink } from "../config/socials";
 import { LinkI18n } from "./LinkI18n";
 import { LocaleSwitcherThemeWrapper } from "./LocaleSwitcher";
 
@@ -84,7 +85,7 @@ const strings = await api.strings(locale);
           }}
         >
           <Link
-            href="https://discord.gg/nDt7AjGJQH"
+            href={discordLink}
             target="_blank"
             color="gray"
           >

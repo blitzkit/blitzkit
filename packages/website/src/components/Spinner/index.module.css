@@ -1,10 +1,10 @@
 .spinner {
   display: inline-block;
   box-sizing: border-box;
-  width: var(--space-5);
-  height: var(--space-5);
+  width: 1.5em;
+  height: 1.5em;
 
-  border: var(--space-2) solid var(--gray-5);
+  border: calc(1em / 4) solid var(--gray-5);
   border-top-color: var(--gray-12);
   border-radius: 50%;
 

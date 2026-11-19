@@ -1,0 +1,49 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.intro {
+  margin-top: var(--space-3);
+}
+
+.embeds {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.embed {
+  display: block;
+  width: fit-content;
+  height: fit-content;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  border-radius: var(--space-4);
+  background-color: var(--gray-2);
+  box-shadow: var(--shadow-subtle);
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3);
+}
+
+.preview {
+  position: relative;
+  overflow: hidden;
+
+  width: 20rem;
+  height: 20rem;
+
+  background-image: url(/media/embed-default.webp);
+  background-size: cover;
+  background-position: center;
+}

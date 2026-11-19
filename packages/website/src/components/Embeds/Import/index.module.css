@@ -1,0 +1,13 @@
+.description {
+  margin-bottom: var(--space-3);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.field {
+  flex: 1;
+}

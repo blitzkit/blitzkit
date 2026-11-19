@@ -1,10 +1,10 @@
-import { Slider as RadixSlider } from "@radix-ui/themes";
 import type { EmbedPreviewControllerProps } from "../../pages/[...chunk_default]/[...locale]/embed/[embed]/_index";
-import { EmbedState, type RadixSize } from "../../stores/embedState";
+import { EmbedState } from "../../stores/embedState";
 import type {
   EmbedConfigItemType,
   EmbedItemType,
 } from "../../stores/embedState/constants";
+import { RangeSlider } from "./RangeSlider";
 
 export function Slider({
   configKey,
@@ -13,14 +13,11 @@ export function Slider({
   config: EmbedConfigItemType<EmbedItemType.Slider>;
 }) {
   return (
-    <RadixSlider
-      variant="classic"
+    <RangeSlider
       min={config.min}
       max={config.max}
-      value={[
-        EmbedState.use((state) => parseInt(state[configKey] as RadixSize)),
-      ]}
-      onValueChange={([value]) => {
+      value={EmbedState.use((state) => Number(state[configKey]))}
+      onValueChange={(value) => {
         EmbedState.mutate((draft) => {
           draft[configKey] = value;
         });

@@ -22,11 +22,12 @@ const strings = await api.strings(locale);
   <ToolCardLayoutRoot>
     <ToolCardLayoutColumn>
       <ToolCard {locale} minor tool={tools.session} />
-      <ToolCard {locale} minor tool={tools.playlist} />
+      <ToolCard {locale} minor tool={tools.embed} />
     </ToolCardLayoutColumn>
 
     <ToolCardLayoutColumn major>
-      <ToolCard {locale} tool={tools.players} />
+      <ToolCard {locale} minor tool={tools.playlist} />
+      <!-- <ToolCard {locale} tool={tools.players} /> -->
     </ToolCardLayoutColumn>
   </ToolCardLayoutRoot>
 </HomeSection>

@@ -1,10 +1,8 @@
 ---
-import { AstroSeo } from "@astrolib/seo";
 import { MagicWandIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, Link } from "@radix-ui/themes";
 import { compareVersions } from "compare-versions";
 import { PageWrapper } from "../../../../../components/PageWrapper";
-import { getStrings } from "../../../../../core/i18n/getStrings";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../../index.astro";
@@ -13,7 +11,6 @@ export { getStaticPaths } from "../../index.astro";
 const ROOT = "../../../../../../../../docs/changelogs/";
 
 const { locale } = Astro.props;
-const strings = getStrings(locale);
 const versions = Object.keys(
   import.meta.glob("../../../../../../../../docs/changelogs/*.md", {
     eager: true,
@@ -23,19 +20,6 @@ const versions = Object.keys(
   .sort(compareVersions)
   .reverse();
 ---
-
-<AstroSeo
-  title={strings.website.docs.patches.name}
-  description={strings.website.docs.patches.seo_description}
-  canonical={Astro.url.href}
-  openGraph={{
-    url: Astro.url.href,
-    title: strings.website.docs.patches.name,
-    description: strings.website.docs.patches.seo_description,
-    site_name: "BlitzKit",
-  }}
-  twitter={{ cardType: "summary_large_image" }}
-/>
 
 <BaseLayout {locale}>
   <PageWrapper align="center">
