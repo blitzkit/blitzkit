@@ -1,4 +1,4 @@
-import { createDefaultSkills } from "@blitzkit/core";
+import { createDefaultSkills, type TankDefinition } from "@blitzkit/core";
 import { Box, Flex, Progress, Text } from "@radix-ui/themes";
 import { clamp } from "lodash-es";
 import { memo, useMemo, type ComponentProps, type ReactNode } from "react";
@@ -10,7 +10,7 @@ import {
 import { tankToDuelMember } from "../../../../../../core/blitzkit/tankToDuelMember";
 import { useDelta } from "../../../../../../hooks/useDelta";
 import { useLocale } from "../../../../../../hooks/useLocale";
-import { Duel } from "../../../../../../stores/duel";
+import { Duel, type EquipmentMatrix } from "../../../../../../stores/duel";
 import {
   Tankopedia,
   TankopediaRelativeAgainst,
@@ -45,6 +45,83 @@ const [
   api.skillDefinitions(),
 ]);
 
+// every row, and every page of the same tier and class, ranks against the same tanks
+const othersCache = new Map<string, TankCharacteristics[]>();
+
+function othersCharacteristics(
+  protagonistTank: TankDefinition,
+  relativeAgainst: TankopediaRelativeAgainst,
+  shellIndex: number,
+  equipmentMatrix: EquipmentMatrix,
+  equalize: boolean,
+) {
+  const key = JSON.stringify([
+    protagonistTank.tier,
+    protagonistTank.class,
+    relativeAgainst,
+    shellIndex,
+    equipmentMatrix,
+    equalize,
+  ]);
+  const cached = othersCache.get(key);
+
+  if (cached) return cached;
+
+  const defaultSkills = createDefaultSkills(skillDefinitions);
+  const others = Object.values(tankDefinitions.tanks)
+    .filter(
+      (tank) =>
+        (relativeAgainst === TankopediaRelativeAgainst.Class &&
+          tank.tier === protagonistTank.tier &&
+          tank.class === protagonistTank.class) ||
+        (relativeAgainst === TankopediaRelativeAgainst.Tier &&
+          tank.tier === protagonistTank.tier) ||
+        relativeAgainst === TankopediaRelativeAgainst.All,
+    )
+    .map((tank) => {
+      const member = tankToDuelMember(tank, provisionDefinitions);
+
+      if (member.gun.shells[shellIndex] === undefined) {
+        return undefined;
+      }
+
+      return tankCharacteristics(
+        {
+          applyDynamicArmor: false,
+          applyReactiveArmor: false,
+          applySpallLiner: false,
+          camouflage: member.camouflage,
+          consumables: member.consumables,
+          crewSkills: defaultSkills,
+          provisions: member.provisions,
+          engine: member.engine,
+          gun: member.gun,
+          equipmentMatrix: equipmentMatrix,
+          shell: member.gun.shells[shellIndex],
+          stockEngine: tank.engines[0],
+          stockGun: tank.turrets[0].guns[0],
+          stockTrack: tank.tracks[0],
+          stockTurret: tank.turrets[0],
+          tank,
+          track: member.track,
+          turret: member.turret,
+          assaultDistance: member.assaultDistance,
+          equalize,
+        },
+        {
+          equipmentDefinitions,
+          provisionDefinitions,
+          tankModelDefinition: modelDefinitions.models[tank.id],
+        },
+      );
+    })
+    .filter((tank) => tank !== undefined);
+
+  othersCache.set(key, others);
+
+  return others;
+}
+
 export const InfoWithDelta = memo<InfoWithDeltaProps>(
   ({ stats, indent, noRanking, deltaType, ...props }) => {
     const { strings } = useLocale();
@@ -62,67 +139,24 @@ export const InfoWithDelta = memo<InfoWithDeltaProps>(
       (state) => state.protagonist.equipmentMatrix,
     );
     const equalize = Duel.use((state) => state.equalize);
-    const others = useMemo(() => {
-      const defaultSkills = createDefaultSkills(skillDefinitions);
-
-      return Object.values(tankDefinitions.tanks)
-        .filter(
-          (tank) =>
-            (relativeAgainst === TankopediaRelativeAgainst.Class &&
-              tank.tier === protagonistTank.tier &&
-              tank.class === protagonistTank.class) ||
-            (relativeAgainst === TankopediaRelativeAgainst.Tier &&
-              tank.tier === protagonistTank.tier) ||
-            relativeAgainst === TankopediaRelativeAgainst.All,
-        )
-        .map((tank) => {
-          const member = tankToDuelMember(tank, provisionDefinitions);
-
-          if (member.gun.shells[shellIndex] === undefined) {
-            return undefined;
-          }
-
-          return tankCharacteristics(
-            {
-              applyDynamicArmor: false,
-              applyReactiveArmor: false,
-              applySpallLiner: false,
-              camouflage: member.camouflage,
-              consumables: member.consumables,
-              crewSkills: defaultSkills,
-              provisions: member.provisions,
-              engine: member.engine,
-              gun: member.gun,
-              equipmentMatrix: equipmentMatrix,
-              shell: member.gun.shells[shellIndex],
-              stockEngine: tank.engines[0],
-              stockGun: tank.turrets[0].guns[0],
-              stockTrack: tank.tracks[0],
-              stockTurret: tank.turrets[0],
-              tank,
-              track: member.track,
-              turret: member.turret,
-              assaultDistance: member.assaultDistance,
-              equalize,
-            },
-            {
-              equipmentDefinitions,
-              provisionDefinitions,
-              tankModelDefinition: modelDefinitions.models[tank.id],
-            },
-          );
-        })
-        .filter((tank) => {
-          if (tank === undefined) return false;
-
+    const others = useMemo(
+      () =>
+        othersCharacteristics(
+          protagonistTank,
+          relativeAgainst,
+          shellIndex,
+          equipmentMatrix,
+          equalize,
+        ).filter((tank) => {
           const othersValue =
             typeof props.value === "function"
               ? props.value(tank)!
               : (tank[props.value] as number);
 
           return othersValue !== undefined;
-        }) as TankCharacteristics[];
-    }, [relativeAgainst, shellIndex, equipmentMatrix, equalize]);
+        }),
+      [relativeAgainst, shellIndex, equipmentMatrix, equalize],
+    );
     const values = useMemo(
       () =>
         others.map((tank) =>
