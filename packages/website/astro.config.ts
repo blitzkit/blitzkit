@@ -16,7 +16,7 @@ export default defineConfig({
   outDir: "../../dist/website",
   prefetch: { defaultStrategy: "hover", prefetchAll: true },
 
-  build: { concurrency: 4, inlineStylesheets: "never" },
+  build: { concurrency: 8, inlineStylesheets: "never" },
 
   integrations: [
     favicons({
