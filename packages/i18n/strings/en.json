@@ -390,90 +390,59 @@
   },
 
   "tools": {
+    "home": {
+      "name": "Home"
+    },
     "tanks": {
-      "name": "Tankopedia",
-      "slogan": "Blitz tank encyclopedia",
-      "action": "Find tanks"
+      "name": "Tankopedia"
     },
     "avatars": {
-      "name": "Avatars",
-      "slogan": "Blitz player avatars",
-      "action": "Browse all"
+      "name": "Avatars"
     },
     "backgrounds": {
-      "name": "Backgrounds",
-      "slogan": "Blitz player backgrounds",
-      "action": "View all"
+      "name": "Backgrounds"
     },
     "api": {
-      "name": "API",
-      "action": "To docs",
-      "slogan": "BlitzKit hosted API"
+      "name": "API"
     },
     "players": {
-      "name": "Players",
-      "slogan": "Player statistics",
-      "action": "Stalk player"
+      "name": "Players"
     },
     "compare": {
-      "name": "Compare",
-      "slogan": "Compare tanks characteristics",
-      "action": "Compare now"
+      "name": "Compare"
     },
     "performance": {
-      "name": "Performance",
-      "slogan": "Tank performance statistics",
-      "action": "View tanks"
+      "name": "Performance"
     },
     "playlist": {
-      "name": "Playlist",
-      "slogan": "Tank playlist generator",
-      "action": "Generate"
+      "name": "Playlist"
     },
     "mixer": {
-      "name": "Mixer",
-      "slogan": "Tank module mixer",
-      "action": "Mix and match"
+      "name": "Mixer"
     },
     "session": {
-      "name": "Session",
-      "slogan": "Live player statistics",
-      "action": "Track"
+      "name": "Session"
     },
     "guesser": {
-      "name": "Guesser",
-      "slogan": "Silhouette mini-game",
-      "action": "Play"
+      "name": "Guesser"
     },
     "changelogs": {
-      "name": "Changelogs",
-      "slogan": "BlitzKit patch notes",
-      "action": "Read up"
+      "name": "Changelogs"
     },
     "settings": {
-      "name": "Settings",
-      "slogan": "",
-      "action": ""
+      "name": "Settings"
     },
     "tier_list": {
-      "name": "Tier list",
-      "slogan": "Rank tanks your way",
-      "action": "Make a list"
+      "name": "Tier list"
     },
     "embed": {
-      "name": "Embed",
-      "slogan": "Stream overlays and widgets",
-      "action": "Customize"
+      "name": "Embed"
     },
     "more": {
-      "name": "More",
-      "slogan": "Suggest a tool on Discord",
-      "action": "Join Discord"
+      "name": "More"
     },
     "credits": {
-      "name": "Credits",
-      "slogan": "",
-      "action": ""
+      "name": "Credits"
     }
   },
 

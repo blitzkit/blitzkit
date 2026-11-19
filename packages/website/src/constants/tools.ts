@@ -7,10 +7,16 @@ export interface Tool {
   disabled?: boolean;
 
   banner_background_position: "top" | "center" | "bottom";
-  navbar?: boolean;
+  hide_in_navbar?: boolean;
+  hide_in_navbar_desktop?: boolean;
 }
 
 export const tools: Record<string, Tool> = {
+  home: {
+    id: "home",
+    banner_background_position: "center",
+    hide_in_navbar_desktop: true,
+  },
   tanks: {
     id: "tanks",
     banner_background_position: "top",
@@ -84,13 +90,13 @@ export const tools: Record<string, Tool> = {
   settings: {
     id: "settings",
     banner_background_position: "center",
-    navbar: false,
+    hide_in_navbar: true,
   },
   credits: {
     disabled: true,
     id: "credits",
     banner_background_position: "center",
-    navbar: false,
+    hide_in_navbar: true,
   },
 };
 

@@ -14,13 +14,17 @@ interface ToolBannerProps {
   size: ToolBannerSize;
 }
 
+const BANNER_EXTENSIONS = ["webp", "png", "jpg", "jpeg"];
+
 function bannerPath(tool: string) {
-  return `src/media/banners/${tool}.webp`;
+  return BANNER_EXTENSIONS.map(
+    (extension) => `src/media/banners/${tool}.${extension}`,
+  ).find((path) => existsSync(path));
 }
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, () =>
   Object.values(tools)
-    .filter((tool) => existsSync(bannerPath(tool.id)))
+    .filter((tool) => bannerPath(tool.id) !== undefined)
     .flatMap((tool) =>
       Object.values(ToolBannerSize).map(
         (size) =>
@@ -34,7 +38,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () =>
 
 export async function GET({ props }: APIContext<ToolBannerProps>) {
   const height = TOOL_BANNER_HEIGHTS[props.size];
-  let image = sharp(bannerPath(props.tool));
+  let image = sharp(bannerPath(props.tool)!);
 
   if (height !== null) image = image.resize({ height });
 
