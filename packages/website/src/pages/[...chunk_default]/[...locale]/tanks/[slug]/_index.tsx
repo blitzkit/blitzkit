@@ -17,28 +17,27 @@ import { withLocale } from "../../../../../hocs/withLocale";
 import { useAwait } from "../../../../../hooks/useAwait";
 import { useCharacteristics } from "../../../../../hooks/useCharacteristics";
 import { Tankopedia, TankopediaTab } from "../../../../../stores/tankopedia";
-import type { MaybeSkeletonComponentProps } from "../../../../../types/maybeSkeletonComponentProps";
 import styles from "./_index.module.css";
 
-type PageProps = MaybeSkeletonComponentProps & {
+interface PageProps {
   id: number;
-};
+}
 
-type SandboxProps = MaybeSkeletonComponentProps & {
+interface SandboxProps {
   tier: number;
-};
+}
 
 const tanks = await api.tanks();
 
 export const Page = withErrorWrapper(
-  withLocale<PageProps>(({ skeleton, id }) => {
+  withLocale<PageProps>(({ id }) => {
     const protagonistTank = useAwait(() => api.tank(id), `tank-${id}`);
 
     Tankopedia.useInitialization(protagonistTank);
 
     return (
       <div className={styles.page}>
-        <Sandbox skeleton={skeleton} tier={protagonistTank.tier} />
+        <Sandbox tier={protagonistTank.tier} />
         <Loadout />
       </div>
     );
@@ -61,7 +60,7 @@ function Loadout() {
   );
 }
 
-function Sandbox({ skeleton, tier }: SandboxProps) {
+function Sandbox({ tier }: SandboxProps) {
   const protagonist = Tankopedia.use((state) => state.protagonist);
   const equalize = Tankopedia.use((state) => state.environment.equalize);
 
@@ -86,13 +85,10 @@ function Sandbox({ skeleton, tier }: SandboxProps) {
     return { value } satisfies ThicknessRange;
   }, [protagonist, equalize]);
 
-  const tabbed = Tankopedia.use((state) => state.tab === TankopediaTab.Sandbox);
-
   return (
     <div className={styles.sandbox}>
       <TankopediaSandbox
         antagonistCharacteristics={antagonistCharacteristics}
-        skeleton={skeleton}
         thicknessRange={thicknessRange}
       />
       <TankopediaCharacteristics characteristics={characteristics} />
@@ -102,14 +98,4 @@ function Sandbox({ skeleton, tier }: SandboxProps) {
       <TankopediaTabs />
     </div>
   );
-
-  // return (
-  // <Scroller
-  //   id="main"
-  //   className={styles.sandbox}
-  //   data-tabbed={tabbed}
-  //   orientation={ScrollerOrientation.Vertical}
-  // >
-  // </Scroller>
-  // );
 }

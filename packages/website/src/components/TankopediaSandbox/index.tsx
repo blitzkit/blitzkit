@@ -7,11 +7,11 @@ import { useDuelModels } from "../../hooks/useDuelModels";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
 import { useModel } from "../../hooks/useModel";
+import { useMounted } from "../../hooks/useMounted";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
 import type { ComputedCharacteristics } from "../../types/characteristics";
-import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { ArmorPlateDisplay } from "../ArmorPlateDisplay";
 import { CanvasAutoClear } from "../CanvasAutoClear";
 import { CanvasControl } from "../CanvasControl";
@@ -31,16 +31,16 @@ import { TankStaticArmor, type ThicknessRange } from "../TankStaticArmor";
 import { Thicknesses } from "../Thicknesses";
 import styles from "./index.module.css";
 
-type TankSandboxProps = MaybeSkeletonComponentProps & {
+interface TankSandboxProps {
   thicknessRange: ThicknessRange;
   antagonistCharacteristics: ComputedCharacteristics;
-};
+}
 
 export function TankopediaSandbox({
-  skeleton,
   thicknessRange,
   antagonistCharacteristics,
 }: TankSandboxProps) {
+  const mounted = useMounted();
   const wrapper = useRef<HTMLDivElement>(null);
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
   const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
@@ -169,7 +169,7 @@ export function TankopediaSandbox({
             });
           }}
         >
-          {!skeleton && <Content thicknessRange={thicknessRange} />}
+          {mounted && <Content thicknessRange={thicknessRange} />}
         </SmartCanvas>
 
         <TankSandboxLoader />
