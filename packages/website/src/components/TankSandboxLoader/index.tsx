@@ -1,6 +1,7 @@
 import { alias } from "@blitzkit/core";
 import { useProgress } from "@react-three/drei";
 import { Tankopedia } from "../../stores/tankopedia";
+import { Progress } from "../Progress";
 import styles from "./index.module.css";
 
 export function TankSandboxLoader() {
@@ -18,18 +19,6 @@ export function TankSandboxLoader() {
         src={alias("api", `/tanks/${tank}/icons/big.webp`)}
       />
       <Progress value={data.progress} />
-    </div>
-  );
-}
-
-interface ProgressProps {
-  value: number;
-}
-
-function Progress({ value }: ProgressProps) {
-  return (
-    <div className={styles.progress}>
-      <div className={styles.bar} style={{ width: `${value}%` }} />
     </div>
   );
 }

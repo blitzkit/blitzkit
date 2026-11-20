@@ -48,6 +48,7 @@ export type TankSearchProps = MaybeSkeletonComponentProps & {
   onSelectAll?: (tanks: TankDefinition[]) => void;
 };
 
+// TODO: across the project, remove "definitions"
 const [gameDefinitions, tankDefinitions, tankNames] = await Promise.all([
   api.game(),
   api.tanks(),
@@ -55,6 +56,7 @@ const [gameDefinitions, tankDefinitions, tankNames] = await Promise.all([
 ]);
 const tankDefinitionsArray = Object.values(tankDefinitions.tanks);
 
+// TODO: add compact mode
 export const TankSearch = memo<TankSearchProps>(
   ({ compact, onSelect, onSelectAll, skeleton }) => {
     const strings = useStrings();

@@ -57,6 +57,7 @@ const tool = tools.tanks;
         min-height: 100dvh;
 
         display: flex;
+        flex-direction: row-reverse;
 
         background-color: var(--gray-1);
         color: var(--gray-12);
@@ -65,21 +66,24 @@ const tool = tools.tanks;
         .main {
           flex: 1;
           min-width: 0;
+
+          display: flex;
+          flex-direction: column;
         }
 
         @media screen and (max-width: 80rem) {
-          flex-direction: column-reverse;
+          flex-direction: column;
         }
       }
     </style>
   </head>
 
-  <body>
-    <NavbarDesktop {locale} {tool} />
-    <NavbarMobile {locale} {tool} solid={solidNavbar} />
-
+  <body data-solid-navbar={solidNavbar}>
     <main class="main">
       <slot />
     </main>
+
+    <NavbarDesktop {locale} {tool} />
+    <NavbarMobile {locale} {tool} solid={solidNavbar} />
   </body>
 </html>

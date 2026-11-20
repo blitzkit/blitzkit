@@ -1,5 +1,6 @@
 .content {
   position: relative;
-  height: 100dvh;
   background-color: black;
+
+  flex: 1;
 }

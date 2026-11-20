@@ -42,7 +42,6 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   mixer: {
-    disabled: true,
     id: "mixer",
     banner_background_position: "bottom",
   },

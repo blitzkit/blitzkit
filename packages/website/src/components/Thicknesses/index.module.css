@@ -11,7 +11,7 @@
   top: 50%;
 
   user-select: none;
-  transition: var(--duration-brief);
+  transition-duration: var(--duration-brief);
 
   /* slides off the right edge when the static armor view isn't active */
   transform: translate(calc(100% + var(--space-4)), -50%);

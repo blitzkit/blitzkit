@@ -113,7 +113,7 @@
     position: absolute;
 
     opacity: 0;
-    transition: opacity var(--duration-brief);
+    transition-duration: var(--duration-brief);
 
     &[data-hidden="true"] {
       display: none;

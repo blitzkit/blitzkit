@@ -21,7 +21,7 @@
     outline: var(--outline-focus);
     border-radius: var(--radius-max);
 
-    transition: var(--duration-brief);
+    transition-duration: var(--duration-brief);
   }
 
   &[data-variant="solid"] {

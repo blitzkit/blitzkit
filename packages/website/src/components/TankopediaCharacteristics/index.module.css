@@ -103,7 +103,7 @@
 
               .bar {
                 height: 100%;
-                transition: var(--duration-brief);
+                transition-duration: var(--duration-brief);
               }
             }
           }

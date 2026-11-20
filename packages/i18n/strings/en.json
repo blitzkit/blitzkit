@@ -4,6 +4,11 @@
     "settings": "Settings"
   },
 
+  "mixer": {
+    "screenshot": "Screenshot",
+    "randomize": "Randomize"
+  },
+
   "guesser": {
     "help": {
       "title": "Partially reveal tank?",
@@ -544,6 +549,14 @@
 
   "common": {
     "name": "BlitzKit",
+
+    "screenshot": {
+      "title": "Screenshot",
+      "description": "Screenshot the tank with a transparent background.",
+      "cancel": "Cancel",
+      "download": "Download",
+      "copy": "Copy"
+    },
 
     "search": {
       "hint_players": "Search players...",

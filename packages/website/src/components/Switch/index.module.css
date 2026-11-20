@@ -16,7 +16,7 @@
   background-color: var(--gray-a5);
 
   cursor: pointer;
-  transition: var(--duration-brief);
+  transition-duration: var(--duration-brief);
 
   &[data-state="checked"] {
     background-color: var(--accent-8);
@@ -43,7 +43,7 @@
   background-color: var(--white-a12);
   box-shadow: var(--shadow-subtle);
 
-  transition: var(--duration-brief);
+  transition-duration: var(--duration-brief);
 
   &[data-state="checked"] {
     transform: translateX(calc(var(--switch-thumb-size) * 1.25));

@@ -255,7 +255,7 @@
     height: 65%;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: var(--duration-brief);
+    transition-duration: var(--duration-brief);
 
     &[data-shot="true"] {
       width: 70%;
@@ -368,7 +368,7 @@
     position: absolute;
     inset: 0;
     background: transparent;
-    transition: var(--duration-brief);
+    transition-duration: var(--duration-brief);
 
     &[data-shot="true"] {
       background: var(--white-a3);

@@ -7,7 +7,7 @@
 
   min-width: 5rem;
 
-  transition: var(--duration-brief);
+  transition-duration: var(--duration-brief);
 
   position: absolute;
   top: 50%;

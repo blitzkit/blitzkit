@@ -2,19 +2,20 @@ import { useThree, type ThreeEvent } from "@react-three/fiber";
 import type { QuicklimeEvent } from "quicklime";
 import { useCallback, useEffect, useRef } from "react";
 import { Group, Vector2 } from "three";
-import { api } from "../../../api/dynamic";
-import { jsxTree } from "../../../core/blitzkit/jsxTree";
+import { api } from "../../api/dynamic";
+import { jsxTree } from "../../core/blitzkit/jsxTree";
 import {
   modelTransformEvent,
   type ModelTransformEventData,
-} from "../../../core/blitzkit/modelTransform";
-import { controlsEnabledEvent } from "../../../core/controlsEnabled";
-import { useModel } from "../../../hooks/useModel";
-import { Mixer } from "../../../stores/mixer";
+} from "../../core/blitzkit/modelTransform";
+import { controlsEnabledEvent } from "../../core/controlsEnabled";
+import { useModel } from "../../hooks/useModel";
+import { Mixer } from "../../stores/mixer";
 
 const modelDefinitions = await api.models();
 
-export function Model() {
+// TODO: combine this and others with tank model or at least find a mutual way to handle tank assembly
+export function MixerModel() {
   const canvas = useThree((state) => state.gl.domElement);
 
   const turretGroup = useRef<Group>(null!);
@@ -86,7 +87,7 @@ export function Model() {
     function handleModelTransform(
       event: QuicklimeEvent<ModelTransformEventData>,
     ) {
-      turretGroup.current.rotation.z = event.data.yaw;
+      turretGroup.current.rotation.y = event.data.yaw;
       gunGroup.current.rotation.x = event.data.pitch;
     }
 
@@ -98,7 +99,7 @@ export function Model() {
   }, []);
 
   return (
-    <group rotation={[-Math.PI / 2, 0, 0]}>
+    <>
       {hullNodes.map((node) => {
         const isHull = node.name === "hull";
         const isWheel = node.name.startsWith("chassis_wheel_");
@@ -116,18 +117,18 @@ export function Model() {
 
       <group
         ref={turretGroup}
-        rotation={[0, 0, modelTransformEvent.last!.yaw]}
+        rotation={[0, modelTransformEvent.last!.yaw, 0]}
         position={[
           tankModel.turret_origin!.x + trackModel.origin!.x,
-          tankModel.turret_origin!.z + trackModel.origin!.z,
           tankModel.turret_origin!.y + trackModel.origin!.y,
+          tankModel.turret_origin!.z + trackModel.origin!.z,
         ]}
       >
         <group
           position={[
             -turretTankModel.turret_origin!.x - turretTrackModel.origin!.x,
-            -turretTankModel.turret_origin!.z - turretTrackModel.origin!.z,
             -turretTankModel.turret_origin!.y - turretTrackModel.origin!.y,
+            -turretTankModel.turret_origin!.z - turretTrackModel.origin!.z,
           ]}
         >
           {turretNodes.map((node) => {
@@ -163,12 +164,12 @@ export function Model() {
               turretTankModel.turret_origin!.x +
                 turretTrackModel.origin!.x +
                 turretModel.gun_origin!.x,
-              turretTankModel.turret_origin!.z +
-                turretTrackModel.origin!.z +
-                turretModel.gun_origin!.z,
               turretTankModel.turret_origin!.y +
                 turretTrackModel.origin!.y +
                 turretModel.gun_origin!.y,
+              turretTankModel.turret_origin!.z +
+                turretTrackModel.origin!.z +
+                turretModel.gun_origin!.z,
             ]}
           >
             <group
@@ -176,18 +177,22 @@ export function Model() {
                 -turretTankModel.turret_origin!.x -
                   turretTrackModel.origin!.x -
                   turretModel.gun_origin!.x,
-                -turretTankModel.turret_origin!.z -
-                  turretTrackModel.origin!.z -
-                  turretModel.gun_origin!.z,
                 -turretTankModel.turret_origin!.y -
                   turretTrackModel.origin!.y -
                   turretModel.gun_origin!.y,
+                -turretTankModel.turret_origin!.z -
+                  turretTrackModel.origin!.z -
+                  turretModel.gun_origin!.z,
               ]}
             >
               {turretNodes.map((node) => {
                 const isCurrentMantlet =
                   node.name ===
-                  `gun_${turretModel.guns[turret.turret.guns.at(-1)!.id].model_id.toString().padStart(2, "0")}_mask`;
+                  `gun_${turretModel.guns[
+                    turret.turret.guns.at(-1)!.id
+                  ].model_id
+                    .toString()
+                    .padStart(2, "0")}_mask`;
                 // const isCurrentGun =
                 //   node.name ===
                 //   `gun_${gunModel.model_id.toString().padStart(2, "0")}`;
@@ -219,12 +224,12 @@ export function Model() {
                 -gunTankModel.turret_origin!.x -
                   gunTrackModel.origin!.x -
                   gunTurretModel.gun_origin!.x,
-                -gunTankModel.turret_origin!.z -
-                  gunTrackModel.origin!.z -
-                  gunTurretModel.gun_origin!.z,
                 -gunTankModel.turret_origin!.y -
                   gunTrackModel.origin!.y -
                   gunTurretModel.gun_origin!.y,
+                -gunTankModel.turret_origin!.z -
+                  gunTrackModel.origin!.z -
+                  gunTurretModel.gun_origin!.z,
               ]}
             >
               {gunNodes.map((node) => {
@@ -259,6 +264,6 @@ export function Model() {
           </group>
         </group>
       </group>
-    </group>
+    </>
   );
 }

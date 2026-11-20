@@ -11,7 +11,7 @@ const { locale } = Astro.props;
 
 <ToolOpenGraph {locale} tool={tools.mixer} />
 
-<BaseLayout {locale} integrated>
+<BaseLayout accent="gray" {locale} solidNavbar>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

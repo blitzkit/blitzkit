@@ -20,10 +20,24 @@ const strings = await api.strings(locale);
 ---
 
 <style>
-  #navbar-mobile {
+  #navbar-mobile,
+  #navbar-mobile-spacer {
     --icon-size: 1.5rem;
     --padding: var(--space-4);
+  }
 
+  #navbar-mobile-spacer {
+    display: none;
+    flex-shrink: 0;
+
+    height: calc(var(--icon-size) + 2 * var(--padding));
+
+    @media screen and (max-width: 80rem) {
+      display: block;
+    }
+  }
+
+  #navbar-mobile {
     position: fixed;
     overflow: hidden;
 
@@ -190,7 +204,12 @@ const strings = await api.strings(locale);
   });
 </script>
 
-<nav id="navbar-mobile" data-visible="true" data-expanded="false">
+<nav
+  id="navbar-mobile"
+  data-visible="true"
+  data-expanded="false"
+  data-solid={solid}
+>
   <Scroller
     client:load
     orientation={ScrollerOrientation.Vertical}
@@ -245,5 +264,7 @@ const strings = await api.strings(locale);
 </nav>
 
 <div id="navbar-mobile-overlay" />
+
+{solid && <div id="navbar-mobile-spacer" />}
 
 {!solid && <NavbarMobileAutoHide />}
