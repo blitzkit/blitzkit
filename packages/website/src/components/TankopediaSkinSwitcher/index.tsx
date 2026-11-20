@@ -6,6 +6,7 @@ import { SKIN_NUMBER } from "../../constants/skinNumber";
 import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { hasSkinAnimations } from "../../hooks/useSkin";
+import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
@@ -17,6 +18,7 @@ const camouflageDefinitions = await api.camouflages();
 
 export function TankopediaSkinSwitcher() {
   const unwrap = useUnwrapper();
+  const strings = useStrings();
 
   const protagonist = useDuelModules("protagonist");
 
@@ -94,7 +96,11 @@ export function TankopediaSkinSwitcher() {
 
       {hasAnimations && (
         <Tooltip
-          tooltip={playing ? "Pause animations" : "Play animations"}
+          tooltip={
+            playing
+              ? strings.tanks.skin_switcher.pause_animations
+              : strings.tanks.skin_switcher.play_animations
+          }
           side="left"
         >
           <IconButton

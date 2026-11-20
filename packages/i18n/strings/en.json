@@ -173,6 +173,11 @@
       "equalize": "Equalize"
     },
 
+    "skin_switcher": {
+      "play_animations": "Play animations",
+      "pause_animations": "Pause animations"
+    },
+
     "custom_shell": {
       "title": "Custom shell",
       "type": "Type",
@@ -764,6 +769,11 @@
     "redirect": {
       "title": "301: moved permanently",
       "body": "This page has moved. Redirecting..."
+    },
+
+    "not_found": {
+      "title": "404: page not found",
+      "body": "Where would you like to go?"
     },
 
     "settings": {

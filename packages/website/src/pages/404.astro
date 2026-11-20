@@ -1,6 +1,7 @@
 ---
 import locales from "@blitzkit/i18n/locales.json";
 import { DiscordLogoIcon, HomeIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
 import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 import { Link } from "../components/Link";
@@ -11,25 +12,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 // the 404 page is not locale-scoped, so it always renders in the default locale
 const locale = locales.default;
+const strings = await api.strings(locale);
 ---
 
 <BaseLayout accent="blue" {locale}>
   <div class="page">
-    <Heading size="3">404: page not found</Heading>
-    <Text lowContrast>Where would you like to go?</Text>
+    <Heading size="3">{strings.website.not_found.title}</Heading>
+    <Text lowContrast>{strings.website.not_found.body}</Text>
 
     <div class="actions">
       <LinkI18n {locale} href="/" underline="never">
         <Button>
           <HomeIcon />
-          Home
+          {strings.navbar.home}
         </Button>
       </LinkI18n>
 
       <Link href={discordLink} underline="never">
         <Button variant="outline">
           <DiscordLogoIcon />
-          Discord
+          {strings.website.home.discord.action}
         </Button>
       </Link>
     </div>

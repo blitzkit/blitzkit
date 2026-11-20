@@ -66,6 +66,7 @@ export const tools: Record<string, Tool> = {
     banner_background_position: "bottom",
   },
   tier_list: {
+    disabled: true,
     id: "tier_list",
     slug: "tier-list",
     banner_background_position: "bottom",
