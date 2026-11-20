@@ -182,15 +182,14 @@ export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
           `  Cache miss for ${supported.locale} (this will take a while...)`
         );
 
-        const localLocale = supported.variant_blitz_local ?? supported.locale;
-        const cdnLocale = supported.variant_blitz_cdn ?? supported.locale;
+        const stringsLocale = supported.variant_blitz_strings ?? supported.locale;
         const networkStrings = (await fetch(
-          `https://stufficons.wgcdn.co/localizations/${cdnLocale}.yaml`
+          `https://stufficons.wgcdn.co/localizations/${stringsLocale}.yaml`
         )
           .then((response) => response.text())
           .then(parseYaml)) as BlitzStrings;
         const localStrings = await this.vfs.yaml<BlitzStrings>(
-          `Data/Strings/${localLocale}.yaml`
+          `Data/Strings/${stringsLocale}.yaml`
         );
         const combined = { ...networkStrings, ...localStrings };
 

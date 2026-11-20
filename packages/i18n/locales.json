@@ -36,8 +36,8 @@
     {
       "locale": "zh",
 
-      "variant_blitz_local": "zh_Hans_SG",
-      "variant_blitz_cdn": "zh-Hans",
+      "variant_blitz_glossary": "zh_Hans_SG",
+      "variant_blitz_strings": "zh-Hans",
 
       "flag": "🇨🇳"
     }

@@ -12,7 +12,7 @@ export abstract class ServerBlitzKitAPI10 extends ServerBlitzKitAPI9 {
     await Promise.all(
       locales.supported.map(async (supported) => {
         const glossary = await fetchGlossary(
-          supported.variant_blitz_local ?? supported.locale,
+          supported.variant_blitz_glossary ?? supported.locale,
         );
 
         console.log(
