@@ -3,6 +3,7 @@ import { api } from "../../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
 import ColorScale from "../../../../../components/ColorScale.astro";
 import ColorRanks from "../../../../../components/ColorRanks.astro";
+import { tools } from "../../../../../constants/tools";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
@@ -19,7 +20,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 const { id, locale } = Astro.props;
 ---
 
-<BaseLayout {locale} accent="violet">
+<BaseLayout tool={tools.tanks} {locale} accent="violet">
   <ColorScale color="ruby" />
   <ColorScale color="cyan" />
   <ColorScale color="green" />

@@ -11,7 +11,7 @@ const { locale } = Astro.props;
 
 <ToolOpenGraph {locale} tool={tools.playlist} />
 
-<BaseLayout {locale} noFooter>
+<BaseLayout tool={tools.playlist} {locale} noFooter>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

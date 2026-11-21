@@ -243,13 +243,15 @@ const strings = await api.strings(locale);
     </LinkI18nWrapper>
 
     <div class="tool" id="current-tool">
-      <div
-        style={`background-image: url(${alias(
-          "api",
-          `/tools/${tool.id}/banners/thumbnail.webp`,
-        )})`}
-        class="logo"
-      />
+      {tool.id !== "home" && (
+        <div
+          style={`background-image: url(${alias(
+            "api",
+            `/tools/${tool.id}/banners/thumbnail.webp`,
+          )})`}
+          class="logo"
+        />
+      )}
 
       <Text className="name">
         {strings.tools[tool.id as keyof typeof strings.tools].name}

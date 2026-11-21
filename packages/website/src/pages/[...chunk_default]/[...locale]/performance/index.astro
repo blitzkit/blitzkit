@@ -1,5 +1,6 @@
 ---
 import ColorScale from "../../../../components/ColorScale.astro";
+import { tools } from "../../../../constants/tools";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import { Page } from "./_index";
 
@@ -8,7 +9,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<BaseLayout accent="jade" {locale}>
+<BaseLayout tool={tools.performance} accent="jade" {locale}>
   <ColorScale color="red" />
   <ColorScale color="jade" />
   <ColorScale color="amber" />

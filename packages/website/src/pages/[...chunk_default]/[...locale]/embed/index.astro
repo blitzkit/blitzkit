@@ -9,7 +9,7 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<BaseLayout {locale} accent="red">
+<BaseLayout tool={tools.embed} {locale} accent="red">
   <ToolBanner {locale} tool={tools.embed} />
 
   <Page {locale} />

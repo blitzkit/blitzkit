@@ -16,6 +16,7 @@ export interface Tool {
 export const tools: Record<string, Tool> = {
   home: {
     id: "home",
+    slug: "",
     banner_background_position: "center",
     hide_in_navbar_desktop: true,
   },

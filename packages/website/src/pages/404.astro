@@ -8,6 +8,7 @@ import { Link } from "../components/Link";
 import { LinkI18n } from "../components/LinkI18n";
 import { Text } from "../components/Text";
 import { discordLink } from "../config/socials";
+import { tools } from "../constants/tools";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 // the 404 page is not locale-scoped, so it always renders in the default locale
@@ -15,7 +16,7 @@ const locale = locales.default;
 const strings = await api.strings(locale);
 ---
 
-<BaseLayout accent="blue" {locale}>
+<BaseLayout tool={tools.home} accent="blue" {locale}>
   <div class="page">
     <Heading size="3">{strings.website.not_found.title}</Heading>
     <Text lowContrast>{strings.website.not_found.body}</Text>

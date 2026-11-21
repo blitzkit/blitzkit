@@ -2,6 +2,7 @@
 import { Flex, Heading, Text } from "@radix-ui/themes";
 import { PageWrapper } from "../../../../../components/PageWrapper";
 import { mixStaticPaths } from "../../../../../core/blitzkit/mixStaticPaths";
+import { tools } from "../../../../../constants/tools";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../../index.astro";
 import { AUTH_PROVIDER_NAMES, AUTH_PROVIDERS, Authorize } from "./_index";
@@ -16,7 +17,7 @@ const { provider } = Astro.params;
 const { locale } = Astro.props;
 ---
 
-<BaseLayout {locale}>
+<BaseLayout tool={tools.home} {locale}>
   <PageWrapper>
     <Flex
       style={{ flex: 1 }}

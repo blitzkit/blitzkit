@@ -2,6 +2,7 @@
 import { CheckIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { Badge } from "../../../components/Badge";
 import ColorScale from "../../../components/ColorScale.astro";
+import { tools } from "../../../constants/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import type { Color } from "../../../ui/color";
 
@@ -16,7 +17,7 @@ const iconLayouts = ["leading", "trailing", "both", "icon only"] as const;
 const extraColors = ["red", "amber", "green"] satisfies Color[];
 ---
 
-<BaseLayout accent="blue" {locale}>
+<BaseLayout tool={tools.home} accent="blue" {locale}>
   {extraColors.map((color) => (
     <ColorScale {color} />
   ))}
