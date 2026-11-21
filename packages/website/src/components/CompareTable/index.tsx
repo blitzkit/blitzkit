@@ -181,10 +181,13 @@ interface GroupProps {
 function Group({ group, characteristics }: GroupProps) {
   const strings = useStrings();
   const members = CompareEphemeral.use((state) => state.members);
+  // A lone tank still shows its values; otherwise rows need two tanks to compare
+  const minimumPresent = Math.min(2, characteristics.length);
   const items = group.order.filter(
     (item): item is CharacteristicRenderConfig =>
       "name" in item &&
-      characteristics.some((computed) => computed.has(item.name)),
+      characteristics.filter((computed) => computed.has(item.name)).length >=
+        minimumPresent,
   );
 
   if (items.length === 0) return null;
