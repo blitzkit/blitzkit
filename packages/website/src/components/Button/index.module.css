@@ -13,7 +13,7 @@
     --content-size: calc(0.85 * var(--font-size-regular));
   }
 
-  &[data-size="regular"] {
+  &:not([data-size]) {
     --padding: var(--space-3);
     --content-size: calc(1 * var(--font-size-regular));
   }

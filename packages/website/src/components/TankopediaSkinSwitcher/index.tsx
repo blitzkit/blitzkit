@@ -11,6 +11,7 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
@@ -79,7 +80,7 @@ export function TankopediaSkinSwitcher() {
                     });
                   }}
                 >
-                  <img
+                  <LazyImage
                     className={styles["camouflage-icon"]}
                     alt={name}
                     src={alias(

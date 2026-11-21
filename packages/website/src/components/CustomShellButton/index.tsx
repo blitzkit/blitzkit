@@ -10,6 +10,7 @@ import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia } from "../../stores/tankopedia";
 import { Button } from "../Button";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { Popover } from "../Popover";
 import { Select } from "../Select";
 import { Slider } from "../Slider";
@@ -112,7 +113,7 @@ export function CustomShellButton() {
             highContrast={customShell !== undefined}
             size="major"
           >
-            <img
+            <LazyImage
               alt={strings.tanks.custom_shell.title}
               src="/assets/images/icons/custom-shell.png"
             />
@@ -193,7 +194,7 @@ export function CustomShellButton() {
                                 <Select.ItemText className="TEST_CLASS">
                                   {strings.common.shells[label]}
 
-                                  <img
+                                  <LazyImage
                                     alt={strings.common.shells[label]}
                                     src={alias(
                                       "api",

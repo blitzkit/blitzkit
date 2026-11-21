@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import { classNames } from "../../ui/classNames";
 import type { ButtonProps } from "../Button";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import styles from "./index.module.css";
 
 type SidebarIconButtonProps = ButtonProps & {
@@ -37,7 +38,7 @@ export function SidebarIconButton({
       size="major"
       {...props}
     >
-      <img alt={alt} src={src} />
+      <LazyImage alt={alt} src={src} />
     </IconButton>
   );
 }

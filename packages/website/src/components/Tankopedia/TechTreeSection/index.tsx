@@ -9,6 +9,7 @@ import { useLocale } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import { LazyImage } from "../../LazyImage";
 import { Arrow } from "./components/Arrow";
 import { Node } from "./components/Node";
 
@@ -104,7 +105,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
           <Flex gap="4" align="center">
             <Text color="gray" wrap="nowrap">
               <Flex gap="1" align="center">
-                <img
+                <LazyImage
                   alt="XP"
                   src={alias("api", "/icons/currencies/xp.webp")}
                   style={{
@@ -120,7 +121,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
 
             <Text color="gray" wrap="nowrap">
               <Flex gap="1" align="center">
-                <img
+                <LazyImage
                   alt="Silver"
                   src={alias("api", "/icons/currencies/silver.webp")}
                   style={{

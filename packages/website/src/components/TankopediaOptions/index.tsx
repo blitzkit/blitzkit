@@ -1,5 +1,6 @@
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
+import { LazyImage } from "../LazyImage";
 import { SegmentedControl } from "../SegmentedControl";
 import styles from "./index.module.css";
 
@@ -119,18 +120,18 @@ export function TankopediaOptions() {
           value={`${requestedDisplay}`}
           options={[
             {
-              label: <img src="/assets/images/icons/tankopedia-model.png" />,
+              label: <LazyImage src="/assets/images/icons/tankopedia-model.png" />,
               value: `${TankopediaDisplay.Model}`,
             },
             {
               label: (
-                <img src="/assets/images/icons/tankopedia-dynamic-armor.png" />
+                <LazyImage src="/assets/images/icons/tankopedia-dynamic-armor.png" />
               ),
               value: `${TankopediaDisplay.DynamicArmor}`,
             },
             {
               label: (
-                <img src="/assets/images/icons/tankopedia-static-armor.png" />
+                <LazyImage src="/assets/images/icons/tankopedia-static-armor.png" />
               ),
               value: `${TankopediaDisplay.StaticArmor}`,
             },
@@ -155,7 +156,7 @@ export function TankopediaOptions() {
           <SegmentedControl.Item value={`${TankopediaDisplay.DynamicArmor}`}>
             <Tooltip tooltip={strings.tanks.tabs.dynamic_armor}>
               <div height="100%" align="center">
-                <img
+                <LazyImage
                   src="/assets/images/icons/tankopedia-dynamic-armor.png"
                   style={{ height: "1.25em" }}
                 />
@@ -165,7 +166,7 @@ export function TankopediaOptions() {
           <SegmentedControl.Item value={`${TankopediaDisplay.StaticArmor}`}>
             <Tooltip tooltip={strings.tanks.tabs.model}>
               <div height="100%" align="center">
-                <img
+                <LazyImage
                   src="/assets/images/icons/tankopedia-static-armor.png"
                   style={{ height: "1.25em" }}
                 />

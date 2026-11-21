@@ -10,6 +10,7 @@ import { resolveTankModules } from "../../tankopedia/resolveTankModules";
 import { selectModule } from "../../tankopedia/selectModule";
 import { Button, type ButtonProps } from "../Button";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutConsumables } from "../LoadoutConsumables";
 import { LoadoutEquipment } from "../LoadoutEquipment";
 import { LoadoutModules } from "../LoadoutModules";
@@ -111,7 +112,7 @@ function Camouflage({ index }: SectionProps) {
         });
       }}
     >
-      <img
+      <LazyImage
         alt={strings.tanks.loadout.camouflage}
         src={alias("api", "/icons/camo.webp")}
       />
@@ -128,7 +129,7 @@ function ModulesSummary(props: SummaryProps) {
     <IconButton variant="ghost" size="major" {...props}>
       <div className={styles["modules-summary"]}>
         {(["turret", "gun", "engine", "chassis"] as const).map((module) => (
-          <img
+          <LazyImage
             key={module}
             alt={strings.tanks.loadout.module_types[module]}
             className={styles["summary-module"]}
@@ -153,7 +154,7 @@ function ItemsSummary({ index, kind, ...props }: ItemsSummaryProps) {
     <IconButton variant="ghost" {...props}>
       <div className={styles["items-summary"]}>
         {selected.map((id) => (
-          <img
+          <LazyImage
             key={id}
             alt={unwrap(
               kind === "provisions"

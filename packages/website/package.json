@@ -23,7 +23,6 @@
     "@types/three": "^0.180.0",
     "@vite-pwa/astro": "^1.1.0",
     "astro": "^5.14.4",
-    "astro-favicons": "^3.1.5",
     "cheerio": "^1.1.2",
     "compare-versions": "^6.1.1",
     "fuzzysort": "^3.1.0",

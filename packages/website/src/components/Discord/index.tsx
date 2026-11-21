@@ -8,6 +8,7 @@ import { Var } from '../../core/radix/var';
 import type { LocaleAcceptorProps } from '../../hooks/useLocale';
 import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
 import { InlineSkeleton } from '../InlineSkeleton';
+import { LazyImage } from '../LazyImage';
 import './index.css';
 
 export interface DiscordWidget {
@@ -101,7 +102,7 @@ function Member({
       <Flex key={id} align="center" gap="2" flexShrink="0" width="8rem">
         <Box width="1.5em" height="1.5em" flexShrink="0" position="relative">
           {!skeleton && (
-            <img
+            <LazyImage
               src={avatar_url}
               alt={`${username} profile picture`}
               style={{ width: '100%', height: '100%', borderRadius: '50%' }}

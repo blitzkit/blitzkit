@@ -3,6 +3,7 @@ import type { GunDefinition } from "@blitzkit/protos";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
@@ -34,7 +35,7 @@ export function LoadoutShells({ gun, selected, onSelect }: LoadoutShellsProps) {
                 parentListChild="horizontal"
                 onClick={() => onSelect(candidate.id)}
               >
-                <img
+                <LazyImage
                   alt={name}
                   src={alias("api", `/icons/shells/${candidate.icon}.webp`)}
                 />

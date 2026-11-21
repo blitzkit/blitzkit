@@ -18,6 +18,7 @@ import { layoutAugmentTree } from "../../tankopedia/augmentTreeLayout";
 import { AUGMENT_GROUP_ID } from "../../tankopedia/augments";
 import { classNames } from "../../ui/classNames";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import shared from "../LoadoutTree/index.module.css";
 import { Text } from "../Text";
@@ -31,7 +32,7 @@ interface AugmentIconProps {
 function AugmentIcon({ icon, isCommon }: AugmentIconProps) {
   if (icon !== undefined) {
     return (
-      <img
+      <LazyImage
         alt=""
         src={alias("api", `/icons/augments/${icon}.webp`)}
         className={shared.icon}
@@ -58,7 +59,7 @@ function Price({ xp }: PriceProps) {
   return (
     <div className={shared.price}>
       <Text size="minor">{formatCompact(locale, xp)}</Text>
-      <img alt="xp" src={alias("api", "/icons/currencies/xp.webp")} />
+      <LazyImage alt="xp" src={alias("api", "/icons/currencies/xp.webp")} />
     </div>
   );
 }

@@ -19,3 +19,11 @@ export const weights = {
   bold: 700,
   black: 900,
 } as const;
+
+export const COLOR_SCALE_LENGTH = 12;
+
+export const COLORS_ALPHA_ONLY = ["black", "white"] as const;
+export type AlphaOnlyColor = (typeof COLORS_ALPHA_ONLY)[number];
+
+export const COLOR_ALIASES = ["gray", "accent"] as const;
+export type ColorAlias = (typeof COLOR_ALIASES)[number];

@@ -40,8 +40,8 @@ export function Text({
   return (
     <span
       className={classNames(styles.text, className)}
-      data-low-contrast={lowContrast}
-      data-size={size}
+      data-low-contrast={lowContrast || undefined}
+      data-size={size === "regular" ? undefined : size}
       data-weight={weight}
       data-align={align === "left" ? undefined : align}
       style={{ color: `var(--${scale}-${power})` }}

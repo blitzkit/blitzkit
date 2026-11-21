@@ -19,6 +19,7 @@ import type { TankState } from "../../tankopedia/tankState";
 import { classNames } from "../../ui/classNames";
 import { Discriminator } from "../Discriminator";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LinkI18n } from "../LinkI18n";
 import { LoadoutSection } from "../LoadoutSection";
 import shared from "../LoadoutTree/index.module.css";
@@ -220,7 +221,7 @@ function ModuleNode({
         if (!isTank) onSelect(unlock);
       }}
     >
-      <img
+      <LazyImage
         alt={tooltip}
         src={
           isTank
@@ -237,7 +238,7 @@ function ModuleNode({
       {unlock.cost!.value > 0 && (
         <div className={shared.price}>
           <Text size="minor">{formatCompact(locale, unlock.cost!.value)}</Text>
-          <img
+          <LazyImage
             alt={unlock.cost!.type}
             src={alias("api", `/icons/currencies/${unlock.cost!.type}.webp`)}
           />

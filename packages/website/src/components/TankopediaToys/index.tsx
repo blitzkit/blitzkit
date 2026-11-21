@@ -32,6 +32,7 @@ import type { ComputedCharacteristics } from "../../types/characteristics";
 import { Button } from "../Button";
 import { Checkbox } from "../Checkbox";
 import { Code } from "../Code";
+import { LazyImage } from "../LazyImage";
 import { SegmentedControl } from "../SegmentedControl";
 import { Slider } from "../Slider";
 import { ShellBorder } from "../Tankopedia/CharacteristicsSection/components/Characteristics/components/ReloadVisualizer/components/ShellBorder";
@@ -101,7 +102,7 @@ export function RicochetToy({ characteristics }: ToyProps) {
       >
         <div className={styles.extension} />
         <div className={styles.line} />
-        <img
+        <LazyImage
           className={styles.shell}
           src={alias("api", `/icons/shells/${protagonist.shell.icon}.webp`)}
         />
@@ -269,14 +270,14 @@ export function TraverseToy({ characteristics }: TraverseToyProps) {
   return (
     <div className={styles.traverse}>
       <div ref={hull} className={styles.hull} data-turretless={isTurretless}>
-        <img
+        <LazyImage
           draggable="false"
           className={styles.image}
           src={`/media/toys/hull${isTurretless ? "-only" : ""}.png`}
         />
 
         {!isTurretless && (
-          <img
+          <LazyImage
             draggable="false"
             ref={turret}
             className={styles.turret}
@@ -520,7 +521,7 @@ export function ReloadToy({ characteristics }: ToyProps) {
         </div>
       </div>
 
-      <img
+      <LazyImage
         className={styles.caret}
         src="/assets/images/tankopedia/visualizers/reload/caret.png"
       />

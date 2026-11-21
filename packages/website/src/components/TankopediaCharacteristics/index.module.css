@@ -102,7 +102,10 @@
               overflow: hidden;
 
               .bar {
+                width: var(--ranking-progress);
                 height: 100%;
+
+                background-color: var(--ranking-color);
                 transition-duration: var(--duration-brief);
               }
             }

@@ -13,6 +13,7 @@ import { useLocale } from "../../../../../../hooks/useLocale";
 import { useTankModelDefinition } from "../../../../../../hooks/useTankModelDefinition";
 import { Duel } from "../../../../../../stores/duel";
 import type { MaybeSkeletonComponentProps } from "../../../../../../types/maybeSkeletonComponentProps";
+import { LazyImage } from "../../../../../LazyImage";
 import { AssaultRangesVisualizer } from "./AssaultRangesVisualizer";
 import { GunFlexibilityVisualizer } from "./GunFlexibilityVisualizer";
 import { Info } from "./Info";
@@ -66,7 +67,7 @@ export function Firepower({
                     });
                   }}
                 >
-                  <img
+                  <LazyImage
                     alt={unwrap(thisShell.name!)}
                     width={16}
                     height={16}

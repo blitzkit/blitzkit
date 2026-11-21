@@ -1,8 +1,8 @@
 ---
-import "@radix-ui/colors/violet-dark.css";
 import { api } from "../../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
 import ColorScale from "../../../../../components/ColorScale.astro";
+import ColorRanks from "../../../../../components/ColorRanks.astro";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
@@ -20,15 +20,10 @@ const { id, locale } = Astro.props;
 ---
 
 <BaseLayout {locale} accent="violet">
-  <ColorScale color="amber" alpha />
-  <ColorScale color="red" />
-  <ColorScale color="ruby" alpha />
-  <ColorScale color="orange" />
-  <ColorScale color="amber" />
-  <ColorScale color="jade" />
-  <ColorScale color="jade" alpha />
-  <ColorScale color="cyan" alpha />
+  <ColorScale color="ruby" />
+  <ColorScale color="cyan" />
   <ColorScale color="green" />
+  <ColorRanks />
 
   <Page {id} {locale} client:load />
 </BaseLayout>

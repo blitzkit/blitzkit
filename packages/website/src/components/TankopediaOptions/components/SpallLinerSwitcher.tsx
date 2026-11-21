@@ -6,6 +6,7 @@ import { Duel } from "../../../../../../stores/duel";
 import { SPALL_LINER_PROVISION_ID } from "../../../core/blitzkit/spallLiner";
 import { useLocale } from "../../../hooks/useLocale";
 import { Tankopedia } from "../../../stores/tankopedia";
+import { LazyImage } from "../../LazyImage";
 
 const provisionDefinitions = await api.provisionDefinitions();
 
@@ -62,7 +63,7 @@ export function SpallLinerSwitcher() {
         }
       }}
     >
-      <img
+      <LazyImage
         alt={unwrap(
           provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
         )}
@@ -83,7 +84,7 @@ export function SpallLinerSwitcher() {
 
       <Popover.Content>
         <Flex gap="2" align="center">
-          <img
+          <LazyImage
             alt={unwrap(
               provisionDefinitions.provisions[SPALL_LINER_PROVISION_ID].name!,
             )}
@@ -109,7 +110,7 @@ export function SpallLinerSwitcher() {
                   radius="medium"
                   onClick={() => equip(id)}
                 >
-                  <img
+                  <LazyImage
                     alt={unwrap(provisionDefinitions.provisions[id].name!)}
                     src={alias("api", `/icons/provisions/${id}.webp`)}
                     style={{

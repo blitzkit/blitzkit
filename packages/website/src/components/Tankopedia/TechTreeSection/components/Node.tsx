@@ -6,6 +6,7 @@ import { awaitableAverageDefinitions } from "../../../../core/awaitables/average
 import { useLocale } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
+import { LazyImage } from "../../../LazyImage";
 import { LinkI18n } from "../../../LinkI18n";
 
 type NodeProps = MaybeSkeletonComponentProps & {
@@ -77,7 +78,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
             WebkitBackdropFilter: highlight ? "brightness(0.25)" : undefined,
           }}
         >
-          <img
+          <LazyImage
             alt={unwrap(tank.name!)}
             src={alias("api", `/tanks/${id}/icons/big.webp`)}
             width={64}
@@ -97,7 +98,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
             <Flex gap="2" align="center">
               <Text color="gray" size="1" wrap="nowrap">
                 <Flex gap="1" align="center">
-                  <img
+                  <LazyImage
                     alt="XP"
                     src={alias("api", "/icons/currencies/xp.webp")}
                     style={{
@@ -112,7 +113,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
               </Text>
               <Text color="gray" size="1" wrap="nowrap">
                 <Flex gap="1" align="center">
-                  <img
+                  <LazyImage
                     alt="Silver"
                     src={alias("api", "/icons/currencies/silver.webp")}
                     style={{

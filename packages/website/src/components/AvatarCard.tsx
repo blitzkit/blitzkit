@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useIntersection } from "../hooks/useIntersection";
 import { useLocale } from "../hooks/useLocale";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
+import { LazyImage } from "./LazyImage";
 import { Skeleton } from "./Skeleton";
 import { Text } from "./Text";
 
@@ -46,7 +47,7 @@ export function AvatarCard(props: GalleryCardProps) {
 
       {!props.skeleton && (
         <>
-          <img
+          <LazyImage
             style={{
               width: "4rem",
               height: "4.57rem",
@@ -105,7 +106,7 @@ export function AvatarCard(props: GalleryCardProps) {
             marginTop: "var(--space-3)",
           }}
         >
-          <img src={src} alt={unwrap(props.avatar.name!)} />
+          <LazyImage src={src} alt={unwrap(props.avatar.name!)} />
         </div>
 
         <div

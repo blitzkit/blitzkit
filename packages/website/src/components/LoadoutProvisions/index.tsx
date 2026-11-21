@@ -6,6 +6,7 @@ import { useStrings } from "../../hooks/useStrings";
 import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
@@ -55,7 +56,7 @@ function Content({
               disabled={disabled}
               onClick={() => onToggle(provision.id)}
             >
-              <img
+              <LazyImage
                 src={alias("api", `/icons/provisions/${provision.id}.webp`)}
               />
             </IconButton>

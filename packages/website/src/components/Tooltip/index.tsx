@@ -22,7 +22,7 @@ export function Tooltip({
   return (
     <div
       className={classNames(styles.tooltip, className)}
-      data-controlled={open !== undefined}
+      data-controlled={open !== undefined || undefined}
       {...props}
     >
       <div className={styles.text} data-side={side} data-open={open}>

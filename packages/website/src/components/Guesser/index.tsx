@@ -26,6 +26,7 @@ import { Card } from "../Card";
 import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { TRANSITION_ANIMATION_TIME, transitionEvent } from "../Lighting";
 import { SearchResults } from "../SearchResults";
 import { Text } from "../Text";
@@ -122,7 +123,7 @@ export function Guesser() {
                   key={result.id}
                   text={unwrap(result.name!)}
                   prefix={
-                    <img
+                    <LazyImage
                       src={alias("api", `/flags/circle/${result.nation}.webp`)}
                     />
                   }

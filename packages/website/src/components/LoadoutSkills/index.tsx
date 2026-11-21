@@ -9,6 +9,7 @@ import { api } from "../../api/dynamic";
 import { useStrings } from "../../hooks/useStrings";
 import { Discriminator } from "../Discriminator";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import styles from "./index.module.css";
 
@@ -49,7 +50,7 @@ function Content({ selected, onChange }: ContentProps) {
                   }
                 }}
               >
-                <img src={alias("api", `/icons/skills/${skill}.webp`)} />
+                <LazyImage src={alias("api", `/icons/skills/${skill}.webp`)} />
                 {level > 0 && (
                   <Discriminator inset="small">{romanize(level)}</Discriminator>
                 )}

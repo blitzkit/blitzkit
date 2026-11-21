@@ -13,6 +13,7 @@ import { Button } from "../Button";
 import { Dialog } from "../Dialog";
 import { Discriminator } from "../Discriminator";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { Popover } from "../Popover";
 import { Skeleton } from "../Skeleton";
 import { TankSearch } from "../TankSearch";
@@ -130,7 +131,7 @@ export function MixerModuleChooser({
                         onSelect?.(tankDefinition, turret);
                       }}
                     >
-                      <img
+                      <LazyImage
                         alt="turret"
                         src={alias("api", "/icons/modules/turret.webp")}
                       />
@@ -165,7 +166,7 @@ export function MixerModuleChooser({
                         onSelect?.(tankDefinition, turretDefinition, gun);
                       }}
                     >
-                      <img
+                      <LazyImage
                         alt="gun"
                         src={alias("api", "/icons/modules/gun.webp")}
                       />

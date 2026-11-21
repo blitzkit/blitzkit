@@ -2,6 +2,7 @@ import { CaretRightIcon } from "@radix-ui/react-icons";
 import { Box, Flex, Link, Text } from "@radix-ui/themes";
 import { Var } from "../../../core/radix/var";
 import type { TankGuide } from "../../../types/tankGuide";
+import { LazyImage } from "../../LazyImage";
 
 interface Props {
   guide: TankGuide;
@@ -26,7 +27,7 @@ export function GuideSection({ guide }: Props) {
           <Flex direction="column" gap="4" position="relative">
             <Text size="4" weight="medium">
               <Flex width="100%" justify="start" align="center" gap="2">
-                <img
+                <LazyImage
                   style={{
                     width: "1.5em",
                     height: "1.5em",
@@ -39,7 +40,7 @@ export function GuideSection({ guide }: Props) {
             </Text>
 
             <Text size="2">{guide.description}</Text>
-            <img style={{ width: "100%" }} src={guide.image} />
+            <LazyImage style={{ width: "100%" }} src={guide.image} />
 
             <Box
               position="absolute"

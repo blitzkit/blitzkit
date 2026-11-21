@@ -9,6 +9,7 @@ import { useEquipmentPreset } from "../../hooks/useEquipmentPreset";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
@@ -70,7 +71,7 @@ function Slot({ slot, slotIndex, selected, onToggle }: SlotProps) {
                 parentListChild="horizontal"
                 onClick={() => onToggle(slotIndex, optionIndex)}
               >
-                <img
+                <LazyImage
                   alt={name}
                   src={alias("api", `/icons/equipment/${id}.webp`)}
                 />

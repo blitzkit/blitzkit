@@ -1,5 +1,6 @@
 import { Var } from "../../core/radix/var";
 import { Heading } from "../Heading";
+import { LazyImage } from "../LazyImage";
 import { Link } from "../Link";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -20,7 +21,7 @@ export function AesonPlug() {
           overflow: "hidden",
         }}
       >
-        <img
+        <LazyImage
           src="/assets/images/third-party/wotb-news.png"
           style={{ width: "6rem", height: "6rem", objectFit: "cover" }}
         />

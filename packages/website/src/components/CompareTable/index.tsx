@@ -30,6 +30,7 @@ import { CompareInsertionMarker } from "../CompareInsertionMarker";
 import { CompareLoadout } from "../CompareLoadout";
 import { CompareTankCard } from "../CompareTankCard";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { Table } from "../Table";
 import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
@@ -160,7 +161,7 @@ function ShellSwitcher({ member, index }: ShellSwitcherProps) {
                 });
               }}
             >
-              <img
+              <LazyImage
                 alt={name}
                 src={alias("api", `/icons/shells/${candidate.icon}.webp`)}
               />

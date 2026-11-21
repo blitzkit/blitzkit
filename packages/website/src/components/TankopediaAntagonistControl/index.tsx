@@ -14,6 +14,7 @@ import { EqualIcon } from "../EqualIcon";
 import { IconButton } from "../IconButton";
 
 import { Discriminator } from "../Discriminator";
+import { LazyImage } from "../LazyImage";
 import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
@@ -84,7 +85,7 @@ export function TankopediaAntagonistControl({
                     });
                   }}
                 >
-                  <img
+                  <LazyImage
                     alt={name}
                     src={alias("api", "/icons/modules/gun.webp")}
                   />
@@ -119,7 +120,7 @@ export function TankopediaAntagonistControl({
                   });
                 }}
               >
-                <img
+                <LazyImage
                   alt={name}
                   src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}
                 />
@@ -154,7 +155,7 @@ export function TankopediaAntagonistControl({
               });
             }}
           >
-            <img
+            <LazyImage
               alt={strings.tanks.antagonist_control.calibrated_shells}
               src={alias("api", "/icons/equipment/103.webp")}
             />
@@ -183,7 +184,7 @@ export function TankopediaAntagonistControl({
               });
             }}
           >
-            <img
+            <LazyImage
               alt={strings.tanks.antagonist_control.enhanced_armor}
               src={alias("api", "/icons/equipment/110.webp")}
             />

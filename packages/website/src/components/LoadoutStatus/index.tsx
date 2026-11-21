@@ -5,6 +5,7 @@ import {
   type VehicleStatusKey,
 } from "../../tankopedia/tankState";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import styles from "./index.module.css";
 
@@ -48,7 +49,7 @@ export function LoadoutStatus({
                 variant={status[key] ? "surface" : "soft"}
                 onClick={() => onToggle(key)}
               >
-                <img src={`/media/status/${key}.png`} />
+                <LazyImage src={`/media/status/${key}.png`} />
               </IconButton>
             ))}
           </div>

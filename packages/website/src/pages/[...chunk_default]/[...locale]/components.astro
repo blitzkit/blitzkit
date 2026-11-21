@@ -17,106 +17,97 @@ const extraColors = ["red", "amber", "green"] satisfies Color[];
 ---
 
 <BaseLayout accent="blue" {locale}>
-  {
-    extraColors.map((color) => (
-      <>
-        <ColorScale {color} />
-        <ColorScale {color} alpha />
-      </>
-    ))
-  }
+  {extraColors.map((color) => (
+    <ColorScale {color} />
+  ))}
 
   <div class="page">
     <h1>Badge</h1>
 
-    {
-      sizes.map((size) => (
-        <section>
-          <h2>size="{size}"</h2>
+    {sizes.map((size) => (
+      <section>
+        <h2>size="{size}"</h2>
 
-          <table>
-            <thead>
-              <tr>
-                <th />
-                {variants.map((variant) => (
-                  <th>{variant}</th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {colors.map((color) => (
-                <tr>
-                  <th>{color ?? "accent"}</th>
-                  {variants.map((variant) => (
-                    <td>
-                      <Badge {color} {variant} {size}>
-                        Badge
-                      </Badge>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      ))
-    }
-
-    {
-      sizes.map((size) => (
-        <section>
-          <h2>size="{size}" with icons</h2>
-
-          <table>
-            <thead>
-              <tr>
-                <th />
-                {iconLayouts.map((layout) => (
-                  <th>{layout}</th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
+        <table>
+          <thead>
+            <tr>
+              <th />
               {variants.map((variant) => (
-                <tr>
-                  <th>{variant}</th>
-
-                  <td>
-                    <Badge {variant} {size}>
-                      <StarFilledIcon />
-                      Badge
-                    </Badge>
-                  </td>
-
-                  <td>
-                    <Badge {variant} {size}>
-                      Badge
-                      <CheckIcon />
-                    </Badge>
-                  </td>
-
-                  <td>
-                    <Badge {variant} {size}>
-                      <StarFilledIcon />
-                      Badge
-                      <CheckIcon />
-                    </Badge>
-                  </td>
-
-                  <td>
-                    <Badge {variant} {size}>
-                      <StarFilledIcon />
-                    </Badge>
-                  </td>
-                </tr>
+                <th>{variant}</th>
               ))}
-            </tbody>
-          </table>
-        </section>
-      ))
-    }
+            </tr>
+          </thead>
+
+          <tbody>
+            {colors.map((color) => (
+              <tr>
+                <th>{color ?? "accent"}</th>
+                {variants.map((variant) => (
+                  <td>
+                    <Badge {color} {variant} {size}>
+                      Badge
+                    </Badge>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))}
+
+    {sizes.map((size) => (
+      <section>
+        <h2>size="{size}" with icons</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th />
+              {iconLayouts.map((layout) => (
+                <th>{layout}</th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {variants.map((variant) => (
+              <tr>
+                <th>{variant}</th>
+
+                <td>
+                  <Badge {variant} {size}>
+                    <StarFilledIcon />
+                    Badge
+                  </Badge>
+                </td>
+
+                <td>
+                  <Badge {variant} {size}>
+                    Badge
+                    <CheckIcon />
+                  </Badge>
+                </td>
+
+                <td>
+                  <Badge {variant} {size}>
+                    <StarFilledIcon />
+                    Badge
+                    <CheckIcon />
+                  </Badge>
+                </td>
+
+                <td>
+                  <Badge {variant} {size}>
+                    <StarFilledIcon />
+                  </Badge>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))}
   </div>
 </BaseLayout>
 

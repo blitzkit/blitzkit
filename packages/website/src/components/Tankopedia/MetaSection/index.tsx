@@ -7,6 +7,7 @@ import { App } from "../../../stores/app";
 import { Duel } from "../../../stores/duel";
 import { classIcons } from "../../ClassIcon";
 import { CopyableCode } from "../../CopyableCode";
+import { LazyImage } from "../../LazyImage";
 import { Listing } from "./components/Listing";
 
 const NATIONAL_BANNER_POSITION_OVERRIDES: Record<string, string> = {
@@ -58,7 +59,7 @@ export function MetaSection() {
                 <Flex direction="column" width="100%" gap="2">
                   <Listing label={strings.website.tools.tankopedia.meta.nation}>
                     <Flex align="center" gap="1">
-                      <img
+                      <LazyImage
                         style={{ width: "1em", height: "1em" }}
                         alt={protagonist.nation}
                         src={alias(
@@ -131,7 +132,7 @@ export function MetaSection() {
                     >
                       <Flex align="center" gap="1">
                         {protagonist.price!.value / 400}
-                        <img
+                        <LazyImage
                           style={{ width: "1em", height: "1em" }}
                           alt="gold"
                           src={alias("api", "/icons/currencies/gold.webp")}
@@ -148,7 +149,7 @@ export function MetaSection() {
                   >
                     <Flex align="center" gap="1">
                       {protagonist.price!.value.toLocaleString(locale)}
-                      <img
+                      <LazyImage
                         style={{ width: "1em", height: "1em" }}
                         alt={TankPriceType[protagonist.price!.type]}
                         src={alias(
@@ -166,7 +167,7 @@ export function MetaSection() {
                   <Listing label={strings.website.tools.tankopedia.meta.sale}>
                     <Flex align="center" gap="1">
                       {(protagonist.price!.value / 2).toLocaleString(locale)}
-                      <img
+                      <LazyImage
                         style={{ width: "1em", height: "1em" }}
                         alt={TankPriceType[protagonist.price!.type]}
                         src={alias(
@@ -190,7 +191,7 @@ export function MetaSection() {
                           protagonist.research_cost.research_cost_type!
                             .value as number
                         ).toLocaleString(locale)}
-                        <img
+                        <LazyImage
                           style={{ width: "1em", height: "1em" }}
                           alt="xp"
                           src={alias("api", "/icons/currencies/xp.webp")}

@@ -7,6 +7,7 @@ import { CompareEphemeral } from "../../stores/compareEphemeral";
 import { CompareInsertionMarker } from "../CompareInsertionMarker";
 import { insertionMarkers } from "../CompareInsertionMarker/constants";
 import { CompareTankControl } from "../CompareTankControl";
+import { LazyImage } from "../LazyImage";
 import { Table } from "../Table";
 import { Text } from "../Text";
 import styles from "./index.module.css";
@@ -106,7 +107,7 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
         <CompareTankControl index={index} key={tank.id} slug={tank.slug} />
 
         <div ref={draggable} className={styles.draggable}>
-          <img
+          <LazyImage
             alt={unwrap(tank.name!)}
             src={tankIcon(tank.id)}
             width={64}

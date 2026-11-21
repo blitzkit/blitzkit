@@ -32,7 +32,7 @@
     }
   }
 
-  &[data-controlled="false"]:hover .text,
+  &:not([data-controlled]):hover .text,
   .text[data-open="true"] {
     display: block;
   }

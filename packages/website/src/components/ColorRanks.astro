@@ -1,0 +1,9 @@
+---
+import { RANKING_COLORS } from "../config/rankings";
+import ColorScale from "./ColorScale.astro";
+---
+
+{RANKING_COLORS.map((color) => (
+  <ColorScale {color} />
+))}
+<link rel="stylesheet" href="/styles/rankings.css" />

@@ -4,6 +4,7 @@ import { useDuelModules } from "../../hooks/useDuelModules";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Heading } from "../Heading";
+import { LazyImage } from "../LazyImage";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
@@ -86,7 +87,7 @@ export function TankopediaGameModeAbilities() {
 function Ability({ icon, name }: { icon: string; name: string }) {
   return (
     <Text lowContrast className={styles.ability}>
-      <img src={icon} alt={name} />
+      <LazyImage src={icon} alt={name} />
       {name}
     </Text>
   );

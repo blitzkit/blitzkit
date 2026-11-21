@@ -8,6 +8,7 @@ import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { ClassIcon } from "../ClassIcon";
+import { LazyImage } from "../LazyImage";
 import { LinkI18nWrapper } from "../LinkI18nWrapper";
 import { TankCardSkeleton } from "../TankCardSkeleton";
 import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
@@ -71,7 +72,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
           )})`,
         }}
       >
-        <img
+        <LazyImage
           alt={name}
           src={alias("api", `/tanks/${props.tank.id}/icons/big.webp`)}
         />

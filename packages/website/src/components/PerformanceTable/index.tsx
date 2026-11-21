@@ -35,6 +35,7 @@ import { EmptyState } from "../EmptyState";
 import { ExperimentIcon } from "../ExperimentIcon";
 import { IncrementalLoader } from "../IncrementalLoader";
 import { InlineSkeleton } from "../InlineSkeleton";
+import { LazyImage } from "../LazyImage";
 import { LinkI18n } from "../LinkI18n";
 import { Skeleton } from "../Skeleton";
 import { Table } from "../Table";
@@ -341,7 +342,7 @@ function TankLink({ tank }: TankLinkProps) {
       }
       highContrast={tank.type === TankType.TANK_TYPE_RESEARCHABLE}
     >
-      <img
+      <LazyImage
         alt={name}
         src={tankIcon(tank.id)}
         draggable={false}

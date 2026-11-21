@@ -19,6 +19,7 @@ const { locale } = Astro.props;
   <ToolBanner {locale} tool={tools.tanks} />
 
   <Section>
+    <!-- TODO: eliminate all client:only's -->
     <Page {locale} client:only="react">
       <Page {locale} skeleton slot="fallback" />
     </Page>

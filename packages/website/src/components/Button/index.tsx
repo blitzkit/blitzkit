@@ -37,7 +37,7 @@ export function Button({
   style,
   radius = "max",
   size = "regular",
-  evenPadding = false,
+  evenPadding,
 
   listChild,
   parentListChild,
@@ -49,13 +49,13 @@ export function Button({
       className={classNames("composable-radius", styles.button, className)}
       data-accent={color}
       data-variant={variant}
-      data-light-text={variant === "solid"}
+      data-light-text={variant === "solid" || undefined}
       data-radius={radius}
-      data-size={size}
+      data-size={size === "regular" ? undefined : size}
       data-list-child={listChild}
       data-parent-list-child={parentListChild}
-      data-high-contrast={highContrast}
-      data-even-padding={evenPadding}
+      data-high-contrast={highContrast || undefined}
+      data-even-padding={evenPadding || undefined}
       {...props}
     />
   );

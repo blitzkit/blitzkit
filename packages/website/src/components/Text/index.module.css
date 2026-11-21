@@ -1,5 +1,5 @@
 .text {
-  &[data-size="regular"] {
+  &:not([data-size]) {
     font-size: var(--font-size-regular);
   }
   &[data-size="minor"] {

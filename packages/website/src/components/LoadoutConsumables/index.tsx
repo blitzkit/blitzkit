@@ -8,6 +8,7 @@ import { useTankCompatibility } from "../../hooks/useTankCompatibility";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Button } from "../Button";
 import { IconButton } from "../IconButton";
+import { LazyImage } from "../LazyImage";
 import { LoadoutSection } from "../LoadoutSection";
 import { Text } from "../Text";
 import { Tooltip } from "../Tooltip";
@@ -57,7 +58,7 @@ function Content({ tank, gun, selected, onToggle }: ContentProps) {
                 disabled={disabled}
                 onClick={() => onToggle(consumable.id)}
               >
-                <img
+                <LazyImage
                   src={alias("api", `/icons/consumables/${consumable.id}.webp`)}
                 />
                 <div className={styles.info}>

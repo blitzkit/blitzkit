@@ -2,6 +2,7 @@ import { romanize } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Fragment, useRef } from "react";
 import { characteristicsGroups } from "../../config/characteristicsGroups";
+import { RANKING_STEPS } from "../../config/rankings";
 import { toys } from "../../config/toys";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { useRankings } from "../../hooks/useRankings";
@@ -249,40 +250,19 @@ function CompareOptions() {
 
 // Unranked items get a full neutral bar
 function BarStub() {
-  return (
-    <div className={styles["bar-wrapper"]}>
-      <div
-        className={styles.bar}
-        style={{ backgroundColor: "var(--gray-3)", width: "100%" }}
-      />
-    </div>
-  );
+  return <div className={styles["bar-wrapper"]} />;
 }
 
 interface BarProps {
   value: number;
 }
 
-const barColors = ["red", "orange", "amber", "jade"];
-
 function Bar({ value }: BarProps) {
-  const index = (barColors.length - 1) * value;
-  const iA = Math.floor(index);
-  const iB = Math.ceil(index);
-  const A = barColors[iA];
-  const B = barColors[iB];
-  const x = index % 1;
-  const p = (1 - x) * 100;
-  const v = 7;
-
   return (
     <div className={styles["bar-wrapper"]}>
       <div
         className={styles.bar}
-        style={{
-          backgroundColor: `color-mix(in srgb, var(--${A}-${v}) ${p}%, var(--${B}-${v}))`,
-          width: `${value * 100}%`,
-        }}
+        data-ranking={Math.round(value * RANKING_STEPS)}
       />
     </div>
   );

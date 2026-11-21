@@ -21,6 +21,7 @@ import { Button } from "../Button";
 import { ClassIcon } from "../ClassIcon";
 import { DropdownMenu } from "../DropdownMenu";
 import { GunTypeIcon } from "../GunTypeIcon";
+import { LazyImage } from "../LazyImage";
 import { MissingShellIcon } from "../MissingShellIcon";
 import { ResearchedIcon } from "../ResearchedIcon";
 import { ScienceIcon } from "../ScienceIcon";
@@ -272,7 +273,7 @@ function NationsFilter() {
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="soft">
           {nations.map((nation) => (
-            <img
+            <LazyImage
               className={styles.icon}
               key={nation}
               src={alias("api", `/flags/circle/${nation}.webp`)}
@@ -605,7 +606,7 @@ function IndividualShellFilter({
           )}
 
           {shells[index] !== null && (
-            <img
+            <LazyImage
               src={alias(
                 "api",
                 `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
@@ -651,7 +652,7 @@ function IndividualShellFilter({
                   ]
                 }
 
-                <img
+                <LazyImage
                   src={alias(
                     "api",
                     `/icons/shells/${shellTypeIcons[shellType]}${
@@ -799,7 +800,7 @@ function ConsumablesFilter() {
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="soft">
           {consumables.slice(0, MAX_ICONS).map((consumable) => (
-            <img
+            <LazyImage
               key={consumable}
               className={styles.icon}
               src={alias("api", `/icons/consumables/${consumable}.webp`)}
@@ -846,7 +847,7 @@ function ConsumablesFilter() {
 
               {unwrap(consumableDefinition.name!)}
 
-              <img
+              <LazyImage
                 src={alias("api", `/icons/consumables/${consumable}.webp`)}
               />
             </DropdownMenu.CheckboxItem>
@@ -886,7 +887,7 @@ function ProvisionsFilter() {
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="soft">
           {provisions.slice(0, MAX_ICONS).map((provision) => (
-            <img
+            <LazyImage
               key={provision}
               className={styles.icon}
               src={alias("api", `/icons/provisions/${provision}.webp`)}
@@ -933,7 +934,7 @@ function ProvisionsFilter() {
 
               {unwrap(provisionDefinition.name!)}
 
-              <img src={alias("api", `/icons/provisions/${provision}.webp`)} />
+              <LazyImage src={alias("api", `/icons/provisions/${provision}.webp`)} />
             </DropdownMenu.CheckboxItem>
           );
         })}
@@ -986,7 +987,7 @@ function GameModeAbilitiesFilter() {
       <DropdownMenu.Trigger asChild>
         <Button color="gray" variant="soft">
           {icons.slice(0, MAX_ICONS).map((icon) => (
-            <img key={icon} className={styles.icon} src={icon} />
+            <LazyImage key={icon} className={styles.icon} src={icon} />
           ))}
 
           {icons.length > MAX_ICONS && (
@@ -1051,7 +1052,7 @@ function GameModeAbilitiesFilter() {
 
                       {unwrap(abilityDefinition.name!)}
 
-                      <img
+                      <LazyImage
                         src={alias(
                           "api",
                           `/icons/consumables/${consumable}.webp`,
@@ -1102,7 +1103,7 @@ function GameModeAbilitiesFilter() {
 
                       {unwrap(powerDefinition.name!)}
 
-                      <img
+                      <LazyImage
                         src={alias(
                           "api",
                           `/icons/provisions/${provision}.webp`,

@@ -1,6 +1,4 @@
 import react from "@astrojs/react";
-import strings from "@blitzkit/i18n/strings/en.json";
-import favicons from "astro-favicons";
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
@@ -9,6 +7,16 @@ export default defineConfig({
   vite: {
     server: { allowedHosts: [] },
     esbuild: { target: "es2022" },
+    build: { cssCodeSplit: false },
+    css: {
+      modules: {
+        // Short hashed class names in production to shrink HTML; the leading _ keeps names that start with a digit valid
+        generateScopedName:
+          process.env.NODE_ENV === "production"
+            ? "_[hash:base64:6]"
+            : undefined,
+      },
+    },
   },
 
   output: "static",
@@ -18,21 +26,5 @@ export default defineConfig({
 
   build: { concurrency: 8, inlineStylesheets: "never" },
 
-  integrations: [
-    favicons({
-      name: strings.common.name,
-      short_name: strings.common.name,
-
-      icons: {
-        windows: true,
-        android: true,
-        appleIcon: true,
-        appleStartup: true,
-        favicons: true,
-        yandex: true,
-      },
-    }),
-
-    react(),
-  ],
+  integrations: [react()],
 });

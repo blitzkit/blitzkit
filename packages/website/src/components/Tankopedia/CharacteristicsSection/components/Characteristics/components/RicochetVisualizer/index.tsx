@@ -6,6 +6,7 @@ import { clamp, degToRad, radToDeg } from "three/src/math/MathUtils.js";
 import { Var } from "../../../../../../../core/radix/var";
 import { useLocale } from "../../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../../stores/duel";
+import { LazyImage } from "../../../../../../LazyImage";
 import type { StatsAcceptorProps } from "../TraverseVisualizer";
 import { VisualizerCard } from "../VisualizerCard";
 import { VisualizerCornerStat } from "../VisualizerCornerStat";
@@ -123,7 +124,7 @@ export function RicochetVisualizer({ stats }: StatsAcceptorProps) {
             }}
           />
 
-          <img
+          <LazyImage
             src={alias("api", `/icons/shells/${shell.icon}.webp`)}
             style={{
               objectFit: "contain",

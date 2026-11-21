@@ -3,6 +3,7 @@ import { IconButton } from "@radix-ui/themes";
 import { Duel } from "../../../../../../stores/duel";
 import { useArmor } from "../../../hooks/useArmor";
 import { Tankopedia } from "../../../stores/tankopedia";
+import { LazyImage } from "../../LazyImage";
 
 export function DynamicArmorSwitcher() {
   const tank = Duel.use((state) => state.protagonist.tank);
@@ -36,7 +37,7 @@ export function DynamicArmorSwitcher() {
         });
       }}
     >
-      <img
+      <LazyImage
         alt="Dynamic Armor"
         src={alias("api", "/icons/consumables/73.webp")}
         style={{
