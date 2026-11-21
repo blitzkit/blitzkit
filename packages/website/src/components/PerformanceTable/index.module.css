@@ -1,20 +1,5 @@
-/* Spans the page even when the columns would fit in less */
 .root {
-  --tank-width: 15rem;
-
-  width: 100%;
-
-  /* Fixed layout keeps stat columns equal. Fixed tables ignore cell minimums, so the table holds 8rem per stat column and scrolls past that */
-  table {
-    table-layout: fixed;
-    width: 100%;
-    min-width: calc(var(--tank-width) + var(--columns) * 8rem);
-  }
-}
-
-.corner {
-  box-sizing: border-box;
-  width: var(--tank-width);
+  overflow-x: auto;
 }
 
 .value {
@@ -25,7 +10,6 @@
   width: 100%;
 }
 
-/* Table cells ignore max-width, so the link inside caps the column instead */
 .tank {
   display: flex;
   align-items: center;

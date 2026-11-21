@@ -10,7 +10,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
 } from "react";
 import { api } from "../../api/dynamic";
 import {
@@ -103,11 +102,7 @@ export function PerformanceTable() {
   }
 
   return (
-    <Table.Root
-      scrollable
-      className={styles.root}
-      style={{ "--columns": performanceStatNames.length } as CSSProperties}
-    >
+    <Table.Root className={styles.root}>
       <Head />
       <Body filtered={filtered} />
     </Table.Root>
@@ -118,7 +113,7 @@ function Head() {
   return (
     <Table.Head>
       <Table.Row>
-        <Table.IconCorner className={styles.corner} />
+        <Table.IconCorner />
 
         {performanceStatNames.map((name) => (
           <ColumnHeader key={name} name={name} />

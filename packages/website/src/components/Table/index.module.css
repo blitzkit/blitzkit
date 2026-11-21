@@ -4,7 +4,8 @@
 
   border: var(--space-0) solid var(--gray-a5);
   border-radius: var(--space-3);
-  overflow: hidden;
+  /* Clips the corners without becoming a scroll container, so sticky headers follow the page */
+  overflow: clip;
 }
 
 .table {
@@ -20,7 +21,7 @@
 
   /* Row dividers sit inside the cells, so they take no space. Borders on a row itself don't paint with separate borders, so rows apply them to their cells here */
   tbody tr > * {
-    box-shadow: inset 0 var(--space-0) var(--gray-5);
+    box-shadow: inset 0 var(--space-0) var(--white-a2);
   }
 
   .column-header {

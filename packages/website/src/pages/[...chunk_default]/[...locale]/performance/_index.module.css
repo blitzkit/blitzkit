@@ -1,11 +1,7 @@
 .page {
-  /* Fixed to the viewport so the table scrolls, not the page */
-  height: 100dvh;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
 
   .top {
     display: flex;
@@ -17,10 +13,7 @@
   }
 
   .table {
-    flex: 1;
-    min-height: 0;
     align-self: stretch;
-    overflow: hidden;
 
     display: flex;
     justify-content: center;
