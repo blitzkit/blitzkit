@@ -1,5 +1,9 @@
 .section {
-  padding: var(--space-5);
+  padding: var(--space-4);
+
+  @media (pointer: fine) {
+    padding-left: 0;
+  }
 
   display: flex;
   justify-content: center;
