@@ -1,215 +1,33 @@
-import {
-  alias,
-  GunDefinition,
-  TankDefinition,
-  TIER_ROMAN_NUMERALS,
-  TurretDefinition,
-} from "@blitzkit/core";
-import { literals } from "@blitzkit/i18n";
-import { CaretRightIcon, CaretUpIcon, UpdateIcon } from "@radix-ui/react-icons";
-import {
-  Box,
-  Button,
-  Dialog,
-  Flex,
-  IconButton,
-  Popover,
-  Skeleton,
-  Text,
-  type ButtonProps,
-} from "@radix-ui/themes";
-import { useRef, useState } from "react";
+import { UpdateIcon } from "@radix-ui/react-icons";
+import { useRef } from "react";
+import { Button } from "../../../../components/Button";
+import { MixerModuleChooser } from "../../../../components/MixerModuleChooser";
+import { MixerModuleSeparator } from "../../../../components/MixerModuleSeparator";
 import { MixerScene } from "../../../../components/MixerScene";
-import { ModuleButton } from "../../../../components/ModuleButtons/ModuleButton";
-import { PageWrapper } from "../../../../components/PageWrapper";
 import { ScreenshotButton } from "../../../../components/ScreenshotButton";
-import { TankSearch } from "../../../../components/TankSearch";
-import { DIALOG_MAX_HEIGHT } from "../../../../constants/dialog";
-import { api } from "../../../../core/blitzkit/api";
 import { curateMixer } from "../../../../core/blitzkit/curateMixer";
-import {
-  LocaleProvider,
-  useLocale,
-  type LocaleAcceptorProps,
-} from "../../../../hooks/useLocale";
+import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../hocs/withLocale";
+import { useStrings } from "../../../../hooks/useStrings";
 import { Mixer } from "../../../../stores/mixer";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
+import styles from "./_index.module.css";
 
-const modelDefinition = await api
-  .modelDefinitions()
-  .then(({ models }) => models[1]);
-const tankDefinitions = await api.tankDefinitions();
+export const Page = withLocale(
+  withErrorWrapper(({ skeleton }: MaybeSkeletonComponentProps) => {
+    const initial = useRef(curateMixer());
 
-export function Page({
-  locale,
-  skeleton,
-}: LocaleAcceptorProps & MaybeSkeletonComponentProps) {
-  const initial = useRef(curateMixer());
+    Mixer.useInitialization(initial.current);
+    Tankopedia.useInitialization(initial.current.hull);
 
-  Mixer.useInitialization(initial.current);
-  Tankopedia.useInitialization(modelDefinition);
-
-  return (
-    <PageWrapper color="gray" p="0" maxWidth="unset">
-      <LocaleProvider locale={locale}>
+    return (
+      <div className={styles.wrapper}>
         <Content skeleton={skeleton} />
-      </LocaleProvider>
-    </PageWrapper>
-  );
-}
-
-type ModuleButtonProps = Omit<ButtonProps, "onSelect"> &
-  MaybeSkeletonComponentProps & {
-    tank: number;
-    onSelect: (
-      tank: TankDefinition,
-      turret?: TurretDefinition,
-      gun?: GunDefinition,
-    ) => void;
-    turret?: number;
-    gun?: number;
-  };
-
-function ModuleChooser({
-  skeleton,
-  tank,
-  onSelect,
-  turret,
-  gun,
-  ...props
-}: ModuleButtonProps) {
-  const { strings } = useLocale();
-  const [open, setOpen] = useState(false);
-  const tankDefinition = tankDefinitions.tanks[tank];
-  const turretDefinition = tankDefinition.turrets.find((t) => t.id === turret);
-  const gunDefinition = turretDefinition?.guns.find((g) => g.id === gun);
-  const subSelector =
-    turret !== undefined &&
-    (tankDefinition.turrets.length > 1 ||
-      (gun !== undefined && turretDefinition!.guns.length > 1));
-
-  return (
-    <Flex>
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger>
-          <Button
-            variant="surface"
-            size={{ initial: "2", xs: "3", md: "4" }}
-            style={{
-              overflow: "clip",
-              borderTopRightRadius: subSelector ? 0 : undefined,
-              borderBottomRightRadius: subSelector ? 0 : undefined,
-            }}
-            {...props}
-          >
-            {skeleton ? (
-              <Skeleton width="4em" height="2em" />
-            ) : (
-              <img
-                style={{
-                  width: "4em",
-                  height: "4em",
-                  objectFit: "contain",
-                }}
-                src={alias("api", `/tanks/${tank}/icons/big.webp`)}
-              />
-            )}
-          </Button>
-        </Dialog.Trigger>
-
-        <Dialog.Content maxHeight={DIALOG_MAX_HEIGHT}>
-          <Dialog.Title>
-            {strings.website.common.tank_search.select_dialog_title}
-          </Dialog.Title>
-
-          <TankSearch
-            compact
-            onSelect={(tank) => {
-              onSelect?.(tank);
-              setOpen(false);
-            }}
-          />
-        </Dialog.Content>
-      </Dialog.Root>
-
-      {subSelector && (
-        <Popover.Root>
-          <Popover.Trigger>
-            <IconButton
-              variant="surface"
-              size={{ initial: "2", xs: "3", md: "4" }}
-              style={{
-                overflow: "clip",
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                marginLeft: -1,
-              }}
-              {...props}
-            >
-              <CaretUpIcon />
-            </IconButton>
-          </Popover.Trigger>
-
-          <Popover.Content>
-            <Flex direction="column" gap="2">
-              {tankDefinition.turrets.length > 1 && (
-                <Flex gap="2">
-                  {tankDefinition.turrets.map((turret) => (
-                    <ModuleButton
-                      variant={
-                        turret.id === turretDefinition?.id ? "solid" : undefined
-                      }
-                      key={turret.id}
-                      module="turret"
-                      discriminator={TIER_ROMAN_NUMERALS[turret.tier]}
-                      onClick={() => {
-                        onSelect?.(tankDefinition, turret);
-                      }}
-                    />
-                  ))}
-                </Flex>
-              )}
-
-              {turretDefinition && turretDefinition.guns.length > 1 && (
-                <Flex gap="2">
-                  {turretDefinition.guns.map((gun) => (
-                    <ModuleButton
-                      variant={
-                        gun.id === gunDefinition?.id ? "solid" : undefined
-                      }
-                      key={gun.id}
-                      module="gun"
-                      discriminator={TIER_ROMAN_NUMERALS[gun.tier]}
-                      secondaryDiscriminator={
-                        <Text style={{ fontSize: "0.75em" }}>
-                          {literals(strings.common.units.mm, {
-                            value: gun.shells[0].caliber.toFixed(0),
-                          })}
-                        </Text>
-                      }
-                      onClick={() => {
-                        onSelect?.(tankDefinition, turretDefinition, gun);
-                      }}
-                    />
-                  ))}
-                </Flex>
-              )}
-            </Flex>
-          </Popover.Content>
-        </Popover.Root>
-      )}
-    </Flex>
-  );
-}
-
-function ModuleSeparator() {
-  return (
-    <Text size={{ initial: "3", xs: "5" }} color="gray" trim="end">
-      <CaretRightIcon width="1em" height="1em" />
-    </Text>
-  );
-}
+      </div>
+    );
+  })
+);
 
 function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const hullTankId = Mixer.use((state) => state.hull);
@@ -219,34 +37,25 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
   const gunTurretId = Mixer.use((state) => state.gun.turret.id);
   const gunGunId = Mixer.use((state) => state.gun.gun.id);
   const canvas = useRef<HTMLCanvasElement>(null!);
-  const { strings } = useLocale();
+  const strings = useStrings();
 
   return (
-    <Box flexGrow="1" position="relative">
-      <Box position="absolute" width="100%" height="100%" top="0" left="0">
+    <div className={styles.content}>
+      <div className={styles.scene}>
         {!skeleton && <MixerScene ref={canvas} />}
-      </Box>
+      </div>
 
-      <Flex
-        align="center"
-        direction="column"
-        position="absolute"
-        bottom="4"
-        left="50%"
-        style={{ transform: "translateX(-50%)" }}
-        gap="4"
-      >
-        <Flex gap="2">
+      <div className={styles.controls}>
+        <div className={styles.row}>
           <ScreenshotButton
             name={hullTankId.slug}
             canvas={canvas}
-            highContrast
             variant="surface"
           >
-            {strings.website.tools.mixer.screenshot}
+            {strings.mixer.screenshot}
           </ScreenshotButton>
+
           <Button
-            highContrast
             variant="surface"
             onClick={() => {
               const mixed = curateMixer();
@@ -257,12 +66,12 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
             }}
           >
             <UpdateIcon />
-            {strings.website.tools.mixer.randomize}
+            {strings.mixer.randomize}
           </Button>
-        </Flex>
+        </div>
 
-        <Flex gap={{ initial: "1", xs: "2" }} align="center">
-          <ModuleChooser
+        <div className={styles.modules}>
+          <MixerModuleChooser
             skeleton={skeleton}
             tank={hullTankId.id}
             onSelect={(tank) => {
@@ -271,8 +80,8 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
               });
             }}
           />
-          <ModuleSeparator />
-          <ModuleChooser
+          <MixerModuleSeparator />
+          <MixerModuleChooser
             skeleton={skeleton}
             tank={turretTankId}
             turret={turretTurretId}
@@ -285,8 +94,8 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
               });
             }}
           />
-          <ModuleSeparator />
-          <ModuleChooser
+          <MixerModuleSeparator />
+          <MixerModuleChooser
             skeleton={skeleton}
             tank={gunTankId}
             turret={gunTurretId}
@@ -304,8 +113,8 @@ function Content({ skeleton }: MaybeSkeletonComponentProps) {
               });
             }}
           />
-        </Flex>
-      </Flex>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }

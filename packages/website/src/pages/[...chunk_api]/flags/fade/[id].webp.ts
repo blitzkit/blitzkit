@@ -1,6 +1,9 @@
-import sharp from "sharp";
 import type { APIContext, GetStaticPathsItem } from "astro";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import {
+  readPackedSprite,
+  type PackedSpriteProps,
+} from "../../../../core/blitz/readSprite";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -12,8 +15,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     .then((files) =>
       files.filter(
         (flag) =>
-          flag.startsWith("flag_filter_") && flag.endsWith("@2x.packed.webp"),
-      ),
+          flag.startsWith("flag_filter_") && flag.endsWith("@2x.packed.webp")
+      )
     );
 
   for (const flag of fadedFiles) {
@@ -22,18 +25,13 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
     paths.push({
       params: { id },
-      props: { path },
+      props: { packed: path },
     });
   }
 
   return paths;
 });
 
-export async function GET({ props }: APIContext<{ path: string }>) {
-  const bytes = await sharp(new Uint8Array(await vfs.file(props.path)))
-    .trim({ background: { r: 0, g: 0, b: 0, alpha: 0 }, threshold: 1 })
-    .webp()
-    .toBuffer();
-
-  return new Response(new Uint8Array(bytes));
+export async function GET({ props }: APIContext<PackedSpriteProps>) {
+  return new Response(await readPackedSprite(props.packed));
 }

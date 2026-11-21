@@ -1,9 +1,10 @@
-import { CREW_MEMBER_NAMES, CrewType } from "@blitzkit/core";
+import { CREW_MEMBER_NAMES } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n";
+import { CrewType } from "@blitzkit/protos";
 import { AccessibilityIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, Popover, Text } from "@radix-ui/themes";
 import { Fragment } from "react/jsx-runtime";
-import { api } from "../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../api/dynamic";
 import { useEquipment } from "../../../../../../hooks/useEquipment";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";
@@ -11,13 +12,13 @@ import { InfoWithDelta } from "./InfoWithDelta";
 import { StatsTableWrapper } from "./StatsTableWrapper";
 import type { StatsAcceptorProps } from "./TraverseVisualizer";
 
-const provisionDefinitions = await api.provisionDefinitions();
+const provisionDefinitions = await api.provisions();
 
 export function Crew({ stats }: StatsAcceptorProps) {
   const tank = Duel.use((state) => state.protagonist.tank);
   const { strings } = useLocale();
   const provisions = Duel.use((state) => state.protagonist.provisions);
-  const hasImprovedVentilation = useEquipment(102);
+  const hasImprovedVentilation = useEquipment("protagonist", 102);
   const provisionCrewBonus =
     provisions.reduce(
       (total, provision) =>

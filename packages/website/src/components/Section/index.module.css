@@ -1,0 +1,24 @@
+.section {
+  padding: var(--space-4);
+
+  @media (pointer: fine) {
+    padding-left: 0;
+  }
+
+  display: flex;
+  justify-content: center;
+
+  &:last-child {
+    flex: 1;
+  }
+
+  .content {
+    flex: 1;
+    max-width: var(--page-width);
+
+    gap: var(--space-5);
+
+    display: flex;
+    flex-direction: column;
+  }
+}

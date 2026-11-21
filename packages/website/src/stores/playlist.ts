@@ -1,4 +1,4 @@
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
 
 export interface PlaylistEntry {
   id: number;
@@ -11,4 +11,4 @@ export interface Playlist {
   list?: PlaylistEntry[];
 }
 
-export const Playlist = new Varuna<Playlist>({}, "playlist");
+export const Playlist = new Soapstone<Playlist>({}, "playlist");

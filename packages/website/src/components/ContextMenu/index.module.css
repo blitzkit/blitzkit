@@ -1,0 +1,8 @@
+@import "../DropdownMenu/index.module.css";
+
+.Content,
+.SubContent {
+  max-height: calc(
+    var(--radix-context-menu-content-available-height) - var(--space-6)
+  );
+}

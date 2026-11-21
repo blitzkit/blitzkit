@@ -2,11 +2,13 @@ import { assertSecret } from '@blitzkit/core';
 import { CaretRightIcon } from '@radix-ui/react-icons';
 import { Box, Button, Flex, Link, Text } from '@radix-ui/themes';
 import { times } from 'lodash-es';
+import { discordLink } from '../../config/socials';
 import { getStrings } from '../../core/i18n/getStrings';
 import { Var } from '../../core/radix/var';
 import type { LocaleAcceptorProps } from '../../hooks/useLocale';
 import type { MaybeSkeletonComponentProps } from '../../types/maybeSkeletonComponentProps';
 import { InlineSkeleton } from '../InlineSkeleton';
+import { LazyImage } from '../LazyImage';
 import './index.css';
 
 export interface DiscordWidget {
@@ -100,7 +102,7 @@ function Member({
       <Flex key={id} align="center" gap="2" flexShrink="0" width="8rem">
         <Box width="1.5em" height="1.5em" flexShrink="0" position="relative">
           {!skeleton && (
-            <img
+            <LazyImage
               src={avatar_url}
               alt={`${username} profile picture`}
               style={{ width: '100%', height: '100%', borderRadius: '50%' }}
@@ -161,7 +163,7 @@ export function DiscordPlug({
     <Flex justify="center" flexGrow="1" flexShrink="0">
       <Link
         style={{ display: 'contents' }}
-        href="https://discord.gg/nDt7AjGJQH"
+        href={discordLink}
         target="_blank"
       >
         <Flex

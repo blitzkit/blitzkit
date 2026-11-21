@@ -1,0 +1,13 @@
+---
+import { tools } from "../../../../constants/tools";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+---
+
+<BaseLayout tool={tools.settings} {locale}>
+  <Page {locale} client:load />
+</BaseLayout>

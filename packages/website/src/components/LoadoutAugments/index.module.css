@@ -1,0 +1,87 @@
+.tree {
+  --line-thickness: calc(var(--space-1) * 2);
+  --line-color: var(--gray-6);
+
+  .cell {
+    .north,
+    .south,
+    .west,
+    .east {
+      position: absolute;
+      background-color: var(--line-color);
+    }
+
+    .north,
+    .south {
+      left: 50%;
+      width: var(--line-thickness);
+      transform: translateX(-50%);
+    }
+
+    .west,
+    .east {
+      top: 50%;
+      height: var(--line-thickness);
+      transform: translateY(-50%);
+    }
+
+    /* An empty cell passes a line through, out to the middle of the gaps */
+    .north {
+      top: calc(var(--depth-gap) / -2);
+      height: calc(50% + var(--depth-gap) / 2);
+    }
+
+    .south {
+      bottom: calc(var(--depth-gap) / -2);
+      height: calc(50% + var(--depth-gap) / 2);
+    }
+
+    .west {
+      left: calc(var(--sibling-gap) / -2);
+      width: calc(50% + var(--sibling-gap) / 2);
+    }
+
+    .east {
+      right: calc(var(--sibling-gap) / -2);
+      width: calc(50% + var(--sibling-gap) / 2);
+    }
+
+    /* The buttons are translucent, so around a node the lines stay in the gaps */
+    &[data-node="true"] {
+      .north {
+        top: auto;
+        bottom: 100%;
+        height: calc(var(--depth-gap) / 2);
+      }
+
+      .south {
+        bottom: auto;
+        top: 100%;
+        height: calc(var(--depth-gap) / 2);
+      }
+
+      .west {
+        left: auto;
+        right: 100%;
+        width: calc(var(--sibling-gap) / 2);
+      }
+
+      .east {
+        right: auto;
+        left: 100%;
+        width: calc(var(--sibling-gap) / 2);
+      }
+    }
+  }
+
+  .alternatives {
+    grid-column: 1 / -1;
+
+    display: flex;
+    justify-content: center;
+    gap: var(--sibling-gap);
+
+    /* Prices hang below the nodes */
+    padding-bottom: calc(var(--space-2) + var(--font-size-minor));
+  }
+}

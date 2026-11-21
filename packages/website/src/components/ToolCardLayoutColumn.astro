@@ -1,0 +1,26 @@
+---
+interface Props {
+  major?: boolean;
+}
+
+const { major } = Astro.props;
+---
+
+<style>
+  .tool-card-layout-root {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+
+    gap: inherit;
+
+    &[data-major="true"] {
+      flex: 2;
+    }
+  }
+</style>
+
+<div class="tool-card-layout-root" data-major={major}>
+  <slot />
+</div>

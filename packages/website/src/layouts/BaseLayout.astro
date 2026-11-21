@@ -1,52 +1,84 @@
 ---
-import strings from "@blitzkit/i18n/strings/en.json";
-import "@fontsource/inter";
-import { Flex } from "@radix-ui/themes";
-import Analytics from "../components/Analytics.astro";
-import { BlitzKitTheme } from "../components/BlitzKitTheme";
-import { Checks } from "../components/Checks";
-import EasterEggs from "../components/EasterEggs.astro";
-import Footer from "../components/Footer.astro";
-import LocaleRedirector from "../components/LocaleRedirector.astro";
-import Meta from "../components/Meta.astro";
-import Navbar from "../components/Navbar.astro";
-import Servicing from "../components/Servicing.astro";
-import "./base.css";
+import BaseMeta from "../components/BaseMeta.astro";
+import BaseStyles from "../components/BaseStyles.astro";
+import ColorAlias from "../components/ColorAlias.astro";
+import ColorScale from "../components/ColorScale.astro";
+import NavbarCourse from "../components/NavbarCourse.astro";
+import NavbarFine from "../components/NavbarFine.astro";
+import SystemTheme from "../components/SystemTheme.astro";
+import type { Tool } from "../constants/tools";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import type { Color } from "../ui/color";
 
-export interface Props {
-  noFooter?: boolean;
-  noNavbar?: boolean;
-  integrated?: boolean;
-  locale: string;
-}
+type Props = LocaleAcceptorProps & {
+  accent: Color;
+  solidNavbar?: boolean;
+  tool: Tool;
+};
 
-const servicing = import.meta.env.SERVICING;
-const { noFooter, noNavbar, integrated, locale } = Astro.props;
+const { locale, accent, solidNavbar = false, tool } = Astro.props;
 ---
 
-<html lang={locale}>
+<html lang={locale} class="dark">
   <head>
-    <meta property="og:site_name" content={strings.common.name} />
+    <BaseMeta />
+    <SystemTheme />
 
-    <Meta />
-    <Analytics />
-    <LocaleRedirector />
-    <EasterEggs />
+    <ColorScale color="mauve" />
+    <ColorAlias color="mauve" alias="gray" />
 
-    <slot name="head" />
+    <ColorScale color="black" />
+    <ColorScale color="white" />
+
+    <ColorScale color={accent} />
+    <ColorAlias color={accent} alias="accent" />
+
+    <BaseStyles />
+
+    <style>
+      :root {
+        interpolate-size: allow-keywords;
+
+        background-color: var(--gray-1);
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+
+        display: flex;
+        flex-direction: column;
+
+        @media (pointer: fine) {
+          flex-direction: row-reverse;
+        }
+
+        background-color: var(--gray-1);
+        color: var(--gray-12);
+        font-family: var(--font-family-regular);
+
+        .main {
+          flex: 1;
+          min-width: 0;
+
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    </style>
   </head>
 
-  <body class={noNavbar ? "no-navbar" : ""}>
-    <BlitzKitTheme>
-      <Flex direction="column" minHeight="100vh">
-        <Navbar {locale} {integrated} />
+  <body data-solid-navbar={solidNavbar}>
+    <main class="main">
+      <slot />
+    </main>
 
-        <Checks {locale} client:only="react" />
-
-        {servicing ? <Servicing /> : <slot />}
-
-        {!noFooter && <Footer {locale} />}
-      </Flex>
-    </BlitzKitTheme>
+    <NavbarFine {locale} {tool} />
+    <NavbarCourse {locale} {tool} solid={solidNavbar} />
   </body>
 </html>

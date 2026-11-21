@@ -8,30 +8,34 @@ import {
   CamouflagesYaml,
   CombatRolesYaml,
   ConsumablesCommon,
-  ConsumableTankCategoryFilterCategory,
-  CrewType,
-  I18nString,
   MapsYaml,
-  ModuleType,
   OptionalDevices,
   OptionalDeviceSlots,
   ProvisionsCommon,
-  ShellKind,
-  ShellType,
   SquadBattleTypeStylesYaml,
-  TankClass,
   TankmenAvatar,
   toUniqueId,
   VehicleDefinitionList,
 } from "@blitzkit/core";
 import { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
 import locales from "@blitzkit/i18n/locales.json";
-import { SUPPORTED_LOCALE_BLITZ_MAP } from "@blitzkit/i18n/src/strings";
+import {
+  ConsumableTankCategoryFilterCategory,
+  CrewType,
+  I18nString,
+  ModuleType,
+  TankClass,
+} from "@blitzkit/protos";
+import type { extname, parse } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { BlitzKitAPI } from "../base";
+import { AbstractBlitzKitAPI } from "../abstract";
 
-export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
+export abstract class ServerBlitzKitAPI0 extends AbstractBlitzKitAPI {
+  // TODO: move most of these to their respective constructors
+
   protected vfs: AbstractVFS;
+  protected parsePath?: typeof parse;
+  protected extname?: typeof extname;
 
   protected nationSlugDiscriminators = {
     china: "cn",
@@ -74,12 +78,6 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     heavyTank: TankClass.TANK_CLASS_HEAVY,
     mediumTank: TankClass.TANK_CLASS_MEDIUM,
   };
-  protected blitzShellKindToBlitzkit: Record<ShellKind, ShellType> = {
-    ARMOR_PIERCING: ShellType.SHELL_TYPE_AP,
-    ARMOR_PIERCING_CR: ShellType.SHELL_TYPE_APCR,
-    HIGH_EXPLOSIVE: ShellType.SHELL_TYPE_HE,
-    HOLLOW_CHARGE: ShellType.SHELL_TYPE_HEAT,
-  };
   protected blitzTankFilterDefinitionCategoryToBlitzkit: Record<
     BlitzTankFilterDefinitionCategory,
     ConsumableTankCategoryFilterCategory
@@ -89,7 +87,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
   protected botPattern = /^.+((tutorial_bot(\d+)?)|(TU))$/;
 
-  protected stringsI18n: Record<string, Record<string, string>> = {};
+  private stringsI18n: Record<string, Record<string, string>> = {};
   protected nationsDir?: string[];
   protected tankStringIdMap: Record<string, number> = {};
   protected consumablesCommon: ConsumablesCommon = {};
@@ -110,6 +108,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
   constructor(vfs: AbstractVFS) {
     super();
+
     this.vfs = vfs;
   }
 
@@ -117,41 +116,46 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     const { existsSync } = await import("fs");
     const { readFile, writeFile, mkdir } = await import("fs/promises");
 
+    const path = await import("node:path");
+
+    this.extname = path.extname;
+    this.parsePath = path.parse;
+
     console.log("Fetching game data...");
     this.nationsDir = await this.vfs
       .dir("Data/XML/item_defs/vehicles")
       .then((files) => files.filter((nation) => nation !== "common"));
 
     this.optionalDevices = await this.vfs.xml<{ root: OptionalDevices }>(
-      "Data/XML/item_defs/vehicles/common/optional_devices.xml",
+      "Data/XML/item_defs/vehicles/common/optional_devices.xml"
     );
     this.optionalDeviceSlots = await this.vfs.xml<{
       root: OptionalDeviceSlots;
     }>("Data/XML/item_defs/vehicles/common/optional_device_slots.xml");
     this.tankmenAvatar = await this.vfs.xml<{ root: TankmenAvatar }>(
-      "Data/XML/item_defs/tankmen/avatar.xml",
+      "Data/XML/item_defs/tankmen/avatar.xml"
     );
     this.mapsYaml = await this.vfs.yaml<MapsYaml>("Data/maps.yaml");
     this.camouflagesXml = await this.vfs.xml<{ root: CamouflagesXml }>(
-      "Data/XML/item_defs/vehicles/common/camouflages.xml",
+      "Data/XML/item_defs/vehicles/common/camouflages.xml"
     );
     this.camouflagesYaml = await this.vfs.yaml<CamouflagesYaml>(
-      "Data/camouflages.yaml",
+      "Data/camouflages.yaml"
     );
     this.squadBattleTypeStyles = await this.vfs.yaml<SquadBattleTypeStylesYaml>(
-      `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`,
+      `Data/UI/Screens3/Lobby/Hangar/Squad/SquadBattleType.yaml`
     );
     this.gameTypeSelectorStyles =
       await this.vfs.yaml<SquadBattleTypeStylesYaml>(
-        `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`,
+        `Data/UI/Screens/Lobby/Hangar/GameTypeSelector.yaml`
       );
     this.combatRoles = await this.vfs.yaml<CombatRolesYaml>(
-      `Data/XML/item_defs/vehicles/common/combat_roles.yaml`,
+      `Data/XML/item_defs/vehicles/common/combat_roles.yaml`
     );
     this.tierEqualizer = await this.vfs.csv(
       // spell:disable-next-line
       `Data/XML/item_defs/vehicles/common/tier_equializer.csv`,
-      { delimiter: ";" },
+      { delimiter: ";" }
     );
 
     this.version = (await this.vfs.text("Data/version.txt")).split(" ")[0];
@@ -159,44 +163,48 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
     console.log("Fetching game localizations...");
 
     await Promise.all(
-      locales.supported.map(async ({ locale }) => {
+      locales.supported.map(async (supported) => {
         const root = `../../temp/game-strings/${this.version}`;
-        const cachePath = `${root}/${locale}.json`;
+        const cachePath = `${root}/${supported.locale}.json`;
 
         if (existsSync(cachePath)) {
-          console.log(`  Cache hit for ${locale}`);
+          console.log(`  Cache hit for ${supported.locale}`);
 
           const content = await readFile(cachePath, "utf-8");
-          this.stringsI18n[locale] = JSON.parse(content) as BlitzStrings;
+          this.stringsI18n[supported.locale] = JSON.parse(
+            content
+          ) as BlitzStrings;
 
           return;
         }
 
-        console.log(`  Cache miss for ${locale} (this will take a while...)`);
+        console.log(
+          `  Cache miss for ${supported.locale} (this will take a while...)`
+        );
 
-        const blitzLocale = SUPPORTED_LOCALE_BLITZ_MAP[locale];
+        const stringsLocale = supported.variant_blitz_strings ?? supported.locale;
         const networkStrings = (await fetch(
-          `https://stufficons.wgcdn.co/localizations/${blitzLocale}.yaml`,
+          `https://stufficons.wgcdn.co/localizations/${stringsLocale}.yaml`
         )
           .then((response) => response.text())
           .then(parseYaml)) as BlitzStrings;
         const localStrings = await this.vfs.yaml<BlitzStrings>(
-          `Data/Strings/${blitzLocale}.yaml`,
+          `Data/Strings/${stringsLocale}.yaml`
         );
         const combined = { ...networkStrings, ...localStrings };
 
         await mkdir(root, { recursive: true });
         await writeFile(cachePath, JSON.stringify(combined));
 
-        this.stringsI18n[locale] = combined;
-      }),
+        this.stringsI18n[supported.locale] = combined;
+      })
     );
 
     console.log("Fetching consumable and provision data...");
 
     for (const match of (
       await this.vfs.text(
-        `Data/XML/item_defs/vehicles/common/consumables/list.xml`,
+        `Data/XML/item_defs/vehicles/common/consumables/list.xml`
       )
     ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
       if (match[1] === "prototypes") continue;
@@ -205,15 +213,15 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
         this.consumablesCommon,
         (
           await this.vfs.xml<{ root: ConsumablesCommon }>(
-            `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`,
+            `Data/XML/item_defs/vehicles/common/consumables/${match[1]}.xml`
           )
-        ).root,
+        ).root
       );
     }
 
     for (const match of (
       await this.vfs.text(
-        `Data/XML/item_defs/vehicles/common/provisions/list.xml`,
+        `Data/XML/item_defs/vehicles/common/provisions/list.xml`
       )
     ).matchAll(/<items path="(.+)\.xml"\/>/g)) {
       if (match[1] === "prototypes") continue;
@@ -222,15 +230,15 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
         this.provisionsCommon,
         (
           await this.vfs.xml<{ root: ConsumablesCommon }>(
-            `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`,
+            `Data/XML/item_defs/vehicles/common/provisions/${match[1]}.xml`
           )
-        ).root,
+        ).root
       );
     }
 
     for (const nation of this.nationsDir!) {
       const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
-        `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+        `Data/XML/item_defs/vehicles/${nation}/list.xml`
       );
 
       for (const tankKey in tankList.root) {
@@ -249,7 +257,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
   protected getTankFilterIds(
     name: string,
     definitionKey: string,
-    filter: "include" | "exclude",
+    filter: "include" | "exclude"
   ) {
     const keys = name.trim().split(/\s+/).filter(Boolean);
 
@@ -258,7 +266,7 @@ export abstract class ServerBlitzKitAPI0 extends BlitzKitAPI {
 
       if (id === undefined) {
         console.warn(
-          `Skipping unavailable tank "${key}" in ${filter} vehicle filter for "${definitionKey}"`,
+          `Skipping unavailable tank "${key}" in ${filter} vehicle filter for "${definitionKey}"`
         );
         return [];
       }
@@ -295,7 +303,7 @@ export function Cache(disableInDev = false) {
   const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
   return function <This, Arguments extends any[], Return>(
-    target: (this: This, ...args: Arguments) => Promise<Return>,
+    target: (this: This, ...args: Arguments) => Promise<Return>
     // TODO: evaluate if we need context to make the error trace easier
     // context: ClassMethodDecoratorContext<
     //   This,

@@ -17,9 +17,9 @@ import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, mergeDocuments, unpartition } from "@gltf-transform/functions";
 import type { APIContext } from "astro";
 import type { Vector3Tuple, Vector4Tuple } from "three";
+import { api } from "../../../../api/dynamic";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
 import { SKIN_NUMBER } from "../../../../constants/skinNumber";
-import { api } from "../../../../core/blitzkit/api";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
 import { switcherStates } from "../../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import {
@@ -33,7 +33,7 @@ const DIGIT_COLUMNS = 5;
 const DIGIT_ROWS = 2;
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
-  const camouflages = await api.camouflageDefinitions();
+  const camouflages = await api.camouflages();
 
   return Object.values(camouflages.camouflages)
     .filter((camouflage) => camouflage.tank_id)

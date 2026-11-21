@@ -1,14 +1,35 @@
 import { readDVPL } from "@blitzkit/core";
-import { Options, parse as parseCSV } from "csv-parse/sync";
+import { Options, parse as parseCSV } from "csv-parse/browser/esm/sync";
 import { XMLParser } from "fast-xml-parser";
-import { normalize } from "path/posix";
+import type { normalize } from "node:path/posix";
 import { parse as parseYaml } from "yaml";
+
+// Tags of an upgrade progression that are lists even with a single child
+const UPGRADE_PROGRESSION_LIST_TAGS = new Set([
+  "node",
+  "attribute",
+  "alternativeMechanicGroup",
+]);
 
 export abstract class AbstractVFS {
   textDecoder = new TextDecoder();
   private xmlParser = new XMLParser();
+  private attributeXmlParser = new XMLParser({
+    ignoreAttributes: false,
+    // A lone child would otherwise parse to an object instead of a list
+    isArray: (name) => UPGRADE_PROGRESSION_LIST_TAGS.has(name),
+  });
 
-  abstract init(): Promise<typeof this>;
+  protected normalizePath?: typeof normalize;
+
+  async init() {
+    const path = await import("node:path/posix");
+    this.normalizePath = path.normalize;
+
+    return await this._init();
+  }
+
+  protected abstract _init(): Promise<typeof this>;
 
   abstract dispose(): void;
 
@@ -17,7 +38,7 @@ export abstract class AbstractVFS {
   abstract raw(path: string): Promise<Uint8Array<ArrayBuffer>>;
 
   async resolve(path: string) {
-    const normalized = normalize(path);
+    const normalized = this.normalizePath!(path);
     if (await this.has(normalized)) return normalized;
 
     const dvplPath = `${normalized}.dvpl`;
@@ -69,6 +90,12 @@ export abstract class AbstractVFS {
   async xml<Type>(path: string) {
     const file = await this.text(path);
     return this.xmlParser.parse(file) as Type;
+  }
+
+  // Keeps attributes as `@_name` and lists as arrays, which `xml` drops
+  async xmlWithAttributes<Type>(path: string) {
+    const file = await this.text(path);
+    return this.attributeXmlParser.parse(file) as Type;
   }
 
   protected async _csv(text: string, options: Options = {}) {

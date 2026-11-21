@@ -1,13 +1,15 @@
 ---
+import ColorScale from "../../../../../../components/ColorScale.astro";
 import EmbedLayout from "../../../../../../layouts/EmbedLayout.astro";
-import type { getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
-const { locale } = Astro.props;
+const { locale, embed } = Astro.props;
 ---
 
-<EmbedLayout>
-  <Page {locale} client:only="react" embed={Astro.params.embed} />
+<EmbedLayout {locale}>
+  <ColorScale color="red" />
+
+  <Page {locale} client:only="react" {embed} />
 </EmbedLayout>

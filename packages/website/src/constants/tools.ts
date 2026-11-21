@@ -1,81 +1,116 @@
-import type { ButtonProps } from "@radix-ui/themes";
+import { discordLink } from "../config/socials";
 
 export interface Tool {
   id: string;
-  strings?: string;
 
-  button: ButtonProps["color"];
-  significant?: boolean;
-  disabled?: boolean;
+  slug?: string;
   href?: string;
+
+  disabled?: boolean;
+
+  banner_background_position: "top" | "center" | "bottom";
+  hide_in_navbar?: boolean;
+  hide_in_navbar_desktop?: boolean;
 }
 
 export const tools: Record<string, Tool> = {
+  home: {
+    id: "home",
+    slug: "",
+    banner_background_position: "center",
+    hide_in_navbar_desktop: true,
+  },
   tanks: {
     id: "tanks",
-    strings: "tankopedia",
-    button: "purple",
-    significant: true,
+    banner_background_position: "top",
   },
   players: {
-    id: "players",
     disabled: true,
-    button: "blue",
+    id: "players",
+    banner_background_position: "top",
   },
   compare: {
     id: "compare",
-    button: "crimson",
+    banner_background_position: "bottom",
   },
   performance: {
     id: "performance",
-    button: "jade",
-  },
-  charts: {
-    id: "charts",
-    disabled: true,
-    button: "bronze",
+    banner_background_position: "bottom",
   },
   playlist: {
+    disabled: true,
     id: "playlist",
-    button: "tomato",
+    banner_background_position: "bottom",
   },
   mixer: {
     id: "mixer",
-    button: "gray",
+    banner_background_position: "bottom",
   },
-  guess: {
-    id: "guess",
-    button: "cyan",
+  guesser: {
+    id: "guesser",
+    banner_background_position: "bottom",
   },
-  gallery: {
-    id: "gallery",
-    button: "gold",
+  avatars: {
+    disabled: true,
+    id: "avatars",
+    banner_background_position: "bottom",
+  },
+  backgrounds: {
+    disabled: true,
+    id: "backgrounds",
+    banner_background_position: "bottom",
   },
   session: {
+    disabled: true,
     id: "session",
-    button: "blue",
+    banner_background_position: "bottom",
   },
   tier_list: {
-    id: "tier-list",
-    strings: "tier_list",
-    button: "orange",
+    disabled: true,
+    id: "tier_list",
+    slug: "tier-list",
+    banner_background_position: "bottom",
   },
   embed: {
     id: "embed",
-    button: "red",
-  },
-  api: {
-    id: "api",
-    disabled: true,
-    button: "bronze",
+    banner_background_position: "top",
   },
   more: {
     id: "more",
-    href: "https://discord.gg/nDt7AjGJQH",
-    button: "plum",
+    href: discordLink,
+    banner_background_position: "bottom",
+  },
+  api: {
+    disabled: true,
+    id: "api",
+    banner_background_position: "bottom",
+  },
+  changelogs: {
+    disabled: true,
+    id: "changelogs",
+    banner_background_position: "bottom",
+  },
+  settings: {
+    id: "settings",
+    banner_background_position: "center",
+    hide_in_navbar: true,
   },
   credits: {
+    disabled: true,
     id: "credits",
-    button: "bronze",
+    banner_background_position: "center",
+    hide_in_navbar: true,
   },
+};
+
+export enum ToolBannerSize {
+  Thumbnail = "thumbnail",
+  Poster = "poster",
+  Full = "full",
+}
+
+export const TOOL_BANNER_HEIGHTS: Record<ToolBannerSize, number | null> = {
+  [ToolBannerSize.Thumbnail]: 128,
+  [ToolBannerSize.Poster]: 480 * 1.5,
+  [ToolBannerSize.Full]: null,
 };

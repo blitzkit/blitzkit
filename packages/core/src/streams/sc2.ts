@@ -137,6 +137,13 @@ interface RbAabbox {
   maximum: number[];
 }
 
+export type ComponentName = Component["comp.typename"];
+
+export type ComponentOf<Name extends ComponentName> = Extract<
+  Component,
+  { "comp.typename": Name }
+>;
+
 export type Component =
   | {
       "comp.typename": "TransformComponent";

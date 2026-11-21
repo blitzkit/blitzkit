@@ -1,3 +1,7 @@
-import { fetchAverageDefinitions } from '@blitzkit/core';
+import { fetchPB, staticAsset } from "@blitzkit/core";
+import { AverageDefinitions } from "@blitzkit/protos";
 
-export const awaitableAverageDefinitions = fetchAverageDefinitions();
+export const awaitableAverageDefinitions = fetchPB(
+  staticAsset("averages.pb"),
+  AverageDefinitions,
+);

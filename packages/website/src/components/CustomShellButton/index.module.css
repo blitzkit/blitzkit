@@ -1,0 +1,36 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.field {
+  max-width: 7rem;
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  flex-grow: 1;
+  min-width: 8rem;
+  max-width: 15rem;
+
+  > :last-child {
+    flex-grow: 1;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

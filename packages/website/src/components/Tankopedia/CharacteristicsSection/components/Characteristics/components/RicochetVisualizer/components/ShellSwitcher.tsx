@@ -2,6 +2,7 @@ import { alias } from "@blitzkit/core";
 import { Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { useLocale } from "../../../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../../../stores/duel";
+import { LazyImage } from "../../../../../../../LazyImage";
 
 export function ShellSwitcher() {
   const gun = Duel.use((state) => state.protagonist.gun);
@@ -35,7 +36,7 @@ export function ShellSwitcher() {
                 });
               }}
             >
-              <img
+              <LazyImage
                 alt={unwrap(thisShell.name!)}
                 style={{ width: "1.125rem", height: "1.125rem" }}
                 src={alias("api", `/icons/shells/${thisShell.icon}.webp`)}

@@ -1,7 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 import { useEffect } from "react";
+import { api } from "../../../../../api/dynamic";
 import { applyPitchYawLimits } from "../../../../../core/blitz/applyPitchYawLimits";
-import { api } from "../../../../../core/blitzkit/api";
 import { modelTransformEvent } from "../../../../../core/blitzkit/modelTransform";
 import { tankCharacteristics } from "../../../../../core/blitzkit/tankCharacteristics";
 import { useEquipment } from "../../../../../hooks/useEquipment";
@@ -15,8 +15,8 @@ import { Maneuverability } from "./components/Maneuverability";
 import { Survivability } from "./components/Survivability";
 
 const [equipmentDefinitions, provisionDefinitions] = await Promise.all([
-  api.equipmentDefinitions(),
-  api.provisionDefinitions(),
+  api.equipment(),
+  api.provisions(),
 ]);
 
 export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
@@ -71,8 +71,8 @@ export function Characteristics({ skeleton }: MaybeSkeletonComponentProps) {
     },
   );
 
-  const hasImprovedVerticalStabilizer = useEquipment(122);
-  const hasDownImprovedVerticalStabilizer = useEquipment(124);
+  const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
+  const hasDownImprovedVerticalStabilizer = useEquipment("protagonist", 124);
 
   useEffect(() => {
     const [pitch, yaw] = applyPitchYawLimits(

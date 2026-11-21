@@ -1,0 +1,13 @@
+---
+import type { ColorAlias } from "../config/styles";
+import type { Color } from "../ui/color";
+
+interface Props {
+  color: Color;
+  alias: ColorAlias;
+}
+
+const { color, alias } = Astro.props;
+---
+
+<link rel="stylesheet" href={`/styles/scales/${color}-as-${alias}.css`} />

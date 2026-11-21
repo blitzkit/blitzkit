@@ -1,4 +1,4 @@
-import { ShellDefinition, ShellType } from "../protos";
+import { ShellDefinition, ShellType } from "../../../protos/src/blitzkit";
 
 export function isExplosive(
   type: ShellDefinition["type"],

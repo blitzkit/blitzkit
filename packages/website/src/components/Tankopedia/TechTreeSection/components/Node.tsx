@@ -1,11 +1,12 @@
-import { alias, formatCompact, TIER_ROMAN_NUMERALS } from "@blitzkit/core";
+import { alias, formatCompact, romanize } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import { Box, Flex, Skeleton, Text } from "@radix-ui/themes";
+import { api } from "../../../../api/dynamic";
 import { awaitableAverageDefinitions } from "../../../../core/awaitables/averageDefinitions";
-import { api } from "../../../../core/blitzkit/api";
 import { useLocale } from "../../../../hooks/useLocale";
 import { Tankopedia } from "../../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
+import { LazyImage } from "../../../LazyImage";
 import { LinkI18n } from "../../../LinkI18n";
 
 type NodeProps = MaybeSkeletonComponentProps & {
@@ -15,7 +16,7 @@ type NodeProps = MaybeSkeletonComponentProps & {
 };
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
   awaitableAverageDefinitions,
 ]);
 
@@ -77,7 +78,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
             WebkitBackdropFilter: highlight ? "brightness(0.25)" : undefined,
           }}
         >
-          <img
+          <LazyImage
             alt={unwrap(tank.name!)}
             src={alias("api", `/tanks/${id}/icons/big.webp`)}
             width={64}
@@ -90,14 +91,14 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
           <Flex direction="column" align="center">
             <Flex gap="2" align="center">
               <Text color="gray" size="1">
-                {TIER_ROMAN_NUMERALS[tank.tier]}
+                {romanize(tank.tier)}
               </Text>
               <Text wrap="nowrap">{unwrap(tank.name!)}</Text>
             </Flex>
             <Flex gap="2" align="center">
               <Text color="gray" size="1" wrap="nowrap">
                 <Flex gap="1" align="center">
-                  <img
+                  <LazyImage
                     alt="XP"
                     src={alias("api", "/icons/currencies/xp.webp")}
                     style={{
@@ -112,7 +113,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
               </Text>
               <Text color="gray" size="1" wrap="nowrap">
                 <Flex gap="1" align="center">
-                  <img
+                  <LazyImage
                     alt="Silver"
                     src={alias("api", "/icons/currencies/silver.webp")}
                     style={{

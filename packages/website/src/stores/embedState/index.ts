@@ -1,25 +1,26 @@
-import * as radixColors from "@radix-ui/colors";
-import { Varuna } from "varuna";
+import { Soapstone } from "soapstone";
+import type { Color } from "../../ui/color";
+import type {
+  Radius,
+  Space,
+  SpaceWithout0,
+  Weight,
+} from "../../types/styles";
 import {
   type EmbedConfigItemType,
   EmbedItemType,
-  radixGrays,
-  radixTextWeights,
+  grays,
 } from "./constants";
 
-export type RadixSize = `${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
-export type RadixSizeWithout0 = Exclude<RadixSize, "0">;
-export type RadixRadius = `${1 | 2 | 3 | 4}` | "full";
-export type RadixTextWeight = (typeof radixTextWeights)[number];
-export type RadixColorCompound = {
-  base: RadixColor;
-  variant: RadixColorVariant;
+export type ColorCompound = {
+  base: Color;
+  variant: ColorVariant;
 };
-export type RadixTextColor =
-  | Exclude<RadixColor, RadixColorGrays>
+export type TextColor =
+  | Exclude<Color, Gray>
   | "gray"
   | undefined;
-export type RadixColorVariantRaw = `${
+export type ColorStep = `${
   | 1
   | 2
   | 3
@@ -32,12 +33,8 @@ export type RadixColorVariantRaw = `${
   | 10
   | 11
   | 12}`;
-export type RadixColorVariant = `${"" | "a"}${RadixColorVariantRaw}`;
-export type RadixColor = Exclude<
-  keyof typeof radixColors,
-  `${string}${"A" | "P3" | "Dark"}`
->;
-export type RadixColorGrays = (typeof radixGrays)[number];
+export type ColorVariant = `${"" | "a"}${ColorStep}`;
+export type Gray = (typeof grays)[number];
 
 export type ExtractEmbedConfigTypes<Config extends EmbedConfig> = {
   [Key in keyof Config]: ({
@@ -67,15 +64,15 @@ export type EmbedConfigItem = (
     }
   | {
       type: EmbedItemType.Radius;
-      default: RadixRadius;
+      default: Radius;
     }
   | {
       type: EmbedItemType.Size;
-      default: RadixSize;
+      default: Space;
     }
   | {
       type: EmbedItemType.SizeWithout0;
-      default: RadixSizeWithout0;
+      default: SpaceWithout0;
     }
   | {
       type: EmbedItemType.Color;
@@ -85,8 +82,8 @@ export type EmbedConfigItem = (
       type: EmbedItemType.RichText;
       default: {
         color: string;
-        size: RadixSizeWithout0;
-        weight: RadixTextWeight;
+        size: SpaceWithout0;
+        weight: Weight;
       };
     }
   | {
@@ -103,6 +100,6 @@ export type EmbedConfigItem = (
 
 export type EmbedStateStore = Record<string, EmbedConfigItem["default"]>;
 
-export const EmbedState = new Varuna<EmbedStateStore, EmbedStateStore>(
+export const EmbedState = new Soapstone<EmbedStateStore, [EmbedStateStore]>(
   (data) => data
 );

@@ -1,0 +1,31 @@
+@keyframes fade-out-border {
+  from {
+    outline: var(--space-4) solid #ff0000ff;
+  }
+  to {
+    outline: var(--space-3) solid #ff000000;
+  }
+}
+
+.naked {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0) scale(0.75);
+}
+
+.preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.animated {
+  animation: fade-out-border var(--duration-brief) linear;
+
+  &:hover {
+    outline: 1rem solid #ff000080;
+  }
+}

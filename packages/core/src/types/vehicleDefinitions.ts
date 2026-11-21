@@ -1,4 +1,4 @@
-import { BlitzModuleType } from "@blitzkit/core";
+import { BlitzModuleType, VehicleDefinitionArmor } from "@blitzkit/core";
 
 export interface VehicleDefinitions {
   invisibility: {
@@ -13,6 +13,8 @@ export interface VehicleDefinitions {
   };
   consumableSlots: number;
   provisionSlots: number;
+  // Tier 11 tanks only, parsed separately because it needs attributes
+  upgradeProgression?: object;
   optDevicePreset: string | string[];
   hull: {
     armor: VehicleDefinitionArmor;
@@ -76,48 +78,7 @@ export interface VehicleDefinitions {
         collisionModel: string;
       };
       guns: {
-        [key: string]: {
-          unlocks: UnlocksListing;
-          armor: VehicleDefinitionArmor & {
-            gun?:
-              | number
-              | {
-                  chanceToHitByProjectile: number;
-                  chanceToHitByExplosion: number;
-                  "#text": number;
-                };
-          };
-          invisibilityFactorAtShot: number | number[];
-          reloadTime: number;
-          aimingTime?: number;
-          shotDispersionRadius: number;
-          shotDispersionFactors?: {
-            turretRotation: number;
-            afterShot: number;
-            whileGunDamaged: number;
-          };
-          maxAmmo: number;
-          extraPitchLimits?: {
-            front?: string;
-            back?: string;
-            transition?: number | number[];
-          };
-          pitchLimits?: string | string[];
-          pumpGunMode?: boolean;
-          pumpGunReloadTimes?: string;
-          clip?: { count: number; rate: number };
-          burst?: { count: number; rate: number };
-          models: { undamaged: string };
-          extras?: {
-            trayShell?: {
-              kinds: string;
-              sectors: Record<
-                string,
-                { id: number; distance: number; factor: number }[]
-              >;
-            };
-          };
-        };
+        [key: string]: VehicleDefinitionGun;
       };
     };
   };
@@ -152,3 +113,47 @@ export type BlitzCrewType =
   | "loader";
 
 export type UnlocksListing = BlitzModuleType | undefined;
+
+// A turret gun as its tank lists it, which overrides the shared gun entry
+export interface VehicleDefinitionGun {
+  unlocks: UnlocksListing;
+  armor: VehicleDefinitionArmor & {
+    gun?:
+      | number
+      | {
+          chanceToHitByProjectile: number;
+          chanceToHitByExplosion: number;
+          "#text": number;
+        };
+  };
+  invisibilityFactorAtShot: number | number[];
+  reloadTime: number;
+  aimingTime?: number;
+  shotDispersionRadius: number;
+  shotDispersionFactors?: {
+    turretRotation: number;
+    afterShot: number;
+    whileGunDamaged: number;
+  };
+  maxAmmo: number;
+  extraPitchLimits?: {
+    front?: string;
+    back?: string;
+    transition?: number | number[];
+  };
+  pitchLimits?: string | string[];
+  pumpGunMode?: boolean;
+  pumpGunReloadTimes?: string;
+  clip?: { count: number; rate: number };
+  burst?: { count: number; rate: number };
+  models: { undamaged: string };
+  extras?: {
+    trayShell?: {
+      kinds: string;
+      sectors: Record<
+        string,
+        { id: number; distance: number; factor: number }[]
+      >;
+    };
+  };
+}

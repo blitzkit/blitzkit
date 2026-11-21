@@ -1,0 +1,31 @@
+.loader {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+
+  opacity: 1;
+  filter: blur(0);
+
+  transition-duration: var(--duration-brief);
+
+  &[data-visible="false"] {
+    transition-duration: var(--duration-subtle);
+
+    opacity: 0;
+    pointer-events: none;
+
+    filter: blur(4rem);
+  }
+
+  .icon {
+    height: 25%;
+  }
+}

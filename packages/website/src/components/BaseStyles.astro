@@ -1,0 +1,100 @@
+---
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/roboto-flex";
+import { spaces, weights } from "../config/styles";
+
+let styles = "";
+
+styles += ":root{";
+
+spaces.forEach((space, index) => {
+  styles += `--space-${index}:${space}rem;`;
+});
+
+for (const weight in weights) {
+  styles += `--weight-${weight}:${weights[weight as keyof typeof weights]};`;
+}
+
+styles += "}";
+---
+
+<style set:html={styles}></style>
+
+<style>
+  :root {
+    --page-width: 64rem;
+
+    --max-size: max(100vw, 100vh);
+    --radius-max: var(--max-size);
+
+    --font-size-regular: 1rem;
+    --font-size-minor: 0.85rem;
+    --font-size-major: 1.25rem;
+
+    --font-size-heading-1: 3rem;
+    --font-size-heading-2: 2rem;
+    --font-size-heading-3: 1.5rem;
+    --font-size-heading-4: 1.25rem;
+    --font-size-heading-5: 1rem;
+    --font-size-heading-6: 0.75rem;
+
+    --font-family-regular: "Roboto Flex Variable", sans-serif;
+    --font-family-mono: "JetBrains Mono Variable", monospace;
+
+    --color-regular: var(--gray-12);
+    --color-low-contrast: var(--gray-11);
+
+    --outline-interactive: var(--space-1) solid var(--gray-4);
+    --outline-focus: var(--space-1) solid var(--accent-6);
+
+    --shadow-bump:
+      inset calc(var(--space-1) * sin(45deg)) calc(var(--space-1) * sin(45deg))
+        var(--space-1) var(--white-a3),
+      inset calc(var(--space-1) * sin(45deg) * -1)
+        calc(var(--space-1) * sin(45deg) * -1) var(--space-1) var(--black-a3);
+
+    --shadow-outline-width: 1.5px;
+    --shadow-outline-width-negative: calc(var(--shadow-outline-width) * -1);
+
+    --shadow-aggressive: var(--space-1) var(--space-1) var(--space-4)
+      var(--black-a11);
+    --shadow-subtle: 0 var(--space-1) var(--space-3) var(--black-a5);
+    --shadow-icon: 0 0 var(--space-1) var(--black-a11);
+    --shadow-none: 0 0 0 transparent;
+
+    &.light {
+      --shadow-subtle: 0 var(--space-1) var(--space-3) var(--black-a2);
+    }
+
+    --blur-glass: blur(4rem);
+    --blur-tint: blur(8rem);
+
+    --duration-brief: 200ms;
+    --duration-subtle: 2s;
+    --duration-spinner: 1s;
+
+    --tank-card-min-width: 8rem;
+    --drop-down-min-width: 16rem;
+    --alert-max-width: 28rem;
+  }
+</style>
+
+<style is:global>
+  .composable-radius {
+    &[data-radius="1"] {
+      border-radius: var(--space-3);
+    }
+
+    &[data-radius="2"] {
+      border-radius: var(--space-4);
+    }
+
+    &[data-radius="3"] {
+      border-radius: var(--space-5);
+    }
+
+    &[data-radius="max"] {
+      border-radius: var(--radius-max);
+    }
+  }
+</style>

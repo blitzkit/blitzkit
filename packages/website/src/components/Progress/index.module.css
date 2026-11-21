@@ -1,0 +1,15 @@
+.progress {
+  width: 100%;
+  height: var(--space-2);
+  overflow: hidden;
+
+  background-color: var(--gray-a3);
+  border-radius: var(--radius-max);
+
+  .bar {
+    height: 100%;
+
+    background-color: var(--accent-9);
+    transition-duration: var(--duration-brief);
+  }
+}

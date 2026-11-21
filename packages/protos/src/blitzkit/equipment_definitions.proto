@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package blitzkit;
+
+import "i18n.proto";
+
+message EquipmentDefinitions {
+  map<string, EquipmentPreset> presets    = 1;
+  map<uint32, Equipment>       equipments = 2;
+}
+
+message Equipment {
+  I18nString name        = 1;
+  I18nString description = 2;
+}
+
+message EquipmentPreset {
+  repeated EquipmentSlot slots = 1;
+}
+
+message EquipmentSlot {
+  repeated uint32 options = 1;
+}

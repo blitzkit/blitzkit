@@ -1,8 +1,7 @@
 ---
-import ToolOpenGraph from "../../../../components/ToolOpenGraph.astro";
+import ColorScale from "../../../../components/ColorScale.astro";
 import { tools } from "../../../../constants/tools";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import type { getStaticPaths } from "../index.astro";
 import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
@@ -10,10 +9,11 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<ToolOpenGraph {locale} tool={tools.performance} />
+<BaseLayout tool={tools.performance} accent="jade" {locale}>
+  <ColorScale color="red" />
+  <ColorScale color="jade" />
+  <ColorScale color="amber" />
+  <ColorScale color="blue" />
 
-<BaseLayout {locale} noFooter>
-  <Page client:only="react" {locale}>
-    <Page skeleton slot="fallback" {locale} />
-  </Page>
+  <Page {locale} client:load />
 </BaseLayout>

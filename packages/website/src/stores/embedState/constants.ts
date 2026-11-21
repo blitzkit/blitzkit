@@ -1,4 +1,4 @@
-import type { EmbedConfigItem } from '.';
+import type { EmbedConfigItem } from ".";
 
 export enum EmbedItemType {
   Radius,
@@ -12,16 +12,14 @@ export enum EmbedItemType {
   Enum,
 }
 
-export const radixGrays = [
-  'gray',
-  'mauve',
-  'slate',
-  'sage',
-  'olive',
-  'sand',
+export const grays = [
+  "gray",
+  "mauve",
+  "slate",
+  "sage",
+  "olive",
+  "sand",
 ] as const;
-
-export const radixTextWeights = ['light', 'regular', 'medium', 'bold'] as const;
 
 export type EmbedConfigItemType<Type extends EmbedItemType> =
   EmbedConfigItem & { type: Type };

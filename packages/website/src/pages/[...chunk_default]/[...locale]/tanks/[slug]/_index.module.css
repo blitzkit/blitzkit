@@ -1,0 +1,47 @@
+.page {
+  flex-grow: 1;
+  display: flex;
+
+  gap: var(--space-4);
+
+  .sandbox {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+
+    @media (pointer: fine) {
+      padding-top: var(--space-4);
+    }
+  }
+
+  .loadout {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--gray-2);
+
+    position: sticky;
+    top: 0;
+
+    max-height: 100dvh;
+
+    .content {
+      padding: var(--space-5);
+
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .sandbox,
+    .loadout {
+      &[data-tabbed="false"] {
+        display: none;
+      }
+    }
+  }
+}

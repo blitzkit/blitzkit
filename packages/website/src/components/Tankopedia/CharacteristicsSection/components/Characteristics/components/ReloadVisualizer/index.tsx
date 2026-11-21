@@ -5,6 +5,7 @@ import { Quicklime, type QuicklimeCallback } from 'quicklime';
 import { useCallback, useEffect, useRef } from 'react';
 import { Var } from '../../../../../../../core/radix/var';
 import { useLocale } from '../../../../../../../hooks/useLocale';
+import { LazyImage } from '../../../../../../LazyImage';
 import type { StatsAcceptorProps } from '../TraverseVisualizer';
 import { VisualizerCard } from '../VisualizerCard';
 import { Shell } from './components/Shell';
@@ -236,7 +237,7 @@ export function ReloadVisualizer({ stats }: StatsAcceptorProps) {
         </Box>
       </Box>
 
-      <img
+      <LazyImage
         src="/assets/images/tankopedia/visualizers/reload/caret.png"
         style={{
           position: 'absolute',

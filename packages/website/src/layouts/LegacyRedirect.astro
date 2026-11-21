@@ -1,6 +1,6 @@
 ---
 import locales from "@blitzkit/i18n/locales.json";
-import { getStrings } from "../core/i18n/getStrings";
+import { api } from "../api/dynamic";
 
 export interface Props {
   path: string;
@@ -9,7 +9,7 @@ export interface Props {
 
 const { path, locale } = Astro.props;
 
-const strings = getStrings(locale);
+const strings = await api.strings(locale);
 const resolvedPath = `/${locale === locales.default ? "" : `${locale}/`}${path}`;
 ---
 

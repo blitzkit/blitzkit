@@ -1,5 +1,5 @@
-import { emptyAllStats } from '..';
-import { BlitzStats } from './compositeStats/constants';
+import { emptyAllStats } from "../types";
+import { BlitzStats } from "./compositeStats/constants";
 
 export function sumAllStats(allStatsCollection: BlitzStats[]) {
   return allStatsCollection.reduce((accumulated, current) => {

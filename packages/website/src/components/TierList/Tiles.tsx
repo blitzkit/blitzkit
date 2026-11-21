@@ -2,17 +2,17 @@ import { metaSortTank } from "@blitzkit/core";
 import { times } from "lodash-es";
 import { useMemo, useState } from "react";
 import usePromise from "react-promise-suspense";
-import { api } from "../../core/blitzkit/api";
+import { api } from "../../api/dynamic";
 import { filterTanks } from "../../core/blitzkit/filterTanks";
 import { TankFilters } from "../../stores/tankFilters";
 import { TierList } from "../../stores/tierList";
-import { SkeletonTankCard } from "../TankSearch/components/SkeletonTankCard";
-import { TankCardWrapper } from "../TankSearch/components/TankCardWrapper";
+import { TankCardSkeleton } from "../TankCardSkeleton";
+import { TankCardWrapper } from "../TankCardWrapper";
 import { TierListTile } from "./Tile";
 
 const [tankDefinitions, gameDefinitions] = await Promise.all([
-  api.tankDefinitions(),
-  api.gameDefinitions(),
+  api.tanks(),
+  api.game(),
 ]);
 
 const tanks = Object.values(tankDefinitions.tanks);
@@ -45,7 +45,7 @@ export function TierListTiles() {
 
       {times(Math.min(PREVIEW_COUNT, sorted.length - loadedTiles), (index) => {
         return (
-          <SkeletonTankCard
+          <TankCardSkeleton
             key={index}
             onIntersection={() => {
               setLoadedTiles((state) => Math.min(state + 2, sorted.length));

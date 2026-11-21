@@ -1,0 +1,28 @@
+.card {
+  white-space: nowrap;
+
+  margin-bottom: var(--space-4);
+  transform: translateY(-50%);
+}
+
+.title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.edit {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.input {
+  width: 6rem;
+}

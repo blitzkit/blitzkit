@@ -17,7 +17,8 @@ export function TierListControls() {
           });
         }}
       >
-        <ReloadIcon /> {strings.website.tools.tier_list.buttons.reset}
+        <ReloadIcon />
+        {strings.website.tools.tier_list.buttons.reset}
       </Button>
 
       <Share />
