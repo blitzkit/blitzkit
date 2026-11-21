@@ -10,10 +10,8 @@
     height: 100%;
     background-color: black;
 
-    border-radius: var(--space-4);
-
-    @media screen and (max-width: 80rem) {
-      border-radius: 0;
+    @media (pointer: fine) {
+      border-radius: var(--space-4);
     }
   }
 }

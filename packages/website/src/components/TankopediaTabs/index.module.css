@@ -7,7 +7,7 @@
 
   display: none;
 
-  @media screen and (max-width: 80rem) {
+  @media (pointer: coarse) {
     display: flex;
   }
 }

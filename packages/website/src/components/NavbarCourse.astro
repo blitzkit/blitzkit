@@ -4,13 +4,12 @@ import { CaretUpIcon, GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
 import { Logo } from "../icons/Logo";
 import { LinkI18nWrapper } from "./LinkI18nWrapper";
-import type { Props as NavbarDesktopProps } from "./NavbarDesktop.astro";
-import { filtered } from "./NavbarDesktop.astro";
+import { filtered, type Props as NavbarFineProps } from "./NavbarFine.astro";
 import NavbarMobileAutoHide from "./NavbarMobileAutoHide.astro";
 import { Scroller, ScrollerOrientation } from "./Scroller";
 import { Text } from "./Text";
 
-export type Props = NavbarDesktopProps & {
+export type Props = NavbarFineProps & {
   solid?: boolean;
 };
 
@@ -27,13 +26,13 @@ const strings = await api.strings(locale);
   }
 
   #navbar-mobile-spacer {
-    display: none;
     flex-shrink: 0;
+    display: none;
 
     height: calc(var(--icon-size) + 2 * var(--padding));
 
-    @media screen and (max-width: 80rem) {
-      display: block;
+    @media (pointer: coarse) {
+      display: flex;
     }
   }
 
@@ -59,7 +58,7 @@ const strings = await api.strings(locale);
     flex-direction: column;
     justify-content: flex-end;
 
-    @media screen and (max-width: 80rem) {
+    @media (pointer: coarse) {
       display: flex;
     }
 

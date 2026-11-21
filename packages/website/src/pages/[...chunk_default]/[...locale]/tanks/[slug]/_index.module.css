@@ -7,10 +7,8 @@
   .sandbox {
     flex-grow: 1;
 
-    padding-top: var(--space-4);
-
-    @media screen and (max-width: 80rem) {
-      padding-top: 0;
+    @media (pointer: fine) {
+      padding-top: var(--space-4);
     }
   }
 
@@ -34,7 +32,7 @@
     }
   }
 
-  @media screen and (max-width: 80rem) {
+  @media (pointer: coarse) {
     .sandbox,
     .loadout {
       &[data-tabbed="false"] {

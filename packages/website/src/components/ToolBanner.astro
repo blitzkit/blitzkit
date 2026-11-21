@@ -21,16 +21,13 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
     --margin: var(--space-4);
 
     flex: 1;
-    border-radius: var(--space-4);
     overflow: hidden;
-
-    margin: var(--margin) var(--margin) 0 0;
 
     background-size: cover;
 
-    @media screen and (max-width: 80rem) {
-      margin: 0;
-      border-radius: 0;
+    @media (pointer: fine) {
+      margin: var(--margin) var(--margin) 0 0;
+      border-radius: var(--space-4);
     }
 
     .content {

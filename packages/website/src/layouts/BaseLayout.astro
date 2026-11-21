@@ -3,8 +3,8 @@ import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
 import ColorScale from "../components/ColorScale.astro";
-import NavbarDesktop from "../components/NavbarDesktop.astro";
-import NavbarMobile from "../components/NavbarMobile.astro";
+import NavbarCourse from "../components/NavbarCourse.astro";
+import NavbarFine from "../components/NavbarFine.astro";
 import SystemTheme from "../components/SystemTheme.astro";
 import { tools } from "../constants/tools";
 import type { LocaleAcceptorProps } from "../hooks/useLocale";
@@ -53,7 +53,11 @@ const tool = tools.tanks;
         min-height: 100dvh;
 
         display: flex;
-        flex-direction: row-reverse;
+        flex-direction: column;
+
+        @media (pointer: fine) {
+          flex-direction: row-reverse;
+        }
 
         background-color: var(--gray-1);
         color: var(--gray-12);
@@ -66,10 +70,6 @@ const tool = tools.tanks;
           display: flex;
           flex-direction: column;
         }
-
-        @media screen and (max-width: 80rem) {
-          flex-direction: column;
-        }
       }
     </style>
   </head>
@@ -79,7 +79,7 @@ const tool = tools.tanks;
       <slot />
     </main>
 
-    <NavbarDesktop {locale} {tool} />
-    <NavbarMobile {locale} {tool} solid={solidNavbar} />
+    <NavbarFine {locale} {tool} />
+    <NavbarCourse {locale} {tool} solid={solidNavbar} />
   </body>
 </html>

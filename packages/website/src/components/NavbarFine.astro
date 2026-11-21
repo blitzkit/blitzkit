@@ -27,8 +27,10 @@ export const filtered = Object.values(tools).filter(
     --padding: var(--space-4);
     --min-content-width: calc(var(--icon-size) + 2 * var(--padding));
 
-    @media screen and (max-width: 80rem) {
-      display: none;
+    display: none;
+
+    @media (pointer: fine) {
+      display: block;
     }
 
     width: var(--min-content-width);
