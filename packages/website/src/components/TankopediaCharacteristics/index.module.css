@@ -5,10 +5,10 @@
   container-type: inline-size;
 
   gap: var(--space-4);
-  margin: var(--space-4);
 
   --base-cell-width: 20rem;
   --group-span: 7;
+  --cell-padding: var(--space-4);
 
   .compare-options {
     display: flex;
@@ -23,6 +23,7 @@
     --cell-width: calc(100cqw / var(--N));
     --cell-height: calc(var(--cell-width) / var(--group-span));
 
+    margin: 0 calc(-1 * var(--cell-padding));
     margin-bottom: calc(-1 * var(--cell-height));
 
     display: grid;
@@ -41,7 +42,7 @@
       grid-column: span 1;
 
       display: grid;
-      grid-template-columns: inherit;
+      grid-template-columns: minmax(0, 1fr);
       grid-auto-rows: inherit;
 
       .title {
@@ -58,13 +59,13 @@
       }
 
       .content {
-        margin: 0 var(--space-4);
+        margin: 0 var(--cell-padding);
 
         gap: inherit;
         height: 100%;
 
         display: grid;
-        grid-template-columns: inherit;
+        grid-template-columns: minmax(0, 1fr);
         grid-auto-rows: inherit;
 
         .item {
@@ -121,7 +122,7 @@
 
         .toy {
           grid-row: span var(--group-span);
-          padding: var(--space-4) 0;
+          padding: var(--cell-padding) 0;
 
           .sandbox {
             width: 100%;
