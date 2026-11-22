@@ -3,10 +3,6 @@
 
   &[data-compact="true"] {
     --image-height: 4rem;
-
-    .image-wrapper {
-      background-size: auto 75%;
-    }
   }
 
   .image-wrapper {
@@ -14,7 +10,7 @@
 
     box-sizing: border-box;
 
-    background-size: auto 100%;
+    background-size: auto 75%;
     background-repeat: no-repeat;
 
     height: var(--image-height);

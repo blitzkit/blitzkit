@@ -1,5 +1,5 @@
 .wrapper {
-  --min-size: 12rem;
+  --min-size: 10rem;
 
   display: grid;
   gap: var(--space-5) var(--space-4);
