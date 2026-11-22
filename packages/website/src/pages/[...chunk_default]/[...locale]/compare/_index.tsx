@@ -4,6 +4,7 @@ import { api } from "../../../../api/dynamic";
 import { CompareControls } from "../../../../components/CompareControls";
 import { CompareTable } from "../../../../components/CompareTable";
 import { EmptyState } from "../../../../components/EmptyState";
+import { Section } from "../../../../components/Section";
 import { tankToCompareMember } from "../../../../core/blitzkit/tankToCompareMember";
 import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
 import { withLocale } from "../../../../hocs/withLocale";
@@ -59,23 +60,27 @@ function Content() {
   }, [members]);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.top}>
-        <CompareControls />
-      </div>
+    <>
+      <Section>
+        <div className={styles.top}>
+          <CompareControls />
+        </div>
+      </Section>
 
       {members.length > 0 && (
-        <div className={styles.table}>
+        <Section overflow>
           <CompareTable />
-        </div>
+        </Section>
       )}
 
       {members.length === 0 && (
-        <EmptyState
-          title={strings.compare.no_tanks.title}
-          body={strings.compare.no_tanks.body}
-        />
+        <Section>
+          <EmptyState
+            title={strings.compare.no_tanks.title}
+            body={strings.compare.no_tanks.body}
+          />
+        </Section>
       )}
-    </div>
+    </>
   );
 }

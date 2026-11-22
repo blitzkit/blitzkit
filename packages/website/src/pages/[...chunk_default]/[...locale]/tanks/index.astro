@@ -11,15 +11,15 @@ export { getStaticPaths } from "../index.astro";
 const { locale } = Astro.props;
 ---
 
-<BaseLayout tool={tools.tanks} {locale} accent="purple">
-  <ColorScale color="blue" />
-  <ColorScale color="amber" />
-  <ColorScale color="red" />
+<ColorScale color="blue" />
+<ColorScale color="amber" />
+<ColorScale color="red" />
 
+<BaseLayout tool={tools.tanks} {locale} accent="purple">
   <ToolBanner {locale} tool={tools.tanks} />
 
+  <!-- TODO: eliminate all client:only's -->
   <Section>
-    <!-- TODO: eliminate all client:only's -->
     <Page {locale} client:only="react">
       <Page {locale} skeleton slot="fallback" />
     </Page>

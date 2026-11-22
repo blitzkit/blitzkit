@@ -1,16 +1,12 @@
-.scroller {
-  /* Fits the table, centered by the parent, never wider than the page */
-  max-width: 100%;
-
-  border: var(--space-0) solid var(--gray-a5);
-  border-radius: var(--space-3);
-  /* Clips the corners without becoming a scroll container, so sticky headers follow the page */
-  overflow: clip;
-}
-
 .table {
+  border-radius: var(--space-3);
+  overflow: hidden;
+
   border-collapse: separate;
   border-spacing: 0;
+
+  width: fit-content;
+  margin: auto;
 
   th,
   td {

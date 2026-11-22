@@ -8,8 +8,8 @@ export { getStaticPaths } from "../index.astro";
 const { locale, embed } = Astro.props;
 ---
 
-<EmbedLayout {locale}>
-  <ColorScale color="red" />
+<ColorScale color="red" />
 
+<EmbedLayout {locale}>
   <Page {locale} client:only="react" {embed} />
 </EmbedLayout>

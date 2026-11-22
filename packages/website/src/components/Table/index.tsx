@@ -13,16 +13,12 @@ import { Logo } from "../../icons/Logo";
 import { SortDirection } from "../../stores/tankopediaPersistent";
 import { CharacteristicRanking } from "../../types/characteristics";
 import { classNames } from "../../ui/classNames";
-import { Scroller, ScrollerOrientation } from "../Scroller";
 import styles from "./index.module.css";
 
-interface RootProps
-  extends Omit<ComponentProps<typeof Scroller>, "orientation"> {
-  scrollable?: boolean;
-}
+interface RootProps extends ComponentProps<"table"> {}
 
 // When scrollable, scrolls both ways, keeping the head, the row headers and the group titles in view
-function Root({ children, className, scrollable, ...props }: RootProps) {
+function Root({ children, className, ...props }: RootProps) {
   const table = useRef<HTMLTableElement>(null);
 
   // Group titles stick right below the head, whatever its height
@@ -42,29 +38,11 @@ function Root({ children, className, scrollable, ...props }: RootProps) {
 
     return () => observer.disconnect();
   }, []);
-  const content = (
+
+  return (
     <table ref={table} className={styles.table}>
       {children}
     </table>
-  );
-
-  if (!scrollable) {
-    return (
-      <div className={classNames(styles.scroller, className)} {...props}>
-        {content}
-      </div>
-    );
-  }
-
-  return (
-    <Scroller
-      orientation={ScrollerOrientation.Both}
-      startCurtain={false}
-      className={classNames(styles.scroller, className)}
-      {...props}
-    >
-      {content}
-    </Scroller>
   );
 }
 

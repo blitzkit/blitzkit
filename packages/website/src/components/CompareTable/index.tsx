@@ -75,7 +75,7 @@ export function CompareTable() {
   }, [members, environment]);
 
   return (
-    <Table.Root scrollable>
+    <Table.Root>
       <Table.Head>
         <Table.Row>
           <Table.IconCorner>

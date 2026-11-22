@@ -20,11 +20,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 const { id, locale } = Astro.props;
 ---
 
-<BaseLayout tool={tools.tanks} {locale} accent="violet">
-  <ColorScale color="ruby" />
-  <ColorScale color="cyan" />
-  <ColorScale color="green" />
-  <ColorRanks />
+<ColorScale color="ruby" />
+<ColorScale color="cyan" />
+<ColorScale color="green" />
+<ColorRanks />
 
+<BaseLayout tool={tools.tanks} {locale} accent="violet">
   <Page {id} {locale} client:load />
 </BaseLayout>

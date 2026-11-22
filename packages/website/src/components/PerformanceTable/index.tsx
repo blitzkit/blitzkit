@@ -102,7 +102,7 @@ export function PerformanceTable() {
   }
 
   return (
-    <Table.Root className={styles.root}>
+    <Table.Root>
       <Head />
       <Body filtered={filtered} />
     </Table.Root>

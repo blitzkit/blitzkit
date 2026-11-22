@@ -11,9 +11,9 @@ const { locale } = Astro.props;
 // TODO: the tank search popup is complete unreviewed AI slop, write a proper system for it manually
 ---
 
-<BaseLayout tool={tools.guesser} accent="blue" {locale} solidNavbar>
-  <ColorScale color="red" />
+<ColorScale color="red" />
 
+<BaseLayout tool={tools.guesser} accent="blue" {locale} solidNavbar>
   <Page {locale} client:only="react">
     <Page {locale} skeleton slot="fallback" />
   </Page>

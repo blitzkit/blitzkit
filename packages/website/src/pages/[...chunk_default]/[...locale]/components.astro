@@ -17,11 +17,11 @@ const iconLayouts = ["leading", "trailing", "both", "icon only"] as const;
 const extraColors = ["red", "amber", "green"] satisfies Color[];
 ---
 
-<BaseLayout tool={tools.home} accent="blue" {locale}>
-  {extraColors.map((color) => (
-    <ColorScale {color} />
-  ))}
+{extraColors.map((color) => (
+  <ColorScale {color} />
+))}
 
+<BaseLayout tool={tools.home} accent="blue" {locale}>
   <div class="page">
     <h1>Badge</h1>
 

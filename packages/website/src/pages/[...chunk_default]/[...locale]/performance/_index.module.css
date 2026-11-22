@@ -1,21 +1,6 @@
-.page {
+.top {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-4);
-
-    padding: var(--space-4);
-  }
-
-  .table {
-    align-self: stretch;
-
-    display: flex;
-    justify-content: center;
-  }
+  gap: var(--space-4);
 }
