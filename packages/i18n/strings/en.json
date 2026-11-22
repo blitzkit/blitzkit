@@ -809,6 +809,7 @@
         "login": "Login to use this",
         "search_bar_hint": "Search tanks...",
         "recent": "Recently viewed",
+        "recent_empty": "Tanks you view will show up here",
         "select_all": "Select all",
         "count_singular": "1 tank",
         "count_plural": "{count} tanks",

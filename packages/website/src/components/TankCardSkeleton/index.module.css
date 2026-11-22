@@ -1,4 +1,6 @@
 .wrapper {
+  min-width: var(--min-tank-card-size);
+
   --image-height: 6rem;
 
   &[data-compact="true"] {

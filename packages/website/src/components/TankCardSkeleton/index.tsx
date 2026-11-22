@@ -6,9 +6,14 @@ import styles from "./index.module.css";
 type TankCardProps = {
   compact?: boolean;
   onIntersection?: () => void;
+  className?: string;
 };
 
-export const TankCardSkeleton = ({ compact, onIntersection }: TankCardProps) => {
+export const TankCardSkeleton = ({
+  compact,
+  onIntersection,
+  className,
+}: TankCardProps) => {
   const wrapper = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +31,7 @@ export const TankCardSkeleton = ({ compact, onIntersection }: TankCardProps) => 
   return (
     <div
       ref={wrapper}
-      className={styles.wrapper}
+      className={`${styles.wrapper} ${className ?? ""}`}
       data-compact={compact}
       style={{
         display: "flex",

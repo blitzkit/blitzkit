@@ -3,20 +3,38 @@
   flex-direction: column;
   gap: var(--space-4);
 
+  box-sizing: border-box;
   padding: var(--space-4);
-
-  background-color: var(--gray-a2);
-
-  border-radius: var(--space-3);
-
+  min-width: 100%;
   width: fit-content;
 
+  background-color: var(--gray-a2);
+  border-radius: var(--space-3);
+
   .list {
+    --min-tank-card-size: 7rem;
+
     display: flex;
     gap: var(--space-4);
 
-    width: fit-content;
+    width: 100%;
+    min-width: fit-content;
 
-    --min-tank-card-size: 7rem;
+    &[data-empty="true"] {
+      position: relative;
+    }
+
+    .placeholder {
+      visibility: hidden;
+    }
+
+    .message {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
