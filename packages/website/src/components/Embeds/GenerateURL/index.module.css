@@ -2,12 +2,6 @@
   width: fit-content;
 }
 
-.search {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
 .results {
   display: flex;
   justify-content: center;

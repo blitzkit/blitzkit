@@ -4,6 +4,13 @@
     "settings": "Settings"
   },
 
+  "settings": {
+    "language": "Language",
+    "device_language": "Device language",
+    "auto_load_models": "Auto-load models",
+    "developer_mode": "Developer mode"
+  },
+
   "mixer": {
     "screenshot": "Screenshot",
     "randomize": "Randomize"
@@ -477,60 +484,23 @@
   },
 
   "tools": {
-    "home": {
-      "name": "Home"
-    },
-    "tanks": {
-      "name": "Tankopedia"
-    },
-    "avatars": {
-      "name": "Avatars"
-    },
-    "backgrounds": {
-      "name": "Backgrounds"
-    },
-    "api": {
-      "name": "API"
-    },
-    "players": {
-      "name": "Players"
-    },
-    "compare": {
-      "name": "Compare"
-    },
-    "performance": {
-      "name": "Performance"
-    },
-    "playlist": {
-      "name": "Playlist"
-    },
-    "mixer": {
-      "name": "Mixer"
-    },
-    "session": {
-      "name": "Session"
-    },
-    "guesser": {
-      "name": "Guesser"
-    },
-    "changelogs": {
-      "name": "Changelogs"
-    },
-    "settings": {
-      "name": "Settings"
-    },
-    "tier_list": {
-      "name": "Tier list"
-    },
-    "embed": {
-      "name": "Embed"
-    },
-    "more": {
-      "name": "More"
-    },
-    "credits": {
-      "name": "Credits"
-    }
+    "home": "Home",
+    "tanks": "Tankopedia",
+    "avatars": "Avatars",
+    "backgrounds": "Backgrounds",
+    "api": "API",
+    "players": "Players",
+    "compare": "Compare",
+    "performance": "Performance",
+    "playlist": "Playlist",
+    "mixer": "Mixer",
+    "session": "Session",
+    "guesser": "Guesser",
+    "changelogs": "Changelogs",
+    "tier_list": "Tier list",
+    "embed": "Embed",
+    "more": "More",
+    "credits": "Credits"
   },
 
   "home": {
@@ -787,14 +757,6 @@
     "not_found": {
       "title": "404: page not found",
       "body": "Where would you like to go?"
-    },
-
-    "settings": {
-      "title": "Settings",
-      "description": "Change BlitzKit settings",
-      "dev_mode": "Development mode",
-      "auto_load_models": "Auto-load models",
-      "language": "Language"
     },
 
     "common": {

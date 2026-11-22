@@ -90,11 +90,6 @@ export const tools: Record<string, Tool> = {
     id: "changelogs",
     banner_background_position: "bottom",
   },
-  settings: {
-    id: "settings",
-    banner_background_position: "center",
-    hide_in_navbar: true,
-  },
   credits: {
     disabled: true,
     id: "credits",

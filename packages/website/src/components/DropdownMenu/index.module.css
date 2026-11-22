@@ -98,6 +98,11 @@
       }
     }
 
+    .discriminator {
+      display: inline;
+      margin-left: auto;
+    }
+
     .ItemIndicator {
       position: absolute;
       left: 0;

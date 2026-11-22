@@ -13,7 +13,7 @@ interface Props {
 
 const { locale, tool, minor } = Astro.props;
 const strings = await api.strings(locale);
-const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
+const name = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>
@@ -103,7 +103,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
     <div class="content" data-minor={minor}>
       <div class="wrapper">
         <Heading size={minor ? "3" : "2"} weight="medium">
-          {toolStrings.name}
+          {name}
         </Heading>
       </div>
     </div>

@@ -2,11 +2,15 @@
 import { alias } from "@blitzkit/core";
 import { GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
+import { getLocaleOptions } from "../core/i18n/getLocaleOptions";
 import { tools, type Tool } from "../constants/tools";
 import type { LocaleAcceptorProps } from "../hooks/useLocale";
 import { Logo } from "../icons/Logo";
 import { LinkI18nWrapper } from "./LinkI18nWrapper";
+import { SettingsDialog } from "./SettingsDialog";
 import { Text } from "./Text";
+
+// TODO: combine all navbar after adding NavbarCourseLandscape
 
 export type Props = LocaleAcceptorProps & {
   tool: Tool;
@@ -15,6 +19,7 @@ export type Props = LocaleAcceptorProps & {
 const { locale } = Astro.props;
 
 const strings = await api.strings(locale);
+const localeOptions = await getLocaleOptions();
 
 export const filtered = Object.values(tools).filter(
   (tool) => !tool.href && !tool.hide_in_navbar && !tool.disabled,
@@ -184,7 +189,7 @@ export const filtered = Object.values(tools).filter(
                 />
 
                 <Text className="name">
-                  {strings.tools[tool.id as keyof typeof strings.tools].name}
+                  {strings.tools[tool.id as keyof typeof strings.tools]}
                 </Text>
               </div>
             </LinkI18nWrapper>
@@ -192,11 +197,11 @@ export const filtered = Object.values(tools).filter(
         ))}
     </div>
 
-    <LinkI18nWrapper {locale} href="/settings">
+    <SettingsDialog {locale} {localeOptions} client:load>
       <div class="named-link">
         <GearIcon className="icon" />
         <Text className="name">{strings.navbar.settings}</Text>
       </div>
-    </LinkI18nWrapper>
+    </SettingsDialog>
   </div>
 </nav>

@@ -89,46 +89,44 @@ export function GenerateURL({ embed }: GenerateURLProps) {
             </Dialog.Header>
 
             <Dialog.Body>
-              <div className={styles.search}>
-                <TextField
-                  placeholder={strings.common.search.hint_players}
-                  ref={input}
-                  onChange={handleChange}
-                >
-                  <PersonIcon />
-                </TextField>
+              <TextField
+                placeholder={strings.common.search.hint_players}
+                ref={input}
+                onChange={handleChange}
+              >
+                <PersonIcon />
+              </TextField>
 
-                <div className={styles.results}>
-                  {searching && (
-                    <Text lowContrast className={styles.searching}>
-                      <Spinner />
-                      {strings.common.search.searching}
-                    </Text>
-                  )}
+              <div className={styles.results}>
+                {searching && (
+                  <Text lowContrast className={styles.searching}>
+                    <Spinner />
+                    {strings.common.search.searching}
+                  </Text>
+                )}
 
-                  {!searching && results.length === 0 && (
-                    <Text lowContrast>{strings.common.search.no_results}</Text>
-                  )}
+                {!searching && results.length === 0 && (
+                  <Text lowContrast>{strings.common.search.no_results}</Text>
+                )}
 
-                  {!searching && results.length > 0 && (
-                    <SearchResults.Root>
-                      {results.map((result) => (
-                        <SearchResults.Item
-                          key={`${result.region}-${result.account_id}`}
-                          text={result.nickname}
-                          discriminator={
-                            strings.common.regions.short[result.region]
-                          }
-                          onClick={() => {
-                            setCopyUser(result);
-                            setCopyDialogOpen(true);
-                            setSearchDialogOpen(false);
-                          }}
-                        />
-                      ))}
-                    </SearchResults.Root>
-                  )}
-                </div>
+                {!searching && results.length > 0 && (
+                  <SearchResults.Root>
+                    {results.map((result) => (
+                      <SearchResults.Item
+                        key={`${result.region}-${result.account_id}`}
+                        text={result.nickname}
+                        discriminator={
+                          strings.common.regions.short[result.region]
+                        }
+                        onClick={() => {
+                          setCopyUser(result);
+                          setCopyDialogOpen(true);
+                          setSearchDialogOpen(false);
+                        }}
+                      />
+                    ))}
+                  </SearchResults.Root>
+                )}
               </div>
             </Dialog.Body>
 

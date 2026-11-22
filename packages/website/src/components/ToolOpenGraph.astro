@@ -10,12 +10,11 @@ interface Props {
 
 const { locale, tool } = Astro.props;
 const strings = await api.strings(locale);
-const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
+const title = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <AstroSeo
-  title={toolStrings.name}
-  description={toolStrings.seo_description}
+  {title}
   canonical={Astro.url.href}
   openGraph={{
     url: Astro.url.href,
@@ -24,9 +23,8 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
         url: `${Astro.url.origin}/assets/images/tools/${tool.id}.webp`,
       },
     ],
-    title: toolStrings.name,
-    description: toolStrings.seo_description,
-    site_name: "BlitzKit",
+    title,
+    site_name: strings.common.name,
   }}
   twitter={{ cardType: "summary_large_image" }}
 />

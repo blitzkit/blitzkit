@@ -12,7 +12,7 @@ interface Props {
 
 const { tool, locale } = Astro.props;
 const strings = await api.strings(locale);
-const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
+const name = strings.tools[tool.id as keyof typeof strings.tools];
 ---
 
 <style>
@@ -107,7 +107,7 @@ const toolStrings = strings.tools[tool.id as keyof typeof strings.tools];
 
     <div class="centered">
       <Heading weight="bold" size="2">
-        {toolStrings.name}
+        {name}
       </Heading>
 
       <Logo className="logo" />

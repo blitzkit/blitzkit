@@ -2,11 +2,13 @@
 import { alias } from "@blitzkit/core";
 import { CaretUpIcon, GearIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
+import { getLocaleOptions } from "../core/i18n/getLocaleOptions";
 import { Logo } from "../icons/Logo";
 import { LinkI18nWrapper } from "./LinkI18nWrapper";
 import { filtered, type Props as NavbarFineProps } from "./NavbarFine.astro";
 import NavbarMobileAutoHide from "./NavbarMobileAutoHide.astro";
 import { Scroller, ScrollerOrientation } from "./Scroller";
+import { SettingsDialog } from "./SettingsDialog";
 import { Text } from "./Text";
 
 export type Props = NavbarFineProps & {
@@ -16,6 +18,7 @@ export type Props = NavbarFineProps & {
 const { locale, tool, solid = false } = Astro.props;
 
 const strings = await api.strings(locale);
+const localeOptions = await getLocaleOptions();
 ---
 
 <style>
@@ -229,7 +232,7 @@ const strings = await api.strings(locale);
             />
 
             <Text className="name">
-              {strings.tools[tool.id as keyof typeof strings.tools].name}
+              {strings.tools[tool.id as keyof typeof strings.tools]}
             </Text>
           </div>
         </LinkI18nWrapper>
@@ -254,15 +257,15 @@ const strings = await api.strings(locale);
       )}
 
       <Text className="name">
-        {strings.tools[tool.id as keyof typeof strings.tools].name}
+        {strings.tools[tool.id as keyof typeof strings.tools]}
       </Text>
 
       <CaretUpIcon className="icon" />
     </div>
 
-    <LinkI18nWrapper {locale} href="/settings">
+    <SettingsDialog {locale} {localeOptions} client:load>
       <GearIcon className="icon" />
-    </LinkI18nWrapper>
+    </SettingsDialog>
   </div>
 </nav>
 
