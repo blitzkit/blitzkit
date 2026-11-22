@@ -7,7 +7,7 @@ import { useStrings } from "../../hooks/useStrings";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
 import { Dialog } from "../Dialog";
 import { IconButton } from "../IconButton";
-import { TankSearch } from "../TankSearch";
+import { TankSearchResults } from "../TankSearchResults";
 import styles from "./index.module.css";
 
 interface CompareTankControlProps {
@@ -51,7 +51,7 @@ export function CompareTankControl({ index, slug }: CompareTankControlProps) {
             </Dialog.Header>
 
             <Dialog.Body>
-              <TankSearch
+              <TankSearchResults
                 compact
                 onSelect={(tank) => {
                   CompareEphemeral.mutate((draft) => {

@@ -40,6 +40,9 @@ const { locale, accent, solidNavbar = false, tool } = Astro.props;
         interpolate-size: allow-keywords;
 
         background-color: var(--gray-1);
+      }
+
+      :global(*) {
         scrollbar-width: none;
 
         &::-webkit-scrollbar {

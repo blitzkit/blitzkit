@@ -16,7 +16,7 @@ import { IconButton } from "../IconButton";
 import { LazyImage } from "../LazyImage";
 import { Popover } from "../Popover";
 import { Skeleton } from "../Skeleton";
-import { TankSearch } from "../TankSearch";
+import { TankSearchResults } from "../TankSearchResults";
 import styles from "./index.module.css";
 
 const tankDefinitions = await api.tanks();
@@ -26,7 +26,7 @@ type MixerModuleChooserProps = MaybeSkeletonComponentProps & {
   onSelect: (
     tank: TankDefinition,
     turret?: TurretDefinition,
-    gun?: GunDefinition
+    gun?: GunDefinition,
   ) => void;
   turret?: number;
   gun?: number;
@@ -69,7 +69,7 @@ export function MixerModuleChooser({
                 style={{
                   backgroundImage: `url(${alias(
                     "api",
-                    `/tanks/${tank}/icons/big.webp`
+                    `/tanks/${tank}/icons/big.webp`,
                   )})`,
                 }}
               />
@@ -87,7 +87,7 @@ export function MixerModuleChooser({
             </Dialog.Header>
 
             <Dialog.Body>
-              <TankSearch
+              <TankSearchResults
                 compact
                 onSelect={(tank) => {
                   onSelect?.(tank);

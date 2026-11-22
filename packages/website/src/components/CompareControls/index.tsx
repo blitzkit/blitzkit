@@ -12,7 +12,7 @@ import { Button } from "../Button";
 import { Checkbox } from "../Checkbox";
 import { Dialog } from "../Dialog";
 import { SegmentedControl } from "../SegmentedControl";
-import { TankSearch } from "../TankSearch";
+import { TankSearchResults } from "../TankSearchResults";
 import styles from "./index.module.css";
 
 export function CompareControls() {
@@ -52,7 +52,7 @@ export function CompareControls() {
               </Dialog.Header>
 
               <Dialog.Body>
-                <TankSearch
+                <TankSearchResults
                   compact
                   onSelect={(tank) => {
                     CompareEphemeral.mutate((draft) => {

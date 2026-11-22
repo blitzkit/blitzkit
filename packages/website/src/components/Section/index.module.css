@@ -19,7 +19,6 @@
   }
 
   &[data-overflow="true"] {
-    padding-right: 0;
     overflow-x: auto;
   }
 }

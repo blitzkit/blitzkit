@@ -6,22 +6,20 @@ import {
   useEffect,
   useRef,
 } from "react";
+import { withLocale } from "../../hocs/withLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
-import type { MaybeSkeletonComponentProps } from "../../types/maybeSkeletonComponentProps";
 import { TankSearchSort } from "../TankSearchSort";
 import { TextField } from "../TextField";
 
-type SearchBarProps = MaybeSkeletonComponentProps & {
+type SearchBarProps = {
   topResult?: TankDefinition;
   onSelect?: (tank: TankDefinition) => void;
 };
 
-export function TankSearchBar({
-  topResult,
-  skeleton,
-  onSelect,
-}: SearchBarProps) {
+export const TankSearchBar = withLocale(Content);
+
+function Content({ topResult, onSelect }: SearchBarProps) {
   const strings = useStrings();
 
   const search = TankFilters.use((state) => state.search);
@@ -56,13 +54,12 @@ export function TankSearchBar({
         window.location.href = `/tanks/${topResult.slug}`;
       }
     },
-    [topResult]
+    [topResult],
   );
 
   return (
     <div style={{ display: "flex", gap: "var(--space-3)" }}>
       <TextField
-        disabled={skeleton}
         defaultValue={search ?? undefined}
         style={{ flex: 1 }}
         ref={input}

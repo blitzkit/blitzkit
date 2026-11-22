@@ -11,7 +11,7 @@ import { ClassIcon } from "../ClassIcon";
 import { LazyImage } from "../LazyImage";
 import { LinkI18nWrapper } from "../LinkI18nWrapper";
 import { TankCardSkeleton } from "../TankCardSkeleton";
-import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
+import { MAX_RECENTLY_VIEWED } from "../TankSearchResults/constants";
 import { Text, type TextProps } from "../Text";
 import styles from "./index.module.css";
 

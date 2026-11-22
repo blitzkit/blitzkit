@@ -1,32 +1,34 @@
 import { isEqual } from "lodash-es";
 import { useMemo } from "react";
 import { api } from "../../api/dynamic";
+import { withLocale } from "../../hocs/withLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { TankFilters } from "../../stores/tankFilters";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankSort } from "../../stores/tankopediaSort";
 import { TankCard } from "../TankCard";
-import { TankCardWrapper } from "../TankCardWrapper";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
 const tankDefinitions = await api.tanks();
 
-export function RecentlyViewedTanks() {
+export const RecentlyViewedTanks = withLocale(Content);
+
+function Content() {
   const filters = TankFilters.use();
   // non-reactive because it is a little weird that it updates instantly even before the page loads
   const recentlyViewed = TankopediaPersistent.state.recentlyViewed.filter(
-    (id) => id in tankDefinitions.tanks
+    (id) => id in tankDefinitions.tanks,
   );
   const hasFilters = useMemo(
     () =>
       Object.entries(filters).some(([key, value]) => {
         return !isEqual(
           value,
-          TankFilters.initial[key as keyof typeof TankFilters.initial]
+          TankFilters.initial[key as keyof typeof TankFilters.initial],
         );
       }),
-    [filters]
+    [filters],
   );
 
   const strings = useStrings();
@@ -37,23 +39,16 @@ export function RecentlyViewedTanks() {
   }
 
   return (
-    <div
-      className={styles.recent}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-4)",
-      }}
-    >
-      <Text color="gray" lowContrast>
+    <div className={styles.recent}>
+      <Text color="gray" lowContrast className={styles.label}>
         {strings.website.common.tank_search.recent}
       </Text>
 
-      <TankCardWrapper compact>
+      <div className={styles.list}>
         {recentlyViewed.map((id) => (
           <TankCard compact tank={tankDefinitions.tanks[id]} key={id} />
         ))}
-      </TankCardWrapper>
+      </div>
     </div>
   );
 }

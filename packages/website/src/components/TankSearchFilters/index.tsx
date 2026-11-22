@@ -13,6 +13,7 @@ import {
 import { Fragment } from "react";
 import { api } from "../../api/dynamic";
 import { awaitableTiers } from "../../core/awaitables/tiers";
+import { withLocale } from "../../hocs/withLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { App } from "../../stores/app";
@@ -149,7 +150,9 @@ const MAX_ICONS = 4;
 
 const TIERS = await awaitableTiers;
 
-export function TankSearchFilters() {
+export const TankSearchFilters = withLocale(Content);
+
+function Content() {
   return (
     <div className={styles.filters}>
       <TiersFilter />
@@ -310,7 +313,10 @@ function NationsFilter() {
               <div
                 className={styles.flag}
                 style={{
-                  backgroundImage: `url(${alias("api", `/flags/scratched/${nation}.webp`)})`,
+                  backgroundImage: `url(${alias(
+                    "api",
+                    `/flags/scratched/${nation}.webp`,
+                  )})`,
                 }}
               />
 
@@ -609,7 +615,9 @@ function IndividualShellFilter({
             <LazyImage
               src={alias(
                 "api",
-                `/icons/shells/${shellTypeIcons[shells[index]]}${premium ? "_premium" : ""}.webp`,
+                `/icons/shells/${shellTypeIcons[shells[index]]}${
+                  premium ? "_premium" : ""
+                }.webp`,
               )}
             />
           )}
@@ -934,7 +942,9 @@ function ProvisionsFilter() {
 
               {unwrap(provisionDefinition.name!)}
 
-              <LazyImage src={alias("api", `/icons/provisions/${provision}.webp`)} />
+              <LazyImage
+                src={alias("api", `/icons/provisions/${provision}.webp`)}
+              />
             </DropdownMenu.CheckboxItem>
           );
         })}

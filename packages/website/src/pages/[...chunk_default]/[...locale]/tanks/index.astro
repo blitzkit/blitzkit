@@ -1,10 +1,14 @@
 ---
 import ColorScale from "../../../../components/ColorScale.astro";
+import { RecentlyViewedTanks } from "../../../../components/RecentlyViewedTanks";
+import { ScrollerCurtains } from "../../../../components/ScrollerCurtains";
 import { Section } from "../../../../components/Section";
+import { TankSearchBar } from "../../../../components/TankSearchBar";
+import { TankSearchFilters } from "../../../../components/TankSearchFilters";
+import { TankSearchResults } from "../../../../components/TankSearchResults";
 import ToolBanner from "../../../../components/ToolBanner.astro";
 import { tools } from "../../../../constants/tools";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
@@ -18,10 +22,21 @@ const { locale } = Astro.props;
 <BaseLayout tool={tools.tanks} {locale} accent="purple">
   <ToolBanner {locale} tool={tools.tanks} />
 
-  <!-- TODO: eliminate all client:only's -->
+  <Section overflow>
+    <ScrollerCurtains client:load />
+    <RecentlyViewedTanks {locale} client:load />
+  </Section>
+
   <Section>
-    <Page {locale} client:only="react">
-      <Page {locale} skeleton slot="fallback" />
-    </Page>
+    <TankSearchBar {locale} client:load />
+  </Section>
+
+  <Section overflow>
+    <ScrollerCurtains client:load />
+    <TankSearchFilters {locale} client:load />
+  </Section>
+
+  <Section>
+    <TankSearchResults {locale} client:load />
   </Section>
 </BaseLayout>

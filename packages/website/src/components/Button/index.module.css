@@ -1,6 +1,8 @@
 .button {
   border: none;
 
+  white-space: nowrap;
+
   display: flex;
   align-items: center;
   justify-content: center;

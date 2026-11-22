@@ -8,7 +8,7 @@ import { Duel } from "../../stores/duel";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { AesonPlug } from "../AesonPlug";
 import { ExperimentIcon } from "../ExperimentIcon";
-import { MAX_RECENTLY_VIEWED } from "../TankSearch/constants";
+import { MAX_RECENTLY_VIEWED } from "../TankSearchResults/constants";
 
 const tankDefinitions = await api.tanks();
 

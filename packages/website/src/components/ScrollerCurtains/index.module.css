@@ -1,0 +1,29 @@
+.anchor {
+  display: none;
+}
+
+.target {
+  --scroller-curtains-size: min(25%, var(--space-6));
+  --scroller-curtains-x-start: 0;
+  --scroller-curtains-x-end: 0;
+  --scroller-curtains-y-start: 0;
+  --scroller-curtains-y-end: 0;
+
+  /* Masks the element's own box, so the fade stays put while the content scrolls under it */
+  mask-image:
+    linear-gradient(
+      90deg,
+      rgb(0 0 0 / calc(1 - var(--scroller-curtains-x-start))),
+      black var(--scroller-curtains-size),
+      black calc(100% - var(--scroller-curtains-size)),
+      rgb(0 0 0 / calc(1 - var(--scroller-curtains-x-end)))
+    ),
+    linear-gradient(
+      180deg,
+      rgb(0 0 0 / calc(1 - var(--scroller-curtains-y-start))),
+      black var(--scroller-curtains-size),
+      black calc(100% - var(--scroller-curtains-size)),
+      rgb(0 0 0 / calc(1 - var(--scroller-curtains-y-end)))
+    );
+  mask-composite: intersect;
+}
