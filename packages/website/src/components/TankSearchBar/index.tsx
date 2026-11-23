@@ -64,6 +64,7 @@ function Content({ topResult, onSelect }: SearchBarProps) {
         style={{ flex: 1 }}
         ref={input}
         placeholder={strings.website.common.tank_search.search_bar_hint}
+        autoFocus="fine"
         onChange={handleChange}
         onKeyDown={handleKeyDown}
       >

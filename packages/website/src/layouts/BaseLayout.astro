@@ -1,4 +1,5 @@
 ---
+import AutoFocus from "../components/AutoFocus.astro";
 import BaseMeta from "../components/BaseMeta.astro";
 import BaseStyles from "../components/BaseStyles.astro";
 import ColorAlias from "../components/ColorAlias.astro";
@@ -82,6 +83,8 @@ const { locale, accent, solidNavbar = false, tool } = Astro.props;
     <main class="main">
       <slot />
     </main>
+
+    <AutoFocus />
 
     <NavbarFine {locale} {tool} />
     <NavbarCourse {locale} {tool} solid={solidNavbar} />

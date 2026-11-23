@@ -8,13 +8,15 @@ import {
 import { classNames } from "../../ui/classNames";
 import styles from "./index.module.css";
 
-export interface TextFieldProps extends Omit<ComponentProps<"input">, "size"> {
+export interface TextFieldProps
+  extends Omit<ComponentProps<"input">, "size" | "autoFocus"> {
   children?: ReactNode;
   align?: "left" | "center" | "right";
   autoWidth?: boolean;
   variant?: "bubble" | "form";
   size?: "regular" | "minor";
   childrenAsSuffix?: boolean;
+  autoFocus?: "coarse" | "fine" | "always";
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
@@ -30,6 +32,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       variant = "bubble",
       size = "regular",
       childrenAsSuffix,
+      autoFocus,
       ...props
     },
     ref,
@@ -52,6 +55,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
         <input
           data-auto-width={autoWidth}
+          autoFocus={autoFocus === "always"}
+          data-auto-focus={autoFocus === "always" ? undefined : autoFocus}
           data-align={align === "left" ? undefined : align}
           disabled={disabled}
           ref={input}
