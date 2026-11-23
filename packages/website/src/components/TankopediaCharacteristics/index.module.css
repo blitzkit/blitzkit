@@ -23,7 +23,6 @@
     --cell-width: calc(100cqw / var(--N));
     --cell-height: calc(var(--cell-width) / var(--group-span));
 
-    margin: 0 calc(-1 * var(--cell-padding));
     margin-bottom: calc(-1 * var(--cell-height));
 
     display: grid;
