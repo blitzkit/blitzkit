@@ -27,14 +27,4 @@ export abstract class AbstractBlitzKitAPI {
   abstract scripts(): Promise<BlitzScripts>;
 
   abstract strings(locale: string): Promise<Strings>;
-
-  async tank(id: number) {
-    const tanks = await this.tanks();
-    return tanks.tanks[id];
-  }
-
-  async model(id: number) {
-    const models = await this.models();
-    return models.models[id];
-  }
 }

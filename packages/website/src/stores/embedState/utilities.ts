@@ -8,7 +8,9 @@ import { embedText } from "./tokens";
 
 export function useEmbedStateCurry<Config extends EmbedConfig>() {
   // TODO: find a way to initialize with the correct state preset
-  EmbedState.useInitialization(extractEmbedConfigDefaults(breakdownConfig));
+  EmbedState.useInitialization(() =>
+    extractEmbedConfigDefaults(breakdownConfig),
+  );
 
   function useEmbedState<Key extends keyof Config>(key: Key) {
     return EmbedState.use((state) => {

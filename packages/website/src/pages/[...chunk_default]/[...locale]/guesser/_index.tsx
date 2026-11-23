@@ -20,7 +20,7 @@ export const Page = withLocale(
   withErrorWrapper(({ skeleton }: MaybeSkeletonComponentProps) => {
     const id = Number(ids[Math.floor(Math.random() * ids.length)]);
 
-    Guess.useInitialization(id);
+    Guess.useInitialization(() => id);
 
     return <Container skeleton={skeleton} />;
   }),
@@ -30,7 +30,7 @@ function Container({ skeleton }: MaybeSkeletonComponentProps) {
   const id = Guess.use((state) => state.tank);
   const tank = tankDefinitions.tanks[id];
 
-  Tankopedia.useInitialization(tank);
+  Tankopedia.useInitialization(() => tank);
 
   useEffect(() => {
     Tankopedia.mutate((draft) => {

@@ -100,6 +100,6 @@ export type EmbedConfigItem = (
 
 export type EmbedStateStore = Record<string, EmbedConfigItem["default"]>;
 
-export const EmbedState = new Soapstone<EmbedStateStore, [EmbedStateStore]>(
+export const EmbedState = new Soapstone<EmbedStateStore, EmbedStateStore>(
   (data) => data
 );

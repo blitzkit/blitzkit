@@ -134,32 +134,30 @@ export enum TankopediaTab {
 
 const skills = await api.skills();
 
-export const Tankopedia = new Soapstone<Tankopedia, [TankDefinition]>(
-  (tank) => ({
-    disturbed: false,
-    revealed: false,
-    showControls: false,
-    animate: true,
+export const Tankopedia = new Soapstone<Tankopedia, TankDefinition>((tank) => ({
+  disturbed: false,
+  revealed: false,
+  showControls: false,
+  animate: true,
 
-    tab: TankopediaTab.Sandbox,
+  tab: TankopediaTab.Sandbox,
 
-    protagonist: createTankState(tank),
-    antagonist: createTankState(tank),
-    environment: createDefaultEnvironment(skills),
+  protagonist: createTankState(tank),
+  antagonist: createTankState(tank),
+  environment: createDefaultEnvironment(skills),
 
-    relative_against: TankopediaRelativeAgainst.ClassAndTier,
+  relative_against: TankopediaRelativeAgainst.ClassAndTier,
 
-    loaders: {
-      display: {
-        requested: TankopediaDisplay.Model,
-        loaded: TankopediaDisplay.Model,
-      },
-      model: { requested: App.state.autoLoadModels, loaded: false },
-      skin: { requested: undefined, loaded: undefined },
-      attachment: { requested: undefined, loaded: undefined },
+  loaders: {
+    display: {
+      requested: TankopediaDisplay.Model,
+      loaded: TankopediaDisplay.Model,
     },
+    model: { requested: App.state.autoLoadModels, loaded: false },
+    skin: { requested: undefined, loaded: undefined },
+    attachment: { requested: undefined, loaded: undefined },
+  },
 
-    editStatic: false,
-    xpMultiplier: 1,
-  }),
-);
+  editStatic: false,
+  xpMultiplier: 1,
+}));

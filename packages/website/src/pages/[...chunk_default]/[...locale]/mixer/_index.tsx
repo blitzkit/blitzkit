@@ -18,8 +18,8 @@ export const Page = withLocale(
   withErrorWrapper(({ skeleton }: MaybeSkeletonComponentProps) => {
     const initial = useRef(curateMixer());
 
-    Mixer.useInitialization(initial.current);
-    Tankopedia.useInitialization(initial.current.hull);
+    Mixer.useInitialization(() => initial.current);
+    Tankopedia.useInitialization(() => initial.current.hull);
 
     return (
       <div className={styles.wrapper}>

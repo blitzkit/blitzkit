@@ -34,7 +34,7 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
     return state;
   }, [embed]);
 
-  EmbedState.useInitialization(state);
+  EmbedState.useInitialization(() => state);
 
   return (
     <LocaleProvider locale={locale}>

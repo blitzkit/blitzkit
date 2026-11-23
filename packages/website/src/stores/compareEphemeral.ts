@@ -19,7 +19,7 @@ export interface CompareEphemeral {
 
 export const CompareEphemeral = new Soapstone<
   CompareEphemeral,
-  [TankEnvironment]
+  TankEnvironment
 >((environment) => ({
   environment,
   syncShells: false,

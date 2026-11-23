@@ -19,7 +19,7 @@ const [skillDefinitions, tankDefinitions] = await Promise.all([
 
 export const Page = withLocale(
   withErrorWrapper(() => {
-    CompareEphemeral.useInitialization(
+    CompareEphemeral.useInitialization(() =>
       createDefaultEnvironment(skillDefinitions),
     );
 

@@ -18,4 +18,4 @@ export interface Mixer {
   };
 }
 
-export const Mixer = new Soapstone<Mixer, [Mixer]>((data) => data);
+export const Mixer = new Soapstone<Mixer, Mixer>((data) => data);

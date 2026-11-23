@@ -1,12 +1,12 @@
 ---
 import { api } from "../../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
-import ColorScale from "../../../../../components/ColorScale.astro";
 import ColorRanks from "../../../../../components/ColorRanks.astro";
+import ColorScale from "../../../../../components/ColorScale.astro";
 import { tools } from "../../../../../constants/tools";
 import BaseLayout from "../../../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../index.astro";
-import { Page } from "./_index";
+import { Loadout, Sandbox } from "./_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const tanks = await api.tanks();
@@ -25,6 +25,18 @@ const { id, locale } = Astro.props;
 <ColorScale color="green" />
 <ColorRanks />
 
+<style>
+  .page {
+    flex-grow: 1;
+    display: flex;
+
+    gap: var(--space-4);
+  }
+</style>
+
 <BaseLayout tool={tools.tanks} {locale} accent="violet">
-  <Page {id} {locale} client:load />
+  <div class="page">
+    <Sandbox {id} {locale} client:load />
+    <Loadout {id} {locale} client:load />
+  </div>
 </BaseLayout>

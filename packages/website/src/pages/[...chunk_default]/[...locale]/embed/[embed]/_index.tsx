@@ -52,7 +52,7 @@ interface PageProps {
 export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
   const config = embedConfigurations[embed];
 
-  EmbedState.useInitialization(extractEmbedConfigDefaults(config));
+  EmbedState.useInitialization(() => extractEmbedConfigDefaults(config));
 
   return (
     <LocaleProvider locale={locale}>

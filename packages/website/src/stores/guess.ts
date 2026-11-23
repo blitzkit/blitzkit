@@ -21,7 +21,7 @@ export interface Guess {
   tiers: number[];
 }
 
-export const Guess = new Soapstone<Guess, [number]>((tank) => ({
+export const Guess = new Soapstone<Guess, number>((tank) => ({
   tank,
   guessState: GuessState.NotGuessed,
   totalGuesses: 0,
