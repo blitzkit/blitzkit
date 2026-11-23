@@ -25,11 +25,7 @@ function Content({ topResult, onSelect }: SearchBarProps) {
   const search = TankFilters.use((state) => state.search);
 
   const input = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (search !== null) return;
-    input.current!.value = "";
-  }, [search]);
+  const previousSearch = useRef(search);
 
   const handleChange = useCallback(() => {
     if (!input.current) return;
@@ -40,6 +36,19 @@ function Content({ topResult, onSelect }: SearchBarProps) {
       draft.search = sanitized.length === 0 ? null : sanitized;
     });
   }, []);
+
+  useEffect(() => {
+    // Picks up text typed before hydration
+    if (input.current!.value.trim().length > 0) handleChange();
+  }, []);
+
+  useEffect(() => {
+    if (previousSearch.current !== null && search === null) {
+      input.current!.value = "";
+    }
+
+    previousSearch.current = search;
+  }, [search]);
   const handleKeyDown = useCallback<KeyboardEventHandler>(
     (event) => {
       if (event.key !== "Enter" || !topResult || !TankFilters.state.search) {
