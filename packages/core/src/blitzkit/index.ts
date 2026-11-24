@@ -11,6 +11,7 @@ export * from "./discoveredIdDefinitions";
 export * from "./emblemURL";
 export * from "./environment";
 export * from "./eventManager";
+export * from "./fetchWGCClientSource";
 export * from "./getTimeDaysAgo";
 export * from "./isExplosive";
 export * from "./metaSortTank";

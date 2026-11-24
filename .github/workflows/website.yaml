@@ -48,16 +48,14 @@ on:
 
         options:
           - wgc
-          - steam
           - zip
-          - wgpkg
+          - 7z
 
       client_source:
         description: Client source
 
         type: string
-        required: true
-        default: 444200/windows
+        required: false
 
 permissions:
   contents: read
@@ -71,11 +69,9 @@ env:
   HAS_ROOT_REPO_CONTEXT: ${{ github.event_name != 'pull_request' }}
 
   # client
-  STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
-  STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-  CLIENT_PROVIDER: ${{ inputs.client_provider || (github.event_name != 'pull_request' && 'steam' || 'wgc') }}
-  CLIENT_SOURCE: ${{ inputs.client_source || '444200/windows' }}
-  CLIENT_DIR: ../../temp/game
+  CLIENT_PROVIDER: ${{ inputs.client_provider || 'wgc' }}
+  CLIENT_SOURCE: ${{ inputs.client_source }}
+  SMART_DLC_DIR: ../../temp/smart-dlc
 
   # blitzkit
   PUBLIC_ENVIRONMENT: ${{ inputs.environment || 'production' }}
@@ -120,19 +116,11 @@ jobs:
         with:
           repo-token: ${{ secrets.GH_TOKEN }}
 
-      - name: Setup CLIs
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y aria2 libarchive-tools
-
       - name: Set up script
         run: scripts/setup.sh
 
       # - name: Lint
       #   run: scripts/lint.sh
-
-      - name: Download client
-        run: scripts/download-client.sh
 
       - name: Download SmartDLC
         if: ${{ env.HAS_ROOT_REPO_CONTEXT == 'true' }}

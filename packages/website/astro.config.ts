@@ -8,6 +8,11 @@ export default defineConfig({
     server: { allowedHosts: [] },
     esbuild: { target: "es2022" },
     build: { cssCodeSplit: false },
+
+    optimizeDeps: {
+      exclude: ["@napi-rs/lzma"],
+    },
+
     css: {
       modules: {
         // Short hashed class names in production to shrink HTML; the leading _ keeps names that start with a digit valid

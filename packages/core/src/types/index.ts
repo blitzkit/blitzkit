@@ -32,3 +32,4 @@ export * from "./vehicleDefinitionArmor";
 export * from "./vehicleDefinitionList";
 export * from "./vehicleDefinitions";
 export * from "./vehicleFilter";
+export * from "./wgcClient";

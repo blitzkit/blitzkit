@@ -125,6 +125,7 @@
     "loddist",
     "lods",
     "lossrate",
+    "lzma",
     "Maddoxkkm",
     "malum",
     "mantlets",
@@ -139,6 +140,7 @@
     "modeltransform",
     "MURICA",
     "nanostores",
+    "napi",
     "NEGATIVEX",
     "NEGATIVEY",
     "NEGATIVEZ",
@@ -240,7 +242,6 @@
     "Vovko",
     "wargaming",
     "webp",
-    "wgpkg",
     "whitespaces",
     "WHSS",
     "winrate",
@@ -259,7 +260,6 @@
     "youtubers",
     "zoomable"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.enabledFileTypes": {
     "proto": true
   }

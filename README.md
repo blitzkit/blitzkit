@@ -20,14 +20,6 @@ BlitzKit uses [Protocol Buffer's protoc CLI](https://protobuf.dev/installation/)
 
 You will need a local installation of [World of Tanks Blitz](https://wotblitz.com/) for BlitzKit to build off.
 
-### aria2 (Optional)
-
-If you plan to use BlitzKit's client-management CLI for BlitzKit Previews, you will need to [get aria2](https://aria2.github.io/) to speed up your downloads.
-
-### libarchive (Optional)
-
-If you plan to use BlitzKit's client-management CLI for BlitzKit OpenTests, you will need to [get libarchive](https://www.libarchive.org/) to keep your downloads completely in-memory.
-
 ### Linux (Optional)
 
 All work on BlitzKit is done on Linux and macOS. It is theoretically possible to work on Windows; please feel free to try and share your discoveries with us!

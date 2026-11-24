@@ -1,4 +1,4 @@
-export interface ClientMetadata {
+export interface WGCClientMetadata {
   protocol: {
     version: number;
     predefined_section: PredefinedSection;
@@ -50,7 +50,7 @@ interface Instance {
   content_service_url: string;
 }
 
-export interface PatchesChain {
+export interface WGCPatchesChain {
   protocol: {
     parts_info: { part: Part };
     patches_chain: { patch: Patch };
