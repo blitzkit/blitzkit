@@ -54,7 +54,6 @@ export class SevenZipVFS extends AbstractVFS {
   }
 
   async raw(path: string) {
-    console.log(path);
     const entry = this.entries.get(path);
     if (!entry) throw new Error(`File not found in 7z: ${path}`);
     return this.archive.read(entry);
