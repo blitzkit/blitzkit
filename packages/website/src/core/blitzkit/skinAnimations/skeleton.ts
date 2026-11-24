@@ -1,5 +1,5 @@
 import { VertexAttribute, type ComponentOf } from "@blitzkit/core";
-import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import type { AbstractVFS } from "@blitzkit/vfs";
 import {
   MathUtils,
   type Buffer,

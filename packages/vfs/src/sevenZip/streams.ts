@@ -1,4 +1,4 @@
-import { ReadStream } from "./buffer";
+import { ReadStream } from "@blitzkit/core";
 
 export const SEVEN_ZIP_SIGNATURE_HEADER_SIZE = 32;
 

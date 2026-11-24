@@ -6,7 +6,7 @@ import {
   type SevenZipCoder,
   type SevenZipFileInfo,
   type SevenZipStreamsInfo,
-} from "../../../streams/sevenZip";
+} from "./streams";
 import type { HTTPMultiRangeReader } from "./rangeReader";
 
 const enum Method {

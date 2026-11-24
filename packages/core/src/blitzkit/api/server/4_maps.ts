@@ -1,5 +1,5 @@
 import { MapDefinitions } from "@blitzkit/protos";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI3 } from "./3_models";
 
 export abstract class ServerBlitzKitAPI4 extends ServerBlitzKitAPI3 {

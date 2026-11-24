@@ -5,7 +5,7 @@ import {
   toUniqueId,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
-import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import type { AbstractVFS } from "@blitzkit/vfs";
 import { Document, Node, NodeIO, Scene } from "@gltf-transform/core";
 import type { APIContext } from "astro";
 import { Sc2ComponentHandler } from "../../../core/blitzkit/sc2Components";

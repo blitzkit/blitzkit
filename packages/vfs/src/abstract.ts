@@ -16,6 +16,7 @@ export abstract class AbstractVFS {
   private xmlParser = new XMLParser();
   private attributeXmlParser = new XMLParser({
     ignoreAttributes: false,
+    // TODO: get this fuck ass thing out of here
     // A lone child would otherwise parse to an object instead of a list
     isArray: (name) => UPGRADE_PROGRESSION_LIST_TAGS.has(name),
   });

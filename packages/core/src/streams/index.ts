@@ -6,5 +6,4 @@ export * from "./rts";
 export * from "./sc2";
 export * from "./scg";
 export * from "./scpg";
-export * from "./sevenZip";
 export * from "./windows";

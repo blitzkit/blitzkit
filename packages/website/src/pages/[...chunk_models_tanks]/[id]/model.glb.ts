@@ -12,7 +12,7 @@ import {
   type Textures,
   type VehicleDefinitionList,
 } from "@blitzkit/core";
-import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import type { AbstractVFS } from "@blitzkit/vfs";
 import {
   Document,
   Material,

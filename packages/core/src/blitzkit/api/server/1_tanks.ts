@@ -46,7 +46,8 @@ import {
   Unlock,
   type VehicleAbility,
 } from "@blitzkit/protos";
-import { Cache, ServerBlitzKitAPI0 } from "./0_base";
+import { Cache } from "../cache";
+import { ServerBlitzKitAPI0 } from "./0_base";
 
 export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
   // A gun the way a tank's turret or a vehicle ability builds it. `gun`

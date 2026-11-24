@@ -1,5 +1,5 @@
 import { EquipmentDefinitions, EquipmentSlot } from "@blitzkit/protos";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI4 } from "./4_maps";
 
 export abstract class ServerBlitzKitAPI5 extends ServerBlitzKitAPI4 {

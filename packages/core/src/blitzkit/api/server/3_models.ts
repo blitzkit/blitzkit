@@ -18,7 +18,7 @@ import {
 } from "@blitzkit/core";
 import { Armor, Crew, ModelDefinitions, ProtoVector3 } from "@blitzkit/protos";
 import { MathUtils, Vector3 as THREEVector3, Vector3Tuple } from "three";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI2 } from "./2_camouflages";
 
 // The `front` and `back` tags hold "min max range" in degrees

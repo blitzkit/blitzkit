@@ -5,8 +5,8 @@ import {
   WGC_CLIENT_URL,
   WGC_METADATA_PROTOCOL_VERSION,
   WGC_PATCHES_CHAIN_PROTOCOL_VERSION,
-} from "../config/wgcClient";
-import type { WGCClientMetadata, WGCPatchesChain } from "../types/wgcClient";
+} from "./config/wgcClient";
+import type { WGCClientMetadata, WGCPatchesChain } from "./types/wgcClient";
 
 const parser = new XMLParser();
 

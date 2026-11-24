@@ -1,7 +1,7 @@
 import { BlitzTankClass } from "@blitzkit/core";
 
 import { SkillDefinitions } from "@blitzkit/protos";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI7 } from "./7_provisions";
 
 export abstract class ServerBlitzKitAPI8 extends ServerBlitzKitAPI7 {

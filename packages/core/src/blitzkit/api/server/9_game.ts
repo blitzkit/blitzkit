@@ -1,7 +1,7 @@
 import { AvailableNationsYaml } from "@blitzkit/core";
 
 import { GameDefinitions } from "@blitzkit/protos";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI8 } from "./8_skills";
 
 export abstract class ServerBlitzKitAPI9 extends ServerBlitzKitAPI8 {

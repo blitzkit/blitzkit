@@ -4,7 +4,7 @@ import {
   type TankParameters,
 } from "@blitzkit/core";
 import { isEqual, times } from "lodash-es";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI1 } from "./1_tanks";
 
 export abstract class ServerBlitzKitAPI2 extends ServerBlitzKitAPI1 {

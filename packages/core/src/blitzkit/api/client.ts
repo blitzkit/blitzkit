@@ -16,7 +16,7 @@ import { fetchPB } from "../../api";
 import { fetchJSON } from "../../api/fetchJSON";
 import { BlitzScripts } from "../../types/blitzScripts";
 import { AbstractBlitzKitAPI } from "./abstract";
-import { Cache } from "./server/0_base";
+import { Cache } from "./cache";
 
 export class ClientBlitzKitAPI extends AbstractBlitzKitAPI {
   @Cache()

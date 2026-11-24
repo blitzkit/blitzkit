@@ -10,7 +10,7 @@ import {
   type SC2,
   type ScgPolygonGroups,
 } from "@blitzkit/core";
-import type { AbstractVFS } from "@blitzkit/core/src/blitzkit/vfs/abstract";
+import type { AbstractVFS } from "@blitzkit/vfs";
 import {
   Accessor,
   Document,

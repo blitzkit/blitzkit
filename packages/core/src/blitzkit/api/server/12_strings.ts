@@ -2,7 +2,7 @@ import { Strings } from "@blitzkit/i18n";
 import locales from "@blitzkit/i18n/locales.json";
 import { DeepPartial } from "@blitzkit/protos";
 import { merge } from "lodash-es";
-import { Cache } from "./0_base";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI11 } from "./11_scripts";
 
 export abstract class ServerBlitzKitAPI12 extends ServerBlitzKitAPI11 {

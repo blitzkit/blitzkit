@@ -4,8 +4,8 @@ import type {
   ConsumablesCommon,
   OptionalDevices,
 } from "../../../types";
-import { AbstractVFS } from "../../vfs";
-import { Cache } from "./0_base";
+import type { AbstractVFS } from "@blitzkit/vfs";
+import { Cache } from "../cache";
 import { ServerBlitzKitAPI10 } from "./10_avatars";
 
 export abstract class ServerBlitzKitAPI11 extends ServerBlitzKitAPI10 {

@@ -1,5 +1,5 @@
 import { assertSecret } from "@blitzkit/core";
-import { fetchWGCClientSource } from "../fetchWGCClientSource";
+import { fetchWGCClientSource } from "./fetchWGCClientSource";
 import { AbstractVFS } from "./abstract";
 import { LocalVFS } from "./local";
 import { MixedVFS } from "./mixed";
