@@ -1,0 +1,10 @@
+.wrapper {
+  background-size: cover;
+  background-position: center;
+
+  .content {
+    padding: var(--space-4);
+
+    background: linear-gradient(90deg, var(--gray-1), transparent);
+  }
+}

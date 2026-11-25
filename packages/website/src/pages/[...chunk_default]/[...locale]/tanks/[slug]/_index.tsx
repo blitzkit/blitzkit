@@ -8,6 +8,7 @@ import { TankopediaGameModeAbilities } from "../../../../../components/Tankopedi
 import { TankopediaLoadout } from "../../../../../components/TankopediaLoadout";
 import { TankopediaSandbox } from "../../../../../components/TankopediaSandbox";
 import { TankopediaTabs } from "../../../../../components/TankopediaTabs";
+import { TankopediaTitle } from "../../../../../components/TankopediaTitle";
 import { TankopediaVideos } from "../../../../../components/TankopediaVideos";
 import { defaultEqualizer } from "../../../../../config/equalizer";
 import { withErrorWrapper } from "../../../../../hocs/withErrorWrapper";
@@ -56,6 +57,7 @@ export const Sandbox = withErrorWrapper(
 
     return (
       <div className={styles.sandbox}>
+        <TankopediaTitle />
         <TankopediaSandbox
           antagonistCharacteristics={antagonistCharacteristics}
           thicknessRange={thicknessRange}
@@ -63,7 +65,6 @@ export const Sandbox = withErrorWrapper(
         <TankopediaCharacteristics characteristics={characteristics} />
         <TankopediaGameModeAbilities />
         <TankopediaVideos />
-
         <TankopediaTabs />
       </div>
     );
