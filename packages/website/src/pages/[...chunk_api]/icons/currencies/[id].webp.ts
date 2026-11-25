@@ -1,4 +1,5 @@
-import { assertSecret, type BlitzGlossary } from "@blitzkit/core";
+import { fetchGlossary } from "@blitzkit/core";
+import locales from "@blitzkit/i18n/locales.json";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import sharp from "sharp";
 import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
@@ -30,13 +31,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     });
   }
 
-  const glossary = await fetch(assertSecret(import.meta.env.WOTB_GLOSSARY))
-    .then((response) => response.json() as Promise<BlitzGlossary>)
-    .then((glossary) =>
-      Object.values(glossary)
-        .entries()
-        .filter(([key]) => /^prx_season_\d+$/.test(`${key}`)),
-    );
+  const glossary = await fetchGlossary(locales.default).then((glossary) =>
+    Object.values(glossary)
+      .entries()
+      .filter(([key]) => /^prx_season_\d+$/.test(`${key}`)),
+  );
 
   for (const [id, item] of glossary) {
     if (!item.image_url) continue;
