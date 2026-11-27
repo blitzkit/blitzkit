@@ -47,6 +47,7 @@ const SELF_ENTITY = "*** Self ***";
 const SCENE_LOADED_EVENT = 1;
 const USER_EVENT = 2;
 const ANIMATION_END_EVENTS = [3, 8];
+const START_EFFECT_ACTION = 1;
 const START_ANIMATION_ACTION = 6;
 const SWITCH_ACTIONS = [8, 9];
 const TRIGGER_EVENT_ACTION = 10;
@@ -107,6 +108,7 @@ function replay(
   const states = new Map<Entity, string | null>();
   const looping = new Set<Entity>();
   const finished = new Set<Entity>();
+  const effects = new Map<Entity, number>();
   const pending: (() => void)[] = [];
   const fired = new Set<unknown>();
 
@@ -210,6 +212,8 @@ function replay(
       if (action["act.delay"] > 0 && action["act.switchIndex"] < 0) return;
 
       activateState(target, action["act.switchIndex"]);
+    } else if (animate && action["act.type"] === START_EFFECT_ACTION) {
+      if (target) effects.set(target, action["act.stopAfterNRepeats"]);
     } else if (animate && action["act.type"] === START_ANIMATION_ACTION) {
       if (target) {
         const repeats = action["act.stopAfterNRepeats"];
@@ -439,6 +443,16 @@ function replay(
           case "TriggerCustomEvent":
             if (animate) fireEvent(input(id, "event name") as string);
             break;
+
+          case "StartParticles":
+            if (animate && entity) {
+              effects.set(entity, Number(input(id, "repeats") ?? 0));
+            }
+            break;
+
+          case "StopParticles":
+            if (entity) effects.delete(entity);
+            break;
         }
       }
 
@@ -506,6 +520,12 @@ function replay(
         .filter(isShown)
         .map((entity) => entity.hierarchy as Hierarchy),
     ),
+    effects: new Map(
+      [...effects].map(([entity, repeats]) => [
+        entity.hierarchy as Hierarchy,
+        repeats,
+      ]),
+    ),
   };
 }
 
@@ -529,8 +549,9 @@ export function switcherStates(
 }
 
 /**
- * where a customization part ends up: each state switcher's state and the
- * motions left looping
+ * where a customization part ends up: each state switcher's state, the
+ * motions left looping and the particle effects started with how many times
+ * they repeat
  */
 export function partGarage(
   sc2: ReturnType<Sc2ReadStream["sc2"]>,
