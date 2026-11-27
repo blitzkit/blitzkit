@@ -40,7 +40,11 @@ function Root({ children, className, ...props }: RootProps) {
   }, []);
 
   return (
-    <table ref={table} className={styles.table}>
+    <table
+      ref={table}
+      className={classNames(styles.table, className)}
+      {...props}
+    >
       {children}
     </table>
   );

@@ -2,7 +2,7 @@ import { EmbedState, type EmbedConfig, type ExtractEmbedConfigTypes } from ".";
 import {
   breakdownConfig,
   extractEmbedConfigDefaults,
-} from "../../constants/embeds";
+} from "../../config/embeds";
 import type { EmbedConfigItemType, EmbedItemType } from "./constants";
 import { embedText } from "./tokens";
 

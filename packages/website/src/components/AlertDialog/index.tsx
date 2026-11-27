@@ -1,11 +1,18 @@
 import { AlertDialog as _ } from "radix-ui";
-import type { ComponentProps } from "react";
-import { classNames } from "../../ui/classNames";
 import { composeRadixComponents } from "../../ui/compose";
+import { DialogActions } from "../DialogActions";
+import { DialogBody } from "../DialogBody";
+import { DialogField } from "../DialogField";
+import { DialogHeader } from "../DialogHeader";
 import styles from "./index.module.css";
 
-function Actions({ className, ...props }: ComponentProps<"div">) {
-  return <div className={classNames(styles.actions, className)} {...props} />;
-}
+// TODO: figoure out tree shaking for these kinds of wrapped components
+// The extra parts live in their own components, shared by every dialog-like surface
+export const AlertDialog = {
+  ...composeRadixComponents(_, styles),
 
-export const AlertDialog = { ...composeRadixComponents(_, styles), Actions };
+  Header: DialogHeader,
+  Body: DialogBody,
+  Actions: DialogActions,
+  Field: DialogField,
+};

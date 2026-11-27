@@ -2,7 +2,7 @@ export function Cache(disableInDev = false) {
   const cache = new WeakMap<object, Map<string, Promise<unknown>>>();
 
   return function <This, Arguments extends any[], Return>(
-    target: (this: This, ...args: Arguments) => Promise<Return>
+    target: (this: This, ...args: Arguments) => Promise<Return>,
     // TODO: evaluate if we need context to make the error trace easier
     // context: ClassMethodDecoratorContext<
     //   This,

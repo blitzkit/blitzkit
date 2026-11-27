@@ -1,0 +1,35 @@
+/* A plain cell, since a row header's own background would cover the accent */
+.header {
+  vertical-align: middle;
+
+  background-color: var(--accent-9);
+  cursor: pointer;
+
+  /* Table cells ignore max-width, so the content carries the size: the widest name, within limits */
+  .content {
+    width: max-content;
+    min-width: 5rem;
+    max-width: 12rem;
+    min-height: 8rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.swatches {
+  /* Adds no width of its own, filling and wrapping within what the rest of the popover sets */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  width: 0;
+  min-width: 100%;
+
+  /* Every swatch keeps its check so the buttons stay the same size; only the selected one shows it */
+  .swatch[data-selected="false"] svg {
+    visibility: hidden;
+  }
+}

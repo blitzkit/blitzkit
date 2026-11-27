@@ -1,0 +1,17 @@
+.table {
+  width: 100%;
+  background-color: var(--gray-2);
+
+  .body {
+    scroll-margin-top: var(--page-padding);
+  }
+
+  .add {
+    padding: var(--space-3);
+
+    /* Stretches the button across the table */
+    .button {
+      width: 100%;
+    }
+  }
+}

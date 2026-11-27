@@ -13,7 +13,7 @@ export * from "./environment";
 export * from "./eventManager";
 export * from "./getTimeDaysAgo";
 export * from "./isExplosive";
-export * from "./metaSortTank";
+export * from "./metaSortTanks";
 export * from "./normalizeBoundingBox";
 export * from "./patientFetchJSON";
 export * from "./popularTanks";

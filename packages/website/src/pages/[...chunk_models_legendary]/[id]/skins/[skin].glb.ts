@@ -19,7 +19,7 @@ import type { APIContext } from "astro";
 import type { Vector3Tuple, Vector4Tuple } from "three";
 import { api } from "../../../../api/dynamic";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
-import { SKIN_NUMBER } from "../../../../constants/skinNumber";
+import { SKIN_NUMBER } from "../../../../config/skinNumber";
 import { switcherStates } from "../../../../core/blitzkit/switcherStates";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import {

@@ -6,7 +6,7 @@ import {
   TOOL_BANNER_HEIGHTS,
   ToolBannerSize,
   tools,
-} from "../../../../../constants/tools";
+} from "../../../../../config/tools";
 import { getStaticPaths as _getStaticPaths } from "../../../_index";
 
 interface ToolBannerProps {

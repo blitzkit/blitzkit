@@ -2,7 +2,6 @@ import { CameraIcon, CopyIcon, DownloadIcon } from "@radix-ui/react-icons";
 import { Jimp } from "jimp";
 import { useCallback, type RefObject } from "react";
 import { useStrings } from "../../hooks/useStrings";
-import { AlertDialog } from "../AlertDialog";
 import { Button, type ButtonProps } from "../Button";
 import { Dialog } from "../Dialog";
 import { IconButton } from "../IconButton";
@@ -71,7 +70,7 @@ export function ScreenshotButton({ canvas, name, children, ...props }: Props) {
             </Dialog.Description>
           </Dialog.Header>
 
-          <AlertDialog.Actions>
+          <Dialog.Actions>
             <Dialog.Close asChild>
               <Button color="red" variant="outline">
                 {strings.common.screenshot.cancel}
@@ -116,7 +115,7 @@ export function ScreenshotButton({ canvas, name, children, ...props }: Props) {
                 {strings.common.screenshot.download}
               </Button>
             </Dialog.Close>
-          </AlertDialog.Actions>
+          </Dialog.Actions>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

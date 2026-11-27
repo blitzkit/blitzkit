@@ -8,7 +8,7 @@ import { TankClass, TankDefinition, TankType } from "@blitzkit/protos";
 import { amberDark, blueDark } from "@radix-ui/colors";
 import { times } from "lodash-es";
 import type { ComponentProps } from "react";
-import { breakdownConfig } from "../../constants/embeds";
+import { breakdownConfig } from "../../config/embeds";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { embedRadius, embedSpace } from "../../stores/embedState/tokens";
 import { useEmbedStateCurry } from "../../stores/embedState/utilities";

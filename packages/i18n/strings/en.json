@@ -155,6 +155,20 @@
     }
   },
 
+  "tier_list": {
+    "add": "Add tier",
+    "reset": "Reset",
+    "share": "Share",
+    "edit": {
+      "placeholder": "Tier name",
+      "label": "Label",
+      "color": "Color",
+      "remove": "Remove",
+      "cancel": "Cancel",
+      "apply": "Apply"
+    }
+  },
+
   "units": {
     "m": "{value}m",
     "mm": "{value}mm",

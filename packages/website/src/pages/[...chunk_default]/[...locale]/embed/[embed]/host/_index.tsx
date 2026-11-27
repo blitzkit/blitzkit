@@ -4,7 +4,7 @@ import {
   embedConfigurations,
   embedRenderers,
   extractEmbedConfigDefaults,
-} from "../../../../../../constants/embeds";
+} from "../../../../../../config/embeds";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,

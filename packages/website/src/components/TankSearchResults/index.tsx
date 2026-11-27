@@ -1,4 +1,4 @@
-import { metaSortTank, SEARCH_KEYS } from "@blitzkit/core";
+import { metaSortTanks, SEARCH_KEYS } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
 import type { TankDefinition } from "@blitzkit/protos";
 import fuzzysort from "fuzzysort";
@@ -108,7 +108,7 @@ function Content({ onSelect, onSelectAll }: TankSearchResultsProps) {
       tankopediaSort.by === null ||
       !sortableCharacteristics.has(tankopediaSort.by)
     ) {
-      const byMeta = metaSortTank([...filtered], gameDefinitions);
+      const byMeta = metaSortTanks([...filtered], gameDefinitions);
 
       return tankopediaSort.direction === SortDirection.Ascending
         ? byMeta

@@ -12,7 +12,7 @@ import locales from "@blitzkit/i18n/locales.json";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../../api/dynamic";
-import { breakdownConfig } from "../../constants/embeds";
+import { breakdownConfig } from "../../config/embeds";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
 import { useStrings } from "../../hooks/useStrings";
 import { EmbedBreakdown } from "../../stores/embedBreakdown";

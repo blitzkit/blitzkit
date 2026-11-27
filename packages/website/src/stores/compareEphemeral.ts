@@ -1,5 +1,6 @@
-import type { TankEnvironment } from "@blitzkit/core";
+import { createDefaultEnvironment, type TankEnvironment } from "@blitzkit/core";
 import { Soapstone } from "soapstone";
+import { api } from "../api/dynamic";
 import { resolveTankModules } from "../tankopedia/resolveTankModules";
 import type { TankState } from "../tankopedia/tankState";
 import { SortDirection } from "./tankopediaPersistent";
@@ -17,15 +18,14 @@ export interface CompareEphemeral {
   sorting: TankSort;
 }
 
-export const CompareEphemeral = new Soapstone<
-  CompareEphemeral,
-  TankEnvironment
->((environment) => ({
-  environment,
+const skills = await api.skills();
+
+export const CompareEphemeral = new Soapstone<CompareEphemeral>({
+  environment: createDefaultEnvironment(skills),
   syncShells: false,
   members: [],
   sorting: { by: null, direction: SortDirection.Descending },
-}));
+});
 
 // Picks the shell at the same slot on every member, where one exists
 export function syncShellSlot(members: CompareMember[], slot: number) {

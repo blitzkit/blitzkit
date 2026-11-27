@@ -3,7 +3,7 @@ import { Link } from "../../../../components/Link";
 import { LinkI18n } from "../../../../components/LinkI18n";
 import { Text } from "../../../../components/Text";
 import { discordLink } from "../../../../config/socials";
-import { embedConfigurations } from "../../../../constants/embeds";
+import { embedConfigurations } from "../../../../config/embeds";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,

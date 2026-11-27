@@ -31,7 +31,7 @@ import { Text } from "../../../../../components/Text";
 import {
   embedConfigurations,
   extractEmbedConfigDefaults,
-} from "../../../../../constants/embeds";
+} from "../../../../../config/embeds";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,

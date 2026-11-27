@@ -2,7 +2,7 @@ import { alias } from "@blitzkit/core";
 import { PauseIcon, PlayIcon } from "@radix-ui/react-icons";
 import { uniqBy } from "lodash-es";
 import { api } from "../../api/dynamic";
-import { SKIN_NUMBER } from "../../constants/skinNumber";
+import { SKIN_NUMBER } from "../../config/skinNumber";
 import { useAbsoluteDisplay } from "../../hooks/useAbsoluteDisplay";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { hasSkinAnimations } from "../../hooks/useSkin";

@@ -1,6 +1,7 @@
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { tankToCompareMember } from "../../core/blitzkit/tankToCompareMember";
+import { withLocale } from "../../hocs/withLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { CompareEphemeral, syncShellSlot } from "../../stores/compareEphemeral";
 import {
@@ -15,7 +16,9 @@ import { SegmentedControl } from "../SegmentedControl";
 import { TankSearchResults } from "../TankSearchResults";
 import styles from "./index.module.css";
 
-export function CompareControls() {
+export const CompareControls = withLocale(Content);
+
+function Content() {
   const strings = useStrings();
   const deltaMode = ComparePersistent.use((state) => state.deltaMode);
   const syncShells = CompareEphemeral.use((state) => state.syncShells);

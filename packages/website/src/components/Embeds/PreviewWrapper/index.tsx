@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { embedPreviews } from "../../../constants/embeds";
+import { embedPreviews } from "../../../config/embeds";
 import { classNames } from "../../../ui/classNames";
 import { useEmbedStateCurry } from "../../../stores/embedState/utilities";
 import styles from "./index.module.css";

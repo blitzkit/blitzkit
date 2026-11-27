@@ -1,0 +1,42 @@
+<!-- Keeps the members and the url in sync, so the url is always shareable -->
+<script>
+  import { parse, stringify } from "urlon";
+  import { api } from "../api/dynamic";
+  import { tankToCompareMember } from "../core/blitzkit/tankToCompareMember";
+  import {
+    CompareEphemeral,
+    type CompareMember,
+  } from "../stores/compareEphemeral";
+
+  const tankDefinitions = await api.tanks();
+
+  // Tanks come from the url on load...
+  const state = new URLSearchParams(window.location.search).get("state");
+
+  if (state !== null) {
+    const tanks: number[] = parse(state);
+
+    CompareEphemeral.mutate((draft) => {
+      draft.members = tanks
+        .filter((id) => id in tankDefinitions.tanks)
+        .map((id) => tankDefinitions.tanks[id])
+        .map(tankToCompareMember);
+    });
+  }
+
+  // ...and are written back whenever they change
+  function writeURL(members: CompareMember[]) {
+    const search = new URLSearchParams(window.location.search);
+
+    search.set("state", stringify(members.map(({ state }) => state.tank)));
+
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}?${search.toString()}`,
+    );
+  }
+
+  writeURL(CompareEphemeral.state.members);
+  CompareEphemeral.on((state) => state.members, writeURL);
+</script>

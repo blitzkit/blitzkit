@@ -1,9 +1,12 @@
 ---
 import ColorScale from "../../../../components/ColorScale.astro";
+import { CompareControls } from "../../../../components/CompareControls";
+import { CompareTable } from "../../../../components/CompareTable";
+import CompareURLManager from "../../../../components/CompareURLManager.astro";
+import { Section } from "../../../../components/Section";
 import ToolBanner from "../../../../components/ToolBanner.astro";
-import { tools } from "../../../../constants/tools";
+import { tools } from "../../../../config/tools";
 import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import { Page } from "./_index";
 
 export { getStaticPaths } from "../index.astro";
 
@@ -15,8 +18,25 @@ const { locale } = Astro.props;
 <ColorScale color="amber" />
 <ColorScale color="blue" />
 
+<style>
+  .controls {
+    display: flex;
+    justify-content: center;
+  }
+</style>
+
 <BaseLayout tool={tools.compare} accent="pink" {locale}>
   <!-- TODO: add svg art for this tool -->
   <ToolBanner tool={tools.compare} {locale} />
-  <Page {locale} client:load />
+  <CompareURLManager />
+
+  <Section>
+    <div class="controls">
+      <CompareControls {locale} client:load />
+    </div>
+  </Section>
+
+  <Section overflow>
+    <CompareTable {locale} client:load />
+  </Section>
 </BaseLayout>

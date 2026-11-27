@@ -7,7 +7,9 @@ import {
 } from "@radix-ui/react-icons";
 import { useMemo } from "react";
 import { characteristicsGroups } from "../../config/characteristicsGroups";
+import { compareInsertionMarker } from "../../config/compare";
 import { computeCharacteristics } from "../../hooks/useCharacteristics";
+import { withLocale } from "../../hocs/withLocale";
 import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import {
@@ -26,10 +28,11 @@ import {
 } from "../../types/characteristics";
 import { CharacteristicValue } from "../CharacteristicValue";
 import { CompareEnvironment } from "../CompareEnvironment";
-import { CompareInsertionMarker } from "../CompareInsertionMarker";
 import { CompareLoadout } from "../CompareLoadout";
 import { CompareTankCard } from "../CompareTankCard";
+import { EmptyState } from "../EmptyState";
 import { IconButton } from "../IconButton";
+import { InsertionMarker } from "../InsertionMarker";
 import { LazyImage } from "../LazyImage";
 import { Table } from "../Table";
 import { Text } from "../Text";
@@ -47,8 +50,15 @@ function without(ids: number[], excluded: number[]) {
   return remaining;
 }
 
-export function CompareTable() {
-  const members = CompareEphemeral.use((state) => state.members);
+// The table of members, or an empty state when there are none
+export const CompareTable = withLocale(Content);
+
+function Content() {
+  const strings = useStrings();
+  const members = CompareEphemeral.useDeferred(
+    (state) => state.members,
+    CompareEphemeral.initial.members,
+  );
   const environment = CompareEphemeral.use((state) => state.environment);
 
   // Other tanks' consumables and provisions can reduce a tank's damage, so each
@@ -74,44 +84,55 @@ export function CompareTable() {
     });
   }, [members, environment]);
 
+  if (members.length === 0) {
+    return (
+      <EmptyState
+        title={strings.compare.no_tanks.title}
+        body={strings.compare.no_tanks.body}
+      />
+    );
+  }
+
   return (
-    <Table.Root>
-      <Table.Head>
-        <Table.Row>
-          <Table.IconCorner>
-            <CompareInsertionMarker index={0} />
-          </Table.IconCorner>
+    <>
+      <Table.Root>
+        <Table.Head>
+          <Table.Row>
+            <Table.IconCorner />
 
-          {members.map(({ key, state }, index) => (
-            <CompareTankCard
-              key={key}
-              index={index}
-              tank={resolveTankModules(state).tank}
-            />
-          ))}
-        </Table.Row>
-      </Table.Head>
+            {members.map(({ key, state }, index) => (
+              <CompareTankCard
+                key={key}
+                index={index}
+                tank={resolveTankModules(state).tank}
+              />
+            ))}
+          </Table.Row>
+        </Table.Head>
 
-      <Table.Body>
-        <Table.Row>
-          <Table.RowHeader>
-            <CompareEnvironment />
-          </Table.RowHeader>
+        <Table.Body>
+          <Table.Row>
+            <Table.RowHeader>
+              <CompareEnvironment />
+            </Table.RowHeader>
 
-          {members.map((member, index) => (
-            <LoadoutCell key={member.key} index={index} />
-          ))}
-        </Table.Row>
-      </Table.Body>
+            {members.map((member, index) => (
+              <LoadoutCell key={member.key} index={index} />
+            ))}
+          </Table.Row>
+        </Table.Body>
 
-      {characteristicsGroups.map((group) => (
-        <Group
-          key={group.name}
-          group={group}
-          characteristics={characteristics}
-        />
-      ))}
-    </Table.Root>
+        {characteristicsGroups.map((group) => (
+          <Group
+            key={group.name}
+            group={group}
+            characteristics={characteristics}
+          />
+        ))}
+      </Table.Root>
+
+      <InsertionMarker ref={compareInsertionMarker} />
+    </>
   );
 }
 

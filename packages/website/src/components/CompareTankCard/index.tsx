@@ -2,10 +2,10 @@ import { tankIcon } from "@blitzkit/core";
 import type { TankDefinition } from "@blitzkit/protos";
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
+import { compareInsertionMarker } from "../../config/compare";
+import { showInsertionMarker } from "../../core/blitzkit/showInsertionMarker";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { CompareEphemeral } from "../../stores/compareEphemeral";
-import { CompareInsertionMarker } from "../CompareInsertionMarker";
-import { insertionMarkers } from "../CompareInsertionMarker/constants";
 import { CompareTankControl } from "../CompareTankControl";
 import { LazyImage } from "../LazyImage";
 import { Table } from "../Table";
@@ -24,9 +24,7 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
 
   useEffect(() => {
     const initial = new Vector2();
-    const current = new Vector2();
-    const delta = new Vector2();
-    const marker = new Vector2();
+    const offset = new Vector2();
     let initialRect = draggable.current!.getBoundingClientRect();
     let dropIndex = -1;
 
@@ -34,48 +32,44 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
       event.preventDefault();
 
       initialRect = draggable.current!.getBoundingClientRect();
+      initial.set(event.clientX, event.clientY);
 
-      delta.set(0, 0);
-      current.copy(initial.set(event.clientX, event.clientY));
       window.addEventListener("pointermove", handlePointerMove);
       window.addEventListener("pointerup", handlePointerUp);
     }
     function handlePointerMove(event: PointerEvent) {
       event.preventDefault();
 
-      current.set(event.clientX, event.clientY);
-      delta.copy(current).sub(initial);
-      insertionMarkers.forEach(({ element }) => {
-        element.style.opacity = "0";
+      // Slot i sits on the right edge of the row's i-th cell: the corner, then each card
+      const cells = header.current!.parentElement!.children;
+      let closestRect = cells[0].getBoundingClientRect();
+      let closestDistance = Infinity;
+
+      for (let cell = 0; cell < cells.length; cell++) {
+        const rect = cells[cell].getBoundingClientRect();
+        const distance = Math.abs(rect.right - event.clientX);
+
+        if (distance >= closestDistance) continue;
+
+        dropIndex = cell;
+        closestRect = rect;
+        closestDistance = distance;
+      }
+
+      showInsertionMarker(compareInsertionMarker.current!, {
+        position: [closestRect.right, closestRect.top],
+        height: closestRect.height,
       });
-
-      const distances = Array.from(insertionMarkers, (insertionMarker) => {
-        const markerBounds = insertionMarker.element.getBoundingClientRect();
-        marker.set(markerBounds.left, markerBounds.top);
-
-        return {
-          ...insertionMarker,
-          distance: marker.distanceTo(current),
-        };
-      });
-      const closest = distances.reduce((a, b) =>
-        a.distance < b.distance ? a : b,
-      );
-
-      dropIndex = closest.index;
-      closest.element.style.opacity = "1";
       header.current!.dataset.dragging = "true";
-      draggable.current!.style.left = `${initialRect.left + delta.x}px`;
-      draggable.current!.style.top = `${initialRect.top + delta.y}px`;
+      offset.set(event.clientX, event.clientY).sub(initial);
+      draggable.current!.style.left = `${initialRect.left + offset.x}px`;
+      draggable.current!.style.top = `${initialRect.top + offset.y}px`;
     }
     function handlePointerUp(event: PointerEvent) {
       event.preventDefault();
 
       delete header.current!.dataset.dragging;
-
-      insertionMarkers.forEach(({ element }) => {
-        element.style.opacity = "0";
-      });
+      showInsertionMarker(compareInsertionMarker.current!, undefined);
 
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
@@ -119,8 +113,6 @@ export function CompareTankCard({ index, tank }: TankCardProps) {
           <Text className={styles.name}>{unwrap(tank.name!)}</Text>
         </div>
       </div>
-
-      <CompareInsertionMarker index={index + 1} />
     </Table.ColumnHeader>
   );
 }

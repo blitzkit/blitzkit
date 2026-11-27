@@ -1,0 +1,24 @@
+/* Spans the whole slot; its padding keeps the bar off the slot's edges */
+.marker {
+  position: fixed;
+  z-index: 1;
+
+  box-sizing: border-box;
+  padding: var(--space-4) 0;
+  transform: translateX(-50%);
+
+  pointer-events: none;
+  opacity: 0;
+
+  &[data-visible="true"] {
+    opacity: 1;
+  }
+
+  .bar {
+    width: var(--space-1);
+    height: 100%;
+
+    border-radius: var(--radius-max);
+    background-color: var(--accent-12);
+  }
+}

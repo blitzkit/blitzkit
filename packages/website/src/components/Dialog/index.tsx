@@ -1,17 +1,17 @@
 import { Dialog as _ } from "radix-ui";
-import type { ComponentProps } from "react";
-import { classNames } from "../../ui/classNames";
 import { composeRadixComponents } from "../../ui/compose";
+import { DialogActions } from "../DialogActions";
+import { DialogBody } from "../DialogBody";
+import { DialogField } from "../DialogField";
+import { DialogHeader } from "../DialogHeader";
 import styles from "./index.module.css";
 
-// Groups a title and description
-function Header({ className, ...props }: ComponentProps<"div">) {
-  return <div className={classNames(styles.header, className)} {...props} />;
-}
+// The extra parts live in their own components, shared by every dialog-like surface
+export const Dialog = {
+  ...composeRadixComponents(_, styles),
 
-// Stacks the content that follows the header
-function Body({ className, ...props }: ComponentProps<"div">) {
-  return <div className={classNames(styles.body, className)} {...props} />;
-}
-
-export const Dialog = { ...composeRadixComponents(_, styles), Header, Body };
+  Header: DialogHeader,
+  Body: DialogBody,
+  Actions: DialogActions,
+  Field: DialogField,
+};

@@ -1,7 +1,7 @@
 import { UpdateIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Heading } from "@radix-ui/themes";
 import { useEffect, useRef } from "react";
-import { SKIN_NUMBER } from "../../../../../../constants/skinNumber";
+import { SKIN_NUMBER } from "../../../../../../config/skinNumber";
 import { api } from "../../../../../../core/blitzkit/api";
 import { useLocale } from "../../../../../../hooks/useLocale";
 import { Duel } from "../../../../../../stores/duel";

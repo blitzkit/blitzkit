@@ -8,10 +8,9 @@ import { CaretLeftIcon, Link2Icon, PersonIcon } from "@radix-ui/react-icons";
 import { debounce } from "lodash-es";
 import { useCallback, useRef, useState } from "react";
 import { stringify } from "urlon";
-import type { embedConfigurations } from "../../../constants/embeds";
+import type { embedConfigurations } from "../../../config/embeds";
 import { useStrings } from "../../../hooks/useStrings";
 import { EmbedState, type EmbedStateStore } from "../../../stores/embedState";
-import { AlertDialog } from "../../AlertDialog";
 import { Button } from "../../Button";
 import { CopyButton } from "../../CopyButton";
 import { Dialog } from "../../Dialog";
@@ -51,7 +50,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
       setSearching(false);
       setResults(results);
     }, 500),
-    []
+    [],
   );
 
   const handleChange = useCallback(() => {
@@ -130,13 +129,13 @@ export function GenerateURL({ embed }: GenerateURLProps) {
               </div>
             </Dialog.Body>
 
-            <AlertDialog.Actions>
+            <Dialog.Actions>
               <Dialog.Close asChild>
                 <Button color="red" variant="outline">
                   {generateStrings.cancel}
                 </Button>
               </Dialog.Close>
-            </AlertDialog.Actions>
+            </Dialog.Actions>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
@@ -154,7 +153,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
               </Dialog.Description>
             </Dialog.Header>
 
-            <AlertDialog.Actions>
+            <Dialog.Actions>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -193,7 +192,7 @@ export function GenerateURL({ embed }: GenerateURLProps) {
                 <Link2Icon />
                 {generateStrings.success.copy}
               </CopyButton>
-            </AlertDialog.Actions>
+            </Dialog.Actions>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
