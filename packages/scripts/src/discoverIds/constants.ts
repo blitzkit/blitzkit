@@ -1,6 +1,6 @@
 export const API_RATE = 10; // 10Hz
 export const MAX_IDS_PER_CALL = 100;
-export const MAX_DRY_STREAK = 10_000;
+export const MAX_DRY_STREAK = 200_000;
 
 export const ACCOMMODATED_ID_COUNT = 500_000_000; // 500M ids
 
