@@ -3,7 +3,20 @@ import locales from "@blitzkit/i18n/locales.json";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import { extname } from "path";
 import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { parallelDownloads } from "../../../../core/blitzkit/parallelDownloads";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
+
+const avatarUrls: string[] = [];
+let downloads: Map<string, Promise<ArrayBuffer>> | undefined;
+
+function downloadAvatars() {
+  const urls = [...new Set(avatarUrls)];
+  const buffers = parallelDownloads(urls, (url) =>
+    fetch(url).then((response) => response.arrayBuffer()),
+  );
+
+  return new Map(urls.map((url, index) => [url, buffers[index]]));
+}
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const paths: GetStaticPathsItem[] = [];
@@ -61,6 +74,7 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
         params: { name },
         props: { url },
       });
+      avatarUrls.push(url);
     }),
   );
 
@@ -72,8 +86,13 @@ export async function GET({ props }: APIContext<{ url: string }>) {
     return Response.redirect(props.url);
   }
 
-  const response = await fetch(props.url);
-  const buffer = await response.arrayBuffer();
+  downloads ??= downloadAvatars();
+
+  const download = downloads.get(props.url);
+  const buffer = await (download ??
+    fetch(props.url).then((response) => response.arrayBuffer()));
+
+  downloads.delete(props.url);
 
   return new Response(buffer);
 }

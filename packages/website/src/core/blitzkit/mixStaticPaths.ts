@@ -15,6 +15,10 @@ export function mixStaticPaths<
 ) {
   return async function (options: GetStaticPathsOptions) {
     const pathsA = await a(options);
+
+    // skips b's work (often network or game file reads) for chunks not being built
+    if (pathsA.length === 0) return [] as (TypeA & TypeB)[];
+
     const pathsB = await b(options);
     const paths: GetStaticPathsResult = [];
 
