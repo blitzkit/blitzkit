@@ -1,8 +1,4 @@
-import {
-  WOTB_GLOSSARY_DOMAIN,
-  WOTB_GLOSSARY_PATH,
-  type BlitzGlossary,
-} from "@blitzkit/core";
+import { fetchGlossary } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import type { APIContext, GetStaticPathsItem } from "astro";
 import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
@@ -34,13 +30,11 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     });
   }
 
-  const glossary = await fetch(
-    `${WOTB_GLOSSARY_DOMAIN}/${locales.default}/${WOTB_GLOSSARY_PATH}`
-  )
-    .then((response) => response.json() as Promise<BlitzGlossary>)
-    .then((glossary) =>
-      Object.entries(glossary).filter(([key]) => /^prx_season_\d+$/.test(key))
-    );
+  const glossary = await fetchGlossary(locales.default).then((glossary) =>
+    Object.values(glossary)
+      .entries()
+      .filter(([key]) => /^prx_season_\d+$/.test(`${key}`)),
+  );
 
   for (const [id, item] of glossary) {
     if (!item.image_url) continue;
