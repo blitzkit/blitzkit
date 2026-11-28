@@ -4,8 +4,12 @@ import { Fragment, useRef } from "react";
 import { characteristicsGroups } from "../../config/characteristicsGroups";
 import { RANKING_STEPS } from "../../config/rankings";
 import { toys } from "../../config/toys";
+import { withErrorWrapper } from "../../hocs/withErrorWrapper";
+import { withLocale } from "../../hocs/withLocale";
+import { useCharacteristics } from "../../hooks/useCharacteristics";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { useRankings } from "../../hooks/useRankings";
+import { api } from "../../api/dynamic";
 import { useStrings } from "../../hooks/useStrings";
 import { Tankopedia, TankopediaRelativeAgainst } from "../../stores/tankopedia";
 import type { CharacteristicRank } from "../../tankopedia/calculateRankings";
@@ -24,13 +28,20 @@ import { CharacteristicValue } from "../CharacteristicValue";
 import { Text } from "../Text";
 import styles from "./index.module.css";
 
+const tanks = await api.tanks();
+
 interface TankopediaCharacteristicsProps {
-  characteristics: ComputedCharacteristics;
+  id: number;
 }
 
-export function TankopediaCharacteristics({
-  characteristics,
-}: TankopediaCharacteristicsProps) {
+export const TankopediaCharacteristics = withErrorWrapper(
+  withLocale<TankopediaCharacteristicsProps>(Content)
+);
+
+function Content({ id }: TankopediaCharacteristicsProps) {
+  Tankopedia.useInitialization(() => tanks.tanks[id]);
+
+  const characteristics = useCharacteristics("protagonist");
   const rankings = useRankings(characteristics);
 
   return (
@@ -56,7 +67,7 @@ type GroupItem = CharacteristicsGroup["order"][number];
 // A toy that needs a characteristic only shows for the tanks that have it
 function hasToy(
   { requires }: ToyRenderConfig,
-  characteristics: ComputedCharacteristics,
+  characteristics: ComputedCharacteristics
 ) {
   return requires === undefined || characteristics.has(requires);
 }

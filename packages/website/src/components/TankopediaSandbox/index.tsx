@@ -1,8 +1,13 @@
 import type { QuicklimeEvent } from "quicklime";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { api } from "../../api/dynamic";
+import { defaultEqualizer } from "../../config/equalizer";
 import { applyPitchYawLimits } from "../../core/blitz/applyPitchYawLimits";
 import { modelTransformEvent } from "../../core/blitzkit/modelTransform";
 import { Pose, poseEvent } from "../../core/blitzkit/pose";
+import { withErrorWrapper } from "../../hocs/withErrorWrapper";
+import { withLocale } from "../../hocs/withLocale";
+import { useCharacteristics } from "../../hooks/useCharacteristics";
 import { useDuelModels } from "../../hooks/useDuelModels";
 import { useDuelModules } from "../../hooks/useDuelModules";
 import { useEquipment } from "../../hooks/useEquipment";
@@ -11,7 +16,6 @@ import { useMounted } from "../../hooks/useMounted";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaPersistent } from "../../stores/tankopediaPersistent";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import type { ComputedCharacteristics } from "../../types/characteristics";
 import { ArmorPlateDisplay } from "../ArmorPlateDisplay";
 import { CanvasAutoClear } from "../CanvasAutoClear";
 import { CanvasControl } from "../CanvasControl";
@@ -31,15 +35,22 @@ import { TankStaticArmor, type ThicknessRange } from "../TankStaticArmor";
 import { Thicknesses } from "../Thicknesses";
 import styles from "./index.module.css";
 
-interface TankSandboxProps {
-  thicknessRange: ThicknessRange;
-  antagonistCharacteristics: ComputedCharacteristics;
+const tanks = await api.tanks();
+
+interface TankopediaSandboxProps {
+  id: number;
 }
 
-export function TankopediaSandbox({
-  thicknessRange,
-  antagonistCharacteristics,
-}: TankSandboxProps) {
+export const TankopediaSandbox = withErrorWrapper(
+  withLocale<TankopediaSandboxProps>(Sandbox)
+);
+
+function Sandbox({ id }: TankopediaSandboxProps) {
+  const protagonistTank = tanks.tanks[id];
+
+  Tankopedia.useInitialization(() => protagonistTank);
+
+  const equalize = Tankopedia.use((state) => state.environment.equalize);
   const mounted = useMounted();
   const wrapper = useRef<HTMLDivElement>(null);
   const hasImprovedVerticalStabilizer = useEquipment("protagonist", 122);
@@ -49,6 +60,31 @@ export function TankopediaSandbox({
 
   const { turret, gun } = useDuelModels("protagonist");
   const display = Tankopedia.use((state) => state.loaders.display.loaded);
+
+  const antagonistCharacteristics = useCharacteristics("antagonist");
+  const antagonistPenetration = antagonistCharacteristics.get(
+    "penetration"
+  ) as number;
+
+  const thicknessRange = useMemo(() => {
+    const entries = Object.values(tanks.tanks);
+    const filtered = entries.filter(
+      (thisTank) => thisTank.tier === protagonistTank.tier
+    );
+    const value =
+      (filtered.reduce((accumulator, thisTank) => {
+        return (
+          accumulator +
+          thisTank.turrets.at(-1)!.guns.at(-1)!.shells[0].penetration!.near *
+            ((equalize ? thisTank.equalizer : undefined) ?? defaultEqualizer)
+              .penetration
+        );
+      }, 0) /
+        filtered.length) *
+      (3 / 4);
+
+    return { value } satisfies ThicknessRange;
+  }, [equalize]);
 
   function handlePointerDown() {
     window.addEventListener("pointermove", handlePointerMove);
@@ -74,7 +110,7 @@ export function TankopediaSandbox({
             gun.pitch!,
             turret.yaw,
             hasImprovedVerticalStabilizer,
-            hasDownImprovedVerticalStabilizer,
+            hasDownImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -88,7 +124,7 @@ export function TankopediaSandbox({
             0,
             gun.pitch!,
             turret.yaw,
-            hasImprovedVerticalStabilizer,
+            hasImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -102,7 +138,7 @@ export function TankopediaSandbox({
             0,
             gun.pitch!,
             turret.yaw,
-            hasImprovedVerticalStabilizer,
+            hasImprovedVerticalStabilizer
           );
 
           modelTransformEvent.dispatch({ pitch, yaw });
@@ -130,7 +166,7 @@ export function TankopediaSandbox({
       modelTransformEvent.last!.yaw,
       gun.pitch!,
       turret.yaw,
-      hasImprovedVerticalStabilizer,
+      hasImprovedVerticalStabilizer
     );
 
     modelTransformEvent.dispatch({ pitch, yaw });
@@ -176,9 +212,7 @@ export function TankopediaSandbox({
         <TankopediaSkinSwitcher />
         <TankopediaQuickInputs />
         <Thicknesses thicknessRange={thicknessRange} />
-        <TankopediaAntagonistControl
-          antagonistCharacteristics={antagonistCharacteristics}
-        />
+        <TankopediaAntagonistControl penetration={antagonistPenetration} />
         <TankopediaOptions />
       </div>
     </div>
@@ -194,7 +228,7 @@ function Content({ thicknessRange }: { thicknessRange: ThicknessRange }) {
   // this causes a re-render of the ENTIRE thing, maybe move this elsewhere?
   const revealed = Tankopedia.use((state) => state.revealed);
   const hideTankModelUnderArmor = TankopediaPersistent.use(
-    (state) => state.hideTankModelUnderArmor,
+    (state) => state.hideTankModelUnderArmor
   );
 
   return (

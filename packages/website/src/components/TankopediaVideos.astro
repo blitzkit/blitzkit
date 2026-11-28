@@ -1,0 +1,108 @@
+---
+import { youtubers } from "@blitzkit/core";
+import { api } from "../api/dynamic";
+import { awaitableReviews } from "../core/awaitables/reviews";
+import { Heading } from "./Heading";
+import { Text } from "./Text";
+import { VerifiedIcon } from "./VerifiedIcon";
+
+interface Props {
+  id: number;
+  locale: string;
+}
+
+const { id, locale } = Astro.props;
+const reviews = await awaitableReviews;
+const strings = await api.strings(locale);
+const videos = reviews.reviews[id]?.videos ?? [];
+---
+
+<style>
+  .tankopedia-videos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4);
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-4);
+      width: 100%;
+
+      .card {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: var(--space-3);
+        background-size: cover;
+        background-position: 0 18px;
+        color: inherit;
+        text-decoration: none;
+
+        .thumbnail {
+          width: 16rem;
+          aspect-ratio: 16 / 9;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .info {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--space-1);
+          padding: var(--space-3);
+          backdrop-filter: blur(4rem);
+          -webkit-backdrop-filter: blur(4rem);
+        }
+
+        &:hover .info {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+</style>
+
+{
+  videos.length > 0 && (
+    <section class="tankopedia-videos">
+      <Heading size="3">{strings.tanks.videos.title}</Heading>
+
+      <div class="cards">
+        {videos.map((video) => {
+          const image = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+          const youtuber = youtubers.find(
+            (youtuber) => youtuber.id === video.author,
+          );
+
+          if (!youtuber) return null;
+
+          return (
+            <a
+              class="card"
+              style={{ backgroundImage: `url(${image})` }}
+              href={`https://www.youtube.com/watch?v=${video.id}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div
+                class="thumbnail"
+                style={{ backgroundImage: `url(${image})` }}
+              />
+
+              <div class="info">
+                <Text>{youtuber.name}</Text>
+                <VerifiedIcon width="1em" height="1em" />
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  )
+}

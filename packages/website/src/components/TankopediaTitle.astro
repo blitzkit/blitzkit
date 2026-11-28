@@ -1,0 +1,39 @@
+---
+import { unwrapper } from "@blitzkit/i18n";
+import { api } from "../api/dynamic";
+import { Heading } from "./Heading";
+
+interface Props {
+  id: number;
+  locale: string;
+}
+
+const { id, locale } = Astro.props;
+const tanks = await api.tanks();
+const tank = tanks.tanks[id];
+const unwrap = unwrapper(locale);
+---
+
+<style>
+  .tankopedia-title {
+    background-size: cover;
+    background-position: center;
+
+    .content {
+      padding: var(--space-4);
+
+      background: linear-gradient(90deg, var(--gray-1), transparent);
+    }
+  }
+</style>
+
+<div
+  class="tankopedia-title"
+  style={{
+    backgroundImage: `url(/media/national-wallpapers/${tank.nation}.jpg)`,
+  }}
+>
+  <div class="content">
+    <Heading size="3">{unwrap(tank.name)}</Heading>
+  </div>
+</div>

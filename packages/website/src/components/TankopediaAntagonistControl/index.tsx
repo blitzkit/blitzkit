@@ -8,7 +8,6 @@ import { useStrings } from "../../hooks/useStrings";
 import { useUnwrapper } from "../../hooks/useUnwrapper";
 import { Tankopedia } from "../../stores/tankopedia";
 import { TankopediaDisplay } from "../../stores/tankopediaPersistent/constants";
-import type { ComputedCharacteristics } from "../../types/characteristics";
 import { CustomShellButton } from "../CustomShellButton";
 import { EqualIcon } from "../EqualIcon";
 import { IconButton } from "../IconButton";
@@ -20,21 +19,21 @@ import { Tooltip } from "../Tooltip";
 import styles from "./index.module.css";
 
 interface TankopediaAntagonistControlProps {
-  antagonistCharacteristics: ComputedCharacteristics;
+  penetration: number;
 }
 
 export function TankopediaAntagonistControl({
-  antagonistCharacteristics,
+  penetration,
 }: TankopediaAntagonistControlProps) {
   const strings = useStrings();
   const unwrap = useUnwrapper();
 
   const showControls = Tankopedia.use((state) => state.showControls);
   const isDynamicArmorDisplay = useAbsoluteDisplay(
-    TankopediaDisplay.DynamicArmor,
+    TankopediaDisplay.DynamicArmor
   );
   const hasCustomShell = Tankopedia.use(
-    (state) => state.customShell !== undefined,
+    (state) => state.customShell !== undefined
   );
   const equalize = Tankopedia.use((state) => state.environment.equalize);
 
@@ -45,7 +44,7 @@ export function TankopediaAntagonistControl({
 
   const antagonistUniqueGuns = useMemo(
     () => uniqueGuns(protagonist.tank.turrets),
-    [protagonist.tank.turrets],
+    [protagonist.tank.turrets]
   );
 
   const isVisible = showControls && isDynamicArmorDisplay;
@@ -54,9 +53,7 @@ export function TankopediaAntagonistControl({
     <div className={styles["antagonist-control"]} data-visible={isVisible}>
       <Text lowContrast>
         {literals(strings.common.units.mm, {
-          value: (
-            antagonistCharacteristics.get("penetration") as number
-          ).toFixed(0),
+          value: penetration.toFixed(0),
         })}
       </Text>
 

@@ -16,6 +16,7 @@ interface Props {
   children: ReactNode;
 }
 
+// TODO: move error screen to separate element and just make the fallback trigger that to handle duplicate hoc's
 export function ErrorWrapper({ children }: Props) {
   return (
     <ErrorBoundary fallbackRender={(props) => <Fallback {...props} />}>

@@ -1,9 +1,13 @@
 import { MAX_SKILL_LEVEL } from "@blitzkit/core";
 import { useCallback } from "react";
+import { api } from "../../api/dynamic";
+import { withErrorWrapper } from "../../hocs/withErrorWrapper";
+import { withLocale } from "../../hocs/withLocale";
 import { useDuelModules } from "../../hooks/useDuelModules";
-import { Tankopedia } from "../../stores/tankopedia";
-import { selectModule } from "../../tankopedia/selectModule";
+import { Tankopedia, TankopediaTab } from "../../stores/tankopedia";
 import { createAugments, toggleAugment } from "../../tankopedia/augments";
+import { selectModule } from "../../tankopedia/selectModule";
+import { LoadoutAugments } from "../LoadoutAugments";
 import { LoadoutConsumables } from "../LoadoutConsumables";
 import { LoadoutEquipment } from "../LoadoutEquipment";
 import { LoadoutModules } from "../LoadoutModules";
@@ -11,11 +15,28 @@ import { LoadoutProvisions } from "../LoadoutProvisions";
 import { LoadoutShells } from "../LoadoutShells";
 import { LoadoutSkills } from "../LoadoutSkills";
 import { LoadoutStatus } from "../LoadoutStatus";
-import { LoadoutAugments } from "../LoadoutAugments";
+import { ScrollerOrientation } from "../Scroller";
+import { ScrollerCurtains } from "../ScrollerCurtains";
+import styles from "./index.module.css";
 
-export function TankopediaLoadout() {
+const tanks = await api.tanks();
+
+interface TankopediaLoadoutProps {
+  id: number;
+}
+
+export const TankopediaLoadout = withErrorWrapper(
+  withLocale<TankopediaLoadoutProps>(Content),
+);
+
+function Content({ id }: TankopediaLoadoutProps) {
+  Tankopedia.useInitialization(() => tanks.tanks[id]);
+
+  const tabbed = Tankopedia.use((state) => state.tab === TankopediaTab.Loadout);
+
   return (
-    <>
+    <div className={styles.loadout} data-tabbed={tabbed}>
+      <ScrollerCurtains orientation={ScrollerOrientation.Vertical} />
       <Modules />
       <Augments />
       <Shells />
@@ -24,7 +45,7 @@ export function TankopediaLoadout() {
       <Consumables />
       <CrewSkills />
       <Status />
-    </>
+    </div>
   );
 }
 
