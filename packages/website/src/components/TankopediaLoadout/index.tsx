@@ -30,7 +30,7 @@ export const TankopediaLoadout = withErrorWrapper(
 );
 
 function Content({ id }: TankopediaLoadoutProps) {
-  Tankopedia.useInitialization(() => tanks.tanks[id]);
+  Tankopedia.useInitialization(() => tanks.tanks[id], import.meta.env.SSR);
 
   const tabbed = Tankopedia.use((state) => state.tab === TankopediaTab.Loadout);
 

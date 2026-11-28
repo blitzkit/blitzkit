@@ -48,7 +48,7 @@ export const TankopediaSandbox = withErrorWrapper(
 function Sandbox({ id }: TankopediaSandboxProps) {
   const protagonistTank = tanks.tanks[id];
 
-  Tankopedia.useInitialization(() => protagonistTank);
+  Tankopedia.useInitialization(() => protagonistTank, import.meta.env.SSR);
 
   const equalize = Tankopedia.use((state) => state.environment.equalize);
   const mounted = useMounted();

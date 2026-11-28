@@ -39,7 +39,7 @@ export const TankopediaCharacteristics = withErrorWrapper(
 );
 
 function Content({ id }: TankopediaCharacteristicsProps) {
-  Tankopedia.useInitialization(() => tanks.tanks[id]);
+  Tankopedia.useInitialization(() => tanks.tanks[id], import.meta.env.SSR);
 
   const characteristics = useCharacteristics("protagonist");
   const rankings = useRankings(characteristics);

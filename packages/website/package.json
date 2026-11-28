@@ -38,7 +38,7 @@
     "react-dom": "^19.3.0",
     "react-error-boundary": "^6.1.3",
     "react-promise-suspense": "^0.3.4",
-    "soapstone": "^1.1.0",
+    "soapstone": "^1.2.0",
     "three": "^0.180.0",
     "three-stdlib": "^2.36.0",
     "transliteration": "^2.6.1",

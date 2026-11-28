@@ -8,8 +8,10 @@ import { embedText } from "./tokens";
 
 export function useEmbedStateCurry<Config extends EmbedConfig>() {
   // TODO: find a way to initialize with the correct state preset
-  EmbedState.useInitialization(() =>
-    extractEmbedConfigDefaults(breakdownConfig),
+  EmbedState.useInitialization(
+    () => extractEmbedConfigDefaults(breakdownConfig),
+    // TODO: move this ssr checking buissness to soapstone
+    import.meta.env.SSR,
   );
 
   function useEmbedState<Key extends keyof Config>(key: Key) {

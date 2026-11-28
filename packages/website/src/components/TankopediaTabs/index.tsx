@@ -16,7 +16,7 @@ export const TankopediaTabs = withErrorWrapper(
 );
 
 function Content({ id }: TankopediaTabsProps) {
-  Tankopedia.useInitialization(() => tanks.tanks[id]);
+  Tankopedia.useInitialization(() => tanks.tanks[id], import.meta.env.SSR);
 
   const tab = Tankopedia.use((state) => state.tab);
 
