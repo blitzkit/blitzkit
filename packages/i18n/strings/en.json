@@ -193,7 +193,10 @@
   },
 
   "tanks": {
-    "all_tanks": "All tanks",
+    "title": {
+      "all_tanks": "All tanks",
+      "compare": "Compare"
+    },
 
     "antagonist_control": {
       "calibrated_shells": "Calibrated shells",

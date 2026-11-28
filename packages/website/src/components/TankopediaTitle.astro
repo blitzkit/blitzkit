@@ -2,6 +2,7 @@
 import { alias, romanize } from "@blitzkit/core";
 import { unwrapper } from "@blitzkit/i18n";
 import { ArrowLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { stringify } from "urlon";
 import { api } from "../api/dynamic";
 import { Heading } from "./Heading";
 import { LinkI18n } from "./LinkI18n";
@@ -22,6 +23,7 @@ const tier = romanize(tank.tier);
 const type = strings.common.tank_class_medium[tank.class];
 
 const unwrap = unwrapper(locale);
+const compareState = stringify([id]);
 ---
 
 <style>
@@ -31,6 +33,7 @@ const unwrap = unwrapper(locale);
     background-position: right;
 
     border-radius: var(--space-3);
+    overflow: hidden;
 
     .gradient {
       padding: var(--space-4);
@@ -38,18 +41,30 @@ const unwrap = unwrapper(locale);
 
       background: linear-gradient(
         270deg,
-        transparent,
-        var(--gray-1) var(--space-6)
+        var(--black-a5),
+        var(--gray-1) var(--space-7)
       );
 
       display: flex;
       justify-content: space-between;
       align-items: center;
 
-      .path {
+      .identity {
         display: flex;
-        align-items: center;
-        gap: var(--space-1);
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-2);
+
+        .path {
+          display: flex;
+          align-items: center;
+          gap: var(--space-1);
+
+          svg {
+            width: 1em;
+            height: 1em;
+          }
+        }
       }
     }
   }
@@ -64,17 +79,26 @@ const unwrap = unwrapper(locale);
   <div class="gradient">
     <LinkI18n underline="hover" {locale} href="/tanks">
       <ArrowLeftIcon />
-      {strings.tanks.all_tanks}
+      {strings.tanks.title.all_tanks}
     </LinkI18n>
 
-    <Text className="path" lowContrast>
-      {nation}
-      <CaretRightIcon />
-      {tier}
-      <CaretRightIcon />
-      {type}
-    </Text>
+    <!-- <LinkI18nWrapper {locale} href={`/compare?state=${compareState}`}>
+      <Button variant="outline">
+        <PlusIcon />
+        {strings.tanks.title.compare}
+      </Button>
+    </LinkI18nWrapper> -->
 
-    <Heading size="2">{unwrap(tank.name)}</Heading>
+    <div class="identity">
+      <Heading size="2">{unwrap(tank.name)}</Heading>
+
+      <Text className="path" lowContrast>
+        {nation}
+        <CaretRightIcon />
+        {tier}
+        <CaretRightIcon />
+        {type}
+      </Text>
+    </div>
   </div>
 </div>
