@@ -1,7 +1,11 @@
 ---
+import { alias, romanize } from "@blitzkit/core";
 import { unwrapper } from "@blitzkit/i18n";
+import { ArrowLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
 import { api } from "../api/dynamic";
 import { Heading } from "./Heading";
+import { LinkI18n } from "./LinkI18n";
+import { Text } from "./Text";
 
 interface Props {
   id: number;
@@ -9,20 +13,44 @@ interface Props {
 }
 
 const { id, locale } = Astro.props;
-const tanks = await api.tanks();
+
+const [tanks, strings] = await Promise.all([api.tanks(), api.strings(locale)]);
 const tank = tanks.tanks[id];
+const nation =
+  strings.common.nations[tank.nation as keyof typeof strings.common.nations];
+const tier = romanize(tank.tier);
+const type = strings.common.tank_class_medium[tank.class];
+
 const unwrap = unwrapper(locale);
 ---
 
 <style>
   .tankopedia-title {
-    background-size: cover;
-    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
 
-    .content {
+    border-radius: var(--space-3);
+
+    .gradient {
       padding: var(--space-4);
+      padding-right: var(--space-5);
 
-      background: linear-gradient(90deg, var(--gray-1), transparent);
+      background: linear-gradient(
+        270deg,
+        transparent,
+        var(--gray-1) var(--space-6)
+      );
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .path {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+      }
     }
   }
 </style>
@@ -30,10 +58,23 @@ const unwrap = unwrapper(locale);
 <div
   class="tankopedia-title"
   style={{
-    backgroundImage: `url(/media/national-wallpapers/${tank.nation}.jpg)`,
+    backgroundImage: `url(${alias("api", `/nations/${tank.nation}/flags/fade.webp`)})`,
   }}
 >
-  <div class="content">
-    <Heading size="3">{unwrap(tank.name)}</Heading>
+  <div class="gradient">
+    <LinkI18n underline="hover" {locale} href="/tanks">
+      <ArrowLeftIcon />
+      {strings.tanks.all_tanks}
+    </LinkI18n>
+
+    <Text className="path" lowContrast>
+      {nation}
+      <CaretRightIcon />
+      {tier}
+      <CaretRightIcon />
+      {type}
+    </Text>
+
+    <Heading size="2">{unwrap(tank.name)}</Heading>
   </div>
 </div>

@@ -37,7 +37,7 @@ export function MetaSection() {
       >
         <Box
           style={{
-            background: `url(${alias("api", `/flags/scratched/${protagonist.nation}.webp`)})`,
+            background: `url(${alias("api", `/nations/${protagonist.nation}/flags/scratched.webp`)})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "min(53rem, 80vw)",
             backgroundPosition: "-8rem 50%",
@@ -64,7 +64,7 @@ export function MetaSection() {
                         alt={protagonist.nation}
                         src={alias(
                           "api",
-                          `/flags/circle/${protagonist.nation}.webp`,
+                          `/nations/${protagonist.nation}/flags/circle.webp`,
                         )}
                       />
                       {

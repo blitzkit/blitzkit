@@ -68,7 +68,7 @@ export const TankCard = (props: MaybeSkeletonComponentProps<TankCardProps>) => {
           justifyContent: "flex-end",
           backgroundImage: `url(${alias(
             "api",
-            `/flags/scratched/${props.tank.nation}.webp`,
+            `/nations/${props.tank.nation}/flags/scratched.webp`,
           )})`,
         }}
       >

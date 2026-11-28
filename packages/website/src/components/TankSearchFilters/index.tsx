@@ -279,7 +279,7 @@ function NationsFilter() {
             <LazyImage
               className={styles.icon}
               key={nation}
-              src={alias("api", `/flags/circle/${nation}.webp`)}
+              src={alias("api", `/nations/${nation}/flags/circle.webp`)}
             />
           ))}
         </Button>
@@ -315,7 +315,7 @@ function NationsFilter() {
                 style={{
                   backgroundImage: `url(${alias(
                     "api",
-                    `/flags/scratched/${nation}.webp`,
+                    `/nations/${nation}/flags/scratched.webp`,
                   )})`,
                 }}
               />

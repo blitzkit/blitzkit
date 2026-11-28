@@ -1,11 +1,11 @@
 import type { APIContext, GetStaticPathsItem } from "astro";
-import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import { mixStaticPaths } from "../../../../../astro/mixStaticPaths";
 import {
   readPackedSprite,
   type PackedSpriteProps,
-} from "../../../../core/blitz/readSprite";
-import { vfs } from "../../../../core/blitzkit/vfs";
-import { getStaticPaths as _getStaticPaths } from "../../_index";
+} from "../../../../../core/blitz/readSprite";
+import { vfs } from "../../../../../core/blitzkit/vfs";
+import { getStaticPaths as _getStaticPaths } from "../../../_index";
 
 export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
   const paths: GetStaticPathsItem[] = [];
@@ -22,10 +22,10 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
   for (const flag of circleFiles) {
     const path = `Data/Gfx/Lobby/flags/${flag}`;
-    const id = flag.match(/flag_profile-stat_(.+)\.packed\.webp/)![1];
+    const nation = flag.match(/flag_profile-stat_(.+)\.packed\.webp/)![1];
 
     paths.push({
-      params: { id },
+      params: { nation },
       props: { packed: path },
     });
   }

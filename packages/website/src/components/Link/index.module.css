@@ -2,8 +2,9 @@
   text-decoration-color: currentColor;
   cursor: pointer;
 
-  display: inline;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-3);
 
   &[data-underline="always"] {
@@ -21,7 +22,7 @@
   }
 
   svg {
-    width: 1.25em;
-    height: 1.25em;
+    width: 1em;
+    height: 1em;
   }
 }

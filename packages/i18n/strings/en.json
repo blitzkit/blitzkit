@@ -193,6 +193,8 @@
   },
 
   "tanks": {
+    "all_tanks": "All tanks",
+
     "antagonist_control": {
       "calibrated_shells": "Calibrated shells",
       "enhanced_armor": "Enhanced armor",

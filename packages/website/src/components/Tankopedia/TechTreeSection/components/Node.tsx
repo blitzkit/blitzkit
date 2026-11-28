@@ -59,7 +59,7 @@ export function Node({ id, highlight, nextIds, skeleton }: NodeProps) {
         mx={highlight ? "2" : "0"}
         style={{
           background: highlight
-            ? `url(${alias("api", `/flags/fade/${tank.nation}.webp`)})`
+            ? `url(${alias("api", `/nations/${tank.nation}/flags/fade.webp`)})`
             : undefined,
           backgroundPosition: "center",
           backgroundSize: "cover",

@@ -124,7 +124,7 @@ export function Guesser() {
                   text={unwrap(result.name!)}
                   prefix={
                     <LazyImage
-                      src={alias("api", `/flags/circle/${result.nation}.webp`)}
+                      src={alias("api", `/nations/${result.nation}/flags/circle.webp`)}
                     />
                   }
                   discriminator={
