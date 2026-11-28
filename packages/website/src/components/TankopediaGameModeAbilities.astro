@@ -1,0 +1,143 @@
+---
+import { alias } from "@blitzkit/core";
+import { unwrapper } from "@blitzkit/i18n";
+import { api } from "../api/dynamic";
+import { Heading } from "./Heading";
+import { Text } from "./Text";
+
+interface Props {
+  id: number;
+  locale: string;
+}
+
+const { id, locale } = Astro.props;
+const [gameDefinitions, consumableDefinitions, provisionDefinitions, tanks] =
+  await Promise.all([
+    api.game(),
+    api.consumables(),
+    api.provisions(),
+    api.tanks(),
+  ]);
+const strings = await api.strings(locale);
+const unwrap = unwrapper(locale);
+const tank = tanks.tanks[id];
+const roles = Object.entries(tank.roles);
+---
+
+<style>
+  .tankopedia-game-mode-abilities {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-4);
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-4);
+      width: 100%;
+
+      .card {
+        width: 16rem;
+        height: 20rem;
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: var(--space-3);
+        background-size: cover;
+        background-position: center;
+
+        .banner {
+          flex: 1;
+          background-size: cover;
+          background-position: center;
+        }
+
+        .info {
+          display: flex;
+          min-height: 6.125rem;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: var(--space-2);
+          padding: var(--space-3);
+          backdrop-filter: blur(4rem);
+          -webkit-backdrop-filter: blur(4rem);
+
+          .abilities {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .ability {
+              display: flex;
+              align-items: center;
+              gap: var(--space-1);
+              white-space: nowrap;
+
+              .icon {
+                width: 1.5em;
+                height: 1.5em;
+                object-fit: contain;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+{
+  roles.length > 0 && (
+    <section class="tankopedia-game-mode-abilities">
+      <Heading size="3">{strings.tanks.game_modes.title}</Heading>
+
+      <div class="cards">
+        {roles.map(([id, value]) => {
+          const gameMode = gameDefinitions.gameModes[id];
+          const role = gameDefinitions.roles[value];
+          const banner = alias("api", `/gamemodes/${id}/banner.webp`);
+          const provisions = role.provisions.map((id) => ({
+            icon: alias("api", `/icons/provisions/${id}.webp`),
+            name: unwrap(provisionDefinitions.provisions[id].name!),
+          }));
+          const consumables = role.consumables.map((id) => ({
+            icon: alias("api", `/icons/consumables/${id}.webp`),
+            name: unwrap(consumableDefinitions.consumables[id].name!),
+          }));
+
+          return (
+            <article
+              class="card"
+              style={{ backgroundImage: `url(${banner})` }}
+            >
+              <div
+                class="banner"
+                style={{ backgroundImage: `url(${banner})` }}
+              />
+
+              <div class="info">
+                <Text size="major" weight="bold" align="center">
+                  {unwrap(gameMode.name!)}
+                </Text>
+
+                <div class="abilities">
+                  {[...provisions, ...consumables].map(({ icon, name }) => (
+                    <span class="ability">
+                      <img class="icon" src={icon} alt={name} loading="lazy" />
+                      <Text lowContrast>{name}</Text>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )
+}

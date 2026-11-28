@@ -1,7 +1,7 @@
-import { api } from "../core/blitzkit/api";
+import { api } from "../api/dynamic";
 
-const equipmentDefinitions = await api.equipmentDefinitions();
+const equipment = await api.equipment();
 
 export function useEquipmentPreset(preset: string) {
-  return equipmentDefinitions.presets[preset];
+  return equipment.presets[preset];
 }

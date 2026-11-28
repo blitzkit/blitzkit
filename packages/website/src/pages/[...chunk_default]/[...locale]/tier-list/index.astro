@@ -1,13 +1,45 @@
 ---
-import { tools } from "../../../../constants/tools";
-import ToolLayout from "../../../../layouts/ToolLayout.astro";
-import { Page } from "./_index";
+import ColorScale from "../../../../components/ColorScale.astro";
+import { ScrollerCurtains } from "../../../../components/ScrollerCurtains";
+import { Section } from "../../../../components/Section";
+import { TankSearchFilters } from "../../../../components/TankSearchFilters";
+import { TierListControls } from "../../../../components/TierListControls";
+import { TierListTable } from "../../../../components/TierListTable";
+import { TierListTiles } from "../../../../components/TierListTiles";
+import TierListURLManager from "../../../../components/TierListURLManager.astro";
+import ToolBanner from "../../../../components/ToolBanner.astro";
+import { tierListColors } from "../../../../config/tierList";
+import { tools } from "../../../../config/tools";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
 
 export { getStaticPaths } from "../index.astro";
 
 const { locale } = Astro.props;
 ---
 
-<ToolLayout {locale} tool={tools.tier_list}>
-  <Page {locale} client:load />
-</ToolLayout>
+{tierListColors.map((color) => (
+  <ColorScale {color} />
+))}
+<ColorScale color="red" />
+
+<BaseLayout tool={tools.tier_list} accent="orange" {locale}>
+  <ToolBanner tool={tools.tier_list} {locale} />
+  <TierListURLManager />
+
+  <Section>
+    <TierListControls {locale} client:load />
+  </Section>
+
+  <Section>
+    <TierListTable {locale} client:load />
+  </Section>
+
+  <Section overflow>
+    <ScrollerCurtains client:load />
+    <TankSearchFilters {locale} client:load />
+  </Section>
+
+  <Section>
+    <TierListTiles {locale} client:load />
+  </Section>
+</BaseLayout>

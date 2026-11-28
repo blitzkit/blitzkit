@@ -1,9 +1,13 @@
-import {
-  parseHierarchies,
-  type Hierarchy,
-  type Sc2ReadStream,
-} from "@blitzkit/core";
+import { parseHierarchies, type Hierarchy, type SC2 } from "@blitzkit/core";
 import { sortBy, times } from "lodash-es";
+
+/** the replayed end state of a part or tank */
+export interface Garage {
+  /** state switcher -> chosen state */
+  states: Map<Hierarchy, string | null>;
+  /** entities left looping their motion */
+  motions: Set<Hierarchy>;
+}
 
 interface Value {
   "any.type": string;
@@ -89,7 +93,7 @@ function resolveTarget(owner: Entity, entityName: string) {
  * through their motions, delays and alarms until they settle
  */
 function replay(
-  sc2: ReturnType<Sc2ReadStream["sc2"]>,
+  sc2: SC2,
   preset: string | undefined,
   attachments: Map<string, string[]>,
   animate: boolean,
@@ -506,7 +510,7 @@ function replay(
         .filter(isShown)
         .map((entity) => entity.hierarchy as Hierarchy),
     ),
-  };
+  } satisfies Garage;
 }
 
 /**
@@ -514,7 +518,7 @@ function replay(
  * as they are when the tank appears
  */
 export function switcherStates(
-  sc2: ReturnType<Sc2ReadStream["sc2"]>,
+  sc2: SC2,
   preset: string | undefined,
   attachments: Map<string, string[]>,
 ) {
@@ -532,9 +536,6 @@ export function switcherStates(
  * where a customization part ends up: each state switcher's state and the
  * motions left looping
  */
-export function partGarage(
-  sc2: ReturnType<Sc2ReadStream["sc2"]>,
-  preset: string | undefined,
-) {
+export function partGarage(sc2: SC2, preset: string | undefined): Garage {
   return replay(sc2, preset, new Map(), true);
 }

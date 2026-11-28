@@ -3,6 +3,7 @@ import { Checkbox, Code, Flex, Tabs, Text } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import type { TankCharacteristics } from "../../../../../../../core/blitzkit/tankCharacteristics";
 import { useLocale } from "../../../../../../../hooks/useLocale";
+import { LazyImage } from "../../../../../../LazyImage";
 import { VisualizerCard } from "../VisualizerCard";
 
 export interface StatsAcceptorProps {
@@ -72,7 +73,7 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
           }s`,
         }}
       >
-        <img
+        <LazyImage
           draggable="false"
           style={{
             width: isTurretless ? "22rem" : "12rem",
@@ -84,7 +85,7 @@ export function TraverseVisualizer({ stats }: StatsAcceptorProps) {
         />
 
         {!isTurretless && (
-          <img
+          <LazyImage
             draggable="false"
             ref={turret}
             style={{

@@ -1,0 +1,130 @@
+.table {
+  border-radius: var(--space-3);
+  overflow: hidden;
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+  width: fit-content;
+  margin: auto;
+
+  th,
+  td {
+    padding: var(--space-3);
+    text-align: center;
+    font-weight: inherit;
+  }
+
+  /* Row dividers sit inside the cells, so they take no space. Borders on a row itself don't paint with separate borders, so rows apply them to their cells here */
+  tbody tr > * {
+    box-shadow: inset 0 var(--space-0) var(--white-a2);
+  }
+
+  .column-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+
+    background-color: var(--gray-3);
+
+    &[data-sortable] {
+      cursor: pointer;
+    }
+
+    &[data-sorted="true"] {
+      color: var(--accent-11);
+    }
+  }
+
+  /* Inline so the cell's alignment still centers it */
+  .sortable {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .corner {
+    left: 0;
+    z-index: 1;
+  }
+
+  /* Fills the cell inside its padding, so the row's other headers decide the size */
+  .logo {
+    --padding: var(--space-3);
+    --max-height: 4rem;
+
+    position: absolute;
+
+    top: 50%;
+    left: var(--padding);
+    transform: translateY(-50%);
+
+    width: calc(100% - var(--padding) * 2);
+    height: min(var(--max-height), calc(100% - var(--padding) * 2));
+
+    color: var(--gray-6);
+  }
+
+  .row-header {
+    position: sticky;
+    left: 0;
+
+    background-color: var(--gray-2);
+    text-align: left;
+  }
+
+  .group-title,
+  .group-cell {
+    position: sticky;
+    top: var(--head-height, 0);
+    z-index: 1;
+
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+
+    background-color: var(--gray-3);
+  }
+
+  .group-title {
+    left: 0;
+    color: var(--gray-11);
+    text-align: left;
+  }
+
+  /* A cell spanning the whole row has no room to slide, so its content pins instead */
+  .pinned {
+    position: sticky;
+    left: var(--space-4);
+
+    width: fit-content;
+  }
+
+  .cell {
+    &[data-align="start"] {
+      text-align: left;
+    }
+
+    &[data-align="end"] {
+      text-align: right;
+    }
+
+    &[data-delta="better"] {
+      background-color: color-mix(
+        in srgb,
+        var(--jade-5) var(--intensity),
+        var(--jade-1)
+      );
+    }
+
+    &[data-delta="worse"] {
+      background-color: color-mix(
+        in srgb,
+        var(--red-5) var(--intensity),
+        var(--red-1)
+      );
+    }
+  }
+}

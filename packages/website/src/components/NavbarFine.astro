@@ -1,0 +1,207 @@
+---
+import { alias } from "@blitzkit/core";
+import { GearIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
+import { getLocaleOptions } from "../core/i18n/getLocaleOptions";
+import { tools, type Tool } from "../config/tools";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+import { Logo } from "../icons/Logo";
+import { LinkI18nWrapper } from "./LinkI18nWrapper";
+import { SettingsDialog } from "./SettingsDialog";
+import { Text } from "./Text";
+
+// TODO: combine all navbar after adding NavbarCourseLandscape
+
+export type Props = LocaleAcceptorProps & {
+  tool: Tool;
+};
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+const localeOptions = await getLocaleOptions();
+
+export const filtered = Object.values(tools).filter(
+  (tool) => !tool.href && !tool.hide_in_navbar && !tool.disabled,
+);
+---
+
+<style>
+  #navbar-desktop {
+    --icon-size: 1.5rem;
+    --padding: var(--page-padding);
+    --min-content-width: calc(var(--icon-size) + 2 * var(--padding));
+
+    display: none;
+
+    @media (pointer: fine) {
+      display: block;
+    }
+
+    width: var(--min-content-width);
+    height: 100dvh;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1;
+
+    .expander {
+      background-color: var(--gray-1);
+
+      z-index: 1;
+
+      position: relative;
+      left: 0;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      box-sizing: border-box;
+
+      transition-duration: var(--duration-brief);
+
+      height: 100%;
+      width: var(--min-content-width);
+      overflow: hidden;
+
+      padding: calc(var(--padding) + 2 * var(--space-2)) var(--padding);
+
+      border-right: 0 solid var(--gray-4);
+
+      &:hover {
+        width: fit-content;
+        border-right: var(--space-0) solid var(--gray-4);
+      }
+
+      .logo {
+        width: var(--icon-size);
+        height: var(--icon-size);
+      }
+
+      .named-link {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+
+        .icon {
+          flex-shrink: 0;
+
+          width: var(--icon-size);
+          height: var(--icon-size);
+
+          color: var(--gray-11);
+
+          transition-duration: var(--duration-brief);
+
+          .expander:hover & {
+            color: var(--gray-12);
+          }
+        }
+      }
+
+      .name {
+        transition-duration: var(--duration-brief);
+        white-space: nowrap;
+
+        .expander:not(:hover) & {
+          opacity: 0;
+        }
+      }
+
+      .tools {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+
+        .tool {
+          display: flex;
+          align-items: center;
+          gap: var(--space-3);
+
+          .logo {
+            flex-shrink: 0;
+
+            transition-duration: var(--duration-brief);
+
+            width: var(--icon-size);
+            height: var(--icon-size);
+
+            filter: opacity(0.75);
+            background-size: cover;
+            background-position: center;
+
+            border-radius: var(--radius-max);
+
+            .expander:hover & {
+              width: calc(2 * var(--icon-size));
+
+              filter: opacity(1);
+            }
+          }
+        }
+      }
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+
+      z-index: 1;
+      pointer-events: none;
+
+      background-color: transparent;
+
+      transition-duration: var(--duration-brief);
+
+      #navbar-desktop:hover & {
+        background-color: var(--black-a8);
+      }
+    }
+  }
+</style>
+
+<nav id="navbar-desktop">
+  <div class="overlay" />
+
+  <div class="expander">
+    <LinkI18nWrapper {locale} href="/">
+      <div class="named-link">
+        <Logo className="icon" />
+        <Text className="name">{strings.navbar.home}</Text>
+      </div>
+    </LinkI18nWrapper>
+
+    <div class="tools">
+      {filtered
+        .filter((tool) => !tool.hide_in_navbar_desktop)
+        .map((tool) => (
+          <>
+            <LinkI18nWrapper {locale} href={`/${tool.slug ?? tool.id}`}>
+              <div class="tool">
+                <div
+                  style={`background-image: url(${alias(
+                    "api",
+                    `/tools/${tool.id}/banners/thumbnail.webp`,
+                  )})`}
+                  class="logo"
+                />
+
+                <Text className="name">
+                  {strings.tools[tool.id as keyof typeof strings.tools]}
+                </Text>
+              </div>
+            </LinkI18nWrapper>
+          </>
+        ))}
+    </div>
+
+    <SettingsDialog {locale} {localeOptions} client:load>
+      <div class="named-link">
+        <GearIcon className="icon" />
+        <Text className="name">{strings.navbar.settings}</Text>
+      </div>
+    </SettingsDialog>
+  </div>
+</nav>

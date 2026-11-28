@@ -1,13 +1,43 @@
 ---
-import './base.css';
+import BaseMeta from "../components/BaseMeta.astro";
+import BaseStyles from "../components/BaseStyles.astro";
+import ColorAlias from "../components/ColorAlias.astro";
+import ColorScale from "../components/ColorScale.astro";
+import type { LocaleAcceptorProps } from "../hooks/useLocale";
+
+type Props = LocaleAcceptorProps;
+
+const { locale } = Astro.props;
 ---
 
-<html>
+<html lang={locale} class="dark">
   <head>
-    <meta charset="UTF-8" />
+    <BaseMeta />
+
+    <ColorScale color="mauve" />
+    <ColorAlias color="mauve" alias="gray" />
+
+    <ColorScale color="black" />
+    <ColorScale color="white" />
+
+    <ColorScale color="indigo" />
+    <ColorAlias color="indigo" alias="accent" />
+
+    <BaseStyles />
+
+    <style>
+      .embed {
+        margin: 0;
+        overflow: hidden;
+
+        background-color: transparent;
+        color: var(--gray-12);
+        font-family: var(--font-family-regular);
+      }
+    </style>
   </head>
 
-  <body>
+  <body class="embed">
     <slot />
   </body>
 </html>

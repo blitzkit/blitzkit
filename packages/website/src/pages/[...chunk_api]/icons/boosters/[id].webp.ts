@@ -1,6 +1,9 @@
 import type { APIContext, GetStaticPathsItem } from "astro";
-import sharp from "sharp";
-import { mixStaticPaths } from "../../../../core/blitzkit/mixStaticPaths";
+import { mixStaticPaths } from "../../../../astro/mixStaticPaths";
+import {
+  readDiscreteSprite,
+  type DiscreteSpriteProps,
+} from "../../../../core/blitz/readSprite";
 import { vfs } from "../../../../core/blitzkit/vfs";
 import { getStaticPaths as _getStaticPaths } from "../../_index";
 
@@ -11,8 +14,8 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
     .dir("Data/Gfx/Shared/boosters")
     .then((files) =>
       files.filter(
-        (file) => !file.includes("@2x.txt") && !file.startsWith("texture0"),
-      ),
+        (file) => !file.includes("@2x.txt") && !file.startsWith("texture0")
+      )
     );
 
   for (const file of boosterFiles) {
@@ -20,34 +23,20 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, async () => {
 
     if (id === undefined) continue;
 
-    const sizes = (await vfs.text(`Data/Gfx/Shared/boosters/${file}`))
-      .split("\n")[4]
-      .split(" ")
-      .map(Number);
-
     paths.push({
       params: { id },
-      props: { sizes },
+      props: {
+        descriptor: `Data/Gfx/Shared/boosters/${file}`,
+        texture: `Data/Gfx/Shared/boosters/texture0.packed.webp`,
+      },
     });
   }
 
   return paths;
 });
 
-export async function GET({ props }: APIContext<{ sizes: number[] }>) {
-  const image = sharp(
-    await vfs.file(`Data/Gfx/Shared/boosters/texture0.packed.webp`),
+export async function GET({ props }: APIContext<DiscreteSpriteProps>) {
+  return new Response(
+    await readDiscreteSprite(props.descriptor, props.texture)
   );
-  const buffer = await image
-    .clone()
-    .extract({
-      left: props.sizes[0],
-      top: props.sizes[1],
-      width: props.sizes[2],
-      height: props.sizes[3],
-    })
-    .toBuffer();
-  const bytes = new Uint8Array(buffer);
-
-  return new Response(bytes);
 }

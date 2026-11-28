@@ -1,0 +1,67 @@
+.tree {
+  --line-thickness: var(--space-1);
+  --line-border: var(--space-1) solid var(--gray-6);
+
+  &[data-has-bottom-cost="true"] {
+    margin-bottom: calc(var(--space-2) + var(--font-size-minor));
+  }
+
+  .cell {
+    .trunk-left,
+    .trunk-right {
+      position: absolute;
+      top: calc(var(--depth-gap) / -2);
+      width: 100%;
+    }
+
+    .trunk-left,
+    .trunk-right,
+    .snake-left,
+    .snake-right {
+      border-top: var(--line-border);
+      border-bottom: var(--line-border);
+    }
+
+    .trunk-left {
+      right: 50%;
+    }
+
+    .trunk-right {
+      left: 50%;
+    }
+
+    .top,
+    .bottom {
+      position: absolute;
+      left: 50%;
+      height: calc(var(--depth-gap) / 2);
+
+      border-left: var(--line-border);
+      border-right: var(--line-border);
+    }
+
+    .top {
+      bottom: 100%;
+    }
+
+    .bottom {
+      top: 100%;
+    }
+
+    .snake-left,
+    .snake-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: var(--sibling-gap);
+    }
+
+    .snake-left {
+      right: 100%;
+    }
+
+    .snake-right {
+      left: 100%;
+    }
+  }
+}

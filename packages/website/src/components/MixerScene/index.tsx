@@ -4,10 +4,10 @@ import type { QuicklimeEvent } from "quicklime";
 import { forwardRef, Suspense, useEffect, useRef } from "react";
 import type { OrbitControls as OrbitControlsClass } from "three-stdlib";
 import { controlsEnabledEvent } from "../../core/controlsEnabled";
-import { Lighting } from "../Tankopedia/HeroSection/components/TankSandbox/components/Lighting";
-import { SceneProps } from "../Tankopedia/HeroSection/components/TankSandbox/components/SceneProps";
-import { MixerFallback } from "./components/MixerFallback";
-import { Model } from "./components/Model";
+import { Lighting } from "../Lighting";
+import { MixerFallback } from "../MixerFallback";
+import { MixerModel } from "../MixerModel";
+import { SceneProps } from "../SceneProps";
 
 export const MixerScene = forwardRef<HTMLCanvasElement>((_, ref) => {
   const controls = useRef<OrbitControlsClass>(null!);
@@ -29,11 +29,7 @@ export const MixerScene = forwardRef<HTMLCanvasElement>((_, ref) => {
     <Canvas
       ref={ref}
       shadows="soft"
-      style={{ background: "black" }}
-      camera={{
-        fov: 45,
-        position: [-4, 4, -7],
-      }}
+      camera={{ fov: 45, position: [-4, 4, -7] }}
     >
       <OrbitControls
         ref={controls}
@@ -47,7 +43,7 @@ export const MixerScene = forwardRef<HTMLCanvasElement>((_, ref) => {
       <SceneProps />
 
       <Suspense fallback={<MixerFallback />}>
-        <Model />
+        <MixerModel />
       </Suspense>
     </Canvas>
   );

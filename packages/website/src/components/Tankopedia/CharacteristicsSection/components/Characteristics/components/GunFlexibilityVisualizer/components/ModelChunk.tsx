@@ -1,11 +1,11 @@
 import { mauveDark } from "@radix-ui/colors";
 import { LineBasicMaterial, MeshBasicMaterial } from "three";
-import { api } from "../../../../../../../../core/blitzkit/api";
+import { api } from "../../../../../../../../api/dynamic";
 import { jsxTree } from "../../../../../../../../core/blitzkit/jsxTree";
 import { useModel } from "../../../../../../../../hooks/useModel";
 import { Duel } from "../../../../../../../../stores/duel";
 
-const modelDefinitions = await api.modelDefinitions();
+const modelDefinitions = await api.models();
 
 const surfaceMaterial: Record<Props["only"], MeshBasicMaterial> = {
   gun: new MeshBasicMaterial({

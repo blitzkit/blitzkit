@@ -1,2 +1,2 @@
 cd packages/scripts
-bun src/vfs/index.ts
+bun src/vfs/index.ts "$@"

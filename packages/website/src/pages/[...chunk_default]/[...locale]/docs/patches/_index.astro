@@ -1,0 +1,52 @@
+---
+import { MagicWandIcon, StarFilledIcon } from "@radix-ui/react-icons";
+import { Flex, Heading, Link } from "@radix-ui/themes";
+import { compareVersions } from "compare-versions";
+import { PageWrapper } from "../../../../../components/PageWrapper";
+import { tools } from "../../../../../config/tools";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+
+export { getStaticPaths } from "../../index.astro";
+
+// this can't be used in template literal :(
+const ROOT = "../../../../../../../../docs/changelogs/";
+
+const { locale } = Astro.props;
+const versions = Object.keys(
+  import.meta.glob("../../../../../../../../docs/changelogs/*.md", {
+    eager: true,
+  }),
+)
+  .map((file) => file.replace(ROOT, "").replace(".md", ""))
+  .sort(compareVersions)
+  .reverse();
+---
+
+<BaseLayout tool={tools.changelogs} {locale}>
+  <PageWrapper align="center">
+    <Heading mt="6" mb="4">BlitzKit patches</Heading>
+
+    <Flex direction="column" gap="2" align="center">
+      {
+        versions.map((version) => {
+          const split = version.split(".").map(Number);
+          const isMajor = split[2] === 0;
+
+          return (
+            <Link
+              size="5"
+              href={`/docs/changelogs/${version}`}
+              mb={isMajor ? "6" : "0"}
+            >
+              <Flex align="center" gap="2">
+                {!isMajor && <MagicWandIcon />}
+                {isMajor && <StarFilledIcon />}
+                {version}
+              </Flex>
+            </Link>
+          );
+        })
+      }
+    </Flex>
+  </PageWrapper>
+</BaseLayout>

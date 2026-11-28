@@ -1,27 +1,17 @@
 <script>
   import locales from "@blitzkit/i18n/locales.json";
   import { getBestLocale } from "../core/i18n/getBestLocale";
+  import { getCurrentPathLocale } from "../core/i18n/getCurrentPathLocale";
+  import { navigateToLocale } from "../core/i18n/navigateToLocale";
 
-  const pathname = window.location.pathname;
   const hasPreference = localStorage.getItem("preferred-locale") !== null;
   const bestLocale = getBestLocale();
-  const currentLocale =
-    locales.supported.find(
-      ({ locale }) =>
-        pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
-    )?.locale ?? locales.default;
+  const currentLocale = getCurrentPathLocale();
 
   if (
     bestLocale !== currentLocale &&
     (hasPreference || currentLocale === locales.default)
   ) {
-    const rawPath =
-      currentLocale === locales.default
-        ? pathname
-        : pathname.slice(`/${currentLocale}`.length) || "/";
-
-    window.location.pathname = `${
-      bestLocale === locales.default ? "" : `/${bestLocale}`
-    }${rawPath}`;
+    navigateToLocale(bestLocale);
   }
 </script>

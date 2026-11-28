@@ -1,0 +1,24 @@
+<script>
+  const navbar = document.getElementById("navbar-mobile")!;
+  const lastScrollTops = new WeakMap<Element, number>();
+
+  // Scroll doesn't bubble, so capturing also catches nested scrollers like tables
+  document.addEventListener(
+    "scroll",
+    (event) => {
+      const target =
+        event.target instanceof Element
+          ? event.target
+          : document.scrollingElement!;
+      const scrollTop = target.scrollTop;
+      const lastScrollTop = lastScrollTops.get(target) ?? 0;
+
+      // Horizontal scrolling leaves scrollTop unchanged, so it's ignored
+      if (scrollTop === lastScrollTop) return;
+
+      navbar.dataset.visible = `${scrollTop < lastScrollTop}`;
+      lastScrollTops.set(target, scrollTop);
+    },
+    { capture: true, passive: true },
+  );
+</script>

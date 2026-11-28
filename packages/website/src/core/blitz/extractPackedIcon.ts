@@ -27,5 +27,5 @@ export async function extractPackedIcon(texture: sharp.Sharp, sizes: number[]) {
     );
   }
 
-  return await texture.clone().extract({ left, top, width, height }).toBuffer();
+  return await texture.clone().extract({ left, top, width, height }).webp().toBuffer();
 }

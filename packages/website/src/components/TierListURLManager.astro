@@ -1,0 +1,44 @@
+<!-- Keeps the rows and the url in sync, so the url is always shareable -->
+<script>
+  import { parse, stringify } from "urlon";
+  import { api } from "../api/dynamic";
+  import { tierListColors } from "../config/tierList";
+  import { TierList } from "../stores/tierList";
+
+  const tankDefinitions = await api.tanks();
+
+  // Rows come from the url on load...
+  const state = new URLSearchParams(window.location.search).get("state");
+
+  if (state !== null) {
+    const rows: TierList["rows"] = parse(state);
+
+    TierList.mutate((draft) => {
+      // Tanks and colors that no longer exist are dropped rather than trusted
+      draft.rows = rows.map((row, index) => {
+        const color = tierListColors.includes(row.color)
+          ? row.color
+          : tierListColors[index % tierListColors.length];
+        const tanks = row.tanks.filter((id) => id in tankDefinitions.tanks);
+
+        return { name: row.name, color, tanks };
+      });
+    });
+  }
+
+  // ...and are written back whenever they change
+  function writeURL(rows: TierList["rows"]) {
+    const search = new URLSearchParams(window.location.search);
+
+    search.set("state", stringify(rows));
+
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}?${search.toString()}`,
+    );
+  }
+
+  writeURL(TierList.state.rows);
+  TierList.on((state) => state.rows, writeURL);
+</script>

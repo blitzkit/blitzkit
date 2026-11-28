@@ -1,0 +1,1121 @@
+import {
+  type AugmentAttributeDefinitions,
+  BlitzCrewType,
+  BlitzModuleType,
+  blitzShellKindToBlitzkit,
+  BlitzTankClass,
+  ChassisDefinitionsList,
+  type ConsumablesVehicleFilter,
+  EngineDefinitionsList,
+  GunDefinitionsList,
+  ShellDefinitionsList,
+  ShellKind,
+  sluggify,
+  TechTreeLayoutYaml,
+  toUniqueId,
+  TurretDefinitionsList,
+  UnlocksListing,
+  UpgradeAttributesXml,
+  UpgradeProgressionXml,
+  UpgradeProgressionXmlNode,
+  UpgradeProgressionXmlRequirement,
+  type VehicleAbilityItem,
+  type VehicleDefinitionGun,
+  VehicleDefinitionList,
+  VehicleDefinitions,
+} from "@blitzkit/core";
+import {
+  AbilitySource,
+  AssaultRanges,
+  AugmentAttribute,
+  AugmentNode,
+  AugmentNodeType,
+  AugmentProgression,
+  AugmentRequirement,
+  Crew,
+  Equalizer,
+  GunDefinition,
+  ModulePosition,
+  ModuleType,
+  ResearchCost,
+  ShellDefinition,
+  TankDefinitions,
+  TankPrice,
+  TankPriceType,
+  TankType,
+  Unlock,
+  type VehicleAbility,
+} from "@blitzkit/protos";
+import { Cache } from "../cache";
+import { ServerBlitzKitAPI0 } from "./0_base";
+
+export abstract class ServerBlitzKitAPI1 extends ServerBlitzKitAPI0 {
+  // A gun the way a tank's turret or a vehicle ability builds it. `gun`
+  // overrides the shared gun entry, which is all an ability has
+  private parseGun(
+    nation: string,
+    gunKey: string,
+    gunList: GunDefinitionsList,
+    shellList: ShellDefinitionsList,
+    gun: Partial<VehicleDefinitionGun>,
+    unlocks: GunDefinition["unlocks"],
+  ) {
+    const gunListEntry = gunList.shared[gunKey];
+    const gunType =
+      gun.clip === undefined
+        ? "regular"
+        : gun.pumpGunMode
+        ? "auto_reloader"
+        : "auto_loader";
+    const gunClipCount = gunType === "regular" ? 1 : gun.clip!.count;
+    const shotDispersionFactors =
+      gun.shotDispersionFactors ?? gunListEntry.shotDispersionFactors;
+    let assault_ranges: AssaultRanges | undefined;
+
+    if (gun.extras?.trayShell) {
+      const types = gun.extras.trayShell.kinds.split(" ").map((string) => {
+        const trimmed = string.trim();
+
+        if (trimmed in blitzShellKindToBlitzkit) {
+          return blitzShellKindToBlitzkit[trimmed as ShellKind];
+        }
+
+        throw new SyntaxError(`Invalid shell kind: ${trimmed}`);
+      });
+      const sectorNames = Object.keys(gun.extras.trayShell.sectors);
+
+      if (sectorNames.length !== 1 || sectorNames[0] !== "sector") {
+        throw new SyntaxError("Invalid tray shell sector");
+      }
+
+      const sector = gun.extras.trayShell.sectors.sector;
+
+      assault_ranges = {
+        types,
+        ranges: sector.map((value) => ({
+          factor: value.factor,
+          distance: value.distance,
+        })),
+      };
+    }
+
+    return {
+      id: toUniqueId(nation, gunList.ids[gunKey]),
+      weight: gunListEntry.weight,
+      rotation_speed: gunListEntry.rotationSpeed,
+      name: this.getString(gunListEntry.userString),
+      tier: gunListEntry.level,
+      shells: this.parseShells(nation, gunListEntry, shellList),
+      camouflage_loss:
+        gun.invisibilityFactorAtShot === undefined
+          ? 0
+          : typeof gun.invisibilityFactorAtShot === "number"
+          ? gun.invisibilityFactorAtShot
+          : gun.invisibilityFactorAtShot.at(-1)!,
+      aim_time: gun.aimingTime ?? gunListEntry.aimingTime,
+      dispersion_base:
+        gun.shotDispersionRadius ?? gunListEntry.shotDispersionRadius,
+      dispersion_damaged: shotDispersionFactors.whileGunDamaged,
+      dispersion_shot: shotDispersionFactors.afterShot,
+      dispersion_traverse: shotDispersionFactors.turretRotation,
+      unlocks,
+      shell_capacity: gun.maxAmmo ?? gunListEntry.maxAmmo,
+      assault_ranges,
+      burst:
+        gun.burst && gun.burst.count > 1
+          ? {
+              count: gun.burst.count,
+              interval: 60 / gun.burst.rate,
+            }
+          : undefined,
+      gun_type:
+        gunType === "regular"
+          ? {
+              $case: "regular",
+              value: {
+                reload: gun.reloadTime ?? 0,
+              },
+            }
+          : gunType === "auto_reloader"
+          ? {
+              $case: "auto_reloader",
+              value: {
+                intra_clip: 60 / gun.clip!.rate,
+                shell_count: gunClipCount,
+                shell_reloads: gun.pumpGunReloadTimes!.split(" ").map(Number),
+              },
+            }
+          : {
+              $case: "auto_loader",
+              value: {
+                intra_clip: 60 / gun.clip!.rate,
+                clip_reload: gun.reloadTime ?? 0,
+                shell_count: gunClipCount,
+              },
+            },
+    } satisfies GunDefinition;
+  }
+
+  // The shells a gun fires. Its shots may override a shell's speed, range and
+  // penetration, and otherwise the shell's own values hold
+  private parseShells(
+    nation: string,
+    gunListEntry: GunDefinitionsList["shared"][string],
+    shellList: ShellDefinitionsList,
+  ) {
+    return Object.keys(gunListEntry.shots ?? {}).map((shellKey) => {
+      const gunShellEntry = gunListEntry.shots[shellKey];
+      const shell = shellList[shellKey];
+
+      // Newer client data stores shot properties on the shell rather than
+      // repeating them under every gun's <shots> entry
+      const speed =
+        typeof gunShellEntry === "string" ? shell.speed : gunShellEntry.speed;
+      const maxDistance =
+        typeof gunShellEntry === "string"
+          ? shell.maxDistance
+          : gunShellEntry.maxDistance;
+      const piercingPower =
+        typeof gunShellEntry === "string"
+          ? shell.piercingPower
+          : gunShellEntry.piercingPower;
+
+      const penetrationRaw = piercingPower
+        .split(" ")
+        .filter((penetrationString) => penetrationString !== "")
+        .map(Number);
+
+      return {
+        id: toUniqueId(nation, shell.id),
+        name: this.getString(shell.userString),
+        velocity: speed,
+        armor_damage: shell.damage.armor,
+        module_damage: shell.damage.devices,
+        caliber: shell.caliber,
+        normalization: shell.normalizationAngle,
+        ricochet: shell.ricochetAngle,
+        type: blitzShellKindToBlitzkit[shell.kind],
+        explosion_radius:
+          shell.kind === "HIGH_EXPLOSIVE"
+            ? shell.explosionRadius ?? 0
+            : undefined,
+        icon: shell.icon,
+        penetration: {
+          near: penetrationRaw[0],
+          far: penetrationRaw[1],
+        },
+        range: maxDistance,
+        acceleration: shell.acceleration,
+        max_speed: shell.maxSpeed,
+      } satisfies ShellDefinition;
+    });
+  }
+
+  // A vehicle ability's placeholder gun as `nation:gun`, built like a tank's own
+  // guns. An ability's gun has no turret, so its shared entry is all its data
+  private async placeholderGun(reference: string) {
+    const [nation, gunKey] = reference.trim().split(":");
+    const base = `Data/XML/item_defs/vehicles/${nation}/components`;
+    const { root: gunList } = await this.vfs.xml<{
+      root: GunDefinitionsList;
+    }>(`${base}/guns.xml`);
+    const { root: shellList } = await this.vfs.xml<{
+      root: ShellDefinitionsList;
+    }>(`${base}/shells.xml`);
+    const shared = gunList.shared[gunKey];
+
+    if (shared === undefined) {
+      throw new Error(`Vehicle ability gun ${reference} is not in guns.xml`);
+    }
+
+    return this.parseGun(nation, gunKey, gunList, shellList, shared, []);
+  }
+
+  // The hidden provisions and consumables the game marks as vehicle abilities,
+  // by the key a tank's `extras` names them with
+  private vehicleAbilityItems() {
+    const items = new Map<string, VehicleAbilityItem>();
+    const groups = [
+      [AbilitySource.ABILITY_SOURCE_CONSUMABLE, this.consumablesCommon],
+      [AbilitySource.ABILITY_SOURCE_PROVISION, this.provisionsCommon],
+    ] as const;
+
+    for (const [source, group] of groups) {
+      for (const [key, item] of Object.entries(group)) {
+        if (!("isVehicleAbility" in item)) continue;
+
+        // The names in the filter's `include`, or nothing when it doesn't name tanks
+        const vehicle = item.vehicleFilter?.include.vehicle;
+
+        items.set(key, {
+          source,
+          id: item.id,
+          vehicleNames:
+            vehicle !== undefined && "name" in vehicle
+              ? vehicle.name.trim().split(/\s+/)
+              : undefined,
+          gun: item.script?.gun,
+        });
+      }
+    }
+
+    return items;
+  }
+
+  // The abilities a tank has, from the hidden items its own `extras` names.
+  // Guns name none in the game files today, so one is an error, not a gap
+  private async vehicleAbilitiesOf(
+    nation: string,
+    tankKey: string,
+    root: {
+      extras?: Record<string, unknown>;
+      turrets0?: Record<
+        string,
+        { guns: Record<string, { extras?: Record<string, unknown> }> }
+      >;
+    },
+    items: Map<string, VehicleAbilityItem>,
+  ) {
+    const name = `${nation}:${tankKey}`;
+
+    for (const turret of Object.values(root.turrets0 ?? {})) {
+      for (const gun of Object.values(turret.guns ?? {})) {
+        for (const key of Object.keys(gun.extras ?? {})) {
+          if (items.has(key)) {
+            throw new Error(
+              `Gun extra ${key} on ${name} is a vehicle ability, which is only linked for tanks`,
+            );
+          }
+        }
+      }
+    }
+
+    const abilities: VehicleAbility[] = [];
+
+    for (const key of Object.keys(root.extras ?? {})) {
+      const item = items.get(key);
+      if (item === undefined) continue;
+
+      if (item.vehicleNames && !item.vehicleNames.includes(name)) {
+        throw new Error(
+          `${key} is on ${name}, which its vehicle filter does not include`,
+        );
+      }
+
+      abilities.push({
+        source: item.source,
+        id: item.id,
+        gun:
+          item.gun === undefined
+            ? undefined
+            : await this.placeholderGun(item.gun),
+      });
+    }
+
+    return abilities;
+  }
+
+  private parseResearchCost(raw: number | string) {
+    if (typeof raw === "number") {
+      return {
+        research_cost_type: { $case: "xp", value: raw },
+      } satisfies ResearchCost;
+    } else {
+      return {
+        research_cost_type: {
+          $case: "seasonal_tokens",
+          value: {
+            season: Number(/prx_season_(\d+):\d+/.exec(raw)![1]),
+            tokens: Number(/prx_season_\d+:(\d+)/.exec(raw)![1]),
+          },
+        },
+      } satisfies ResearchCost;
+    }
+  }
+
+  private parseAugmentProgression(
+    xml: UpgradeProgressionXml,
+    attributeDefinitions: AugmentAttributeDefinitions,
+  ) {
+    const iconName = (path?: string) => path?.split("/").at(-1);
+
+    const types = {
+      NODETYPE_COMMON: AugmentNodeType.AUGMENT_NODE_TYPE_COMMON,
+      NODETYPE_MECHANIC: AugmentNodeType.AUGMENT_NODE_TYPE_MECHANIC,
+      NODETYPE_ALTERNATIVE_MECHANIC:
+        AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE,
+    } satisfies Record<UpgradeProgressionXmlNode["nodeType"], AugmentNodeType>;
+
+    const parseRequirements = (
+      requiredNodes: UpgradeProgressionXmlNode["requiredNodes"],
+    ) =>
+      (requiredNodes === undefined || requiredNodes === ""
+        ? []
+        : requiredNodes.node
+      ).map((requirement: UpgradeProgressionXmlRequirement) =>
+        typeof requirement === "string"
+          ? ({
+              tech_name: requirement,
+              vertical_first: false,
+            } satisfies AugmentRequirement)
+          : ({
+              tech_name: requirement["#text"],
+              vertical_first: requirement["@_verticalFirst"] === "true",
+            } satisfies AugmentRequirement),
+      );
+
+    const parseNode = (node: UpgradeProgressionXmlNode) =>
+      ({
+        id: node.id,
+        tech_name: node.techName,
+        type: types[node.nodeType],
+        xp_cost: node.xpCost ?? 0,
+        position:
+          node.gridPosition === undefined
+            ? undefined
+            : { x: node.gridPosition.column, y: node.gridPosition.row },
+        requires: parseRequirements(node.requiredNodes),
+        attributes: (node.attributes?.attribute ?? []).map(
+          ({ attributeName, value }) => {
+            const definition = attributeDefinitions.get(attributeName);
+
+            return {
+              name: attributeName,
+              value: typeof value === "boolean" ? Number(value) : value,
+              icon: iconName(definition?.icon),
+              title:
+                definition === undefined
+                  ? undefined
+                  : this.getString(definition.title),
+            } satisfies AugmentAttribute;
+          },
+        ),
+        name:
+          node.displayName === undefined
+            ? undefined
+            : this.getString(node.displayName),
+      } satisfies AugmentNode);
+
+    const parsedNodes = xml.nodes.node.map(parseNode);
+    const byTechName = new Map(
+      parsedNodes.map((node) => [node.tech_name, node]),
+    );
+    const groups =
+      xml.alternativeMechanicGroups?.alternativeMechanicGroup ?? [];
+
+    if (groups.length > 1) {
+      throw new Error(
+        "Upgrade progression with more than one alternative group",
+      );
+    }
+
+    const group = groups.at(0);
+    const alternativeNames = new Set(group?.alternativeNodes.node);
+
+    for (const node of parsedNodes) {
+      if (
+        node.type === AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE &&
+        !alternativeNames.has(node.tech_name)
+      ) {
+        throw new Error(
+          `Alternative upgrade ${node.tech_name} belongs to no group`,
+        );
+      }
+    }
+
+    return {
+      rows: xml.matrix.rows,
+      columns: xml.matrix.columns,
+      nodes: parsedNodes.filter(
+        (node) => node.type !== AugmentNodeType.AUGMENT_NODE_TYPE_ALTERNATIVE,
+      ),
+      group:
+        group === undefined
+          ? undefined
+          : {
+              tech_name: group.techName,
+              name: this.getString(group.displayName),
+              description: this.getString(group.description),
+              icon: iconName(group.icon),
+              xp_cost: group.xpCost,
+              position: {
+                x: group.gridPosition.column,
+                y: group.gridPosition.row,
+              },
+              requires: parseRequirements(group.requiredNodes),
+              alternatives: group.alternativeNodes.node.map((techName) => {
+                const node = byTechName.get(techName);
+
+                if (node === undefined) {
+                  throw new Error(`Unknown alternative upgrade ${techName}`);
+                }
+
+                return node;
+              }),
+            },
+    } satisfies AugmentProgression;
+  }
+
+  @Cache()
+  async tanks() {
+    const tankDefinitions = TankDefinitions.create();
+    const abilityItems = this.vehicleAbilityItems();
+
+    const gameModeNativeNames: Record<string, string> = {};
+
+    const squadBattleTypeGameModeNativeNameMatches =
+      this.squadBattleTypeStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
+        /eGameMode\.(\w+) -> "(battleType\/([a-zA-Z]+))"/g,
+      );
+    const gameTypeGameModeNativeNameMatches =
+      this.gameTypeSelectorStyles!.Prototypes[0].components.UIDataLocalBindingsComponent.data[1][2].matchAll(
+        /eGameMode\.([a-zA-Z]+) -> "~res:\/Gfx\/UI\/Hangar\/GameTypes\/battle-type_([^"]+)"/g,
+      );
+
+    for (const match of squadBattleTypeGameModeNativeNameMatches) {
+      gameModeNativeNames[match[3]] = match[1];
+    }
+
+    for (const match of gameTypeGameModeNativeNameMatches) {
+      Object.entries(gameModeNativeNames).forEach(([key, value]) => {
+        if (key.toLowerCase() === match[2].toLowerCase()) {
+          gameModeNativeNames[match[1]] = value;
+        }
+      });
+    }
+
+    const slugRequesters = new Map<string, { id: number; key: string }[]>();
+    const idToNation: Record<number, string> = {};
+
+    for (const nation of this.nationsDir!) {
+      const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
+        `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+      );
+
+      for (const tankKey in tankList.root) {
+        if (this.botPattern.test(tankKey)) continue;
+
+        const tank = tankList.root[tankKey];
+        const tankId = toUniqueId(nation, tank.id);
+
+        const name = (
+          (tank.shortUserString
+            ? this.getString(tank.shortUserString)
+            : undefined) ?? this.getString(tank.userString)
+        ).locales.en;
+
+        let slug = sluggify(name);
+
+        idToNation[tankId] = nation;
+
+        if (slugRequesters.has(slug)) {
+          slugRequesters.get(slug)!.push({ id: tankId, key: tankKey });
+        } else {
+          slugRequesters.set(slug, [{ id: tankId, key: tankKey }]);
+        }
+      }
+    }
+
+    const slugs = new Map<number, string>();
+
+    slugRequesters.forEach((requesters, slug) => {
+      if (requesters.length === 1) {
+        slugs.set(requesters[0].id, slug);
+        return;
+      }
+
+      console.warn(
+        `Multiple tanks share slug ${slug}: ${requesters
+          .map(({ key }) => key)
+          .join(", ")}`,
+      );
+
+      if (requesters.length !== 2) {
+        throw new Error("Unresolvable number of duplicates :(");
+      }
+
+      const nonCanonical = requesters.find(({ key }) => key.endsWith("TUR"));
+
+      if (nonCanonical === undefined) {
+        console.log("Using nations to discriminate");
+        // both are non-tutorial tanks, will have to discriminate using nation
+
+        requesters.forEach(({ id, key }) => {
+          const nation = idToNation[id];
+          const discriminator =
+            this.nationSlugDiscriminators[
+              nation as keyof typeof this.nationSlugDiscriminators
+            ];
+
+          console.log(`Solution: ${key} -> ${slug}-${discriminator}`);
+          slugs.set(id, `${slug}-${discriminator}`);
+        });
+      } else {
+        console.log("Using tutorial bot suffix to discriminate");
+
+        const canonical = requesters.find(({ key }) => !key.endsWith("TUR"));
+
+        if (canonical === undefined) {
+          throw new Error(
+            "Two tutorial bots share the same slug? The world is truly broken.",
+          );
+        }
+
+        console.log(`Solution: ${canonical.key} -> ${slug}`);
+        slugs.set(canonical.id, slug);
+        console.log(`Solution: ${nonCanonical.key} -> ${slug}-tur`);
+        slugs.set(nonCanonical.id, `${slug}-tur`);
+      }
+    });
+
+    const tankXps = new Map<number, ResearchCost>();
+
+    // Only some builds ship augment trees
+    const upgradeAttributesPath =
+      "Data/XML/item_defs/vehicles/common/tank_upgrade_attributes.xml";
+    const upgradeAttributeDefinitions: AugmentAttributeDefinitions = new Map();
+
+    if ((await this.vfs.resolve(upgradeAttributesPath)) !== null) {
+      const upgradeAttributes =
+        await this.vfs.xmlWithAttributes<UpgradeAttributesXml>(
+          upgradeAttributesPath,
+        );
+
+      for (const { attributeName, icon, title } of upgradeAttributes.root
+        .attributes.attribute) {
+        upgradeAttributeDefinitions.set(attributeName, { icon, title });
+      }
+    }
+
+    for (const nation of this.nationsDir!) {
+      const tankList = await this.vfs.xml<{ root: VehicleDefinitionList }>(
+        `Data/XML/item_defs/vehicles/${nation}/list.xml`,
+      );
+      const turretList = await this.vfs.xml<{
+        root: TurretDefinitionsList;
+      }>(`Data/XML/item_defs/vehicles/${nation}/components/turrets.xml`);
+      const gunList = await this.vfs.xml<{
+        root: GunDefinitionsList;
+      }>(`Data/XML/item_defs/vehicles/${nation}/components/guns.xml`);
+      const shellList = await this.vfs.xml<{
+        root: ShellDefinitionsList;
+      }>(`Data/XML/item_defs/vehicles/${nation}/components/shells.xml`);
+      const enginesList = await this.vfs.xml<{
+        root: EngineDefinitionsList;
+      }>(`Data/XML/item_defs/vehicles/${nation}/components/engines.xml`);
+      const chassisList = await this.vfs.xml<{
+        root: ChassisDefinitionsList;
+      }>(`Data/XML/item_defs/vehicles/${nation}/components/chassis.xml`);
+
+      function resolveUnlocks(
+        blitzModuleTypeToBlitzkit: Record<keyof BlitzModuleType, ModuleType>,
+        unlocks?: BlitzModuleType,
+      ) {
+        if (!unlocks) return [];
+
+        return Object.entries(unlocks)
+          .map(([type, list]) =>
+            (Array.isArray(list) ? list : [list]).map((item) => {
+              const typeTyped = type as keyof BlitzModuleType;
+              let rawId: number;
+
+              if (typeTyped === "chassis") {
+                rawId = chassisList.root.ids[item["#text"]];
+              } else if (typeTyped === "engine") {
+                rawId = enginesList.root.ids[item["#text"]];
+              } else if (typeTyped === "gun") {
+                rawId = gunList.root.ids[item["#text"]];
+              } else if (typeTyped === "turret") {
+                rawId = turretList.root.ids[item["#text"]];
+              } else if (typeTyped === "vehicle") {
+                rawId = tankList.root[item["#text"]].id;
+              }
+
+              return {
+                id: toUniqueId(nation, rawId!),
+                type: blitzModuleTypeToBlitzkit[typeTyped],
+                cost: {
+                  type:
+                    typeof item.cost === "number"
+                      ? "xp"
+                      : item.cost.split(":")[0],
+                  value:
+                    typeof item.cost === "number"
+                      ? item.cost
+                      : Number(item.cost.split(":")[1]),
+                },
+              } satisfies Unlock;
+            }),
+          )
+          .flat();
+      }
+
+      for (const tankKey in tankList.root) {
+        if (this.botPattern.test(tankKey)) continue;
+
+        const gunXps = new Map<number, ResearchCost>();
+        const turretXps = new Map<number, ResearchCost>();
+        const engineXps = new Map<number, ResearchCost>();
+        const trackXps = new Map<number, ResearchCost>();
+        const tank = tankList.root[tankKey];
+        let tankPrice: TankPrice;
+        const tankDefinition = await this.vfs.xml<{ root: VehicleDefinitions }>(
+          `Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`,
+        );
+        const tankId = toUniqueId(nation, tank.id);
+
+        const tankTags = tank.tags.split(" ");
+        const equipment = tankDefinition.root.optDevicePreset;
+
+        const slug = slugs.get(tankId);
+
+        if (slug === undefined) {
+          throw new Error(
+            `Could not find slug for ${nation}/${tankKey} (${tankId})`,
+          );
+        }
+
+        if (tank.sellPrice) {
+          tankPrice = {
+            type: TankPriceType.TANK_PRICE_TYPE_GOLD,
+            value: tank.sellPrice["#text"] * 2,
+          };
+        } else if (typeof tank.price === "number") {
+          tankPrice = {
+            type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
+            value: tank.price,
+          };
+        } else {
+          tankPrice = {
+            type: TankPriceType.TANK_PRICE_TYPE_CREDITS,
+            value: tank.price["#text"] * 400,
+          };
+        }
+
+        const crew: Crew[] = [];
+        const fixedCamouflage = tankTags.includes("eventCamouflage_user");
+        const totalUnlocks: UnlocksListing[] = [];
+
+        for (const crewKey in tankDefinition.root.crew) {
+          const value = tankDefinition.root.crew[crewKey as BlitzCrewType];
+          let entry: Crew;
+          const index = crew.findIndex(
+            ({ type }) => this.blitzkitCrewTypeToBlitz[type] === crewKey,
+          );
+          if (index === -1) {
+            if (crewKey === "#text") continue;
+            entry = {
+              type: this.blitzCrewTypeToBlitzkit[crewKey as BlitzCrewType],
+              count: 0,
+              substitute: [],
+            };
+            crew.push(entry);
+          } else {
+            entry = crew[index];
+          }
+
+          if (typeof value === "string") {
+            entry.count++;
+
+            if (value !== "") {
+              entry.substitute = value.split(/\n| /).map((member) => {
+                return this.blitzCrewTypeToBlitzkit[
+                  member.trim() as BlitzCrewType
+                ];
+              });
+            }
+          } else {
+            if (entry.count === undefined) {
+              entry.count = value.length;
+            } else {
+              entry.count += value.length;
+            }
+          }
+        }
+
+        const camouflages = Object.entries(
+          this.camouflagesXml!.root.camouflages,
+        )
+          .filter(([, camo]) => {
+            if (!camo.vehicleFilter.include) return false;
+            if (camo.unlockCostCategory !== "legendary-skins-gold")
+              return false;
+
+            const includeArray = Array.isArray(camo.vehicleFilter.include)
+              ? camo.vehicleFilter.include
+              : [camo.vehicleFilter.include];
+
+            return includeArray.some((filter) => {
+              if ("vehicle" in filter && filter.vehicle?.name) {
+                return filter.vehicle.name === `${nation}:${tankKey}`;
+              }
+
+              return false;
+            });
+          })
+          .map(([, camo]) => camo.id);
+
+        let equalizerEntry = this.tierEqualizer!.find(
+          (line) => line[0] === `${nation}:${tankKey}`,
+        );
+
+        let equalizer: Equalizer | undefined;
+
+        if (equalizerEntry) {
+          const [health, penetration, module_health, damage, armor] =
+            equalizerEntry?.slice(1).map(Number);
+          equalizer = { health, penetration, module_health, damage, armor };
+        }
+
+        const blitzTankClass = tankTags.find(
+          (tag) => tag in this.blitzTankClassToBlitzkit,
+        );
+
+        if (blitzTankClass === undefined) {
+          throw new Error(`Unknown tank class for ${nation}:${tankKey}`);
+        }
+
+        const tankClass =
+          this.blitzTankClassToBlitzkit[blitzTankClass as BlitzTankClass];
+
+        const canonicalFullName = this.getString(tank.userString);
+        const name =
+          (tank.shortUserString
+            ? this.getString(tank.shortUserString)
+            : undefined) ?? canonicalFullName;
+        // only supply full name if it's different from the displayed short name to save some bytes
+        const name_full =
+          name === canonicalFullName ? undefined : canonicalFullName;
+
+        // The client lays modules out automatically unless the tank has its own
+        // file, in which case every cell is placed by hand
+        const module_positions: ModulePosition[] = [];
+        const layoutPath = `Data/Configs/TechTree/${nation}/${tankKey}.yaml`;
+        const resolvedLayoutPath = await this.vfs.resolve(layoutPath);
+
+        if (resolvedLayoutPath !== null) {
+          const layout = await this.vfs.yaml<TechTreeLayoutYaml>(layoutPath);
+
+          if (layout.modules) {
+            for (const [moduleKey, { position }] of Object.entries(
+              layout.modules,
+            )) {
+              // keys look like `#vehicleGun:_85mm_S-53`
+              const [kind, name] = moduleKey.replace(/^#/, "").split(":");
+              let rawId: number | undefined;
+              let type: ModuleType;
+
+              switch (kind) {
+                case "vehicle":
+                  rawId = tankList.root[name]?.id;
+                  type = ModuleType.MODULE_TYPE_VEHICLE;
+                  break;
+
+                case "vehicleChassis":
+                  rawId = chassisList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_TRACKS;
+                  break;
+
+                case "vehicleEngine":
+                  rawId = enginesList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_ENGINE;
+                  break;
+
+                case "vehicleGun":
+                  rawId = gunList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_GUN;
+                  break;
+
+                case "vehicleTurret":
+                  rawId = turretList.root.ids[name];
+                  type = ModuleType.MODULE_TYPE_TURRET;
+                  break;
+
+                default:
+                  throw new Error(
+                    `Unknown module kind in ${layoutPath}: ${kind}`,
+                  );
+              }
+
+              if (rawId === undefined) {
+                throw new Error(
+                  `Unknown module in ${layoutPath}: ${moduleKey}`,
+                );
+              }
+
+              module_positions.push({
+                id: toUniqueId(nation, rawId),
+                type,
+                position: { x: position[0], y: position[1] },
+              });
+            }
+          }
+        }
+
+        const augment_progression =
+          tankDefinition.root.upgradeProgression === undefined
+            ? undefined
+            : this.parseAugmentProgression(
+                (
+                  await this.vfs.xmlWithAttributes<{
+                    root: { upgradeProgression: UpgradeProgressionXml };
+                  }>(`Data/XML/item_defs/vehicles/${nation}/${tankKey}.xml`)
+                ).root.upgradeProgression,
+                upgradeAttributeDefinitions,
+              );
+
+        tankDefinitions.tanks[tankId] = {
+          ancestors: [],
+          successors: [],
+          id: tankId,
+          dev_name: tankKey,
+          module_positions,
+          augment_progression,
+          vehicle_abilities: await this.vehicleAbilitiesOf(
+            nation,
+            tankKey,
+            tankDefinition.root,
+            abilityItems,
+          ),
+          roles: {},
+          camouflages: camouflages,
+          fixed_camouflage: fixedCamouflage,
+          crew,
+          weight: tankDefinition.root.hull.weight,
+          health: tankDefinition.root.hull.maxHealth,
+          speed_forwards: tankDefinition.root.speedLimits.forward,
+          speed_backwards: tankDefinition.root.speedLimits.backward,
+          equipment_preset:
+            typeof equipment === "string" ? equipment : equipment.at(-1)!,
+          max_consumables: tankDefinition.root.consumableSlots,
+          max_provisions: tankDefinition.root.provisionSlots,
+          name,
+          name_full,
+          slug,
+          nation,
+          type: tankTags.includes("collectible")
+            ? TankType.TANK_TYPE_COLLECTOR
+            : (typeof tank.price === "number" ? false : "gold" in tank.price)
+            ? TankType.TANK_TYPE_PREMIUM
+            : TankType.TANK_TYPE_RESEARCHABLE,
+          tier: tank.level,
+          class: tankClass,
+          testing: tankTags.includes("testTank") || tank.level === 11,
+          deprecated: tankTags.includes("deprecated"),
+          price: tankPrice,
+          camouflage_still: tankDefinition.root.invisibility.still,
+          camouflage_moving: tankDefinition.root.invisibility.moving,
+          camouflage_on_fire: tankDefinition.root.invisibility.firePenalty,
+          turrets: [],
+          engines: [],
+          tracks: [],
+          equalizer,
+        };
+
+        if (tank.combatRole) {
+          Object.entries(tank.combatRole).forEach(([gameMode, role]) => {
+            const id = Object.entries(gameModeNativeNames).find(
+              ([key]) => key.toLowerCase() === gameMode.toLowerCase(),
+            )?.[1];
+
+            if (id === undefined) {
+              throw new Error(
+                `Unknown game mode in tank ${tankKey}: ${gameMode}`,
+              );
+            }
+
+            tankDefinitions.tanks[tankId].roles[id] =
+              this.combatRoles![role].id;
+          });
+        }
+
+        Object.keys(tankDefinition.root.chassis).forEach((key) => {
+          const track = tankDefinition.root.chassis[key];
+          const trackId = toUniqueId(nation, chassisList.root.ids[key]);
+          const terrainResistances = track.terrainResistance
+            .split(" ")
+            .map(Number);
+
+          totalUnlocks.push(track.unlocks);
+          tankDefinitions.tanks[tankId].tracks.push({
+            id: trackId,
+            weight: track.weight,
+            name: this.getString(track.userString),
+            traverse_speed: track.rotationSpeed,
+            dispersion_move: track.shotDispersionFactors.vehicleMovement,
+            dispersion_traverse: track.shotDispersionFactors.vehicleRotation,
+            resistance_hard: terrainResistances[0],
+            resistance_medium: terrainResistances[1],
+            resistance_soft: terrainResistances[2],
+            repair_time: track.hysteresisHealth / track.healthRegenPerSec,
+            tier: track.level,
+            unlocks: resolveUnlocks(
+              this.blitzModuleTypeToBlitzkit,
+              track.unlocks,
+            ),
+          });
+        });
+
+        Object.keys(tankDefinition.root.engines).forEach((engineKey) => {
+          const engine = tankDefinition.root.engines[engineKey];
+          const engineListEntry = enginesList.root.shared[engineKey];
+          const engineId = toUniqueId(nation, enginesList.root.ids[engineKey]);
+
+          totalUnlocks.push(engine.unlocks);
+          tankDefinitions.tanks[tankId].engines.push({
+            id: engineId,
+            name: this.getString(engineListEntry.userString),
+            fire_chance: engineListEntry.fireStartingChance,
+            tier: engineListEntry.level,
+            weight: engineListEntry.weight,
+            power: engineListEntry.power,
+            unlocks: resolveUnlocks(
+              this.blitzModuleTypeToBlitzkit,
+              engine.unlocks,
+            ),
+          });
+        });
+
+        let turretIndex = 0;
+        for (const turretKey in tankDefinition.root.turrets0) {
+          const turret = tankDefinition.root.turrets0[turretKey];
+          const turretId = toUniqueId(nation, turretList.root.ids[turretKey]);
+
+          totalUnlocks.push(turret.unlocks);
+
+          tankDefinitions.tanks[tankId].turrets.push({
+            id: turretId,
+            traverse_speed: turret.rotationSpeed,
+            name: this.getString(turret.userString),
+            tier: turret.level,
+            guns: [],
+            health: turret.maxHealth,
+            view_range: turret.circularVisionRadius,
+            weight: turret.weight,
+            unlocks: resolveUnlocks(
+              this.blitzModuleTypeToBlitzkit,
+              turret.unlocks,
+            ),
+          });
+
+          for (const gunKey in turret.guns) {
+            const gun = turret.guns[gunKey];
+
+            totalUnlocks.push(gun.unlocks);
+            tankDefinitions.tanks[tankId].turrets[turretIndex].guns.push(
+              this.parseGun(
+                nation,
+                gunKey,
+                gunList.root,
+                shellList.root,
+                gun,
+                resolveUnlocks(this.blitzModuleTypeToBlitzkit, gun.unlocks),
+              ),
+            );
+          }
+
+          turretIndex++;
+        }
+
+        for (const unlocks of totalUnlocks) {
+          if (unlocks === undefined) continue;
+
+          for (const key in unlocks) {
+            const value = unlocks[key as keyof BlitzModuleType];
+
+            for (const vehicle of Array.isArray(value) ? value : [value]) {
+              switch (key as keyof BlitzModuleType) {
+                case "vehicle": {
+                  const tankListEntry = tankList.root[vehicle["#text"]];
+                  const currentTank = tankDefinitions.tanks[tankId];
+                  const successorId = toUniqueId(nation, tankListEntry.id);
+
+                  tankXps.set(
+                    successorId,
+                    this.parseResearchCost(vehicle.cost),
+                  );
+
+                  if (currentTank.successors === undefined) {
+                    currentTank.successors = [];
+                  }
+                  if (!currentTank.successors!.includes(successorId)) {
+                    currentTank.successors!.push(successorId);
+                  }
+                  break;
+                }
+
+                case "gun": {
+                  gunXps.set(
+                    toUniqueId(nation, gunList.root.ids[vehicle["#text"]]),
+                    this.parseResearchCost(vehicle.cost),
+                  );
+                  break;
+                }
+
+                case "turret": {
+                  turretXps.set(
+                    toUniqueId(nation, turretList.root.ids[vehicle["#text"]]),
+                    this.parseResearchCost(vehicle.cost),
+                  );
+                  break;
+                }
+
+                case "engine": {
+                  engineXps.set(
+                    toUniqueId(nation, enginesList.root.ids[vehicle["#text"]]),
+                    this.parseResearchCost(vehicle.cost),
+                  );
+                  break;
+                }
+
+                case "chassis": {
+                  trackXps.set(
+                    toUniqueId(nation, chassisList.root.ids[vehicle["#text"]]),
+                    this.parseResearchCost(vehicle.cost),
+                  );
+                  break;
+                }
+              }
+            }
+          }
+        }
+
+        Object.values(tankDefinitions.tanks[tankId].turrets).forEach(
+          (turret) => {
+            turret.research_cost = turretXps.get(turret.id);
+
+            Object.values(turret.guns).forEach((gunRaw) => {
+              gunRaw.research_cost = gunXps.get(gunRaw.id);
+            });
+          },
+        );
+
+        Object.values(tankDefinitions.tanks[tankId].engines).forEach(
+          (engine) => {
+            engine.research_cost = engineXps.get(engine.id);
+          },
+        );
+
+        Object.values(tankDefinitions.tanks[tankId].tracks).forEach((track) => {
+          track.research_cost = trackXps.get(track.id);
+        });
+      }
+    }
+
+    Object.values(tankDefinitions.tanks).forEach((tank) => {
+      tank.research_cost = tankXps.get(tank.id);
+    });
+
+    Object.values(tankDefinitions.tanks).forEach((tank) => {
+      tank.successors?.forEach((predecessorId) => {
+        if (
+          !tankDefinitions.tanks[predecessorId].ancestors?.includes(tank.id)
+        ) {
+          tankDefinitions.tanks[predecessorId].ancestors?.push(tank.id);
+        }
+      });
+    });
+
+    return tankDefinitions;
+  }
+}

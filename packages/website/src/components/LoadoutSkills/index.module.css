@@ -1,0 +1,14 @@
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  .row {
+    display: flex;
+    gap: inherit;
+  }
+
+  .skill {
+    position: relative;
+  }
+}

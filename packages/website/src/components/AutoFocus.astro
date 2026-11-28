@@ -1,0 +1,10 @@
+<script is:inline>
+  // Focuses before hydration so the field is ready as soon as it's painted
+  for (const input of document.querySelectorAll("[data-auto-focus]")) {
+    const autoFocus = input.dataset.autoFocus;
+
+    if (window.matchMedia(`(pointer: ${autoFocus})`).matches) {
+      input.focus();
+    }
+  }
+</script>

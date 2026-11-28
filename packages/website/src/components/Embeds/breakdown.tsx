@@ -8,20 +8,28 @@ import {
   sumCompositeStats,
   type IndividualTankStats,
 } from "@blitzkit/core";
-import { STRINGS } from "@blitzkit/i18n";
+import locales from "@blitzkit/i18n/locales.json";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { ContextMenu } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
-import { breakdownConfig } from "../../constants/embeds";
+import { api } from "../../api/dynamic";
+import { breakdownConfig } from "../../config/embeds";
 import { awaitableAverageDefinitions } from "../../core/awaitables/averageDefinitions";
-import { api } from "../../core/blitzkit/api";
+import { useStrings } from "../../hooks/useStrings";
 import { EmbedBreakdown } from "../../stores/embedBreakdown";
 import { useEmbedStateCurry } from "../../stores/embedState/utilities";
+import { ContextMenu } from "../ContextMenu";
 import { BreakdownEmbedCard, BreakdownEmbedWrapper } from "../TanksEmbed";
+
+const allStrings = await Promise.all(
+  locales.supported.map(async ({ locale }) => ({
+    locale,
+    strings: await api.strings(locale),
+  }))
+);
 
 export const compositeStatsKeysOptions = compositeStatsKeys.map((value) => ({
   value,
-  locales: Object.entries(STRINGS).reduce((accumulator, [locale, strings]) => {
+  locales: allStrings.reduce((accumulator, { locale, strings }) => {
     return {
       ...accumulator,
       [locale]: strings.common.composite_stats[value],
@@ -30,7 +38,7 @@ export const compositeStatsKeysOptions = compositeStatsKeys.map((value) => ({
 }));
 
 const [tankDefinitions, averageDefinitions] = await Promise.all([
-  api.tankDefinitions(),
+  api.tanks(),
 
   awaitableAverageDefinitions,
 ]);
@@ -56,7 +64,7 @@ export const fakeCompositeStats = compositeStats(
     wins: 30,
     xp: 1230 * 50,
   },
-  averageDefinitions.averages[7297].mu!,
+  averageDefinitions.averages[7297].mu!
 );
 
 export function BreakdownPreview() {
@@ -65,11 +73,11 @@ export function BreakdownPreview() {
 
   return (
     <BreakdownEmbedWrapper>
-      {useEmbedState("showTotal") && (
+      {useEmbedState("show_total") && (
         <BreakdownEmbedCard composite={fakeCompositeStats} tank={null} />
       )}
 
-      {tanks.slice(0, useEmbedState("listMaxTanks")).map((tank) => (
+      {tanks.slice(0, useEmbedState("list_max_tanks")).map((tank) => (
         <BreakdownEmbedCard
           composite={fakeCompositeStats}
           key={tank.id}
@@ -81,6 +89,7 @@ export function BreakdownPreview() {
 }
 
 export function BreakdownRenderer() {
+  const strings = useStrings();
   const { useEmbedState } = useEmbedStateCurry<typeof breakdownConfig>();
   const params = new URLSearchParams(window.location.search);
   const id = Number(params.get("id"));
@@ -89,9 +98,9 @@ export function BreakdownRenderer() {
   const diff = useMemo(
     () =>
       deltaTankStats(tankStatsA, tankStatsB).sort(
-        (a, b) => b.last_battle_time - a.last_battle_time,
+        (a, b) => b.last_battle_time - a.last_battle_time
       ),
-    [tankStatsB],
+    [tankStatsB]
   );
   const compositeStats = diff
     .map((diff) => {
@@ -101,14 +110,14 @@ export function BreakdownRenderer() {
 
       const compositeStats = calculateCompositeStats(
         { battle_life_time: diff.battle_life_time, ...diff.all },
-        average.mu!,
+        average.mu!
       );
 
       return { id: diff.tank_id, compositeStats };
     })
     .filter((stats) => stats !== null);
   const sum = sumCompositeStats(
-    compositeStats.map(({ compositeStats }) => compositeStats),
+    compositeStats.map(({ compositeStats }) => compositeStats)
   );
 
   useEffect(() => {
@@ -125,14 +134,14 @@ export function BreakdownRenderer() {
 
   return (
     <ContextMenu.Root>
-      <ContextMenu.Trigger>
+      <ContextMenu.Trigger asChild>
         <BreakdownEmbedWrapper>
-          {useEmbedState("showTotal") && (
+          {useEmbedState("show_total") && (
             <BreakdownEmbedCard composite={sum} tank={null} />
           )}
 
           {compositeStats
-            .slice(0, useEmbedState("listMaxTanks"))
+            .slice(0, useEmbedState("list_max_tanks"))
             .map(({ id, compositeStats }) => {
               const tank = tankDefinitions.tanks[id];
 
@@ -147,22 +156,25 @@ export function BreakdownRenderer() {
         </BreakdownEmbedWrapper>
       </ContextMenu.Trigger>
 
-      <ContextMenu.Content>
-        <ContextMenu.Item
-          color="red"
-          onClick={async () => {
-            const newA = await getTankStats(idToRegion(id), id);
+      <ContextMenu.Portal>
+        <ContextMenu.Content>
+          <ContextMenu.Item
+            data-accent="red"
+            onSelect={async () => {
+              const newA = await getTankStats(idToRegion(id), id);
 
-            if (newA === null) return;
+              if (newA === null) return;
 
-            EmbedBreakdown.mutate((draft) => {
-              draft[id] = newA;
-            });
-          }}
-        >
-          <ReloadIcon /> Reset
-        </ContextMenu.Item>
-      </ContextMenu.Content>
+              EmbedBreakdown.mutate((draft) => {
+                draft[id] = newA;
+              });
+            }}
+          >
+            {strings.embed.types.breakdown.reset}
+            <ReloadIcon />
+          </ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
     </ContextMenu.Root>
   );
 }

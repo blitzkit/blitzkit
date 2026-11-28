@@ -1,0 +1,20 @@
+---
+import ColorScale from "../../../../components/ColorScale.astro";
+import { tools } from "../../../../config/tools";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import { Page } from "./_index";
+
+export { getStaticPaths } from "../index.astro";
+
+const { locale } = Astro.props;
+
+// TODO: the tank search popup is complete unreviewed AI slop, write a proper system for it manually
+---
+
+<ColorScale color="red" />
+
+<BaseLayout tool={tools.guesser} accent="blue" {locale} solidNavbar>
+  <Page {locale} client:only="react">
+    <Page {locale} skeleton slot="fallback" />
+  </Page>
+</BaseLayout>

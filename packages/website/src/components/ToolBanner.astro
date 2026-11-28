@@ -1,0 +1,116 @@
+---
+import { alias } from "@blitzkit/core";
+import { api } from "../api/dynamic";
+import type { Tool } from "../config/tools";
+import { Logo } from "../icons/Logo";
+import { Heading } from "./Heading";
+
+interface Props {
+  locale: string;
+  tool: Tool;
+}
+
+const { tool, locale } = Astro.props;
+const strings = await api.strings(locale);
+const name = strings.tools[tool.id as keyof typeof strings.tools];
+---
+
+<style>
+  .tool-banner {
+    --tool-banner-overlap: 8rem;
+    --margin: var(--space-4);
+
+    overflow: hidden;
+
+    background-size: cover;
+
+    @media (pointer: fine) {
+      border-radius: var(--space-4);
+      margin: var(--page-padding) var(--page-padding) 0 0;
+    }
+
+    .content {
+      width: 100%;
+      height: 100%;
+      position: relative;
+
+      display: flex;
+      justify-content: center;
+      gap: var(--space-4);
+      padding: var(--space-6) var(--space-4);
+      box-sizing: border-box;
+
+      backdrop-filter: var(--blur-tint);
+
+      overflow: hidden;
+
+      :root.light & {
+        backdrop-filter: var(--blur-tint) invert(1) hue-rotate(180deg);
+      }
+
+      .centered {
+        position: relative;
+
+        flex: 1;
+        max-width: var(--page-width);
+
+        .logo {
+          position: absolute;
+
+          pointer-events: none;
+
+          right: 0;
+          top: 50%;
+          height: 100%;
+
+          transform: translateY(-50%) scale(10);
+          color: var(--black-a4);
+        }
+      }
+
+      .pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        :root.light & {
+          filter: invert(1) brightness(0);
+        }
+
+        mask-image: linear-gradient(
+          90deg,
+          transparent 25%,
+          var(--black-a1),
+          transparent
+        );
+        mask-repeat: no-repeat;
+        mask-size: cover;
+      }
+    }
+  }
+</style>
+
+<div
+  class="tool-banner"
+  style={{
+    backgroundImage: `url(${alias("api", `/tools/${tool.id}/banners/thumbnail.webp`)})`,
+    backgroundPosition: tool.banner_background_position ?? "top",
+  }}
+>
+  <div class="content">
+    <div
+      class="pattern"
+      style={{ backgroundImage: `url(/media/patterns/${tool.id}.svg)` }}
+    ></div>
+
+    <div class="centered">
+      <Heading weight="bold" size="2">
+        {name}
+      </Heading>
+
+      <Logo className="logo" />
+    </div>
+  </div>
+</div>

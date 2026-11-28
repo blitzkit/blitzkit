@@ -1,0 +1,11 @@
+.tile {
+  cursor: grab;
+  touch-action: none;
+
+  &[data-dragging="true"] {
+    position: fixed;
+    z-index: 1;
+
+    cursor: grabbing;
+  }
+}

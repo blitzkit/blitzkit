@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package blitzkit;
+
+message RatingLeaderboard {
+  oneof version {
+    RatingLeaderboardV1 v1 = 1;
+    RatingLeaderboardV2 v2 = 2;
+  }
+}
+
+message RatingLeaderboardV1 {
+  repeated RatingLeaderboardEntryV1 entries = 1;
+}
+
+message RatingLeaderboardEntryV1 {
+  uint32 id    = 1;
+  uint32 score = 2;
+}
+
+message RatingLeaderboardV2 {
+  repeated RatingLeaderboardEntryV2 entries = 1;
+}
+
+message RatingLeaderboardEntryV2 {
+  uint32 id       = 1;
+  uint32 score    = 2;
+  uint32 battles  = 3;
+  uint32 wins     = 4;
+  uint32 survived = 5;
+  uint32 damage   = 6;
+  uint32 kills    = 7;
+}

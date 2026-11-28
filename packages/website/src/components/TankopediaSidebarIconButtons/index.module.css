@@ -1,0 +1,4 @@
+.sidebar-icon-group {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,24 @@
+.section {
+  display: flex;
+  flex-direction: column;
+
+  padding-right: var(--page-padding);
+
+  /* astro island's children sometimes end up being first deeper into the div's */
+  &:first-child:not(astro-island > &) {
+    padding-top: var(--page-padding);
+  }
+
+  &:last-child {
+    flex: 1;
+    padding-bottom: var(--page-padding);
+  }
+
+  @media (pointer: coarse) {
+    padding-left: var(--page-padding);
+  }
+
+  &[data-overflow="true"] {
+    overflow-x: auto;
+  }
+}

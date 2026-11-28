@@ -1,0 +1,10 @@
+.mixer-module-separator {
+  display: flex;
+  color: var(--gray-11);
+  font-size: var(--font-size-regular);
+
+  svg {
+    width: 1em;
+    height: 1em;
+  }
+}

@@ -1,19 +1,21 @@
-import { alias, TankType } from "@blitzkit/core";
+import { alias } from "@blitzkit/core";
 import { literals } from "@blitzkit/i18n/src/literals";
+import { TankType } from "@blitzkit/protos";
 import { CaretLeftIcon, CaretRightIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Flex, Heading, IconButton, ScrollArea, Text } from "@radix-ui/themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "../../../core/blitzkit/api";
+import { api } from "../../../api/dynamic";
 import { useLocale } from "../../../hooks/useLocale";
 import { Duel } from "../../../stores/duel";
 import { Tankopedia } from "../../../stores/tankopedia";
 import type { MaybeSkeletonComponentProps } from "../../../types/maybeSkeletonComponentProps";
+import { LazyImage } from "../../LazyImage";
 import { Arrow } from "./components/Arrow";
 import { Node } from "./components/Node";
 
 type Line = number[];
 
-const tankDefinitions = await api.tankDefinitions();
+const tankDefinitions = await api.tanks();
 
 export const XP_MULTIPLIERS = [1, 2, 3, 4, 5, 10];
 
@@ -103,7 +105,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
           <Flex gap="4" align="center">
             <Text color="gray" wrap="nowrap">
               <Flex gap="1" align="center">
-                <img
+                <LazyImage
                   alt="XP"
                   src={alias("api", "/icons/currencies/xp.webp")}
                   style={{
@@ -119,7 +121,7 @@ export function TechTreeSection({ skeleton }: MaybeSkeletonComponentProps) {
 
             <Text color="gray" wrap="nowrap">
               <Flex gap="1" align="center">
-                <img
+                <LazyImage
                   alt="Silver"
                   src={alias("api", "/icons/currencies/silver.webp")}
                   style={{

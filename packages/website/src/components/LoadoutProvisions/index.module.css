@@ -1,0 +1,13 @@
+.provisions {
+  width: 0;
+  min-width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  &[data-implicit-width="true"] {
+    width: auto;
+    min-width: 0;
+  }
+}

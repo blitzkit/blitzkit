@@ -1,12 +1,16 @@
-import { GunDefinition, ProvisionDefinitions, TankDefinition } from "../protos";
-import { checkConsumableProvisionInclusivity } from "./checkConsumableProvisionInclusivity";
+import {
+  GunDefinition,
+  ProvisionDefinitions,
+  TankDefinition,
+} from "../../../protos/src/blitzkit";
+import { isTankCompatible } from "../tankopedia";
 
 export function availableProvisions(
   tank: TankDefinition,
   gun: GunDefinition,
-  provisionDefinitions: ProvisionDefinitions
+  provisionDefinitions: ProvisionDefinitions,
 ) {
   return Object.values(provisionDefinitions.provisions).filter((provision) =>
-    checkConsumableProvisionInclusivity(provision, tank, gun)
+    isTankCompatible(tank, gun, provision.include, provision.exclude),
   );
 }

@@ -2,6 +2,7 @@ import { Link, Table } from '@radix-ui/themes';
 import MarkdownToJSX from 'markdown-to-jsx';
 import type { ComponentProps } from 'react';
 import { docImageUrl, isExternalImage } from '../core/blitzkit/docImages';
+import { LazyImage } from './LazyImage';
 
 interface MarkdownProps {
   children: string;
@@ -9,7 +10,7 @@ interface MarkdownProps {
 
 function Image({ src, ...props }: ComponentProps<'img'>) {
   return (
-    <img
+    <LazyImage
       style={{ maxWidth: '100%' }}
       src={src && isExternalImage(src) ? docImageUrl(src) : src}
       {...props}

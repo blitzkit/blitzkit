@@ -1,12 +1,10 @@
-import { Box } from "@radix-ui/themes";
 import { useMemo } from "react";
 import { parse } from "urlon";
-import { BlitzKitTheme } from "../../../../../../components/BlitzKitTheme";
 import {
   embedConfigurations,
   embedRenderers,
   extractEmbedConfigDefaults,
-} from "../../../../../../constants/embeds";
+} from "../../../../../../config/embeds";
 import {
   LocaleProvider,
   type LocaleAcceptorProps,
@@ -17,6 +15,7 @@ import {
   type ExtractEmbedConfigTypes,
 } from "../../../../../../stores/embedState";
 import { useEmbedStateCurry } from "../../../../../../stores/embedState/utilities";
+import styles from "./_index.module.css";
 
 interface PageProps {
   embed: keyof typeof embedConfigurations;
@@ -35,7 +34,7 @@ export function Page({ embed, locale }: PageProps & LocaleAcceptorProps) {
     return state;
   }, [embed]);
 
-  EmbedState.useInitialization(state);
+  EmbedState.useInitialization(() => state, import.meta.env.SSR);
 
   return (
     <LocaleProvider locale={locale}>
@@ -51,10 +50,11 @@ function Content({ embed }: PageProps) {
   const height = useEmbedState("height");
 
   return (
-    <BlitzKitTheme style={{ background: "transparent" }}>
-      <Box width={`${width}px`} height={`${height}px`} overflow="hidden">
-        <Renderer />
-      </Box>
-    </BlitzKitTheme>
+    <div
+      className={styles.embed}
+      style={{ width: `${width}px`, height: `${height}px` }}
+    >
+      <Renderer />
+    </div>
   );
 }

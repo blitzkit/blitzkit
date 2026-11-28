@@ -1,3 +1,3 @@
-import { createClientVFS } from "@blitzkit/core/src/blitzkit/vfs/client";
+import { createClientVFS } from "@blitzkit/vfs";
 
 export const vfs = await createClientVFS();

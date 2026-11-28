@@ -1,0 +1,22 @@
+.loadout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+
+  background-color: var(--gray-2);
+
+  position: sticky;
+  top: 0;
+
+  max-height: 100dvh;
+  overflow-y: auto;
+
+  padding: var(--space-5);
+  box-sizing: border-box;
+
+  @media (pointer: coarse) {
+    &[data-tabbed="false"] {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+.content {
+  position: relative;
+  background-color: black;
+
+  flex: 1;
+}

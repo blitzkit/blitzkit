@@ -2,6 +2,7 @@ import { Code, Flex, Heading, Link, Text } from "@radix-ui/themes";
 import { useEffect, useState, type ReactNode } from "react";
 import type { MaybeSkeletonComponentProps } from "../types/maybeSkeletonComponentProps";
 import { InlineSkeleton } from "./InlineSkeleton";
+import { LazyImage } from "./LazyImage";
 
 const TIME = 1794675600 * 1000;
 const HREF = "https://preview.blitzkit.app/tanks";
@@ -66,7 +67,7 @@ export function Countdown({ skeleton }: MaybeSkeletonComponentProps) {
           align="center"
           gap="5"
         >
-          <img
+          <LazyImage
             src="https://i.imgur.com/kXV3r3P.png"
             style={{
               height: "min(15vw, 5rem)",

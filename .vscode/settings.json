@@ -96,6 +96,7 @@
     "fullstats",
     "fuzzysort",
     "gamemode",
+    "gamemodes",
     "gameplay",
     "glsl",
     "GLTF",
@@ -105,6 +106,7 @@
     "Herdbreaker",
     "Hetz",
     "highp",
+    "hocs",
     "iife",
     "imgur",
     "immer",
@@ -123,6 +125,7 @@
     "loddist",
     "lods",
     "lossrate",
+    "lzma",
     "Maddoxkkm",
     "malum",
     "mantlets",
@@ -137,6 +140,7 @@
     "modeltransform",
     "MURICA",
     "nanostores",
+    "napi",
     "NEGATIVEX",
     "NEGATIVEY",
     "NEGATIVEZ",
@@ -157,6 +161,7 @@
     "ownedtanks",
     "padder",
     "partytown",
+    "passability",
     "patchnotes",
     "PIXELFORMAT",
     "playerachievements",
@@ -225,7 +230,9 @@
     "UNLOCALIZED",
     "UNORM",
     "unpickled",
+    "unranked",
     "Unregistering",
+    "unreviewed",
     "unrotate",
     "unwrapper",
     "userns",
@@ -235,7 +242,6 @@
     "Vovko",
     "wargaming",
     "webp",
-    "wgpkg",
     "whitespaces",
     "WHSS",
     "winrate",
@@ -254,5 +260,7 @@
     "youtubers",
     "zoomable"
   ],
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "cSpell.enabledFileTypes": {
+    "proto": true
+  }
 }

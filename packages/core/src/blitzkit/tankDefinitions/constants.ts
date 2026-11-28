@@ -1,5 +1,5 @@
+import { CrewType, ShellType } from "@blitzkit/protos";
 import { times } from "lodash-es";
-import { CrewType, ShellType } from "../../protos";
 
 export const SHELL_NAMES: Record<ShellType, string> = {
   [ShellType.SHELL_TYPE_AP]: "AP",
@@ -16,19 +16,6 @@ export const CREW_MEMBER_NAMES = {
 } as const;
 
 export const TIERS = times(10, (index) => index + 1);
-export const TIER_ROMAN_NUMERALS: Record<number, string> = {
-  1: "I",
-  2: "II",
-  3: "III",
-  4: "IV",
-  5: "V",
-  6: "VI",
-  7: "VII",
-  8: "VIII",
-  9: "IX",
-  10: "X",
-  11: "XI",
-};
 
 export const flags: Record<string, string> = {
   ussr: "<:ussr:1218421042033197197>",

@@ -1,0 +1,40 @@
+.mixer-module-chooser {
+  display: flex;
+}
+
+.trigger {
+  position: relative;
+  overflow: clip;
+}
+
+.sizer {
+  width: var(--space-6);
+  height: var(--space-5);
+}
+
+.tank-image,
+.skeleton {
+  position: absolute;
+  inset: 0;
+}
+
+.tank-image {
+  background-size: auto 125%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.module-button {
+  position: relative;
+}
+
+.popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.popover-row {
+  display: flex;
+  gap: var(--space-2);
+}

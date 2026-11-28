@@ -1,0 +1,61 @@
+---
+import locales from "@blitzkit/i18n/locales.json";
+import { DiscordLogoIcon, HomeIcon } from "@radix-ui/react-icons";
+import { api } from "../api/dynamic";
+import { Button } from "../components/Button";
+import { Heading } from "../components/Heading";
+import { Link } from "../components/Link";
+import { LinkI18n } from "../components/LinkI18n";
+import { Text } from "../components/Text";
+import { discordLink } from "../config/socials";
+import { tools } from "../config/tools";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// the 404 page is not locale-scoped, so it always renders in the default locale
+const locale = locales.default;
+const strings = await api.strings(locale);
+---
+
+<BaseLayout tool={tools.home} accent="blue" {locale}>
+  <div class="page">
+    <Heading size="3">{strings.website.not_found.title}</Heading>
+    <Text lowContrast>{strings.website.not_found.body}</Text>
+
+    <div class="actions">
+      <LinkI18n {locale} href="/" underline="never">
+        <Button>
+          <HomeIcon />
+          {strings.navbar.home}
+        </Button>
+      </LinkI18n>
+
+      <Link href={discordLink} underline="never">
+        <Button variant="outline">
+          <DiscordLogoIcon />
+          {strings.website.home.discord.action}
+        </Button>
+      </Link>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    min-height: 100dvh;
+    box-sizing: border-box;
+    padding: var(--space-5);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+
+  .actions {
+    margin-top: var(--space-4);
+
+    display: flex;
+    gap: var(--space-3);
+  }
+</style>

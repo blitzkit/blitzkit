@@ -1,0 +1,115 @@
+import { readDVPL } from "@blitzkit/core";
+import { Options, parse as parseCSV } from "csv-parse/browser/esm/sync";
+import { XMLParser } from "fast-xml-parser";
+import type { normalize } from "node:path/posix";
+import { parse as parseYaml } from "yaml";
+
+// Tags of an upgrade progression that are lists even with a single child
+const UPGRADE_PROGRESSION_LIST_TAGS = new Set([
+  "node",
+  "attribute",
+  "alternativeMechanicGroup",
+]);
+
+export abstract class AbstractVFS {
+  textDecoder = new TextDecoder();
+  private xmlParser = new XMLParser();
+  private attributeXmlParser = new XMLParser({
+    ignoreAttributes: false,
+    // TODO: get this fuck ass thing out of here
+    // A lone child would otherwise parse to an object instead of a list
+    isArray: (name) => UPGRADE_PROGRESSION_LIST_TAGS.has(name),
+  });
+
+  protected normalizePath?: typeof normalize;
+
+  async init() {
+    const path = await import("node:path/posix");
+    this.normalizePath = path.normalize;
+
+    return await this._init();
+  }
+
+  protected abstract _init(): Promise<typeof this>;
+
+  abstract dispose(): void;
+
+  abstract has(path: string): Promise<boolean>;
+
+  abstract raw(path: string): Promise<Uint8Array<ArrayBuffer>>;
+
+  async resolve(path: string) {
+    const normalized = this.normalizePath!(path);
+    if (await this.has(normalized)) return normalized;
+
+    const dvplPath = `${normalized}.dvpl`;
+    if (await this.has(dvplPath)) return dvplPath;
+
+    return null;
+  }
+
+  async assert(path: string) {
+    const resolved = await this.resolve(path);
+
+    if (resolved === null) throw new Error(`File not found: ${path}`);
+
+    return resolved;
+  }
+
+  async file(file: string) {
+    const resolved = await this.assert(file);
+    const raw = await this.raw(resolved);
+    let buffer = raw;
+
+    if (resolved.endsWith(".dvpl")) {
+      buffer = new Uint8Array(readDVPL(Buffer.from(raw)));
+    }
+
+    return buffer;
+  }
+
+  protected abstract _dir(path: string): Promise<string[]>;
+
+  async dir(path: string) {
+    const files = await this._dir(path);
+
+    return files.map((file) =>
+      file.endsWith(".dvpl") ? file.slice(0, -5) : file,
+    );
+  }
+
+  async text(path: string) {
+    const file = await this.file(path);
+    return this.textDecoder.decode(file);
+  }
+
+  async yaml<Type>(path: string) {
+    const file = await this.text(path);
+    return parseYaml(file) as Type;
+  }
+
+  async xml<Type>(path: string) {
+    const file = await this.text(path);
+    return this.xmlParser.parse(file) as Type;
+  }
+
+  // Keeps attributes as `@_name` and lists as arrays, which `xml` drops
+  async xmlWithAttributes<Type>(path: string) {
+    const file = await this.text(path);
+    return this.attributeXmlParser.parse(file) as Type;
+  }
+
+  protected async _csv(text: string, options: Options = {}) {
+    const parsed = parseCSV(text, options);
+    return parsed;
+  }
+
+  async csv(path: string, options: Options = {}) {
+    const text = await this.text(path);
+    return await this._csv(text, options);
+  }
+
+  [Symbol.dispose]() {
+    this.dispose();
+  }
+}

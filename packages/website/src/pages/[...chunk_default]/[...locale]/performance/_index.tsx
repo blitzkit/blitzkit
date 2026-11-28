@@ -1,30 +1,22 @@
-import { PageWrapper } from "../../../../components/PageWrapper";
-import { PlayerCountControl } from "../../../../components/Performance/PlayerCountControl";
-import { TankTable } from "../../../../components/Performance/Table";
-import { FilterControl } from "../../../../components/TankSearch/components/FilterControl";
-import {
-  LocaleProvider,
-  type LocaleAcceptorProps,
-} from "../../../../hooks/useLocale";
-import type { MaybeSkeletonComponentProps } from "../../../../types/maybeSkeletonComponentProps";
+import { PerformanceControls } from "../../../../components/PerformanceControls";
+import { PerformanceTable } from "../../../../components/PerformanceTable";
+import { Section } from "../../../../components/Section";
+import { withErrorWrapper } from "../../../../hocs/withErrorWrapper";
+import { withLocale } from "../../../../hocs/withLocale";
+import styles from "./_index.module.css";
 
-type PageProps = MaybeSkeletonComponentProps & LocaleAcceptorProps;
+export const Page = withLocale(
+  withErrorWrapper(() => (
+    <>
+      <Section>
+        <div className={styles.top}>
+          <PerformanceControls />
+        </div>
+      </Section>
 
-export function Page({ skeleton, locale }: PageProps) {
-  return (
-    <LocaleProvider locale={locale}>
-      <Content skeleton={skeleton} />
-    </LocaleProvider>
-  );
-}
-
-function Content({ skeleton }: MaybeSkeletonComponentProps) {
-  return (
-    <PageWrapper pb="0" px="0" color="jade" maxWidth="100%">
-      <FilterControl />
-      <PlayerCountControl />
-
-      <TankTable skeleton={skeleton} />
-    </PageWrapper>
-  );
-}
+      <Section overflow>
+        <PerformanceTable />
+      </Section>
+    </>
+  )),
+);

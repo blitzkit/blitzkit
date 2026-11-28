@@ -1,6 +1,7 @@
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { Button, Em, Flex, Strong, Text } from "@radix-ui/themes";
 import { donationTiers } from "../../config/donations";
+import { LazyImage } from "../LazyImage";
 import styles from "./index.module.css";
 
 export function Beg() {
@@ -8,7 +9,7 @@ export function Beg() {
     <Flex align="center" gap="4" direction="column" className={styles.outer}>
       <Text size="3" className={styles.important}>
         <Flex gap="2" align="center">
-          <img src="https://github.com/tresabhi.png" />
+          <LazyImage src="https://github.com/tresabhi.png" />
           <Em>We need your attention</Em>
         </Flex>
       </Text>

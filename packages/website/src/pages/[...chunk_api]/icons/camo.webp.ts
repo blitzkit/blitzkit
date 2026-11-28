@@ -1,8 +1,9 @@
-import { vfs } from "../../../core/blitzkit/vfs";
+import { readPackedSprite } from "../../../core/blitz/readSprite";
 
 export { getStaticPaths } from "../_index";
 
 export async function GET() {
-  const bytes = await vfs.file("Data/Gfx/UI/Hangar/IconCamouflage.packed.webp");
-  return new Response(bytes);
+  return new Response(
+    await readPackedSprite("Data/Gfx/UI/Hangar/IconCamouflage.packed.webp"),
+  );
 }

@@ -1,0 +1,104 @@
+---
+import { alias, romanize } from "@blitzkit/core";
+import { unwrapper } from "@blitzkit/i18n";
+import { ArrowLeftIcon, CaretRightIcon } from "@radix-ui/react-icons";
+import { stringify } from "urlon";
+import { api } from "../api/dynamic";
+import { Heading } from "./Heading";
+import { LinkI18n } from "./LinkI18n";
+import { Text } from "./Text";
+
+interface Props {
+  id: number;
+  locale: string;
+}
+
+const { id, locale } = Astro.props;
+
+const [tanks, strings] = await Promise.all([api.tanks(), api.strings(locale)]);
+const tank = tanks.tanks[id];
+const nation =
+  strings.common.nations[tank.nation as keyof typeof strings.common.nations];
+const tier = romanize(tank.tier);
+const type = strings.common.tank_class_medium[tank.class];
+
+const unwrap = unwrapper(locale);
+const compareState = stringify([id]);
+---
+
+<style>
+  .tankopedia-title {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+
+    border-radius: var(--space-3);
+    overflow: hidden;
+
+    .gradient {
+      padding: var(--space-4);
+      padding-right: var(--space-5);
+
+      background: linear-gradient(
+        270deg,
+        var(--black-a5),
+        var(--gray-1) var(--space-7)
+      );
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .identity {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-2);
+
+        .path {
+          display: flex;
+          align-items: center;
+          gap: var(--space-1);
+
+          svg {
+            width: 1em;
+            height: 1em;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<div
+  class="tankopedia-title"
+  style={{
+    backgroundImage: `url(${alias("api", `/nations/${tank.nation}/flags/fade.webp`)})`,
+  }}
+>
+  <div class="gradient">
+    <LinkI18n underline="hover" {locale} href="/tanks">
+      <ArrowLeftIcon />
+      {strings.tanks.title.all_tanks}
+    </LinkI18n>
+
+    <!-- <LinkI18nWrapper {locale} href={`/compare?state=${compareState}`}>
+      <Button variant="outline">
+        <PlusIcon />
+        {strings.tanks.title.compare}
+      </Button>
+    </LinkI18nWrapper> -->
+
+    <div class="identity">
+      <Heading size="2">{unwrap(tank.name)}</Heading>
+
+      <Text className="path" lowContrast>
+        {nation}
+        <CaretRightIcon />
+        {tier}
+        <CaretRightIcon />
+        {type}
+      </Text>
+    </div>
+  </div>
+</div>

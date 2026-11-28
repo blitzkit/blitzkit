@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "dependencies": {
     "@blitzkit/i18n": "workspace:*",
+    "@blitzkit/protos": "workspace:*",
     "@bufbuild/protobuf": "^2.9.0",
     "@octokit/plugin-throttling": "^11.0.1",
     "@octokit/rest": "^22.0.0",

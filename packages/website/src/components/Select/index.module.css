@@ -1,0 +1,20 @@
+@import "../DropdownMenu/index.module.css";
+
+.Content,
+.SubContent {
+  max-height: calc(
+    var(--radix-select-content-available-height) - var(--space-6)
+  );
+}
+
+.Trigger {
+  justify-content: space-between;
+
+  /*
+   * Another unselectable Radix component, being selected by span instead.
+   */
+  .Icon,
+  span {
+    display: contents;
+  }
+}

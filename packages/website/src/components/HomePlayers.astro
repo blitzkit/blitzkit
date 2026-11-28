@@ -1,0 +1,33 @@
+---
+import { api } from "../api/dynamic";
+import { tools } from "../config/tools";
+import { Heading } from "./Heading";
+import { Section } from "./Section";
+import ToolCard from "./ToolCard.astro";
+import ToolCardLayoutColumn from "./ToolCardLayoutColumn.astro";
+import ToolCardLayoutRoot from "./ToolCardLayoutRoot.astro";
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+
+const strings = await api.strings(locale);
+---
+
+<Section>
+  <Heading size="2">{strings.home.players}</Heading>
+
+  <ToolCardLayoutRoot>
+    <ToolCardLayoutColumn>
+      <ToolCard {locale} minor tool={tools.session} />
+      <ToolCard {locale} minor tool={tools.embed} />
+    </ToolCardLayoutColumn>
+
+    <ToolCardLayoutColumn major>
+      <ToolCard {locale} minor tool={tools.playlist} />
+      <!-- <ToolCard {locale} tool={tools.players} /> -->
+    </ToolCardLayoutColumn>
+  </ToolCardLayoutRoot>
+</Section>

@@ -1,4 +1,5 @@
 import { alias } from "@blitzkit/core";
+import { LazyImage } from "./LazyImage";
 
 interface SmallTankIconProps {
   id: number;
@@ -17,7 +18,7 @@ export function SmallTankIcon({ id, size = HEIGHT }: SmallTankIconProps) {
         width: WIDTH * (size / HEIGHT),
       }}
     >
-      <img
+      <LazyImage
         alt={`Tank ${id}`}
         src={alias("api", `/tanks/${id}/icons/small.webp`)}
         style={{

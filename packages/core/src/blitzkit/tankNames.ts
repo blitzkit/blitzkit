@@ -1,25 +1,37 @@
-import { BlitzKitAPI } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
-import { deburr } from "lodash-es";
-import { I18nString } from "../protos";
+import { I18nString } from "@blitzkit/protos";
+import { deburr, times } from "lodash-es";
+import { AbstractBlitzKitAPI } from "./api";
 
-export async function fetchTankNames(api: BlitzKitAPI) {
+export async function fetchTankNames(api: AbstractBlitzKitAPI) {
   const [tankDefinitions, camouflageDefinitions] = await Promise.all([
-    api.tankDefinitions(),
-    api.camouflageDefinitions(),
+    api.tanks(),
+    api.camouflages(),
   ]);
   const tankDefinitionsArray = Object.values(tankDefinitions.tanks);
 
   return await Promise.all(
     tankDefinitionsArray.map(async (tank) => {
-      const searchableNameDeburr: I18nString = { locales: {} };
+      const name_deburr: I18nString = I18nString.create();
+      const camouflages_deburr: I18nString[] = [];
+
+      const camouflages = tank.camouflages.map(
+        (id) => camouflageDefinitions.camouflages[id].name!,
+      );
 
       Object.entries(tank.name!).forEach(([key, value]) => {
-        searchableNameDeburr.locales[key] = deburr(value);
+        name_deburr.locales[key] = deburr(value);
+      });
+
+      camouflages.forEach((camouflage, index) => {
+        camouflages_deburr[index] = I18nString.create();
+        Object.entries(camouflage).forEach(([key, value]) => {
+          camouflages_deburr[index].locales[key] = deburr(value);
+        });
       });
 
       const searchableNameFull: I18nString = {
-        locales: { ...tank.name_full?.locales },
+        locales: { ...(tank.name_full?.locales ?? tank.name!.locales) },
       };
       const searchableNameFullDeburr: I18nString = { locales: {} };
 
@@ -29,36 +41,33 @@ export async function fetchTankNames(api: BlitzKitAPI) {
 
       return {
         id: tank.id,
-        name: tank.name,
-        searchableName: tank.name,
-        searchableNameDeburr,
-        searchableNameFull,
-        searchableNameFullDeburr,
-        camouflages: tank.camouflages
-          ?.map((id) =>
-            locales.supported.map(
-              ({ locale }) =>
-                camouflageDefinitions.camouflages[id]?.name!.locales[locale],
-            ),
-          )
-          .flat()
-          .filter(Boolean)
-          .map(deburr)
-          .join(" "),
-        treeType: tank.type,
+        slug: tank.slug,
+        dev_name: tank.dev_name,
+
+        name: tank.name!,
+        name_deburr,
+
+        camouflages,
+        camouflages_deburr,
       };
     }),
   );
 }
 
 export const SEARCH_KEYS = [
+  "id",
+  "slug",
+  "dev_name",
+
   ...locales.supported
     .map(({ locale }) => [
-      `searchableName.locales.${locale}`,
-      `searchableNameDeburr.locales.${locale}`,
-      `searchableNameFull.locales.${locale}`,
-      `searchableNameFullDeburr.locales.${locale}`,
+      `name.locales.${locale}`,
+      `name_deburr.locales.${locale}`,
+
+      ...times(8, (index) => [
+        `camouflages.${index}.locales.${locale}`,
+        `camouflages_deburr.${index}.locales.${locale}`,
+      ]),
     ])
-    .flat(),
-  "camouflages",
+    .flat(2),
 ];

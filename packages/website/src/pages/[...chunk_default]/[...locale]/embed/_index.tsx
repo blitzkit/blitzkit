@@ -1,14 +1,16 @@
-import { Box, Flex, Link, Text } from "@radix-ui/themes";
 import { PreviewWrapper } from "../../../../components/Embeds/PreviewWrapper";
+import { Link } from "../../../../components/Link";
 import { LinkI18n } from "../../../../components/LinkI18n";
-import { PageWrapper } from "../../../../components/PageWrapper";
-import { embedConfigurations } from "../../../../constants/embeds";
-import { Var } from "../../../../core/radix/var";
+import { Text } from "../../../../components/Text";
+import { discordLink } from "../../../../config/socials";
+import { embedConfigurations } from "../../../../config/embeds";
 import {
   type LocaleAcceptorProps,
   LocaleProvider,
   useLocale,
 } from "../../../../hooks/useLocale";
+import { useStrings } from "../../../../hooks/useStrings";
+import styles from "./_index.module.css";
 
 export function Page({ locale }: LocaleAcceptorProps) {
   return (
@@ -19,74 +21,50 @@ export function Page({ locale }: LocaleAcceptorProps) {
 }
 
 function Content() {
-  const { locale, strings } = useLocale();
+  const locale = useLocale();
+  const strings = useStrings();
 
   return (
-    <PageWrapper color="red">
-      <Text align="center" mt="3">
-        {strings.website.tools.embed.coming_soon}{" "}
-        <Link
-          underline="always"
-          href="https://discord.gg/nDt7AjGJQH"
-          target="_blank"
-        >
-          {strings.website.tools.embed.suggest}
+    <div className={styles.content}>
+      <Text align="center" className={styles.intro}>
+        {strings.embed.coming_soon}{" "}
+        <Link href={discordLink} target="_blank">
+          {strings.embed.suggest}
         </Link>
       </Text>
 
-      <Flex justify="center">
+      <div className={styles.embeds}>
         {Object.keys(embedConfigurations).map((embed) => (
           <LinkI18n
+            key={embed}
             locale={locale}
             href={`/embed/${embed}`}
             color="gray"
             highContrast
-            style={{
-              width: "fit-content",
-              height: "fit-content",
-            }}
             underline="hover"
+            className={styles.embed}
           >
-            <Flex
-              direction="column"
-              overflow="hidden"
-              style={{
-                borderRadius: Var("radius-4"),
-                backgroundColor: Var("color-panel-solid"),
-                boxShadow: Var("shadow-3"),
-              }}
-            >
-              <Flex justify="center" p="2">
+            <div className={styles.card}>
+              <div className={styles.title}>
                 <Text>
                   {
-                    strings.website.tools.embed.types[
-                      embed as keyof typeof strings.website.tools.embed.types
+                    strings.embed.types[
+                      embed as keyof typeof strings.embed.types
                     ].name
                   }
                 </Text>
-              </Flex>
+              </div>
 
-              <Box
-                width="20rem"
-                height="20rem"
-                overflow="hidden"
-                position="relative"
-                style={{
-                  backgroundImage:
-                    "url(/assets/images/backgrounds/embed-default.webp)",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              >
+              <div className={styles.preview}>
                 <PreviewWrapper
                   naked
                   name={embed as keyof typeof embedConfigurations}
                 />
-              </Box>
-            </Flex>
+              </div>
+            </div>
           </LinkI18n>
         ))}
-      </Flex>
-    </PageWrapper>
+      </div>
+    </div>
   );
 }

@@ -1,0 +1,41 @@
+/* What the modules and the augments have in common; each draws its own lines */
+
+.tree {
+  /* The game lays the tree out left to right; here depth runs top to bottom */
+  --depth-gap: var(--space-5);
+  --sibling-gap: var(--space-4);
+
+  display: grid;
+  gap: var(--depth-gap) var(--sibling-gap);
+}
+
+.cell {
+  position: relative;
+}
+
+.node {
+  position: relative;
+
+  .price {
+    display: flex;
+    gap: var(--space-1);
+
+    font-size: var(--font-size-minor);
+
+    position: absolute;
+    top: 100%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    margin-top: var(--space-2);
+
+    background-color: var(--gray-2);
+
+    svg,
+    img {
+      width: 1em;
+      height: 1em;
+    }
+  }
+}
