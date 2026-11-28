@@ -2,13 +2,8 @@
 import { assertSecret } from "@blitzkit/core";
 import locales from "@blitzkit/i18n/locales.json";
 import { mixStaticPaths } from "../../../astro/mixStaticPaths";
-import { AesonPlug } from "../../../components/AesonPlug";
-import HelpTranslate from "../../../components/HelpTranslate.astro";
-import HomeCosmetics from "../../../components/HomeCosmetics.astro";
-import HomeGames from "../../../components/HomeGames.astro";
-import HomePlayers from "../../../components/HomePlayers.astro";
+import HomeHero from "../../../components/HomeHero.astro";
 import HomeTanks from "../../../components/HomeTanks.astro";
-import HomeTechnical from "../../../components/HomeTechnical.astro";
 import { tools, type Tool } from "../../../config/tools";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getStaticPaths as _getStaticPaths } from "../_index";
@@ -46,17 +41,17 @@ export const getStaticPaths = mixStaticPaths(_getStaticPaths, () => {
 ---
 
 <BaseLayout tool={tools.home} accent="blue" {locale}>
-  <!-- <HomeHero {locale} /> -->
+  <HomeHero {locale} />
 
-  <HelpTranslate {locale} />
+  <!-- <HelpTranslate {locale} /> -->
 
-  {environment === "preview" && <AesonPlug />}
+  <!-- {environment === "preview" && <AesonPlug />} -->
 
   <HomeTanks {locale} />
-  <HomePlayers {locale} />
-  <HomeGames {locale} />
-  <HomeCosmetics {locale} />
-  <HomeTechnical {locale} />
+  <!-- <HomePlayers {locale} /> -->
+  <!-- <HomeGames {locale} /> -->
+  <!-- <HomeCosmetics {locale} /> -->
+  <!-- <HomeTechnical {locale} /> -->
 </BaseLayout>
 
 <!-- TODO: read temp/notes.md for user testing fixes -->

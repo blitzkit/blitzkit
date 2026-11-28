@@ -1,9 +1,7 @@
 import { assertSecret } from "@blitzkit/core";
-import { STRINGS } from "@blitzkit/i18n";
-import locales from "@blitzkit/i18n/locales.json";
+import type { Strings } from "@blitzkit/i18n";
 
-export function resolveBranchName(locale: string = locales.default) {
-  const strings = STRINGS[locale];
+export function resolveBranchName(strings: Strings) {
   const environment = assertSecret(import.meta.env.PUBLIC_ENVIRONMENT);
 
   if (environment === "production") return undefined;
