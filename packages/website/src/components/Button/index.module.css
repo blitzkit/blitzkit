@@ -10,6 +10,8 @@
 
   cursor: pointer;
 
+  white-space: nowrap;
+
   &[data-size="minor"] {
     --padding: var(--space-2);
     --content-size: calc(0.85 * var(--font-size-regular));

@@ -26,7 +26,7 @@ const { locale } = Astro.props;
     <BaseStyles />
 
     <style>
-      body {
+      .embed {
         margin: 0;
         overflow: hidden;
 
@@ -37,7 +37,7 @@ const { locale } = Astro.props;
     </style>
   </head>
 
-  <body>
+  <body class="embed">
     <slot />
   </body>
 </html>

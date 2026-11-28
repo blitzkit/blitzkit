@@ -24,6 +24,8 @@
   font: inherit;
   cursor: pointer;
 
+  white-space: nowrap;
+
   &:focus-visible {
     outline: var(--outline-focus);
     box-shadow: var(--shadow-focus);
